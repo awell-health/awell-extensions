@@ -11,18 +11,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-    - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag activity-plugin:$GITHUB_SHA
-    - name: Push to GCR
-      env:
-        GCR_KEY: ${{ secrets.GCR_KEY }}
-      uses: mattes/gce-docker-push-action@v1.0.0
+    - uses: RafikFarhad/push-to-gcr-github-action@v5-beta
       with:
-        # Contents of a Service Account JSON Key
-        creds: $GCR_KEY
-        # Registry host name (must match dst image)
+        gcloud_service_key: ${{ secrets.GCR_KEY }}
         registry: eu.gcr.io
-        # Source image name
-        src: activity-plugin:$GITHUB_SHA
-        # Destination image name
-        dst: eu.gcr.io/awell-container-registry/activity-plugin:$GITHUB_SHA
+        project_id: awell-container-registry
+        image_name: activity-plugins
+        image_tag: latest,${{GITHUB_SHA}}
+        dockerfile: ./Dockerfile
+        context: ./
