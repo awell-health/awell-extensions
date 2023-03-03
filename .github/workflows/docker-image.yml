@@ -1,0 +1,28 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Build the Docker image
+      run: docker build . --file Dockerfile --tag activity-plugin:$GITHUB_SHA
+    - name: Push to GCR
+      env:
+        GCR_KEY: ${{ secrets.GCR_KEY }}
+      uses: mattes/gce-docker-push-action@v1.0.0
+      with:
+        # Contents of a Service Account JSON Key
+        creds: $GCR_KEY
+        # Registry host name (must match dst image)
+        registry: eu.gcr.io
+        # Source image name
+        src: activity-plugin:$GITHUB_SHA
+        # Destination image name
+        dst: eu.gcr.io/awell-container-registry/activity-plugin:$GITHUB_SHA
