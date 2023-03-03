@@ -17,6 +17,6 @@ jobs:
         registry: eu.gcr.io
         project_id: awell-container-registry
         image_name: activity-plugins
-        image_tag: latest,${{GITHUB_SHA}}
+        image_tag: latest,$GITHUB_SHA
         dockerfile: ./Dockerfile
         context: ./
