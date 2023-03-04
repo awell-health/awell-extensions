@@ -13,6 +13,7 @@ export interface PluginAction<
   description?: string
   options?: Record<string, any>
   fields: Fields
+  previewable?: boolean
   onActivityCreated: (
     payload: NewActivityPayload<keyof Settings, keyof Fields>,
     done: () => Promise<void>

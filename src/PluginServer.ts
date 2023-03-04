@@ -74,7 +74,7 @@ export class PluginServer {
   }
 
   async registerPlugin(plugin: ActivityPlugin): Promise<void> {
-    this.log.debug(plugin, 'Registering plugin')
+    this.log.info({ key: plugin.key }, 'Registering plugin')
     await Promise.all(
       Object.values(plugin.actions).map(async (action) => {
         const subscription = await this.getSubscription(

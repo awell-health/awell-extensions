@@ -19,6 +19,7 @@ export const log: PluginAction<typeof fields, typeof settings> = {
   category: 'demo',
   title: 'Log hello world',
   fields,
+  previewable: true,
   onActivityCreated: async (payload, done): Promise<void> => {
     const { activity, fields, settings } = payload
     console.log('Hello world!', { activity, fields, settings })
