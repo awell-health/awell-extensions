@@ -1,5 +1,5 @@
 {
-  "name": "activity-plugins",
+  "name": "awell-action-extensions",
   "packageManager": "yarn@3.4.1",
   "scripts": {
     "dev": "PRETTY_LOGS=true LOG_LEVEL=debug ts-node-dev --clear --transpile-only ./src/index.ts",
@@ -9,7 +9,7 @@
     "lint": "eslint **/*.ts",
     "postinstall": "husky install",
     "test": "jest",
-    "test:publish-new-activity": "ts-node-dev --transpile-only ./src/publish-new-activity.ts"
+    "test:publish-new-action-extension": "ts-node-dev --transpile-only ./src/publish-new-action-extension.ts"
   },
   "devDependencies": {
     "@types/jest": "^29.4.0",

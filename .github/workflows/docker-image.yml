@@ -16,7 +16,7 @@ jobs:
         gcloud_service_key: ${{ secrets.GCR_KEY }}
         registry: eu.gcr.io
         project_id: awell-container-registry
-        image_name: custom-action-extensions
+        image_name: action-extensions
         image_tag: latest, ${{ github.sha }}
         dockerfile: ./Dockerfile
         context: ./
