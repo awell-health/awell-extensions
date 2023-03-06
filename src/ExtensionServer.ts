@@ -9,9 +9,9 @@ import {
 } from '@google-cloud/pubsub'
 import { environment } from '../lib/environment'
 import { type NewActivityPayload } from '../lib/types'
-import { type ActivityPlugin } from '../lib/types/ActivityPlugin'
+import { type CustomActionExtension } from '../lib/types/CustomActionExtension'
 
-export class PluginServer {
+export class ExtensionServer {
   log: FastifyBaseLogger
   pubSubClient: PubSub
   activityCreatedTopic: Topic
@@ -22,10 +22,10 @@ export class PluginServer {
     this.pubSubClient = new PubSub()
     this.log = log
     this.activityCreatedTopic = this.pubSubClient.topic(
-      environment.PLUGIN_ACTIVITY_CREATED_TOPIC
+      environment.EXTENSION_ACTIVITY_CREATED_TOPIC
     )
     this.activityCompletedTopic = this.pubSubClient.topic(
-      environment.PLUGIN_ACTIVITY_COMPLETED_TOPIC
+      environment.EXTENSION_ACTIVITY_COMPLETED_TOPIC
     )
   }
 
@@ -57,7 +57,7 @@ export class PluginServer {
   ): Promise<Subscription> {
     this.log.debug(
       { topic: (topic as Topic).name, name, options },
-      'Retrieving plugin action subscription'
+      'Retrieving custom actions extension subscription'
     )
     const subscription = this.pubSubClient.subscription(name)
     const [exists] = await subscription.exists()
@@ -73,19 +73,19 @@ export class PluginServer {
     return newSubscription
   }
 
-  async registerPlugin(plugin: ActivityPlugin): Promise<void> {
-    this.log.info({ key: plugin.key }, 'Registering plugin')
+  async registerExtension(extension: CustomActionExtension): Promise<void> {
+    this.log.info({ key: extension.key }, 'Registering extension')
     await Promise.all(
-      Object.values(plugin.actions).map(async (action) => {
+      Object.values(extension.actions).map(async (action) => {
         const subscription = await this.getSubscription(
           this.activityCreatedTopic,
-          `${plugin.key}-${action.key}`,
+          `${extension.key}-${action.key}`,
           {
-            filter: `attributes.plugin = "${plugin.key}" AND attributes.action = "${action.key}"`,
+            filter: `attributes.extension = "${extension.key}" AND attributes.action = "${action.key}"`,
             enableExactlyOnceDelivery: true,
           }
         )
-        this.log.debug(action, 'Configuring plugin action subscription')
+        this.log.debug(action, 'Configuring extension action subscription')
         const createCompleteActivityCallback = (
           payload: NewActivityPayload
         ) => {
@@ -94,7 +94,7 @@ export class PluginServer {
             await this.activityCompletedTopic.publishMessage({
               data,
               attributes: {
-                plugin: plugin.key,
+                extension: extension.key,
                 action: action.key,
               },
             })
@@ -103,11 +103,11 @@ export class PluginServer {
 
         const messageHandler = async (message: Message): Promise<void> => {
           const {
-            attributes: { plugin: pluginKey, action: actionKey },
+            attributes: { extension: extensionKey, action: actionKey },
           } = message
           // Extra check on attributes. This mainly serves local testing with the
           // pub sub emulator as it does not support filtering.
-          if (pluginKey === plugin.key && actionKey === action.key) {
+          if (extensionKey === extension.key && actionKey === action.key) {
             const payload: NewActivityPayload = JSON.parse(String(message.data))
             this.log.debug(payload, 'New activity payload received')
             void action.onActivityCreated(

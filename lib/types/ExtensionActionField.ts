@@ -1,4 +1,4 @@
-export enum PluginActionFieldType {
+export enum ExtensionActionFieldType {
   HTML = 'html',
   JSON = 'json',
   STRING = 'string',
@@ -21,39 +21,39 @@ export enum StringType {
 }
 
 type NumericField = BaseField & {
-  type: PluginActionFieldType.NUMERIC
+  type: ExtensionActionFieldType.NUMERIC
   value?: number
 }
 
 type StringField = BaseField & {
-  type: PluginActionFieldType.STRING
+  type: ExtensionActionFieldType.STRING
   value?: string
   stringType?: StringType
 }
 
 type HtmlField = BaseField & {
-  type: PluginActionFieldType.HTML
+  type: ExtensionActionFieldType.HTML
   value?: string
 }
 
 type JsonField = BaseField & {
-  type: PluginActionFieldType.JSON
+  type: ExtensionActionFieldType.JSON
   value?: string
 }
 
 type TextField = BaseField & {
-  type: PluginActionFieldType.TEXT
+  type: ExtensionActionFieldType.TEXT
   value?: string
 }
 
-export type PluginActionField =
+export type ExtensionActionField =
   | TextField
   | NumericField
   | StringField
   | HtmlField
   | JsonField
 
-export type PluginActionFieldValue = NonNullable<PluginActionField['value']>
+export type PluginActionFieldValue = NonNullable<ExtensionActionField['value']>
 
 type NumericFieldWithValue = NumericField &
   Required<Pick<NumericField, 'value'>>
@@ -62,7 +62,7 @@ type HtmlFieldWithValue = HtmlField & Required<Pick<HtmlField, 'value'>>
 type JsonFieldWithValue = JsonField & Required<Pick<JsonField, 'value'>>
 type TextFieldWithValue = TextField & Required<Pick<TextField, 'value'>>
 
-export type PluginActionFieldWithWithValue =
+export type ExtensionActionFieldWithWithValue =
   | NumericFieldWithValue
   | StringFieldWithValue
   | HtmlFieldWithValue
