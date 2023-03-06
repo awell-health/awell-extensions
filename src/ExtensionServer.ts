@@ -9,7 +9,7 @@ import {
 } from '@google-cloud/pubsub'
 import { environment } from '../lib/environment'
 import { type NewActivityPayload } from '../lib/types'
-import { type CustomActionExtension } from '../lib/types/CustomActionExtension'
+import { type ActionExtension } from '../lib/types/ActionExtension'
 
 export class ExtensionServer {
   log: FastifyBaseLogger
@@ -73,7 +73,7 @@ export class ExtensionServer {
     return newSubscription
   }
 
-  async registerExtension(extension: CustomActionExtension): Promise<void> {
+  async registerExtension(extension: ActionExtension): Promise<void> {
     this.log.info({ key: extension.key }, 'Registering extension')
     await Promise.all(
       Object.values(extension.actions).map(async (action) => {

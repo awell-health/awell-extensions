@@ -4,12 +4,12 @@ import { environment } from '../lib/environment'
 import {
   type ExtensionActionField,
   type ExtensionSetting,
-  type CustomActionExtension,
+  type ActionExtension,
   type ExtensionAction,
 } from '../lib/types'
 import { extensions } from '../extensions'
 
-type CustomActionExtensionConfig = Omit<CustomActionExtension, 'actions'> & {
+type ActionExtensionConfig = Omit<ActionExtension, 'actions'> & {
   actions: Record<
     string,
     Omit<
@@ -23,8 +23,8 @@ type CustomActionExtensionConfig = Omit<CustomActionExtension, 'actions'> & {
 }
 
 const getExtensionConfig = (
-  extension: CustomActionExtension
-): CustomActionExtensionConfig => {
+  extension: ActionExtension
+): ActionExtensionConfig => {
   return {
     ...extension,
     actions: mapValues(extension.actions, (extension) =>

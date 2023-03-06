@@ -2,7 +2,7 @@ import { type ExtensionAction } from './ExtensionAction'
 import { type ExtensionActionField } from './ExtensionActionField'
 import { type ExtensionSetting } from './ExtensionSetting'
 
-export interface CustomActionExtension {
+export interface ActionExtension {
   key: string
   title: string
   category: string

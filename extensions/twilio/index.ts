@@ -1,8 +1,8 @@
-import { type CustomActionExtension } from '../../lib/types'
+import { type ActionExtension } from '../../lib/types'
 import { smsNotification } from './actions'
 import { settings } from './settings'
 
-export const Twilio: CustomActionExtension = {
+export const Twilio: ActionExtension = {
   key: 'twilio',
   title: 'Twilio',
   category: 'Notifications',

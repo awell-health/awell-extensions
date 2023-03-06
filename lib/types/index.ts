@@ -1,4 +1,4 @@
-export * from './CustomActionExtension'
+export * from './ActionExtension'
 export * from './NewActivityPayload'
 export * from './ExtensionAction'
 export * from './ExtensionActionField'

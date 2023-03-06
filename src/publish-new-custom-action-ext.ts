@@ -17,7 +17,7 @@ const payload: NewActivityPayload = {
 const extensionKey = 'hello-world'
 const actionKey = 'log'
 
-const publishNewCustomActionExtension = async (): Promise<void> => {
+const publishNewActionExtension = async (): Promise<void> => {
   const pubSubClient = new PubSub()
 
   const activityCreatedTopic = pubSubClient.topic(
@@ -33,4 +33,4 @@ const publishNewCustomActionExtension = async (): Promise<void> => {
   })
 }
 
-void publishNewCustomActionExtension()
+void publishNewActionExtension()
