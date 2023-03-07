@@ -87,7 +87,8 @@ export class ExtensionServer {
         )
         this.log.debug(action, 'Configuring extension action subscription')
         const createCompleteActivityCallback = (
-          payload: NewActivityPayload
+          payload: NewActivityPayload,
+          domain: string
         ) => {
           return async () => {
             const data = Buffer.from(JSON.stringify(payload))
@@ -96,6 +97,7 @@ export class ExtensionServer {
               attributes: {
                 extension: extension.key,
                 action: action.key,
+                domain
               },
             })
           }
@@ -103,7 +105,7 @@ export class ExtensionServer {
 
         const messageHandler = async (message: Message): Promise<void> => {
           const {
-            attributes: { extension: extensionKey, action: actionKey },
+            attributes: { extension: extensionKey, action: actionKey, domain },
           } = message
           // Extra check on attributes. This mainly serves local testing with the
           // pub sub emulator as it does not support filtering.
@@ -112,7 +114,7 @@ export class ExtensionServer {
             this.log.debug(payload, 'New activity payload received')
             void action.onActivityCreated(
               payload,
-              createCompleteActivityCallback(payload)
+              createCompleteActivityCallback(payload, domain)
             )
           }
           await message.ackWithResponse()
