@@ -1,8 +1,8 @@
 import twilioSdk from '../twilioSdk'
 import {
-  ExtensionActionFieldType,
-  type ExtensionAction,
-  type ExtensionActionField,
+  FieldType,
+  type Action,
+  type Field,
 } from '../../../lib/types'
 import { type settings } from '../settings'
 
@@ -10,16 +10,16 @@ const fields = {
   recipient: {
     id: 'recipient',
     label: 'Recipient',
-    type: ExtensionActionFieldType.STRING,
+    type: FieldType.STRING,
   },
   message: {
     id: 'message',
     label: 'Message',
-    type: ExtensionActionFieldType.TEXT,
+    type: FieldType.TEXT,
   },
-} satisfies Record<string, ExtensionActionField>
+} satisfies Record<string, Field>
 
-export const smsNotification: ExtensionAction<typeof fields, typeof settings> = {
+export const smsNotification: Action<typeof fields, typeof settings> = {
   key: 'smsNotification',
   title: 'SMS via Twilio',
   category: 'Notifications',

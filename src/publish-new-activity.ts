@@ -12,7 +12,6 @@ const payload: NewActivityPayload = {
   settings: {
     secret: 'An extension secret',
   },
-  token: '',
 }
 const extensionKey = 'hello-world'
 const actionKey = 'log'

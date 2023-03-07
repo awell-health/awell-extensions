@@ -8,12 +8,10 @@ export type OnActivityCreatedHandler<
     activity,
     settings,
     fields,
-    token,
   }: {
     activity: NewActivityPayload['activity']
     settings: Settings
     fields: Fields
-    token?: string
   },
   done: () => Promise<void>
 ) => Promise<void>

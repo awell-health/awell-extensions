@@ -12,7 +12,6 @@ describe('HelloWorld - log', () => {
         settings: {
           secret: 'secret-value',
         },
-        token: 'token',
       },
       done
     )
@@ -29,7 +28,6 @@ describe('HelloWorld - log', () => {
         settings: {
           secret: 'secret-value',
         },
-        token: 'token',
       },
       done
     )
@@ -46,7 +44,6 @@ describe('HelloWorld - log', () => {
         settings: {
           secret: undefined,
         },
-        token: 'token',
       },
       done
     )

@@ -2,20 +2,20 @@ import Fastify from 'fastify'
 import { mapValues, omit } from 'lodash'
 import { environment } from '../lib/environment'
 import {
-  type ExtensionActionField,
-  type ExtensionSetting,
-  type ActionExtension,
-  type ExtensionAction,
+  type Field,
+  type Setting,
+  type Extension,
+  type Action,
 } from '../lib/types'
 import { extensions } from '../extensions'
 
-type ActionExtensionConfig = Omit<ActionExtension, 'actions'> & {
+type ExtensionWebConfig = Omit<Extension, 'actions'> & {
   actions: Record<
     string,
     Omit<
-      ExtensionAction<
-        Record<string, ExtensionActionField>,
-        Record<string, ExtensionSetting>
+      Action<
+        Record<string, Field>,
+        Record<string, Setting>
       >,
       'onActivityCreated'
     >
@@ -23,8 +23,8 @@ type ActionExtensionConfig = Omit<ActionExtension, 'actions'> & {
 }
 
 const getExtensionConfig = (
-  extension: ActionExtension
-): ActionExtensionConfig => {
+  extension: Extension
+): ExtensionWebConfig => {
   return {
     ...extension,
     actions: mapValues(extension.actions, (extension) =>

@@ -1,10 +1,10 @@
 import { type NewActivityPayload } from './NewActivityPayload'
-import { type ExtensionActionField } from './ExtensionActionField'
-import { type ExtensionSetting } from './ExtensionSetting'
+import { type Field } from './Field'
+import { type Setting } from './Setting'
 
-export interface ExtensionAction<
-  Fields extends Record<string, ExtensionActionField>,
-  Settings extends Record<string, ExtensionSetting>
+export interface Action<
+  Fields extends Record<string, Field>,
+  Settings extends Record<string, Setting>
 > {
   key: string
   title: string

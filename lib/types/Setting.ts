@@ -1,4 +1,4 @@
-export interface ExtensionSetting {
+export interface Setting {
   label: string
   key: string
   obfuscated: boolean

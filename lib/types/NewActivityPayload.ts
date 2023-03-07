@@ -6,6 +6,5 @@ export interface NewActivityPayload<
     id: string
   }
   fields: Record<FieldsKeys, string | undefined>
-  token: string
   settings: Record<SettingsKeys, string | undefined>
 }

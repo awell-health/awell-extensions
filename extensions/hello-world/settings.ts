@@ -1,10 +1,10 @@
-import { type ExtensionSetting } from '../../lib/types'
+import { type Setting } from '../../lib/types'
 
 export const settings = {
   secret: {
     key: 'secret',
     label: 'Secret',
     obfuscated: true,
-    description: 'A secret value needed by the plugin like an API key.',
+    description: 'A secret value needed by the extension like an API key.',
   },
-} satisfies Record<string, ExtensionSetting>
+} satisfies Record<string, Setting>
