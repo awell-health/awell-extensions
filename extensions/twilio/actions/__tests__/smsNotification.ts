@@ -22,7 +22,6 @@ describe('Simple sms notification action', () => {
           authToken: 'authToken',
           fromNumber: 'fromNumber',
         },
-        token: 'secret',
       },
       done
     )

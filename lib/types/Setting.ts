@@ -1,4 +1,4 @@
-export interface PluginSetting {
+export interface Setting {
   label: string
   key: string
   obfuscated: boolean

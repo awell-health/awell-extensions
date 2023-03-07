@@ -1,9 +1,7 @@
-name: Docker Image CI
+name: Build and push docker image
 
 on:
   push:
-    branches: [ "main" ]
-  pull_request:
     branches: [ "main" ]
 
 jobs:
@@ -16,7 +14,7 @@ jobs:
         gcloud_service_key: ${{ secrets.GCR_KEY }}
         registry: eu.gcr.io
         project_id: awell-container-registry
-        image_name: activity-plugins
+        image_name: action-extensions
         image_tag: latest, ${{ github.sha }}
         dockerfile: ./Dockerfile
         context: ./

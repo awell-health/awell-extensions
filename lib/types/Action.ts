@@ -1,10 +1,10 @@
 import { type NewActivityPayload } from './NewActivityPayload'
-import { type PluginActionField } from './PluginActionField'
-import { type PluginSetting } from './PluginSetting'
+import { type Field } from './Field'
+import { type Setting } from './Setting'
 
-export interface PluginAction<
-  Fields extends Record<string, PluginActionField>,
-  Settings extends Record<string, PluginSetting>
+export interface Action<
+  Fields extends Record<string, Field>,
+  Settings extends Record<string, Setting>
 > {
   key: string
   title: string
