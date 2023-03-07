@@ -9,7 +9,7 @@
   },
   "include": [
     "lib/**/*.ts",
-    "plugins/**/*.ts",
+    "extensions/**/*.ts",
     "src/**/*.ts"
   ]
 }

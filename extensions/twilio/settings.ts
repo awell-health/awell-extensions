@@ -1,4 +1,4 @@
-import { type PluginSetting } from '../../lib/types'
+import { type Setting } from '../../lib/types'
 
 export const settings = {
   accountSid: {
@@ -22,4 +22,4 @@ export const settings = {
     required: true,
     description: '',
   },
-} satisfies Record<string, PluginSetting>
+} satisfies Record<string, Setting>

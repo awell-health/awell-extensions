@@ -2,31 +2,33 @@ import Fastify from 'fastify'
 import { mapValues, omit } from 'lodash'
 import { environment } from '../lib/environment'
 import {
-  type PluginActionField,
-  type PluginSetting,
-  type ActivityPlugin,
-  type PluginAction,
+  type Field,
+  type Setting,
+  type Extension,
+  type Action,
 } from '../lib/types'
-import { plugins } from '../plugins'
+import { extensions } from '../extensions'
 
-type ActivityPluginConfig = Omit<ActivityPlugin, 'actions'> & {
+type ExtensionWebConfig = Omit<Extension, 'actions'> & {
   actions: Record<
     string,
     Omit<
-      PluginAction<
-        Record<string, PluginActionField>,
-        Record<string, PluginSetting>
+      Action<
+        Record<string, Field>,
+        Record<string, Setting>
       >,
       'onActivityCreated'
     >
   >
 }
 
-const getPluginConfig = (plugin: ActivityPlugin): ActivityPluginConfig => {
+const getExtensionConfig = (
+  extension: Extension
+): ExtensionWebConfig => {
   return {
-    ...plugin,
-    actions: mapValues(plugin.actions, (action) =>
-      omit(action, 'onActivityCreated')
+    ...extension,
+    actions: mapValues(extension.actions, (extension) =>
+      omit(extension, 'onActivityCreated')
     ),
   }
 }
@@ -46,17 +48,19 @@ const webServer = Fastify({
 })
 
 webServer.get('/', async (request, reply) => {
-  const allPlugins = plugins.map((plugin) => getPluginConfig(plugin))
-  await reply.send(allPlugins)
+  const allExtensions = extensions.map((extension) =>
+    getExtensionConfig(extension)
+  )
+  await reply.send(allExtensions)
 })
 
-webServer.get('/:pluginKey', async (request, reply) => {
-  const { pluginKey } = request.params as { pluginKey: string }
-  const plugin = plugins.find(({ key }) => key === pluginKey)
-  if (plugin === undefined) {
+webServer.get('/:extensionKey', async (request, reply) => {
+  const { extensionKey } = request.params as { extensionKey: string }
+  const extension = extensions.find(({ key }) => key === extensionKey)
+  if (extension === undefined) {
     await reply.status(404)
   } else {
-    await reply.send(getPluginConfig(plugin))
+    await reply.send(getExtensionConfig(extension))
   }
 })
 

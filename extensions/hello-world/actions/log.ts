@@ -1,7 +1,7 @@
 import {
-  type PluginActionField,
-  PluginActionFieldType,
-  type PluginAction,
+  type Field,
+  FieldType,
+  type Action,
 } from '../../../lib/types'
 import { type settings } from '../settings'
 
@@ -10,11 +10,11 @@ const fields = {
     id: 'text',
     label: 'Message',
     description: 'A text field configured at design time',
-    type: PluginActionFieldType.TEXT,
+    type: FieldType.TEXT,
   },
-} satisfies Record<string, PluginActionField>
+} satisfies Record<string, Field>
 
-export const log: PluginAction<typeof fields, typeof settings> = {
+export const log: Action<typeof fields, typeof settings> = {
   key: 'log',
   category: 'demo',
   title: 'Log hello world',

@@ -1,6 +1,6 @@
 import { createLightship } from 'lightship'
-import { PluginServer } from './PluginServer'
-import { plugins } from '../plugins'
+import { ExtensionServer } from './ExtensionServer'
+import { extensions } from '../extensions'
 import { webServer } from './WebServer'
 import { environment } from '../lib/environment'
 
@@ -8,25 +8,25 @@ const start = async (): Promise<void> => {
   const lightship = await createLightship()
   try {
     await webServer.listen({ port: environment.PORT, host: '::' })
-    const pluginServer = new PluginServer({
+    const extensionServer = new ExtensionServer({
       log: webServer.log,
     })
-    webServer.log.info('Initialising plugin server')
-    await pluginServer.init()
-    await plugins.reduce(async (register, plugin) => {
+    webServer.log.info('Initialising extension server')
+    await extensionServer.init()
+    await extensions.reduce(async (register, extension) => {
       await register
-      await pluginServer.registerPlugin(plugin)
+      await extensionServer.registerExtension(extension)
     }, Promise.resolve())
-    webServer.log.info('Plugin registration completed successfully')
+    webServer.log.info('Extension registration completed successfully')
     lightship.signalReady()
     lightship.registerShutdownHandler(async () => {
-      webServer.log.info('Shutting down plugin server')
-      await pluginServer.shutDown()
+      webServer.log.info('Shutting down extension server')
+      await extensionServer.shutDown()
       webServer.log.info('Shutting down web server')
       await webServer.close()
     })
   } catch (err) {
-    webServer.log.fatal(err, 'Plugin server failed to start')
+    webServer.log.fatal(err, 'Extension server failed to start')
     process.exit(-1)
   }
 }

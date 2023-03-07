@@ -16,7 +16,7 @@ COPY .yarn /app/.yarn
 RUN yarn
 
 COPY lib /app/lib
-COPY plugins /app/plugins
+COPY extensions /app/extensions
 COPY src /app/src
 
 RUN yarn build

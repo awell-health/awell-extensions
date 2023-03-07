@@ -1,8 +1,8 @@
 import twilioSdk from '../twilioSdk'
 import {
-  PluginActionFieldType,
-  type PluginAction,
-  type PluginActionField,
+  FieldType,
+  type Action,
+  type Field,
 } from '../../../lib/types'
 import { type settings } from '../settings'
 
@@ -10,16 +10,16 @@ const fields = {
   recipient: {
     id: 'recipient',
     label: 'Recipient',
-    type: PluginActionFieldType.STRING,
+    type: FieldType.STRING,
   },
   message: {
     id: 'message',
     label: 'Message',
-    type: PluginActionFieldType.TEXT,
+    type: FieldType.TEXT,
   },
-} satisfies Record<string, PluginActionField>
+} satisfies Record<string, Field>
 
-export const smsNotification: PluginAction<typeof fields, typeof settings> = {
+export const smsNotification: Action<typeof fields, typeof settings> = {
   key: 'smsNotification',
   title: 'SMS via Twilio',
   category: 'Notifications',
@@ -43,7 +43,7 @@ export const smsNotification: PluginAction<typeof fields, typeof settings> = {
           to: recipient,
         })
       } catch (err) {
-        console.error('Error in twilio plugin', err)
+        console.error('Error in twilio extension', err)
       }
     }
     await done()
