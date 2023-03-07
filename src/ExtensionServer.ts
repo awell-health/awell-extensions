@@ -57,7 +57,7 @@ export class ExtensionServer {
   ): Promise<Subscription> {
     this.log.debug(
       { topic: (topic as Topic).name, name, options },
-      'Retrieving custom actions extension subscription'
+      'Retrieving extension subscription'
     )
     const subscription = this.pubSubClient.subscription(name)
     const [exists] = await subscription.exists()

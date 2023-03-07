@@ -1,5 +1,5 @@
 {
-  "name": "@awell/action-extensions",
+  "name": "@awell-extensions/custom-actions",
   "packageManager": "yarn@3.4.1",
   "scripts": {
     "dev": "PRETTY_LOGS=true LOG_LEVEL=debug ts-node-dev --clear --transpile-only ./src/index.ts",

@@ -1,3 +1,3 @@
-# Custom Action Extensions
+# Custom Actions
 
-You can find all the documentation [here](https://developers.awellhealth.com/awell-extensions/docs/actions/introduction/what-are-action-extensions).
+You can find all documentation [here](https://developers.awellhealth.com/awell-extensions/docs/getting-started/what-are-awell-extensions).
