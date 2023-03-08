@@ -41,7 +41,7 @@ __metadata:
     rimraf: ^4.1.2
     ts-jest: ^29.0.5
     ts-node-dev: ^2.0.0
-    twilio: ^4.7.2
+    twilio: ^4.8.0
     typescript: 4.9.5
   languageName: unknown
   linkType: soft
@@ -7097,9 +7097,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"twilio@npm:^4.7.2":
-  version: 4.7.2
-  resolution: "twilio@npm:4.7.2"
+"twilio@npm:^4.8.0":
+  version: 4.8.0
+  resolution: "twilio@npm:4.8.0"
   dependencies:
     axios: ^0.26.1
     dayjs: ^1.8.29
@@ -7109,7 +7109,7 @@ __metadata:
     scmp: ^2.1.0
     url-parse: ^1.5.9
     xmlbuilder: ^13.0.2
-  checksum: 750f99d8366130c132717d578c3f3bb500e106ab0a181c6f0dba09d99bb189683edfe7d49b759d2e1d4cb5bbb8acc282812788f6454268fbdda0bbef89a101bb
+  checksum: 9850ae1a34a9c03be516a151c1030e0d0248c19ef55342e779f648b7244034b9afe0fba8abce69f17523c62e27a9a92c6e44f846aafb1fa9cf78c0fcc9fe271b
   languageName: node
   linkType: hard
 

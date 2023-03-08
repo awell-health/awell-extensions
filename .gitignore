@@ -12,3 +12,5 @@
 
 # Compiled typescript
 dist/*
+
+.DS_Store
