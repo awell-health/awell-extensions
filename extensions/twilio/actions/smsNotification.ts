@@ -1,9 +1,5 @@
 import twilioSdk from '../twilioSdk'
-import {
-  FieldType,
-  type Action,
-  type Field,
-} from '../../../lib/types'
+import { FieldType, type Action, type Field } from '../../../lib/types'
 import { type settings } from '../settings'
 
 const fields = {
@@ -11,11 +7,13 @@ const fields = {
     id: 'recipient',
     label: 'Recipient',
     type: FieldType.STRING,
+    required: true,
   },
   message: {
     id: 'message',
     label: 'Message',
     type: FieldType.TEXT,
+    required: true,
   },
 } satisfies Record<string, Field>
 

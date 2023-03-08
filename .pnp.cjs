@@ -50,7 +50,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["rimraf", "npm:4.1.2"],\
             ["ts-jest", "virtual:9fc52fb708650d8aee495e014ea163d6e7a250b0c7643c2f43a2b3af0f401a37b67526aacd23b886d536ea3e838e18ac504a491304a3cbae2efa13c3c996ebec#npm:29.0.5"],\
             ["ts-node-dev", "virtual:9fc52fb708650d8aee495e014ea163d6e7a250b0c7643c2f43a2b3af0f401a37b67526aacd23b886d536ea3e838e18ac504a491304a3cbae2efa13c3c996ebec#npm:2.0.0"],\
-            ["twilio", "npm:4.7.2"],\
+            ["twilio", "npm:4.8.0"],\
             ["typescript", "patch:typescript@npm%3A4.9.5#~builtin<compat/typescript>::version=4.9.5&hash=23ec76"]\
           ],\
           "linkType": "SOFT"\
@@ -94,7 +94,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["rimraf", "npm:4.1.2"],\
             ["ts-jest", "virtual:9fc52fb708650d8aee495e014ea163d6e7a250b0c7643c2f43a2b3af0f401a37b67526aacd23b886d536ea3e838e18ac504a491304a3cbae2efa13c3c996ebec#npm:29.0.5"],\
             ["ts-node-dev", "virtual:9fc52fb708650d8aee495e014ea163d6e7a250b0c7643c2f43a2b3af0f401a37b67526aacd23b886d536ea3e838e18ac504a491304a3cbae2efa13c3c996ebec#npm:2.0.0"],\
-            ["twilio", "npm:4.7.2"],\
+            ["twilio", "npm:4.8.0"],\
             ["typescript", "patch:typescript@npm%3A4.9.5#~builtin<compat/typescript>::version=4.9.5&hash=23ec76"]\
           ],\
           "linkType": "SOFT"\
@@ -8765,10 +8765,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["twilio", [\
-        ["npm:4.7.2", {\
-          "packageLocation": "./.yarn/cache/twilio-npm-4.7.2-c91637fb95-750f99d836.zip/node_modules/twilio/",\
+        ["npm:4.8.0", {\
+          "packageLocation": "./.yarn/cache/twilio-npm-4.8.0-8d81f06f8a-9850ae1a34.zip/node_modules/twilio/",\
           "packageDependencies": [\
-            ["twilio", "npm:4.7.2"],\
+            ["twilio", "npm:4.8.0"],\
             ["axios", "npm:0.26.1"],\
             ["dayjs", "npm:1.11.7"],\
             ["https-proxy-agent", "npm:5.0.1"],\
