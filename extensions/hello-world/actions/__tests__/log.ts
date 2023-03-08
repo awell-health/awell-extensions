@@ -6,6 +6,7 @@ describe('HelloWorld - log', () => {
     await log.onActivityCreated(
       {
         activity: { id: 'test-activity' },
+        patient: { id: 'test-patient' },
         fields: {
           text: 'Some text',
         },
@@ -22,6 +23,7 @@ describe('HelloWorld - log', () => {
     await log.onActivityCreated(
       {
         activity: { id: 'test-activity' },
+        patient: { id: 'test-patient' },
         fields: {
           text: undefined,
         },
@@ -38,6 +40,7 @@ describe('HelloWorld - log', () => {
     await log.onActivityCreated(
       {
         activity: { id: 'test-activity' },
+        patient: { id: 'test-patient' },
         fields: {
           text: 'Some text',
         },

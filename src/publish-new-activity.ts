@@ -6,6 +6,9 @@ const payload: NewActivityPayload = {
   activity: {
     id: 'e2e-test-activity',
   },
+  patient: {
+    id: 'e2e-test-patient',
+  },
   fields: {
     text: 'A simple text message',
   },

@@ -13,6 +13,7 @@ describe('Simple sms notification action', () => {
         activity: {
           id: 'activity-id',
         },
+        patient: { id: 'test-patient' },
         fields: {
           message: 'Message content',
           recipient: '+32494000000',
