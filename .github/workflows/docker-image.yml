@@ -15,6 +15,6 @@ jobs:
         registry: eu.gcr.io
         project_id: awell-container-registry
         image_name: action-extensions
-        image_tag: latest, ${{ github.sha }}
+        image_tag: ${{ github.sha }}, latest
         dockerfile: ./Dockerfile
         context: ./
