@@ -1,8 +1,8 @@
 export interface ActivityEvent {
-  text: string
+  text: Record<string, string>
   date: string
   error?: {
-    category: 'BAD_REQUEST' | 'UNKNOWN_SERVER_ERROR'
+    category: string
     message: string
   }
 }
