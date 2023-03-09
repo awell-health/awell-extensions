@@ -1,8 +1,4 @@
-import {
-  type Field,
-  FieldType,
-  type Action,
-} from '../../../lib/types'
+import { type Field, FieldType, type Action } from '../../../lib/types'
 import { type settings } from '../settings'
 
 const fields = {
@@ -20,9 +16,9 @@ export const log: Action<typeof fields, typeof settings> = {
   title: 'Log hello world',
   fields,
   previewable: true,
-  onActivityCreated: async (payload, done): Promise<void> => {
+  onActivityCreated: async (payload, onComplete): Promise<void> => {
     const { activity, fields, settings } = payload
     console.log('Hello world!', { activity, fields, settings })
-    await done()
+    await onComplete()
   },
 }
