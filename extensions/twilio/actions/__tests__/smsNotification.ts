@@ -1,13 +1,13 @@
 import { smsNotification } from '../'
 
 describe('Simple sms notification action', () => {
-  const done = jest.fn()
+  const onComplete = jest.fn()
 
   beforeEach(() => {
-    done.mockClear()
+    onComplete.mockClear()
   })
 
-  test('Should call the done callback', async () => {
+  test('Should call the onComplete callback', async () => {
     await smsNotification.onActivityCreated(
       {
         activity: {
@@ -24,8 +24,8 @@ describe('Simple sms notification action', () => {
           fromNumber: 'fromNumber',
         },
       },
-      done
+      onComplete
     )
-    expect(done).toHaveBeenCalled()
+    expect(onComplete).toHaveBeenCalled()
   })
 })

@@ -22,7 +22,7 @@ export const smsNotification: Action<typeof fields, typeof settings> = {
   title: 'SMS via Twilio',
   category: 'Notifications',
   fields,
-  onActivityCreated: async (payload, done) => {
+  onActivityCreated: async (payload, onComplete) => {
     const {
       fields: { message, recipient },
       settings,
@@ -44,6 +44,6 @@ export const smsNotification: Action<typeof fields, typeof settings> = {
         console.error('Error in twilio extension', err)
       }
     }
-    await done()
+    await onComplete()
   },
 }
