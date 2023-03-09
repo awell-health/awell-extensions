@@ -8,7 +8,11 @@ import {
   type CreateSubscriptionOptions,
 } from '@google-cloud/pubsub'
 import { environment } from '../lib/environment'
-import { type NewActivityPayload } from '../lib/types'
+import {
+  type OnCompleteCallback,
+  type OnErrorCallback,
+  type NewActivityPayload,
+} from '../lib/types'
 import { type Extension } from '../lib/types/Extension'
 
 export class ExtensionServer {
@@ -86,18 +90,46 @@ export class ExtensionServer {
           }
         )
         this.log.debug(action, 'Configuring extension action subscription')
-        const createCompleteActivityCallback = (
+        const createOnCompleteCallback = (
           payload: NewActivityPayload,
           domain: string
-        ) => {
-          return async () => {
-            const data = Buffer.from(JSON.stringify(payload))
+        ): OnCompleteCallback => {
+          return async (params) => {
+            const data = Buffer.from(
+              JSON.stringify({
+                activity: payload.activity,
+                resolution: 'success',
+                ...params,
+              })
+            )
             await this.activityCompletedTopic.publishMessage({
               data,
               attributes: {
                 extension: extension.key,
                 action: action.key,
-                domain
+                domain,
+              },
+            })
+          }
+        }
+        const createOnErrorCallback = (
+          payload: NewActivityPayload,
+          domain: string
+        ): OnErrorCallback => {
+          return async (params) => {
+            const data = Buffer.from(
+              JSON.stringify({
+                activity: payload.activity,
+                resolution: 'failure',
+                ...params,
+              })
+            )
+            await this.activityCompletedTopic.publishMessage({
+              data,
+              attributes: {
+                extension: extension.key,
+                action: action.key,
+                domain,
               },
             })
           }
@@ -114,7 +146,8 @@ export class ExtensionServer {
             this.log.debug(payload, 'New activity payload received')
             void action.onActivityCreated(
               payload,
-              createCompleteActivityCallback(payload, domain)
+              createOnCompleteCallback(payload, domain),
+              createOnErrorCallback(payload, domain)
             )
           }
           await message.ackWithResponse()
