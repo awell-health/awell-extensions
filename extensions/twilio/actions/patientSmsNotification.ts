@@ -17,7 +17,7 @@ export const patientSmsNotification: Action<typeof fields, typeof settings> = {
   category: 'Notifications',
   description: 'Send SMS message to your care flow patient.',
   fields,
-  onActivityCreated: async (payload, done) => {
+  onActivityCreated: async (payload, onComplete) => {
     const {
       patient,
       fields: { message },
@@ -40,6 +40,6 @@ export const patientSmsNotification: Action<typeof fields, typeof settings> = {
         console.error('Error in twilio extension', err)
       }
     }
-    await done()
+    await onComplete()
   },
 }
