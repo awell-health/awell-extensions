@@ -1,6 +1,8 @@
 import { type NewActivityPayload } from './NewActivityPayload'
 import { type Field } from './Field'
 import { type Setting } from './Setting'
+import { type OnCompleteCallback } from './OnCompleteCallback'
+import { type OnErrorCallback } from './OnErrorCallback'
 
 export interface Action<
   Fields extends Record<string, Field>,
@@ -16,6 +18,7 @@ export interface Action<
   previewable?: boolean
   onActivityCreated: (
     payload: NewActivityPayload<keyof Settings, keyof Fields>,
-    done: () => Promise<void>
+    onComplete: OnCompleteCallback,
+    onError?: OnErrorCallback
   ) => Promise<void>
 }
