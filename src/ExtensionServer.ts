@@ -94,7 +94,7 @@ export class ExtensionServer {
           payload: NewActivityPayload,
           domain: string
         ): OnCompleteCallback => {
-          return async (params) => {
+          return async (params = {}) => {
             const data = Buffer.from(
               JSON.stringify({
                 activity: payload.activity,
@@ -116,7 +116,7 @@ export class ExtensionServer {
           payload: NewActivityPayload,
           domain: string
         ): OnErrorCallback => {
-          return async (params) => {
+          return async (params = {}) => {
             const data = Buffer.from(
               JSON.stringify({
                 activity: payload.activity,
