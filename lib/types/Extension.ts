@@ -8,6 +8,7 @@ export interface Extension {
   category: string
   description?: string
   settings: Record<string, Setting>
+  icon_url?: string
   actions: Record<
     string,
     Action<

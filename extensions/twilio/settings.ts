@@ -6,20 +6,21 @@ export const settings = {
     key: 'accountSid',
     obfuscated: true,
     required: true,
-    description: '',
+    description: 'Find your Account SID twilio.com/console',
   },
   authToken: {
     label: 'Auth token',
     key: 'authToken',
     obfuscated: true,
     required: true,
-    description: '',
+    description: 'Find your Auth Token at twilio.com/console',
   },
   fromNumber: {
-    label: 'From number',
+    label: '"From" number',
     key: 'fromNumber',
     obfuscated: false,
     required: true,
-    description: '',
+    description:
+      'From specified the Twilio phone number, short code, or messaging Service that will send the text messages. This must be a Twilio phone number that you own.',
   },
 } satisfies Record<string, Setting>
