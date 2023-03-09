@@ -6,7 +6,7 @@ export const settings = {
     key: 'accountSid',
     obfuscated: true,
     required: true,
-    description: 'Find your Account SID twilio.com/console',
+    description: 'Find your Account SID at twilio.com/console',
   },
   authToken: {
     label: 'Auth token',
