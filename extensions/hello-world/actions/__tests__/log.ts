@@ -1,8 +1,8 @@
 import { log } from '../'
 
 describe('HelloWorld - log', () => {
-  test('Should call done', async () => {
-    const done = jest.fn()
+  test('Should call onComplete', async () => {
+    const onComplete = jest.fn()
     await log.onActivityCreated(
       {
         activity: { id: 'test-activity' },
@@ -14,12 +14,12 @@ describe('HelloWorld - log', () => {
           secret: 'secret-value',
         },
       },
-      done
+      onComplete
     )
-    expect(done).toHaveBeenCalled()
+    expect(onComplete).toHaveBeenCalled()
   })
-  test('Should call done if fields are undefined', async () => {
-    const done = jest.fn()
+  test('Should call onComplete if fields are undefined', async () => {
+    const onComplete = jest.fn()
     await log.onActivityCreated(
       {
         activity: { id: 'test-activity' },
@@ -31,12 +31,12 @@ describe('HelloWorld - log', () => {
           secret: 'secret-value',
         },
       },
-      done
+      onComplete
     )
-    expect(done).toHaveBeenCalled()
+    expect(onComplete).toHaveBeenCalled()
   })
-  test('Should call done if settings are undefined', async () => {
-    const done = jest.fn()
+  test('Should call onComplete if settings are undefined', async () => {
+    const onComplete = jest.fn()
     await log.onActivityCreated(
       {
         activity: { id: 'test-activity' },
@@ -48,8 +48,8 @@ describe('HelloWorld - log', () => {
           secret: undefined,
         },
       },
-      done
+      onComplete
     )
-    expect(done).toHaveBeenCalled()
+    expect(onComplete).toHaveBeenCalled()
   })
 })
