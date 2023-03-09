@@ -12,7 +12,7 @@ const fields = {
 } satisfies Record<string, Field>
 
 export const patientSmsNotification: Action<typeof fields, typeof settings> = {
-  key: 'smsNotification',
+  key: 'patientSmsNotification',
   title: 'Send SMS to Patient via Twilio',
   category: 'Notifications',
   description: 'Send SMS message to your care flow patient.',
