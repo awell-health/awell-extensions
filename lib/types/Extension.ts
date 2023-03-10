@@ -1,6 +1,7 @@
 import { type Action } from './Action'
 import { type Field } from './Field'
 import { type Setting } from './Setting'
+import { type Webhook } from './Webhook'
 
 export interface Extension {
   key: string
@@ -11,9 +12,7 @@ export interface Extension {
   icon_url?: string
   actions: Record<
     string,
-    Action<
-      Record<string, Field>,
-      Record<string, Setting>
-    >
+    Action<Record<string, Field>, Record<string, Setting>>
   >
+  webhooks?: Array<Webhook<string, any>>
 }
