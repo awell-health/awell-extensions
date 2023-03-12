@@ -29,6 +29,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./",\
           "packageDependencies": [\
             ["@google-cloud/pubsub", "npm:3.3.0"],\
+            ["@graphql-typed-document-node/core", "virtual:9fc52fb708650d8aee495e014ea163d6e7a250b0c7643c2f43a2b3af0f401a37b67526aacd23b886d536ea3e838e18ac504a491304a3cbae2efa13c3c996ebec#npm:3.1.2"],\
             ["@types/jest", "npm:29.4.0"],\
             ["@types/lodash", "npm:4.14.191"],\
             ["@types/node", "npm:18.13.0"],\
@@ -75,6 +76,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["@awell/action-extensions", "workspace:."],\
             ["@google-cloud/pubsub", "npm:3.3.0"],\
+            ["@graphql-typed-document-node/core", "virtual:9fc52fb708650d8aee495e014ea163d6e7a250b0c7643c2f43a2b3af0f401a37b67526aacd23b886d536ea3e838e18ac504a491304a3cbae2efa13c3c996ebec#npm:3.1.2"],\
             ["@types/jest", "npm:29.4.0"],\
             ["@types/lodash", "npm:4.14.191"],\
             ["@types/node", "npm:18.13.0"],\
@@ -1023,10 +1025,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:9da08b7b8c82acce8f05e54bfaf0aca33c5f63f8c1575dc094c8ef34229f696ea06362ed689380542685c24d37aa27570fc87f2e3724a0e9dd599b8f3d6b684e#npm:3.1.2", {\
-          "packageLocation": "./.yarn/__virtual__/@graphql-typed-document-node-core-virtual-3716fd1dcc/0/cache/@graphql-typed-document-node-core-npm-3.1.2-20941d8c94-a61afa025a.zip/node_modules/@graphql-typed-document-node/core/",\
+        ["virtual:9fc52fb708650d8aee495e014ea163d6e7a250b0c7643c2f43a2b3af0f401a37b67526aacd23b886d536ea3e838e18ac504a491304a3cbae2efa13c3c996ebec#npm:3.1.2", {\
+          "packageLocation": "./.yarn/__virtual__/@graphql-typed-document-node-core-virtual-4d46752aa4/0/cache/@graphql-typed-document-node-core-npm-3.1.2-20941d8c94-a61afa025a.zip/node_modules/@graphql-typed-document-node/core/",\
           "packageDependencies": [\
-            ["@graphql-typed-document-node/core", "virtual:9da08b7b8c82acce8f05e54bfaf0aca33c5f63f8c1575dc094c8ef34229f696ea06362ed689380542685c24d37aa27570fc87f2e3724a0e9dd599b8f3d6b684e#npm:3.1.2"],\
+            ["@graphql-typed-document-node/core", "virtual:9fc52fb708650d8aee495e014ea163d6e7a250b0c7643c2f43a2b3af0f401a37b67526aacd23b886d536ea3e838e18ac504a491304a3cbae2efa13c3c996ebec#npm:3.1.2"],\
             ["@types/graphql", null],\
             ["graphql", "npm:16.6.0"]\
           ],\
@@ -5050,7 +5052,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/__virtual__/graphql-request-virtual-9da08b7b8c/0/cache/graphql-request-npm-5.2.0-31dd65ab47-a8aa378163.zip/node_modules/graphql-request/",\
           "packageDependencies": [\
             ["graphql-request", "virtual:9fc52fb708650d8aee495e014ea163d6e7a250b0c7643c2f43a2b3af0f401a37b67526aacd23b886d536ea3e838e18ac504a491304a3cbae2efa13c3c996ebec#npm:5.2.0"],\
-            ["@graphql-typed-document-node/core", "virtual:9da08b7b8c82acce8f05e54bfaf0aca33c5f63f8c1575dc094c8ef34229f696ea06362ed689380542685c24d37aa27570fc87f2e3724a0e9dd599b8f3d6b684e#npm:3.1.2"],\
+            ["@graphql-typed-document-node/core", "virtual:9fc52fb708650d8aee495e014ea163d6e7a250b0c7643c2f43a2b3af0f401a37b67526aacd23b886d536ea3e838e18ac504a491304a3cbae2efa13c3c996ebec#npm:3.1.2"],\
             ["@types/graphql", null],\
             ["cross-fetch", "npm:3.1.5"],\
             ["extract-files", "npm:9.0.0"],\

@@ -15,5 +15,6 @@
         "project": ["tsconfig.json"]
     },
     "rules": {
+        "@typescript-eslint/naming-convention": "warn"
     }
 }

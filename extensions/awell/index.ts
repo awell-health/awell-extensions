@@ -1,6 +1,7 @@
-import { startCareFlow } from './actions'
+import { actions } from './actions'
 import { type Extension } from '../../lib/types'
 import { settings } from './settings'
+import { webhooks } from './webhooks'
 
 export const Awell: Extension = {
   key: 'awell',
@@ -8,7 +9,6 @@ export const Awell: Extension = {
   title: 'Awell API',
   description: 'Orchestrate care flows using the Awell Orchestration API',
   settings,
-  actions: {
-    startCareFlow,
-  },
+  actions,
+  webhooks,
 }
