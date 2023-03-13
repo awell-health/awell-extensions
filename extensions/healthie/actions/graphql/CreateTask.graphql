@@ -1,0 +1,25 @@
+mutation createTask(
+  $content: String,
+  $user_id: String,
+  $priority: Int,
+  $client_id: String,
+  $due_date: String,
+  $reminder: TaskReminderInput
+) {
+  createTask(input: {
+    content: $content,
+    user_id: $user_id,
+    priority: $priority,
+    client_id: $client_id,
+    due_date: $due_date,
+    reminder: $reminder
+  }) {
+    task {
+      id
+    }
+    messages {
+      field
+      message
+    }
+  }
+}
