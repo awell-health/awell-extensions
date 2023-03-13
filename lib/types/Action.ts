@@ -8,14 +8,14 @@ import { type DataPointDefinition } from './DataPointDefinition'
 export interface Action<
   Fields extends Record<string, Field>,
   Settings extends Record<string, Setting>,
-  DPKeys extends string
+  DPKeys extends string = string
 > {
   key: string
   title: string
   category: string
   icon?: string
   description?: string
-  dataPoints: Record<DPKeys, DataPointDefinition>
+  dataPoints?: Record<DPKeys, DataPointDefinition>
   fields: Fields
   previewable?: boolean
   onActivityCreated: (

@@ -24,7 +24,8 @@ describe('Simple sms notification action', () => {
           fromNumber: 'fromNumber',
         },
       },
-      onComplete
+      onComplete,
+      jest.fn()
     )
     expect(onComplete).toHaveBeenCalled()
   })

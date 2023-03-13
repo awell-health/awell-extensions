@@ -14,7 +14,8 @@ describe('HelloWorld - log', () => {
           secret: 'secret-value',
         },
       },
-      onComplete
+      onComplete,
+      jest.fn()
     )
     expect(onComplete).toHaveBeenCalled()
   })
@@ -31,7 +32,8 @@ describe('HelloWorld - log', () => {
           secret: 'secret-value',
         },
       },
-      onComplete
+      onComplete,
+      jest.fn()
     )
     expect(onComplete).toHaveBeenCalled()
   })
@@ -48,7 +50,8 @@ describe('HelloWorld - log', () => {
           secret: undefined,
         },
       },
-      onComplete
+      onComplete,
+      jest.fn()
     )
     expect(onComplete).toHaveBeenCalled()
   })
