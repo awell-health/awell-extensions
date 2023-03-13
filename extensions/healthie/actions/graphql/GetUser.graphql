@@ -1,0 +1,12 @@
+query getUser($id: ID) {
+  user(id: $id) {
+    id
+    first_name
+    last_name
+    dob
+    gender
+    email
+    phone_number
+    next_appt_date
+  }
+}
