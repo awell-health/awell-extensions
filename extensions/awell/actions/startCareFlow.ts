@@ -30,14 +30,14 @@ const fields = {
     id: 'id',
     label: 'Care flow definition ID',
     description: 'The identifier of the care flow definition to start',
-    type: FieldType.TEXT,
+    type: FieldType.STRING,
   },
   patientId: {
     id: 'patientId',
     label: 'Patient ID',
     description:
       'The patient identifier. If not provided an anonymous patient is created',
-    type: FieldType.TEXT,
+    type: FieldType.STRING,
     required: false,
   },
 } satisfies Record<string, Field>
@@ -62,7 +62,7 @@ const createPatient = async (
 export const startCareFlow: Action<typeof fields, typeof settings> = {
   key: 'startCareFlow',
   category: 'orchestration',
-  title: 'Start a new care flow for the current patient',
+  title: 'Start a new care flow',
   fields,
   previewable: true,
   onActivityCreated: async (payload, done): Promise<void> => {
