@@ -21,6 +21,6 @@ export const settings = {
     obfuscated: false,
     required: true,
     description:
-      'From specifies the Twilio phone number, short code, or messaging Service that will send the text messages. This must be a Twilio phone number that you own.',
+      '"From" specifies the Twilio phone number, short code, or messaging service that will send the text messages. This must be a Twilio phone number that you own.',
   },
 } satisfies Record<string, Setting>

@@ -1,12 +1,14 @@
 import twilioSdk from '../twilioSdk'
-import { FieldType, type Action, type Field } from '../../../lib/types'
+import { FieldType, StringType, type Action, type Field } from '../../../lib/types'
 import { type settings } from '../settings'
 
 const fields = {
   recipient: {
     id: 'recipient',
-    label: 'Recipient',
+    label: '"To" phone number',
     type: FieldType.STRING,
+    stringType: StringType.PHONE_NUMBER,
+    description: 'To what phone number would you like to send a text message?',
     required: true,
   },
   message: {
