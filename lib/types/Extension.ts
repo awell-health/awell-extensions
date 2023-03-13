@@ -12,7 +12,7 @@ export interface Extension {
   icon_url?: string
   actions: Record<
     string,
-    Action<Record<string, Field>, Record<string, Setting>>
+    Action<Record<string, Field>, Record<string, Setting>, string>
   >
   webhooks?: Array<Webhook<string, any>>
 }

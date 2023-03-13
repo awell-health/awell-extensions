@@ -8,6 +8,8 @@ export const Healthie: Extension = {
   category: 'integration',
   title: 'Helthie',
   description: '',
+  icon_url:
+    'https://assets-global.website-files.com/5ff335a72af33d6ff0d8191f/6001d714ffd4c31ae0361055_healthie-logo-color.svg',
   settings,
   actions,
   webhooks,

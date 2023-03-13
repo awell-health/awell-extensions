@@ -21,6 +21,6 @@ export interface Action<
   onActivityCreated: (
     payload: NewActivityPayload<keyof Settings, keyof Fields>,
     onComplete: OnCompleteCallback<DPKeys>,
-    onError?: OnErrorCallback
+    onError: OnErrorCallback
   ) => Promise<void>
 }
