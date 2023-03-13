@@ -11,7 +11,6 @@ interface BaseField {
   label: string
   description?: string
   required?: boolean
-  options?: Record<string, any>
 }
 
 export enum StringType {
@@ -27,23 +26,19 @@ type NumericField = BaseField & {
 
 type StringField = BaseField & {
   type: FieldType.STRING
-  value?: string
   stringType?: StringType
 }
 
 type HtmlField = BaseField & {
   type: FieldType.HTML
-  value?: string
 }
 
 type JsonField = BaseField & {
   type: FieldType.JSON
-  value?: string
 }
 
 type TextField = BaseField & {
   type: FieldType.TEXT
-  value?: string
 }
 
 export type Field =
