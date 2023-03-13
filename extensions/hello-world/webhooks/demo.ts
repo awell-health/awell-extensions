@@ -16,8 +16,8 @@ interface Payload {
   hello: string
 }
 
-export const test: Webhook<keyof typeof dataPoints, Payload> = {
-  key: 'test',
+export const demo: Webhook<keyof typeof dataPoints, Payload> = {
+  key: 'demo',
   dataPoints,
   onWebhookReceived: async ({ eventType, hello }) => ({
     data_points: {

@@ -1,3 +1,3 @@
-import { test } from './test'
+import { demo } from './demo'
 
-export const webhooks = [test]
+export const webhooks = [demo]
