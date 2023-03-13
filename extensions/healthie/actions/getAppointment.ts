@@ -9,67 +9,59 @@ import { initialiseClient } from '../graphqlClient'
 import { type settings } from '../settings'
 
 const fields = {
-  patientId: {
-    id: 'patientId',
-    label: 'Patient ID',
-    description: 'The patient identifier',
+  appointmentId: {
+    id: 'appointmentId',
+    label: 'Appointment ID',
+    description: 'The identifier of the appointment',
     type: FieldType.STRING,
   },
 } satisfies Record<string, Field>
 
 const dataPoints = {
-  firstName: {
-    key: 'firstName',
+  date: {
+    key: 'date',
+    valueType: 'date',
+  },
+  appointmentTypeId: {
+    key: 'appointmentTypeId',
     valueType: 'string',
   },
-  lastName: {
-    key: 'lastName',
+  appointmentTypeName: {
+    key: 'appointmentTypeName',
     valueType: 'string',
   },
-  dob: {
-    key: 'dob',
-    valueType: 'string',
-  },
-  gender: {
-    key: 'gender',
-    valueType: 'string',
-  },
-  email: {
-    key: 'email',
-    valueType: 'string',
-  },
-  phoneNumber: {
-    key: 'phoneNumber',
+  contactType: {
+    key: 'contactType',
     valueType: 'string',
   },
 } satisfies Record<string, DataPointDefinition>
 
-export const getPatient: Action<
+export const getAppointment: Action<
   typeof fields,
   typeof settings,
   keyof typeof dataPoints
 > = {
-  key: 'getPatient',
+  key: 'getAppointment',
   category: 'Healthie API',
-  title: 'Retrieve a patient',
+  title: 'Retrieve an appointment',
   fields,
   dataPoints,
   previewable: true,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
     const { fields, settings } = payload
-    const { patientId } = fields
+    const { appointmentId } = fields
     const client = initialiseClient(settings)
     if (client !== undefined) {
       const sdk = getSdk(client)
-      const { data } = await sdk.getUser({ id: patientId })
+      const { data } = await sdk.getAppointment({
+        id: appointmentId,
+      })
       await onComplete({
         data_points: {
-          firstName: data.user?.first_name,
-          lastName: data.user?.last_name,
-          dob: data.user?.dob,
-          email: data.user?.email,
-          gender: data.user?.gender,
-          phoneNumber: data.user?.phone_number,
+          appointmentTypeId: data.appointment?.appointment_type?.id,
+          appointmentTypeName: data.appointment?.appointment_type?.name,
+          contactType: data.appointment?.contact_type,
+          date: data.appointment?.date,
         },
       })
     } else {

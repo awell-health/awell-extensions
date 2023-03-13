@@ -20232,6 +20232,36 @@ export type ValidateVerificationTokenPayload = {
   user?: Maybe<User>;
 };
 
+export type CreateAppointmentMutationVariables = Exact<{
+  user_id?: InputMaybe<Scalars['String']>;
+  appointment_type_id?: InputMaybe<Scalars['String']>;
+  contact_type?: InputMaybe<Scalars['String']>;
+  other_party_id?: InputMaybe<Scalars['String']>;
+  datetime?: InputMaybe<Scalars['String']>;
+}>;
+
+
+export type CreateAppointmentMutation = { __typename?: 'Mutation', createAppointment?: { __typename?: 'createAppointmentPayload', appointment?: { __typename?: 'Appointment', id: string } | null, messages?: Array<{ __typename?: 'FieldError', field?: string | null, message: string } | null> | null } | null };
+
+export type CreateTaskMutationVariables = Exact<{
+  content?: InputMaybe<Scalars['String']>;
+  user_id?: InputMaybe<Scalars['String']>;
+  priority?: InputMaybe<Scalars['Int']>;
+  client_id?: InputMaybe<Scalars['String']>;
+  due_date?: InputMaybe<Scalars['String']>;
+  reminder?: InputMaybe<TaskReminderInput>;
+}>;
+
+
+export type CreateTaskMutation = { __typename?: 'Mutation', createTask?: { __typename?: 'createTaskPayload', task?: { __typename?: 'Task', id: string } | null, messages?: Array<{ __typename?: 'FieldError', field?: string | null, message: string } | null> | null } | null };
+
+export type GetAppointmentQueryVariables = Exact<{
+  id?: InputMaybe<Scalars['ID']>;
+}>;
+
+
+export type GetAppointmentQuery = { __typename?: 'Query', appointment?: { __typename?: 'Appointment', id: string, date?: string | null, contact_type?: string | null, pm_status?: string | null, provider?: { __typename?: 'User', id: string, full_name?: string | null } | null, user?: { __typename?: 'User', id: string, full_name?: string | null } | null, appointment_type?: { __typename?: 'AppointmentType', id: string, name?: string | null } | null } | null };
+
 export type GetUserQueryVariables = Exact<{
   id?: InputMaybe<Scalars['ID']>;
 }>;
@@ -20240,6 +20270,58 @@ export type GetUserQueryVariables = Exact<{
 export type GetUserQuery = { __typename?: 'Query', user?: { __typename?: 'User', id: string, first_name?: string | null, last_name?: string | null, dob?: string | null, gender?: string | null, email?: string | null, phone_number?: string | null, next_appt_date?: string | null } | null };
 
 
+export const CreateAppointmentDocument = gql`
+    mutation createAppointment($user_id: String, $appointment_type_id: String, $contact_type: String, $other_party_id: String, $datetime: String) {
+  createAppointment(
+    input: {user_id: $user_id, appointment_type_id: $appointment_type_id, contact_type: $contact_type, other_party_id: $other_party_id, datetime: $datetime}
+  ) {
+    appointment {
+      id
+    }
+    messages {
+      field
+      message
+    }
+  }
+}
+    `;
+export const CreateTaskDocument = gql`
+    mutation createTask($content: String, $user_id: String, $priority: Int, $client_id: String, $due_date: String, $reminder: TaskReminderInput) {
+  createTask(
+    input: {content: $content, user_id: $user_id, priority: $priority, client_id: $client_id, due_date: $due_date, reminder: $reminder}
+  ) {
+    task {
+      id
+    }
+    messages {
+      field
+      message
+    }
+  }
+}
+    `;
+export const GetAppointmentDocument = gql`
+    query getAppointment($id: ID) {
+  appointment(id: $id) {
+    id
+    date
+    contact_type
+    pm_status
+    provider {
+      id
+      full_name
+    }
+    user {
+      id
+      full_name
+    }
+    appointment_type {
+      id
+      name
+    }
+  }
+}
+    `;
 export const GetUserDocument = gql`
     query getUser($id: ID) {
   user(id: $id) {
@@ -20259,9 +20341,21 @@ export type SdkFunctionWrapper = <T>(action: (requestHeaders?:Record<string, str
 
 
 const defaultWrapper: SdkFunctionWrapper = (action, _operationName, _operationType) => action();
+const CreateAppointmentDocumentString = print(CreateAppointmentDocument);
+const CreateTaskDocumentString = print(CreateTaskDocument);
+const GetAppointmentDocumentString = print(GetAppointmentDocument);
 const GetUserDocumentString = print(GetUserDocument);
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
+    createAppointment(variables?: CreateAppointmentMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: CreateAppointmentMutation; extensions?: any; headers: Dom.Headers; status: number; }> {
+        return withWrapper((wrappedRequestHeaders) => client.rawRequest<CreateAppointmentMutation>(CreateAppointmentDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'createAppointment', 'mutation');
+    },
+    createTask(variables?: CreateTaskMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: CreateTaskMutation; extensions?: any; headers: Dom.Headers; status: number; }> {
+        return withWrapper((wrappedRequestHeaders) => client.rawRequest<CreateTaskMutation>(CreateTaskDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'createTask', 'mutation');
+    },
+    getAppointment(variables?: GetAppointmentQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: GetAppointmentQuery; extensions?: any; headers: Dom.Headers; status: number; }> {
+        return withWrapper((wrappedRequestHeaders) => client.rawRequest<GetAppointmentQuery>(GetAppointmentDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getAppointment', 'query');
+    },
     getUser(variables?: GetUserQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: GetUserQuery; extensions?: any; headers: Dom.Headers; status: number; }> {
         return withWrapper((wrappedRequestHeaders) => client.rawRequest<GetUserQuery>(GetUserDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getUser', 'query');
     }

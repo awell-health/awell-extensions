@@ -15,61 +15,53 @@ const fields = {
     description: 'The patient identifier',
     type: FieldType.STRING,
   },
+  content: {
+    id: 'content',
+    label: 'Content',
+    description: 'Content of the Task',
+    type: FieldType.TEXT,
+    required: true,
+  },
+  due_date: {
+    id: 'due_date',
+    label: 'Due date',
+    description: 'The due date of the task',
+    type: FieldType.STRING,
+  },
 } satisfies Record<string, Field>
 
 const dataPoints = {
-  firstName: {
-    key: 'firstName',
-    valueType: 'string',
-  },
-  lastName: {
-    key: 'lastName',
-    valueType: 'string',
-  },
-  dob: {
-    key: 'dob',
-    valueType: 'string',
-  },
-  gender: {
-    key: 'gender',
-    valueType: 'string',
-  },
-  email: {
-    key: 'email',
-    valueType: 'string',
-  },
-  phoneNumber: {
-    key: 'phoneNumber',
+  taskId: {
+    key: 'taskId',
     valueType: 'string',
   },
 } satisfies Record<string, DataPointDefinition>
 
-export const getPatient: Action<
+export const createTask: Action<
   typeof fields,
   typeof settings,
   keyof typeof dataPoints
 > = {
-  key: 'getPatient',
+  key: 'createTask',
   category: 'Healthie API',
-  title: 'Retrieve a patient',
+  title: 'Create a task',
   fields,
   dataPoints,
   previewable: true,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
     const { fields, settings } = payload
-    const { patientId } = fields
+    const { patientId, content, due_date } = fields
     const client = initialiseClient(settings)
     if (client !== undefined) {
       const sdk = getSdk(client)
-      const { data } = await sdk.getUser({ id: patientId })
+      const { data } = await sdk.createTask({
+        client_id: patientId,
+        content,
+        due_date,
+      })
       await onComplete({
         data_points: {
-          firstName: data.user?.first_name,
-          lastName: data.user?.last_name,
-          dob: data.user?.dob,
-          email: data.user?.email,
-          gender: data.user?.gender,
-          phoneNumber: data.user?.phone_number,
+          taskId: data.createTask?.task?.id,
         },
       })
     } else {

@@ -15,61 +15,52 @@ const fields = {
     description: 'The patient identifier',
     type: FieldType.STRING,
   },
+  datetime: {
+    id: 'datetime',
+    label: 'Appointment date / time',
+    description: 'The datetime of the appointment in ISO8601 format',
+    type: FieldType.STRING,
+  },
+  appointmentTypeId: {
+    id: 'appointmentTypeId',
+    label: 'Appointment type ID',
+    description: 'The ID of the appointment type',
+    type: FieldType.STRING,
+  },
 } satisfies Record<string, Field>
 
 const dataPoints = {
-  firstName: {
-    key: 'firstName',
-    valueType: 'string',
-  },
-  lastName: {
-    key: 'lastName',
-    valueType: 'string',
-  },
-  dob: {
-    key: 'dob',
-    valueType: 'string',
-  },
-  gender: {
-    key: 'gender',
-    valueType: 'string',
-  },
-  email: {
-    key: 'email',
-    valueType: 'string',
-  },
-  phoneNumber: {
-    key: 'phoneNumber',
+  appointmentId: {
+    key: 'appointmentId',
     valueType: 'string',
   },
 } satisfies Record<string, DataPointDefinition>
 
-export const getPatient: Action<
+export const createAppointment: Action<
   typeof fields,
   typeof settings,
   keyof typeof dataPoints
 > = {
-  key: 'getPatient',
+  key: 'createAppointment',
   category: 'Healthie API',
-  title: 'Retrieve a patient',
+  title: 'Create an appointment',
   fields,
   dataPoints,
   previewable: true,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
     const { fields, settings } = payload
-    const { patientId } = fields
+    const { patientId, appointmentTypeId, datetime } = fields
     const client = initialiseClient(settings)
     if (client !== undefined) {
       const sdk = getSdk(client)
-      const { data } = await sdk.getUser({ id: patientId })
+      const { data } = await sdk.createAppointment({
+        appointment_type_id: appointmentTypeId,
+        datetime,
+        user_id: patientId,
+      })
       await onComplete({
         data_points: {
-          firstName: data.user?.first_name,
-          lastName: data.user?.last_name,
-          dob: data.user?.dob,
-          email: data.user?.email,
-          gender: data.user?.gender,
-          phoneNumber: data.user?.phone_number,
+          appointmentId: data.createAppointment?.appointment?.id,
         },
       })
     } else {
