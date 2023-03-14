@@ -15,7 +15,7 @@ export const patientSmsNotification: Action<typeof fields, typeof settings> = {
   key: 'patientSmsNotification',
   title: 'Send SMS to patient',
   category: 'Communication',
-  description: 'Send a SMS message to the patient enrolled in this care flow.',
+  description: 'Send an SMS message to the patient enrolled in this care flow.',
   fields,
   onActivityCreated: async (payload, onComplete) => {
     const {
