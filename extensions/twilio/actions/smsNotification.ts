@@ -7,7 +7,7 @@ const fields = {
     id: 'recipient',
     label: '"To" phone number',
     type: FieldType.STRING,
-    stringType: StringType.PHONE_NUMBER,
+    stringType: StringType.PHONE,
     description: 'To what phone number would you like to send an SMS message?',
     required: true,
   },
