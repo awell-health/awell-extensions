@@ -24,13 +24,13 @@ export const bookAppointment: Action<typeof fields, typeof settings> = {
   fields,
   onActivityCreated: async (payload, onComplete) => {
     const {
-      fields: { calLink },
+      fields: { calLink }, settings
     } = payload
     if (calLink === undefined) {
       console.error('calLink is not defined')
     } else {
       try {
-        console.log('bookAppointment -> onActivityCreated executed with: ', {calLink})
+        console.log('bookAppointment -> onActivityCreated executed with: ', { fields: { calLink }, settings })
       } catch (err) {
         console.error('Error in calDotCom extension -> bookAppointment action', err)
       }
