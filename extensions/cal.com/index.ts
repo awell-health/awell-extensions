@@ -1,5 +1,5 @@
 import { type Extension } from '../../lib/types'
-import { bookAppointment,  } from './actions'
+import { bookAppointment } from './actions'
 import { settings } from './settings'
 
 export const CalDotCom: Extension = {
