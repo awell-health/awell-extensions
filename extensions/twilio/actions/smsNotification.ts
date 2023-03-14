@@ -8,7 +8,7 @@ const fields = {
     label: '"To" phone number',
     type: FieldType.STRING,
     stringType: StringType.PHONE_NUMBER,
-    description: 'To what phone number would you like to send a text message?',
+    description: 'To what phone number would you like to send an SMS message?',
     required: true,
   },
   message: {
@@ -21,8 +21,9 @@ const fields = {
 
 export const smsNotification: Action<typeof fields, typeof settings> = {
   key: 'smsNotification',
-  title: 'SMS via Twilio',
-  category: 'Notifications',
+  title: 'Send SMS to phone number',
+  description: 'Send an SMS message to a phone number.',
+  category: 'Communication',
   fields,
   onActivityCreated: async (payload, onComplete) => {
     const {
