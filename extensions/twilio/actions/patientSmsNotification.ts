@@ -13,9 +13,9 @@ const fields = {
 
 export const patientSmsNotification: Action<typeof fields, typeof settings> = {
   key: 'patientSmsNotification',
-  title: 'Send SMS to Patient via Twilio',
-  category: 'Notifications',
-  description: 'Send SMS message to your care flow patient.',
+  title: 'Send SMS to patient',
+  category: 'Communication',
+  description: 'Send an SMS message to the patient enrolled in this care flow.',
   fields,
   onActivityCreated: async (payload, onComplete) => {
     const {
