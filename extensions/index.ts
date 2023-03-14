@@ -1,6 +1,7 @@
 import { Awell } from './awell'
+import { CalDotCom } from './cal.com'
 import { Healthie } from './healthie'
 import { HelloWorld } from './hello-world'
 import { Twilio } from './twilio'
 
-export const extensions = [Awell, HelloWorld, Healthie, Twilio]
+export const extensions = [Awell, HelloWorld, Healthie, Twilio, CalDotCom]
