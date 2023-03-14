@@ -44,8 +44,11 @@
     "graphql": "^16.6.0",
     "graphql-request": "5.1.0",
     "graphql-tag": "^2.12.6",
+    "libphonenumber-js": "^1.10.21",
     "lightship": "^7.1.1",
     "lodash": "^4.17.21",
-    "twilio": "^4.8.0"
+    "twilio": "^4.8.0",
+    "zod": "^3.21.4",
+    "zod-validation-error": "^1.0.1"
   }
 }
