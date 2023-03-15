@@ -4,6 +4,7 @@ import { type Setting } from './Setting'
 import { type OnCompleteCallback } from './OnCompleteCallback'
 import { type OnErrorCallback } from './OnErrorCallback'
 import { type DataPointDefinition } from './DataPointDefinition'
+import { type Category } from './marketplace'
 
 export interface Action<
   Fields extends Record<string, Field>,
@@ -13,7 +14,7 @@ export interface Action<
   key: string
   title: string
   description: string
-  category: string
+  category: Category
   iconUrl?: string
   dataPoints?: Record<DPKeys, DataPointDefinition>
   fields: Fields

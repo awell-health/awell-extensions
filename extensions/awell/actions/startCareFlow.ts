@@ -6,6 +6,7 @@ import {
   type CreatePatientPayload,
   type StartPathwayPayload,
 } from '../gql/graphql'
+import { Category } from '../../../lib/types/marketplace'
 
 const startPathwayMutation = `
 mutation StartPathway($input: StartPathwayInput!) {
@@ -61,7 +62,7 @@ const createPatient = async (
 
 export const startCareFlow: Action<typeof fields, typeof settings> = {
   key: 'startCareFlow',
-  category: 'orchestration',
+  category: Category.WORKFLOW,
   title: 'Start new care flow',
   description: 'Start a new care flow from within the current care flow.',
   fields,
