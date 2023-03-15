@@ -1,4 +1,5 @@
 import { FieldType, type Action, type Field } from '../../../lib/types'
+import { Category } from '../../../lib/types/marketplace'
 import { type settings } from '../settings'
 
 const fields = {
@@ -21,7 +22,7 @@ export const bookAppointment: Action<typeof fields, typeof settings> = {
   key: 'bookAppointment',
   title: 'Book appointment',
   description: 'Enable a stakeholder to book an appointment via Cal.com.',
-  category: 'Scheduling',
+  category: Category.SCHEDULING,
   fields,
   onActivityCreated: async (payload, onComplete, onError) => {
     const {

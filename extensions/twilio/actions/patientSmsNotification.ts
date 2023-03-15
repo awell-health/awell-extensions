@@ -1,6 +1,7 @@
 import twilioSdk from '../twilioSdk'
 import { FieldType, type Action, type Field } from '../../../lib/types'
 import { type settings } from '../settings'
+import { Category } from '../../../lib/types/marketplace'
 
 const fields = {
   message: {
@@ -14,7 +15,7 @@ const fields = {
 export const patientSmsNotification: Action<typeof fields, typeof settings> = {
   key: 'patientSmsNotification',
   title: 'Send SMS to patient',
-  category: 'Communication',
+  category: Category.COMMUNICATION,
   description: 'Send an SMS message to the patient enrolled in this care flow.',
   fields,
   onActivityCreated: async (payload, onComplete) => {
