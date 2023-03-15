@@ -1,6 +1,6 @@
 import { z, ZodError } from 'zod'
 import { fromZodError } from 'zod-validation-error'
-import twilioSdk from '../twilioSdk'
+import twilioSdk from '../twilio'
 import {
   FieldType,
   StringType,
