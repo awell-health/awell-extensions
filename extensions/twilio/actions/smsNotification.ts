@@ -43,14 +43,11 @@ export const smsNotification: Action<typeof fields, typeof settings> = {
   category: 'Communication',
   fields,
   onActivityCreated: async (payload, onComplete, onError) => {
-    console.log('payload', payload)
     try {
       const {
         fields: { recipient, message },
         settings: { accountSid, authToken, fromNumber },
       } = validate({ schema: Schema, payload })
-      console.log('recipient', recipient)
-      console.log('message', message)
       const client = twilioSdk(accountSid, authToken, {
         region: 'IE1',
         accountSid,
@@ -65,7 +62,6 @@ export const smsNotification: Action<typeof fields, typeof settings> = {
       console.error(err)
       if (err instanceof ZodError) {
         const error = fromZodError(err)
-        console.log('error', error.message)
         await onError({
           events: [
             {
