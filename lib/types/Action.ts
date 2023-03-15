@@ -15,7 +15,6 @@ export interface Action<
   title: string
   description: string
   category: Category
-  iconUrl?: string
   dataPoints?: Record<DPKeys, DataPointDefinition>
   fields: Fields
   previewable?: boolean

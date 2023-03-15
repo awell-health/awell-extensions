@@ -6,7 +6,7 @@ import { settings } from './settings'
 export const Twilio: Extension = {
   key: 'twilio',
   title: 'Twilio',
-  iconUrl: 'https://www.vectorlogo.zone/logos/twilio/twilio-icon.svg',
+  icon_url: 'https://www.vectorlogo.zone/logos/twilio/twilio-icon.svg',
   description: 'Add robust messaging capabilities to your care flow.',
   category: Category.COMMUNICATION,
   author: {
