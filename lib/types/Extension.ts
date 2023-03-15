@@ -10,7 +10,7 @@ export interface Extension {
   category: Category
   description: string
   settings: Record<string, Setting>
-  iconUrl: string
+  icon_url: string
   author: Author
   actions: Record<
     string,

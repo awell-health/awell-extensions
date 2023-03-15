@@ -6,7 +6,7 @@ import { settings } from './settings'
 export const CalDotCom: Extension = {
   key: 'calDotCom',
   title: 'Cal.com',
-  iconUrl: 'https://cal.com/logo.svg',
+  icon_url: 'https://cal.com/logo.svg',
   description: 'Enable scheduling in your care flows with Cal.com.',
   category: Category.SCHEDULING,
   author: {

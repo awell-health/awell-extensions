@@ -9,7 +9,7 @@ export const Healthie: Extension = {
   category: Category.INTEGRATIONS,
   title: 'Healthie',
   description: 'Connect to the Healthie API and receive webhooks',
-  iconUrl:
+  icon_url:
     'https://assets-global.website-files.com/5ff335a72af33d6ff0d8191f/6001d714ffd4c31ae0361055_healthie-logo-color.svg',
   author: {
     authorType: AuthorType.AWELL,
