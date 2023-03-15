@@ -92,7 +92,7 @@ export class ExtensionServer {
         this.log.debug(action, 'Configuring extension action subscription')
         const createOnCompleteCallback = (
           payload: NewActivityPayload,
-          domain: string
+          attributes: Record<string, string>
         ): OnCompleteCallback => {
           return async (params = {}) => {
             const data = Buffer.from(
@@ -104,17 +104,13 @@ export class ExtensionServer {
             )
             await this.activityCompletedTopic.publishMessage({
               data,
-              attributes: {
-                extension: extension.key,
-                action: action.key,
-                domain,
-              },
+              attributes,
             })
           }
         }
         const createOnErrorCallback = (
           payload: NewActivityPayload,
-          domain: string
+          attributes: Record<string, string>
         ): OnErrorCallback => {
           return async (params = {}) => {
             const data = Buffer.from(
@@ -126,19 +122,14 @@ export class ExtensionServer {
             )
             await this.activityCompletedTopic.publishMessage({
               data,
-              attributes: {
-                extension: extension.key,
-                action: action.key,
-                domain,
-              },
+              attributes,
             })
           }
         }
 
         const messageHandler = async (message: Message): Promise<void> => {
-          const {
-            attributes: { extension: extensionKey, action: actionKey, domain },
-          } = message
+          const { attributes } = message
+          const { extension: extensionKey, action: actionKey } = attributes
           // Extra check on attributes. This mainly serves local testing with the
           // pub sub emulator as it does not support filtering.
           if (extensionKey === extension.key && actionKey === action.key) {
@@ -146,8 +137,8 @@ export class ExtensionServer {
             this.log.debug(payload, 'New activity payload received')
             void action.onActivityCreated(
               payload,
-              createOnCompleteCallback(payload, domain),
-              createOnErrorCallback(payload, domain)
+              createOnCompleteCallback(payload, attributes),
+              createOnErrorCallback(payload, attributes)
             )
           }
           await message.ackWithResponse()
