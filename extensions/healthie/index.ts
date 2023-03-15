@@ -10,7 +10,7 @@ export const Healthie: Extension = {
   title: 'Healthie',
   description: 'Connect to the Healthie API and receive webhooks',
   icon_url:
-    'https://assets-global.website-files.com/5ff335a72af33d6ff0d8191f/6001d714ffd4c31ae0361055_healthie-logo-color.svg',
+    'https://res.cloudinary.com/da7x4rzl4/image/upload/v1678908303/Awell%20Extensions/HealthieLogo.png',
   author: {
     authorType: AuthorType.AWELL,
   },
