@@ -1,6 +1,9 @@
-import twilioSdk from '../twilioSdk'
+import { z, ZodError } from 'zod'
+import { fromZodError } from 'zod-validation-error'
+import twilioSdk from '../twilio'
 import { FieldType, type Action, type Field } from '../../../lib/types'
 import { type settings } from '../settings'
+import { Message, Phone, Settings, validate } from '../validation'
 
 const fields = {
   message: {
@@ -11,35 +14,73 @@ const fields = {
   },
 } satisfies Record<string, Field>
 
+const PatientProfile = z.object({
+  mobile_phone: Phone,
+})
+
+const Patient = z.object({ profile: PatientProfile })
+
+const Schema = z.object({
+  patient: Patient,
+  fields: Message,
+  settings: Settings,
+})
+
 export const patientSmsNotification: Action<typeof fields, typeof settings> = {
   key: 'patientSmsNotification',
   title: 'Send SMS to patient',
   category: 'Communication',
   description: 'Send an SMS message to the patient enrolled in this care flow.',
   fields,
-  onActivityCreated: async (payload, onComplete) => {
-    const {
-      patient,
-      fields: { message },
-      settings,
-    } = payload
-    if (patient?.profile?.mobile_phone === undefined) {
-      console.error('Recipient is not defined')
-    } else {
-      try {
-        const client = twilioSdk(settings.accountSid, settings.authToken, {
-          region: 'IE1',
-          accountSid: settings.accountSid,
+  onActivityCreated: async (payload, onComplete, onError) => {
+    try {
+      const {
+        patient: {
+          profile: { mobile_phone },
+        },
+        fields: { message },
+        settings: { accountSid, authToken, fromNumber },
+      } = validate({ schema: Schema, payload })
+      const client = twilioSdk(accountSid, authToken, {
+        region: 'IE1',
+        accountSid,
+      })
+      await client.messages.create({
+        body: message,
+        from: fromNumber,
+        to: mobile_phone,
+      })
+      await onComplete()
+    } catch (err) {
+      if (err instanceof ZodError) {
+        const error = fromZodError(err)
+        await onError({
+          events: [
+            {
+              date: new Date().toISOString(),
+              text: { en: error.message },
+              error: {
+                category: 'BAD_REQUEST',
+                message: error.message,
+              },
+            },
+          ],
         })
-        await client.messages.create({
-          body: message,
-          from: settings.fromNumber,
-          to: patient.profile.mobile_phone,
+      } else {
+        const message = (err as Error).message
+        await onError({
+          events: [
+            {
+              date: new Date().toISOString(),
+              text: { en: message },
+              error: {
+                category: 'SERVER_ERROR',
+                message,
+              },
+            },
+          ],
         })
-      } catch (err) {
-        console.error('Error in twilio extension', err)
       }
     }
-    await onComplete()
   },
 }
