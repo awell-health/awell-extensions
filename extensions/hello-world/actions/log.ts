@@ -4,6 +4,7 @@ import {
   type Action,
   type DataPointDefinition,
 } from '../../../lib/types'
+import { Category } from '../../../lib/types/marketplace'
 import { type settings } from '../settings'
 
 const fields = {
@@ -28,8 +29,9 @@ export const log: Action<
   keyof typeof dataPoints
 > = {
   key: 'log',
-  category: 'demo',
+  category: Category.DEMO,
   title: 'Log hello world',
+  description: 'This is a dummy Custom Action for extension developers.',
   fields,
   previewable: true,
   dataPoints,
