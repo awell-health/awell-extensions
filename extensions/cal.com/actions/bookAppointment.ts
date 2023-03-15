@@ -1,4 +1,5 @@
 import { FieldType, type Action, type Field } from '../../../lib/types'
+import { Category } from '../../../lib/types/marketplace'
 import { type settings } from '../settings'
 
 const fields = {
@@ -20,11 +21,13 @@ const fields = {
 export const bookAppointment: Action<typeof fields, typeof settings> = {
   key: 'bookAppointment',
   title: 'Book appointment',
-  category: 'Scheduling',
+  description: 'Enable a stakeholder to book an appointment via Cal.com.',
+  category: Category.SCHEDULING,
   fields,
   onActivityCreated: async (payload, onComplete, onError) => {
     const {
-      fields: { calLink }, settings
+      fields: { calLink },
+      settings,
     } = payload
     if (calLink === undefined) {
       await onError({
@@ -37,13 +40,20 @@ export const bookAppointment: Action<typeof fields, typeof settings> = {
       })
     } else {
       try {
-        console.log('bookAppointment -> onActivityCreated executed with: ', { fields: { calLink }, settings })
+        console.log('bookAppointment -> onActivityCreated executed with: ', {
+          fields: { calLink },
+          settings,
+        })
       } catch (error) {
         await onError({
           events: [
             {
               date: new Date().toISOString(),
-              text: { en: `Error in calDotCom extension -> bookAppointment action: ${JSON.stringify(error)}` },
+              text: {
+                en: `Error in calDotCom extension -> bookAppointment action: ${JSON.stringify(
+                  error
+                )}`,
+              },
             },
           ],
         })

@@ -8,6 +8,7 @@ import {
 } from '../../../lib/types'
 import { type settings } from '../settings'
 import { getReplyTo } from './utils'
+import { Category } from '../../../lib/types/marketplace'
 
 const fields = {
   subject: {
@@ -31,7 +32,7 @@ export const patientEmailNotification: Action<typeof fields, typeof settings> =
   {
     key: 'patientEmailNotification',
     title: 'Send email to patient',
-    category: 'Communication',
+    category: Category.COMMUNICATION,
     description: 'Send an email to patient.',
     fields,
     onActivityCreated: async (payload, onComplete) => {

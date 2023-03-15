@@ -4,6 +4,7 @@ import {
   type DataPointDefinition,
   type Field,
 } from '../../../lib/types'
+import { Category } from '../../../lib/types/marketplace'
 import { getSdk } from '../gql/sdk'
 import { initialiseClient } from '../graphqlClient'
 import { type settings } from '../settings'
@@ -42,8 +43,9 @@ export const createAppointment: Action<
   keyof typeof dataPoints
 > = {
   key: 'createAppointment',
-  category: 'Healthie API',
-  title: 'Create an appointment',
+  category: Category.INTEGRATIONS,
+  title: 'Create appointment',
+  description: 'Create an appointment in Healthie.',
   fields,
   dataPoints,
   previewable: true,

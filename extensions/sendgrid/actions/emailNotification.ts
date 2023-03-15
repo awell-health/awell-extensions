@@ -8,6 +8,7 @@ import {
 } from '../../../lib/types'
 import { type settings } from '../settings'
 import { getRecipientsFromCommaSeparatedEmails, getReplyTo } from './utils'
+import { Category } from '../../../lib/types/marketplace'
 
 const fields = {
   toEmails: {
@@ -38,7 +39,7 @@ const fields = {
 export const emailNotification: Action<typeof fields, typeof settings> = {
   key: 'emailNotification',
   title: 'Send email',
-  category: 'Communication',
+  category: Category.COMMUNICATION,
   description: 'Send email using Sendgrid API.',
   fields,
   onActivityCreated: async (payload, onComplete) => {

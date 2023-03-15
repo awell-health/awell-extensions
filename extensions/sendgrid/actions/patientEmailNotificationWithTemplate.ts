@@ -8,6 +8,7 @@ import {
 } from '../../../lib/types'
 import { type settings } from '../settings'
 import { getReplyTo } from './utils'
+import { Category } from '../../../lib/types/marketplace'
 
 const fields = {
   templateId: {
@@ -34,7 +35,7 @@ export const patientEmailNotificationWithTemplate: Action<
 > = {
   key: 'patientEmailNotificationWithTemplate',
   title: 'Send email to patient with template',
-  category: 'Communication',
+  category: Category.COMMUNICATION,
   description:
     'Send an email to Patient using dynamic template email via the Sendgrid API',
   fields,
