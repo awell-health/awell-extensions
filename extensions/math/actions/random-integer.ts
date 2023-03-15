@@ -1,4 +1,9 @@
-import { type Field, FieldType, type Action } from '../../../lib/types'
+import {
+  type Field,
+  FieldType,
+  type Action,
+  type NewActivityPayload,
+} from '../../../lib/types'
 import { type settings } from '../settings'
 
 const fields = {
@@ -46,3 +51,7 @@ export const randomInteger: Action<typeof fields, typeof settings> = {
     })
   },
 }
+export type RandomIntegerActivityPayload = NewActivityPayload<
+  keyof typeof settings,
+  keyof typeof fields
+>
