@@ -6,6 +6,7 @@ import {
   patientEmailNotification,
   patientEmailNotificationWithTemplate,
 } from './actions'
+import { AuthorType, Category } from '../../lib/types/marketplace'
 
 export const Sendgrid: Extension = {
   key: 'sendgrid',
@@ -13,7 +14,7 @@ export const Sendgrid: Extension = {
   icon_url: 'https://www.vectorlogo.zone/logos/sendgrid/sendgrid-icon.svg',
   description:
     'Use Sendgrid as your notification provider to send notifications to stakeholders in your care flow.',
-  category: 'Communication',
+  category: Category.COMMUNICATION,
   actions: {
     emailNotification,
     emailNotificationWithTemplate,
@@ -21,4 +22,7 @@ export const Sendgrid: Extension = {
     patientEmailNotificationWithTemplate,
   },
   settings,
+  author: {
+    authorType: AuthorType.AWELL,
+  },
 }
