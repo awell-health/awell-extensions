@@ -51,7 +51,8 @@ export const getPatient: Action<
 > = {
   key: 'getPatient',
   category: 'Healthie API',
-  title: 'Retrieve a patient',
+  title: 'Get patient',
+  description: 'Retrieve the details of a patient in Healthie.',
   fields,
   dataPoints,
   previewable: true,

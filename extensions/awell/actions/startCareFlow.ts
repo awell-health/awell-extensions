@@ -62,7 +62,8 @@ const createPatient = async (
 export const startCareFlow: Action<typeof fields, typeof settings> = {
   key: 'startCareFlow',
   category: 'orchestration',
-  title: 'Start a new care flow',
+  title: 'Start new care flow',
+  description: 'Start a new care flow from within the current care flow.',
   fields,
   previewable: true,
   onActivityCreated: async (payload, done): Promise<void> => {

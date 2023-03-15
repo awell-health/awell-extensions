@@ -12,9 +12,9 @@ export interface Action<
 > {
   key: string
   title: string
+  description: string
   category: string
-  icon?: string
-  description?: string
+  iconUrl?: string
   dataPoints?: Record<DPKeys, DataPointDefinition>
   fields: Fields
   previewable?: boolean
