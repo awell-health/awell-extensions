@@ -44,7 +44,8 @@ export const createTask: Action<
 > = {
   key: 'createTask',
   category: 'Healthie API',
-  title: 'Create a task',
+  title: 'Create task',
+  description: 'Create a new task in healthie',
   fields,
   dataPoints,
   previewable: true,

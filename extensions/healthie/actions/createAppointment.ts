@@ -43,7 +43,8 @@ export const createAppointment: Action<
 > = {
   key: 'createAppointment',
   category: 'Healthie API',
-  title: 'Create an appointment',
+  title: 'Create appointment',
+  description: 'Create an appointment in Healthie.',
   fields,
   dataPoints,
   previewable: true,

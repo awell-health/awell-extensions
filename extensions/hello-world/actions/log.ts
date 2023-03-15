@@ -30,6 +30,7 @@ export const log: Action<
   key: 'log',
   category: 'demo',
   title: 'Log hello world',
+  description: 'This is a dummy Custom Action for extension developers.',
   fields,
   previewable: true,
   dataPoints,
