@@ -40,6 +40,7 @@
   },
   "dependencies": {
     "@google-cloud/pubsub": "^3.3.0",
+    "@sendgrid/mail": "^7.7.0",
     "fastify": "^4.13.0",
     "graphql": "^16.6.0",
     "graphql-request": "5.1.0",
