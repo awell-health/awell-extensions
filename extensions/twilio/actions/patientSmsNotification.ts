@@ -3,6 +3,7 @@ import { fromZodError } from 'zod-validation-error'
 import twilioSdk from '../twilio'
 import { FieldType, type Action, type Field } from '../../../lib/types'
 import { type settings } from '../settings'
+import { Category } from '../../../lib/types/marketplace'
 import { Message, Phone, Settings, validate } from '../validation'
 
 const fields = {
@@ -29,7 +30,7 @@ const Schema = z.object({
 export const patientSmsNotification: Action<typeof fields, typeof settings> = {
   key: 'patientSmsNotification',
   title: 'Send SMS to patient',
-  category: 'Communication',
+  category: Category.COMMUNICATION,
   description: 'Send an SMS message to the patient enrolled in this care flow.',
   fields,
   onActivityCreated: async (payload, onComplete, onError) => {

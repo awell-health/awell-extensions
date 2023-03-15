@@ -4,6 +4,7 @@ import {
   type DataPointDefinition,
   type Field,
 } from '../../../lib/types'
+import { Category } from '../../../lib/types/marketplace'
 import { getSdk } from '../gql/sdk'
 import { initialiseClient } from '../graphqlClient'
 import { type settings } from '../settings'
@@ -43,8 +44,9 @@ export const createTask: Action<
   keyof typeof dataPoints
 > = {
   key: 'createTask',
-  category: 'Healthie API',
-  title: 'Create a task',
+  category: Category.INTEGRATIONS,
+  title: 'Create task',
+  description: 'Create a new task in healthie',
   fields,
   dataPoints,
   previewable: true,

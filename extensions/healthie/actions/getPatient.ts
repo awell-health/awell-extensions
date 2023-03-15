@@ -4,6 +4,7 @@ import {
   type DataPointDefinition,
   type Field,
 } from '../../../lib/types'
+import { Category } from '../../../lib/types/marketplace'
 import { getSdk } from '../gql/sdk'
 import { initialiseClient } from '../graphqlClient'
 import { type settings } from '../settings'
@@ -50,8 +51,9 @@ export const getPatient: Action<
   keyof typeof dataPoints
 > = {
   key: 'getPatient',
-  category: 'Healthie API',
-  title: 'Retrieve a patient',
+  category: Category.INTEGRATIONS,
+  title: 'Get patient',
+  description: 'Retrieve the details of a patient in Healthie.',
   fields,
   dataPoints,
   previewable: true,

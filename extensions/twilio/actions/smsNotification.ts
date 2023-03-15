@@ -8,6 +8,7 @@ import {
   type Field,
 } from '../../../lib/types'
 import { type settings } from '../settings'
+import { Category } from '../../../lib/types/marketplace'
 import { Message, Phone, Settings, validate } from '../validation'
 
 const fields = {
@@ -40,7 +41,7 @@ export const smsNotification: Action<typeof fields, typeof settings> = {
   key: 'smsNotification',
   title: 'Send SMS to phone number',
   description: 'Send an SMS message to a phone number.',
-  category: 'Communication',
+  category: Category.COMMUNICATION,
   fields,
   onActivityCreated: async (payload, onComplete, onError) => {
     try {
