@@ -1,24 +1,24 @@
 import {
-  type Field,
   FieldType,
   type Action,
   type DataPointDefinition,
+  type Field,
 } from '../../../lib/types'
 import { Category } from '../../../lib/types/marketplace'
 import { type settings } from '../settings'
 
 const fields = {
-  text: {
-    id: 'text',
-    label: 'Message',
-    description: 'A text field configured at design time',
-    type: FieldType.TEXT,
+  hello: {
+    id: 'hello',
+    label: 'Hello',
+    description: 'A string field configured at design time',
+    type: FieldType.STRING,
   },
 } satisfies Record<string, Field>
 
 const dataPoints = {
-  hello: {
-    key: 'hello',
+  world: {
+    key: 'world',
     valueType: 'string',
   },
 } satisfies Record<string, DataPointDefinition>
@@ -36,11 +36,10 @@ export const log: Action<
   previewable: true,
   dataPoints,
   onActivityCreated: async (payload, onComplete): Promise<void> => {
-    const { activity, fields, settings } = payload
-    console.log('Hello world!', { activity, fields, settings })
+    const { fields } = payload
     await onComplete({
       data_points: {
-        hello: 'world',
+        world: fields.hello,
       },
     })
   },
