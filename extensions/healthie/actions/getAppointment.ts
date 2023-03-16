@@ -35,6 +35,10 @@ const dataPoints = {
     key: 'contactType',
     valueType: 'string',
   },
+  patientId: {
+    key: 'patientId',
+    valueType: 'string',
+  },
 } satisfies Record<string, DataPointDefinition>
 
 export const getAppointment: Action<
@@ -64,6 +68,7 @@ export const getAppointment: Action<
           appointmentTypeName: data.appointment?.appointment_type?.name,
           contactType: data.appointment?.contact_type,
           date: data.appointment?.date,
+          patientId: data?.appointment?.user?.id,
         },
       })
     } else {
