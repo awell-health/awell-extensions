@@ -23,4 +23,11 @@ export interface Action<
     onComplete: OnCompleteCallback<DPKeys>,
     onError: OnErrorCallback
   ) => Promise<void>
+  // @Deprecated. Don't use unless you absolutey have to
+  options?: {
+    stakeholders?: {
+      label: string
+      mode: 'single'
+    }
+  }
 }
