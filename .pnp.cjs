@@ -28,6 +28,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         [null, {\
           "packageLocation": "./",\
           "packageDependencies": [\
+            ["@fastify/cors", "npm:8.2.1"],\
             ["@google-cloud/pubsub", "npm:3.3.0"],\
             ["@graphql-codegen/cli", "virtual:9fc52fb708650d8aee495e014ea163d6e7a250b0c7643c2f43a2b3af0f401a37b67526aacd23b886d536ea3e838e18ac504a491304a3cbae2efa13c3c996ebec#npm:3.2.2"],\
             ["@graphql-codegen/typescript", "virtual:9fc52fb708650d8aee495e014ea163d6e7a250b0c7643c2f43a2b3af0f401a37b67526aacd23b886d536ea3e838e18ac504a491304a3cbae2efa13c3c996ebec#npm:3.0.2"],\
@@ -133,6 +134,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./",\
           "packageDependencies": [\
             ["@awell/action-extensions", "workspace:."],\
+            ["@fastify/cors", "npm:8.2.1"],\
             ["@google-cloud/pubsub", "npm:3.3.0"],\
             ["@graphql-codegen/cli", "virtual:9fc52fb708650d8aee495e014ea163d6e7a250b0c7643c2f43a2b3af0f401a37b67526aacd23b886d536ea3e838e18ac504a491304a3cbae2efa13c3c996ebec#npm:3.2.2"],\
             ["@graphql-codegen/typescript", "virtual:9fc52fb708650d8aee495e014ea163d6e7a250b0c7643c2f43a2b3af0f401a37b67526aacd23b886d536ea3e838e18ac504a491304a3cbae2efa13c3c996ebec#npm:3.0.2"],\
@@ -1814,6 +1816,17 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["ajv", "npm:8.12.0"],\
             ["ajv-formats", "virtual:d1a90dc51fd4f27c180a2a806ba9ab5e42abb6f7420ba1e8ab979625b7462658b5a2ecaaf9566f9537491e28e0df48947655c2ecc4489537931b03e5f7e9da96#npm:2.1.1"],\
             ["fast-uri", "npm:2.2.0"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["@fastify/cors", [\
+        ["npm:8.2.1", {\
+          "packageLocation": "./.yarn/cache/@fastify-cors-npm-8.2.1-605ff6c2bc-219edf11ad.zip/node_modules/@fastify/cors/",\
+          "packageDependencies": [\
+            ["@fastify/cors", "npm:8.2.1"],\
+            ["fastify-plugin", "npm:4.5.0"],\
+            ["mnemonist", "npm:0.39.5"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -6973,6 +6986,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
+      ["fastify-plugin", [\
+        ["npm:4.5.0", {\
+          "packageLocation": "./.yarn/cache/fastify-plugin-npm-4.5.0-c81347eaa5-3cc36a43ec.zip/node_modules/fastify-plugin/",\
+          "packageDependencies": [\
+            ["fastify-plugin", "npm:4.5.0"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
       ["fastq", [\
         ["npm:1.15.0", {\
           "packageLocation": "./.yarn/cache/fastq-npm-1.15.0-1013f6514e-0170e6bfcd.zip/node_modules/fastq/",\
@@ -9950,6 +9972,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
+      ["mnemonist", [\
+        ["npm:0.39.5", {\
+          "packageLocation": "./.yarn/cache/mnemonist-npm-0.39.5-cbd4ee161e-6669d687a4.zip/node_modules/mnemonist/",\
+          "packageDependencies": [\
+            ["mnemonist", "npm:0.39.5"],\
+            ["obliterator", "npm:2.0.4"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
       ["ms", [\
         ["npm:2.1.2", {\
           "packageLocation": "./.yarn/cache/ms-npm-2.1.2-ec0c1512ff-673cdb2c31.zip/node_modules/ms/",\
@@ -10246,6 +10278,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["call-bind", "npm:1.0.2"],\
             ["define-properties", "npm:1.2.0"],\
             ["es-abstract", "npm:1.21.1"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["obliterator", [\
+        ["npm:2.0.4", {\
+          "packageLocation": "./.yarn/cache/obliterator-npm-2.0.4-b21b355294-f28ad35b6d.zip/node_modules/obliterator/",\
+          "packageDependencies": [\
+            ["obliterator", "npm:2.0.4"]\
           ],\
           "linkType": "HARD"\
         }]\
