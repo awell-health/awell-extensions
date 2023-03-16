@@ -96,6 +96,7 @@ webServer.post('/:extensionKey/webhook/:endpoint', async (request, reply) => {
             extension: extension.key,
             endpoint,
             webhook: webhook.key,
+            environment: environment.AWELL_ENVIRONMENT,
           },
         })
       })
