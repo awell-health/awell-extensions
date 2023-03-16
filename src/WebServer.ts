@@ -1,4 +1,5 @@
 import Fastify from 'fastify'
+import cors from '@fastify/cors'
 import { mapValues, omit } from 'lodash'
 import { environment } from '../lib/environment'
 import {
@@ -46,6 +47,10 @@ const webServer = Fastify({
       : undefined,
     level: environment.LOG_LEVEL,
   },
+})
+
+void webServer.register(cors, {
+  origin: true,
 })
 
 webServer.get('/', async (request, reply) => {
