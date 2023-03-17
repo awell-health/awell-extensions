@@ -1,4 +1,4 @@
-import { FieldType, type Action, type Field } from '../../../lib/types'
+import { type DataPointDefinition, FieldType, type Action, type Field } from '../../../lib/types'
 import { Category } from '../../../lib/types/marketplace'
 import { type settings } from '../settings'
 
@@ -18,12 +18,34 @@ const fields = {
   // },
 } satisfies Record<string, Field>
 
+const dataPoints = {
+  date: {
+    key: 'date',
+    valueType: 'string',
+  },
+  eventTypeId: {
+    key: 'eventTypeId',
+    valueType: 'string',
+  },
+  bookingId: {
+    key: 'bookingId',
+    valueType: 'string',
+  },
+} satisfies Record<string, DataPointDefinition>
+
 export const bookAppointment: Action<typeof fields, typeof settings> = {
   key: 'bookAppointment',
   title: 'Book appointment',
   description: 'Enable a stakeholder to book an appointment via Cal.com.',
   category: Category.SCHEDULING,
   fields,
+  dataPoints,
+  options: {
+    stakeholders: {
+      label: 'Stakeholder',
+      mode: 'single'
+    }
+  },
   onActivityCreated: async (payload, onComplete, onError) => {
     const {
       fields: { calLink },
