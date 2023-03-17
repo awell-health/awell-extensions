@@ -20,5 +20,5 @@ export interface Extension {
 }
 
 export interface ExtensionWithDocumentation extends Extension {
-  htmlDocs: string | null
+  htmlDocs: string
 }
