@@ -21,6 +21,7 @@
     "@types/jest": "^29.4.0",
     "@types/lodash": "^4.14.191",
     "@types/node": "^18.13.0",
+    "@types/showdown": "^2.0.0",
     "@typescript-eslint/eslint-plugin": "^5.52.0",
     "eslint": "^8.34.0",
     "eslint-config-prettier": "^8.6.0",
@@ -48,6 +49,7 @@
     "libphonenumber-js": "^1.10.21",
     "lightship": "^7.1.1",
     "lodash": "^4.17.21",
+    "showdown": "^2.1.0",
     "twilio": "^4.8.0",
     "zod": "^3.21.4",
     "zod-validation-error": "^1.0.1"

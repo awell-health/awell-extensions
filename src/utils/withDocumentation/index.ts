@@ -1,0 +1,1 @@
+export { withDocumentation } from './withDocumentation'
