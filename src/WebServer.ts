@@ -1,4 +1,5 @@
 import Fastify from 'fastify'
+import cors from '@fastify/cors'
 import { mapValues, omit } from 'lodash'
 import { environment } from '../lib/environment'
 import {
@@ -48,6 +49,10 @@ const webServer = Fastify({
   },
 })
 
+void webServer.register(cors, {
+  origin: true,
+})
+
 webServer.get('/', async (request, reply) => {
   const allExtensions = extensions.map((extension) =>
     getExtensionConfig(extension)
@@ -91,6 +96,7 @@ webServer.post('/:extensionKey/webhook/:endpoint', async (request, reply) => {
             extension: extension.key,
             endpoint,
             webhook: webhook.key,
+            environment: environment.AWELL_ENVIRONMENT,
           },
         })
       })

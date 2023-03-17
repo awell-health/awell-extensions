@@ -8,7 +8,7 @@ describe('HelloWorld - log', () => {
         activity: { id: 'test-activity' },
         patient: { id: 'test-patient' },
         fields: {
-          text: 'Some text',
+          hello: 'Some text',
         },
         settings: {
           secret: 'secret-value',
@@ -26,7 +26,7 @@ describe('HelloWorld - log', () => {
         activity: { id: 'test-activity' },
         patient: { id: 'test-patient' },
         fields: {
-          text: undefined,
+          hello: undefined,
         },
         settings: {
           secret: 'secret-value',
@@ -44,7 +44,7 @@ describe('HelloWorld - log', () => {
         activity: { id: 'test-activity' },
         patient: { id: 'test-patient' },
         fields: {
-          text: 'Some text',
+          hello: 'Some text',
         },
         settings: {
           secret: undefined,

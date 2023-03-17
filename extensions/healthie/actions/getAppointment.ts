@@ -35,6 +35,10 @@ const dataPoints = {
     key: 'contactType',
     valueType: 'string',
   },
+  patientId: {
+    key: 'patientId',
+    valueType: 'string',
+  },
 } satisfies Record<string, DataPointDefinition>
 
 export const getAppointment: Action<
@@ -52,29 +56,46 @@ export const getAppointment: Action<
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
     const { fields, settings } = payload
     const { appointmentId } = fields
-    const client = initialiseClient(settings)
-    if (client !== undefined) {
-      const sdk = getSdk(client)
-      const { data } = await sdk.getAppointment({
-        id: appointmentId,
-      })
-      await onComplete({
-        data_points: {
-          appointmentTypeId: data.appointment?.appointment_type?.id,
-          appointmentTypeName: data.appointment?.appointment_type?.name,
-          contactType: data.appointment?.contact_type,
-          date: data.appointment?.date,
-        },
-      })
-    } else {
+    try {
+      const client = initialiseClient(settings)
+      if (client !== undefined) {
+        const sdk = getSdk(client)
+        const { data } = await sdk.getAppointment({
+          id: appointmentId,
+        })
+        await onComplete({
+          data_points: {
+            appointmentTypeId: data.appointment?.appointment_type?.id,
+            appointmentTypeName: data.appointment?.appointment_type?.name,
+            contactType: data.appointment?.contact_type,
+            date: data.appointment?.date,
+            patientId: data?.appointment?.user?.id,
+          },
+        })
+      } else {
+        await onError({
+          events: [
+            {
+              date: new Date().toISOString(),
+              text: { en: 'API client requires an API url and API key' },
+              error: {
+                category: 'MISSING_SETTINGS',
+                message: 'Missing api url or api key',
+              },
+            },
+          ],
+        })
+      }
+    } catch (err) {
+      const error = err as Error
       await onError({
         events: [
           {
             date: new Date().toISOString(),
-            text: { en: 'API client requires an API url and API key' },
+            text: { en: 'Healthie API reported an error' },
             error: {
-              category: 'MISSING_SETTINGS',
-              message: 'Missing api url or api key',
+              category: 'SERVER_ERROR',
+              message: error.message,
             },
           },
         ],

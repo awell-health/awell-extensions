@@ -1,4 +1,5 @@
 export const environment = {
+  AWELL_ENVIRONMENT: process.env.AWELL_ENVIRONMENT ?? '',
   EXTENSION_ACTIVITY_CREATED_TOPIC:
     process.env.EXTENSION_ACTIVITY_CREATED_TOPIC ??
     'extension-activity-created',
