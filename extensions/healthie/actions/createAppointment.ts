@@ -52,28 +52,44 @@ export const createAppointment: Action<
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
     const { fields, settings } = payload
     const { patientId, appointmentTypeId, datetime } = fields
-    const client = initialiseClient(settings)
-    if (client !== undefined) {
-      const sdk = getSdk(client)
-      const { data } = await sdk.createAppointment({
-        appointment_type_id: appointmentTypeId,
-        datetime,
-        user_id: patientId,
-      })
-      await onComplete({
-        data_points: {
-          appointmentId: data.createAppointment?.appointment?.id,
-        },
-      })
-    } else {
+    try {
+      const client = initialiseClient(settings)
+      if (client !== undefined) {
+        const sdk = getSdk(client)
+        const { data } = await sdk.createAppointment({
+          appointment_type_id: appointmentTypeId,
+          datetime,
+          user_id: patientId,
+        })
+        await onComplete({
+          data_points: {
+            appointmentId: data.createAppointment?.appointment?.id,
+          },
+        })
+      } else {
+        await onError({
+          events: [
+            {
+              date: new Date().toISOString(),
+              text: { en: 'API client requires an API url and API key' },
+              error: {
+                category: 'MISSING_SETTINGS',
+                message: 'Missing api url or api key',
+              },
+            },
+          ],
+        })
+      }
+    } catch (err) {
+      const error = err as Error
       await onError({
         events: [
           {
             date: new Date().toISOString(),
-            text: { en: 'API client requires an API url and API key' },
+            text: { en: 'Healthie API reported an error' },
             error: {
-              category: 'MISSING_SETTINGS',
-              message: 'Missing api url or api key',
+              category: 'SERVER_ERROR',
+              message: error.message,
             },
           },
         ],
