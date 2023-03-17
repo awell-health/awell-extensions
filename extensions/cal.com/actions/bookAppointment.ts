@@ -27,6 +27,10 @@ const dataPoints = {
     key: 'eventTypeId',
     valueType: 'string',
   },
+  bookingId: {
+    key: 'bookingId',
+    valueType: 'string',
+  },
 } satisfies Record<string, DataPointDefinition>
 
 export const bookAppointment: Action<typeof fields, typeof settings> = {
