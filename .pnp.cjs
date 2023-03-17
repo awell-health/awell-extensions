@@ -39,6 +39,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/jest", "npm:29.4.0"],\
             ["@types/lodash", "npm:4.14.191"],\
             ["@types/node", "npm:18.13.0"],\
+            ["@types/showdown", "npm:2.0.0"],\
             ["@typescript-eslint/eslint-plugin", "virtual:9fc52fb708650d8aee495e014ea163d6e7a250b0c7643c2f43a2b3af0f401a37b67526aacd23b886d536ea3e838e18ac504a491304a3cbae2efa13c3c996ebec#npm:5.52.0"],\
             ["eslint", "npm:8.34.0"],\
             ["eslint-config-prettier", "virtual:9fc52fb708650d8aee495e014ea163d6e7a250b0c7643c2f43a2b3af0f401a37b67526aacd23b886d536ea3e838e18ac504a491304a3cbae2efa13c3c996ebec#npm:8.6.0"],\
@@ -59,6 +60,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["pino-pretty", "npm:9.4.0"],\
             ["prettier", "npm:2.8.4"],\
             ["rimraf", "npm:4.1.2"],\
+            ["showdown", "npm:2.1.0"],\
             ["ts-jest", "virtual:9fc52fb708650d8aee495e014ea163d6e7a250b0c7643c2f43a2b3af0f401a37b67526aacd23b886d536ea3e838e18ac504a491304a3cbae2efa13c3c996ebec#npm:29.0.5"],\
             ["ts-node-dev", "virtual:9fc52fb708650d8aee495e014ea163d6e7a250b0c7643c2f43a2b3af0f401a37b67526aacd23b886d536ea3e838e18ac504a491304a3cbae2efa13c3c996ebec#npm:2.0.0"],\
             ["twilio", "npm:4.8.0"],\
@@ -145,6 +147,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/jest", "npm:29.4.0"],\
             ["@types/lodash", "npm:4.14.191"],\
             ["@types/node", "npm:18.13.0"],\
+            ["@types/showdown", "npm:2.0.0"],\
             ["@typescript-eslint/eslint-plugin", "virtual:9fc52fb708650d8aee495e014ea163d6e7a250b0c7643c2f43a2b3af0f401a37b67526aacd23b886d536ea3e838e18ac504a491304a3cbae2efa13c3c996ebec#npm:5.52.0"],\
             ["eslint", "npm:8.34.0"],\
             ["eslint-config-prettier", "virtual:9fc52fb708650d8aee495e014ea163d6e7a250b0c7643c2f43a2b3af0f401a37b67526aacd23b886d536ea3e838e18ac504a491304a3cbae2efa13c3c996ebec#npm:8.6.0"],\
@@ -165,6 +168,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["pino-pretty", "npm:9.4.0"],\
             ["prettier", "npm:2.8.4"],\
             ["rimraf", "npm:4.1.2"],\
+            ["showdown", "npm:2.1.0"],\
             ["ts-jest", "virtual:9fc52fb708650d8aee495e014ea163d6e7a250b0c7643c2f43a2b3af0f401a37b67526aacd23b886d536ea3e838e18ac504a491304a3cbae2efa13c3c996ebec#npm:29.0.5"],\
             ["ts-node-dev", "virtual:9fc52fb708650d8aee495e014ea163d6e7a250b0c7643c2f43a2b3af0f401a37b67526aacd23b886d536ea3e838e18ac504a491304a3cbae2efa13c3c996ebec#npm:2.0.0"],\
             ["twilio", "npm:4.8.0"],\
@@ -3977,6 +3981,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@types-semver-npm-7.3.13-56212b60da-00c0724d54.zip/node_modules/@types/semver/",\
           "packageDependencies": [\
             ["@types/semver", "npm:7.3.13"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["@types/showdown", [\
+        ["npm:2.0.0", {\
+          "packageLocation": "./.yarn/cache/@types-showdown-npm-2.0.0-981911f7b3-90ae870146.zip/node_modules/@types/showdown/",\
+          "packageDependencies": [\
+            ["@types/showdown", "npm:2.0.0"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -11486,6 +11499,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/shell-quote-npm-1.8.0-cda42f9ba5-6ef7c5e308.zip/node_modules/shell-quote/",\
           "packageDependencies": [\
             ["shell-quote", "npm:1.8.0"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["showdown", [\
+        ["npm:2.1.0", {\
+          "packageLocation": "./.yarn/cache/showdown-npm-2.1.0-e325b389ea-9e33607612.zip/node_modules/showdown/",\
+          "packageDependencies": [\
+            ["showdown", "npm:2.1.0"],\
+            ["commander", "npm:9.5.0"]\
           ],\
           "linkType": "HARD"\
         }]\

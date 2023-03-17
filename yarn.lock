@@ -68,6 +68,7 @@ __metadata:
     "@types/jest": ^29.4.0
     "@types/lodash": ^4.14.191
     "@types/node": ^18.13.0
+    "@types/showdown": ^2.0.0
     "@typescript-eslint/eslint-plugin": ^5.52.0
     eslint: ^8.34.0
     eslint-config-prettier: ^8.6.0
@@ -88,6 +89,7 @@ __metadata:
     pino-pretty: ^9.4.0
     prettier: 2.8.4
     rimraf: ^4.1.2
+    showdown: ^2.1.0
     ts-jest: ^29.0.5
     ts-node-dev: ^2.0.0
     twilio: ^4.8.0
@@ -2594,6 +2596,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/showdown@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "@types/showdown@npm:2.0.0"
+  checksum: 90ae870146b3d3f2ca75732b5ee9b85cd2b10719f1aea8021af97e0bb6828acd7715093a1f715dcc18244636e1a983650556a051b1aa51a06018302b1d7c8722
+  languageName: node
+  linkType: hard
+
 "@types/stack-utils@npm:^2.0.0":
   version: 2.0.1
   resolution: "@types/stack-utils@npm:2.0.1"
@@ -3864,7 +3873,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"commander@npm:^9.4.1":
+"commander@npm:^9.0.0, commander@npm:^9.4.1":
   version: 9.5.0
   resolution: "commander@npm:9.5.0"
   checksum: c7a3e27aa59e913b54a1bafd366b88650bc41d6651f0cbe258d4ff09d43d6a7394232a4dadd0bf518b3e696fdf595db1028a0d82c785b88bd61f8a440cecfade
@@ -8865,6 +8874,17 @@ __metadata:
   version: 1.8.0
   resolution: "shell-quote@npm:1.8.0"
   checksum: 6ef7c5e308b9c77eedded882653a132214fa98b4a1512bb507588cf6cd2fc78bfee73e945d0c3211af028a1eabe09c6a19b96edd8977dc149810797e93809749
+  languageName: node
+  linkType: hard
+
+"showdown@npm:^2.1.0":
+  version: 2.1.0
+  resolution: "showdown@npm:2.1.0"
+  dependencies:
+    commander: ^9.0.0
+  bin:
+    showdown: bin/showdown.js
+  checksum: 9e33607612c4465f9ef39de356e2cee512e248eb71d4725e1d4353cf3ab4bbe89a94601ce6bfbd8245000633693c8b90e7d85a9613dfeba7704a7422cee78282
   languageName: node
   linkType: hard
 
