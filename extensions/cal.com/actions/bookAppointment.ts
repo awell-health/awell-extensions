@@ -24,6 +24,12 @@ export const bookAppointment: Action<typeof fields, typeof settings> = {
   description: 'Enable a stakeholder to book an appointment via Cal.com.',
   category: Category.SCHEDULING,
   fields,
+  options: {
+    stakeholders: {
+      label: 'Stakeholder',
+      mode: 'single'
+    }
+  },
   onActivityCreated: async (payload, onComplete, onError) => {
     const {
       fields: { calLink },
