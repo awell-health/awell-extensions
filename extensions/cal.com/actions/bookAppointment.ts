@@ -1,4 +1,10 @@
-import { type DataPointDefinition, FieldType, type Action, type Field } from '../../../lib/types'
+import {
+  FieldType,
+  StakeholdersMode,
+  type DataPointDefinition,
+  type Action,
+  type Field,
+} from '../../../lib/types'
 import { Category } from '../../../lib/types/marketplace'
 import { type settings } from '../settings'
 
@@ -43,8 +49,8 @@ export const bookAppointment: Action<typeof fields, typeof settings> = {
   options: {
     stakeholders: {
       label: 'Stakeholder',
-      mode: 'single'
-    }
+      mode: StakeholdersMode.single,
+    },
   },
   onActivityCreated: async (payload, onComplete, onError) => {
     const {

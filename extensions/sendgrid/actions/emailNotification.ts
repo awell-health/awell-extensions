@@ -2,6 +2,7 @@
 import sendgridMail, { type MailDataRequired } from '../sendgridSdk'
 import {
   FieldType,
+  StakeholdersMode,
   StringType,
   type Action,
   type Field,
@@ -12,7 +13,7 @@ import { Category } from '../../../lib/types/marketplace'
 
 const fields = {
   toEmails: {
-    id: 'toEmails',
+    id: 'to-emails',
     label: 'To email(s)',
     type: FieldType.STRING,
     stringType: StringType.EMAIL,
@@ -28,7 +29,7 @@ const fields = {
     description: 'Subject of the email',
   },
   bodyHtml: {
-    id: 'bodyHtml',
+    id: 'body-html',
     label: 'Content',
     type: FieldType.HTML,
     required: true,
@@ -40,8 +41,16 @@ export const emailNotification: Action<typeof fields, typeof settings> = {
   key: 'emailNotification',
   title: 'Send email',
   category: Category.COMMUNICATION,
-  description: 'Send email using Sendgrid API.',
+  description: 'Send an email via the Sendgrid API.',
   fields,
+  options: {
+    stakeholders: {
+      label: 'Send to patient',
+      mode: StakeholdersMode.toggle,
+      description:
+        'If enabled and a patient email address is available in the patient profile, the email will be sent to the patient',
+    },
+  },
   onActivityCreated: async (payload, onComplete) => {
     const {
       fields: { toEmails, subject, bodyHtml },

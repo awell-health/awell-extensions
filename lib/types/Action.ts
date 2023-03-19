@@ -5,6 +5,7 @@ import { type OnCompleteCallback } from './OnCompleteCallback'
 import { type OnErrorCallback } from './OnErrorCallback'
 import { type DataPointDefinition } from './DataPointDefinition'
 import { type Category } from './marketplace'
+import { type StakeholdersSettings } from './StakeholdersSettings'
 
 export interface Action<
   Fields extends Record<string, Field>,
@@ -23,11 +24,8 @@ export interface Action<
     onComplete: OnCompleteCallback<DPKeys>,
     onError: OnErrorCallback
   ) => Promise<void>
-  // @Deprecated. Don't use unless you absolutey have to
+  // @Deprecated. Don't use unless you absolutely have to
   options?: {
-    stakeholders?: {
-      label: string
-      mode: 'single'
-    }
+    stakeholders?: StakeholdersSettings
   }
 }

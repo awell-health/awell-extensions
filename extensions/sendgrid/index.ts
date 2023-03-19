@@ -1,11 +1,6 @@
 import { type Extension } from '../../lib/types'
 import { settings } from './settings'
-import {
-  emailNotification,
-  emailNotificationWithTemplate,
-  patientEmailNotification,
-  patientEmailNotificationWithTemplate,
-} from './actions'
+import { emailNotification, emailNotificationWithTemplate } from './actions'
 import { AuthorType, Category } from '../../lib/types/marketplace'
 
 export const Sendgrid: Extension = {
@@ -18,8 +13,6 @@ export const Sendgrid: Extension = {
   actions: {
     emailNotification,
     emailNotificationWithTemplate,
-    patientEmailNotification,
-    patientEmailNotificationWithTemplate,
   },
   settings,
   author: {

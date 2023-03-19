@@ -2,6 +2,7 @@
 import sendgridMail, { type MailDataRequired } from '../sendgridSdk'
 import {
   FieldType,
+  StakeholdersMode,
   StringType,
   type Action,
   type Field,
@@ -12,7 +13,7 @@ import { Category } from '../../../lib/types/marketplace'
 
 const fields = {
   toEmails: {
-    id: 'toEmails',
+    id: 'to-emails',
     label: 'To email(s)',
     type: FieldType.STRING,
     stringType: StringType.EMAIL,
@@ -20,7 +21,7 @@ const fields = {
       'Specify email addresses to send the email to. Separate multiple email addresses with a comma',
   },
   templateId: {
-    id: 'templateId',
+    id: 'template-id',
     label: 'Template id',
     type: FieldType.STRING,
     stringType: StringType.TEXT,
@@ -29,7 +30,7 @@ const fields = {
       'ID of the dynamic template to use. You can find this in the Sendgrid UI',
   },
   templateData: {
-    id: 'templateData',
+    id: 'template-data',
     label: 'Dynamic template data',
     type: FieldType.JSON,
     description:
@@ -46,6 +47,14 @@ export const emailNotificationWithTemplate: Action<
   category: Category.COMMUNICATION,
   description: 'Send a dynamic template email via the Sendgrid API',
   fields,
+  options: {
+    stakeholders: {
+      label: 'Send to patient',
+      mode: StakeholdersMode.toggle,
+      description:
+        'If enabled and a patient email address is available in the patient profile, the email will be sent to the patient',
+    },
+  },
   onActivityCreated: async (payload, onComplete) => {
     const {
       fields: { toEmails, templateId, templateData },
