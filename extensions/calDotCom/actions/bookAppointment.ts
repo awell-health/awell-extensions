@@ -19,14 +19,6 @@ const fields = {
 } satisfies Record<string, Field>
 
 const dataPoints = {
-  date: {
-    key: 'date',
-    valueType: 'string',
-  },
-  eventTypeId: {
-    key: 'eventTypeId',
-    valueType: 'string',
-  },
   bookingId: {
     key: 'bookingId',
     valueType: 'string',
