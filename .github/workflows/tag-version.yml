@@ -1,0 +1,22 @@
+name: Tag docker image
+
+on:
+  push:
+    tags: ["*"]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - id: 'auth'
+      uses: 'google-github-actions/auth@v1'
+      with:
+        credentials_json: '${{ secrets.GCR_KEY }}'
+    - name: 'Set up Cloud SDK'
+      uses: 'google-github-actions/setup-gcloud@v1'
+    - name: Tag docker image
+      shell: bash
+      env:
+        SRC: eu.gcr.io/awell-container-registry/extensions:${{ github.sha }}
+        DST: eu.gcr.io/awell-container-registry/extensions:${{ github.ref_name }}
+      run: gcloud -q container images add-tag ${{ env.SRC }} ${{ env.DST }}
