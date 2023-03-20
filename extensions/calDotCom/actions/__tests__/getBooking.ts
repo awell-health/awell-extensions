@@ -1,29 +1,30 @@
-import { bookAppointment } from '..'
+import { getBooking } from '../'
+jest.mock('../../calComApi')
 
-describe('Simple book appointment action', () => {
+describe('Simple getBooking action', () => {
   const onComplete = jest.fn()
 
   beforeEach(() => {
     onComplete.mockClear()
   })
 
-  test('Should not call the onComplete callback', async () => {
-    await bookAppointment.onActivityCreated(
+  test('Should call the onComplete callback', async () => {
+    await getBooking.onActivityCreated(
       {
         activity: {
           id: 'activity-id',
         },
         patient: { id: 'test-patient' },
         fields: {
-          calLink: 'awell/1h',
+          bookingId: '123',
         },
         settings: {
-          apiKey: 'abc123',
+          apiKey: 'apiKey',
         },
       },
       onComplete,
       jest.fn()
     )
-    expect(onComplete).not.toHaveBeenCalled()
+    expect(onComplete).toHaveBeenCalled()
   })
 })
