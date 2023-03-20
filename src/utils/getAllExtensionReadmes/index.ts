@@ -1,1 +1,0 @@
-export { getAllExtensionReadmes } from './getAllExtensionReadmes'
