@@ -9,13 +9,6 @@ const fields = {
     type: FieldType.STRING,
     required: true,
   },
-  // TODO: Implement BOOLEAN field type for `Show event type details`
-  // showEventTypeDetails: {
-  //   id: 'showEventTypeDetails',
-  //   label: 'Show event type details',
-  //   type: FieldType.BOOLEAN,
-  //   required: false,
-  // },
 } satisfies Record<string, Field>
 
 const dataPoints = {
