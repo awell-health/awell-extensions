@@ -5,7 +5,7 @@ on:
     tags: ["*"]
 
 jobs:
-  build:
+  tag:
     runs-on: ubuntu-latest
     steps:
     - id: 'auth'
