@@ -18,7 +18,3 @@ export interface Extension {
   >
   webhooks?: Array<Webhook<string, any>>
 }
-
-export interface ExtensionWithDocumentation extends Extension {
-  htmlDocs: string
-}
