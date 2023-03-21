@@ -1,6 +1,6 @@
 import { type Extension } from '../../lib/types'
 import { AuthorType, Category } from '../../lib/types/marketplace'
-import { bookAppointment } from './actions'
+import { bookAppointment, getBooking } from './actions'
 import { settings } from './settings'
 
 export const CalDotCom: Extension = {
@@ -14,6 +14,7 @@ export const CalDotCom: Extension = {
   },
   actions: {
     bookAppointment,
+    getBooking
   },
   settings,
 }

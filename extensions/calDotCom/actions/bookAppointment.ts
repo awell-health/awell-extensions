@@ -9,24 +9,9 @@ const fields = {
     type: FieldType.STRING,
     required: true,
   },
-  // TODO: Implement BOOLEAN field type for `Show event type details`
-  // showEventTypeDetails: {
-  //   id: 'showEventTypeDetails',
-  //   label: 'Show event type details',
-  //   type: FieldType.BOOLEAN,
-  //   required: false,
-  // },
 } satisfies Record<string, Field>
 
 const dataPoints = {
-  date: {
-    key: 'date',
-    valueType: 'string',
-  },
-  eventTypeId: {
-    key: 'eventTypeId',
-    valueType: 'string',
-  },
   bookingId: {
     key: 'bookingId',
     valueType: 'string',
@@ -49,7 +34,6 @@ export const bookAppointment: Action<typeof fields, typeof settings> = {
   onActivityCreated: async (payload, onComplete, onError) => {
     const {
       fields: { calLink },
-      settings,
     } = payload
     if (calLink === undefined) {
       await onError({
@@ -60,26 +44,6 @@ export const bookAppointment: Action<typeof fields, typeof settings> = {
           },
         ],
       })
-    } else {
-      try {
-        console.log('bookAppointment -> onActivityCreated executed with: ', {
-          fields: { calLink },
-          settings,
-        })
-      } catch (error) {
-        await onError({
-          events: [
-            {
-              date: new Date().toISOString(),
-              text: {
-                en: `Error in calDotCom extension -> bookAppointment action: ${JSON.stringify(
-                  error
-                )}`,
-              },
-            },
-          ],
-        })
-      }
     }
   },
 }
