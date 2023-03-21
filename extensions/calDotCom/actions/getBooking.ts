@@ -62,10 +62,6 @@ export const getBooking: Action<typeof fields, typeof settings> = {
       })
     } else {
       try {
-        console.log('getBooking -> onActivityCreated executed with: ', {
-          fields: { bookingId },
-          settings: { apiKey },
-        })
         const calComApi = new CalComApi(apiKey);
         const { booking } = await calComApi.getBooking(bookingId)
 

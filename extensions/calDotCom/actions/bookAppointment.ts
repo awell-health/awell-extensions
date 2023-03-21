@@ -34,7 +34,6 @@ export const bookAppointment: Action<typeof fields, typeof settings> = {
   onActivityCreated: async (payload, onComplete, onError) => {
     const {
       fields: { calLink },
-      settings,
     } = payload
     if (calLink === undefined) {
       await onError({
@@ -45,26 +44,6 @@ export const bookAppointment: Action<typeof fields, typeof settings> = {
           },
         ],
       })
-    } else {
-      try {
-        console.log('bookAppointment -> onActivityCreated executed with: ', {
-          fields: { calLink },
-          settings,
-        })
-      } catch (error) {
-        await onError({
-          events: [
-            {
-              date: new Date().toISOString(),
-              text: {
-                en: `Error in calDotCom extension -> bookAppointment action: ${JSON.stringify(
-                  error
-                )}`,
-              },
-            },
-          ],
-        })
-      }
     }
   },
 }
