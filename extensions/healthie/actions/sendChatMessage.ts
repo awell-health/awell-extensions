@@ -24,12 +24,6 @@ const fields = {
     type: FieldType.TEXT,
     required: true,
   },
-  always_create_new_conversation: {
-    id: 'always_create_new_conversation',
-    label: 'Always create a new conversation',
-    description: 'When set to "Yes", a new conversation will always be created  between the patient and the provider, even if one already exists.',
-    type: FieldType.BOOLEAN,
-  },
   message: {
     id: 'message',
     label: 'Message',
@@ -50,7 +44,7 @@ export const sendChatMessage: Action<
   previewable: true,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
     const { fields, settings } = payload
-    const { healthie_patient_id, provider_id, always_create_new_conversation, message } = fields
+    const { healthie_patient_id, provider_id, message } = fields
     try {
       if (healthie_patient_id === undefined) throw new Error(`Fields are missing!: ${JSON.stringify(fields)}}`)
 
@@ -74,34 +68,26 @@ export const sendChatMessage: Action<
           })
         }
 
-        if (always_create_new_conversation === 'true') {
+        const { data } = await sdk.getConversationList({
+          client_id: healthie_patient_id,
+          active_status: "active",
+          conversation_type: "individual"
+        })
+
+        const conversations = data.conversationMemberships ?? [];
+        const conversation = conversations.find((value) => value?.convo?.owner?.id === provider_id);
+
+        let conversationId = conversation?.id;
+        if (isNil(conversationId)) {
           const conversation = await createConversation()
-          const conversationId = conversation?.id
-
-          if (!isNil(conversationId)) await sendMessage(conversationId);
-        } else {
-          const { data } = await sdk.getConversationList({
-            client_id: healthie_patient_id,
-            active_status: "active",
-            conversation_type: "individual"
-          })
-
-          const conversations = data.conversationMemberships ?? [];
-          const conversation = conversations.find((value) => value?.convo?.owner?.id === provider_id);
-
-          if (!isNil(conversation)) {
-            const conversationId = conversation.id;
-            await sendMessage(conversationId);
-          } else {
-            const conversation = await createConversation()
-            const conversationId = conversation?.id
-
-            if (!isNil(conversationId)) await sendMessage(conversationId);
-          }
-
+          conversationId = conversation?.id
         }
 
+        if (isNil(conversationId)) {
+          throw new Error('Conversation doesn\'t exist nor couldn\'t be created!')
+        }
 
+        await sendMessage(conversationId)
 
         await onComplete()
       } else {
