@@ -11,7 +11,10 @@ import {
 } from '../lib/types'
 import { extensions } from '../extensions'
 import { PubSub } from '@google-cloud/pubsub'
-import { getExtensionDocumentation } from './documentation'
+import {
+  getExtensionChangelog,
+  getExtensionDocumentation,
+} from './documentation'
 
 type ExtensionWebConfig = Omit<Extension, 'actions' | 'webhooks'> & {
   actions: Record<
@@ -23,6 +26,7 @@ type ExtensionWebConfig = Omit<Extension, 'actions' | 'webhooks'> & {
   >
   webhooks: Array<Omit<Webhook<string, unknown>, 'onWebhookReceived'>>
   htmlDocs: string
+  changelog: string
 }
 
 const getExtensionConfig = (extension: Extension): ExtensionWebConfig => {
@@ -35,6 +39,7 @@ const getExtensionConfig = (extension: Extension): ExtensionWebConfig => {
       omit(webhook, 'onWebhookReceived')
     ),
     htmlDocs: getExtensionDocumentation(extension.key),
+    changelog: getExtensionChangelog(extension.key),
   }
 }
 
