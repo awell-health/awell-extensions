@@ -20629,23 +20629,6 @@ export type CreateConversationMutationVariables = Exact<{
 
 export type CreateConversationMutation = { __typename?: 'Mutation', createConversation?: { __typename?: 'createConversationPayload', conversation?: { __typename?: 'Conversation', id: string } | null, messages?: Array<{ __typename?: 'FieldError', field?: string | null, message: string } | null> | null } | null };
 
-export type CreateNoteMutationVariables = Exact<{
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  user_id?: InputMaybe<Scalars['String']>;
-  content?: InputMaybe<Scalars['String']>;
-  conversation_id?: InputMaybe<Scalars['String']>;
-  attached_image?: InputMaybe<Scalars['Upload']>;
-  attached_document?: InputMaybe<Scalars['Upload']>;
-  attached_audio?: InputMaybe<Scalars['Upload']>;
-  attached_image_string?: InputMaybe<Scalars['String']>;
-  scheduled_at?: InputMaybe<Scalars['String']>;
-  org_chat?: InputMaybe<Scalars['Boolean']>;
-  hide_org_chat_confirmation?: InputMaybe<Scalars['Boolean']>;
-}>;
-
-
-export type CreateNoteMutation = { __typename?: 'Mutation', createNote?: { __typename?: 'createNotePayload', messages?: Array<{ __typename?: 'FieldError', field?: string | null, message: string } | null> | null, note?: { __typename?: 'Note', id: string, user_id?: string | null, recipient_id?: string | null } | null } | null };
-
 export type CreateTaskMutationVariables = Exact<{
   content?: InputMaybe<Scalars['String']>;
   user_id?: InputMaybe<Scalars['String']>;
@@ -20665,7 +20648,7 @@ export type GetAppointmentQueryVariables = Exact<{
 
 export type GetAppointmentQuery = { __typename?: 'Query', appointment?: { __typename?: 'Appointment', id: string, date?: string | null, contact_type?: string | null, pm_status?: string | null, provider?: { __typename?: 'User', id: string, full_name?: string | null } | null, user?: { __typename?: 'User', id: string, full_name?: string | null } | null, appointment_type?: { __typename?: 'AppointmentType', id: string, name?: string | null } | null } | null };
 
-export type ConversationMembershipsQueryVariables = Exact<{
+export type GetConversationListQueryVariables = Exact<{
   offset?: InputMaybe<Scalars['Int']>;
   keywords?: InputMaybe<Scalars['String']>;
   active_status?: InputMaybe<Scalars['String']>;
@@ -20673,11 +20656,10 @@ export type ConversationMembershipsQueryVariables = Exact<{
   read_status?: InputMaybe<Scalars['String']>;
   conversation_type?: InputMaybe<Scalars['String']>;
   provider_id?: InputMaybe<Scalars['ID']>;
-  is_scheduled_tab: Scalars['Boolean'];
 }>;
 
 
-export type ConversationMembershipsQuery = { __typename?: 'Query', conversationMembershipsCount?: number | null, conversationMemberships?: Array<{ __typename?: 'ConversationMembership', id: string, display_name?: string | null, archived?: boolean | null, viewed?: boolean | null, convo?: { __typename?: 'Conversation', id: string, conversation_memberships_count?: number | null } | null } | null> | null };
+export type GetConversationListQuery = { __typename?: 'Query', conversationMembershipsCount?: number | null, conversationMemberships?: Array<{ __typename?: 'ConversationMembership', id: string, display_name?: string | null, archived?: boolean | null, viewed?: boolean | null, convo?: { __typename?: 'Conversation', id: string, conversation_memberships_count?: number | null } | null } | null> | null };
 
 export type GetUserQueryVariables = Exact<{
   id?: InputMaybe<Scalars['ID']>;
@@ -20685,6 +20667,23 @@ export type GetUserQueryVariables = Exact<{
 
 
 export type GetUserQuery = { __typename?: 'Query', user?: { __typename?: 'User', id: string, first_name?: string | null, last_name?: string | null, dob?: string | null, gender?: string | null, email?: string | null, phone_number?: string | null, next_appt_date?: string | null } | null };
+
+export type SendChatMessageMutationVariables = Exact<{
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  user_id?: InputMaybe<Scalars['String']>;
+  content?: InputMaybe<Scalars['String']>;
+  conversation_id?: InputMaybe<Scalars['String']>;
+  attached_image?: InputMaybe<Scalars['Upload']>;
+  attached_document?: InputMaybe<Scalars['Upload']>;
+  attached_audio?: InputMaybe<Scalars['Upload']>;
+  attached_image_string?: InputMaybe<Scalars['String']>;
+  scheduled_at?: InputMaybe<Scalars['String']>;
+  org_chat?: InputMaybe<Scalars['Boolean']>;
+  hide_org_chat_confirmation?: InputMaybe<Scalars['Boolean']>;
+}>;
+
+
+export type SendChatMessageMutation = { __typename?: 'Mutation', createNote?: { __typename?: 'createNotePayload', messages?: Array<{ __typename?: 'FieldError', field?: string | null, message: string } | null> | null, note?: { __typename?: 'Note', id: string, user_id?: string | null, recipient_id?: string | null } | null } | null };
 
 
 export const CreateAppointmentDocument = gql`
@@ -20713,23 +20712,6 @@ export const CreateConversationDocument = gql`
     messages {
       field
       message
-    }
-  }
-}
-    `;
-export const CreateNoteDocument = gql`
-    mutation createNote($clientMutationId: String, $user_id: String, $content: String, $conversation_id: String, $attached_image: Upload, $attached_document: Upload, $attached_audio: Upload, $attached_image_string: String, $scheduled_at: String, $org_chat: Boolean, $hide_org_chat_confirmation: Boolean) {
-  createNote(
-    input: {clientMutationId: $clientMutationId, user_id: $user_id, content: $content, conversation_id: $conversation_id, attached_image: $attached_image, attached_document: $attached_document, attached_audio: $attached_audio, attached_image_string: $attached_image_string, scheduled_at: $scheduled_at, org_chat: $org_chat, hide_org_chat_confirmation: $hide_org_chat_confirmation}
-  ) {
-    messages {
-      field
-      message
-    }
-    note {
-      id
-      user_id
-      recipient_id
     }
   }
 }
@@ -20771,8 +20753,8 @@ export const GetAppointmentDocument = gql`
   }
 }
     `;
-export const ConversationMembershipsDocument = gql`
-    query conversationMemberships($offset: Int, $keywords: String, $active_status: String, $client_id: String, $read_status: String, $conversation_type: String, $provider_id: ID, $is_scheduled_tab: Boolean!) {
+export const GetConversationListDocument = gql`
+    query getConversationList($offset: Int, $keywords: String, $active_status: String, $client_id: String, $read_status: String, $conversation_type: String, $provider_id: ID) {
   conversationMembershipsCount(
     keywords: $keywords
     active_status: $active_status
@@ -20815,6 +20797,23 @@ export const GetUserDocument = gql`
   }
 }
     `;
+export const SendChatMessageDocument = gql`
+    mutation sendChatMessage($clientMutationId: String, $user_id: String, $content: String, $conversation_id: String, $attached_image: Upload, $attached_document: Upload, $attached_audio: Upload, $attached_image_string: String, $scheduled_at: String, $org_chat: Boolean, $hide_org_chat_confirmation: Boolean) {
+  createNote(
+    input: {clientMutationId: $clientMutationId, user_id: $user_id, content: $content, conversation_id: $conversation_id, attached_image: $attached_image, attached_document: $attached_document, attached_audio: $attached_audio, attached_image_string: $attached_image_string, scheduled_at: $scheduled_at, org_chat: $org_chat, hide_org_chat_confirmation: $hide_org_chat_confirmation}
+  ) {
+    messages {
+      field
+      message
+    }
+    note {
+      id
+      user_id
+      recipient_id
+    }
+  }
+}
+    `;
 
 export type SdkFunctionWrapper = <T>(action: (requestHeaders?:Record<string, string>) => Promise<T>, operationName: string, operationType?: string) => Promise<T>;
 
@@ -20822,11 +20821,11 @@ export type SdkFunctionWrapper = <T>(action: (requestHeaders?:Record<string, str
 const defaultWrapper: SdkFunctionWrapper = (action, _operationName, _operationType) => action();
 const CreateAppointmentDocumentString = print(CreateAppointmentDocument);
 const CreateConversationDocumentString = print(CreateConversationDocument);
-const CreateNoteDocumentString = print(CreateNoteDocument);
 const CreateTaskDocumentString = print(CreateTaskDocument);
 const GetAppointmentDocumentString = print(GetAppointmentDocument);
-const ConversationMembershipsDocumentString = print(ConversationMembershipsDocument);
+const GetConversationListDocumentString = print(GetConversationListDocument);
 const GetUserDocumentString = print(GetUserDocument);
+const SendChatMessageDocumentString = print(SendChatMessageDocument);
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
     createAppointment(variables?: CreateAppointmentMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: CreateAppointmentMutation; extensions?: any; headers: Dom.Headers; status: number; }> {
@@ -20835,20 +20834,20 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     createConversation(variables?: CreateConversationMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: CreateConversationMutation; extensions?: any; headers: Dom.Headers; status: number; }> {
         return withWrapper((wrappedRequestHeaders) => client.rawRequest<CreateConversationMutation>(CreateConversationDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'createConversation', 'mutation');
     },
-    createNote(variables?: CreateNoteMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: CreateNoteMutation; extensions?: any; headers: Dom.Headers; status: number; }> {
-        return withWrapper((wrappedRequestHeaders) => client.rawRequest<CreateNoteMutation>(CreateNoteDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'createNote', 'mutation');
-    },
     createTask(variables?: CreateTaskMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: CreateTaskMutation; extensions?: any; headers: Dom.Headers; status: number; }> {
         return withWrapper((wrappedRequestHeaders) => client.rawRequest<CreateTaskMutation>(CreateTaskDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'createTask', 'mutation');
     },
     getAppointment(variables?: GetAppointmentQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: GetAppointmentQuery; extensions?: any; headers: Dom.Headers; status: number; }> {
         return withWrapper((wrappedRequestHeaders) => client.rawRequest<GetAppointmentQuery>(GetAppointmentDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getAppointment', 'query');
     },
-    conversationMemberships(variables: ConversationMembershipsQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: ConversationMembershipsQuery; extensions?: any; headers: Dom.Headers; status: number; }> {
-        return withWrapper((wrappedRequestHeaders) => client.rawRequest<ConversationMembershipsQuery>(ConversationMembershipsDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'conversationMemberships', 'query');
+    getConversationList(variables?: GetConversationListQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: GetConversationListQuery; extensions?: any; headers: Dom.Headers; status: number; }> {
+        return withWrapper((wrappedRequestHeaders) => client.rawRequest<GetConversationListQuery>(GetConversationListDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getConversationList', 'query');
     },
     getUser(variables?: GetUserQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: GetUserQuery; extensions?: any; headers: Dom.Headers; status: number; }> {
         return withWrapper((wrappedRequestHeaders) => client.rawRequest<GetUserQuery>(GetUserDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getUser', 'query');
+    },
+    sendChatMessage(variables?: SendChatMessageMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: SendChatMessageMutation; extensions?: any; headers: Dom.Headers; status: number; }> {
+        return withWrapper((wrappedRequestHeaders) => client.rawRequest<SendChatMessageMutation>(SendChatMessageDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'sendChatMessage', 'mutation');
     }
   };
 }

@@ -1,4 +1,4 @@
-mutation createNote(
+mutation sendChatMessage(
   $clientMutationId: String
   $user_id: String
   $content: String

@@ -1,4 +1,4 @@
-query conversationMemberships(
+query getConversationList(
   $offset: Int
   $keywords: String
   $active_status: String
@@ -6,7 +6,6 @@ query conversationMemberships(
   $read_status: String
   $conversation_type: String
   $provider_id: ID
-  $is_scheduled_tab: Boolean!
 ) {
   conversationMembershipsCount(
     keywords: $keywords
