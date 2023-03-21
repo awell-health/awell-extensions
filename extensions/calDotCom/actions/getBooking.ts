@@ -13,28 +13,28 @@ const fields = {
 } satisfies Record<string, Field>
 
 const dataPoints = {
-  calApptEventTypeId: {
-    key: 'calApptEventTypeId',
+  eventTypeId: {
+    key: 'eventTypeId',
     valueType: 'string',
   },
-  calApptTitle: {
-    key: 'calApptTitle',
+  title: {
+    key: 'title',
     valueType: 'string',
   },
-  calApptDescription: {
-    key: 'calApptDescription',
+  description: {
+    key: 'description',
     valueType: 'string',
   },
-  calApptStartTime: {
-    key: 'calApptStartTime',
+  startTime: {
+    key: 'startTime',
     valueType: 'string',
   },
-  calApptEndTime: {
-    key: 'calApptEndTime',
+  endTime: {
+    key: 'endTime',
     valueType: 'string',
   },
-  calStatus: {
-    key: 'calStatus',
+  status: {
+    key: 'status',
     valueType: 'string',
   },
 } satisfies Record<string, DataPointDefinition>
@@ -67,12 +67,12 @@ export const getBooking: Action<typeof fields, typeof settings> = {
 
         await onComplete({
           data_points: {
-            calApptEventTypeId: `${booking.eventTypeId}`,
-            calApptTitle: booking.title,
-            calApptDescription: booking.description,
-            calApptStartTime: booking.startTime,
-            calApptEndTime: booking.endTime,
-            calStatus: booking.status,
+            eventTypeId: `${booking.eventTypeId}`,
+            title: booking.title,
+            description: booking.description,
+            startTime: booking.startTime,
+            endTime: booking.endTime,
+            status: booking.status,
           },
         })
       } catch (error) {
