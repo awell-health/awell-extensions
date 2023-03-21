@@ -747,6 +747,8 @@ export type AppointmentType = {
   __typename?: 'AppointmentType';
   /** The appointment setting associated with this appointment type. An associated appointment setting overrides the providers general one. */
   appointment_setting?: Maybe<AppointmentSetting>;
+  /** The cpt code units for this appointment type */
+  appointment_type_cpt_codes?: Maybe<Array<Maybe<AppointmentTypeCptCodeType>>>;
   /** Is true if upcoming availability exists */
   availability_exists_for?: Maybe<Scalars['Boolean']>;
   /** List of available contact types for this appointment type */
@@ -887,6 +889,15 @@ export type AppointmentTypeAppointmentSettingInput = {
   send_text_reminder_two_days_before?: InputMaybe<Scalars['Boolean']>;
   send_text_reminder_two_hours_before?: InputMaybe<Scalars['Boolean']>;
   use_client_credit_system?: InputMaybe<Scalars['Boolean']>;
+};
+
+/** AppointmentTypeCptCode object */
+export type AppointmentTypeCptCodeType = {
+  __typename?: 'AppointmentTypeCptCodeType';
+  appointment_type_id?: Maybe<Scalars['ID']>;
+  cpt_code_id?: Maybe<Scalars['ID']>;
+  id: Scalars['ID'];
+  units?: Maybe<Scalars['String']>;
 };
 
 /** An object containing information the clients' remaining credit for a given appointment type */
@@ -1439,6 +1450,14 @@ export type Campaign = {
 export type CampaignClientsArgs = {
   offset?: InputMaybe<Scalars['Int']>;
   should_paginate?: InputMaybe<Scalars['Boolean']>;
+};
+
+/** Info on connection to Candid Health */
+export type CandidHealthConnection = {
+  __typename?: 'CandidHealthConnection';
+  id: Scalars['ID'];
+  /** True if the Candid connection is turned by user */
+  is_enabled?: Maybe<Scalars['Boolean']>;
 };
 
 /** A Care Plan */
@@ -4253,6 +4272,8 @@ export type LabOrder = {
   appt_confirmation_code?: Maybe<Scalars['String']>;
   /** Date Lab Order was Placed */
   created_at?: Maybe<Scalars['String']>;
+  /** Get result document */
+  document?: Maybe<Document>;
   id: Scalars['ID'];
   /** Order integration (lab_testing_api, evexia, rupa) */
   integration?: Maybe<Scalars['String']>;
@@ -4503,6 +4524,8 @@ export type Mutation = {
   bulkCreateAvailability?: Maybe<BulkCreateAvailabilityPayload>;
   /** creates bulk Entries (intended for apple health only for the time being) */
   bulkCreateEntries?: Maybe<BulkCreateEntriesPayload>;
+  /** Delete tasks */
+  bulkDeleteTasks?: Maybe<BulkDeleteTasksPayload>;
   /** Update unseen card issues on a provider */
   bulkUpdateCardIssues?: Maybe<BulkUpdateCardIssuesPayload>;
   /** Trigger notification email or care plan activation for each user related to the selected care plans. In case of activation, a group care plan will be activated for each user of user_group(unless a user already have an active care plan). If you want to activate selected care plan for only one user(user of group) use ToggleCarePlanStatusForSpecificUser mutation */
@@ -4539,6 +4562,8 @@ export type Mutation = {
   createAppointmentSetting?: Maybe<CreateAppointmentSettingPayload>;
   /** create Appointment Type */
   createAppointmentType?: Maybe<CreateAppointmentTypePayload>;
+  /** Create an Appointment Type CPT Code Object */
+  createAppointmentTypeCptCode?: Maybe<CreateAppointmentTypeCptCodePayload>;
   /** Create auto task generator */
   createAutoTaskGenerator?: Maybe<CreateAutoTaskGeneratorPayload>;
   /** Create availability */
@@ -4633,6 +4658,8 @@ export type Mutation = {
   createInsuranceAuthorization?: Maybe<CreateInsuranceAuthorizationPayload>;
   /** Create Insurance Plan */
   createInsurancePlan?: Maybe<CreateInsurancePlanPayload>;
+  /** Create Lab Order */
+  createLabOrder?: Maybe<CreateLabOrderPayload>;
   /** create Location */
   createLocation?: Maybe<CreateLocationPayload>;
   /** Create a Meal */
@@ -4659,6 +4686,8 @@ export type Mutation = {
   createOrAddToWaterIntakeEntry?: Maybe<CreateOrAddToWaterIntakeEntryPayload>;
   /** create Organization */
   createOrganization?: Maybe<CreateOrganizationPayload>;
+  /** Create an Organization CPT Code Object */
+  createOrganizationCptCode?: Maybe<CreateOrganizationCptCodePayload>;
   /** create OrganizationMembership */
   createOrganizationMembership?: Maybe<CreateOrganizationMembershipPayload>;
   /** Creates a Patner */
@@ -4672,6 +4701,8 @@ export type Mutation = {
   /** Create a Procedure Object */
   createProcedure?: Maybe<CreateProcedurePayload>;
   createProduct?: Maybe<CreateProductPayload>;
+  /** Create a Provider CPT Code Object */
+  createProviderCptCode?: Maybe<CreateProviderCptCodePayload>;
   /** Create a care plan recommendation */
   createRecommendation?: Maybe<CreateRecommendationPayload>;
   /** Create new Referring Physician */
@@ -4682,6 +4713,8 @@ export type Mutation = {
   createRequestedFormCompletion?: Maybe<CreateRequestedFormPayload>;
   /** create requested payment */
   createRequestedPayment?: Maybe<CreateRequestedPaymentPayload>;
+  /** Create a Rupa order */
+  createRupaOrder?: Maybe<CreateRupaOrderPayload>;
   /** create Sent Fax */
   createSentFax?: Maybe<CreateSentFaxPayload>;
   /** Create a Smart Phrase */
@@ -4718,6 +4751,8 @@ export type Mutation = {
   deleteAppointment?: Maybe<DeleteAppointmentPayload>;
   /** Destroy an AppointmentType */
   deleteAppointmentType?: Maybe<DeleteAppointmentTypePayload>;
+  /** Delete a AppointmentTypeCptCode Object */
+  deleteAppointmentTypeCptCode?: Maybe<DeleteAppointmentTypeCptCodePayload>;
   /** Delete auto task generator */
   deleteAutoTaskGenerator?: Maybe<DeleteAutoTaskGeneratorPayload>;
   /** delete Availability */
@@ -4802,6 +4837,8 @@ export type Mutation = {
   deleteOnboardingFlow?: Maybe<DeleteOnboardingFlowPayload>;
   /** Destroy a OnboardingItem */
   deleteOnboardingItem?: Maybe<DeleteOnboardingItemPayload>;
+  /** Delete a OrganizationCptCode Object */
+  deleteOrganizationCptCode?: Maybe<DeleteOrganizationCptCodePayload>;
   /** Destroy an organization info */
   deleteOrganizationInfo?: Maybe<DeleteOrganizationInfoPayload>;
   /** Destroy a Organization Membership */
@@ -4811,6 +4848,8 @@ export type Mutation = {
   /** Delete a Procedure Object */
   deleteProcedure?: Maybe<DeleteProcedurePayload>;
   deleteProduct?: Maybe<DeleteProductPayload>;
+  /** Delete a ProviderCptCode Object */
+  deleteProviderCptCode?: Maybe<DeleteProviderCptCodePayload>;
   /** Destroy a received fax */
   deleteReceivedFax?: Maybe<DeleteReceivedFaxPayload>;
   /** Destroy a care plan recommendation */
@@ -4923,6 +4962,8 @@ export type Mutation = {
   updateAppointmentSetting?: Maybe<UpdateAppointmentSettingPayload>;
   /** Update an Appointment Type and return Appointment Type */
   updateAppointmentType?: Maybe<UpdateAppointmentTypePayload>;
+  /** Update a AppointmentTypeCptCode Object */
+  updateAppointmentTypeCptCode?: Maybe<UpdateAppointmentTypeCptCodePayload>;
   /** update approval status for a user */
   updateApproval?: Maybe<UpdateApprovalPayload>;
   /** Update auto task generator */
@@ -5037,6 +5078,8 @@ export type Mutation = {
   updateOnboardingItem?: Maybe<UpdateOnboardingItemPayload>;
   /** Update Organization */
   updateOrganization?: Maybe<UpdateOrganizationPayload>;
+  /** Update a OrganizationCptCode Object */
+  updateOrganizationCptCode?: Maybe<UpdateOrganizationCptCodePayload>;
   /** Update org members */
   updateOrganizationMember?: Maybe<UpdateOrganizationMemberPayload>;
   /** Update a OrganizationMembership */
@@ -5045,6 +5088,8 @@ export type Mutation = {
   /** Update a Procedure Object */
   updateProcedure?: Maybe<UpdateProcedurePayload>;
   updateProduct?: Maybe<UpdateProductPayload>;
+  /** Update a ProviderCptCode Object */
+  updateProviderCptCode?: Maybe<UpdateProviderCptCodePayload>;
   /** update a received fax */
   updateReceivedFax?: Maybe<UpdateReceivedFaxPayload>;
   /** Update a care plan recommendation */
@@ -5083,6 +5128,8 @@ export type Mutation = {
   updateUserGroup?: Maybe<UpdateUserGroupPayload>;
   /** Update Webhook */
   updateWebhook?: Maybe<UpdateWebhookPayload>;
+  /** Upload a CMS1500 batch to CandidHealth */
+  uploadBatchToCandidHealth?: Maybe<UploadBatchToCandidHealthPayload>;
   /** Upload a CMS1500 batch to OfficeAlly */
   uploadBatchToOfficeally?: Maybe<UploadBatchToOfficeallyPayload>;
   /** Verify 2FA code for Human */
@@ -5132,6 +5179,11 @@ export type MutationBulkCreateAvailabilityArgs = {
 
 export type MutationBulkCreateEntriesArgs = {
   input: BulkCreateEntriesInput;
+};
+
+
+export type MutationBulkDeleteTasksArgs = {
+  input: BulkDeleteTasksInput;
 };
 
 
@@ -5222,6 +5274,11 @@ export type MutationCreateAppointmentSettingArgs = {
 
 export type MutationCreateAppointmentTypeArgs = {
   input: CreateAppointmentTypeInput;
+};
+
+
+export type MutationCreateAppointmentTypeCptCodeArgs = {
+  input: CreateAppointmentTypeCptCodeInput;
 };
 
 
@@ -5460,6 +5517,11 @@ export type MutationCreateInsurancePlanArgs = {
 };
 
 
+export type MutationCreateLabOrderArgs = {
+  input: CreateLabOrderInput;
+};
+
+
 export type MutationCreateLocationArgs = {
   input: CreateLocationInput;
 };
@@ -5525,6 +5587,11 @@ export type MutationCreateOrganizationArgs = {
 };
 
 
+export type MutationCreateOrganizationCptCodeArgs = {
+  input: CreateOrganizationCptCodeInput;
+};
+
+
 export type MutationCreateOrganizationMembershipArgs = {
   input: CreateOrganizationMembershipInput;
 };
@@ -5560,6 +5627,11 @@ export type MutationCreateProductArgs = {
 };
 
 
+export type MutationCreateProviderCptCodeArgs = {
+  input: CreateProviderCptCodeInput;
+};
+
+
 export type MutationCreateRecommendationArgs = {
   input: CreateRecommendationInput;
 };
@@ -5582,6 +5654,11 @@ export type MutationCreateRequestedFormCompletionArgs = {
 
 export type MutationCreateRequestedPaymentArgs = {
   input: CreateRequestedPaymentInput;
+};
+
+
+export type MutationCreateRupaOrderArgs = {
+  input: CreateRupaOrderInput;
 };
 
 
@@ -5672,6 +5749,11 @@ export type MutationDeleteAppointmentArgs = {
 
 export type MutationDeleteAppointmentTypeArgs = {
   input: DeleteAppointmentTypeInput;
+};
+
+
+export type MutationDeleteAppointmentTypeCptCodeArgs = {
+  input: DeleteAppointmentTypeCptCodeInput;
 };
 
 
@@ -5885,6 +5967,11 @@ export type MutationDeleteOnboardingItemArgs = {
 };
 
 
+export type MutationDeleteOrganizationCptCodeArgs = {
+  input: DeleteOrganizationCptCodeInput;
+};
+
+
 export type MutationDeleteOrganizationInfoArgs = {
   input: DeleteOrganizationInfoInput;
 };
@@ -5907,6 +5994,11 @@ export type MutationDeleteProcedureArgs = {
 
 export type MutationDeleteProductArgs = {
   input: DeleteProductInput;
+};
+
+
+export type MutationDeleteProviderCptCodeArgs = {
+  input: DeleteProviderCptCodeInput;
 };
 
 
@@ -6187,6 +6279,11 @@ export type MutationUpdateAppointmentSettingArgs = {
 
 export type MutationUpdateAppointmentTypeArgs = {
   input: UpdateAppointmentTypeInput;
+};
+
+
+export type MutationUpdateAppointmentTypeCptCodeArgs = {
+  input: UpdateAppointmentTypeCptCodeInput;
 };
 
 
@@ -6475,6 +6572,11 @@ export type MutationUpdateOrganizationArgs = {
 };
 
 
+export type MutationUpdateOrganizationCptCodeArgs = {
+  input: UpdateOrganizationCptCodeInput;
+};
+
+
 export type MutationUpdateOrganizationMemberArgs = {
   input: UpdateOrganizationMemberInput;
 };
@@ -6497,6 +6599,11 @@ export type MutationUpdateProcedureArgs = {
 
 export type MutationUpdateProductArgs = {
   input: UpdateProductInput;
+};
+
+
+export type MutationUpdateProviderCptCodeArgs = {
+  input: UpdateProviderCptCodeInput;
 };
 
 
@@ -6592,6 +6699,11 @@ export type MutationUpdateUserGroupArgs = {
 
 export type MutationUpdateWebhookArgs = {
   input: UpdateWebhookInput;
+};
+
+
+export type MutationUploadBatchToCandidHealthArgs = {
+  input: UploadBatchToCandidHealthInput;
 };
 
 
@@ -7401,6 +7513,15 @@ export type OrganizationUsersArgs = {
   show_all_by_default?: InputMaybe<Scalars['Boolean']>;
 };
 
+/** OrganizationCptCode object */
+export type OrganizationCptCodeType = {
+  __typename?: 'OrganizationCptCodeType';
+  cpt_code_id?: Maybe<Scalars['ID']>;
+  id: Scalars['ID'];
+  organization_id?: Maybe<Scalars['ID']>;
+  price_per_unit?: Maybe<Scalars['String']>;
+};
+
 /** Specific information for an organization */
 export type OrganizationInfo = {
   __typename?: 'OrganizationInfo';
@@ -7517,6 +7638,8 @@ export type OrganizationMembership = {
   can_see_sent_faxes?: Maybe<Scalars['Boolean']>;
   /** If true, the user can see transfers tab in billing page */
   can_see_transfers?: Maybe<Scalars['Boolean']>;
+  /** When true, user can submit to Candid */
+  can_submit_cms_1500s_to_candid_health?: Maybe<Scalars['Boolean']>;
   /** If true, the user can submit CMS 1500s to Office Ally */
   can_submit_cms_1500s_to_office_ally?: Maybe<Scalars['Boolean']>;
   /** If true, it will return all organization tasks for current user */
@@ -8027,6 +8150,15 @@ export type ProviderApptTypeConnection = {
   user_id?: Maybe<Scalars['ID']>;
 };
 
+/** ProviderCptCode object */
+export type ProviderCptCodeType = {
+  __typename?: 'ProviderCptCodeType';
+  cpt_code_id?: Maybe<Scalars['ID']>;
+  id: Scalars['ID'];
+  price_per_unit?: Maybe<Scalars['String']>;
+  provider_id?: Maybe<Scalars['ID']>;
+};
+
 /** The query root of this schema. See available queries. */
 export type Query = {
   __typename?: 'Query';
@@ -8113,6 +8245,8 @@ export type Query = {
   campaignsCount?: Maybe<Scalars['Int']>;
   /** Check if the user has access to the package buy limit feature */
   canCapOfferingPurchases?: Maybe<Scalars['Boolean']>;
+  /** fetch the current users candidhealth  connection */
+  candidHealthConnection?: Maybe<CandidHealthConnection>;
   /** Fetch paginated stripe customer accounts with associated errors or soon to expire credit cards */
   cardIssues?: Maybe<Array<Maybe<StripeCustomerDetail>>>;
   /** Fetch paginated stripe customer accounts with associated errors or soon to expire credit cards */
@@ -8962,6 +9096,7 @@ export type QueryBillingItemsArgs = {
   provider_id?: InputMaybe<Scalars['ID']>;
   sort_by?: InputMaybe<Scalars['String']>;
   state?: InputMaybe<Scalars['String']>;
+  status?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   user_id?: InputMaybe<Scalars['ID']>;
 };
 
@@ -8971,6 +9106,7 @@ export type QueryBillingItemsCountArgs = {
   client_id?: InputMaybe<Scalars['ID']>;
   keywords?: InputMaybe<Scalars['String']>;
   state?: InputMaybe<Scalars['String']>;
+  status?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
 
@@ -12468,6 +12604,8 @@ export type User = {
   can_mark_assigned_tasks_to_other_org_members_as_completed?: Maybe<Scalars['Boolean']>;
   /** If true, the user can merge clients */
   can_merge_clients?: Maybe<Scalars['Boolean']>;
+  /** If true, can order new lab using labs widget */
+  can_order_labs?: Maybe<Scalars['Boolean']>;
   /** Allow this user to schedule appointments (Linked accounts */
   can_schedule_appointments?: Maybe<Scalars['Boolean']>;
   /** If true, user can see products tab in client profile and see fullscript box on homepage if not linked to fullscript */
@@ -13638,6 +13776,22 @@ export type BulkCreateEntriesPayload = {
   messages?: Maybe<Array<Maybe<FieldError>>>;
 };
 
+/** Autogenerated input type of bulkDeleteTasks */
+export type BulkDeleteTasksInput = {
+  /** A unique identifier for the client performing the mutation. */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  ids?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+};
+
+/** Autogenerated return type of bulkDeleteTasks */
+export type BulkDeleteTasksPayload = {
+  __typename?: 'bulkDeleteTasksPayload';
+  /** A unique identifier for the client performing the mutation. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  messages?: Maybe<Array<Maybe<FieldError>>>;
+  tasks?: Maybe<Array<Maybe<Task>>>;
+};
+
 /** Autogenerated input type of bulkUpdateCardIssues */
 export type BulkUpdateCardIssuesInput = {
   /** A unique identifier for the client performing the mutation. */
@@ -13739,7 +13893,9 @@ export type BulkUpdateNotificationsPayload = {
 export type BulkUpdateTasksInput = {
   /** A unique identifier for the client performing the mutation. */
   clientMutationId?: InputMaybe<Scalars['String']>;
+  complete?: InputMaybe<Scalars['Boolean']>;
   seen?: InputMaybe<Scalars['Boolean']>;
+  task_ids?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   update_all_tasks?: InputMaybe<Scalars['Boolean']>;
 };
 
@@ -14122,6 +14278,24 @@ export type CreateAppointmentSettingInput = {
 export type CreateAppointmentSettingPayload = {
   __typename?: 'createAppointmentSettingPayload';
   appointmentSetting?: Maybe<AppointmentSetting>;
+  /** A unique identifier for the client performing the mutation. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  messages?: Maybe<Array<Maybe<FieldError>>>;
+};
+
+/** Autogenerated input type of createAppointmentTypeCptCode */
+export type CreateAppointmentTypeCptCodeInput = {
+  appointment_type_id?: InputMaybe<Scalars['ID']>;
+  /** A unique identifier for the client performing the mutation. */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  cpt_code_id?: InputMaybe<Scalars['ID']>;
+  units?: InputMaybe<Scalars['String']>;
+};
+
+/** Autogenerated return type of createAppointmentTypeCptCode */
+export type CreateAppointmentTypeCptCodePayload = {
+  __typename?: 'createAppointmentTypeCptCodePayload';
+  appointment_type_cpt_code?: Maybe<AppointmentTypeCptCodeType>;
   /** A unique identifier for the client performing the mutation. */
   clientMutationId?: Maybe<Scalars['String']>;
   messages?: Maybe<Array<Maybe<FieldError>>>;
@@ -15325,6 +15499,32 @@ export type CreateInsurancePlanPayload = {
   messages?: Maybe<Array<Maybe<FieldError>>>;
 };
 
+/** Autogenerated input type of createLabOrder */
+export type CreateLabOrderInput = {
+  /** A unique identifier for the client performing the mutation. */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** Required. The ID of the document containing the lab results. Needs to be pre-created and have a rel_user_id matching the patient ID */
+  document_id?: InputMaybe<Scalars['ID']>;
+  /** Required. The lab panel that was ordered */
+  lab?: InputMaybe<Scalars['String']>;
+  /** Required. The lab company who processed the order */
+  lab_company?: InputMaybe<Scalars['String']>;
+  /** Required. The ID of the user in Healthie who ordered the lab */
+  orderer_id?: InputMaybe<Scalars['ID']>;
+  /** Required. The ID of the patient */
+  patient_id?: InputMaybe<Scalars['ID']>;
+};
+
+/** Autogenerated return type of createLabOrder */
+export type CreateLabOrderPayload = {
+  __typename?: 'createLabOrderPayload';
+  /** A unique identifier for the client performing the mutation. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  currentUserNotificationsCount?: Maybe<UserNotificationsCount>;
+  lab_order?: Maybe<LabOrder>;
+  messages?: Maybe<Array<Maybe<FieldError>>>;
+};
+
 /** Autogenerated input type of createLocation */
 export type CreateLocationInput = {
   city?: InputMaybe<Scalars['String']>;
@@ -15615,6 +15815,24 @@ export type CreateOrAddToWaterIntakeEntryPayload = {
   messages?: Maybe<Array<Maybe<FieldError>>>;
 };
 
+/** Autogenerated input type of createOrganizationCptCode */
+export type CreateOrganizationCptCodeInput = {
+  /** A unique identifier for the client performing the mutation. */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  cpt_code_id?: InputMaybe<Scalars['ID']>;
+  organization_id?: InputMaybe<Scalars['ID']>;
+  price_per_unit?: InputMaybe<Scalars['String']>;
+};
+
+/** Autogenerated return type of createOrganizationCptCode */
+export type CreateOrganizationCptCodePayload = {
+  __typename?: 'createOrganizationCptCodePayload';
+  /** A unique identifier for the client performing the mutation. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  messages?: Maybe<Array<Maybe<FieldError>>>;
+  organization_cpt_code?: Maybe<OrganizationCptCodeType>;
+};
+
 /** Autogenerated input type of createOrganization */
 export type CreateOrganizationInput = {
   /** A unique identifier for the client performing the mutation. */
@@ -15810,6 +16028,24 @@ export type CreateProductPayload = {
   product?: Maybe<Product>;
 };
 
+/** Autogenerated input type of createProviderCptCode */
+export type CreateProviderCptCodeInput = {
+  /** A unique identifier for the client performing the mutation. */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  cpt_code_id?: InputMaybe<Scalars['ID']>;
+  price_per_unit?: InputMaybe<Scalars['String']>;
+  provider_id?: InputMaybe<Scalars['ID']>;
+};
+
+/** Autogenerated return type of createProviderCptCode */
+export type CreateProviderCptCodePayload = {
+  __typename?: 'createProviderCptCodePayload';
+  /** A unique identifier for the client performing the mutation. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  messages?: Maybe<Array<Maybe<FieldError>>>;
+  provider_cpt_code?: Maybe<ProviderCptCodeType>;
+};
+
 /** Autogenerated input type of createRecommendation */
 export type CreateRecommendationInput = {
   care_plan_id?: InputMaybe<Scalars['ID']>;
@@ -15936,6 +16172,22 @@ export type CreateRequestedPaymentPayload = {
   clientMutationId?: Maybe<Scalars['String']>;
   messages?: Maybe<Array<Maybe<FieldError>>>;
   requestedPayment?: Maybe<RequestedPayment>;
+};
+
+/** Autogenerated input type of createRupaOrder */
+export type CreateRupaOrderInput = {
+  /** A unique identifier for the client performing the mutation. */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  client_id?: InputMaybe<Scalars['ID']>;
+};
+
+/** Autogenerated return type of createRupaOrder */
+export type CreateRupaOrderPayload = {
+  __typename?: 'createRupaOrderPayload';
+  /** A unique identifier for the client performing the mutation. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  messages?: Maybe<Array<Maybe<FieldError>>>;
+  rupa_order_url?: Maybe<Scalars['String']>;
 };
 
 /** Autogenerated input type of createSentFax */
@@ -16267,6 +16519,22 @@ export type DeleteAppointmentInput = {
 export type DeleteAppointmentPayload = {
   __typename?: 'deleteAppointmentPayload';
   appointment?: Maybe<Appointment>;
+  /** A unique identifier for the client performing the mutation. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  messages?: Maybe<Array<Maybe<FieldError>>>;
+};
+
+/** Autogenerated input type of deleteAppointmentTypeCptCode */
+export type DeleteAppointmentTypeCptCodeInput = {
+  /** A unique identifier for the client performing the mutation. */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  id?: InputMaybe<Scalars['ID']>;
+};
+
+/** Autogenerated return type of deleteAppointmentTypeCptCode */
+export type DeleteAppointmentTypeCptCodePayload = {
+  __typename?: 'deleteAppointmentTypeCptCodePayload';
+  appointment_type_cpt_code?: Maybe<AppointmentTypeCptCodeType>;
   /** A unique identifier for the client performing the mutation. */
   clientMutationId?: Maybe<Scalars['String']>;
   messages?: Maybe<Array<Maybe<FieldError>>>;
@@ -16941,6 +17209,22 @@ export type DeleteOnboardingItemPayload = {
   onboardingItem?: Maybe<OnboardingItem>;
 };
 
+/** Autogenerated input type of deleteOrganizationCptCode */
+export type DeleteOrganizationCptCodeInput = {
+  /** A unique identifier for the client performing the mutation. */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  id?: InputMaybe<Scalars['ID']>;
+};
+
+/** Autogenerated return type of deleteOrganizationCptCode */
+export type DeleteOrganizationCptCodePayload = {
+  __typename?: 'deleteOrganizationCptCodePayload';
+  /** A unique identifier for the client performing the mutation. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  messages?: Maybe<Array<Maybe<FieldError>>>;
+  organization_cpt_code?: Maybe<OrganizationCptCodeType>;
+};
+
 /** Autogenerated input type of deleteOrganizationInfo */
 export type DeleteOrganizationInfoInput = {
   /** A unique identifier for the client performing the mutation. */
@@ -17020,6 +17304,22 @@ export type DeleteProductPayload = {
   clientMutationId?: Maybe<Scalars['String']>;
   messages?: Maybe<Array<Maybe<FieldError>>>;
   product?: Maybe<Product>;
+};
+
+/** Autogenerated input type of deleteProviderCptCode */
+export type DeleteProviderCptCodeInput = {
+  /** A unique identifier for the client performing the mutation. */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  id?: InputMaybe<Scalars['ID']>;
+};
+
+/** Autogenerated return type of deleteProviderCptCode */
+export type DeleteProviderCptCodePayload = {
+  __typename?: 'deleteProviderCptCodePayload';
+  /** A unique identifier for the client performing the mutation. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  messages?: Maybe<Array<Maybe<FieldError>>>;
+  provider_cpt_code?: Maybe<ProviderCptCodeType>;
 };
 
 /** Autogenerated input type of deleteReceivedFax */
@@ -17996,6 +18296,25 @@ export type UpdateAppointmentSettingInput = {
 export type UpdateAppointmentSettingPayload = {
   __typename?: 'updateAppointmentSettingPayload';
   appointmentSetting?: Maybe<AppointmentSetting>;
+  /** A unique identifier for the client performing the mutation. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  messages?: Maybe<Array<Maybe<FieldError>>>;
+};
+
+/** Autogenerated input type of updateAppointmentTypeCptCode */
+export type UpdateAppointmentTypeCptCodeInput = {
+  appointment_type_id?: InputMaybe<Scalars['ID']>;
+  /** A unique identifier for the client performing the mutation. */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  cpt_code_id?: InputMaybe<Scalars['ID']>;
+  id?: InputMaybe<Scalars['ID']>;
+  units?: InputMaybe<Scalars['String']>;
+};
+
+/** Autogenerated return type of updateAppointmentTypeCptCode */
+export type UpdateAppointmentTypeCptCodePayload = {
+  __typename?: 'updateAppointmentTypeCptCodePayload';
+  appointment_type_cpt_code?: Maybe<AppointmentTypeCptCodeType>;
   /** A unique identifier for the client performing the mutation. */
   clientMutationId?: Maybe<Scalars['String']>;
   messages?: Maybe<Array<Maybe<FieldError>>>;
@@ -19128,6 +19447,7 @@ export type UpdateLabOrderInput = {
   clientMutationId?: InputMaybe<Scalars['String']>;
   force_appointment_reload?: InputMaybe<Scalars['Boolean']>;
   id?: InputMaybe<Scalars['ID']>;
+  patient_id?: InputMaybe<Scalars['ID']>;
 };
 
 /** Autogenerated return type of updateLabOrder */
@@ -19475,6 +19795,25 @@ export type UpdateOnboardingItemPayload = {
   onboardingItem?: Maybe<OnboardingItem>;
 };
 
+/** Autogenerated input type of updateOrganizationCptCode */
+export type UpdateOrganizationCptCodeInput = {
+  /** A unique identifier for the client performing the mutation. */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  cpt_code_id?: InputMaybe<Scalars['ID']>;
+  id?: InputMaybe<Scalars['ID']>;
+  organization_id?: InputMaybe<Scalars['ID']>;
+  price_per_unit?: InputMaybe<Scalars['String']>;
+};
+
+/** Autogenerated return type of updateOrganizationCptCode */
+export type UpdateOrganizationCptCodePayload = {
+  __typename?: 'updateOrganizationCptCodePayload';
+  /** A unique identifier for the client performing the mutation. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  messages?: Maybe<Array<Maybe<FieldError>>>;
+  organization_cpt_code?: Maybe<OrganizationCptCodeType>;
+};
+
 /** Autogenerated input type of updateOrganization */
 export type UpdateOrganizationInput = {
   /** A unique identifier for the client performing the mutation. */
@@ -19713,6 +20052,25 @@ export type UpdateProductPayload = {
   clientMutationId?: Maybe<Scalars['String']>;
   messages?: Maybe<Array<Maybe<FieldError>>>;
   product?: Maybe<Product>;
+};
+
+/** Autogenerated input type of updateProviderCptCode */
+export type UpdateProviderCptCodeInput = {
+  /** A unique identifier for the client performing the mutation. */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  cpt_code_id?: InputMaybe<Scalars['ID']>;
+  id?: InputMaybe<Scalars['ID']>;
+  price_per_unit?: InputMaybe<Scalars['String']>;
+  provider_id?: InputMaybe<Scalars['ID']>;
+};
+
+/** Autogenerated return type of updateProviderCptCode */
+export type UpdateProviderCptCodePayload = {
+  __typename?: 'updateProviderCptCodePayload';
+  /** A unique identifier for the client performing the mutation. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  messages?: Maybe<Array<Maybe<FieldError>>>;
+  provider_cpt_code?: Maybe<ProviderCptCodeType>;
 };
 
 /** Autogenerated input type of updateReceivedFax */
@@ -20137,6 +20495,7 @@ export type UpdateUserInput = {
   email?: InputMaybe<Scalars['String']>;
   first_name?: InputMaybe<Scalars['String']>;
   gender?: InputMaybe<Scalars['String']>;
+  gender_identity?: InputMaybe<Scalars['String']>;
   gender_identity_code?: InputMaybe<Scalars['String']>;
   human_id?: InputMaybe<Scalars['ID']>;
   id?: InputMaybe<Scalars['ID']>;
@@ -20162,6 +20521,7 @@ export type UpdateUserInput = {
   seen_onboarding_complete_page?: InputMaybe<Scalars['Boolean']>;
   seen_welcome?: InputMaybe<Scalars['Boolean']>;
   send_get_mobile_app_email?: InputMaybe<Scalars['Boolean']>;
+  sex?: InputMaybe<Scalars['String']>;
   sexual_orientation_code?: InputMaybe<Scalars['String']>;
   skipped_email?: InputMaybe<Scalars['Boolean']>;
   submit_labs_immediately?: InputMaybe<Scalars['Boolean']>;
@@ -20197,6 +20557,23 @@ export type UpdateWebhookPayload = {
   clientMutationId?: Maybe<Scalars['String']>;
   messages?: Maybe<Array<Maybe<FieldError>>>;
   webhook?: Maybe<Webhook>;
+};
+
+/** Autogenerated input type of uploadBatchToCandidHealth */
+export type UploadBatchToCandidHealthInput = {
+  /** A unique identifier for the client performing the mutation. */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  cms1500_ids?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+};
+
+/** Autogenerated return type of uploadBatchToCandidHealth */
+export type UploadBatchToCandidHealthPayload = {
+  __typename?: 'uploadBatchToCandidHealthPayload';
+  /** A unique identifier for the client performing the mutation. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  cms1500s?: Maybe<Array<Maybe<Cms1500>>>;
+  messages?: Maybe<Array<Maybe<FieldError>>>;
+  success_string?: Maybe<Scalars['String']>;
 };
 
 /** Autogenerated input type of uploadBatchToOfficeally */
@@ -20243,6 +20620,32 @@ export type CreateAppointmentMutationVariables = Exact<{
 
 export type CreateAppointmentMutation = { __typename?: 'Mutation', createAppointment?: { __typename?: 'createAppointmentPayload', appointment?: { __typename?: 'Appointment', id: string } | null, messages?: Array<{ __typename?: 'FieldError', field?: string | null, message: string } | null> | null } | null };
 
+export type CreateConversationMutationVariables = Exact<{
+  simple_added_users?: InputMaybe<Scalars['String']>;
+  owner_id?: InputMaybe<Scalars['ID']>;
+  name?: InputMaybe<Scalars['String']>;
+}>;
+
+
+export type CreateConversationMutation = { __typename?: 'Mutation', createConversation?: { __typename?: 'createConversationPayload', conversation?: { __typename?: 'Conversation', id: string } | null, messages?: Array<{ __typename?: 'FieldError', field?: string | null, message: string } | null> | null } | null };
+
+export type CreateNoteMutationVariables = Exact<{
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  user_id?: InputMaybe<Scalars['String']>;
+  content?: InputMaybe<Scalars['String']>;
+  conversation_id?: InputMaybe<Scalars['String']>;
+  attached_image?: InputMaybe<Scalars['Upload']>;
+  attached_document?: InputMaybe<Scalars['Upload']>;
+  attached_audio?: InputMaybe<Scalars['Upload']>;
+  attached_image_string?: InputMaybe<Scalars['String']>;
+  scheduled_at?: InputMaybe<Scalars['String']>;
+  org_chat?: InputMaybe<Scalars['Boolean']>;
+  hide_org_chat_confirmation?: InputMaybe<Scalars['Boolean']>;
+}>;
+
+
+export type CreateNoteMutation = { __typename?: 'Mutation', createNote?: { __typename?: 'createNotePayload', messages?: Array<{ __typename?: 'FieldError', field?: string | null, message: string } | null> | null, note?: { __typename?: 'Note', id: string, user_id?: string | null, recipient_id?: string | null } | null } | null };
+
 export type CreateTaskMutationVariables = Exact<{
   content?: InputMaybe<Scalars['String']>;
   user_id?: InputMaybe<Scalars['String']>;
@@ -20261,6 +20664,20 @@ export type GetAppointmentQueryVariables = Exact<{
 
 
 export type GetAppointmentQuery = { __typename?: 'Query', appointment?: { __typename?: 'Appointment', id: string, date?: string | null, contact_type?: string | null, pm_status?: string | null, provider?: { __typename?: 'User', id: string, full_name?: string | null } | null, user?: { __typename?: 'User', id: string, full_name?: string | null } | null, appointment_type?: { __typename?: 'AppointmentType', id: string, name?: string | null } | null } | null };
+
+export type ConversationMembershipsQueryVariables = Exact<{
+  offset?: InputMaybe<Scalars['Int']>;
+  keywords?: InputMaybe<Scalars['String']>;
+  active_status?: InputMaybe<Scalars['String']>;
+  client_id?: InputMaybe<Scalars['String']>;
+  read_status?: InputMaybe<Scalars['String']>;
+  conversation_type?: InputMaybe<Scalars['String']>;
+  provider_id?: InputMaybe<Scalars['ID']>;
+  is_scheduled_tab: Scalars['Boolean'];
+}>;
+
+
+export type ConversationMembershipsQuery = { __typename?: 'Query', conversationMembershipsCount?: number | null, conversationMemberships?: Array<{ __typename?: 'ConversationMembership', id: string, display_name?: string | null, archived?: boolean | null, viewed?: boolean | null, convo?: { __typename?: 'Conversation', id: string, conversation_memberships_count?: number | null } | null } | null> | null };
 
 export type GetUserQueryVariables = Exact<{
   id?: InputMaybe<Scalars['ID']>;
@@ -20281,6 +20698,38 @@ export const CreateAppointmentDocument = gql`
     messages {
       field
       message
+    }
+  }
+}
+    `;
+export const CreateConversationDocument = gql`
+    mutation createConversation($simple_added_users: String, $owner_id: ID, $name: String) {
+  createConversation(
+    input: {simple_added_users: $simple_added_users, owner_id: $owner_id, name: $name}
+  ) {
+    conversation {
+      id
+    }
+    messages {
+      field
+      message
+    }
+  }
+}
+    `;
+export const CreateNoteDocument = gql`
+    mutation createNote($clientMutationId: String, $user_id: String, $content: String, $conversation_id: String, $attached_image: Upload, $attached_document: Upload, $attached_audio: Upload, $attached_image_string: String, $scheduled_at: String, $org_chat: Boolean, $hide_org_chat_confirmation: Boolean) {
+  createNote(
+    input: {clientMutationId: $clientMutationId, user_id: $user_id, content: $content, conversation_id: $conversation_id, attached_image: $attached_image, attached_document: $attached_document, attached_audio: $attached_audio, attached_image_string: $attached_image_string, scheduled_at: $scheduled_at, org_chat: $org_chat, hide_org_chat_confirmation: $hide_org_chat_confirmation}
+  ) {
+    messages {
+      field
+      message
+    }
+    note {
+      id
+      user_id
+      recipient_id
     }
   }
 }
@@ -20322,6 +20771,36 @@ export const GetAppointmentDocument = gql`
   }
 }
     `;
+export const ConversationMembershipsDocument = gql`
+    query conversationMemberships($offset: Int, $keywords: String, $active_status: String, $client_id: String, $read_status: String, $conversation_type: String, $provider_id: ID, $is_scheduled_tab: Boolean!) {
+  conversationMembershipsCount(
+    keywords: $keywords
+    active_status: $active_status
+    client_id: $client_id
+    read_status: $read_status
+    conversation_type: $conversation_type
+    provider_id: $provider_id
+  )
+  conversationMemberships(
+    offset: $offset
+    keywords: $keywords
+    active_status: $active_status
+    client_id: $client_id
+    read_status: $read_status
+    conversation_type: $conversation_type
+    provider_id: $provider_id
+  ) {
+    id
+    display_name
+    archived
+    viewed
+    convo {
+      id
+      conversation_memberships_count
+    }
+  }
+}
+    `;
 export const GetUserDocument = gql`
     query getUser($id: ID) {
   user(id: $id) {
@@ -20342,19 +20821,31 @@ export type SdkFunctionWrapper = <T>(action: (requestHeaders?:Record<string, str
 
 const defaultWrapper: SdkFunctionWrapper = (action, _operationName, _operationType) => action();
 const CreateAppointmentDocumentString = print(CreateAppointmentDocument);
+const CreateConversationDocumentString = print(CreateConversationDocument);
+const CreateNoteDocumentString = print(CreateNoteDocument);
 const CreateTaskDocumentString = print(CreateTaskDocument);
 const GetAppointmentDocumentString = print(GetAppointmentDocument);
+const ConversationMembershipsDocumentString = print(ConversationMembershipsDocument);
 const GetUserDocumentString = print(GetUserDocument);
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
     createAppointment(variables?: CreateAppointmentMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: CreateAppointmentMutation; extensions?: any; headers: Dom.Headers; status: number; }> {
         return withWrapper((wrappedRequestHeaders) => client.rawRequest<CreateAppointmentMutation>(CreateAppointmentDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'createAppointment', 'mutation');
     },
+    createConversation(variables?: CreateConversationMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: CreateConversationMutation; extensions?: any; headers: Dom.Headers; status: number; }> {
+        return withWrapper((wrappedRequestHeaders) => client.rawRequest<CreateConversationMutation>(CreateConversationDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'createConversation', 'mutation');
+    },
+    createNote(variables?: CreateNoteMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: CreateNoteMutation; extensions?: any; headers: Dom.Headers; status: number; }> {
+        return withWrapper((wrappedRequestHeaders) => client.rawRequest<CreateNoteMutation>(CreateNoteDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'createNote', 'mutation');
+    },
     createTask(variables?: CreateTaskMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: CreateTaskMutation; extensions?: any; headers: Dom.Headers; status: number; }> {
         return withWrapper((wrappedRequestHeaders) => client.rawRequest<CreateTaskMutation>(CreateTaskDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'createTask', 'mutation');
     },
     getAppointment(variables?: GetAppointmentQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: GetAppointmentQuery; extensions?: any; headers: Dom.Headers; status: number; }> {
         return withWrapper((wrappedRequestHeaders) => client.rawRequest<GetAppointmentQuery>(GetAppointmentDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getAppointment', 'query');
+    },
+    conversationMemberships(variables: ConversationMembershipsQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: ConversationMembershipsQuery; extensions?: any; headers: Dom.Headers; status: number; }> {
+        return withWrapper((wrappedRequestHeaders) => client.rawRequest<ConversationMembershipsQuery>(ConversationMembershipsDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'conversationMemberships', 'query');
     },
     getUser(variables?: GetUserQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: GetUserQuery; extensions?: any; headers: Dom.Headers; status: number; }> {
         return withWrapper((wrappedRequestHeaders) => client.rawRequest<GetUserQuery>(GetUserDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getUser', 'query');

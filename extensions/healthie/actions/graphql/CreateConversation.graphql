@@ -1,0 +1,21 @@
+mutation createConversation(
+  $simple_added_users: String # e.g "user-1,group-2,user-3"
+  $owner_id: ID # e.g "4"
+  $name: String # e.g "Questions for Next Appointment"
+) {
+  createConversation(
+    input: {
+      simple_added_users: $simple_added_users
+      owner_id: $owner_id
+      name: $name
+    }
+  ) {
+    conversation {
+      id
+    }
+    messages {
+      field
+      message
+    }
+  }
+}
