@@ -4,7 +4,6 @@ export enum FieldType {
   STRING = 'string',
   TEXT = 'text',
   NUMERIC = 'numeric',
-  BOOLEAN = 'boolean',
 }
 
 interface BaseField {
@@ -43,14 +42,9 @@ type TextField = BaseField & {
   type: FieldType.TEXT
 }
 
-type BooleanField = BaseField & {
-  type: FieldType.BOOLEAN
-}
-
 export type Field =
   | TextField
   | NumericField
   | StringField
   | HtmlField
   | JsonField
-  | BooleanField
