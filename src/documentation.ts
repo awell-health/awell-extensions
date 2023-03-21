@@ -3,7 +3,11 @@ import { has } from 'lodash'
 import path from 'path'
 import Showdown from 'showdown'
 
-const converter = new Showdown.Converter()
+const converter = new Showdown.Converter({
+  tables: true,
+  emoji: true,
+  underline: true,
+})
 const loadedDocumentations: Record<string, string> = {}
 
 const getAppRootDir = (): string => {
