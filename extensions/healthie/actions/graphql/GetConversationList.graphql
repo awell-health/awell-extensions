@@ -31,6 +31,9 @@ query getConversationList(
     convo {
       id
       conversation_memberships_count
+      owner {
+        id
+      }
     }
   }
 }

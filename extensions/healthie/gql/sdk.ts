@@ -20659,7 +20659,7 @@ export type GetConversationListQueryVariables = Exact<{
 }>;
 
 
-export type GetConversationListQuery = { __typename?: 'Query', conversationMembershipsCount?: number | null, conversationMemberships?: Array<{ __typename?: 'ConversationMembership', id: string, display_name?: string | null, archived?: boolean | null, viewed?: boolean | null, convo?: { __typename?: 'Conversation', id: string, conversation_memberships_count?: number | null } | null } | null> | null };
+export type GetConversationListQuery = { __typename?: 'Query', conversationMembershipsCount?: number | null, conversationMemberships?: Array<{ __typename?: 'ConversationMembership', id: string, display_name?: string | null, archived?: boolean | null, viewed?: boolean | null, convo?: { __typename?: 'Conversation', id: string, conversation_memberships_count?: number | null, owner?: { __typename?: 'User', id: string } | null } | null } | null> | null };
 
 export type GetUserQueryVariables = Exact<{
   id?: InputMaybe<Scalars['ID']>;
@@ -20779,6 +20779,9 @@ export const GetConversationListDocument = gql`
     convo {
       id
       conversation_memberships_count
+      owner {
+        id
+      }
     }
   }
 }
