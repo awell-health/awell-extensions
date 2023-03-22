@@ -1,0 +1,29 @@
+mutation updatePatient(
+  $id: ID
+  $first_name: String
+  $last_name: String
+  $legal_name: String
+  $email: String
+) {
+  updateClient(
+    input: {
+      id: $id
+      first_name: $first_name
+      last_name: $last_name
+      legal_name: $legal_name
+      email: $email
+    }
+  ) {
+    user {
+      id
+      first_name
+      last_name
+      legal_name
+      email
+    }
+    messages {
+      field
+      message
+    }
+  }
+}
