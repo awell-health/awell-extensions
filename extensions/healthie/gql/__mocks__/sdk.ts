@@ -1,34 +1,30 @@
-const mockGetConversationList = jest.fn((args) => {
-  console.log('getConversationList:', args);
-  return { data: { conversationMemberships: [] } }
-})
-
-const mockCreateConversation = jest.fn((args) => {
-  console.log('createConversation:', args);
-  return {
-    data: {
-      createConversation: {
-        conversation: {
-          id: 'conversation-1'
+export const mockGetSdkReturn = {
+  getConversationList: jest.fn((args) => {
+    console.log('getConversationList:', args);
+    return { data: { conversationMemberships: [] } }
+  }),
+  createConversation: jest.fn((args) => {
+    console.log('createConversation:', args);
+    return {
+      data: {
+        createConversation: {
+          conversation: {
+            id: 'conversation-1'
+          }
         }
       }
     }
-  }
-})
+  }),
+  sendChatMessage: jest.fn((args) => {
+    console.log('sendChatMessage:', args);
+    return undefined
+  })
+}
 
-const mockSendChatMessage = jest.fn((args) => {
-  console.log('sendChatMessage:', args);
-  return undefined
-})
-
-const mockGetSdk = jest.fn().mockImplementation((params) => {
+export const mockGetSdk = (params: any): any => {
   console.log('mockGetSdk:', params)
 
-  return {
-    getConversationList: mockGetConversationList,
-    createConversation: mockCreateConversation,
-    sendChatMessage: mockSendChatMessage
-  };
-});
+  return mockGetSdkReturn;
+};
 
-export { mockGetSdk as getSdk, mockGetConversationList }
+export const getSdk = jest.fn(mockGetSdk)
