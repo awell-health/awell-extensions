@@ -123,7 +123,7 @@ export const updatePatient: Action<
     const { fields, settings } = payload
     const { id, first_name, last_name, legal_name, email, phone_number, provider_id, gender, gender_identity, height, sex, user_group_id } = fields
     try {
-      if (isNil(first_name) || isNil(last_name)) throw new Error(`Fields are missing!: ${JSON.stringify(fields)}}`)
+      if (isNil(id)) throw new Error(`Fields are missing!: ${JSON.stringify(fields)}}`)
 
       const client = initialiseClient(settings)
       if (client !== undefined) {
