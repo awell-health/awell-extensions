@@ -16,12 +16,13 @@ const fields = {
     label: 'Healthie Patient ID',
     description: 'The ID of the patient in Healthie.',
     type: FieldType.STRING,
+    required: true,
   },
   provider_id: {
     id: 'provider_id',
     label: 'Provider ID',
     description: 'The ID of the provider, the chat message will be sent in name of this provider.',
-    type: FieldType.TEXT,
+    type: FieldType.STRING,
     required: true,
   },
   message: {
@@ -29,6 +30,7 @@ const fields = {
     label: 'Message',
     description: 'The chat message you would like to send.',
     type: FieldType.HTML,
+    required: true,
   },
 } satisfies Record<string, Field>
 
