@@ -75,7 +75,7 @@ export const sendChatMessage: Action<
         })
 
         const conversations = data.conversationMemberships ?? [];
-        const conversation = conversations.find((value) => value?.convo?.owner?.id === provider_id);
+        const conversation = conversations.find((value) => value?.convo?.owner?.id === provider_id)?.convo;
 
         let conversationId = conversation?.id;
         if (isNil(conversationId)) {
