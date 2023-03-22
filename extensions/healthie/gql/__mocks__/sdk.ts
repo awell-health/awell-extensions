@@ -27,6 +27,18 @@ export const mockGetSdkReturn = {
         },
       }
     }
+  }),
+  updatePatient: jest.fn((args) => {
+    console.log('updatePatient:', args);
+    return {
+      data: {
+        updateClient: {
+          user: {
+            id: "patient-1",
+          },
+        },
+      }
+    }
   })
 }
 
