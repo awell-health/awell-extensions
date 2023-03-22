@@ -50,6 +50,19 @@ export const mockGetSdkReturn = {
         },
       }
     }
+  }),
+  removeTagFromUser: jest.fn((args) => {
+    console.log('removeTagFromUser:', args);
+    return {
+      data: {
+        removeAppliedTag: {
+          tag: {
+            id: "tag-1",
+            name: "Tag",
+          },
+        },
+      }
+    }
   })
 }
 
