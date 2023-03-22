@@ -25,7 +25,7 @@ describe('applyTagToPatient action', () => {
         patient: { id: 'test-patient' },
         fields: {
           id: 'tag-1',
-          patient_id: ' patient-1'
+          patient_id: 'patient-1'
         },
         settings: {
           apiKey: 'apiKey',
