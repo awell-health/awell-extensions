@@ -37,6 +37,19 @@ export const mockGetSdkReturn = {
         },
       }
     }
+  }),
+  applyTagsToUser: jest.fn((args) => {
+    console.log('applyTagsToUser:', args);
+    return {
+      data: {
+        bulkApply: {
+          tags: [{
+            id: "tag-1",
+            name: "Tag",
+          }],
+        },
+      }
+    }
   })
 }
 
