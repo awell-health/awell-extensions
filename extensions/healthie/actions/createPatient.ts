@@ -30,7 +30,7 @@ const fields = {
   legal_name: {
     id: 'legal_name',
     label: 'Legal name',
-    description: 'The patient’s legal name which will be used in CMS 1500 Claims, Invoices, and Superbills.',
+    description: "The patient's legal name which will be used in CMS 1500 Claims, Invoices, and Superbills.",
     type: FieldType.STRING,
   },
   // ! TODO: BOOLEAN field implementation needed
@@ -97,7 +97,7 @@ export const createPatient: Action<
   previewable: true,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
     const { fields, settings } = payload
-    const { first_name, last_name, email, phone_number, provider_id } = fields
+    const { first_name, last_name, email, phone_number, provider_id, legal_name } = fields
     try {
       if (isNil(first_name) || isNil(last_name)) throw new Error(`Fields are missing!: ${JSON.stringify(fields)}}`)
 
@@ -109,6 +109,7 @@ export const createPatient: Action<
         const { data } = await sdk.createPatient({
           first_name,
           last_name,
+          legal_name,
           email,
           phone_number,
           dietitian_id: provider_id
