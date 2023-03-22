@@ -1,6 +1,7 @@
 mutation createPatient(
   $first_name: String
   $last_name: String
+  $legal_name: String
   $email: String
   $skipped_email: Boolean
   $phone_number: String
@@ -12,6 +13,7 @@ mutation createPatient(
     input: {
       first_name: $first_name
       last_name: $last_name
+      legal_name: $legal_name
       email: $email
       skipped_email: $skipped_email
       phone_number: $phone_number
