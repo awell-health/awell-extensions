@@ -20640,6 +20640,7 @@ export type CreateConversationMutation = { __typename?: 'Mutation', createConver
 export type CreatePatientMutationVariables = Exact<{
   first_name?: InputMaybe<Scalars['String']>;
   last_name?: InputMaybe<Scalars['String']>;
+  legal_name?: InputMaybe<Scalars['String']>;
   email?: InputMaybe<Scalars['String']>;
   skipped_email?: InputMaybe<Scalars['Boolean']>;
   phone_number?: InputMaybe<Scalars['String']>;
@@ -20711,6 +20712,16 @@ export type UpdatePatientMutationVariables = Exact<{
   last_name?: InputMaybe<Scalars['String']>;
   legal_name?: InputMaybe<Scalars['String']>;
   email?: InputMaybe<Scalars['String']>;
+  skipped_email?: InputMaybe<Scalars['Boolean']>;
+  phone_number?: InputMaybe<Scalars['String']>;
+  dietitian_id?: InputMaybe<Scalars['String']>;
+  user_group_id?: InputMaybe<Scalars['String']>;
+  dob?: InputMaybe<Scalars['String']>;
+  active?: InputMaybe<Scalars['Boolean']>;
+  height?: InputMaybe<Scalars['String']>;
+  gender?: InputMaybe<Scalars['String']>;
+  gender_identity?: InputMaybe<Scalars['String']>;
+  sex?: InputMaybe<Scalars['String']>;
 }>;
 
 
@@ -20762,9 +20773,9 @@ export const CreateConversationDocument = gql`
 }
     `;
 export const CreatePatientDocument = gql`
-    mutation createPatient($first_name: String, $last_name: String, $email: String, $skipped_email: Boolean, $phone_number: String, $dietitian_id: String, $user_group_id: String, $dont_send_welcome: Boolean) {
+    mutation createPatient($first_name: String, $last_name: String, $legal_name: String, $email: String, $skipped_email: Boolean, $phone_number: String, $dietitian_id: String, $user_group_id: String, $dont_send_welcome: Boolean) {
   createClient(
-    input: {first_name: $first_name, last_name: $last_name, email: $email, skipped_email: $skipped_email, phone_number: $phone_number, dietitian_id: $dietitian_id, user_group_id: $user_group_id, dont_send_welcome: $dont_send_welcome}
+    input: {first_name: $first_name, last_name: $last_name, legal_name: $legal_name, email: $email, skipped_email: $skipped_email, phone_number: $phone_number, dietitian_id: $dietitian_id, user_group_id: $user_group_id, dont_send_welcome: $dont_send_welcome}
   ) {
     user {
       id
@@ -20890,9 +20901,9 @@ export const SendChatMessageDocument = gql`
 }
     `;
 export const UpdatePatientDocument = gql`
-    mutation updatePatient($id: ID, $first_name: String, $last_name: String, $legal_name: String, $email: String) {
+    mutation updatePatient($id: ID, $first_name: String, $last_name: String, $legal_name: String, $email: String, $skipped_email: Boolean, $phone_number: String, $dietitian_id: String, $user_group_id: String, $dob: String, $active: Boolean, $height: String, $gender: String, $gender_identity: String, $sex: String) {
   updateClient(
-    input: {id: $id, first_name: $first_name, last_name: $last_name, legal_name: $legal_name, email: $email}
+    input: {id: $id, first_name: $first_name, last_name: $last_name, legal_name: $legal_name, email: $email, skipped_email: $skipped_email, phone_number: $phone_number, dietitian_id: $dietitian_id, user_group_id: $user_group_id, dob: $dob, active: $active, height: $height, gender: $gender, gender_identity: $gender_identity, sex: $sex}
   ) {
     user {
       id
