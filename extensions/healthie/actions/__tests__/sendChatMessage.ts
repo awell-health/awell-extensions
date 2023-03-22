@@ -49,8 +49,8 @@ describe('Simple sendChatMessage action', () => {
       getConversationList: mockGetSdkReturn.getConversationList.mockReturnValueOnce({
         data: {
           conversationMemberships: [{
-            id: 'conversation-2',
             convo: {
+              id: 'conversation-2',
               owner: { id: 'provider-1' }
             }
           }] as any
