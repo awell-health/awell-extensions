@@ -99,7 +99,21 @@ export const createPatient: Action<
     const { fields, settings } = payload
     const { first_name, last_name, email, phone_number, provider_id, legal_name } = fields
     try {
-      if (isNil(first_name) || isNil(last_name)) throw new Error(`Fields are missing!: ${JSON.stringify(fields)}}`)
+      if (isNil(first_name) || isNil(last_name)) {
+        await onError({
+          events: [
+            {
+              date: new Date().toISOString(),
+              text: { en: 'Fields are missing' },
+              error: {
+                category: 'MISSING_FIELDS',
+                message: '`first_name` or `last_name` is missing',
+              },
+            },
+          ],
+        })
+        return;
+      }
 
       const client = initialiseClient(settings)
       if (client !== undefined) {
@@ -107,12 +121,14 @@ export const createPatient: Action<
 
 
         const { data } = await sdk.createPatient({
-          first_name,
-          last_name,
-          legal_name,
-          email,
-          phone_number,
-          dietitian_id: provider_id
+          input: {
+            first_name,
+            last_name,
+            legal_name,
+            email,
+            phone_number,
+            dietitian_id: provider_id
+          }
         })
 
         const healthiePatientId = data.createClient?.user?.id;

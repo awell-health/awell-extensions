@@ -123,7 +123,21 @@ export const updatePatient: Action<
     const { fields, settings } = payload
     const { id, first_name, last_name, legal_name, email, phone_number, provider_id, gender, gender_identity, height, sex, user_group_id } = fields
     try {
-      if (isNil(id)) throw new Error(`Fields are missing!: ${JSON.stringify(fields)}}`)
+      if (isNil(id)) {
+        await onError({
+          events: [
+            {
+              date: new Date().toISOString(),
+              text: { en: 'Fields are missing' },
+              error: {
+                category: 'MISSING_FIELDS',
+                message: '`id` is missing',
+              },
+            },
+          ],
+        })
+        return;
+      }
 
       const client = initialiseClient(settings)
       if (client !== undefined) {
@@ -131,18 +145,20 @@ export const updatePatient: Action<
 
 
         await sdk.updatePatient({
-          id,
-          first_name,
-          last_name,
-          legal_name,
-          email,
-          phone_number,
-          dietitian_id: provider_id,
-          gender,
-          gender_identity,
-          height,
-          sex,
-          user_group_id
+          input: {
+            id,
+            first_name,
+            last_name,
+            legal_name,
+            email,
+            phone_number,
+            dietitian_id: provider_id,
+            gender,
+            gender_identity,
+            height,
+            sex,
+            user_group_id
+          }
         })
 
         await onComplete()

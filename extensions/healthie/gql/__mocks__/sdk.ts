@@ -17,7 +17,6 @@ export const mockGetSdkReturn = {
     return undefined
   }),
   createPatient: jest.fn((args) => {
-    console.log('createPatient:', args);
     return {
       data: {
         createClient: {
@@ -29,7 +28,6 @@ export const mockGetSdkReturn = {
     }
   }),
   updatePatient: jest.fn((args) => {
-    console.log('updatePatient:', args);
     return {
       data: {
         updateClient: {
