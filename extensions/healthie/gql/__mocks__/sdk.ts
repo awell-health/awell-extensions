@@ -79,6 +79,9 @@ export const mockGetSdkReturn = {
   }),
   createFormAnswerGroup: jest.fn((args) => {
     return undefined
+  }),
+  createFormCompletionRequest: jest.fn((args) => {
+    return undefined
   })
 }
 
