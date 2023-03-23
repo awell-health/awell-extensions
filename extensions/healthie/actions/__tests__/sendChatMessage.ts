@@ -5,7 +5,7 @@ import { sendChatMessage } from "../sendChatMessage"
 jest.mock('../../gql/sdk')
 jest.mock('../../graphqlClient')
 
-describe('Simple sendChatMessage action', () => {
+describe('sendChatMessage action', () => {
   const onComplete = jest.fn()
 
   beforeAll(() => {

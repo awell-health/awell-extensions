@@ -37,6 +37,30 @@ export const mockGetSdkReturn = {
         },
       }
     }
+  }),
+  applyTagsToUser: jest.fn((args) => {
+    return {
+      data: {
+        bulkApply: {
+          tags: [{
+            id: "tag-1",
+            name: "Tag",
+          }],
+        },
+      }
+    }
+  }),
+  removeTagFromUser: jest.fn((args) => {
+    return {
+      data: {
+        removeAppliedTag: {
+          tag: {
+            id: "tag-1",
+            name: "Tag",
+          },
+        },
+      }
+    }
   })
 }
 
