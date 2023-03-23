@@ -1,57 +1,57 @@
-import { randomInteger, type RandomIntegerActivityPayload } from '../'
+import { randomNumber, type RandomNumberActivityPayload } from '..'
 
 describe('Math - random-integer', () => {
   test('Should call onComplete', async () => {
     const onComplete = jest.fn()
     const onError = jest.fn()
-    const mockOnActivityCreateParams: RandomIntegerActivityPayload = {
+    const mockOnActivityCreateParams: RandomNumberActivityPayload = {
       activity: { id: 'test-activity' },
       patient: { id: 'test-patient' },
       fields: {
-        low: '15',
-        high: '30',
+        min: '15',
+        max: '30',
       },
       settings: {},
     }
-    await randomInteger.onActivityCreated(
+    await randomNumber.onActivityCreated(
       mockOnActivityCreateParams,
       onComplete,
       onError
     )
     expect(onComplete).toHaveBeenCalled()
   })
-  test('Should call onError if fields.low is undefined', async () => {
+  test('Should call onError if fields.min is undefined', async () => {
     const onComplete = jest.fn()
     const onError = jest.fn()
-    const mockOnActivityCreateParams: RandomIntegerActivityPayload = {
+    const mockOnActivityCreateParams: RandomNumberActivityPayload = {
       activity: { id: 'test-activity' },
       patient: { id: 'test-patient' },
       fields: {
-        low: undefined,
-        high: '30',
+        min: undefined,
+        max: '30',
       },
       settings: {},
     }
-    await randomInteger.onActivityCreated(
+    await randomNumber.onActivityCreated(
       mockOnActivityCreateParams,
       onComplete,
       onError
     )
     expect(onError).toHaveBeenCalled()
   })
-  test('Should call onError if fields.high is undefined', async () => {
+  test('Should call onError if fields.max is undefined', async () => {
     const onComplete = jest.fn()
     const onError = jest.fn()
-    const mockOnActivityCreateParams: RandomIntegerActivityPayload = {
+    const mockOnActivityCreateParams: RandomNumberActivityPayload = {
       activity: { id: 'test-activity' },
       patient: { id: 'test-patient' },
       fields: {
-        low: '15',
-        high: undefined,
+        min: '15',
+        max: undefined,
       },
       settings: {},
     }
-    await randomInteger.onActivityCreated(
+    await randomNumber.onActivityCreated(
       mockOnActivityCreateParams,
       onComplete,
       onError
@@ -61,16 +61,16 @@ describe('Math - random-integer', () => {
   test('Check for difference between min and max', async () => {
     const onComplete = jest.fn()
     const onError = jest.fn()
-    const mockOnActivityCreateParams: RandomIntegerActivityPayload = {
+    const mockOnActivityCreateParams: RandomNumberActivityPayload = {
       activity: { id: 'test-activity' },
       patient: { id: 'test-patient' },
       fields: {
-        low: '42',
-        high: '42',
+        min: '42',
+        max: '42',
       },
       settings: {},
     }
-    await randomInteger.onActivityCreated(
+    await randomNumber.onActivityCreated(
       mockOnActivityCreateParams,
       onComplete,
       onError

@@ -1,1 +1,1 @@
-export * from './random-integer'
+export * from './randomNumber'
