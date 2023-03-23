@@ -39,7 +39,6 @@ export const mockGetSdkReturn = {
     }
   }),
   applyTagsToUser: jest.fn((args) => {
-    console.log('applyTagsToUser:', args);
     return {
       data: {
         bulkApply: {
@@ -52,7 +51,6 @@ export const mockGetSdkReturn = {
     }
   }),
   removeTagFromUser: jest.fn((args) => {
-    console.log('removeTagFromUser:', args);
     return {
       data: {
         removeAppliedTag: {

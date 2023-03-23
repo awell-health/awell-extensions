@@ -41,7 +41,21 @@ export const applyTagToPatient: Action<
     const { fields, settings } = payload
     const { id, patient_id } = fields
     try {
-      if (isNil(id) || isNil(patient_id)) throw new Error(`Fields are missing!: ${JSON.stringify(fields)}}`)
+      if (isNil(id) || isNil(patient_id)) {
+        await onError({
+          events: [
+            {
+              date: new Date().toISOString(),
+              text: { en: 'Fields are missing' },
+              error: {
+                category: 'MISSING_FIELDS',
+                message: '`id` or `patient_id` is missing',
+              },
+            },
+          ],
+        })
+        return;
+      }
 
       const client = initialiseClient(settings)
       if (client !== undefined) {
