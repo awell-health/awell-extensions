@@ -49,6 +49,11 @@ export const applyTagToPatient: Action<
 
 
         await sdk.applyTagsToUser({
+          /**
+           * Although the Healthie API allows assigning multiple tags in a single API call, we decided that
+           * the action only assigns one as this simplifies the action code. A user can still assign
+           * multiple tags simply by adding multiple actions.
+           */
           ids: [id],
           taggable_user_id: patient_id
         })
