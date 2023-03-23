@@ -6,9 +6,9 @@ To learn more, visit [www.gethealthie.com](www.gethealthie.com).
 
 ## Healthie x Awell
 
-With this extension, organizations are able to build clinical workflows in Awell’s low-code platform and easily integrate them into Healthie. By doing so, Healthie’s customers can automate routine clinical tasks, synchronize data between systems and drive seamless coordination between care team and patients. 
+With this extension, organizations are able to build clinical workflows in Awell’s low-code platform and easily integrate them into Healthie. By doing so, Healthie’s customers can automate routine clinical tasks, synchronize data between systems and drive seamless coordination between care team and patients.
 
-By combining Healthie’s web and mobile platform with our clinical workflows, clinicians will be able to provide the right care, at the right time for the right patient. 
+By combining Healthie’s web and mobile platform with our clinical workflows, clinicians will be able to provide the right care, at the right time for the right patient.
 
 # Extension settings
 
@@ -35,3 +35,13 @@ Adds a tag (existing one, identified by an `id`) to a patient. Although the Heal
 ## Remove tag from patient
 
 Removes a tag (identified by an `id`) from a patient.
+
+## Create charting note
+
+Creates a charting note with the provided `note_content`. It requires that Form Template identified by `form_id` can be used for charting.
+
+## Send form completion request
+
+Send form completion request to the patient. Note that `form_id` identifies an actual Form (not a Form Template).
+
+Although the Healthie API call allows sending form completion requests to multiple users per API call (see recipient_ids in their docs), we decided that every action only sends one form completion request. This heavily simplifies the logic and better fits our domain model (1-to-1 relationship between patient and pathway). If a user would like to send multiple form completion requests, they you can just add multiple actions.
