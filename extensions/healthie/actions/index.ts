@@ -5,6 +5,8 @@ import { getPatient } from './getPatient'
 import { sendChatMessage } from './sendChatMessage'
 import { createPatient } from './createPatient'
 import { updatePatient } from './updatePatient'
+import { applyTagToPatient } from './applyTagToPatient'
+import { removeTagFromPatient } from './removeTagFromPatient'
 
 export const actions = {
   createAppointment,
@@ -13,5 +15,7 @@ export const actions = {
   getPatient,
   sendChatMessage,
   createPatient,
-  updatePatient
+  updatePatient,
+  applyTagToPatient,
+  removeTagFromPatient,
 }
