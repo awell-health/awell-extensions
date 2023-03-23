@@ -61,6 +61,24 @@ export const mockGetSdkReturn = {
         },
       }
     }
+  }),
+  getFormTemplate: jest.fn((args) => {
+    return {
+      data: {
+        customModuleForm: {
+          use_for_charting: true,
+          custom_modules: [
+            {
+              id: 'question-1',
+              mod_type: 'textarea'
+            }
+          ]
+        },
+      }
+    }
+  }),
+  createFormAnswerGroup: jest.fn((args) => {
+    return undefined
   })
 }
 
