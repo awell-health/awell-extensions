@@ -20683,13 +20683,13 @@ export type GetUserQueryVariables = Exact<{
 
 export type GetUserQuery = { __typename?: 'Query', user?: { __typename?: 'User', id: string, first_name?: string | null, last_name?: string | null, dob?: string | null, gender?: string | null, email?: string | null, phone_number?: string | null, next_appt_date?: string | null } | null };
 
-export type RemoveTagsFromUserMutationVariables = Exact<{
+export type RemoveTagFromUserMutationVariables = Exact<{
   id?: InputMaybe<Scalars['ID']>;
   taggable_user_id?: InputMaybe<Scalars['ID']>;
 }>;
 
 
-export type RemoveTagsFromUserMutation = { __typename?: 'Mutation', removeAppliedTag?: { __typename?: 'removeAppliedTagPayload', tag?: { __typename?: 'Tag', id?: string | null, name?: string | null } | null, messages?: Array<{ __typename?: 'FieldError', field?: string | null, message: string } | null> | null } | null };
+export type RemoveTagFromUserMutation = { __typename?: 'Mutation', removeAppliedTag?: { __typename?: 'removeAppliedTagPayload', tag?: { __typename?: 'Tag', id?: string | null, name?: string | null } | null, messages?: Array<{ __typename?: 'FieldError', field?: string | null, message: string } | null> | null } | null };
 
 export type SendChatMessageMutationVariables = Exact<{
   input: CreateNoteInput;
@@ -20847,8 +20847,8 @@ export const GetUserDocument = gql`
   }
 }
     `;
-export const RemoveTagsFromUserDocument = gql`
-    mutation removeTagsFromUser($id: ID, $taggable_user_id: ID) {
+export const RemoveTagFromUserDocument = gql`
+    mutation removeTagFromUser($id: ID, $taggable_user_id: ID) {
   removeAppliedTag(input: {id: $id, taggable_user_id: $taggable_user_id}) {
     tag {
       id
@@ -20906,7 +20906,7 @@ const CreateTaskDocumentString = print(CreateTaskDocument);
 const GetAppointmentDocumentString = print(GetAppointmentDocument);
 const GetConversationListDocumentString = print(GetConversationListDocument);
 const GetUserDocumentString = print(GetUserDocument);
-const RemoveTagsFromUserDocumentString = print(RemoveTagsFromUserDocument);
+const RemoveTagFromUserDocumentString = print(RemoveTagFromUserDocument);
 const SendChatMessageDocumentString = print(SendChatMessageDocument);
 const UpdatePatientDocumentString = print(UpdatePatientDocument);
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
@@ -20935,8 +20935,8 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     getUser(variables?: GetUserQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: GetUserQuery; extensions?: any; headers: Dom.Headers; status: number; }> {
         return withWrapper((wrappedRequestHeaders) => client.rawRequest<GetUserQuery>(GetUserDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getUser', 'query');
     },
-    removeTagsFromUser(variables?: RemoveTagsFromUserMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: RemoveTagsFromUserMutation; extensions?: any; headers: Dom.Headers; status: number; }> {
-        return withWrapper((wrappedRequestHeaders) => client.rawRequest<RemoveTagsFromUserMutation>(RemoveTagsFromUserDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'removeTagsFromUser', 'mutation');
+    removeTagFromUser(variables?: RemoveTagFromUserMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: RemoveTagFromUserMutation; extensions?: any; headers: Dom.Headers; status: number; }> {
+        return withWrapper((wrappedRequestHeaders) => client.rawRequest<RemoveTagFromUserMutation>(RemoveTagFromUserDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'removeTagFromUser', 'mutation');
     },
     sendChatMessage(variables: SendChatMessageMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: SendChatMessageMutation; extensions?: any; headers: Dom.Headers; status: number; }> {
         return withWrapper((wrappedRequestHeaders) => client.rawRequest<SendChatMessageMutation>(SendChatMessageDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'sendChatMessage', 'mutation');
