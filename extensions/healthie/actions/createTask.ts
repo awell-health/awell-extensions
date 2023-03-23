@@ -12,8 +12,15 @@ import { type settings } from '../settings'
 const fields = {
   patientId: {
     id: 'patientId',
-    label: 'Patient ID',
-    description: 'The patient identifier',
+    label: 'Healthie patient ID',
+    description: 'The ID of the patient related to this task.',
+    type: FieldType.STRING,
+  },
+  assign_to_user_id: {
+    id: 'assign_to_user_id',
+    label: 'Assign to user',
+    description:
+      'The ID of the user to assign the task to. If none provided, will assign the task to the user the API key is associated with.',
     type: FieldType.STRING,
   },
   content: {
@@ -52,13 +59,14 @@ export const createTask: Action<
   previewable: true,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
     const { fields, settings } = payload
-    const { patientId, content, due_date } = fields
+    const { patientId, assign_to_user_id, content, due_date } = fields
     try {
       const client = initialiseClient(settings)
       if (client !== undefined) {
         const sdk = getSdk(client)
         const { data } = await sdk.createTask({
           client_id: patientId,
+          user_id: assign_to_user_id,
           content,
           due_date,
         })
