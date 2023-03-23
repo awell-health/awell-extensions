@@ -1,6 +1,14 @@
 # What is Healthie?
 
+Healthie offers infrastructure for next generation digital health organizations that provide virtual-first care. Healthie’s API-first and fully brandable suite of solutions (Scheduling, EMR, Client Engagement) enables healthcare builders to launch and scale best-in-class experiences for their members. Healthie also offers a built-in marketplace of business and clinical integrations used by our organizations.
+
+To learn more, visit [www.gethealthie.com](www.gethealthie.com).
+
 ## Healthie x Awell
+
+With this extension, organizations are able to build clinical workflows in Awell’s low-code platform and easily integrate them into Healthie. By doing so, Healthie’s customers can automate routine clinical tasks, synchronize data between systems and drive seamless coordination between care team and patients. 
+
+By combining Healthie’s web and mobile platform with our clinical workflows, clinicians will be able to provide the right care, at the right time for the right patient. 
 
 # Extension settings
 
@@ -14,19 +22,16 @@ Sends a chat message to a patient in name of the provided provider ID. Will crea
 
 ## Create patient
 
-Creates a new patient set up according to the passed fields. After completion the following data points will be available:
-
-1. healthiePatientId
+Creates a new patient according to the passed fields. After completion the `healthiePatientId` will be exposed as a data point in the care flow.
 
 ## Update patient
+
 Updates a specific patient (defined by the provided `id`) according to the passed fields.
 
 ## Apply tag to patient
+
 Adds a tag (existing one, identified by an `id`) to a patient. Although the Healthie API call allows assigning multiple tags per API call, for simplicity of the logic this action can only take one tag as input. Assigning multiple tags is possible by adding multiple actions.
 
 ## Remove tag from patient
+
 Removes a tag (identified by an `id`) from a patient.
-
-# Pricing
-
-# Limitations
