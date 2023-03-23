@@ -1,39 +1,5 @@
-mutation updatePatient(
-  $id: ID
-  $first_name: String
-  $last_name: String
-  $legal_name: String
-  $email: String
-  $skipped_email: Boolean
-  $phone_number: String
-  $dietitian_id: String
-  $user_group_id: String
-  $dob: String
-  $active: Boolean
-  $height: String
-  $gender: String
-  $gender_identity: String
-  $sex: String
-) {
-  updateClient(
-    input: {
-      id: $id
-      first_name: $first_name
-      last_name: $last_name
-      legal_name: $legal_name
-      email: $email
-      skipped_email: $skipped_email
-      phone_number: $phone_number
-      dietitian_id: $dietitian_id
-      user_group_id: $user_group_id
-      dob: $dob
-      active: $active
-      height: $height
-      gender: $gender
-      gender_identity: $gender_identity
-      sex: $sex
-    }
-  ) {
+mutation updatePatient($input: updateClientInput!) {
+  updateClient(input: $input) {
     user {
       id
       first_name
