@@ -15,6 +15,28 @@ export const mockGetSdkReturn = {
   }),
   sendChatMessage: jest.fn((args) => {
     return undefined
+  }),
+  createPatient: jest.fn((args) => {
+    return {
+      data: {
+        createClient: {
+          user: {
+            id: "patient-1",
+          },
+        },
+      }
+    }
+  }),
+  updatePatient: jest.fn((args) => {
+    return {
+      data: {
+        updateClient: {
+          user: {
+            id: "patient-1",
+          },
+        },
+      }
+    }
   })
 }
 

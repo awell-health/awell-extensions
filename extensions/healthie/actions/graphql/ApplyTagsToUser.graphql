@@ -1,0 +1,13 @@
+mutation applyTagsToUser($ids: [ID], $taggable_user_id: ID) {
+  bulkApply(input: { ids: $ids, taggable_user_id: $taggable_user_id }) {
+    tags {
+      id
+      name
+    }
+
+    messages {
+      field
+      message
+    }
+  }
+}

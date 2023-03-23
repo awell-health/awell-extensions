@@ -1,0 +1,11 @@
+mutation createPatient($input: createClientInput!) {
+  createClient(input: $input) {
+    user {
+      id
+    }
+    messages {
+      field
+      message
+    }
+  }
+}
