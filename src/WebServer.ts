@@ -1,4 +1,5 @@
 import Fastify from 'fastify'
+import cors from '@fastify/cors'
 import { mapValues, omit } from 'lodash'
 import { environment } from '../lib/environment'
 import {
@@ -10,6 +11,7 @@ import {
 } from '../lib/types'
 import { extensions } from '../extensions'
 import { PubSub } from '@google-cloud/pubsub'
+import { getExtensionDocumentation } from './documentation'
 
 type ExtensionWebConfig = Omit<Extension, 'actions' | 'webhooks'> & {
   actions: Record<
@@ -20,6 +22,7 @@ type ExtensionWebConfig = Omit<Extension, 'actions' | 'webhooks'> & {
     >
   >
   webhooks: Array<Omit<Webhook<string, unknown>, 'onWebhookReceived'>>
+  htmlDocs: string
 }
 
 const getExtensionConfig = (extension: Extension): ExtensionWebConfig => {
@@ -31,6 +34,7 @@ const getExtensionConfig = (extension: Extension): ExtensionWebConfig => {
     webhooks: (extension.webhooks ?? []).map((webhook) =>
       omit(webhook, 'onWebhookReceived')
     ),
+    htmlDocs: getExtensionDocumentation(extension.key),
   }
 }
 
@@ -46,6 +50,10 @@ const webServer = Fastify({
       : undefined,
     level: environment.LOG_LEVEL,
   },
+})
+
+void webServer.register(cors, {
+  origin: true,
 })
 
 webServer.get('/', async (request, reply) => {
@@ -91,6 +99,7 @@ webServer.post('/:extensionKey/webhook/:endpoint', async (request, reply) => {
             extension: extension.key,
             endpoint,
             webhook: webhook.key,
+            environment: environment.AWELL_ENVIRONMENT,
           },
         })
       })
