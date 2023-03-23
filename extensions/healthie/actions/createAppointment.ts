@@ -13,20 +13,37 @@ const fields = {
   patientId: {
     id: 'patientId',
     label: 'Patient ID',
-    description: 'The patient identifier',
+    description: 'The ID of the patient you want to create an appointment for.',
+    type: FieldType.STRING,
+    required: true,
+  },
+  otherPartyId: {
+    id: 'otherPartyId',
+    label: 'Provider ID',
+    description:
+      'ID of the provider the appointment is with. If none provided, will use the user the API key is associated with.',
     type: FieldType.STRING,
   },
-  datetime: {
-    id: 'datetime',
-    label: 'Appointment date / time',
-    description: 'The datetime of the appointment in ISO8601 format',
+  contactTypeId: {
+    id: 'contactTypeId',
+    label: 'Contact type ID',
+    description: 'How the appointment will be conducted.',
     type: FieldType.STRING,
+    required: true,
   },
   appointmentTypeId: {
     id: 'appointmentTypeId',
     label: 'Appointment type ID',
     description: 'The ID of the appointment type',
     type: FieldType.STRING,
+    required: true,
+  },
+  datetime: {
+    id: 'datetime',
+    label: 'Appointment date and time',
+    description: 'The date and time of the appointment in ISO8601 format.',
+    type: FieldType.STRING,
+    required: true,
   },
 } satisfies Record<string, Field>
 
@@ -44,20 +61,28 @@ export const createAppointment: Action<
 > = {
   key: 'createAppointment',
   category: Category.INTEGRATIONS,
-  title: 'Create appointment',
-  description: 'Create an appointment in Healthie.',
+  title: 'Create 1:1 appointment',
+  description: 'Create a 1:1 appointment in Healthie.',
   fields,
   dataPoints,
   previewable: true,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
     const { fields, settings } = payload
-    const { patientId, appointmentTypeId, datetime } = fields
+    const {
+      patientId,
+      appointmentTypeId,
+      datetime,
+      contactTypeId,
+      otherPartyId,
+    } = fields
     try {
       const client = initialiseClient(settings)
       if (client !== undefined) {
         const sdk = getSdk(client)
         const { data } = await sdk.createAppointment({
           appointment_type_id: appointmentTypeId,
+          contact_type: contactTypeId,
+          other_party_id: otherPartyId,
           datetime,
           user_id: patientId,
         })
