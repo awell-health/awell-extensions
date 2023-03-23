@@ -48,7 +48,21 @@ export const sendChatMessage: Action<
     const { fields, settings } = payload
     const { healthie_patient_id, provider_id, message } = fields
     try {
-      if (healthie_patient_id === undefined) throw new Error(`Fields are missing!: ${JSON.stringify(fields)}}`)
+      if (healthie_patient_id === undefined) {
+        await onError({
+          events: [
+            {
+              date: new Date().toISOString(),
+              text: { en: 'Fields are missing' },
+              error: {
+                category: 'MISSING_FIELDS',
+                message: '`healthie_patient_id` is missing',
+              },
+            },
+          ],
+        })
+        return;
+      }
 
       const client = initialiseClient(settings)
       if (client !== undefined) {
@@ -65,28 +79,47 @@ export const sendChatMessage: Action<
 
         const sendMessage = async (conversationId: string): Promise<SendChatMessage> => {
           return await sdk.sendChatMessage({
-            conversation_id: conversationId,
-            content: message
+            input: {
+              conversation_id: conversationId,
+              content: message
+            }
           })
         }
 
-        const { data } = await sdk.getConversationList({
-          client_id: healthie_patient_id,
-          active_status: "active",
-          conversation_type: "individual"
-        })
+        const getConversation = async (): Promise<Conversation> => {
+          const { data } = await sdk.getConversationList({
+            client_id: healthie_patient_id,
+            active_status: "active",
+            conversation_type: "individual"
+          })
 
-        const conversations = data.conversationMemberships ?? [];
-        const conversation = conversations.find((value) => value?.convo?.owner?.id === provider_id)?.convo;
+          const conversations = data.conversationMemberships ?? [];
+          const conversation = conversations.find((value) => value?.convo?.owner?.id === provider_id)?.convo;
 
-        let conversationId = conversation?.id;
-        if (isNil(conversationId)) {
-          const conversation = await createConversation()
-          conversationId = conversation?.id
+          if (!isNil(conversation)) {
+            return conversation
+          }
+
+          return await createConversation()
         }
 
+        const conversation = await getConversation()
+        const conversationId = conversation?.id;
+
         if (isNil(conversationId)) {
-          throw new Error('Conversation doesn\'t exist nor couldn\'t be created!')
+          await onError({
+            events: [
+              {
+                date: new Date().toISOString(),
+                text: { en: "Conversation doesn't exist nor couldn't be created!" },
+                error: {
+                  category: 'SERVER_ERROR',
+                  message: "Conversation doesn't exist nor couldn't be created!",
+                },
+              },
+            ],
+          })
+          return;
         }
 
         await sendMessage(conversationId)

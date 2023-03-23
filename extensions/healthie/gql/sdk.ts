@@ -20669,17 +20669,7 @@ export type GetUserQueryVariables = Exact<{
 export type GetUserQuery = { __typename?: 'Query', user?: { __typename?: 'User', id: string, first_name?: string | null, last_name?: string | null, dob?: string | null, gender?: string | null, email?: string | null, phone_number?: string | null, next_appt_date?: string | null } | null };
 
 export type SendChatMessageMutationVariables = Exact<{
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  user_id?: InputMaybe<Scalars['String']>;
-  content?: InputMaybe<Scalars['String']>;
-  conversation_id?: InputMaybe<Scalars['String']>;
-  attached_image?: InputMaybe<Scalars['Upload']>;
-  attached_document?: InputMaybe<Scalars['Upload']>;
-  attached_audio?: InputMaybe<Scalars['Upload']>;
-  attached_image_string?: InputMaybe<Scalars['String']>;
-  scheduled_at?: InputMaybe<Scalars['String']>;
-  org_chat?: InputMaybe<Scalars['Boolean']>;
-  hide_org_chat_confirmation?: InputMaybe<Scalars['Boolean']>;
+  input: CreateNoteInput;
 }>;
 
 
@@ -20801,10 +20791,8 @@ export const GetUserDocument = gql`
 }
     `;
 export const SendChatMessageDocument = gql`
-    mutation sendChatMessage($clientMutationId: String, $user_id: String, $content: String, $conversation_id: String, $attached_image: Upload, $attached_document: Upload, $attached_audio: Upload, $attached_image_string: String, $scheduled_at: String, $org_chat: Boolean, $hide_org_chat_confirmation: Boolean) {
-  createNote(
-    input: {clientMutationId: $clientMutationId, user_id: $user_id, content: $content, conversation_id: $conversation_id, attached_image: $attached_image, attached_document: $attached_document, attached_audio: $attached_audio, attached_image_string: $attached_image_string, scheduled_at: $scheduled_at, org_chat: $org_chat, hide_org_chat_confirmation: $hide_org_chat_confirmation}
-  ) {
+    mutation sendChatMessage($input: createNoteInput!) {
+  createNote(input: $input) {
     messages {
       field
       message
@@ -20849,7 +20837,7 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     getUser(variables?: GetUserQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: GetUserQuery; extensions?: any; headers: Dom.Headers; status: number; }> {
         return withWrapper((wrappedRequestHeaders) => client.rawRequest<GetUserQuery>(GetUserDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getUser', 'query');
     },
-    sendChatMessage(variables?: SendChatMessageMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: SendChatMessageMutation; extensions?: any; headers: Dom.Headers; status: number; }> {
+    sendChatMessage(variables: SendChatMessageMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: SendChatMessageMutation; extensions?: any; headers: Dom.Headers; status: number; }> {
         return withWrapper((wrappedRequestHeaders) => client.rawRequest<SendChatMessageMutation>(SendChatMessageDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'sendChatMessage', 'mutation');
     }
   };
