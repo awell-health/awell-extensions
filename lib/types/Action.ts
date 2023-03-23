@@ -4,6 +4,7 @@ import { type Setting } from './Setting'
 import { type OnCompleteCallback } from './OnCompleteCallback'
 import { type OnErrorCallback } from './OnErrorCallback'
 import { type DataPointDefinition } from './DataPointDefinition'
+import { type Category } from './marketplace'
 
 export interface Action<
   Fields extends Record<string, Field>,
@@ -12,9 +13,8 @@ export interface Action<
 > {
   key: string
   title: string
-  category: string
-  icon?: string
-  description?: string
+  description: string
+  category: Category
   dataPoints?: Record<DPKeys, DataPointDefinition>
   fields: Fields
   previewable?: boolean
@@ -23,4 +23,11 @@ export interface Action<
     onComplete: OnCompleteCallback<DPKeys>,
     onError: OnErrorCallback
   ) => Promise<void>
+  // @Deprecated. Don't use unless you absolutey have to
+  options?: {
+    stakeholders?: {
+      label: string
+      mode: 'single'
+    }
+  }
 }

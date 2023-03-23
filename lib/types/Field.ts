@@ -17,6 +17,7 @@ export enum StringType {
   EMAIL = 'email',
   TEXT = 'text',
   URL = 'url',
+  PHONE = 'phone',
 }
 
 type NumericField = BaseField & {

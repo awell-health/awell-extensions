@@ -6,6 +6,7 @@ import {
   type CreatePatientPayload,
   type StartPathwayPayload,
 } from '../gql/graphql'
+import { Category } from '../../../lib/types/marketplace'
 
 const startPathwayMutation = `
 mutation StartPathway($input: StartPathwayInput!) {
@@ -61,23 +62,42 @@ const createPatient = async (
 
 export const startCareFlow: Action<typeof fields, typeof settings> = {
   key: 'startCareFlow',
-  category: 'orchestration',
-  title: 'Start a new care flow',
+  category: Category.WORKFLOW,
+  title: 'Start new care flow',
+  description: 'Start a new care flow from within the current care flow.',
   fields,
   previewable: true,
-  onActivityCreated: async (payload, done): Promise<void> => {
+  onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
     const { fields, settings } = payload
     const { id, patientId } = fields
     const { apiUrl, apiKey } = settings
-    if (apiUrl !== undefined && apiKey !== undefined) {
-      const client = new GraphQLClient(apiUrl, { headers: { apikey: apiKey } })
-      const patient_id = await createPatient(client, patientId)
-      await client.request<StartPathwayPayload>(startPathwayMutation, {
-        patient_id,
-        pathway_definition_id: id,
+    try {
+      if (apiUrl !== undefined && apiKey !== undefined) {
+        const client = new GraphQLClient(apiUrl, {
+          headers: { apikey: apiKey },
+        })
+        const patient_id = await createPatient(client, patientId)
+        await client.request<StartPathwayPayload>(startPathwayMutation, {
+          patient_id,
+          pathway_definition_id: id,
+        })
+      }
+
+      await onComplete()
+    } catch (err) {
+      const error = err as Error
+      await onError({
+        events: [
+          {
+            date: new Date().toISOString(),
+            text: { en: 'Awell API reported an error' },
+            error: {
+              category: 'SERVER_ERROR',
+              message: error.message,
+            },
+          },
+        ],
       })
     }
-
-    await done()
   },
 }

@@ -4,6 +4,7 @@ import {
   type DataPointDefinition,
   type Field,
 } from '../../../lib/types'
+import { Category } from '../../../lib/types/marketplace'
 import { getSdk } from '../gql/sdk'
 import { initialiseClient } from '../graphqlClient'
 import { type settings } from '../settings'
@@ -43,36 +44,53 @@ export const createTask: Action<
   keyof typeof dataPoints
 > = {
   key: 'createTask',
-  category: 'Healthie API',
-  title: 'Create a task',
+  category: Category.INTEGRATIONS,
+  title: 'Create task',
+  description: 'Create a new task in healthie',
   fields,
   dataPoints,
   previewable: true,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
     const { fields, settings } = payload
     const { patientId, content, due_date } = fields
-    const client = initialiseClient(settings)
-    if (client !== undefined) {
-      const sdk = getSdk(client)
-      const { data } = await sdk.createTask({
-        client_id: patientId,
-        content,
-        due_date,
-      })
-      await onComplete({
-        data_points: {
-          taskId: data.createTask?.task?.id,
-        },
-      })
-    } else {
+    try {
+      const client = initialiseClient(settings)
+      if (client !== undefined) {
+        const sdk = getSdk(client)
+        const { data } = await sdk.createTask({
+          client_id: patientId,
+          content,
+          due_date,
+        })
+        await onComplete({
+          data_points: {
+            taskId: data.createTask?.task?.id,
+          },
+        })
+      } else {
+        await onError({
+          events: [
+            {
+              date: new Date().toISOString(),
+              text: { en: 'API client requires an API url and API key' },
+              error: {
+                category: 'MISSING_SETTINGS',
+                message: 'Missing api url or api key',
+              },
+            },
+          ],
+        })
+      }
+    } catch (err) {
+      const error = err as Error
       await onError({
         events: [
           {
             date: new Date().toISOString(),
-            text: { en: 'API client requires an API url and API key' },
+            text: { en: 'Healthie API reported an error' },
             error: {
-              category: 'MISSING_SETTINGS',
-              message: 'Missing api url or api key',
+              category: 'SERVER_ERROR',
+              message: error.message,
             },
           },
         ],

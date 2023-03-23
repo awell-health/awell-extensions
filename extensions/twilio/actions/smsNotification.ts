@@ -1,12 +1,23 @@
-import twilioSdk from '../twilioSdk'
-import { FieldType, type Action, type Field } from '../../../lib/types'
+import { z, ZodError } from 'zod'
+import { fromZodError } from 'zod-validation-error'
+import twilioSdk from '../twilio'
+import {
+  FieldType,
+  StringType,
+  type Action,
+  type Field,
+} from '../../../lib/types'
 import { type settings } from '../settings'
+import { Category } from '../../../lib/types/marketplace'
+import { Message, Phone, Settings, validate } from '../validation'
 
 const fields = {
   recipient: {
     id: 'recipient',
-    label: 'Recipient',
+    label: '"To" phone number',
     type: FieldType.STRING,
+    stringType: StringType.PHONE,
+    description: 'To what phone number would you like to send an SMS message?',
     required: true,
   },
   message: {
@@ -17,33 +28,68 @@ const fields = {
   },
 } satisfies Record<string, Field>
 
+const Fields = Message.extend({
+  recipient: Phone,
+})
+
+const Schema = z.object({
+  fields: Fields,
+  settings: Settings,
+})
+
 export const smsNotification: Action<typeof fields, typeof settings> = {
   key: 'smsNotification',
-  title: 'SMS via Twilio',
-  category: 'Notifications',
+  title: 'Send SMS to phone number',
+  description: 'Send an SMS message to a phone number.',
+  category: Category.COMMUNICATION,
   fields,
-  onActivityCreated: async (payload, onComplete) => {
-    const {
-      fields: { message, recipient },
-      settings,
-    } = payload
-    if (recipient === undefined) {
-      console.error('Recipient is not defined')
-    } else {
-      try {
-        const client = twilioSdk(settings.accountSid, settings.authToken, {
-          region: 'IE1',
-          accountSid: settings.accountSid,
+  onActivityCreated: async (payload, onComplete, onError) => {
+    try {
+      const {
+        fields: { recipient, message },
+        settings: { accountSid, authToken, fromNumber },
+      } = validate({ schema: Schema, payload })
+      const client = twilioSdk(accountSid, authToken, {
+        region: 'IE1',
+        accountSid,
+      })
+      await client.messages.create({
+        body: message,
+        from: fromNumber,
+        to: recipient,
+      })
+      await onComplete()
+    } catch (err) {
+      console.error(err)
+      if (err instanceof ZodError) {
+        const error = fromZodError(err)
+        await onError({
+          events: [
+            {
+              date: new Date().toISOString(),
+              text: { en: error.message },
+              error: {
+                category: 'BAD_REQUEST',
+                message: error.message,
+              },
+            },
+          ],
         })
-        await client.messages.create({
-          body: message,
-          from: settings.fromNumber,
-          to: recipient,
+      } else {
+        const message = (err as Error).message
+        await onError({
+          events: [
+            {
+              date: new Date().toISOString(),
+              text: { en: message },
+              error: {
+                category: 'SERVER_ERROR',
+                message,
+              },
+            },
+          ],
         })
-      } catch (err) {
-        console.error('Error in twilio extension', err)
       }
     }
-    await onComplete()
   },
 }
