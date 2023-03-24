@@ -1,0 +1,14 @@
+mutation createLocation($input: createLocationInput!) {
+  createLocation(input: $input) {
+    location {
+      id
+      name
+      line1
+      zip
+    }
+    messages {
+      field
+      message
+    }
+  }
+}

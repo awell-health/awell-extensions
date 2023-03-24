@@ -1,0 +1,11 @@
+mutation deleteAppointment($id: ID, $deleteRecurring: Boolean) {
+  deleteAppointment(input: { id: $id, deleteRecurring: $deleteRecurring }) {
+    appointment {
+      id
+    }
+    messages {
+      field
+      message
+    }
+  }
+}
