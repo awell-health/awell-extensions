@@ -9,7 +9,7 @@ import { Category } from '../../../lib/types/marketplace'
 import { getSdk } from '../gql/sdk'
 import { initialiseClient } from '../graphqlClient'
 import { type settings } from '../settings'
-import { mapHealthieToExtensionError } from '../utils'
+import { mapHealthieToActivityError } from '../../../lib/errors'
 
 
 const fields = {
@@ -163,7 +163,7 @@ export const updatePatient: Action<
         })
 
         if (!isNil(data.updateClient?.messages)) {
-          const errors = mapHealthieToExtensionError(data.updateClient?.messages)
+          const errors = mapHealthieToActivityError(data.updateClient?.messages)
           await onError({
             events: errors,
           })
