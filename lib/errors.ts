@@ -1,9 +1,9 @@
 import { isNil } from "lodash";
-import { type ActivityEvent } from "../../lib/types/ActivityEvent";
-import { type FieldError } from "./gql/sdk";
+import { type ActivityEvent } from "./types/ActivityEvent";
+import { type FieldError } from "../extensions/healthie/gql/sdk";
 
 
-export const mapHealthieToExtensionError = (errors?: Array<FieldError | null>): ActivityEvent[] => {
+export const mapHealthieToActivityError = (errors?: Array<FieldError | null>): ActivityEvent[] => {
     if (isNil(errors)) return []
     const nonNullErrors = errors.filter((value) => !isNil(value)) as FieldError[]
 

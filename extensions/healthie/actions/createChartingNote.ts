@@ -83,7 +83,7 @@ export const createChartingNote: Action<
                 text: { en: "Form doesn't exist" },
                 error: {
                   category: 'WRONG_INPUT',
-                  message: `Form with id(${form_id}) doesn't exist`,
+                  message: `Form with id ${form_id} doesn't exist`,
                 },
               },
             ],
@@ -99,7 +99,7 @@ export const createChartingNote: Action<
                 text: { en: "Form isn't a charting form" },
                 error: {
                   category: 'WRONG_DATA',
-                  message: `Form with id(${form_id}) cannot be used for charting`,
+                  message: `Form with id ${form_id} cannot be used for charting`,
                 },
               },
             ],
@@ -114,10 +114,10 @@ export const createChartingNote: Action<
             events: [
               {
                 date: new Date().toISOString(),
-                text: { en: "Form doesn't have required field" },
+                text: { en: "Form doesn't have a question of type \"textarea\" (long text)." },
                 error: {
                   category: 'WRONG_DATA',
-                  message: `Form with id(${form_id}) doesn't have a \`textarea\` field`,
+                  message: `Form with id ${form_id}  doesn't have a "textarea" field`,
                 },
               },
             ],

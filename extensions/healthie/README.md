@@ -38,10 +38,15 @@ Removes a tag (identified by an `id`) from a patient.
 
 ## Create charting note
 
-Creates a charting note with the provided `note_content`. It requires that Form Template identified by `form_id` can be used for charting.
+Creates a charting note with the provided `note_content`.
+
+**Prerequisites and set-up:**
+1. The form specified by the `form_id` exists in Healthie.
+2. The form specified by the `form_id` is a charting form (click "Convert to charting form" in the form options).
+3. The form contains at least one question of type `textarea` (long text answer). The action will write the content of the charting note in the first question of that type it finds in the form.
 
 ## Send form completion request
 
-Send form completion request to the patient. Note that `form_id` identifies an actual Form (not a Form Template).
+Send a form completion request to the patient. You will need the Healthie patient ID and the ID of the form you would like the patient to complete.
 
 Although the Healthie API call allows sending form completion requests to multiple users per API call (see recipient_ids in their docs), we decided that every action only sends one form completion request. This heavily simplifies the logic and better fits our domain model (1-to-1 relationship between patient and pathway). If a user would like to send multiple form completion requests, they you can just add multiple actions.
