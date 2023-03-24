@@ -82,6 +82,17 @@ export const mockGetSdkReturn = {
   }),
   createFormCompletionRequest: jest.fn((args) => {
     return undefined
+  }),
+  createLocation: jest.fn((args) => {
+    return {
+      data: {
+        createLocation: {
+          location: {
+            id: 'location-1'
+          }
+        },
+      }
+    }
   })
 }
 
