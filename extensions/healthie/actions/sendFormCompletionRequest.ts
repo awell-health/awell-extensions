@@ -39,7 +39,7 @@ export const sendFormCompletionRequest: Action<
   previewable: true,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
     const { fields, settings } = payload
-    const { healthie_patient_id, form_id, } = fields
+    const { healthie_patient_id, form_id } = fields
     try {
       if (isNil(healthie_patient_id) || isNil(form_id)) {
         await onError({
@@ -71,7 +71,8 @@ export const sendFormCompletionRequest: Action<
            * If a user would like to send multiple form completion requests,
            * they you can just add multiple actions.
            */
-            recipient_ids: healthie_patient_id
+            recipient_ids: healthie_patient_id,
+            form: form_id
           }
         })
 
