@@ -8,8 +8,8 @@ export const Elation: Extension = {
   title: 'Elation',
   description: 'An elation example.',
   icon_url:
-    'https://www.elationhealth.com/wp-content/themes/elation2021/assets/images/elation-health-logo-blue.svg',
-  category: Category.INTEGRATIONS,
+    'https://res.cloudinary.com/da7x4rzl4/image/upload/v1678870116/Awell%20Extensions/Awell_Logo.png',
+  category: Category.WORKFLOW,
   author: {
     authorType: AuthorType.AWELL,
   },

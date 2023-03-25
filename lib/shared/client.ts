@@ -85,6 +85,7 @@ export abstract class APIClient<DW extends DataWrapper> {
 
   protected async getDataWrapper(): Promise<DW> {
     const token = await this.auth.Authenticate()
+    console.log(token)
     return this.ctor(token.access_token, this.baseUrl)
   }
 }

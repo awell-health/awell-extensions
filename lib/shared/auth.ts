@@ -51,8 +51,13 @@ export class OAuthPassword implements OAuthOpts {
     ).toString('base64')
     const req = fetch(this.auth_url, {
       method: 'post',
-      body: JSON.stringify(this.OAuthParams),
-      headers: { authorization: `Basic ${authVal}` },
+      body: new URLSearchParams(
+        Object.entries({ ...this.OAuthParams, grant_type: 'password' })
+      ),
+      headers: {
+        authorization: `Basic ${authVal}`,
+        'content-type': 'application/x-www-form-urlencoded',
+      },
     })
     const resp = await req
     if (resp.status !== 200) {

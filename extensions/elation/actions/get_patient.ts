@@ -17,7 +17,7 @@ const fields = {
     id: 'patientId',
     label: 'Patient ID',
     description: 'A string field configured at design time',
-    type: FieldType.NUMERIC,
+    type: FieldType.STRING,
     required: true,
   },
 } satisfies Record<string, Field>
@@ -45,10 +45,10 @@ export const getPatient: Action<
   typeof settings,
   keyof typeof dataPoints
 > = {
-  key: 'log',
+  key: 'get_patient',
   category: Category.DEMO,
-  title: 'Log hello world',
-  description: 'This is a dummy Custom Action for extension developers.',
+  title: 'Get Patient',
+  description: "Get patient profile using elation's patient api.",
   fields,
   previewable: true,
   dataPoints,
