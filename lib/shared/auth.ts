@@ -21,7 +21,7 @@ export interface OAuthAccessTokenResponse {
 
 export type OAuthOpts = OAuthGrantPassword & { auth_url: string }
 
-export abstract class OAuthPassword implements OAuthOpts {
+export class OAuthPassword implements OAuthOpts {
   readonly client_id: string
   readonly client_secret: string
   readonly username: string
@@ -45,12 +45,10 @@ export abstract class OAuthPassword implements OAuthOpts {
     this.auth_url = opts.auth_url
   }
 
-  public static abstract FromOAuth<T extends OAuthPassword>(
-    opts: OAuthGrantPassword
-  ): T
-
   public async Authenticate(): Promise<OAuthAccessTokenResponse> {
-    const authVal = btoa(`${this.client_id}:${this.client_secret}`)
+    const authVal = Buffer.from(
+      `${this.client_id}:${this.client_secret}`
+    ).toString('base64')
     const req = fetch(this.auth_url, {
       method: 'post',
       body: JSON.stringify(this.OAuthParams),
