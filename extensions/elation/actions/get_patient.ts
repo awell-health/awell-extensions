@@ -8,16 +8,17 @@ import {
 } from '../../../lib/types'
 import { Category } from '../../../lib/types/marketplace'
 import { type settings } from '../settings'
-import { Settings } from '../validation'
+import { Settings, PatientId } from '../validation'
 import { ElationAPIClient, makeDataWrapper } from '../client'
 import { fromZodError } from 'zod-validation-error'
+import { AxiosError } from 'axios'
 
 const fields = {
   patientId: {
     id: 'patientId',
     label: 'Patient ID',
-    description: 'A string field configured at design time',
-    type: FieldType.STRING,
+    description: 'The patient ID (a number)',
+    type: FieldType.NUMERIC,
     required: true,
   },
 } satisfies Record<string, Field>
@@ -33,11 +34,13 @@ const dataPoints = {
   },
 } satisfies Record<string, DataPointDefinition>
 
-const PatientId = z.object({ patientId: z.number({ coerce: true }) })
+const Fields = z.object({
+  patientId: PatientId,
+})
 
 const Schema = z.object({
   settings: Settings,
-  fields: PatientId,
+  fields: Fields,
 })
 
 export const getPatient: Action<
@@ -53,21 +56,22 @@ export const getPatient: Action<
   previewable: true,
   dataPoints,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
-    const {
-      fields: { patientId },
-      settings,
-    } = validate({ schema: Schema, payload })
-    // right now the base url is hardcoded
-    const baseUrl = 'https://sandbox.elationemr.com/api/2.0'
-    const api = new ElationAPIClient(
-      {
-        ...settings,
-        auth_url: 'https://sandbox.elationemr.com/api/2.0/oauth2/token/',
-      },
-      baseUrl,
-      makeDataWrapper
-    )
     try {
+      // Validation should produce ZodError
+      const {
+        fields: { patientId },
+        settings,
+      } = validate({ schema: Schema, payload })
+
+      // API Call should produce AuthError or something dif.
+      const api = new ElationAPIClient({
+        auth: {
+          ...settings,
+          auth_url: 'https://sandbox.elationemr.com/api/2.0/oauth2/token',
+        },
+        baseUrl: 'https://sandbox.elationemr.com/api/2.0',
+        makeDataWrapper,
+      })
       const patientInfo = await api.getPatient(patientId)
       await onComplete({
         data_points: {
@@ -86,6 +90,23 @@ export const getPatient: Action<
               error: {
                 category: 'BAD_REQUEST',
                 message: error.message,
+              },
+            },
+          ],
+        })
+      } else if (err instanceof AxiosError) {
+        await onError({
+          events: [
+            {
+              date: new Date().toISOString(),
+              text: {
+                en: `${err.status ?? '(no status code)'} Error: ${err.message}`,
+              },
+              error: {
+                category: 'BAD_REQUEST',
+                message: `${err.status ?? '(no status code)'} Error: ${
+                  err.message
+                }`,
               },
             },
           ],

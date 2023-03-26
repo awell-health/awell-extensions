@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/naming-convention */
+
 // enum PatientGenderIdentity {
 //   'unknown',
 //   'man',

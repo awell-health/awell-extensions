@@ -1,14 +1,15 @@
-import Axios, {
-  type AxiosInstance,
-  type AxiosRequestConfig,
-  type AxiosError,
-} from 'axios'
-import { AuthError } from './errors'
-import { type OAuthOpts, OAuthPassword } from './auth'
+/**
+ * This base client module contains two classes and the DataWrapper constructor type.
+ *
+ * The API Client manages the lifecycle of the call. When it's initialized some opts are passed in, along with the data wrapper constructor function.
+ * The DataWrapper is responsible for calling an API and mapping the data, if necessary.
+ * The DataWrapper Constructor function makes sure we always pass the DataWrapper a "good" token.
+ *
+ * Please see `${workspaceFolder}/extensions/elation/client` for an example of extending the base classes.
+ */
 
-export enum AuthType {
-  BEARER = 'bearer',
-}
+import Axios, { type AxiosInstance, type AxiosRequestConfig } from 'axios'
+import { type OAuthOpts, OAuthPassword } from './auth'
 
 export type DataWrapperCtor<DW extends DataWrapper> = (
   token: string,
@@ -16,76 +17,70 @@ export type DataWrapperCtor<DW extends DataWrapper> = (
 ) => DW
 
 export abstract class DataWrapper {
-  protected _client: AxiosInstance
-  public constructor(authType: AuthType, token: string, baseUrl: string) {
+  readonly _client: AxiosInstance
+  public constructor(token: string, baseUrl: string) {
     this._client = Axios.create({
       baseURL: baseUrl,
-      headers: { Authorization: `${authType} ${token}` },
-      validateStatus: (status) => status === 200,
+      headers: { Authorization: `Bearer ${token}` },
+      validateStatus: (status) => {
+        return status >= 200 && status < 300
+      },
     })
   }
 
   protected async Request<T>(opts: AxiosRequestConfig): Promise<T> {
-    try {
-      const response = await this._client.request<T>(opts)
-      return response.data
-    } catch (e) {
-      const err = e as AxiosError
-
-      switch (err.status) {
-        case 401: {
-          throw new AuthError(err.message, err.status)
-        }
-        default: {
-          throw new Error(
-            `Status code ${err.status === undefined ? '' : err.status} ${
-              err.message
-            }`
-          )
-        }
-      }
-    }
+    const response = await this._client.request<T>(opts)
+    return response.data
   }
 }
 
 export abstract class APIClient<DW extends DataWrapper> {
   // i'm just handling password rn. we can worry about extending later.
   readonly auth: OAuthPassword
-  // because we're doing a simple oauth password (still calls the auth server)
-  // i'm not as concerned about storing a refresh token and using it to get
-  // the access token... it's kind of pointless, tbh.
   readonly baseUrl: string
   readonly ctor: DataWrapperCtor<DW>
 
-  public constructor(
-    authOpts: OAuthOpts,
-    baseUrl: string,
-    ctor: DataWrapperCtor<DW>
-  ) {
-    this.auth = new OAuthPassword(authOpts)
-    this.baseUrl = baseUrl
-    this.ctor = ctor
+  public constructor(opts: {
+    auth: OAuthOpts
+    baseUrl: string
+    makeDataWrapper: DataWrapperCtor<DW>
+  }) {
+    this.auth = new OAuthPassword(opts.auth)
+    this.baseUrl = opts.baseUrl
+    this.ctor = opts.makeDataWrapper
   }
 
-  protected async fetchData<T>(
+  /**
+   * A fancy looking way to wrap the API call. There's a simple retry
+   * mechanism in here, but it could be extended to include a more complex
+   * retry mechanism.
+   * @param apiCall something like dw => dw.getStuff()
+   * @param isRetry if you don't want to retry, pass boolean `true` as an arg
+   * @returns whatever dw.getStuff() returns
+   */
+  protected async FetchData<T>(
     apiCall: (_: DW) => Promise<T>,
-    retry?: boolean
+    isRetry?: boolean
   ): Promise<T> {
-    const dw = await this.getDataWrapper()
+    const dw = await this._getDataWrapper()
     try {
       const res = await apiCall(dw)
       return res
     } catch (err) {
-      if (retry !== true) {
-        return await this.fetchData<T>(apiCall, true)
+      if (isRetry !== true) {
+        await new Promise((resolve) => setTimeout(resolve, 250))
+        return await this.FetchData<T>(apiCall, true)
       }
       throw err
     }
   }
 
-  protected async getDataWrapper(): Promise<DW> {
-    const token = await this.auth.Authenticate()
-    console.log(token)
+  /**
+   * Calls the authenticator and returns a data wrapper with a valid token.
+   * @returns DataWrapper
+   */
+  private async _getDataWrapper(): Promise<DW> {
+    const token = await this.auth.authenticate()
     return this.ctor(token.access_token, this.baseUrl)
   }
 }

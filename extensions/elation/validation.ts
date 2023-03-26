@@ -6,3 +6,9 @@ export const Settings = z.object({
   username: z.string().min(1, { message: 'Missing username' }),
   password: z.string().min(1, { message: 'Missing password' }),
 })
+
+export const PatientId = z.coerce
+  .number({
+    invalid_type_error: 'Requires a valid patient ID (number)',
+  })
+  .gt(0, { message: 'Requires a valid patient ID (number)' })

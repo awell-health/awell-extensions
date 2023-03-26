@@ -1,32 +1,64 @@
 import { getPatient } from '..'
+import { patientExample } from '../../types/patient'
+import { ElationAPIClient } from '../../client'
+import { type ActivityEvent } from '../../../../lib/types/ActivityEvent'
 
 describe('Simple get patient action', () => {
   const onComplete = jest.fn()
-  const client_id = 'Qq0oymgbCUJJeDE30zvAOCiZRnvDGWv5dx0vWW9t'
-  const client_secret =
-    'uvH1e0C63qI4uYpbl7i5rqBFqaZUse2Kl6PCopWaTqbCrdAOEiEjmJun539zRuqlk7Pd77hZxkzaOry94NGUR86EPY0XOKl40wM9'
-  const username = '4069-563@api.elationemr.com'
-  const password = '24e83d2024e9c4a2f089924e4ecc565f'
+  const settings = {
+    client_id: 'asdf',
+    client_secret: 'asdf',
+    username: 'asdf',
+    password: 'asdf',
+  }
+  jest
+    .spyOn(ElationAPIClient.prototype, 'getPatient')
+    .mockImplementation(async (id) => {
+      return patientExample
+    })
   beforeEach(() => {
     onComplete.mockClear()
   })
 
-  test('Should not call the onComplete callback', async () => {
+  test('Should return with correct data_points', async () => {
     await getPatient.onActivityCreated(
       {
         fields: {
           patientId: '141372212838401',
         },
-        settings: {
-          client_id,
-          client_secret,
-          username,
-          password,
-        },
+        settings,
       } as any,
       onComplete,
       jest.fn()
     )
     expect(onComplete).toHaveBeenCalled()
+    expect(onComplete).toBeCalledWith({
+      data_points: {
+        first_name: patientExample.first_name,
+        last_name: patientExample.last_name,
+      },
+    })
+  })
+
+  test('Should provide good error messaging', async () => {
+    const onError = jest
+      .fn()
+      .mockImplementation((obj: { events: ActivityEvent[] }) => {
+        return obj.events[0].error?.message
+      })
+    await getPatient.onActivityCreated(
+      {
+        fields: {
+          patientId: '',
+        },
+        settings,
+      } as any,
+      onComplete,
+      onError
+    )
+    expect(onError).toHaveBeenCalled()
+    expect(onError).toHaveReturnedWith(
+      'Validation error: Requires a valid patient ID (number) at "fields.patientId"'
+    )
   })
 })
