@@ -65,7 +65,6 @@ export class OAuthPassword {
       authorization: `Basic ${authVal}`,
       'content-type': 'application/x-www-form-urlencoded',
     }
-    console.log(headers, opts.auth_url)
     this._client = Axios.default.create({
       baseURL: opts.auth_url,
       headers,

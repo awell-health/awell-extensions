@@ -9,7 +9,8 @@
     "lint": "eslint **/*.ts",
     "postinstall": "husky install",
     "test": "jest",
-    "test:publish-new-activity": "ts-node-dev --transpile-only ./src/publish-new-activity.ts"
+    "test:publish-new-activity": "ts-node-dev --transpile-only ./src/publish-new-activity.ts",
+    "elation:webhook": "yarn esbuild ./extensions/elation/scripts/create_webhook.ts --bundle --platform=node | yarn node"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "^3.2.2",
@@ -24,6 +25,7 @@
     "@types/node-fetch": "^2.6.2",
     "@types/showdown": "^2.0.0",
     "@typescript-eslint/eslint-plugin": "^5.52.0",
+    "esbuild": "^0.17.14",
     "eslint": "^8.34.0",
     "eslint-config-prettier": "^8.6.0",
     "eslint-config-standard-with-typescript": "^34.0.0",
