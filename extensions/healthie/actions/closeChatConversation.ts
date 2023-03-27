@@ -1,5 +1,5 @@
 import { isNil } from 'lodash'
-import { mapHealthieToActivityError } from '../../../lib/errors'
+import { mapHealthieToActivityError } from '../errors'
 import {
   FieldType,
   type Action,
@@ -22,7 +22,7 @@ const fields = {
   provider_id: {
     id: 'provider_id',
     label: 'Provider ID',
-    description: "This is the ID of the provider.",
+    description: 'This is the ID of the provider.',
     type: FieldType.STRING,
     required: true,
   },

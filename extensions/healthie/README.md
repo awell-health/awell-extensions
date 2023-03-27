@@ -50,3 +50,27 @@ Creates a charting note with the provided `note_content`.
 Send a form completion request to the patient. You will need the Healthie patient ID and the ID of the form you would like the patient to complete.
 
 Although the Healthie API call allows sending form completion requests to multiple users per API call (see recipient_ids in their docs), we decided that every action only sends one form completion request. This heavily simplifies the logic and better fits our domain model (1-to-1 relationship between patient and pathway). If a user would like to send multiple form completion requests, they you can just add multiple actions.
+
+## Archive patient
+
+Archives a patient with a given `id`.
+
+## Create location
+
+Creates a location. ID of the create location is stored as `locationId` data point.
+
+## Close chat conversation
+
+Closes chat conversation with a given `id` as a provider with the given `provider_id`.
+
+## Delete appointment
+
+Deletes an appointment with a given `id`.
+
+## Cancel appointment
+
+Cancels an appointment with a given `id`.
+
+## Create Journal Entry
+
+...
