@@ -1,4 +1,5 @@
 import { isNil } from 'lodash'
+import { mapHealthieToActivityError } from '../../../lib/errors'
 import {
   FieldType,
   type Action,
@@ -60,9 +61,7 @@ export const sendFormCompletionRequest: Action<
       const client = initialiseClient(settings)
       if (client !== undefined) {
         const sdk = getSdk(client)
-
-
-        await sdk.createFormCompletionRequest({
+        const { data } = await sdk.createFormCompletionRequest({
           input: {
             /**
            * Although the Healthie API call allows sending form completion requests to multiple users per API call,
@@ -75,6 +74,14 @@ export const sendFormCompletionRequest: Action<
             form: form_id
           }
         })
+
+        if (!isNil(data.createRequestedFormCompletion?.messages)) {
+          const errors = mapHealthieToActivityError(data.createRequestedFormCompletion?.messages)
+          await onError({
+            events: errors,
+          })
+          return
+        }
 
         await onComplete()
       } else {

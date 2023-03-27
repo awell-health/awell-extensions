@@ -14,7 +14,9 @@ export const mockGetSdkReturn = {
     }
   }),
   sendChatMessage: jest.fn((args) => {
-    return undefined
+    return {
+      data: {}
+    }
   }),
   createPatient: jest.fn((args) => {
     return {
@@ -78,10 +80,14 @@ export const mockGetSdkReturn = {
     }
   }),
   createFormAnswerGroup: jest.fn((args) => {
-    return undefined
+    return {
+      data: {}
+    }
   }),
   createFormCompletionRequest: jest.fn((args) => {
-    return undefined
+    return {
+      data: {}
+    }
   }),
   createLocation: jest.fn((args) => {
     return {
@@ -95,13 +101,19 @@ export const mockGetSdkReturn = {
     }
   }),
   updateConversation: jest.fn((args) => {
-    return undefined
+    return {
+      data: {}
+    }
   }),
   deleteAppointment: jest.fn((args) => {
-    return undefined
+    return {
+      data: {}
+    }
   }),
   updateAppointment: jest.fn((args) => {
-    return undefined
+    return {
+      data: {}
+    }
   }),
   createJournalEntry: jest.fn((args) => {
     return {

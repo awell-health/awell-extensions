@@ -1,4 +1,5 @@
 import { isNil } from 'lodash'
+import { mapHealthieToActivityError } from '../../../lib/errors'
 import {
   FieldType,
   type Action,
@@ -53,15 +54,20 @@ export const cancelAppointment: Action<
       const client = initialiseClient(settings)
       if (client !== undefined) {
         const sdk = getSdk(client)
-
-
-        await sdk.updateAppointment({
+        const { data } = await sdk.updateAppointment({
           input: {
             id,
             pm_status: 'Cancelled'
           }
         })
 
+        if (!isNil(data.updateAppointment?.messages)) {
+          const errors = mapHealthieToActivityError(data.updateAppointment?.messages)
+          await onError({
+            events: errors,
+          })
+          return
+        }
 
         await onComplete()
       } else {

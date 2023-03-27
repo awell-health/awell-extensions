@@ -1,4 +1,5 @@
 import { isNil } from 'lodash'
+import { mapHealthieToActivityError } from '../../../lib/errors'
 import {
   type DataPointDefinition,
   FieldType,
@@ -63,14 +64,20 @@ export const createLocation: Action<
       const client = initialiseClient(settings)
       if (client !== undefined) {
         const sdk = getSdk(client)
-
-
         const { data } = await sdk.createLocation({
           input: {
             user_id: id,
             // TODO: add fields
           }
         })
+
+        if (!isNil(data.createLocation?.messages)) {
+          const errors = mapHealthieToActivityError(data.createLocation?.messages)
+          await onError({
+            events: errors,
+          })
+          return
+        }
 
         const locationId = data.createLocation?.location?.id;
 
