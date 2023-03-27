@@ -1,6 +1,6 @@
 import { isNil } from "lodash";
-import { type ActivityEvent } from "./types/ActivityEvent";
-import { type FieldError } from "../extensions/healthie/gql/sdk";
+import { type ActivityEvent } from "../../lib/types/ActivityEvent";
+import { type FieldError } from "./gql/sdk";
 
 
 export const mapHealthieToActivityError = (errors?: Array<FieldError | null>): ActivityEvent[] => {
