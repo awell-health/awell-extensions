@@ -9,6 +9,12 @@ import { applyTagToPatient } from './applyTagToPatient'
 import { removeTagFromPatient } from './removeTagFromPatient'
 import { createChartingNote } from './createChartingNote'
 import { sendFormCompletionRequest } from './sendFormCompletionRequest'
+import { archivePatient } from './archivePatient'
+import { createLocation } from './createLocation'
+import { closeChatConversation } from './closeChatConversation'
+import { deleteAppointment } from './deleteAppointment'
+import { cancelAppointment } from './cancelAppointment'
+import { createJournalEntry } from './createJournalEntry'
 
 export const actions = {
   createAppointment,
@@ -21,5 +27,11 @@ export const actions = {
   applyTagToPatient,
   removeTagFromPatient,
   createChartingNote,
-  sendFormCompletionRequest
+  sendFormCompletionRequest,
+  archivePatient,
+  createLocation,
+  closeChatConversation,
+  deleteAppointment,
+  cancelAppointment,
+  createJournalEntry,
 }

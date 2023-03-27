@@ -1,11 +1,11 @@
 import { getSdk } from "../../gql/sdk"
 import { mockGetSdk, mockGetSdkReturn } from "../../gql/__mocks__/sdk"
-import { closeConversation } from "../closeConversation"
+import { closeChatConversation } from "../closeChatConversation"
 
 jest.mock('../../gql/sdk')
 jest.mock('../../graphqlClient')
 
-describe('closeConversation action', () => {
+describe('closeChatConversation action', () => {
   const onComplete = jest.fn()
 
   beforeAll(() => {
@@ -17,7 +17,7 @@ describe('closeConversation action', () => {
   })
 
   test("Should close a conversation", async () => {
-    await closeConversation.onActivityCreated(
+    await closeChatConversation.onActivityCreated(
       {
         activity: {
           id: 'activity-id',

@@ -28,14 +28,14 @@ const fields = {
   },
 } satisfies Record<string, Field>
 
-export const closeConversation: Action<
+export const closeChatConversation: Action<
   typeof fields,
   typeof settings
 > = {
-  key: 'closeConversation',
+  key: 'closeChatConversation',
   category: Category.INTEGRATIONS,
-  title: 'Close conversation',
-  description: 'Close conversation in Healthie.',
+  title: 'Close chat conversation',
+  description: 'Close chat conversation in Healthie.',
   fields,
   previewable: true,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
