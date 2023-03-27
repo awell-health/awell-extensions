@@ -24,7 +24,14 @@ describe('createLocation action', () => {
         },
         patient: { id: 'test-patient' },
         fields: {
-          id: 'patient-1'
+          id: 'patient-1',
+          name: 'Test location',
+          country: '',
+          state: '',
+          city: '',
+          zip: '',
+          line1: '',
+          line2: ''
         },
         settings: {
           apiKey: 'apiKey',
