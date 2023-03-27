@@ -20,6 +20,19 @@ const fields = {
     type: FieldType.STRING,
     required: true,
   },
+  type: {
+    id: 'type',
+    label: 'Type',
+    description: 'The type of entry. Valid options are: ["MetricEntry", "FoodEntry", "WorkoutEntry", "MirrorEntry", "SleepEntry", "NoteEntry", "WaterIntakeEntry", "PoopEntry", "SymptomEntry"].',
+    type: FieldType.STRING,
+    required: true,
+  },
+  percieved_hungriness: {
+    id: 'percieved_hungriness',
+    label: 'Perceived hungriness',
+    description: 'A string index of hungriness. Valid options are: ["1", "2", "3"].',
+    type: FieldType.NUMERIC,
+  },
 } satisfies Record<string, Field>
 
 const dataPoints = {
@@ -43,9 +56,9 @@ export const createJournalEntry: Action<
   previewable: true,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
     const { fields, settings } = payload
-    const { id } = fields
+    const { id, type, percieved_hungriness } = fields
     try {
-      if (isNil(id)) {
+      if (isNil(id) || isNil(type)) {
         await onError({
           events: [
             {
@@ -53,7 +66,7 @@ export const createJournalEntry: Action<
               text: { en: 'Fields are missing' },
               error: {
                 category: 'MISSING_FIELDS',
-                message: '`id` is missing',
+                message: '`id` or `type` is missing',
               },
             },
           ],
@@ -66,7 +79,9 @@ export const createJournalEntry: Action<
         const sdk = getSdk(client)
         const { data } = await sdk.createJournalEntry({
           input: {
-            user_id: id
+            user_id: id,
+            type,
+            percieved_hungriness
           }
         })
 

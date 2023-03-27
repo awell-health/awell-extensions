@@ -57,7 +57,7 @@ Archives a patient with a given `id`.
 
 ## Create location
 
-Creates a location. ID of the create location is stored as `locationId` data point.
+Creates a location. ID of the created location is stored as `locationId` data point.
 
 ## Close chat conversation
 
@@ -73,4 +73,4 @@ Cancels an appointment with a given `id`.
 
 ## Create Journal Entry
 
-...
+Creates a Journal Entry of given `type` for a patient with a given `id`. ID of the created entry is stored as `journalEntryId` data point.
