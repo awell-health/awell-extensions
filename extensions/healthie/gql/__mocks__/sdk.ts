@@ -103,6 +103,17 @@ export const mockGetSdkReturn = {
   updateAppointment: jest.fn((args) => {
     return undefined
   }),
+  createJournalEntry: jest.fn((args) => {
+    return {
+      data: {
+        createEntry: {
+          entry: {
+            id: 'entry-1'
+          }
+        },
+      }
+    }
+  }),
 }
 
 export const mockGetSdk = (params: any): any => {
