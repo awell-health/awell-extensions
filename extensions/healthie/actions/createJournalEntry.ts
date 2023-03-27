@@ -4,6 +4,7 @@ import {
   type DataPointDefinition,
   type Action,
   type Field,
+  FieldType,
 } from '../../../lib/types'
 import { Category } from '../../../lib/types/marketplace'
 import { getSdk } from '../gql/sdk'
@@ -12,7 +13,13 @@ import { type settings } from '../settings'
 
 
 const fields = {
-
+  id: {
+    id: 'id',
+    label: 'ID',
+    description: 'The id of the patient in Healthie',
+    type: FieldType.STRING,
+    required: true,
+  },
 } satisfies Record<string, Field>
 
 const dataPoints = {
@@ -35,29 +42,33 @@ export const createJournalEntry: Action<
   dataPoints,
   previewable: true,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
-    const { settings } = payload
-    // const { id } = fields
+    const { fields, settings } = payload
+    const { id } = fields
     try {
-      // if (isNil(id)) {
-      //   await onError({
-      //     events: [
-      //       {
-      //         date: new Date().toISOString(),
-      //         text: { en: 'Fields are missing' },
-      //         error: {
-      //           category: 'MISSING_FIELDS',
-      //           message: '`id` is missing',
-      //         },
-      //       },
-      //     ],
-      //   })
-      //   return;
-      // }
+      if (isNil(id)) {
+        await onError({
+          events: [
+            {
+              date: new Date().toISOString(),
+              text: { en: 'Fields are missing' },
+              error: {
+                category: 'MISSING_FIELDS',
+                message: '`id` is missing',
+              },
+            },
+          ],
+        })
+        return;
+      }
 
       const client = initialiseClient(settings)
       if (client !== undefined) {
         const sdk = getSdk(client)
-        const { data } = await sdk.createJournalEntry({ input: {} })
+        const { data } = await sdk.createJournalEntry({
+          input: {
+            user_id: id
+          }
+        })
 
         if (!isNil(data.createEntry?.messages)) {
           const errors = mapHealthieToActivityError(data.createEntry?.messages)
@@ -69,7 +80,6 @@ export const createJournalEntry: Action<
 
         const journalEntryId = data.createEntry?.entry?.id;
 
-        // TODO: verify if needed
         await onComplete(
           {
             data_points: {
