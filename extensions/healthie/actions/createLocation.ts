@@ -1,5 +1,5 @@
 import { isNil } from 'lodash'
-import { mapHealthieToActivityError } from '../../../lib/errors'
+import { mapHealthieToActivityError } from '../errors'
 import {
   type DataPointDefinition,
   FieldType,
