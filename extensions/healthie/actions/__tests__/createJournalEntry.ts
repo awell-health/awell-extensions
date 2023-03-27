@@ -24,6 +24,7 @@ describe('createJournalEntry action', () => {
         },
         patient: { id: 'test-patient' },
         fields: {
+          id: 'patient-1'
         },
         settings: {
           apiKey: 'apiKey',
