@@ -1,4 +1,5 @@
 import { isNil } from 'lodash'
+import { mapHealthieToActivityError } from '../../../lib/errors'
 import {
   FieldType,
   type Action,
@@ -53,14 +54,20 @@ export const archivePatient: Action<
       const client = initialiseClient(settings)
       if (client !== undefined) {
         const sdk = getSdk(client)
-
-
-        await sdk.updatePatient({
+        const { data } = await sdk.updatePatient({
           input: {
             id,
             active: false
           }
         })
+
+        if (!isNil(data.updateClient?.messages)) {
+          const errors = mapHealthieToActivityError(data.updateClient?.messages)
+          await onError({
+            events: errors,
+          })
+          return
+        }
 
         await onComplete()
       } else {

@@ -1,4 +1,5 @@
 import { isNil } from 'lodash'
+import { mapHealthieToActivityError } from '../../../lib/errors'
 import {
   FieldType,
   type Action,
@@ -53,12 +54,17 @@ export const deleteAppointment: Action<
       const client = initialiseClient(settings)
       if (client !== undefined) {
         const sdk = getSdk(client)
-
-
-        await sdk.deleteAppointment({
+        const { data } = await sdk.deleteAppointment({
           id
         })
 
+        if (!isNil(data.deleteAppointment?.messages)) {
+          const errors = mapHealthieToActivityError(data.deleteAppointment?.messages)
+          await onError({
+            events: errors,
+          })
+          return
+        }
 
         await onComplete()
       } else {

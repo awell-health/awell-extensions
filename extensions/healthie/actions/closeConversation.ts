@@ -1,4 +1,5 @@
 import { isNil } from 'lodash'
+import { mapHealthieToActivityError } from '../../../lib/errors'
 import {
   FieldType,
   type Action,
@@ -60,15 +61,20 @@ export const closeConversation: Action<
       const client = initialiseClient(settings)
       if (client !== undefined) {
         const sdk = getSdk(client)
-
-
-        await sdk.updateConversation({
+        const { data } = await sdk.updateConversation({
           input: {
             id,
             closed_by_id: provider_id
           }
         })
 
+        if (!isNil(data.updateConversation?.messages)) {
+          const errors = mapHealthieToActivityError(data.updateConversation?.messages)
+          await onError({
+            events: errors,
+          })
+          return
+        }
 
         await onComplete()
       } else {

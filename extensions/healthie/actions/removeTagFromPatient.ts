@@ -1,4 +1,5 @@
 import { isNil } from 'lodash'
+import { mapHealthieToActivityError } from '../../../lib/errors'
 import {
   FieldType,
   type Action,
@@ -60,12 +61,18 @@ export const removeTagFromPatient: Action<
       const client = initialiseClient(settings)
       if (client !== undefined) {
         const sdk = getSdk(client)
-
-
-        await sdk.removeTagFromUser({
+        const { data } = await sdk.removeTagFromUser({
           id,
           taggable_user_id: patient_id
         })
+
+        if (!isNil(data.removeAppliedTag?.messages)) {
+          const errors = mapHealthieToActivityError(data.removeAppliedTag?.messages)
+          await onError({
+            events: errors,
+          })
+          return
+        }
 
         await onComplete()
       } else {

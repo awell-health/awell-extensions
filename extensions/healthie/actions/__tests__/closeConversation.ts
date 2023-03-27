@@ -24,7 +24,7 @@ describe('closeConversation action', () => {
         },
         patient: { id: 'test-patient' },
         fields: {
-          id: 'patient-1',
+          id: 'conversation-1',
           provider_id: 'provider-1'
         },
         settings: {

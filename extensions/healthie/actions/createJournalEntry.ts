@@ -1,3 +1,5 @@
+import { isNil } from 'lodash'
+import { mapHealthieToActivityError } from '../../../lib/errors'
 import {
   type DataPointDefinition,
   type Action,
@@ -55,9 +57,15 @@ export const createJournalEntry: Action<
       const client = initialiseClient(settings)
       if (client !== undefined) {
         const sdk = getSdk(client)
-
-
         const { data } = await sdk.createJournalEntry({ input: {} })
+
+        if (!isNil(data.createEntry?.messages)) {
+          const errors = mapHealthieToActivityError(data.createEntry?.messages)
+          await onError({
+            events: errors,
+          })
+          return
+        }
 
         const journalEntryId = data.createEntry?.entry?.id;
 
