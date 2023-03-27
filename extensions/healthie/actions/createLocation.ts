@@ -55,6 +55,7 @@ const fields = {
     label: 'Line 1',
     description: 'The Line 1 of the address',
     type: FieldType.STRING,
+    required: true,
   },
   line2: {
     id: 'line2',
