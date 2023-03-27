@@ -20,6 +20,48 @@ const fields = {
     type: FieldType.STRING,
     required: true,
   },
+  name: {
+    id: 'name',
+    label: 'Name',
+    description: 'The name of the address',
+    type: FieldType.STRING,
+  },
+  country: {
+    id: 'country',
+    label: 'Country',
+    description: 'The country of the patient',
+    type: FieldType.STRING,
+  },
+  state: {
+    id: 'state',
+    label: 'State',
+    description: "The state patient's lives in",
+    type: FieldType.STRING,
+  },
+  city: {
+    id: 'city',
+    label: 'City',
+    description: 'The city of the patient',
+    type: FieldType.STRING,
+  },
+  zip: {
+    id: 'zip',
+    label: 'Zip code',
+    description: 'The zip code of the patient',
+    type: FieldType.STRING,
+  },
+  line1: {
+    id: 'line1',
+    label: 'Line 1',
+    description: 'The Line 1 of the address',
+    type: FieldType.STRING,
+  },
+  line2: {
+    id: 'line2',
+    label: 'Line 2',
+    description: 'The Line 2 of the address',
+    type: FieldType.STRING,
+  },
 } satisfies Record<string, Field>
 
 const dataPoints = {
@@ -43,7 +85,7 @@ export const createLocation: Action<
   previewable: true,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
     const { fields, settings } = payload
-    const { id } = fields
+    const { id, name, country, state, city, zip, line1, line2 } = fields
     try {
       if (isNil(id)) {
         await onError({
@@ -67,7 +109,13 @@ export const createLocation: Action<
         const { data } = await sdk.createLocation({
           input: {
             user_id: id,
-            // TODO: add fields
+            name,
+            country,
+            state,
+            city,
+            zip,
+            line1,
+            line2
           }
         })
 
@@ -81,7 +129,6 @@ export const createLocation: Action<
 
         const locationId = data.createLocation?.location?.id;
 
-        // TODO: verify if needed
         await onComplete(
           {
             data_points: {
