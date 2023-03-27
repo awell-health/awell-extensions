@@ -10,7 +10,7 @@ import { Category } from '../../../lib/types/marketplace'
 import { getSdk } from '../gql/sdk'
 import { initialiseClient } from '../graphqlClient'
 import { type settings } from '../settings'
-import { mapHealthieToActivityError } from '../../../lib/errors'
+import { mapHealthieToActivityError } from '../errors'
 
 
 const fields = {
