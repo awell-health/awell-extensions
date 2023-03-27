@@ -12,8 +12,15 @@ import { type settings } from '../settings'
 const fields = {
   patientId: {
     id: 'patientId',
-    label: 'Patient ID',
-    description: 'The patient identifier',
+    label: 'Healthie patient ID',
+    description: 'The ID of the patient related to this task.',
+    type: FieldType.STRING,
+  },
+  assignToUserId: {
+    id: 'assignToUserId',
+    label: 'Assign to user',
+    description:
+      'The ID of the user to assign the task to. If none provided, will assign the task to the user the API key is associated with.',
     type: FieldType.STRING,
   },
   content: {
@@ -23,8 +30,8 @@ const fields = {
     type: FieldType.TEXT,
     required: true,
   },
-  due_date: {
-    id: 'due_date',
+  dueDate: {
+    id: 'dueDate',
     label: 'Due date',
     description: 'The due date of the task',
     type: FieldType.STRING,
@@ -52,15 +59,16 @@ export const createTask: Action<
   previewable: true,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
     const { fields, settings } = payload
-    const { patientId, content, due_date } = fields
+    const { patientId, assignToUserId, content, dueDate } = fields
     try {
       const client = initialiseClient(settings)
       if (client !== undefined) {
         const sdk = getSdk(client)
         const { data } = await sdk.createTask({
           client_id: patientId,
+          user_id: assignToUserId,
           content,
-          due_date,
+          due_date: dueDate,
         })
         await onComplete({
           data_points: {
