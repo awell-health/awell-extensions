@@ -97,6 +97,12 @@ export const mockGetSdkReturn = {
   updateConversation: jest.fn((args) => {
     return undefined
   }),
+  deleteAppointment: jest.fn((args) => {
+    return undefined
+  }),
+  updateAppointment: jest.fn((args) => {
+    return undefined
+  }),
 }
 
 export const mockGetSdk = (params: any): any => {
