@@ -24,7 +24,9 @@ describe('createJournalEntry action', () => {
         },
         patient: { id: 'test-patient' },
         fields: {
-          id: 'patient-1'
+          id: 'patient-1',
+          type: 'MetricEntry',
+          percieved_hungriness: '1'
         },
         settings: {
           apiKey: 'apiKey',
