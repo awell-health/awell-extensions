@@ -1,8 +1,8 @@
-import { getPatient } from './actions'
+import { getPatient, updatePatient } from './actions'
 import { type Extension } from '../../lib/types'
 import { settings } from './settings'
 import { AuthorType, Category } from '../../lib/types/marketplace'
-import { onCreatePatient } from './webhooks'
+import { webhooks } from './webhooks'
 
 export const Elation: Extension = {
   key: 'elation',
@@ -17,6 +17,7 @@ export const Elation: Extension = {
   settings,
   actions: {
     getPatient,
+    updatePatient,
   },
-  webhooks: [onCreatePatient],
+  webhooks,
 }

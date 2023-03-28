@@ -1,1 +1,3 @@
-export * from './on_create_patient'
+import { onCreatePatient } from './on_create_patient'
+
+export const webhooks = [onCreatePatient]

@@ -20,6 +20,19 @@ export class ElationDataWrapper extends DataWrapper {
     return res
   }
 
+  public async updatePatient(
+    id: number,
+    obj: Partial<Patient>
+  ): Promise<Patient> {
+    const req = this.Request<Patient>({
+      method: 'PUT',
+      url: `/patients/${id}`,
+      data: obj,
+    })
+    const res = await req
+    return res
+  }
+
   public async findSubscriptions(): Promise<Subscription[]> {
     const req = this.Request<Find<Subscription[]>>({
       method: 'GET',
@@ -58,6 +71,13 @@ export const makeDataWrapper: DataWrapperCtor<ElationDataWrapper> = (
 export class ElationAPIClient extends APIClient<ElationDataWrapper> {
   public async getPatient(id: number): Promise<Patient> {
     return await this.FetchData(async (dw) => await dw.getPatient(id))
+  }
+
+  public async updatePatient(
+    id: number,
+    obj: Partial<Patient>
+  ): Promise<Patient> {
+    return await this.FetchData(async (dw) => await dw.updatePatient(id, obj))
   }
 
   public async findSubscriptions(): Promise<Subscription[]> {

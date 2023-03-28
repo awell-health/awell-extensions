@@ -21,7 +21,10 @@ export abstract class DataWrapper {
   public constructor(token: string, baseUrl: string) {
     this._client = Axios.create({
       baseURL: baseUrl,
-      headers: { Authorization: `Bearer ${token}` },
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
       validateStatus: (status) => {
         return status >= 200 && status < 300
       },
