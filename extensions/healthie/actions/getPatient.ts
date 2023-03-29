@@ -43,6 +43,14 @@ const dataPoints = {
     key: 'phoneNumber',
     valueType: 'string',
   },
+  providerId: {
+    key: 'providerId',
+    valueType: 'string',
+  },
+  groupName: {
+    key: 'groupName',
+    valueType: 'string',
+  },
 } satisfies Record<string, DataPointDefinition>
 
 export const getPatient: Action<
@@ -73,6 +81,8 @@ export const getPatient: Action<
             email: data.user?.email,
             gender: data.user?.gender,
             phoneNumber: data.user?.phone_number,
+            groupName: data.user?.user_group?.name,
+            providerId: data.user?.providers?.[0]?.id
           },
         })
       } else {

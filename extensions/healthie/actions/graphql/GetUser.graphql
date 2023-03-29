@@ -8,5 +8,16 @@ query getUser($id: ID) {
     email
     phone_number
     next_appt_date
+    user_group {
+      id
+      name
+    }
+    providers {
+      id
+      active
+      first_name
+      last_name
+      email
+    }
   }
 }
