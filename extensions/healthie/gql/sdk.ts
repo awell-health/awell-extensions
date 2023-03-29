@@ -82,6 +82,24 @@ export type AddedUsersInput = {
   value: Scalars['ID'];
 };
 
+/** Specific appointment price object for provider/client */
+export type AdvanceAppointmentPrice = {
+  __typename?: 'AdvanceAppointmentPrice';
+  /** Appointment type ID this appointment price is associated with. */
+  appointment_type_id?: Maybe<Scalars['ID']>;
+  id: Scalars['ID'];
+  /** The advance price for this appointment type */
+  price?: Maybe<Scalars['String']>;
+  /** User ID this appointment price is associated with. */
+  user_id?: Maybe<Scalars['ID']>;
+};
+
+export type AdvanceAppointmentPricesInput = {
+  appointment_type_id?: InputMaybe<Scalars['ID']>;
+  id?: InputMaybe<Scalars['ID']>;
+  price?: InputMaybe<Scalars['String']>;
+};
+
 /** Information on the provider's affiliate abilities */
 export type Affiliate = {
   __typename?: 'Affiliate';
@@ -521,6 +539,8 @@ export type AppointmentSetting = {
   allow_external_videochat_urls?: Maybe<Scalars['Boolean']>;
   /** When true, a client can reschedule a past appointment (on the Web/API only) */
   allow_past_appointment_rescheduling?: Maybe<Scalars['Boolean']>;
+  /** Whether or not providers will have specific pricing for appointment types */
+  allow_specific_provider_pricing?: Maybe<Scalars['Boolean']>;
   /** Always notify the provider when the client books */
   always_send_confirm_notification?: Maybe<Scalars['Boolean']>;
   /** Appointment Locations for this Appointment Setting */
@@ -745,6 +765,8 @@ export type AppointmentSummaryData = {
 /** An object containing information about the type of appointment */
 export type AppointmentType = {
   __typename?: 'AppointmentType';
+  /** The number of providers with advance pricing for this appointment type */
+  advance_pricing_for_providers_count?: Maybe<Scalars['String']>;
   /** The appointment setting associated with this appointment type. An associated appointment setting overrides the providers general one. */
   appointment_setting?: Maybe<AppointmentSetting>;
   /** The cpt code units for this appointment type */
@@ -4894,6 +4916,8 @@ export type Mutation = {
   dismissAnnouncement?: Maybe<DismissAnnouncementPayload>;
   /** edit Availability */
   editAvailability?: Maybe<EditAvailabilityPayload>;
+  /** Creates a template from existing Care Plan. Original object is not touched */
+  exportCarePlanToTemplate?: Maybe<ExportToTemplatePayload>;
   /** Generate a PDF of charting notes for a client */
   generateChartingPdf?: Maybe<GenerateChartingPdfPayload>;
   /** Sign up Healthie User in the Health Assessment Service */
@@ -4936,6 +4960,8 @@ export type Mutation = {
   signUp?: Maybe<SignUpPayload>;
   /** Switch a provider to be a client */
   switchProviderToClient?: Maybe<SwitchProviderToClientPayload>;
+  /** Toggle 2 Factor Authentication for User */
+  toggle2Fa?: Maybe<Toggle2FaPayload>;
   /** Toggle availability by appointment type, location, or contact type */
   toggleAvailability?: Maybe<ToggleAvailabilityPayload>;
   /** Toggle BAA for external calendar */
@@ -5124,6 +5150,8 @@ export type Mutation = {
   updateUniqueDeviceIdentifier?: Maybe<UpdateUniqueDeviceIdentifierPayload>;
   /** Update the current user, or a patient that the current user has access to. To update other org members, use updateOrganizationMembership */
   updateUser?: Maybe<UpdateUserPayload>;
+  /** Updates the appointment pricing for this user */
+  updateUserAppointmentPricing?: Maybe<UpdateUserAppointmentPricingPayload>;
   /** Update a Group */
   updateUserGroup?: Maybe<UpdateUserGroupPayload>;
   /** Update Webhook */
@@ -6112,6 +6140,11 @@ export type MutationEditAvailabilityArgs = {
 };
 
 
+export type MutationExportCarePlanToTemplateArgs = {
+  input: ExportToTemplateInput;
+};
+
+
 export type MutationGenerateChartingPdfArgs = {
   input: GenerateChartingPdfInput;
 };
@@ -6214,6 +6247,11 @@ export type MutationSignUpArgs = {
 
 export type MutationSwitchProviderToClientArgs = {
   input: SwitchProviderToClientInput;
+};
+
+
+export type MutationToggle2FaArgs = {
+  input: Toggle2FaInput;
 };
 
 
@@ -6689,6 +6727,11 @@ export type MutationUpdateUniqueDeviceIdentifierArgs = {
 
 export type MutationUpdateUserArgs = {
   input: UpdateUserInput;
+};
+
+
+export type MutationUpdateUserAppointmentPricingArgs = {
+  input: UpdateUserAppointmentPricingInput;
 };
 
 
@@ -7610,8 +7653,12 @@ export type OrganizationMembership = {
   can_edit_products?: Maybe<Scalars['Boolean']>;
   /** If true, the user can edit settings */
   can_edit_settings?: Maybe<Scalars['Boolean']>;
-  /** If true, the user will be able to save and lock charting note */
+  /** deprecated, use can_lock_own_charting_notes instead */
   can_lock_form_answer_groups?: Maybe<Scalars['Boolean']>;
+  /** If true, the user can lock charting notes other providers created */
+  can_lock_others_charting_notes?: Maybe<Scalars['Boolean']>;
+  /** If true, the user can lock charting notes they created */
+  can_lock_own_charting_notes?: Maybe<Scalars['Boolean']>;
   /** If true, the user should be able to mark tasks that are assigned to other org members as completed */
   can_mark_assigned_tasks_to_other_org_members_as_completed?: Maybe<Scalars['Boolean']>;
   /** If true, the user can merge clients */
@@ -7638,6 +7685,10 @@ export type OrganizationMembership = {
   can_see_sent_faxes?: Maybe<Scalars['Boolean']>;
   /** If true, the user can see transfers tab in billing page */
   can_see_transfers?: Maybe<Scalars['Boolean']>;
+  /** If true, the user can sign charting notes other providers created */
+  can_sign_others_charting_notes?: Maybe<Scalars['Boolean']>;
+  /** If true, the user can sign charting notes they created */
+  can_sign_own_charting_notes?: Maybe<Scalars['Boolean']>;
   /** When true, user can submit to Candid */
   can_submit_cms_1500s_to_candid_health?: Maybe<Scalars['Boolean']>;
   /** If true, the user can submit CMS 1500s to Office Ally */
@@ -8048,6 +8099,7 @@ export type Prescription = {
   /** Form in which prescription is delivered */
   route?: Maybe<Scalars['String']>;
   rx_reference_number?: Maybe<Scalars['String']>;
+  rxcui?: Maybe<Scalars['String']>;
   schedule?: Maybe<Scalars['String']>;
   /** Status of prescription. Example: Entered, Printed, Sending, eRxSent, Deleted  */
   status?: Maybe<Scalars['String']>;
@@ -8162,6 +8214,8 @@ export type ProviderCptCodeType = {
 /** The query root of this schema. See available queries. */
 export type Query = {
   __typename?: 'Query';
+  /** Fetch advance appointment prices */
+  advanceAppointmentPrices?: Maybe<Array<Maybe<AdvanceAppointmentPrice>>>;
   /** Search results for allergies, allergens, and reactions */
   allergySuggestions?: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Fetch an announcement */
@@ -8576,6 +8630,8 @@ export type Query = {
   onboardingFlowsCount?: Maybe<Scalars['Int']>;
   /** fetch an onboarding item by id (considered public) */
   onboardingItem?: Maybe<OnboardingItem>;
+  /** Returns boolean value when querying if org providers have cpt codes */
+  orgProvidersHasCptCodes?: Maybe<Scalars['Boolean']>;
   /** fetch an organization by id, by provider id, or by the current_user, demographic org info is (considered public) */
   organization?: Maybe<Organization>;
   /** Fetch organization info by id */
@@ -8620,6 +8676,8 @@ export type Query = {
   provider?: Maybe<User>;
   /** get provider appointment locations. */
   providerAppointmentLocations?: Maybe<Array<Maybe<AppointmentLocation>>>;
+  /** Returns all cpt codes associated with this provider */
+  providerCptCodes?: Maybe<Array<Maybe<ProviderCptCodeType>>>;
   /** Fetch generic custom modules for use in the form builder */
   questionBankModules?: Maybe<Array<Maybe<CustomModule>>>;
   /** Fetch receipt_line_items collection by super_bill_id */
@@ -8650,6 +8708,8 @@ export type Query = {
   requestedPayments?: Maybe<Array<Maybe<RequestedPayment>>>;
   /** Number of Requested Payments */
   requestedPaymentsCount?: Maybe<Scalars['Int']>;
+  /** Only available to Internal Healthie Users -- Roles assigned to a given User */
+  roles?: Maybe<Array<Maybe<Role>>>;
   /** Fetch user's scheduled message blasts */
   scheduledMessageBlasts?: Maybe<Array<Maybe<NoteScheduler>>>;
   /** Fetch collection of all scheduled packages */
@@ -8754,6 +8814,13 @@ export type Query = {
   whitelabelSetting?: Maybe<WhitelabelSetting>;
   /** Generate a JWT to be used in the client-side Zoom SDK. This is just available on production, and requires your account to be approved by Healthie. The JWT is valid for 1 day. */
   zoomSdkJwt?: Maybe<Scalars['String']>;
+};
+
+
+/** The query root of this schema. See available queries. */
+export type QueryAdvanceAppointmentPricesArgs = {
+  appointment_type_id?: InputMaybe<Scalars['ID']>;
+  user_id?: InputMaybe<Scalars['ID']>;
 };
 
 
@@ -10477,6 +10544,13 @@ export type QueryOnboardingItemArgs = {
 
 
 /** The query root of this schema. See available queries. */
+export type QueryOrgProvidersHasCptCodesArgs = {
+  cpt_code_id?: InputMaybe<Scalars['ID']>;
+  org_id?: InputMaybe<Scalars['ID']>;
+};
+
+
+/** The query root of this schema. See available queries. */
 export type QueryOrganizationArgs = {
   email?: InputMaybe<Scalars['String']>;
   for_client?: InputMaybe<Scalars['Boolean']>;
@@ -10632,6 +10706,12 @@ export type QueryProviderAppointmentLocationsArgs = {
 
 
 /** The query root of this schema. See available queries. */
+export type QueryProviderCptCodesArgs = {
+  provider_id?: InputMaybe<Scalars['ID']>;
+};
+
+
+/** The query root of this schema. See available queries. */
 export type QueryQuestionBankModulesArgs = {
   category?: InputMaybe<Scalars['String']>;
 };
@@ -10740,6 +10820,12 @@ export type QueryRequestedPaymentsCountArgs = {
   only_unpaid?: InputMaybe<Scalars['Boolean']>;
   sender_id?: InputMaybe<Scalars['ID']>;
   status_filter?: InputMaybe<Scalars['String']>;
+};
+
+
+/** The query root of this schema. See available queries. */
+export type QueryRolesArgs = {
+  user_id?: InputMaybe<Scalars['ID']>;
 };
 
 
@@ -11691,6 +11777,14 @@ export type RequestedPaymentTemplateInput = {
   name?: InputMaybe<Scalars['String']>;
 };
 
+/** Only available to Internal Healthie Users -- Roles assigned to a given User */
+export type Role = {
+  __typename?: 'Role';
+  id: Scalars['ID'];
+  /** Name of the Role on the User */
+  name?: Maybe<Scalars['String']>;
+};
+
 /** A room at a location */
 export type Room = {
   __typename?: 'Room';
@@ -12307,6 +12401,23 @@ export type TaskReminderInput = {
   remove_reminder?: InputMaybe<Scalars['Boolean']>;
 };
 
+/** Autogenerated input type of Toggle2Fa */
+export type Toggle2FaInput = {
+  /** A unique identifier for the client performing the mutation. */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  enable?: InputMaybe<Scalars['String']>;
+  id?: InputMaybe<Scalars['ID']>;
+};
+
+/** Autogenerated return type of Toggle2Fa */
+export type Toggle2FaPayload = {
+  __typename?: 'Toggle2FaPayload';
+  /** A unique identifier for the client performing the mutation. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  messages?: Maybe<Array<Maybe<FieldError>>>;
+  success_string?: Maybe<Scalars['String']>;
+};
+
 /** Autogenerated input type of ToggleAvailability */
 export type ToggleAvailabilityInput = {
   /** A unique identifier for the client performing the mutation. */
@@ -12492,6 +12603,8 @@ export type User = {
   additional_phone_number?: Maybe<Scalars['String']>;
   /** Additional links to display on patient sidebar */
   additional_sidebar_items: Array<Maybe<CustomSidebarOverride>>;
+  /** Appointment prices associated with this user */
+  advance_appointment_prices?: Maybe<Array<Maybe<AdvanceAppointmentPrice>>>;
   /** The user's lead dyno affiliate info */
   affiliate?: Maybe<Affiliate>;
   /** The age of the user (in years) */
@@ -12600,6 +12713,10 @@ export type User = {
   can_have_suborgs?: Maybe<Scalars['Boolean']>;
   /** Whether or not the user can add suborgs */
   can_insert_suborgs?: Maybe<Scalars['Boolean']>;
+  /** If true, the user can lock other providers charting notes */
+  can_lock_others_charting_notes?: Maybe<Scalars['Boolean']>;
+  /** If true, the user can lock their own charting notes */
+  can_lock_own_charting_notes?: Maybe<Scalars['Boolean']>;
   /** Whether or not the provider can mark tasks that are assigned to other org members as completed */
   can_mark_assigned_tasks_to_other_org_members_as_completed?: Maybe<Scalars['Boolean']>;
   /** If true, the user can merge clients */
@@ -12614,13 +12731,17 @@ export type User = {
   can_see_insurance_authorization?: Maybe<Scalars['Boolean']>;
   /** If true, can view transfer tab in billing page */
   can_see_transfers?: Maybe<Scalars['Boolean']>;
+  /** If true, the user can sign other providers charting notes */
+  can_sign_others_charting_notes?: Maybe<Scalars['Boolean']>;
+  /** If true, the user can sign their own charting notes */
+  can_sign_own_charting_notes?: Maybe<Scalars['Boolean']>;
   /** If true, can access to labs widget */
   can_view_labs?: Maybe<Scalars['Boolean']>;
   /** If True, the user will be able to add addendums for an other org member locked form answer groups */
   can_write_org_addendums?: Maybe<Scalars['Boolean']>;
   /** If true, the user cannot access org settings */
   cannot_access_org_member_settings?: Maybe<Scalars['Boolean']>;
-  /** If true, the user is able to save and lock a charting note */
+  /** Deprecated, use can_lock_own_charting_notes instead */
   cannot_lock_form_answer_groups?: Maybe<Scalars['Boolean']>;
   /** Fetch paginated stripe customer accounts with associated errors or soon to expire credit cards */
   card_issues_count?: Maybe<Scalars['Int']>;
@@ -17728,6 +17849,22 @@ export type EditAvailabilityPayload = {
   messages?: Maybe<Array<Maybe<FieldError>>>;
 };
 
+/** Autogenerated input type of exportToTemplate */
+export type ExportToTemplateInput = {
+  /** A unique identifier for the client performing the mutation. */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  id?: InputMaybe<Scalars['ID']>;
+};
+
+/** Autogenerated return type of exportToTemplate */
+export type ExportToTemplatePayload = {
+  __typename?: 'exportToTemplatePayload';
+  carePlan?: Maybe<CarePlan>;
+  /** A unique identifier for the client performing the mutation. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  messages?: Maybe<Array<Maybe<FieldError>>>;
+};
+
 /** A fullscript Sync */
 export type Fullscript = {
   __typename?: 'fullscript';
@@ -18204,6 +18341,7 @@ export type UpdateAppointmentPayload = {
 
 /** Autogenerated input type of updateAppointmentSetting */
 export type UpdateAppointmentSettingInput = {
+  advance_pricing_options?: InputMaybe<Scalars['String']>;
   allow_appointment_type_pricing?: InputMaybe<Scalars['Boolean']>;
   allow_clients_to_cancel_appt?: InputMaybe<Scalars['Boolean']>;
   allow_clients_to_reschedule_appt?: InputMaybe<Scalars['Boolean']>;
@@ -19877,6 +20015,8 @@ export type UpdateOrganizationMembershipInput = {
   can_edit_products?: InputMaybe<Scalars['Boolean']>;
   can_edit_settings?: InputMaybe<Scalars['Boolean']>;
   can_lock_form_answer_groups?: InputMaybe<Scalars['Boolean']>;
+  can_lock_others_charting_notes?: InputMaybe<Scalars['Boolean']>;
+  can_lock_own_charting_notes?: InputMaybe<Scalars['Boolean']>;
   can_mark_assigned_tasks_to_other_org_members_as_completed?: InputMaybe<Scalars['Boolean']>;
   can_merge_clients?: InputMaybe<Scalars['Boolean']>;
   can_order_labs?: InputMaybe<Scalars['Boolean']>;
@@ -19890,6 +20030,8 @@ export type UpdateOrganizationMembershipInput = {
   can_see_fullscript_tab?: InputMaybe<Scalars['Boolean']>;
   can_see_sent_faxes?: InputMaybe<Scalars['Boolean']>;
   can_see_transfers?: InputMaybe<Scalars['Boolean']>;
+  can_sign_others_charting_notes?: InputMaybe<Scalars['Boolean']>;
+  can_sign_own_charting_notes?: InputMaybe<Scalars['Boolean']>;
   can_submit_cms_1500s_to_office_ally?: InputMaybe<Scalars['Boolean']>;
   can_view_all_org_members_tasks?: InputMaybe<Scalars['Boolean']>;
   can_view_cms1500s?: InputMaybe<Scalars['Boolean']>;
@@ -20454,6 +20596,23 @@ export type UpdateUniqueDeviceIdentifierPayload = {
   unique_device_identifier?: Maybe<UniqueDeviceIdentifier>;
 };
 
+/** Autogenerated input type of updateUserAppointmentPricing */
+export type UpdateUserAppointmentPricingInput = {
+  advance_appointment_prices?: InputMaybe<Array<InputMaybe<AdvanceAppointmentPricesInput>>>;
+  /** A unique identifier for the client performing the mutation. */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  user_id?: InputMaybe<Scalars['ID']>;
+};
+
+/** Autogenerated return type of updateUserAppointmentPricing */
+export type UpdateUserAppointmentPricingPayload = {
+  __typename?: 'updateUserAppointmentPricingPayload';
+  advance_appointment_prices?: Maybe<Array<Maybe<AdvanceAppointmentPrice>>>;
+  /** A unique identifier for the client performing the mutation. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  messages?: Maybe<Array<Maybe<FieldError>>>;
+};
+
 /** Autogenerated input type of updateUserGroup */
 export type UpdateUserGroupInput = {
   /** A unique identifier for the client performing the mutation. */
@@ -20681,7 +20840,7 @@ export type GetUserQueryVariables = Exact<{
 }>;
 
 
-export type GetUserQuery = { __typename?: 'Query', user?: { __typename?: 'User', id: string, first_name?: string | null, last_name?: string | null, dob?: string | null, gender?: string | null, email?: string | null, phone_number?: string | null, next_appt_date?: string | null } | null };
+export type GetUserQuery = { __typename?: 'Query', user?: { __typename?: 'User', id: string, first_name?: string | null, last_name?: string | null, dob?: string | null, gender?: string | null, email?: string | null, phone_number?: string | null, next_appt_date?: string | null, user_group?: { __typename?: 'UserGroup', id: string, name?: string | null } | null, providers?: Array<{ __typename?: 'User', id: string, active?: boolean | null, first_name?: string | null, last_name?: string | null, email?: string | null } | null> | null } | null };
 
 export type RemoveTagFromUserMutationVariables = Exact<{
   id?: InputMaybe<Scalars['ID']>;
@@ -20844,6 +21003,17 @@ export const GetUserDocument = gql`
     email
     phone_number
     next_appt_date
+    user_group {
+      id
+      name
+    }
+    providers {
+      id
+      active
+      first_name
+      last_name
+      email
+    }
   }
 }
     `;
