@@ -43,8 +43,8 @@ const dataPoints = {
     key: 'phoneNumber',
     valueType: 'string',
   },
-  providerId: {
-    key: 'providerId',
+  primaryProviderId: {
+    key: 'primaryProviderId',
     valueType: 'string',
   },
   groupName: {
@@ -82,7 +82,7 @@ export const getPatient: Action<
             gender: data.user?.gender,
             phoneNumber: data.user?.phone_number,
             groupName: data.user?.user_group?.name,
-            providerId: data.user?.providers?.[0]?.id
+            primaryProviderId: data.user?.dietitian_id
           },
         })
       } else {
