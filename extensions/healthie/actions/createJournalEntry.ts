@@ -1,9 +1,10 @@
 import { isNil } from 'lodash'
 import { mapHealthieToActivityError } from '../errors'
 import {
-  FieldType,
+  type DataPointDefinition,
   type Action,
   type Field,
+  FieldType,
 } from '../../../lib/types'
 import { Category } from '../../../lib/types/marketplace'
 import { getSdk } from '../gql/sdk'
@@ -15,34 +16,49 @@ const fields = {
   id: {
     id: 'id',
     label: 'ID',
-    description: 'The ID of the tag to remove from the patient.',
+    description: 'The id of the patient in Healthie',
     type: FieldType.STRING,
     required: true,
   },
-  patient_id: {
-    id: 'patient_id',
-    label: 'Patient ID',
-    description: 'The ID of the patient to remove the tag from.',
+  type: {
+    id: 'type',
+    label: 'Type',
+    description: 'The type of entry. Valid options are: ["MetricEntry", "FoodEntry", "WorkoutEntry", "MirrorEntry", "SleepEntry", "NoteEntry", "WaterIntakeEntry", "PoopEntry", "SymptomEntry"].',
     type: FieldType.STRING,
     required: true,
+  },
+  percieved_hungriness: {
+    id: 'percieved_hungriness',
+    label: 'Perceived hungriness',
+    description: 'A string index of hungriness. Valid options are: ["1", "2", "3"].',
+    type: FieldType.NUMERIC,
   },
 } satisfies Record<string, Field>
 
-export const removeTagFromPatient: Action<
+const dataPoints = {
+  journalEntryId: {
+    key: 'journalEntryId',
+    valueType: 'string',
+  },
+} satisfies Record<string, DataPointDefinition>
+
+export const createJournalEntry: Action<
   typeof fields,
-  typeof settings
+  typeof settings,
+  keyof typeof dataPoints
 > = {
-  key: 'removeTagFromPatient',
+  key: 'createJournalEntry',
   category: Category.INTEGRATIONS,
-  title: 'Remove tag from a patient',
-  description: 'Remove tag from a patient in Healthie.',
+  title: 'Create journal entry',
+  description: 'Create journal entry in Healthie.',
   fields,
+  dataPoints,
   previewable: true,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
     const { fields, settings } = payload
-    const { id, patient_id } = fields
+    const { id, type, percieved_hungriness } = fields
     try {
-      if (isNil(id) || isNil(patient_id)) {
+      if (isNil(id) || isNil(type)) {
         await onError({
           events: [
             {
@@ -50,7 +66,7 @@ export const removeTagFromPatient: Action<
               text: { en: 'Fields are missing' },
               error: {
                 category: 'MISSING_FIELDS',
-                message: '`id` or `patient_id` is missing',
+                message: '`id` or `type` is missing',
               },
             },
           ],
@@ -61,20 +77,31 @@ export const removeTagFromPatient: Action<
       const client = initialiseClient(settings)
       if (client !== undefined) {
         const sdk = getSdk(client)
-        const { data } = await sdk.removeTagFromUser({
-          id,
-          taggable_user_id: patient_id
+        const { data } = await sdk.createJournalEntry({
+          input: {
+            user_id: id,
+            type,
+            percieved_hungriness
+          }
         })
 
-        if (!isNil(data.removeAppliedTag?.messages)) {
-          const errors = mapHealthieToActivityError(data.removeAppliedTag?.messages)
+        if (!isNil(data.createEntry?.messages)) {
+          const errors = mapHealthieToActivityError(data.createEntry?.messages)
           await onError({
             events: errors,
           })
           return
         }
 
-        await onComplete()
+        const journalEntryId = data.createEntry?.entry?.id;
+
+        await onComplete(
+          {
+            data_points: {
+              journalEntryId
+            }
+          }
+        )
       } else {
         await onError({
           events: [

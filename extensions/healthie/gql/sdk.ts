@@ -20810,6 +20810,20 @@ export type CreateFormCompletionRequestMutationVariables = Exact<{
 
 export type CreateFormCompletionRequestMutation = { __typename?: 'Mutation', createRequestedFormCompletion?: { __typename?: 'createRequestedFormPayload', requestedFormCompletion?: { __typename?: 'RequestedFormCompletion', id: string } | null, messages?: Array<{ __typename?: 'FieldError', field?: string | null, message: string } | null> | null } | null };
 
+export type CreateJournalEntryMutationVariables = Exact<{
+  input: CreateEntryInput;
+}>;
+
+
+export type CreateJournalEntryMutation = { __typename?: 'Mutation', createEntry?: { __typename?: 'createEntryPayload', entry?: { __typename?: 'Entry', id: string } | null, messages?: Array<{ __typename?: 'FieldError', field?: string | null, message: string } | null> | null } | null };
+
+export type CreateLocationMutationVariables = Exact<{
+  input: CreateLocationInput;
+}>;
+
+
+export type CreateLocationMutation = { __typename?: 'Mutation', createLocation?: { __typename?: 'createLocationPayload', location?: { __typename?: 'Location', id: string, name?: string | null, line1?: string | null, zip?: string | null } | null, messages?: Array<{ __typename?: 'FieldError', field?: string | null, message: string } | null> | null } | null };
+
 export type CreatePatientMutationVariables = Exact<{
   input: CreateClientInput;
 }>;
@@ -20828,6 +20842,14 @@ export type CreateTaskMutationVariables = Exact<{
 
 
 export type CreateTaskMutation = { __typename?: 'Mutation', createTask?: { __typename?: 'createTaskPayload', task?: { __typename?: 'Task', id: string } | null, messages?: Array<{ __typename?: 'FieldError', field?: string | null, message: string } | null> | null } | null };
+
+export type DeleteAppointmentMutationVariables = Exact<{
+  id?: InputMaybe<Scalars['ID']>;
+  deleteRecurring?: InputMaybe<Scalars['Boolean']>;
+}>;
+
+
+export type DeleteAppointmentMutation = { __typename?: 'Mutation', deleteAppointment?: { __typename?: 'deleteAppointmentPayload', appointment?: { __typename?: 'Appointment', id: string } | null, messages?: Array<{ __typename?: 'FieldError', field?: string | null, message: string } | null> | null } | null };
 
 export type GetAppointmentQueryVariables = Exact<{
   id?: InputMaybe<Scalars['ID']>;
@@ -20877,6 +20899,20 @@ export type SendChatMessageMutationVariables = Exact<{
 
 
 export type SendChatMessageMutation = { __typename?: 'Mutation', createNote?: { __typename?: 'createNotePayload', messages?: Array<{ __typename?: 'FieldError', field?: string | null, message: string } | null> | null, note?: { __typename?: 'Note', id: string, user_id?: string | null, recipient_id?: string | null } | null } | null };
+
+export type UpdateAppointmentMutationVariables = Exact<{
+  input: UpdateAppointmentInput;
+}>;
+
+
+export type UpdateAppointmentMutation = { __typename?: 'Mutation', updateAppointment?: { __typename?: 'updateAppointmentPayload', appointment?: { __typename?: 'Appointment', id: string, date?: string | null } | null, messages?: Array<{ __typename?: 'FieldError', field?: string | null, message: string } | null> | null } | null };
+
+export type UpdateConversationMutationVariables = Exact<{
+  input: UpdateConversationInput;
+}>;
+
+
+export type UpdateConversationMutation = { __typename?: 'Mutation', updateConversation?: { __typename?: 'updateConversationPayload', conversation?: { __typename?: 'Conversation', id: string } | null, messages?: Array<{ __typename?: 'FieldError', field?: string | null, message: string } | null> | null } | null };
 
 export type UpdatePatientMutationVariables = Exact<{
   input: UpdateClientInput;
@@ -20956,6 +20992,35 @@ export const CreateFormCompletionRequestDocument = gql`
   }
 }
     `;
+export const CreateJournalEntryDocument = gql`
+    mutation createJournalEntry($input: createEntryInput!) {
+  createEntry(input: $input) {
+    entry {
+      id
+    }
+    messages {
+      field
+      message
+    }
+  }
+}
+    `;
+export const CreateLocationDocument = gql`
+    mutation createLocation($input: createLocationInput!) {
+  createLocation(input: $input) {
+    location {
+      id
+      name
+      line1
+      zip
+    }
+    messages {
+      field
+      message
+    }
+  }
+}
+    `;
 export const CreatePatientDocument = gql`
     mutation createPatient($input: createClientInput!) {
   createClient(input: $input) {
@@ -20975,6 +21040,19 @@ export const CreateTaskDocument = gql`
     input: {content: $content, user_id: $user_id, priority: $priority, client_id: $client_id, due_date: $due_date, reminder: $reminder}
   ) {
     task {
+      id
+    }
+    messages {
+      field
+      message
+    }
+  }
+}
+    `;
+export const DeleteAppointmentDocument = gql`
+    mutation deleteAppointment($id: ID, $deleteRecurring: Boolean) {
+  deleteAppointment(input: {id: $id, deleteRecurring: $deleteRecurring}) {
+    appointment {
       id
     }
     messages {
@@ -21112,6 +21190,33 @@ export const SendChatMessageDocument = gql`
   }
 }
     `;
+export const UpdateAppointmentDocument = gql`
+    mutation updateAppointment($input: updateAppointmentInput!) {
+  updateAppointment(input: $input) {
+    appointment {
+      id
+      date
+    }
+    messages {
+      field
+      message
+    }
+  }
+}
+    `;
+export const UpdateConversationDocument = gql`
+    mutation updateConversation($input: updateConversationInput!) {
+  updateConversation(input: $input) {
+    conversation {
+      id
+    }
+    messages {
+      field
+      message
+    }
+  }
+}
+    `;
 export const UpdatePatientDocument = gql`
     mutation updatePatient($input: updateClientInput!) {
   updateClient(input: $input) {
@@ -21139,14 +21244,19 @@ const CreateAppointmentDocumentString = print(CreateAppointmentDocument);
 const CreateConversationDocumentString = print(CreateConversationDocument);
 const CreateFormAnswerGroupDocumentString = print(CreateFormAnswerGroupDocument);
 const CreateFormCompletionRequestDocumentString = print(CreateFormCompletionRequestDocument);
+const CreateJournalEntryDocumentString = print(CreateJournalEntryDocument);
+const CreateLocationDocumentString = print(CreateLocationDocument);
 const CreatePatientDocumentString = print(CreatePatientDocument);
 const CreateTaskDocumentString = print(CreateTaskDocument);
+const DeleteAppointmentDocumentString = print(DeleteAppointmentDocument);
 const GetAppointmentDocumentString = print(GetAppointmentDocument);
 const GetConversationListDocumentString = print(GetConversationListDocument);
 const GetFormTemplateDocumentString = print(GetFormTemplateDocument);
 const GetUserDocumentString = print(GetUserDocument);
 const RemoveTagFromUserDocumentString = print(RemoveTagFromUserDocument);
 const SendChatMessageDocumentString = print(SendChatMessageDocument);
+const UpdateAppointmentDocumentString = print(UpdateAppointmentDocument);
+const UpdateConversationDocumentString = print(UpdateConversationDocument);
 const UpdatePatientDocumentString = print(UpdatePatientDocument);
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
@@ -21165,11 +21275,20 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     createFormCompletionRequest(variables: CreateFormCompletionRequestMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: CreateFormCompletionRequestMutation; extensions?: any; headers: Dom.Headers; status: number; }> {
         return withWrapper((wrappedRequestHeaders) => client.rawRequest<CreateFormCompletionRequestMutation>(CreateFormCompletionRequestDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'createFormCompletionRequest', 'mutation');
     },
+    createJournalEntry(variables: CreateJournalEntryMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: CreateJournalEntryMutation; extensions?: any; headers: Dom.Headers; status: number; }> {
+        return withWrapper((wrappedRequestHeaders) => client.rawRequest<CreateJournalEntryMutation>(CreateJournalEntryDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'createJournalEntry', 'mutation');
+    },
+    createLocation(variables: CreateLocationMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: CreateLocationMutation; extensions?: any; headers: Dom.Headers; status: number; }> {
+        return withWrapper((wrappedRequestHeaders) => client.rawRequest<CreateLocationMutation>(CreateLocationDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'createLocation', 'mutation');
+    },
     createPatient(variables: CreatePatientMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: CreatePatientMutation; extensions?: any; headers: Dom.Headers; status: number; }> {
         return withWrapper((wrappedRequestHeaders) => client.rawRequest<CreatePatientMutation>(CreatePatientDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'createPatient', 'mutation');
     },
     createTask(variables?: CreateTaskMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: CreateTaskMutation; extensions?: any; headers: Dom.Headers; status: number; }> {
         return withWrapper((wrappedRequestHeaders) => client.rawRequest<CreateTaskMutation>(CreateTaskDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'createTask', 'mutation');
+    },
+    deleteAppointment(variables?: DeleteAppointmentMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: DeleteAppointmentMutation; extensions?: any; headers: Dom.Headers; status: number; }> {
+        return withWrapper((wrappedRequestHeaders) => client.rawRequest<DeleteAppointmentMutation>(DeleteAppointmentDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'deleteAppointment', 'mutation');
     },
     getAppointment(variables?: GetAppointmentQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: GetAppointmentQuery; extensions?: any; headers: Dom.Headers; status: number; }> {
         return withWrapper((wrappedRequestHeaders) => client.rawRequest<GetAppointmentQuery>(GetAppointmentDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getAppointment', 'query');
@@ -21188,6 +21307,12 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     sendChatMessage(variables: SendChatMessageMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: SendChatMessageMutation; extensions?: any; headers: Dom.Headers; status: number; }> {
         return withWrapper((wrappedRequestHeaders) => client.rawRequest<SendChatMessageMutation>(SendChatMessageDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'sendChatMessage', 'mutation');
+    },
+    updateAppointment(variables: UpdateAppointmentMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: UpdateAppointmentMutation; extensions?: any; headers: Dom.Headers; status: number; }> {
+        return withWrapper((wrappedRequestHeaders) => client.rawRequest<UpdateAppointmentMutation>(UpdateAppointmentDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'updateAppointment', 'mutation');
+    },
+    updateConversation(variables: UpdateConversationMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: UpdateConversationMutation; extensions?: any; headers: Dom.Headers; status: number; }> {
+        return withWrapper((wrappedRequestHeaders) => client.rawRequest<UpdateConversationMutation>(UpdateConversationDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'updateConversation', 'mutation');
     },
     updatePatient(variables: UpdatePatientMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: UpdatePatientMutation; extensions?: any; headers: Dom.Headers; status: number; }> {
         return withWrapper((wrappedRequestHeaders) => client.rawRequest<UpdatePatientMutation>(UpdatePatientDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'updatePatient', 'mutation');

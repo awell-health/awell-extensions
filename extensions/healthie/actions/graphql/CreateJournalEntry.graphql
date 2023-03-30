@@ -1,0 +1,11 @@
+mutation createJournalEntry($input: createEntryInput!) {
+  createEntry(input: $input) {
+    entry {
+      id
+    }
+    messages {
+      field
+      message
+    }
+  }
+}

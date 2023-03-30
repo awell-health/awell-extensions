@@ -15,34 +15,34 @@ const fields = {
   id: {
     id: 'id',
     label: 'ID',
-    description: 'The ID of the tag to remove from the patient.',
+    description: 'The id of the conversation in Healthie',
     type: FieldType.STRING,
     required: true,
   },
-  patient_id: {
-    id: 'patient_id',
-    label: 'Patient ID',
-    description: 'The ID of the patient to remove the tag from.',
+  provider_id: {
+    id: 'provider_id',
+    label: 'Provider ID',
+    description: 'This is the ID of the provider.',
     type: FieldType.STRING,
     required: true,
   },
 } satisfies Record<string, Field>
 
-export const removeTagFromPatient: Action<
+export const closeChatConversation: Action<
   typeof fields,
   typeof settings
 > = {
-  key: 'removeTagFromPatient',
+  key: 'closeChatConversation',
   category: Category.INTEGRATIONS,
-  title: 'Remove tag from a patient',
-  description: 'Remove tag from a patient in Healthie.',
+  title: 'Close chat conversation',
+  description: 'Close chat conversation in Healthie.',
   fields,
   previewable: true,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
     const { fields, settings } = payload
-    const { id, patient_id } = fields
+    const { id, provider_id } = fields
     try {
-      if (isNil(id) || isNil(patient_id)) {
+      if (isNil(id) || isNil(provider_id)) {
         await onError({
           events: [
             {
@@ -50,7 +50,7 @@ export const removeTagFromPatient: Action<
               text: { en: 'Fields are missing' },
               error: {
                 category: 'MISSING_FIELDS',
-                message: '`id` or `patient_id` is missing',
+                message: '`id` or `provider_id` is missing',
               },
             },
           ],
@@ -61,13 +61,15 @@ export const removeTagFromPatient: Action<
       const client = initialiseClient(settings)
       if (client !== undefined) {
         const sdk = getSdk(client)
-        const { data } = await sdk.removeTagFromUser({
-          id,
-          taggable_user_id: patient_id
+        const { data } = await sdk.updateConversation({
+          input: {
+            id,
+            closed_by_id: provider_id
+          }
         })
 
-        if (!isNil(data.removeAppliedTag?.messages)) {
-          const errors = mapHealthieToActivityError(data.removeAppliedTag?.messages)
+        if (!isNil(data.updateConversation?.messages)) {
+          const errors = mapHealthieToActivityError(data.updateConversation?.messages)
           await onError({
             events: errors,
           })

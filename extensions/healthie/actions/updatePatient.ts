@@ -143,8 +143,6 @@ export const updatePatient: Action<
       const client = initialiseClient(settings)
       if (client !== undefined) {
         const sdk = getSdk(client)
-
-
         const { data } = await sdk.updatePatient({
           input: {
             id,

@@ -67,8 +67,6 @@ export const createChartingNote: Action<
       const client = initialiseClient(settings)
       if (client !== undefined) {
         const sdk = getSdk(client)
-
-
         const { data } = await sdk.getFormTemplate({
           id: form_id
         })

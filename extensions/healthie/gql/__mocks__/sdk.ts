@@ -14,7 +14,9 @@ export const mockGetSdkReturn = {
     }
   }),
   sendChatMessage: jest.fn((args) => {
-    return undefined
+    return {
+      data: {}
+    }
   }),
   createPatient: jest.fn((args) => {
     return {
@@ -78,11 +80,52 @@ export const mockGetSdkReturn = {
     }
   }),
   createFormAnswerGroup: jest.fn((args) => {
-    return undefined
+    return {
+      data: {}
+    }
   }),
   createFormCompletionRequest: jest.fn((args) => {
-    return undefined
-  })
+    return {
+      data: {}
+    }
+  }),
+  createLocation: jest.fn((args) => {
+    return {
+      data: {
+        createLocation: {
+          location: {
+            id: 'location-1'
+          }
+        },
+      }
+    }
+  }),
+  updateConversation: jest.fn((args) => {
+    return {
+      data: {}
+    }
+  }),
+  deleteAppointment: jest.fn((args) => {
+    return {
+      data: {}
+    }
+  }),
+  updateAppointment: jest.fn((args) => {
+    return {
+      data: {}
+    }
+  }),
+  createJournalEntry: jest.fn((args) => {
+    return {
+      data: {
+        createEntry: {
+          entry: {
+            id: 'entry-1'
+          }
+        },
+      }
+    }
+  }),
 }
 
 export const mockGetSdk = (params: any): any => {
