@@ -5,7 +5,25 @@
     "module": "commonjs",
     "outDir": "dist",
     "sourceMap": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "baseUrl": "./",
+    "paths": {
+      "@/extensions/*": [
+        "extensions/*"
+      ],
+      "@/lib/*": [
+        "lib/*"
+      ],
+      "@/src/*": [
+        "src/*"
+      ],
+      "@/types": [
+        "lib/types"
+      ],
+      "@/types/*": [
+        "lib/types/*"
+      ],
+    },
   },
   "include": [
     "lib/**/*.ts",
