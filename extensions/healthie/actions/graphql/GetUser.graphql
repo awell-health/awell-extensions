@@ -12,6 +12,7 @@ query getUser($id: ID) {
       id
       name
     }
+    dietitian_id
     providers {
       id
       active
