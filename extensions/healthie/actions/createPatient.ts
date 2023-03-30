@@ -10,6 +10,7 @@ import { Category } from '../../../lib/types/marketplace'
 import { getSdk } from '../gql/sdk'
 import { initialiseClient } from '../graphqlClient'
 import { type settings } from '../settings'
+import { mapHealthieToActivityError } from '../errors'
 
 
 const fields = {
@@ -127,9 +128,17 @@ export const createPatient: Action<
             legal_name,
             email,
             phone_number,
-            dietitian_id: provider_id
+            dietitian_id: provider_id === '' ? undefined : provider_id
           }
         })
+
+        if (!isNil(data.createClient?.messages)) {
+          const errors = mapHealthieToActivityError(data.createClient?.messages)
+          await onError({
+            events: errors,
+          })
+          return
+        }
 
         const healthiePatientId = data.createClient?.user?.id;
 
