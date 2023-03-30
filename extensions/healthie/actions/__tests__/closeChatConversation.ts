@@ -36,7 +36,12 @@ describe('closeChatConversation action', () => {
       jest.fn()
     )
 
-    expect(mockGetSdkReturn.updateConversation).toHaveBeenCalled()
+    expect(mockGetSdkReturn.updateConversation).toHaveBeenCalledWith({
+      input: {
+        id: 'conversation-1',
+        closed_by_id: 'provider-1'
+      }
+    })
     expect(onComplete).toHaveBeenCalled()
   })
 })
