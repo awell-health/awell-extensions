@@ -1,6 +1,7 @@
 import { isNil } from 'lodash'
 import { mapHealthieToActivityError } from '../errors'
 import {
+  type DataPointDefinition,
   FieldType,
   type Action,
   type Field,
@@ -15,34 +16,79 @@ const fields = {
   id: {
     id: 'id',
     label: 'ID',
-    description: 'The ID of the tag to remove from the patient.',
+    description: 'The id of the patient in Healthie',
     type: FieldType.STRING,
     required: true,
   },
-  patient_id: {
-    id: 'patient_id',
-    label: 'Patient ID',
-    description: 'The ID of the patient to remove the tag from.',
+  name: {
+    id: 'name',
+    label: 'Name',
+    description: 'The name of the address',
+    type: FieldType.STRING,
+  },
+  country: {
+    id: 'country',
+    label: 'Country',
+    description: 'The country of the patient',
+    type: FieldType.STRING,
+  },
+  state: {
+    id: 'state',
+    label: 'State',
+    description: "The state patient's lives in",
+    type: FieldType.STRING,
+  },
+  city: {
+    id: 'city',
+    label: 'City',
+    description: 'The city of the patient',
+    type: FieldType.STRING,
+  },
+  zip: {
+    id: 'zip',
+    label: 'Zip code',
+    description: 'The zip code of the patient',
+    type: FieldType.STRING,
+  },
+  line1: {
+    id: 'line1',
+    label: 'Line 1',
+    description: 'The Line 1 of the address',
     type: FieldType.STRING,
     required: true,
+  },
+  line2: {
+    id: 'line2',
+    label: 'Line 2',
+    description: 'The Line 2 of the address',
+    type: FieldType.STRING,
   },
 } satisfies Record<string, Field>
 
-export const removeTagFromPatient: Action<
+const dataPoints = {
+  locationId: {
+    key: 'locationId',
+    valueType: 'string',
+  },
+} satisfies Record<string, DataPointDefinition>
+
+export const createLocation: Action<
   typeof fields,
-  typeof settings
+  typeof settings,
+  keyof typeof dataPoints
 > = {
-  key: 'removeTagFromPatient',
+  key: 'createLocation',
   category: Category.INTEGRATIONS,
-  title: 'Remove tag from a patient',
-  description: 'Remove tag from a patient in Healthie.',
+  title: 'Create location',
+  description: 'Create location for a patient in Healthie.',
   fields,
+  dataPoints,
   previewable: true,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
     const { fields, settings } = payload
-    const { id, patient_id } = fields
+    const { id, name, country, state, city, zip, line1, line2 } = fields
     try {
-      if (isNil(id) || isNil(patient_id)) {
+      if (isNil(id)) {
         await onError({
           events: [
             {
@@ -50,7 +96,7 @@ export const removeTagFromPatient: Action<
               text: { en: 'Fields are missing' },
               error: {
                 category: 'MISSING_FIELDS',
-                message: '`id` or `patient_id` is missing',
+                message: '`id` is missing',
               },
             },
           ],
@@ -61,20 +107,36 @@ export const removeTagFromPatient: Action<
       const client = initialiseClient(settings)
       if (client !== undefined) {
         const sdk = getSdk(client)
-        const { data } = await sdk.removeTagFromUser({
-          id,
-          taggable_user_id: patient_id
+        const { data } = await sdk.createLocation({
+          input: {
+            user_id: id,
+            name,
+            country,
+            state,
+            city,
+            zip,
+            line1,
+            line2
+          }
         })
 
-        if (!isNil(data.removeAppliedTag?.messages)) {
-          const errors = mapHealthieToActivityError(data.removeAppliedTag?.messages)
+        if (!isNil(data.createLocation?.messages)) {
+          const errors = mapHealthieToActivityError(data.createLocation?.messages)
           await onError({
             events: errors,
           })
           return
         }
 
-        await onComplete()
+        const locationId = data.createLocation?.location?.id;
+
+        await onComplete(
+          {
+            data_points: {
+              locationId
+            }
+          }
+        )
       } else {
         await onError({
           events: [

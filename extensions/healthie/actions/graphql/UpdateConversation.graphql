@@ -1,0 +1,11 @@
+mutation updateConversation($input: updateConversationInput!) {
+  updateConversation(input: $input) {
+    conversation {
+      id
+    }
+    messages {
+      field
+      message
+    }
+  }
+}
