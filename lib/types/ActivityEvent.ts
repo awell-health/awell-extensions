@@ -7,6 +7,7 @@ export interface ActivityEvent {
       | 'MISSING_SETTINGS'
       | 'BAD_REQUEST'
       | 'SERVER_ERROR'
+      | 'WRONG_INPUT'
     message: string
   }
 }
