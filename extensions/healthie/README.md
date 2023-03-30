@@ -6,9 +6,9 @@ To learn more, visit [www.gethealthie.com](www.gethealthie.com).
 
 ## Healthie x Awell
 
-With this extension, organizations are able to build clinical workflows in Awell’s low-code platform and easily integrate them into Healthie. By doing so, Healthie’s customers can automate routine clinical tasks, synchronize data between systems and drive seamless coordination between care team and patients. 
+With this extension, organizations are able to build clinical workflows in Awell’s low-code platform and easily integrate them into Healthie. By doing so, Healthie’s customers can automate routine clinical tasks, synchronize data between systems and drive seamless coordination between care team and patients.
 
-By combining Healthie’s web and mobile platform with our clinical workflows, clinicians will be able to provide the right care, at the right time for the right patient. 
+By combining Healthie’s web and mobile platform with our clinical workflows, clinicians will be able to provide the right care, at the right time for the right patient.
 
 # Extension settings
 
@@ -35,3 +35,18 @@ Adds a tag (existing one, identified by an `id`) to a patient. Although the Heal
 ## Remove tag from patient
 
 Removes a tag (identified by an `id`) from a patient.
+
+## Create charting note
+
+Creates a charting note with the provided `note_content`.
+
+**Prerequisites and set-up:**
+1. The form specified by the `form_id` exists in Healthie.
+2. The form specified by the `form_id` is a charting form (click "Convert to charting form" in the form options).
+3. The form contains at least one question of type `textarea` (long text answer). The action will write the content of the charting note in the first question of that type it finds in the form.
+
+## Send form completion request
+
+Send a form completion request to the patient. You will need the Healthie patient ID and the ID of the form you would like the patient to complete.
+
+Although the Healthie API call allows sending form completion requests to multiple users per API call (see recipient_ids in their docs), we decided that every action only sends one form completion request. This heavily simplifies the logic and better fits our domain model (1-to-1 relationship between patient and pathway). If a user would like to send multiple form completion requests, they you can just add multiple actions.

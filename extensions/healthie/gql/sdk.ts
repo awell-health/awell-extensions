@@ -20796,6 +20796,20 @@ export type CreateConversationMutationVariables = Exact<{
 
 export type CreateConversationMutation = { __typename?: 'Mutation', createConversation?: { __typename?: 'createConversationPayload', conversation?: { __typename?: 'Conversation', id: string } | null, messages?: Array<{ __typename?: 'FieldError', field?: string | null, message: string } | null> | null } | null };
 
+export type CreateFormAnswerGroupMutationVariables = Exact<{
+  input: CreateFormAnswerGroupInput;
+}>;
+
+
+export type CreateFormAnswerGroupMutation = { __typename?: 'Mutation', createFormAnswerGroup?: { __typename?: 'createFormAnswerGroupPayload', form_answer_group?: { __typename?: 'FormAnswerGroup', id: string } | null, messages?: Array<{ __typename?: 'FieldError', field?: string | null, message: string } | null> | null } | null };
+
+export type CreateFormCompletionRequestMutationVariables = Exact<{
+  input: CreateRequestedFormInput;
+}>;
+
+
+export type CreateFormCompletionRequestMutation = { __typename?: 'Mutation', createRequestedFormCompletion?: { __typename?: 'createRequestedFormPayload', requestedFormCompletion?: { __typename?: 'RequestedFormCompletion', id: string } | null, messages?: Array<{ __typename?: 'FieldError', field?: string | null, message: string } | null> | null } | null };
+
 export type CreatePatientMutationVariables = Exact<{
   input: CreateClientInput;
 }>;
@@ -20834,6 +20848,13 @@ export type GetConversationListQueryVariables = Exact<{
 
 
 export type GetConversationListQuery = { __typename?: 'Query', conversationMembershipsCount?: number | null, conversationMemberships?: Array<{ __typename?: 'ConversationMembership', id: string, display_name?: string | null, archived?: boolean | null, viewed?: boolean | null, convo?: { __typename?: 'Conversation', id: string, conversation_memberships_count?: number | null, owner?: { __typename?: 'User', id: string } | null } | null } | null> | null };
+
+export type GetFormTemplateQueryVariables = Exact<{
+  id?: InputMaybe<Scalars['ID']>;
+}>;
+
+
+export type GetFormTemplateQuery = { __typename?: 'Query', customModuleForm?: { __typename?: 'CustomModuleForm', id: string, name?: string | null, use_for_charting?: boolean | null, use_for_program?: boolean | null, prefill?: boolean | null, has_matrix_field?: boolean | null, is_video?: boolean | null, has_non_readonly_modules?: boolean | null, custom_modules: Array<{ __typename?: 'CustomModule', id: string, mod_type?: string | null, label?: string | null }> } | null };
 
 export type GetUserQueryVariables = Exact<{
   id?: InputMaybe<Scalars['ID']>;
@@ -20900,6 +20921,32 @@ export const CreateConversationDocument = gql`
     input: {simple_added_users: $simple_added_users, owner_id: $owner_id, name: $name}
   ) {
     conversation {
+      id
+    }
+    messages {
+      field
+      message
+    }
+  }
+}
+    `;
+export const CreateFormAnswerGroupDocument = gql`
+    mutation createFormAnswerGroup($input: createFormAnswerGroupInput!) {
+  createFormAnswerGroup(input: $input) {
+    form_answer_group {
+      id
+    }
+    messages {
+      field
+      message
+    }
+  }
+}
+    `;
+export const CreateFormCompletionRequestDocument = gql`
+    mutation createFormCompletionRequest($input: createRequestedFormInput!) {
+  createRequestedFormCompletion(input: $input) {
+    requestedFormCompletion {
       id
     }
     messages {
@@ -20992,6 +21039,25 @@ export const GetConversationListDocument = gql`
   }
 }
     `;
+export const GetFormTemplateDocument = gql`
+    query getFormTemplate($id: ID) {
+  customModuleForm(id: $id) {
+    id
+    name
+    use_for_charting
+    use_for_program
+    prefill
+    has_matrix_field
+    is_video
+    has_non_readonly_modules
+    custom_modules {
+      id
+      mod_type
+      label
+    }
+  }
+}
+    `;
 export const GetUserDocument = gql`
     query getUser($id: ID) {
   user(id: $id) {
@@ -21071,10 +21137,13 @@ const defaultWrapper: SdkFunctionWrapper = (action, _operationName, _operationTy
 const ApplyTagsToUserDocumentString = print(ApplyTagsToUserDocument);
 const CreateAppointmentDocumentString = print(CreateAppointmentDocument);
 const CreateConversationDocumentString = print(CreateConversationDocument);
+const CreateFormAnswerGroupDocumentString = print(CreateFormAnswerGroupDocument);
+const CreateFormCompletionRequestDocumentString = print(CreateFormCompletionRequestDocument);
 const CreatePatientDocumentString = print(CreatePatientDocument);
 const CreateTaskDocumentString = print(CreateTaskDocument);
 const GetAppointmentDocumentString = print(GetAppointmentDocument);
 const GetConversationListDocumentString = print(GetConversationListDocument);
+const GetFormTemplateDocumentString = print(GetFormTemplateDocument);
 const GetUserDocumentString = print(GetUserDocument);
 const RemoveTagFromUserDocumentString = print(RemoveTagFromUserDocument);
 const SendChatMessageDocumentString = print(SendChatMessageDocument);
@@ -21090,6 +21159,12 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     createConversation(variables?: CreateConversationMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: CreateConversationMutation; extensions?: any; headers: Dom.Headers; status: number; }> {
         return withWrapper((wrappedRequestHeaders) => client.rawRequest<CreateConversationMutation>(CreateConversationDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'createConversation', 'mutation');
     },
+    createFormAnswerGroup(variables: CreateFormAnswerGroupMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: CreateFormAnswerGroupMutation; extensions?: any; headers: Dom.Headers; status: number; }> {
+        return withWrapper((wrappedRequestHeaders) => client.rawRequest<CreateFormAnswerGroupMutation>(CreateFormAnswerGroupDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'createFormAnswerGroup', 'mutation');
+    },
+    createFormCompletionRequest(variables: CreateFormCompletionRequestMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: CreateFormCompletionRequestMutation; extensions?: any; headers: Dom.Headers; status: number; }> {
+        return withWrapper((wrappedRequestHeaders) => client.rawRequest<CreateFormCompletionRequestMutation>(CreateFormCompletionRequestDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'createFormCompletionRequest', 'mutation');
+    },
     createPatient(variables: CreatePatientMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: CreatePatientMutation; extensions?: any; headers: Dom.Headers; status: number; }> {
         return withWrapper((wrappedRequestHeaders) => client.rawRequest<CreatePatientMutation>(CreatePatientDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'createPatient', 'mutation');
     },
@@ -21101,6 +21176,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     getConversationList(variables?: GetConversationListQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: GetConversationListQuery; extensions?: any; headers: Dom.Headers; status: number; }> {
         return withWrapper((wrappedRequestHeaders) => client.rawRequest<GetConversationListQuery>(GetConversationListDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getConversationList', 'query');
+    },
+    getFormTemplate(variables?: GetFormTemplateQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: GetFormTemplateQuery; extensions?: any; headers: Dom.Headers; status: number; }> {
+        return withWrapper((wrappedRequestHeaders) => client.rawRequest<GetFormTemplateQuery>(GetFormTemplateDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getFormTemplate', 'query');
     },
     getUser(variables?: GetUserQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: GetUserQuery; extensions?: any; headers: Dom.Headers; status: number; }> {
         return withWrapper((wrappedRequestHeaders) => client.rawRequest<GetUserQuery>(GetUserDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getUser', 'query');

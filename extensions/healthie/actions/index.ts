@@ -7,6 +7,8 @@ import { createPatient } from './createPatient'
 import { updatePatient } from './updatePatient'
 import { applyTagToPatient } from './applyTagToPatient'
 import { removeTagFromPatient } from './removeTagFromPatient'
+import { createChartingNote } from './createChartingNote'
+import { sendFormCompletionRequest } from './sendFormCompletionRequest'
 
 export const actions = {
   createAppointment,
@@ -18,4 +20,6 @@ export const actions = {
   updatePatient,
   applyTagToPatient,
   removeTagFromPatient,
+  createChartingNote,
+  sendFormCompletionRequest
 }

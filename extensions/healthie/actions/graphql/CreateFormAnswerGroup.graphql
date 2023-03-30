@@ -1,0 +1,11 @@
+mutation createFormAnswerGroup($input: createFormAnswerGroupInput!) {
+  createFormAnswerGroup(input: $input) {
+    form_answer_group {
+      id
+    }
+    messages {
+      field
+      message
+    }
+  }
+}

@@ -9,6 +9,7 @@ import { Category } from '../../../lib/types/marketplace'
 import { getSdk } from '../gql/sdk'
 import { initialiseClient } from '../graphqlClient'
 import { type settings } from '../settings'
+import { mapHealthieToActivityError } from '../errors'
 
 
 const fields = {
@@ -144,7 +145,7 @@ export const updatePatient: Action<
         const sdk = getSdk(client)
 
 
-        await sdk.updatePatient({
+        const { data } = await sdk.updatePatient({
           input: {
             id,
             first_name,
@@ -152,7 +153,7 @@ export const updatePatient: Action<
             legal_name,
             email,
             phone_number,
-            dietitian_id: provider_id,
+            dietitian_id: provider_id === '' ? undefined : provider_id,
             gender,
             gender_identity,
             height,
@@ -160,6 +161,14 @@ export const updatePatient: Action<
             user_group_id
           }
         })
+
+        if (!isNil(data.updateClient?.messages)) {
+          const errors = mapHealthieToActivityError(data.updateClient?.messages)
+          await onError({
+            events: errors,
+          })
+          return
+        }
 
         await onComplete()
       } else {
