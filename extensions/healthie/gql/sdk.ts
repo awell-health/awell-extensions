@@ -7448,6 +7448,8 @@ export type Organization = {
   only_active_support_count?: Maybe<Scalars['Int']>;
   /** Potential Organization Roles for this Organization */
   org_roles?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** Returns organization cpt codes */
+  organization_cpt_codes?: Maybe<Array<Maybe<OrganizationCptCodeType>>>;
   /** The first organization info of the organization */
   organization_info?: Maybe<OrganizationInfo>;
   /** The organization infos of the organization */
@@ -7560,9 +7562,13 @@ export type OrganizationUsersArgs = {
 export type OrganizationCptCodeType = {
   __typename?: 'OrganizationCptCodeType';
   cpt_code_id?: Maybe<Scalars['ID']>;
+  /** date created */
+  created_at?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
   organization_id?: Maybe<Scalars['ID']>;
   price_per_unit?: Maybe<Scalars['String']>;
+  /** date updated */
+  updated_at?: Maybe<Scalars['String']>;
 };
 
 /** Specific information for an organization */
@@ -8983,6 +8989,7 @@ export type QueryAppointmentsArgs = {
   colorSchemeId?: InputMaybe<Scalars['String']>;
   currentWeek?: InputMaybe<Scalars['Boolean']>;
   endDate?: InputMaybe<Scalars['String']>;
+  exclude_appointments_with_invoice?: InputMaybe<Scalars['Boolean']>;
   filter?: InputMaybe<Scalars['String']>;
   filter_by_appointment_location_ids?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   filter_by_appointment_status?: InputMaybe<Scalars['String']>;
@@ -9022,6 +9029,7 @@ export type QueryAppointmentsArgs = {
 export type QueryAppointmentsCountArgs = {
   currentWeek?: InputMaybe<Scalars['Boolean']>;
   endDate?: InputMaybe<Scalars['String']>;
+  exclude_appointments_with_invoice?: InputMaybe<Scalars['Boolean']>;
   filter?: InputMaybe<Scalars['String']>;
   filter_by_appointment_location_ids?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   filter_by_appointment_status?: InputMaybe<Scalars['String']>;
@@ -20883,7 +20891,7 @@ export type GetUserQueryVariables = Exact<{
 }>;
 
 
-export type GetUserQuery = { __typename?: 'Query', user?: { __typename?: 'User', id: string, first_name?: string | null, last_name?: string | null, dob?: string | null, gender?: string | null, email?: string | null, phone_number?: string | null, next_appt_date?: string | null, user_group?: { __typename?: 'UserGroup', id: string, name?: string | null } | null, providers?: Array<{ __typename?: 'User', id: string, active?: boolean | null, first_name?: string | null, last_name?: string | null, email?: string | null } | null> | null } | null };
+export type GetUserQuery = { __typename?: 'Query', user?: { __typename?: 'User', id: string, first_name?: string | null, last_name?: string | null, dob?: string | null, gender?: string | null, email?: string | null, phone_number?: string | null, next_appt_date?: string | null, dietitian_id?: string | null, user_group?: { __typename?: 'UserGroup', id: string, name?: string | null } | null, providers?: Array<{ __typename?: 'User', id: string, active?: boolean | null, first_name?: string | null, last_name?: string | null, email?: string | null } | null> | null } | null };
 
 export type RemoveTagFromUserMutationVariables = Exact<{
   id?: InputMaybe<Scalars['ID']>;
@@ -21151,6 +21159,7 @@ export const GetUserDocument = gql`
       id
       name
     }
+    dietitian_id
     providers {
       id
       active
