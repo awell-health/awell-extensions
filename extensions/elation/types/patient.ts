@@ -1,57 +1,68 @@
-/* eslint-disable @typescript-eslint/naming-convention */
+import { type z } from 'zod'
+import {
+  type patientStatusSchema,
+  type consentSchema,
+  type patientSchema,
+  type insuranceSchema,
+  type guarantorSchema,
+  type phoneSchema,
+  type emailSchema
+} from "../validation/patient.zod"
 
-// enum PatientGenderIdentity {
-//   'unknown',
-//   'man',
-//   'woman',
-//   'transgender_man',
-//   'transgender_woman',
-//   'nonbinary',
-//   'option_not_listed',
-//   'prefer_not_to_say',
-//   'two_spirit',
-// }
+export type CreateUpdatePatient = z.infer<typeof patientSchema>
 
-// enum PatientLegalGenderMarker {
-//   'M',
-//   'F',
-//   'X',
-//   'U',
-// }
-
-// enum PatientPronouns {
-//   'he_him_his',
-//   'she_her_hers',
-//   'they_them_theirs',
-//   'not_listed',
-// }
-
-// enum PatientSexualOrientation {
-//   'unknown',
-//   'straight',
-//   'gay',
-//   'bisexual',
-//   'option_not_listed',
-//   'prefer_not_to_say',
-//   'lesbian',
-//   'queer',
-//   'asexual',
-// }
-
-export interface Patient {
-  id?: number
-  first_name: string
-  middle_Name?: string
-  last_name: string
-  //   actual_name?: string
-  //   gender_identity?: string
-  //   legal_gender_marker?: string
-  //   pronouns?: string
-  //   sexual_orientation?: string
-  primary_physician: number
-  caregiver_practice: number
+export interface Patient extends Omit<CreateUpdatePatient, 'dob'> {
+  id: number
   dob: string
-  [key: string]: any
+  primary_care_provider?: number | null
+  phones?: Phone[]
+  emails?: Email[]
+  guarantor?: Guarantor | null
+  insurances?: Insurance[]
+  deleted_insurances?: Insurance[]
+  patient_status: PatientStatus
+  consents?: Consent[]
+  created_date: string
+  deleted_date?: string | null
+  merged_into_chart?: number | null
+}
+
+interface Phone extends z.infer<typeof phoneSchema> {
+  created_date: string
+  deleted_date?: string | null
+}
+interface Email extends z.infer<typeof emailSchema> {
+  created_date: string
+  deleted_date?: string | null
+}
+interface Guarantor extends z.infer<typeof guarantorSchema> {
+  id: number
+}
+
+interface Insurance extends z.infer<typeof insuranceSchema> {
+  id: number
+  insurance_company: number
+  insurance_plan: number
+  payment_program: string
+  insured_person_first_name: string
+  insured_person_last_name: string
+  insured_person_address: string
+  insured_person_city: string
+  insured_person_state: string
+  insured_person_zip: string
+  insured_person_id: string
+  insured_person_dob: string
+  insured_person_gender: string
+  insured_person_ssn: string
+  relationship_to_insured?: string | null
+  created_date: string
+  deleted_date?: string | null
+}
+interface PatientStatus extends z.infer<typeof patientStatusSchema> {
+  last_status_change?: string | null
+}
+interface Consent extends z.infer<typeof consentSchema> {
+  last_modified_date: string
 }
 
 export const patientExample: Patient = {

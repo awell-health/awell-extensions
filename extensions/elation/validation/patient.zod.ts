@@ -1,28 +1,107 @@
 import { z } from 'zod'
 
 // Enums
-const genderIdentityEnum = z.enum(['unknown', 'man', 'woman', 'transgender_man', 'transgender_woman', 'nonbinary', 'option_not_listed', 'prefer_not_to_say', 'two_spirit']).default('unknown');
+const genderIdentityEnum = z.enum([
+  'unknown',
+  'man',
+  'woman',
+  'transgender_man',
+  'transgender_woman',
+  'nonbinary',
+  'option_not_listed',
+  'prefer_not_to_say',
+  'two_spirit'
+]).default('unknown')
 
-const legalGenderMarkerEnum = z.enum(['M', 'F', 'X', 'U']);
+const legalGenderMarkerEnum = z.enum(['M', 'F', 'X', 'U'])
 
-const pronounsEnum = z.enum(['he_him_his', 'she_her_hers', 'they_them_theirs', 'not_listed']);
-const sexEnum = z.enum(['Male', 'Female', 'Other', 'Unknown']);
+const pronounsEnum = z.enum([
+  'he_him_his',
+  'she_her_hers',
+  'they_them_theirs',
+  'not_listed'
+])
 
-const sexualOrientationEnum = z.enum(['unknown', 'straight', 'gay', 'bisexual', 'option_not_listed', 'prefer_not_to_say', 'lesbian', 'queer', 'asexual']).default("unknown");
+const sexEnum = z.enum([
+  'Male',
+  'Female',
+  'Other',
+  'Unknown'
+])
 
-const raceEnum = z.enum(['No race specified', 'American Indian or Alaska Native', 'Asian', 'Black or African American', 'Native Hawaiian or Other Pacific Islander', 'White', 'Other', 'Declined to specify']).default('No race specified');
+const sexualOrientationEnum = z.enum([
+  'unknown',
+  'straight',
+  'gay',
+  'bisexual',
+  'option_not_listed',
+  'prefer_not_to_say',
+  'lesbian',
+  'queer',
+  'asexual'
+]).default("unknown")
 
-const ethnicityEnum = z.enum(['No ethnicity specified', 'Hispanic or Latino', 'Not Hispanic or Latino', 'Unknown', 'Declined to specify']).default('No ethnicity specified');
+const raceEnum = z.enum([
+  'No race specified',
+  'American Indian or Alaska Native',
+  'Asian',
+  'Black or African American',
+  'Native Hawaiian or Other Pacific Islander',
+  'White',
+  'Other',
+  'Declined to specify'
+]).default('No race specified')
 
-const phoneTypeEnum = z.enum(['Home', 'Mobile', 'Main', 'Work', 'Night', 'Fax', 'Other']);
+const ethnicityEnum = z.enum([
+  'No ethnicity specified',
+  'Hispanic or Latino',
+  'Not Hispanic or Latino',
+  'Unknown',
+  'Declined to specify'
+]).default('No ethnicity specified')
 
-const relationshipEnum = z.enum(['Caregiver', 'Child', 'Friend', 'Grandparent', 'Guardian', 'Parent', 'Sibling', 'Spouse', 'Other']);
+const phoneTypeEnum = z.enum([
+  'Home',
+  'Mobile',
+  'Main',
+  'Work',
+  'Night',
+  'Fax',
+  'Other'
+])
 
-const insuranceRankEnum = z.enum(['primary', 'secondary', 'tertiary']);
+const relationshipEnum = z.enum([
+  'Caregiver',
+  'Child',
+  'Friend',
+  'Grandparent',
+  'Guardian',
+  'Parent',
+  'Sibling',
+  'Spouse',
+  'Other'
+]);
 
-const inactiveReasonEnum = z.enum(['other', 'patient left on bad terms', 'patient left on good terms', 'practice ended relationship', 'unknown']);
+const insuranceRankEnum = z.enum([
+  'primary',
+  'secondary',
+  'tertiary'
+])
 
-const patientStatusEnum = z.enum(['active', 'deceased', 'inactive', 'prospect']);
+const inactiveReasonEnum = z.enum([
+  'other',
+  'patient left on bad terms',
+  'patient left on good terms',
+  'practice ended relationship',
+  'unknown'
+])
+
+const patientStatusEnum = z.enum([
+  'active',
+  'deceased',
+  'inactive',
+  'prospect'
+])
 
 // Schemas
 const addressSchema = z.object({
@@ -31,18 +110,18 @@ const addressSchema = z.object({
   city: z.string().max(50),
   state: z.string().max(2),
   zip: z.string().max(9)
-});
+})
 
-const phoneSchema = z.object({
+export const phoneSchema = z.object({
   phone: z.string().max(20),
   phone_type: phoneTypeEnum,
-});
+})
 
-const emailSchema = z.object({
-  email: z.string().max(75),
-});
+export const emailSchema = z.object({
+  email: z.string().email().max(75),
+})
 
-const guarantorSchema = z.object({
+export const guarantorSchema = z.object({
   address: z.string().max(200),
   city: z.string().max(50),
   state: z.string().max(2),
@@ -52,9 +131,9 @@ const guarantorSchema = z.object({
   first_name: z.string().max(70),
   last_name: z.string().max(70),
   middle_name: z.string().max(50).nullish(),
-});
+})
 
-const insuranceSchema = z.object({
+export const insuranceSchema = z.object({
   rank: insuranceRankEnum,
   carrier: z.string().max(200),
   member_id: z.string().max(50),
@@ -69,19 +148,19 @@ const insuranceSchema = z.object({
   zip: z.string().max(9),
   copay: z.number().nullish(),
   deductible: z.number().nullish(),
-});
+})
 
-const patientStatusSchema = z.object({
+export const patientStatusSchema = z.object({
   deceased_date: z.string().nullish(),
   inactive_reason: inactiveReasonEnum.nullish(),
   notes: z.string().nullish(),
   status: patientStatusEnum
-});
+})
 
 const preferenceSchema = z.object({
   preferred_pharmacy_1: z.string().nullish(),
   preferred_pharmacy_2: z.string().nullish()
-});
+})
 
 const emergencyContactSchema = z.object({
   first_name: z.string().max(70),
@@ -93,18 +172,18 @@ const emergencyContactSchema = z.object({
   city: z.string().max(50),
   state: z.string().max(2),
   zip: z.string().max(10)
-});
+})
 
-const consentSchema = z.object({
+export const consentSchema = z.object({
   consented: z.boolean(),
   application: z.string().max(255)
-});
+})
 
 const employerSchema = z.object({
   code: z.string(),
   name: z.string(),
   description: z.string()
-});
+})
 
 export const patientSchema = z.object({
   first_name: z.string().max(70), // required for POST and PUT
@@ -116,9 +195,9 @@ export const patientSchema = z.object({
   pronouns: pronounsEnum.nullish(),
   sex: sexEnum, // required for POST and PUT
   sexual_orientation: sexualOrientationEnum.nullish(),
-  primary_physician: z.number().int().positive(), // required for POST and PUT
-  caregiver_practice: z.number().int().positive(), // required for POST and PUT
-  dob: z.coerce.date(), // required for POST and PUT
+  primary_physician: z.coerce.number().int().positive(), // required for POST and PUT
+  caregiver_practice: z.coerce.number().int().positive(), // required for POST and PUT
+  dob: z.coerce.date().transform(arg => arg.toISOString().slice(0, 10)), // required for POST and PUT
   ssn: z.string().length(9).nullish(),
   race: raceEnum.nullish(),
   preferred_language: z.string().nullish(),
@@ -138,8 +217,12 @@ export const patientSchema = z.object({
   primary_care_provider_npi: z.string().length(10).nullish(),
   previous_first_name: z.string().max(70).nullish(),
   previous_last_name: z.string().max(70).nullish(),
-  master_patient: z.number().int().positive().nullish(), // ? not in docs
+  master_patient: z.number().int().positive().nullish(), // ? type not in docs
   employer: employerSchema.nullish(),
   consents: z.array(consentSchema).default([]).nullish(),
   metadata: z.object({}).passthrough().nullish(),
+})
+
+export const updatePatientSchema = patientSchema.extend({
+  patient_id: z.coerce.number().positive()
 })

@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { z, ZodError } from 'zod'
-import { validate } from '../../../lib/shared/validation'
+import { ZodError } from 'zod'
 import {
   FieldType,
   type Action,
@@ -11,17 +10,11 @@ import { Category } from '../../../lib/types/marketplace'
 import { type settings } from '../settings'
 import {
   Settings,
-  PatientId,
-  FirstName,
-  LastName,
-  DOB,
-  CaregiverPractice,
-  PrimaryPhysician,
-  Sex,
 } from '../validation'
 import { ElationAPIClient, makeDataWrapper } from '../client'
 import { fromZodError } from 'zod-validation-error'
 import { AxiosError } from 'axios'
+import { updatePatientSchema } from '../validation/patient.zod'
 
 const fields = {
   patient_id: {
@@ -77,21 +70,6 @@ const fields = {
 
 const dataPoints = {} satisfies Record<string, DataPointDefinition>
 
-const Fields = z.object({
-  patient_id: PatientId,
-  first_name: FirstName,
-  last_name: LastName,
-  dob: DOB,
-  caregiver_practice: CaregiverPractice,
-  primary_physician: PrimaryPhysician,
-  sex: Sex,
-})
-
-const Schema = z.object({
-  settings: Settings,
-  fields: Fields,
-})
-
 export const updatePatient: Action<
   typeof fields,
   typeof settings,
@@ -106,19 +84,17 @@ export const updatePatient: Action<
   dataPoints,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
     try {
-      // Validation should produce ZodError
+      const settings = Settings.parse(payload.settings);
+
       const {
-        fields: {
-          patient_id,
-          first_name,
-          last_name,
-          dob,
-          primary_physician,
-          caregiver_practice,
-          sex,
-        },
-        settings,
-      } = validate({ schema: Schema, payload })
+        patient_id,
+        first_name,
+        last_name,
+        dob,
+        primary_physician,
+        caregiver_practice,
+        sex,
+      } = updatePatientSchema.parse(payload.fields)
 
       // API Call should produce AuthError or something dif.
       const api = new ElationAPIClient({
@@ -163,9 +139,8 @@ export const updatePatient: Action<
               },
               error: {
                 category: 'BAD_REQUEST',
-                message: `${err.status ?? '(no status code)'} Error: ${
-                  err.message
-                }`,
+                message: `${err.status ?? '(no status code)'} Error: ${err.message
+                  }`,
               },
             },
           ],
