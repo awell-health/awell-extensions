@@ -1,0 +1,99 @@
+import { type Action } from '@/types'
+import { fields, dataPoints } from './config'
+import { Category } from '@/types/marketplace'
+import { type settings } from '../../../settings'
+import { isEmpty, isNil } from 'lodash'
+import messagebirdSdk from '@/extensions/messagebird/common/sdk/messagebirdSdk'
+
+export const sendSms: Action<typeof fields, typeof settings> = {
+  key: 'sendSms',
+  title: 'Send SMS',
+  description: 'Send an SMS.',
+  category: Category.COMMUNICATION,
+  fields,
+  dataPoints,
+  onActivityCreated: async (payload, onComplete, onError) => {
+    const {
+      fields: { originator, recipient, body },
+      settings: { apiKey },
+    } = payload
+
+    try {
+      const allRequiredFieldsHaveValues = [originator, recipient, body].every(
+        (field) => !isEmpty(field)
+      )
+
+      if (!allRequiredFieldsHaveValues) {
+        await onError({
+          events: [
+            {
+              date: new Date().toISOString(),
+              text: { en: 'Fields are missing' },
+              error: {
+                category: 'MISSING_FIELDS',
+                message: '`originator`, `recipient`, or `body` is missing',
+              },
+            },
+          ],
+        })
+        return
+      }
+
+      if (isNil(apiKey)) {
+        await onError({
+          events: [
+            {
+              date: new Date().toISOString(),
+              text: { en: 'Missing an API key' },
+              error: {
+                category: 'MISSING_SETTINGS',
+                message: 'Missing an API key',
+              },
+            },
+          ],
+        })
+        return
+      }
+
+      messagebirdSdk(apiKey).messages.create(
+        {
+          originator: String(originator),
+          recipients: [String(recipient)],
+          body: String(body),
+        },
+        function (error, response) {
+          if (error != null) {
+            await onError({
+              events: [
+                {
+                  date: new Date().toISOString(),
+                  text: { en: 'Exception when calling the MessageBird API' },
+                  error: {
+                    category: 'SERVER_ERROR',
+                    message: error.message,
+                  },
+                },
+              ],
+            })
+          } else {
+            await onComplete()
+          }
+        }
+      )
+    } catch (err) {
+      const error = err as Error
+      await onError({
+        events: [
+          {
+            date: new Date().toISOString(),
+            text: { en: 'Something went wrong while orchestration the action' },
+            error: {
+              category: 'SERVER_ERROR',
+              message: error.message,
+            },
+          },
+        ],
+      })
+    }
+  },
+}
