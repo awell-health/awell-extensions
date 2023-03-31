@@ -7,7 +7,7 @@ import DropboxSignSdk from '@/extensions/dropboxSign/common/sdk/dropboxSignSdk'
 
 export const getSignatureRequest: Action<typeof fields, typeof settings> = {
   key: 'getSignatureRequest',
-  title: 'Cancel signature request',
+  title: 'Get signature request',
   description:
     'Returns the SignatureRequest specified by the signature request id.',
   category: Category.DOCUMENT_MANAGEMENT,
@@ -55,64 +55,32 @@ export const getSignatureRequest: Action<typeof fields, typeof settings> = {
       const signatureRequestApi = new DropboxSignSdk.SignatureRequestApi()
       signatureRequestApi.username = apiKey
 
-      if (signatureRequestApi !== undefined) {
-        const result =
-          signatureRequestApi.signatureRequestGet(signatureRequestId)
+      const result = await signatureRequestApi.signatureRequestGet(
+        signatureRequestId
+      )
 
-        result
-          .then(async (response) => {
-            const signatures = response.body.signatureRequest?.signatures ?? []
-            const hasSignature = signatures.length >= 1
+      const signatures = result.body.signatureRequest?.signatures ?? []
+      const hasSignature = signatures.length >= 1
 
-            await onComplete({
-              data_points: {
-                title: response.body.signatureRequest?.title,
-                originalTitle: response.body.signatureRequest?.originalTitle,
-                subject: response.body.signatureRequest?.subject,
-                message: response.body.signatureRequest?.message,
-                signingUrl: response.body.signatureRequest?.signingUrl,
-                signingRedirectUrl:
-                  response.body.signatureRequest?.signingRedirectUrl,
-                detailsUrl: response.body.signatureRequest?.detailsUrl,
-                requesterEmailAddress:
-                  response.body.signatureRequest?.requesterEmailAddress,
-                signerEmailAddress: hasSignature
-                  ? signatures[0].signerEmailAddress
-                  : undefined,
-                signerName: hasSignature ? signatures[0].signerName : undefined,
-                signerRole: hasSignature ? signatures[0].signerRole : undefined,
-                statusCode: hasSignature ? signatures[0].statusCode : undefined,
-              },
-            })
-          })
-          .catch(async (error) => {
-            await onError({
-              events: [
-                {
-                  date: new Date().toISOString(),
-                  text: { en: 'Exception when calling Dropbox Sign API' },
-                  error: {
-                    category: 'SERVER_ERROR',
-                    message: error.message,
-                  },
-                },
-              ],
-            })
-          })
-      } else {
-        await onError({
-          events: [
-            {
-              date: new Date().toISOString(),
-              text: { en: 'Failed to initialize Dropbox Sign SDK.' },
-              error: {
-                category: 'SDK_ERROR',
-                message: 'Failed to initialize Dropbox Sign SDK.',
-              },
-            },
-          ],
-        })
-      }
+      await onComplete({
+        data_points: {
+          title: result.body.signatureRequest?.title,
+          originalTitle: result.body.signatureRequest?.originalTitle,
+          subject: result.body.signatureRequest?.subject,
+          message: result.body.signatureRequest?.message,
+          signingUrl: result.body.signatureRequest?.signingUrl,
+          signingRedirectUrl: result.body.signatureRequest?.signingRedirectUrl,
+          detailsUrl: result.body.signatureRequest?.detailsUrl,
+          requesterEmailAddress:
+            result.body.signatureRequest?.requesterEmailAddress,
+          signerEmailAddress: hasSignature
+            ? signatures[0].signerEmailAddress
+            : undefined,
+          signerName: hasSignature ? signatures[0].signerName : undefined,
+          signerRole: hasSignature ? signatures[0].signerRole : undefined,
+          statusCode: hasSignature ? signatures[0].statusCode : undefined,
+        },
+      })
     } catch (err) {
       const error = err as Error
       await onError({
