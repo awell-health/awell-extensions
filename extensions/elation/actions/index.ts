@@ -1,3 +1,9 @@
-export * from './getPatient'
-export * from './updatePatient'
-export * from './createPatient'
+import { getPatient } from './getPatient'
+import { updatePatient } from './updatePatient'
+import { createPatient } from './createPatient'
+
+export const actions = {
+    getPatient,
+    createPatient,
+    updatePatient,
+}
