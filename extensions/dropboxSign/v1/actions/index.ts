@@ -2,3 +2,4 @@ export { sendSignatureRequestWithTemplate } from './sendSignatureRequestWithTemp
 export { sendRequestReminder } from './sendRequestReminder'
 export { cancelSignatureRequest } from './cancelSignatureRequest'
 export { getSignatureRequest } from './getSignatureRequest'
+export { createEmbeddedSignatureRequestWithTemplate } from './createEmbeddedSignatureRequestWithTemplate'
