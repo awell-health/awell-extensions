@@ -8,13 +8,12 @@ import {
 } from '../../../lib/types'
 import { Category } from '../../../lib/types/marketplace'
 import { type settings } from '../settings'
-import {
-  Settings,
-} from '../validation'
 import { ElationAPIClient, makeDataWrapper } from '../client'
 import { fromZodError } from 'zod-validation-error'
 import { AxiosError } from 'axios'
-import { updatePatientSchema } from '../validation/patient.zod'
+import { patientSchema, } from '../validation/patient.zod'
+import { settingsSchema } from '../validation/settings.zod'
+import { numberId } from '../validation/generic.zod'
 
 const fields = {
   patient_id: {
@@ -84,17 +83,11 @@ export const updatePatient: Action<
   dataPoints,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
     try {
-      const settings = Settings.parse(payload.settings);
+      const { patient_id, ...patientFields } = payload.fields
 
-      const {
-        patient_id,
-        first_name,
-        last_name,
-        dob,
-        primary_physician,
-        caregiver_practice,
-        sex,
-      } = updatePatientSchema.parse(payload.fields)
+      const settings = settingsSchema.parse(payload.settings);
+      const patient = patientSchema.parse(patientFields)
+      const patientId = numberId.parse(patient_id)
 
       // API Call should produce AuthError or something dif.
       const api = new ElationAPIClient({
@@ -105,14 +98,7 @@ export const updatePatient: Action<
         baseUrl: 'https://sandbox.elationemr.com/api/2.0',
         makeDataWrapper,
       })
-      await api.updatePatient(patient_id, {
-        first_name,
-        last_name,
-        dob,
-        primary_physician: Number(primary_physician),
-        caregiver_practice: Number(caregiver_practice),
-        sex,
-      })
+      await api.updatePatient(patientId, patient)
       await onComplete()
     } catch (err) {
       if (err instanceof ZodError) {

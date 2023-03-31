@@ -4,7 +4,7 @@ import {
   type DataWrapperCtor,
 } from '../../lib/shared/client'
 import { type Find } from './types/generic'
-import { type Patient } from './types/patient'
+import { type CreateUpdatePatient, type Patient } from './types/patient'
 import {
   type Subscription,
   type SubscriptionRequest,
@@ -22,8 +22,8 @@ export class ElationDataWrapper extends DataWrapper {
 
   public async updatePatient(
     id: number,
-    obj: Partial<Patient>
-  ): Promise<Patient> {
+    obj: Partial<CreateUpdatePatient>
+  ): Promise<CreateUpdatePatient> {
     const req = this.Request<Patient>({
       method: 'PUT',
       url: `/patients/${id}`,
@@ -75,8 +75,8 @@ export class ElationAPIClient extends APIClient<ElationDataWrapper> {
 
   public async updatePatient(
     id: number,
-    obj: Partial<Patient>
-  ): Promise<Patient> {
+    obj: Partial<CreateUpdatePatient>
+  ): Promise<CreateUpdatePatient> {
     return await this.FetchData(async (dw) => await dw.updatePatient(id, obj))
   }
 

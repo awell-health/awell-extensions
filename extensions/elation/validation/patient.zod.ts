@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { numberId, stringDate } from './generic.zod'
+import { stringDate } from './generic.zod'
 
 // Enums
 const genderIdentityEnum = z.enum([
@@ -238,7 +238,3 @@ export const patientSchema = z.object({
   employer: employerSchema.strict().nullish(),
   metadata: z.object({}).passthrough().nullish(),
 }).strict()
-
-export const updatePatientSchema = patientSchema.extend({
-  patient_id: numberId
-})
