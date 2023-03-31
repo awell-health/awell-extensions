@@ -9,5 +9,9 @@ export const numberId = z.coerce
     })
 
 export const stringDate = z.coerce
-    .date()
+    .date({
+        errorMap: () => ({
+            message: 'Requires date in valid format (YYYY-MM-DD)',
+        }),
+    })
     .transform(arg => arg.toISOString().slice(0, 10))

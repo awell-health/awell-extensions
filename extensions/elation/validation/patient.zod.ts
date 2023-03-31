@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { stringDate } from './generic.zod'
+import { numberId, stringDate } from './generic.zod'
 
 // Enums
 const genderIdentityEnum = z.enum([
@@ -212,8 +212,8 @@ export const patientSchema = z.object({
   pronouns: pronounsEnum.nullish(),
   sex: sexEnum, // required for POST and PUT
   sexual_orientation: sexualOrientationEnum.nullish(),
-  primary_physician: z.coerce.number().int().positive(), // required for POST and PUT
-  caregiver_practice: z.coerce.number().int().positive(), // required for POST and PUT
+  primary_physician: numberId, // required for POST and PUT
+  caregiver_practice: numberId, // required for POST and PUT
   dob: stringDate, // required for POST and PUT
   ssn: z.string().length(9).nullish(),
   race: raceEnum.nullish(),
@@ -234,7 +234,7 @@ export const patientSchema = z.object({
   primary_care_provider_npi: z.string().length(10).nullish(),
   previous_first_name: z.string().max(70).nullish(),
   previous_last_name: z.string().max(70).nullish(),
-  master_patient: z.number().int().positive().nullish(), // ? type not in docs
+  master_patient: numberId.nullish(), // ? type not in docs
   employer: employerSchema.strict().nullish(),
   metadata: z.object({}).passthrough().nullish(),
 }).strict()

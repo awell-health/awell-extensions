@@ -1,7 +1,7 @@
 import { getPatient } from '..'
-import { patientExample } from '../../types/patient'
-import { ElationAPIClient } from '../../client'
 import { type ActivityEvent } from '../../../../lib/types/ActivityEvent'
+
+jest.mock('../../client')
 
 describe('Simple get patient action', () => {
   const onComplete = jest.fn()
@@ -11,11 +11,7 @@ describe('Simple get patient action', () => {
     username: 'asdf',
     password: 'asdf',
   }
-  jest
-    .spyOn(ElationAPIClient.prototype, 'getPatient')
-    .mockImplementation(async (id) => {
-      return patientExample
-    })
+
   beforeEach(() => {
     onComplete.mockClear()
   })
@@ -34,8 +30,8 @@ describe('Simple get patient action', () => {
     expect(onComplete).toHaveBeenCalled()
     expect(onComplete).toBeCalledWith({
       data_points: {
-        first_name: patientExample.first_name,
-        last_name: patientExample.last_name,
+        first_name: 'First',
+        last_name: 'Last',
       },
     })
   })
