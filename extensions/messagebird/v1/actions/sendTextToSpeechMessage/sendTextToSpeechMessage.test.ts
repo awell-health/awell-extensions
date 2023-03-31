@@ -1,10 +1,14 @@
 import { sendTextToSpeechMessage } from '..'
 
+jest.mock('../../../common/sdk/messagebirdSdk')
+
 describe('Send text-to-speech message', () => {
   const onComplete = jest.fn()
+  const onError = jest.fn()
 
   beforeEach(() => {
     onComplete.mockClear()
+    onError.mockClear()
   })
 
   test('Should call the onComplete callback', async () => {
@@ -30,5 +34,6 @@ describe('Send text-to-speech message', () => {
       jest.fn()
     )
     expect(onComplete).toHaveBeenCalled()
+    expect(onError).not.toHaveBeenCalled()
   })
 })

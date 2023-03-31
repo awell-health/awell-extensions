@@ -1,5 +1,5 @@
 import { type Action } from '@/types'
-import { fields, dataPoints } from './config'
+import { fields } from './config'
 import { Category } from '@/types/marketplace'
 import { type settings } from '../../../settings'
 import { isEmpty, isNil } from 'lodash'
@@ -11,7 +11,6 @@ export const sendWhatsAppMessage: Action<typeof fields, typeof settings> = {
   description: 'Send a WhatsApp message.',
   category: Category.COMMUNICATION,
   fields,
-  dataPoints,
   onActivityCreated: async (payload, onComplete, onError) => {
     const {
       fields: { from, to, content },

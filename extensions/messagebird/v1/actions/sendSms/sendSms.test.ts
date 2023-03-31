@@ -1,10 +1,14 @@
 import { sendSms } from '..'
 
+jest.mock('../../../common/sdk/messagebirdSdk')
+
 describe('Send SMS', () => {
   const onComplete = jest.fn()
+  const onError = jest.fn()
 
   beforeEach(() => {
     onComplete.mockClear()
+    onError.mockClear()
   })
 
   test('Should call the onComplete callback', async () => {
@@ -28,5 +32,6 @@ describe('Send SMS', () => {
       jest.fn()
     )
     expect(onComplete).toHaveBeenCalled()
+    expect(onError).not.toHaveBeenCalled()
   })
 })
