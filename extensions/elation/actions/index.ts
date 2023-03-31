@@ -1,2 +1,2 @@
-export * from './get_patient'
-export * from './update_patient'
+export * from './getPatient'
+export * from './updatePatient'

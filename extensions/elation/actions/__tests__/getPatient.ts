@@ -58,7 +58,7 @@ describe('Simple get patient action', () => {
     )
     expect(onError).toHaveBeenCalled()
     expect(onError).toHaveReturnedWith(
-      'Validation error: Requires a valid patient ID (number) at "fields.patientId"'
+      'Validation error: Requires a valid ID (number)'
     )
   })
 })

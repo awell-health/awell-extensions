@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/naming-convention */
 import { ZodError } from 'zod'
 import {
   FieldType,
@@ -11,83 +10,46 @@ import { type settings } from '../settings'
 import { ElationAPIClient, makeDataWrapper } from '../client'
 import { fromZodError } from 'zod-validation-error'
 import { AxiosError } from 'axios'
-import { patientSchema, } from '../validation/patient.zod'
 import { settingsSchema } from '../validation/settings.zod'
 import { numberId } from '../validation/generic.zod'
 
 const fields = {
-  patient_id: {
-    id: 'patient_id',
+  patientId: {
+    id: 'patientId',
     label: 'Patient ID',
     description: 'The patient ID (a number)',
-    type: FieldType.STRING,
-    required: true,
-  },
-  first_name: {
-    id: 'first_name',
-    label: 'First Name',
-    description: 'First name',
-    type: FieldType.STRING,
-    required: true,
-  },
-  last_name: {
-    id: 'last_name',
-    label: 'Last Name',
-    description: 'Last name',
-    type: FieldType.STRING,
-    required: true,
-  },
-  caregiver_practice: {
-    id: 'caregiver_practice',
-    label: 'Caregiver Practice',
-    description: 'Caregiver Practice ID',
-    type: FieldType.STRING,
-    required: true,
-  },
-  dob: {
-    id: 'dob',
-    label: 'Date of Birth',
-    description: 'Date of Birth',
-    type: FieldType.STRING,
-    required: true,
-  },
-  primary_physician: {
-    id: 'primary_physician',
-    label: 'Primary Physician',
-    description: 'Primary Physician',
-    type: FieldType.STRING,
-    required: true,
-  },
-  sex: {
-    id: 'sex',
-    label: 'Sex',
-    description: 'Sex',
-    type: FieldType.STRING,
+    type: FieldType.NUMERIC,
     required: true,
   },
 } satisfies Record<string, Field>
 
-const dataPoints = {} satisfies Record<string, DataPointDefinition>
+const dataPoints = {
+  first_name: {
+    key: 'first_name',
+    valueType: 'string',
+  },
+  last_name: {
+    key: 'last_name',
+    valueType: 'string',
+  },
+} satisfies Record<string, DataPointDefinition>
 
-export const updatePatient: Action<
+export const getPatient: Action<
   typeof fields,
   typeof settings,
   keyof typeof dataPoints
 > = {
-  key: 'update_patient',
+  key: 'getPatient',
   category: Category.DEMO,
-  title: 'Update Patient',
-  description: "Update patient profile using elation's patient api.",
+  title: 'Get Patient',
+  description: "Get patient profile using elation's patient api.",
   fields,
   previewable: true,
   dataPoints,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
     try {
-      const { patient_id, ...patientFields } = payload.fields
-
       const settings = settingsSchema.parse(payload.settings);
-      const patient = patientSchema.parse(patientFields)
-      const patientId = numberId.parse(patient_id)
+      const patientId = numberId.parse(payload.fields.patientId)
 
       // API Call should produce AuthError or something dif.
       const api = new ElationAPIClient({
@@ -98,8 +60,13 @@ export const updatePatient: Action<
         baseUrl: 'https://sandbox.elationemr.com/api/2.0',
         makeDataWrapper,
       })
-      await api.updatePatient(patientId, patient)
-      await onComplete()
+      const patientInfo = await api.getPatient(patientId)
+      await onComplete({
+        data_points: {
+          first_name: patientInfo.first_name,
+          last_name: patientInfo.last_name,
+        },
+      })
     } catch (err) {
       if (err instanceof ZodError) {
         const error = fromZodError(err)
