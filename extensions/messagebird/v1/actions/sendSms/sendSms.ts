@@ -1,9 +1,9 @@
 import { type Action } from '@/types'
-import { fields, dataPoints } from './config'
+import { fields } from './config'
 import { Category } from '@/types/marketplace'
 import { type settings } from '../../../settings'
 import { isEmpty, isNil } from 'lodash'
-import messagebirdSdk from '@/extensions/messagebird/common/sdk/messagebirdSdk'
+import messagebirdSdk from '../../../common/sdk/messagebirdSdk'
 
 export const sendSms: Action<typeof fields, typeof settings> = {
   key: 'sendSms',
@@ -11,7 +11,6 @@ export const sendSms: Action<typeof fields, typeof settings> = {
   description: 'Send an SMS.',
   category: Category.COMMUNICATION,
   fields,
-  dataPoints,
   onActivityCreated: async (payload, onComplete, onError) => {
     const {
       fields: { originator, recipient, body },
