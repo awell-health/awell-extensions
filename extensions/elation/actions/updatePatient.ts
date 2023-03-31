@@ -85,7 +85,7 @@ export const updatePatient: Action<
     try {
       const { patient_id, ...patientFields } = payload.fields
 
-      const settings = settingsSchema.parse(payload.settings);
+      const { base_url, ...settings } = settingsSchema.parse(payload.settings);
       const patient = patientSchema.parse(patientFields)
       const patientId = numberId.parse(patient_id)
 
@@ -93,9 +93,8 @@ export const updatePatient: Action<
       const api = new ElationAPIClient({
         auth: {
           ...settings,
-          auth_url: 'https://sandbox.elationemr.com/api/2.0/oauth2/token',
         },
-        baseUrl: 'https://sandbox.elationemr.com/api/2.0',
+        baseUrl: base_url,
         makeDataWrapper,
       })
       await api.updatePatient(patientId, patient)

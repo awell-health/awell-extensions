@@ -48,16 +48,15 @@ export const getPatient: Action<
   dataPoints,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
     try {
-      const settings = settingsSchema.parse(payload.settings);
+      const { base_url, ...settings } = settingsSchema.parse(payload.settings);
       const patientId = numberId.parse(payload.fields.patientId)
 
       // API Call should produce AuthError or something dif.
       const api = new ElationAPIClient({
         auth: {
           ...settings,
-          auth_url: 'https://sandbox.elationemr.com/api/2.0/oauth2/token',
         },
-        baseUrl: 'https://sandbox.elationemr.com/api/2.0',
+        baseUrl: base_url,
         makeDataWrapper,
       })
       const patientInfo = await api.getPatient(patientId)

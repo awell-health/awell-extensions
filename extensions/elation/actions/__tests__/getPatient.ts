@@ -6,10 +6,12 @@ jest.mock('../../client')
 describe('Simple get patient action', () => {
   const onComplete = jest.fn()
   const settings = {
-    client_id: 'asdf',
-    client_secret: 'asdf',
-    username: 'asdf',
-    password: 'asdf',
+    client_id: 'clientId',
+    client_secret: 'clientSecret',
+    username: 'username',
+    password: 'password',
+    auth_url: 'https://sandbox.elationemr.com/api/2.0/oauth2/token',
+    base_url: 'https://sandbox.elationemr.com/api/2.0',
   }
 
   beforeEach(() => {

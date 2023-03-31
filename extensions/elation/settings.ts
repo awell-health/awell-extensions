@@ -1,6 +1,20 @@
 import { type Setting } from '../../lib/types'
 
 export const settings = {
+  base_url: {
+    key: 'base_url',
+    label: 'Base URL',
+    obfuscated: false,
+    description: 'Base URL of Elation API',
+    required: true,
+  },
+  auth_url: {
+    key: 'auth_url',
+    label: 'Password',
+    obfuscated: false,
+    description: 'URL of Elation authentication endpoint',
+    required: true,
+  },
   client_id: {
     key: 'client_id',
     label: 'Client ID',
