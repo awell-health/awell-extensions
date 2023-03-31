@@ -123,12 +123,6 @@ const fields = {
     description: 'Additional notes about the patient. Maximum length of 500 characters.',
     type: FieldType.STRING,
   },
-  primary_care_provider_npi: {
-    id: 'primary_care_provider_npi',
-    label: 'Primary care provider NPI',
-    description: "The National Provider Identifier (NPI) of the patient's primary care provider",
-    type: FieldType.NUMERIC,
-  },
   previous_first_name: {
     id: 'previous_first_name',
     label: 'Previous first name',
