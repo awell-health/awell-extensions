@@ -14,7 +14,7 @@ export const sendSms: Action<typeof fields, typeof settings> = {
   onActivityCreated: async (payload, onComplete, onError) => {
     const {
       fields: { originator, recipient, body },
-      settings: { apiKey },
+      settings: { apiKey, reportUrl },
     } = payload
 
     try {
@@ -59,10 +59,11 @@ export const sendSms: Action<typeof fields, typeof settings> = {
           originator: String(originator),
           recipients: [String(recipient)],
           body: String(body),
+          reportUrl,
         },
         function (error, response) {
           if (error != null) {
-            await onError({
+            void onError({
               events: [
                 {
                   date: new Date().toISOString(),
@@ -75,7 +76,7 @@ export const sendSms: Action<typeof fields, typeof settings> = {
               ],
             })
           } else {
-            await onComplete()
+            void onComplete()
           }
         }
       )

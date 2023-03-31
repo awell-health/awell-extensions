@@ -66,7 +66,7 @@ export const sendWhatsAppMessage: Action<typeof fields, typeof settings> = {
         },
         function (error, response) {
           if (error != null) {
-            await onError({
+            void onError({
               events: [
                 {
                   date: new Date().toISOString(),
@@ -79,7 +79,7 @@ export const sendWhatsAppMessage: Action<typeof fields, typeof settings> = {
               ],
             })
           } else {
-            await onComplete()
+            void onComplete()
           }
         }
       )
