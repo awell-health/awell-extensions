@@ -10,7 +10,7 @@ import { removeTagFromPatient } from './removeTagFromPatient'
 import { createChartingNote } from './createChartingNote'
 import { sendFormCompletionRequest } from './sendFormCompletionRequest'
 import { archivePatient } from './archivePatient'
-import { createLocation } from './createLocation'
+// import { createLocation } from './createLocation'
 import { closeChatConversation } from './closeChatConversation'
 import { deleteAppointment } from './deleteAppointment'
 import { cancelAppointment } from './cancelAppointment'
@@ -28,7 +28,11 @@ export const actions = {
   createChartingNote,
   sendFormCompletionRequest,
   archivePatient,
-  createLocation,
+  /**
+  * There is bug in Healthie that prevents linking an address with a patient
+  * Waiting for fix
+  **/
+  // createLocation,
   closeChatConversation,
   deleteAppointment,
   cancelAppointment,
