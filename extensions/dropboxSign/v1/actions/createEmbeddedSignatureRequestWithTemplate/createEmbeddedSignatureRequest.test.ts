@@ -1,6 +1,6 @@
-import { sendRequestReminder } from '..'
+import { createEmbeddedSignatureRequestWithTemplate } from '..'
 
-describe('Send request reminder action', () => {
+describe('Create embedded signature request action', () => {
   const onComplete = jest.fn()
 
   beforeEach(() => {
@@ -8,15 +8,21 @@ describe('Send request reminder action', () => {
   })
 
   test('Should call the onComplete callback', async () => {
-    await sendRequestReminder.onActivityCreated(
+    await createEmbeddedSignatureRequestWithTemplate.onActivityCreated(
       {
         activity: {
           id: 'activity-id',
         },
         patient: { id: 'test-patient' },
         fields: {
-          signatureRequestId: '123',
+          signerRole: 'Client',
+          signerName: 'John Doe',
           signerEmailAddress: 'hello@patient.com',
+          templateId: 'template-1',
+          title: 'A title',
+          subject: 'A subject',
+          message: 'A message',
+          customFields: String([]),
         },
         settings: {
           apiKey: 'apiKey',
