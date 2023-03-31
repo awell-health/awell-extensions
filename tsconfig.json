@@ -22,8 +22,8 @@
       ],
       "@/types/*": [
         "lib/types/*"
-      ],
-    },
+      ]
+    }
   },
   "include": [
     "lib/**/*.ts",

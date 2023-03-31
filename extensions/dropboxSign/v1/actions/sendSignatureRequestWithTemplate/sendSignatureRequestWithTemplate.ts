@@ -58,20 +58,22 @@ export const sendSignatureRequestWithTemplate: Action<
         return
       }
 
-      if (!Array.isArray(customFields)) {
-        await onError({
-          events: [
-            {
-              date: new Date().toISOString(),
-              text: { en: 'Incorrect values for fields' },
-              error: {
-                category: 'INCORRECT_FIELDS',
-                message: '`customFields` should be an array of objects.',
+      if (!isNil(customFields)) {
+        if (!Array.isArray(customFields)) {
+          await onError({
+            events: [
+              {
+                date: new Date().toISOString(),
+                text: { en: 'Incorrect values for fields' },
+                error: {
+                  category: 'INCORRECT_FIELDS',
+                  message: '`customFields` should be an array of objects.',
+                },
               },
-            },
-          ],
-        })
-        return
+            ],
+          })
+          return
+        }
       }
 
       if (isNil(apiKey)) {

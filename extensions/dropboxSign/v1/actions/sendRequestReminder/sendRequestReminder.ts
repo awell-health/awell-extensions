@@ -1,5 +1,5 @@
 import { type Action } from '@/types'
-import { fields, dataPoints } from './config'
+import { fields } from './config'
 import { Category } from '@/types/marketplace'
 import { type settings } from '@/extensions/dropboxSign/settings'
 import { isEmpty, isNil } from 'lodash'
@@ -12,7 +12,6 @@ export const sendRequestReminder: Action<typeof fields, typeof settings> = {
     'Sends an email to the signer reminding them to sign the signature request. You cannot send a reminder within 1 hour of the last reminder that was sent. This includes manual AND automatic reminders.',
   category: Category.DOCUMENT_MANAGEMENT,
   fields,
-  dataPoints,
   onActivityCreated: async (payload, onComplete, onError) => {
     const {
       fields: { signatureRequestId, signerEmailAddress },
