@@ -1,10 +1,33 @@
+import DropboxSignSdk from '../../../common/sdk/dropboxSignSdk'
 import { cancelSignatureRequest } from '..'
+
+jest.mock('../../../common/sdk/dropboxSignSdk')
+
+const mockFn = jest
+  .spyOn(DropboxSignSdk.SignatureRequestApi.prototype, 'signatureRequestCancel')
+  .mockImplementation(async () => {
+    console.log(
+      'mocked DropboxSignSdk.SignatureRequestApi.signatureRequestCancel'
+    )
+
+    return {
+      response: {
+        data: {},
+        status: 200,
+        statusText: 'success',
+        headers: {},
+        config: {},
+      },
+    }
+  })
 
 describe('Cancel signature request action', () => {
   const onComplete = jest.fn()
+  const onError = jest.fn()
 
   beforeEach(() => {
     onComplete.mockClear()
+    onError.mockClear()
   })
 
   test('Should call the onComplete callback', async () => {
@@ -23,8 +46,11 @@ describe('Cancel signature request action', () => {
         },
       },
       onComplete,
-      jest.fn()
+      onError
     )
+
+    expect(mockFn).toHaveBeenCalled()
     expect(onComplete).toHaveBeenCalled()
+    expect(onError).not.toHaveBeenCalled()
   })
 })

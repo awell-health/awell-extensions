@@ -1,5 +1,5 @@
 import { type Action } from '@/types'
-import { fields, dataPoints } from './config'
+import { fields } from './config'
 import { Category } from '@/types/marketplace'
 import { type settings } from '@/extensions/dropboxSign/settings'
 import { isNil } from 'lodash'
@@ -12,7 +12,6 @@ export const cancelSignatureRequest: Action<typeof fields, typeof settings> = {
     'Cancels an incomplete signature request. This action is not reversible.',
   category: Category.DOCUMENT_MANAGEMENT,
   fields,
-  dataPoints,
   onActivityCreated: async (payload, onComplete, onError) => {
     const {
       fields: { signatureRequestId },
@@ -58,6 +57,8 @@ export const cancelSignatureRequest: Action<typeof fields, typeof settings> = {
       if (signatureRequestApi !== undefined) {
         const result =
           signatureRequestApi.signatureRequestCancel(signatureRequestId)
+
+        console.log(result)
 
         result
           .then(async (response) => {
