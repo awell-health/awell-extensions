@@ -14,6 +14,8 @@ By combining Healthie’s web and mobile platform with our clinical workflows, c
 
 In order to set up this extension, **you will need to provide a Healthie API key and Api url**. You can obtain an API key via the Healthie portal (`Settings > Developer > API keys`). You can obtain API url in the [DOCUMENTATION](https://docs.gethealthie.com/docs/#environments) in `Environments` section.
 
+Please note that the extension automatically prefixes the API key with `Basic ` so please provide your raw API key without `Basic ` in front.
+
 # Custom Actions
 
 ## Send chat message action
