@@ -21,7 +21,7 @@ describe('Simple update patient action', () => {
     await updatePatient.onActivityCreated(
       {
         fields: {
-          patient_id: '1',
+          patient_id: '141375220285441',
           first_name: "Paula",
           middle_name: "P",
           last_name: "Patient",
@@ -31,15 +31,15 @@ describe('Simple update patient action', () => {
           pronouns: "he_him_his",
           sex: "Female",
           sexual_orientation: "queer",
-          primary_physician: 131074,
-          caregiver_practice: 65540,
+          primary_physician: 141127177601026,
+          caregiver_practice: 141127173275652,
           dob: "1940-08-29",
           ssn: "123456789",
           race: "Asian",
           preferred_language: "English",
           ethnicity: "Not Hispanic or Latino",
           notes: "This is test Notes",
-          primary_care_provider_npi: "1234567893",
+          primary_care_provider_npi: null,
           previous_first_name: null,
           previous_last_name: null,
         },
