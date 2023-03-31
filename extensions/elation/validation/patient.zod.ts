@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { numberId, stringDate } from './generic.zod'
 
 // Enums
 const genderIdentityEnum = z.enum([
@@ -11,7 +12,7 @@ const genderIdentityEnum = z.enum([
   'option_not_listed',
   'prefer_not_to_say',
   'two_spirit'
-]).default('unknown')
+])
 
 const legalGenderMarkerEnum = z.enum(['M', 'F', 'X', 'U'])
 
@@ -39,7 +40,7 @@ const sexualOrientationEnum = z.enum([
   'lesbian',
   'queer',
   'asexual'
-]).default("unknown")
+])
 
 const raceEnum = z.enum([
   'No race specified',
@@ -50,7 +51,7 @@ const raceEnum = z.enum([
   'White',
   'Other',
   'Declined to specify'
-]).default('No race specified')
+])
 
 const ethnicityEnum = z.enum([
   'No ethnicity specified',
@@ -58,7 +59,7 @@ const ethnicityEnum = z.enum([
   'Not Hispanic or Latino',
   'Unknown',
   'Declined to specify'
-]).default('No ethnicity specified')
+])
 
 const phoneTypeEnum = z.enum([
   'Home',
@@ -86,6 +87,15 @@ const insuranceRankEnum = z.enum([
   'primary',
   'secondary',
   'tertiary'
+])
+
+const paymentProgramEnum = z.enum([
+  'Medicare Part B',
+  'Medicare Advantage',
+  'Medicaid', 'Commercial - HMSA',
+  'Commercial - SFHP',
+  'Commercial - Other',
+  "Worker's Compensation"
 ])
 
 const inactiveReasonEnum = z.enum([
@@ -126,32 +136,44 @@ export const guarantorSchema = z.object({
   city: z.string().max(50),
   state: z.string().max(2),
   zip: z.string().max(9),
-  phone: z.string().max(20),
-  relationship: relationshipEnum,
-  first_name: z.string().max(70),
-  last_name: z.string().max(70),
+  phone: z.string().max(20).nullish(),
+  relationship: relationshipEnum.nullish(),
+  first_name: z.string().max(70).nullish(),
+  last_name: z.string().max(70).nullish(),
   middle_name: z.string().max(50).nullish(),
 })
 
 export const insuranceSchema = z.object({
   rank: insuranceRankEnum,
-  carrier: z.string().max(200),
-  member_id: z.string().max(50),
-  group_id: z.string().max(50),
-  plan: z.string().max(200),
-  phone: z.string().max(20),
-  extension: z.string().max(6),
-  address: z.string().max(200),
+  carrier: z.string().max(200).nullish(),
+  member_id: z.string().max(50).nullish(),
+  group_id: z.string().max(50).nullish(),
+  plan: z.string().max(200).nullish(),
+  phone: z.string().max(20).nullish(),
+  extension: z.string().max(6).nullish(),
+  address: z.string().max(200).nullish(),
   suite: z.string().max(35).nullish(),
-  city: z.string().max(50),
-  state: z.string().max(2),
-  zip: z.string().max(9),
+  city: z.string().max(50).nullish(),
+  state: z.string().max(2).nullish(),
+  zip: z.string().max(9).nullish(),
   copay: z.number().nullish(),
   deductible: z.number().nullish(),
+  payment_program: paymentProgramEnum.nullish(),
+  insured_person_first_name: z.string().max(200).nullish(),
+  insured_person_last_name: z.string().max(200).nullish(),
+  insured_person_address: z.string().max(200).nullish(),
+  insured_person_city: z.string().max(50).nullish(),
+  insured_person_state: z.string().max(2).nullish(),
+  insured_person_zip: z.string().max(9).nullish(),
+  insured_person_id: z.string().max(50).nullish(),
+  insured_person_dob: stringDate.nullish(),
+  insured_person_gender: legalGenderMarkerEnum.nullish(),
+  insured_person_ssn: z.string().max(9).nullish(),
+  relationship_to_insured: z.string().max(20).nullish(),
 })
 
 export const patientStatusSchema = z.object({
-  deceased_date: z.string().nullish(),
+  deceased_date: stringDate.nullish(),
   inactive_reason: inactiveReasonEnum.nullish(),
   notes: z.string().nullish(),
   status: patientStatusEnum
@@ -163,20 +185,15 @@ const preferenceSchema = z.object({
 })
 
 const emergencyContactSchema = z.object({
-  first_name: z.string().max(70),
-  last_name: z.string().max(70),
-  relationship: relationshipEnum,
-  phone: z.string().max(20),
-  address_line1: z.string().max(200),
-  address_line2: z.string().max(35),
-  city: z.string().max(50),
-  state: z.string().max(2),
-  zip: z.string().max(10)
-})
-
-export const consentSchema = z.object({
-  consented: z.boolean(),
-  application: z.string().max(255)
+  first_name: z.string().max(70).nullish(),
+  last_name: z.string().max(70).nullish(),
+  relationship: relationshipEnum.nullish(),
+  phone: z.string().max(20).nullish(),
+  address_line1: z.string().max(200).nullish(),
+  address_line2: z.string().max(35).nullish(),
+  city: z.string().max(50).nullish(),
+  state: z.string().max(2).nullish(),
+  zip: z.string().max(10).nullish()
 })
 
 const employerSchema = z.object({
@@ -197,32 +214,31 @@ export const patientSchema = z.object({
   sexual_orientation: sexualOrientationEnum.nullish(),
   primary_physician: z.coerce.number().int().positive(), // required for POST and PUT
   caregiver_practice: z.coerce.number().int().positive(), // required for POST and PUT
-  dob: z.coerce.date().transform(arg => arg.toISOString().slice(0, 10)), // required for POST and PUT
+  dob: stringDate, // required for POST and PUT
   ssn: z.string().length(9).nullish(),
   race: raceEnum.nullish(),
   preferred_language: z.string().nullish(),
   ethnicity: ethnicityEnum.nullish(),
   notes: z.string().max(500).nullish(),
-  vip: z.boolean().default(false),
-  address: addressSchema.nullish(),
-  phones: z.array(phoneSchema).max(2).default([]).nullish(),
-  emails: z.array(emailSchema).default([]).nullish(),
-  guarantor: guarantorSchema.nullish(),
-  insurances: z.array(insuranceSchema).default([]).nullish(),
-  deleted_insurances: z.array(insuranceSchema).default([]).nullish(),
-  tags: z.array(z.string().max(100)).max(10).default([]).nullish(),
-  patient_status: patientStatusSchema.nullish(),
-  preference: preferenceSchema.nullish(),
-  emergency_contact: emergencyContactSchema.nullish(),
+  vip: z.boolean().nullish(),
+  address: addressSchema.strict().nullish(),
+  phones: z.array(phoneSchema.strict()).max(2).nullish(),
+  emails: z.array(emailSchema.strict()).nullish(),
+  guarantor: guarantorSchema.strict().nullish(),
+  insurances: z.array(insuranceSchema.strict()).nullish(),
+  deleted_insurances: z.array(insuranceSchema.strict()).nullish(),
+  tags: z.array(z.string().max(100)).max(10).nullish(),
+  patient_status: patientStatusSchema.strict().nullish(),
+  preference: preferenceSchema.strict().nullish(),
+  emergency_contact: emergencyContactSchema.strict().nullish(),
   primary_care_provider_npi: z.string().length(10).nullish(),
   previous_first_name: z.string().max(70).nullish(),
   previous_last_name: z.string().max(70).nullish(),
   master_patient: z.number().int().positive().nullish(), // ? type not in docs
-  employer: employerSchema.nullish(),
-  consents: z.array(consentSchema).default([]).nullish(),
+  employer: employerSchema.strict().nullish(),
   metadata: z.object({}).passthrough().nullish(),
-})
+}).strict()
 
 export const updatePatientSchema = patientSchema.extend({
-  patient_id: z.coerce.number().positive()
+  patient_id: numberId
 })

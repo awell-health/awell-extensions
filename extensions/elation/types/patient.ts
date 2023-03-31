@@ -1,7 +1,6 @@
 import { type z } from 'zod'
 import {
   type patientStatusSchema,
-  type consentSchema,
   type patientSchema,
   type insuranceSchema,
   type guarantorSchema,
@@ -43,26 +42,16 @@ interface Insurance extends z.infer<typeof insuranceSchema> {
   id: number
   insurance_company: number
   insurance_plan: number
-  payment_program: string
-  insured_person_first_name: string
-  insured_person_last_name: string
-  insured_person_address: string
-  insured_person_city: string
-  insured_person_state: string
-  insured_person_zip: string
-  insured_person_id: string
-  insured_person_dob: string
-  insured_person_gender: string
-  insured_person_ssn: string
-  relationship_to_insured?: string | null
   created_date: string
   deleted_date?: string | null
 }
 interface PatientStatus extends z.infer<typeof patientStatusSchema> {
   last_status_change?: string | null
 }
-interface Consent extends z.infer<typeof consentSchema> {
+interface Consent {
+  consented: boolean
   last_modified_date: string
+  application: string
 }
 
 export const patientExample: Patient = {
