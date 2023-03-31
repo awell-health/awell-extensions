@@ -6,6 +6,9 @@ const ElationAPIClientMock = jest.fn().mockImplementation((params) => {
     createPatient: jest.fn((params) => {
       return { id: 1 }
     }),
+    updatePatient: jest.fn((params) => {
+      return { id: 1 }
+    }),
   };
 });
 
