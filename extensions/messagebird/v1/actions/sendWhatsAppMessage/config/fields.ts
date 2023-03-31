@@ -11,8 +11,7 @@ export const fields = {
   },
   from: {
     id: 'from',
-    label:
-      'The ID that identifies the channel over which the message should be sent.',
+    label: 'The channel ID from which the message should be sent.',
     type: FieldType.STRING,
     required: true,
   },
