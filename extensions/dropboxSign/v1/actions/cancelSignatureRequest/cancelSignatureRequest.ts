@@ -54,44 +54,9 @@ export const cancelSignatureRequest: Action<typeof fields, typeof settings> = {
       const signatureRequestApi = new DropboxSignSdk.SignatureRequestApi()
       signatureRequestApi.username = apiKey
 
-      if (signatureRequestApi !== undefined) {
-        const result =
-          signatureRequestApi.signatureRequestCancel(signatureRequestId)
+      await signatureRequestApi.signatureRequestCancel(signatureRequestId)
 
-        console.log(result)
-
-        result
-          .then(async (response) => {
-            await onComplete()
-          })
-          .catch(async (error) => {
-            await onError({
-              events: [
-                {
-                  date: new Date().toISOString(),
-                  text: { en: 'Exception when calling Dropbox Sign API' },
-                  error: {
-                    category: 'SERVER_ERROR',
-                    message: error.message,
-                  },
-                },
-              ],
-            })
-          })
-      } else {
-        await onError({
-          events: [
-            {
-              date: new Date().toISOString(),
-              text: { en: 'Failed to initialize Dropbox Sign SDK.' },
-              error: {
-                category: 'SDK_ERROR',
-                message: 'Failed to initialize Dropbox Sign SDK.',
-              },
-            },
-          ],
-        })
-      }
+      await onComplete()
     } catch (err) {
       const error = err as Error
       await onError({

@@ -59,48 +59,16 @@ export const sendRequestReminder: Action<typeof fields, typeof settings> = {
       const signatureRequestApi = new DropboxSignSdk.SignatureRequestApi()
       signatureRequestApi.username = apiKey
 
-      if (signatureRequestApi !== undefined) {
-        const data: DropboxSignSdk.SignatureRequestRemindRequest = {
-          emailAddress: String(signerEmailAddress),
-        }
-
-        const result = signatureRequestApi.signatureRequestRemind(
-          String(signatureRequestId),
-          data
-        )
-
-        result
-          .then(async (response) => {
-            await onComplete()
-          })
-          .catch(async (error) => {
-            await onError({
-              events: [
-                {
-                  date: new Date().toISOString(),
-                  text: { en: 'Exception when calling Dropbox Sign API' },
-                  error: {
-                    category: 'SERVER_ERROR',
-                    message: error.message,
-                  },
-                },
-              ],
-            })
-          })
-      } else {
-        await onError({
-          events: [
-            {
-              date: new Date().toISOString(),
-              text: { en: 'Failed to initialize Dropbox Sign SDK.' },
-              error: {
-                category: 'SDK_ERROR',
-                message: 'Failed to initialize Dropbox Sign SDK.',
-              },
-            },
-          ],
-        })
+      const data: DropboxSignSdk.SignatureRequestRemindRequest = {
+        emailAddress: String(signerEmailAddress),
       }
+
+      await signatureRequestApi.signatureRequestRemind(
+        String(signatureRequestId),
+        data
+      )
+
+      await onComplete()
     } catch (err) {
       const error = err as Error
       await onError({

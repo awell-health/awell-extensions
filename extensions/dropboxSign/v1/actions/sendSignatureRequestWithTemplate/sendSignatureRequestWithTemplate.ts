@@ -95,77 +95,46 @@ export const sendSignatureRequestWithTemplate: Action<
       const signatureRequestApi = new DropboxSignSdk.SignatureRequestApi()
       signatureRequestApi.username = apiKey
 
-      if (signatureRequestApi !== undefined) {
-        const signer: DropboxSignSdk.SubSignatureRequestTemplateSigner = {
-          role: String(signerRole),
-          emailAddress: String(signerEmailAddress),
-          name: String(signerName),
-        }
-
-        const defaultSigningOptions: DropboxSignSdk.SubSigningOptions = {
-          draw: true,
-          type: true,
-          upload: true,
-          phone: false,
-          defaultType: DropboxSignSdk.SubSigningOptions.DefaultTypeEnum.Draw,
-        }
-
-        const data: DropboxSignSdk.SignatureRequestSendWithTemplateRequest = {
-          templateIds: [String(templateId)],
-          subject,
-          message,
-          signers: [signer],
-          title,
-          signingRedirectUrl,
-          customFields,
-          signingOptions: defaultSigningOptions,
-          metadata: {
-            awellPatientId: patientId,
-            awellActivityId: activityId,
-          },
-        }
-
-        const result =
-          signatureRequestApi.signatureRequestSendWithTemplate(data)
-
-        result
-          .then(async (response) => {
-            await onComplete({
-              data_points: {
-                signatureRequestId: String(
-                  response.body.signatureRequest?.signatureRequestId
-                ),
-              },
-            })
-          })
-          .catch(async (error) => {
-            await onError({
-              events: [
-                {
-                  date: new Date().toISOString(),
-                  text: { en: 'Exception when calling Dropbox Sign API' },
-                  error: {
-                    category: 'SERVER_ERROR',
-                    message: error.message,
-                  },
-                },
-              ],
-            })
-          })
-      } else {
-        await onError({
-          events: [
-            {
-              date: new Date().toISOString(),
-              text: { en: 'Failed to initialize Dropbox Sign SDK.' },
-              error: {
-                category: 'SDK_ERROR',
-                message: 'Failed to initialize Dropbox Sign SDK.',
-              },
-            },
-          ],
-        })
+      const signer: DropboxSignSdk.SubSignatureRequestTemplateSigner = {
+        role: String(signerRole),
+        emailAddress: String(signerEmailAddress),
+        name: String(signerName),
       }
+
+      const defaultSigningOptions: DropboxSignSdk.SubSigningOptions = {
+        draw: true,
+        type: true,
+        upload: true,
+        phone: false,
+        defaultType: DropboxSignSdk.SubSigningOptions.DefaultTypeEnum.Draw,
+      }
+
+      const data: DropboxSignSdk.SignatureRequestSendWithTemplateRequest = {
+        templateIds: [String(templateId)],
+        subject,
+        message,
+        signers: [signer],
+        title,
+        signingRedirectUrl,
+        customFields,
+        signingOptions: defaultSigningOptions,
+        metadata: {
+          awellPatientId: patientId,
+          awellActivityId: activityId,
+        },
+      }
+
+      const result = await signatureRequestApi.signatureRequestSendWithTemplate(
+        data
+      )
+
+      await onComplete({
+        data_points: {
+          signatureRequestId: String(
+            result.body.signatureRequest?.signatureRequestId
+          ),
+        },
+      })
     } catch (err) {
       const error = err as Error
       await onError({
