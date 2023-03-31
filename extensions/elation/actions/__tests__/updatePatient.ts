@@ -1,4 +1,4 @@
-import { updatePatient } from '..'
+import { updatePatient } from '../updatePatient'
 
 jest.mock('../../client')
 

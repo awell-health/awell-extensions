@@ -1,4 +1,4 @@
-import { getPatient } from '..'
+import { getPatient } from '../getPatient'
 import { type ActivityEvent } from '../../../../lib/types/ActivityEvent'
 
 jest.mock('../../client')
