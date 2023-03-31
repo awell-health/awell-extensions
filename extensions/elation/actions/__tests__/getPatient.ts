@@ -10,8 +10,8 @@ describe('Simple get patient action', () => {
     client_secret: 'clientSecret',
     username: 'username',
     password: 'password',
-    auth_url: 'https://sandbox.elationemr.com/api/2.0/oauth2/token',
-    base_url: 'https://sandbox.elationemr.com/api/2.0',
+    auth_url: 'authUrl',
+    base_url: 'baseUrl',
   }
 
   beforeEach(() => {

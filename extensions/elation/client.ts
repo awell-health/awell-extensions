@@ -20,10 +20,22 @@ export class ElationDataWrapper extends DataWrapper {
     return res
   }
 
+  public async createPatient(
+    obj: Partial<CreateUpdatePatient>
+  ): Promise<Patient> {
+    const req = this.Request<Patient>({
+      method: 'POST',
+      url: `/patients`,
+      data: obj,
+    })
+    const res = await req
+    return res
+  }
+
   public async updatePatient(
     id: number,
     obj: Partial<CreateUpdatePatient>
-  ): Promise<CreateUpdatePatient> {
+  ): Promise<Patient> {
     const req = this.Request<Patient>({
       method: 'PUT',
       url: `/patients/${id}`,
@@ -73,10 +85,16 @@ export class ElationAPIClient extends APIClient<ElationDataWrapper> {
     return await this.FetchData(async (dw) => await dw.getPatient(id))
   }
 
+  public async createPatient(
+    obj: Partial<CreateUpdatePatient>
+  ): Promise<Patient> {
+    return await this.FetchData(async (dw) => await dw.createPatient(obj))
+  }
+
   public async updatePatient(
     id: number,
     obj: Partial<CreateUpdatePatient>
-  ): Promise<CreateUpdatePatient> {
+  ): Promise<Patient> {
     return await this.FetchData(async (dw) => await dw.updatePatient(id, obj))
   }
 
