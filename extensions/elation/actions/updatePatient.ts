@@ -105,7 +105,7 @@ const fields = {
     id: "ssn",
     label: "SSN",
     description: "Social Security number. An integer with 9 digits",
-    type: FieldType.NUMERIC
+    type: FieldType.STRING
   },
   ethnicity: {
     id: "ethnicity",
