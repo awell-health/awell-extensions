@@ -1,5 +1,6 @@
 import { getPatient } from '../getPatient'
 import { type ActivityEvent } from '../../../../lib/types/ActivityEvent'
+import { patientExample } from '../../__mocks__/constants'
 
 jest.mock('../../client')
 
@@ -22,7 +23,7 @@ describe('Simple get patient action', () => {
     await getPatient.onActivityCreated(
       {
         fields: {
-          patientId: '141372212838401',
+          patientId: '1',
         },
         settings,
       } as any,
@@ -32,8 +33,9 @@ describe('Simple get patient action', () => {
     expect(onComplete).toHaveBeenCalled()
     expect(onComplete).toBeCalledWith({
       data_points: {
-        first_name: 'First',
-        last_name: 'Last',
+        ...patientExample,
+        primary_physician: String(patientExample.primary_physician),
+        caregiver_practice: String(patientExample.caregiver_practice),
       },
     })
   })

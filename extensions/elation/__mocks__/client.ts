@@ -1,13 +1,15 @@
+import { patientExample } from "./constants";
+
 const ElationAPIClientMock = jest.fn().mockImplementation((params) => {
   return {
     getPatient: jest.fn((params) => {
-      return { first_name: 'First', last_name: 'Last' }
+      return { id: 1, ...patientExample }
     }),
     createPatient: jest.fn((params) => {
-      return { id: 1 }
+      return { id: 1, ...patientExample }
     }),
     updatePatient: jest.fn((params) => {
-      return { id: 1 }
+      return { id: 1, ...patientExample }
     }),
   };
 });
