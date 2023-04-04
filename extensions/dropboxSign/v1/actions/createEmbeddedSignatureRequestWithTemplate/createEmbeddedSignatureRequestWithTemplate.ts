@@ -64,7 +64,7 @@ export const createEmbeddedSignatureRequestWithTemplate: Action<
               date: new Date().toISOString(),
               text: { en: 'Incorrect values for fields' },
               error: {
-                category: 'INCORRECT_FIELDS',
+                category: 'WRONG_INPUT',
                 message: '`customFields` should be an array of objects.',
               },
             },
