@@ -14,3 +14,6 @@
 dist/*
 
 .DS_Store
+
+# local files
+*.local.*
