@@ -1,9 +1,9 @@
-import { type Action } from '@/types'
+import { type Action } from '../../../../../lib/types'
 import { fields } from './config'
-import { Category } from '@/types/marketplace'
+import { Category } from '../../../../../lib/types/marketplace'
 import { type settings } from '../../../settings'
 import { isEmpty, isNil } from 'lodash'
-import DropboxSignSdk from '@/extensions/dropboxSign/common/sdk/dropboxSignSdk'
+import DropboxSignSdk from '../../../common/sdk/dropboxSignSdk'
 
 export const createEmbeddedSignatureRequestWithTemplate: Action<
   typeof fields,
@@ -126,62 +126,49 @@ export const createEmbeddedSignatureRequestWithTemplate: Action<
           },
         }
 
-      signatureRequestApi
-        .signatureRequestCreateEmbeddedWithTemplate(data)
-        .then(async (res) => {
-          const embeddedApi = new DropboxSignSdk.EmbeddedApi()
-          embeddedApi.username = apiKey
+      const embeddedSignatureRequest =
+        await signatureRequestApi.signatureRequestCreateEmbeddedWithTemplate(
+          data
+        )
 
-          const signatures = res.body.signatureRequest?.signatures ?? []
-          const signatureId = signatures[0].signatureId
+      const signatures =
+        embeddedSignatureRequest.body.signatureRequest?.signatures ?? []
+      const signatureId = signatures[0].signatureId
 
-          if (isEmpty(signatures) || isEmpty(signatureId)) {
-            await onError({
-              events: [
-                {
-                  date: new Date().toISOString(),
-                  text: { en: 'No signatures found.' },
-                  error: {
-                    category: 'SERVER_ERROR',
-                    message: `No signatures found for embedded signature request with id ${String(
-                      res.body.signatureRequest?.signatureRequestId
-                    )}`,
-                  },
-                },
-              ],
-            })
-          }
-
-          return await embeddedApi.embeddedSignUrl(String(signatureId))
-        })
-        .then((res) => {
-          const signUrl = String(res.body.embedded?.signUrl)
-          /**
-           * Somehow I need to be able to pass the Sign URL to the front-end (Awell Hosted Pages)
-           * so it can use the `hellosign-embedded` sdk to open the URL in the front-end.
-           *
-           * What would make sense is that I can append the signUrl to the activity object so I can
-           * access it in Orchestration.
-           */
-          console.log('The sign url: ' + signUrl)
-        })
-        .catch(async () => {
-          await onError({
-            events: [
-              {
-                date: new Date().toISOString(),
-                text: {
-                  en: 'Could not create embedded signature request with template and retrieve sign URL.',
-                },
-                error: {
-                  category: 'SERVER_ERROR',
-                  message:
-                    'Could not create embedded signature request with template and retrieve sign URL.',
-                },
+      if (isEmpty(signatures) || isEmpty(signatureId)) {
+        await onError({
+          events: [
+            {
+              date: new Date().toISOString(),
+              text: { en: 'No signatures found.' },
+              error: {
+                category: 'SERVER_ERROR',
+                message: `No signatures found for embedded signature request with id ${String(
+                  embeddedSignatureRequest.body.signatureRequest
+                    ?.signatureRequestId
+                )}`,
               },
-            ],
-          })
+            },
+          ],
         })
+      }
+
+      /**
+       * Somehow I need to be able to pass the Sign URL to the front-end (Awell Hosted Pages)
+       * so it can use the `hellosign-embedded` sdk to open the URL in the front-end.
+       *
+       * What would make sense is that I can append the signUrl to the activity object so I can
+       * access it in Orchestration.
+       */
+      // const embeddedApi = new DropboxSignSdk.EmbeddedApi()
+      // embeddedApi.username = apiKey
+
+      // const embeddedSignUrlRequest = await embeddedApi.embeddedSignUrl(
+      //   String(signatureId)
+      // )
+      // const signUrl = String(embeddedSignUrlRequest.body.embedded?.signUrl)
+
+      await onComplete({})
     } catch (err) {
       const error = err as Error
       await onError({
