@@ -86,8 +86,12 @@ export class ExtensionServer {
         .projects.subscriptions.get({ subscription: subscription.name })
       return response.status === 200
     }
-    if (await subscriptionExists()) {
-      return subscription
+    try {
+      if (await subscriptionExists()) {
+        return subscription
+      }
+    } catch (err) {
+      this.log.debug('Unable to find subscription', subscription.name)
     }
     this.log.debug(subscription, 'Creating new topic subscription')
     const [newSubscription] = await this.pubSubClient.createSubscription(
