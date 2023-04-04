@@ -1,3 +1,4 @@
+import { type CreateUpdateAppointment } from '../types/appointment'
 import { type PatientInput } from '../types/patient'
 
 export const patientExample: PatientInput = {
@@ -20,4 +21,17 @@ export const patientExample: PatientInput = {
   notes: 'This is test Notes',
   previous_first_name: '',
   previous_last_name: '',
+}
+
+export const appointmentExample: CreateUpdateAppointment = {
+  scheduled_date: '2016-10-13T11:15:00Z',
+  duration: 15,
+  reason: 'Follow-Up',
+  description: 'follow up to procedure',
+  service_location: 13631735,
+  telehealth_details: 'video platform',
+  patient: 64058687489,
+  physician: 131074,
+  practice: 65540,
+  metadata: null,
 }

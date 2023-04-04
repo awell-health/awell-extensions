@@ -1,7 +1,8 @@
 import * as z from 'zod';
 import { numberId, stringIsoDate } from './generic.zod';
 
-const statusEnum = z.enum(["Scheduled",
+const statusEnum = z.enum([
+    "Scheduled",
     "Confirmed",
     "Checked Out",
     "Cancelled",
