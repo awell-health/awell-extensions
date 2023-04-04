@@ -28,6 +28,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         [null, {\
           "packageLocation": "./",\
           "packageDependencies": [\
+            ["@dropbox/sign", "npm:1.1.3"],\
             ["@fastify/cors", "npm:8.2.1"],\
             ["@google-cloud/pubsub", "npm:3.3.0"],\
             ["@graphql-codegen/cli", "virtual:9fc52fb708650d8aee495e014ea163d6e7a250b0c7643c2f43a2b3af0f401a37b67526aacd23b886d536ea3e838e18ac504a491304a3cbae2efa13c3c996ebec#npm:3.2.2"],\
@@ -58,6 +59,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["lightship", "npm:7.1.1"],\
             ["lint-staged", "npm:13.1.2"],\
             ["lodash", "npm:4.17.21"],\
+            ["messagebird", "npm:4.0.1"],\
             ["node-fetch", "virtual:94e2650e81a726e7adc8f0f6e639be3d7648493f2f2b84c27eee40ecea9a62ed0532e681c130c39c234a2ad47b19ceeb2d6987857059ffec26dfbe9101153344#npm:2.6.9"],\
             ["pino-pretty", "npm:9.4.0"],\
             ["prettier", "npm:2.8.4"],\
@@ -138,6 +140,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./",\
           "packageDependencies": [\
             ["@awell/action-extensions", "workspace:."],\
+            ["@dropbox/sign", "npm:1.1.3"],\
             ["@fastify/cors", "npm:8.2.1"],\
             ["@google-cloud/pubsub", "npm:3.3.0"],\
             ["@graphql-codegen/cli", "virtual:9fc52fb708650d8aee495e014ea163d6e7a250b0c7643c2f43a2b3af0f401a37b67526aacd23b886d536ea3e838e18ac504a491304a3cbae2efa13c3c996ebec#npm:3.2.2"],\
@@ -168,6 +171,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["lightship", "npm:7.1.1"],\
             ["lint-staged", "npm:13.1.2"],\
             ["lodash", "npm:4.17.21"],\
+            ["messagebird", "npm:4.0.1"],\
             ["node-fetch", "virtual:94e2650e81a726e7adc8f0f6e639be3d7648493f2f2b84c27eee40ecea9a62ed0532e681c130c39c234a2ad47b19ceeb2d6987857059ffec26dfbe9101153344#npm:2.6.9"],\
             ["pino-pretty", "npm:9.4.0"],\
             ["prettier", "npm:2.8.4"],\
@@ -1794,6 +1798,20 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["@cspotcode/source-map-support", "npm:0.8.1"],\
             ["@jridgewell/trace-mapping", "npm:0.3.9"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["@dropbox/sign", [\
+        ["npm:1.1.3", {\
+          "packageLocation": "./.yarn/cache/@dropbox-sign-npm-1.1.3-3038828d99-3c0a03f96a.zip/node_modules/@dropbox/sign/",\
+          "packageDependencies": [\
+            ["@dropbox/sign", "npm:1.1.3"],\
+            ["axios", "npm:0.24.0"],\
+            ["bluebird", "npm:3.7.2"],\
+            ["crypto-js", "npm:4.1.1"],\
+            ["form-data", "npm:4.0.0"],\
+            ["qs", "npm:6.11.1"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -4783,11 +4801,19 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["axios", [\
+        ["npm:0.24.0", {\
+          "packageLocation": "./.yarn/cache/axios-npm-0.24.0-39e5c1e79e-468cf496c0.zip/node_modules/axios/",\
+          "packageDependencies": [\
+            ["axios", "npm:0.24.0"],\
+            ["follow-redirects", "virtual:39e5c1e79ea63134f0cf339f4463df92854aaf708a45210afd29a0b4b9f67f95b34a1abbcabaae6d0033ad99a1d5f690ab51ed8e5d3283b87ccbc3a9ab3ec05f#npm:1.15.2"]\
+          ],\
+          "linkType": "HARD"\
+        }],\
         ["npm:0.26.1", {\
           "packageLocation": "./.yarn/cache/axios-npm-0.26.1-a6641ce4e3-d9eb58ff4b.zip/node_modules/axios/",\
           "packageDependencies": [\
             ["axios", "npm:0.26.1"],\
-            ["follow-redirects", "virtual:a6641ce4e3bdcc0997f8f53d9481b67c5d38e21276de8eeee7bf92881685b3ad5600bae416c2af904ceab8132bac649e7efd0af93f18e158e0e65ee05a263d72#npm:1.15.2"]\
+            ["follow-redirects", "virtual:39e5c1e79ea63134f0cf339f4463df92854aaf708a45210afd29a0b4b9f67f95b34a1abbcabaae6d0033ad99a1d5f690ab51ed8e5d3283b87ccbc3a9ab3ec05f#npm:1.15.2"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -5728,6 +5754,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["path-key", "npm:3.1.1"],\
             ["shebang-command", "npm:2.0.0"],\
             ["which", "npm:2.0.2"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["crypto-js", [\
+        ["npm:4.1.1", {\
+          "packageLocation": "./.yarn/cache/crypto-js-npm-4.1.1-38a3b8c19d-b3747c12ee.zip/node_modules/crypto-js/",\
+          "packageDependencies": [\
+            ["crypto-js", "npm:4.1.1"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -7158,10 +7193,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:a6641ce4e3bdcc0997f8f53d9481b67c5d38e21276de8eeee7bf92881685b3ad5600bae416c2af904ceab8132bac649e7efd0af93f18e158e0e65ee05a263d72#npm:1.15.2", {\
-          "packageLocation": "./.yarn/__virtual__/follow-redirects-virtual-1a488024d3/0/cache/follow-redirects-npm-1.15.2-1ec1dd82be-faa66059b6.zip/node_modules/follow-redirects/",\
+        ["virtual:39e5c1e79ea63134f0cf339f4463df92854aaf708a45210afd29a0b4b9f67f95b34a1abbcabaae6d0033ad99a1d5f690ab51ed8e5d3283b87ccbc3a9ab3ec05f#npm:1.15.2", {\
+          "packageLocation": "./.yarn/__virtual__/follow-redirects-virtual-2c858e005e/0/cache/follow-redirects-npm-1.15.2-1ec1dd82be-faa66059b6.zip/node_modules/follow-redirects/",\
           "packageDependencies": [\
-            ["follow-redirects", "virtual:a6641ce4e3bdcc0997f8f53d9481b67c5d38e21276de8eeee7bf92881685b3ad5600bae416c2af904ceab8132bac649e7efd0af93f18e158e0e65ee05a263d72#npm:1.15.2"],\
+            ["follow-redirects", "virtual:39e5c1e79ea63134f0cf339f4463df92854aaf708a45210afd29a0b4b9f67f95b34a1abbcabaae6d0033ad99a1d5f690ab51ed8e5d3283b87ccbc3a9ab3ec05f#npm:1.15.2"],\
             ["@types/debug", null],\
             ["debug", null]\
           ],\
@@ -7187,6 +7222,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/form-data-npm-3.0.1-d080d436e0-b019e8d35c.zip/node_modules/form-data/",\
           "packageDependencies": [\
             ["form-data", "npm:3.0.1"],\
+            ["asynckit", "npm:0.4.0"],\
+            ["combined-stream", "npm:1.0.8"],\
+            ["mime-types", "npm:2.1.35"]\
+          ],\
+          "linkType": "HARD"\
+        }],\
+        ["npm:4.0.0", {\
+          "packageLocation": "./.yarn/cache/form-data-npm-4.0.0-916facec2d-01135bf867.zip/node_modules/form-data/",\
+          "packageDependencies": [\
+            ["form-data", "npm:4.0.0"],\
             ["asynckit", "npm:0.4.0"],\
             ["combined-stream", "npm:1.0.8"],\
             ["mime-types", "npm:2.1.35"]\
@@ -9829,6 +9874,18 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
+      ["messagebird", [\
+        ["npm:4.0.1", {\
+          "packageLocation": "./.yarn/cache/messagebird-npm-4.0.1-ce01c611ef-94f7c70fa1.zip/node_modules/messagebird/",\
+          "packageDependencies": [\
+            ["messagebird", "npm:4.0.1"],\
+            ["jose", "npm:4.13.1"],\
+            ["safe-buffer", "npm:5.2.1"],\
+            ["scmp", "npm:2.1.0"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
       ["micromatch", [\
         ["npm:4.0.5", {\
           "packageLocation": "./.yarn/cache/micromatch-npm-4.0.5-cfab5d7669-02a17b671c.zip/node_modules/micromatch/",\
@@ -10957,6 +11014,14 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/qs-npm-6.11.0-caf1bc9dea-6e1f29dd53.zip/node_modules/qs/",\
           "packageDependencies": [\
             ["qs", "npm:6.11.0"],\
+            ["side-channel", "npm:1.0.4"]\
+          ],\
+          "linkType": "HARD"\
+        }],\
+        ["npm:6.11.1", {\
+          "packageLocation": "./.yarn/cache/qs-npm-6.11.1-1dedced93e-82ee78ef12.zip/node_modules/qs/",\
+          "packageDependencies": [\
+            ["qs", "npm:6.11.1"],\
             ["side-channel", "npm:1.0.4"]\
           ],\
           "linkType": "HARD"\
