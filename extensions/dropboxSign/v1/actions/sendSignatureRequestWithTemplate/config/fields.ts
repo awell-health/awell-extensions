@@ -1,4 +1,4 @@
-import { type Field, FieldType } from '@/lib/types'
+import { type Field, FieldType } from '../../../../../../lib/types'
 
 export const fields = {
   signerRole: {

@@ -1,9 +1,9 @@
-import { type Action } from '@/types'
+import { type Action } from '../../../../../lib/types'
 import { fields } from './config'
-import { Category } from '@/types/marketplace'
-import { type settings } from '@/extensions/dropboxSign/settings'
+import { Category } from '../../../../../lib/types/marketplace'
+import { type settings } from '../../../settings'
 import { isEmpty, isNil } from 'lodash'
-import DropboxSignSdk from '@/extensions/dropboxSign/common/sdk/dropboxSignSdk'
+import DropboxSignSdk from '../../../common/sdk/dropboxSignSdk'
 
 export const sendRequestReminder: Action<typeof fields, typeof settings> = {
   key: 'sendRequestReminder',
