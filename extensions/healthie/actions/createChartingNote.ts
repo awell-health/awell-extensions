@@ -96,7 +96,7 @@ export const createChartingNote: Action<
                 date: new Date().toISOString(),
                 text: { en: "Form isn't a charting form" },
                 error: {
-                  category: 'WRONG_DATA',
+                  category: 'SERVER_ERROR',
                   message: `Form with id ${form_id} cannot be used for charting`,
                 },
               },
@@ -114,7 +114,7 @@ export const createChartingNote: Action<
                 date: new Date().toISOString(),
                 text: { en: "Form doesn't have a question of type \"textarea\" (long text)." },
                 error: {
-                  category: 'WRONG_DATA',
+                  category: 'SERVER_ERROR',
                   message: `Form with id ${form_id}  doesn't have a "textarea" field`,
                 },
               },

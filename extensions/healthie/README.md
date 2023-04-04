@@ -72,7 +72,3 @@ Deletes an appointment with a given `id`.
 ## Cancel appointment
 
 Cancels an appointment with a given `id`.
-
-## Create Journal Entry
-
-Creates a Journal Entry of given `type` for a patient with a given `id`. ID of the created entry is stored as `journalEntryId` data point.

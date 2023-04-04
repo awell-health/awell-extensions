@@ -1,5 +1,5 @@
 import { type FastifyBaseLogger } from 'fastify'
-
+import { google } from 'googleapis'
 import {
   PubSub,
   type Topic,
@@ -52,6 +52,15 @@ export class ExtensionServer {
       )
       await this.activityCompletedTopic.create()
     }
+    // Authorize the google api client to use the pubsub API
+    const auth = new google.auth.GoogleAuth({
+      scopes: [
+        'https://www.googleapis.com/auth/cloud-platform',
+        'https://www.googleapis.com/auth/pubsub',
+      ],
+    })
+    const authClient = await auth.getClient()
+    google.options({ auth: authClient })
   }
 
   async getSubscription(
@@ -60,12 +69,24 @@ export class ExtensionServer {
     options?: CreateSubscriptionOptions
   ): Promise<Subscription> {
     this.log.debug(
-      { topic: (topic as Topic).name, name, options },
+      { topic: (topic as Topic).name, subName: name, options },
       'Retrieving custom actions extension subscription'
     )
     const subscription = this.pubSubClient.subscription(name)
-    const [exists] = await subscription.exists()
-    if (exists) {
+
+    /**
+     * There is a strange bug with the `exists` function in the pubsub client
+     * which causes it to fail with a DEADLINE_EXCEEDED error, with no clear
+     * explanation of what causes it and how to prevent it.
+     * Using the google api client instead prevents this from happening.
+     */
+    const subscriptionExists = async (): Promise<boolean> => {
+      const response = await google
+        .pubsub('v1')
+        .projects.subscriptions.get({ subscription: subscription.name })
+      return response.status === 200
+    }
+    if (await subscriptionExists()) {
       return subscription
     }
     this.log.debug(subscription, 'Creating new topic subscription')
@@ -79,8 +100,9 @@ export class ExtensionServer {
 
   async registerExtension(extension: Extension): Promise<void> {
     this.log.info({ key: extension.key }, 'Registering extension')
-    await Promise.all(
-      Object.values(extension.actions).map(async (action) => {
+    await Object.values(extension.actions).reduce(
+      async (previousAction, action) => {
+        await previousAction
         const subscription = await this.getSubscription(
           this.activityCreatedTopic,
           `${extension.key}-${action.key}`,
@@ -151,14 +173,19 @@ export class ExtensionServer {
           this.log.error(error, 'Subscription error')
         })
         this.subscriptions.push(subscription)
-      })
+      },
+      Promise.resolve()
     )
+    this.log.info({ key: extension.key }, 'Extension registered successfully')
   }
 
   async shutDown(): Promise<void> {
     await this.subscriptions.reduce(async (close, subscription) => {
       await close
-      this.log.debug({ name: subscription.name }, 'Closing subscription')
+      this.log.debug(
+        { subscriptionName: subscription.name },
+        'Closing subscription'
+      )
       await subscription.close()
     }, Promise.resolve())
   }
