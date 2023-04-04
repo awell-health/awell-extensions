@@ -1,5 +1,6 @@
 import { isNil } from 'lodash'
 import {
+  type DataPointDefinition,
   FieldType,
   type Action,
   type Field,
@@ -34,15 +35,24 @@ const fields = {
   },
 } satisfies Record<string, Field>
 
+const dataPoints = {
+  conversationId: {
+    key: 'conversationId',
+    valueType: 'string',
+  },
+} satisfies Record<string, DataPointDefinition>
+
 export const sendChatMessage: Action<
   typeof fields,
-  typeof settings
+  typeof settings,
+  keyof typeof dataPoints
 > = {
   key: 'sendChatMessage',
   category: Category.INTEGRATIONS,
   title: 'Send chat message',
   description: 'Send chat message in Healthie.',
   fields,
+  dataPoints,
   previewable: true,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
     const { fields, settings } = payload
@@ -124,7 +134,11 @@ export const sendChatMessage: Action<
 
         await sendMessage(conversationId)
 
-        await onComplete()
+        await onComplete({
+          data_points: {
+            conversationId
+          }
+        })
       } else {
         await onError({
           events: [
