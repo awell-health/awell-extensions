@@ -5,11 +5,15 @@
     "module": "commonjs",
     "outDir": "dist",
     "sourceMap": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "resolveJsonModule": true
   },
   "include": [
     "lib/**/*.ts",
     "extensions/**/*.ts",
     "src/**/*.ts"
+  ],
+  "exclude": [
+    "**/scripts/*.ts"
   ]
 }

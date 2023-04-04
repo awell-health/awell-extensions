@@ -4,6 +4,7 @@ import { Healthie } from './healthie'
 import { HelloWorld } from './hello-world'
 import { Twilio } from './twilio'
 import { DropboxSign } from './dropboxSign'
+import { Elation } from './elation'
 
 export const extensions = [
   Awell,
@@ -12,4 +13,5 @@ export const extensions = [
   Twilio,
   CalDotCom,
   DropboxSign,
+  Elation
 ]
