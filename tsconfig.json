@@ -6,28 +6,14 @@
     "outDir": "dist",
     "sourceMap": true,
     "esModuleInterop": true,
-    "baseUrl": "./",
-    "paths": {
-      "@/extensions/*": [
-        "extensions/*"
-      ],
-      "@/lib/*": [
-        "lib/*"
-      ],
-      "@/src/*": [
-        "src/*"
-      ],
-      "@/types": [
-        "lib/types"
-      ],
-      "@/types/*": [
-        "lib/types/*"
-      ]
-    }
+    "resolveJsonModule": true
   },
   "include": [
     "lib/**/*.ts",
     "extensions/**/*.ts",
     "src/**/*.ts"
+  ],
+  "exclude": [
+    "**/scripts/*.ts"
   ]
 }

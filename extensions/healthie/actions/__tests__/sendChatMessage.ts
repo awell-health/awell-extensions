@@ -40,7 +40,11 @@ describe('sendChatMessage action', () => {
     expect(mockGetSdkReturn.getConversationList).toHaveReturnedWith({ data: { conversationMemberships: [] } })
     expect(mockGetSdkReturn.createConversation).toHaveBeenCalled()
     expect(mockGetSdkReturn.sendChatMessage).toHaveBeenCalled()
-    expect(onComplete).toHaveBeenCalled()
+    expect(onComplete).toHaveBeenCalledWith({
+      data_points: {
+        conversationId: 'conversation-1'
+      }
+    })
   })
 
   test("Should not create a new message when it exists", async () => {
@@ -79,6 +83,10 @@ describe('sendChatMessage action', () => {
 
     expect(mockGetSdkReturn.createConversation).not.toHaveBeenCalled()
     expect(mockGetSdkReturn.sendChatMessage).toHaveBeenCalled()
-    expect(onComplete).toHaveBeenCalled()
+    expect(onComplete).toHaveBeenCalledWith({
+      data_points: {
+        conversationId: 'conversation-2'
+      }
+    })
   })
 })
