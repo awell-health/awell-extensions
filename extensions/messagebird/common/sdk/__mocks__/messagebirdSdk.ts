@@ -17,7 +17,10 @@ const mockSdk = {
       (params: MessageParameters, callback: CallbackFn<Message>) => {
         console.log('Mocking MessageBird SDK call to messages.create', params)
 
-        callback(null, null)
+        const error = null
+        const message = null
+
+        callback(error, message)
       }
     ),
   },
@@ -32,7 +35,10 @@ const mockSdk = {
           params
         )
 
-        callback(null, null)
+        const error = null
+        const voiceMessage = null
+
+        callback(error, voiceMessage)
       }
     ),
   },
@@ -44,7 +50,10 @@ const mockSdk = {
           params
         )
 
-        callback(null, null)
+        const error = null
+        const res = null
+
+        callback(error, res)
       }
     ),
   },
