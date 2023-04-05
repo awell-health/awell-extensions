@@ -19,7 +19,7 @@ describe('Send WhatsApp message', () => {
         },
         patient: { id: 'test-patient' },
         fields: {
-          from: '+32xxxxxxx',
+          from: 'WHATSAPP-CHANNEL-ID',
           to: '+32xxxxxxx',
           content: 'Hello there!',
         },
@@ -29,7 +29,7 @@ describe('Send WhatsApp message', () => {
         },
       },
       onComplete,
-      jest.fn()
+      onError
     )
     expect(onComplete).toHaveBeenCalled()
     expect(onError).not.toHaveBeenCalled()

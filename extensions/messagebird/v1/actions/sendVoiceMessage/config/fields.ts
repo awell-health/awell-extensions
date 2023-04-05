@@ -1,4 +1,4 @@
-import { type Field, FieldType, StringType } from '@/lib/types'
+import { type Field, FieldType, StringType } from '../../../../../../lib/types'
 
 export const fields = {
   originator: {

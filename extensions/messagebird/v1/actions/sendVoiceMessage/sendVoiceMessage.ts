@@ -1,15 +1,15 @@
-import { type Action } from '@/types'
+import { type Action } from '../../../../../lib/types'
 import { fields } from './config'
-import { Category } from '@/types/marketplace'
+import { Category } from '../../../../../lib/types/marketplace'
 import { type settings } from '../../../settings'
 import { isEmpty, isNil } from 'lodash'
-import messagebirdSdk from '@/extensions/messagebird/common/sdk/messagebirdSdk'
+import messagebirdSdk from '../../../common/sdk/messagebirdSdk'
 import { type voice, type languages } from 'messagebird/types/voice_messages'
 
-export const sendTextToSpeechMessage: Action<typeof fields, typeof settings> = {
-  key: 'sendTextToSpeechMessage',
-  title: 'Send text-to-speech message',
-  description: 'Send a text-to-speech (voice) message.',
+export const sendVoiceMessage: Action<typeof fields, typeof settings> = {
+  key: 'sendVoiceMessage',
+  title: 'Send voice message',
+  description: 'Send a voice message.',
   category: Category.COMMUNICATION,
   fields,
   onActivityCreated: async (payload, onComplete, onError) => {

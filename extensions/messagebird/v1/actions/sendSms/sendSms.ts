@@ -1,6 +1,6 @@
-import { type Action } from '@/types'
+import { type Action } from '../../../../../lib/types'
 import { fields } from './config'
-import { Category } from '@/types/marketplace'
+import { Category } from '../../../../../lib/types/marketplace'
 import { type settings } from '../../../settings'
 import { isEmpty, isNil } from 'lodash'
 import messagebirdSdk from '../../../common/sdk/messagebirdSdk'

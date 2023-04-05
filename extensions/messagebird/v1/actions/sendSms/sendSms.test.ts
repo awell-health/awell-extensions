@@ -19,17 +19,17 @@ describe('Send SMS', () => {
         },
         patient: { id: 'test-patient' },
         fields: {
-          originator: '+32xxxxxxx',
-          recipient: '+32xxxxxxx',
+          originator: 'TestMessage', // "TestMessage" can be used for test messages
+          recipient: '+32476581696',
           body: 'Hello there!',
         },
         settings: {
-          apiKey: 'apiKey',
-          reportUrl: 'https://developers.messagebird.com/',
+          apiKey: 'an-api-key',
+          reportUrl: undefined,
         },
       },
       onComplete,
-      jest.fn()
+      onError
     )
     expect(onComplete).toHaveBeenCalled()
     expect(onError).not.toHaveBeenCalled()
