@@ -31,7 +31,6 @@ export const sendSignatureRequestWithTemplate: Action<
         subject,
         message,
         signingRedirectUrl,
-        customFields,
       },
       settings: { apiKey, testMode },
     } = payload
@@ -59,24 +58,6 @@ export const sendSignatureRequestWithTemplate: Action<
           ],
         })
         return
-      }
-
-      if (!isNil(customFields)) {
-        if (!Array.isArray(customFields)) {
-          await onError({
-            events: [
-              {
-                date: new Date().toISOString(),
-                text: { en: 'Incorrect values for fields' },
-                error: {
-                  category: 'WRONG_INPUT',
-                  message: '`customFields` should be an array of objects.',
-                },
-              },
-            ],
-          })
-          return
-        }
       }
 
       if (isNil(apiKey)) {
@@ -119,7 +100,6 @@ export const sendSignatureRequestWithTemplate: Action<
         signers: [signer],
         title,
         signingRedirectUrl,
-        customFields: customFields ?? [],
         signingOptions: defaultSigningOptions,
         testMode: isInTestMode(String(testMode)),
         metadata: {

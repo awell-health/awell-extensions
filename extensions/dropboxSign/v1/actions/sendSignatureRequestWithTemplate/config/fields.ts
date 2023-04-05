@@ -62,12 +62,4 @@ export const fields = {
     type: FieldType.STRING,
     required: false,
   },
-  customFields: {
-    id: 'customFields',
-    label: 'Custom fields',
-    description:
-      'An array defining values and options for custom fields. Required when a custom field exists in the template.',
-    type: FieldType.JSON,
-    required: false,
-  },
 } satisfies Record<string, Field>
