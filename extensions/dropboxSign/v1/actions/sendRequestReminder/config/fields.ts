@@ -1,4 +1,4 @@
-import { type Field, FieldType } from '../../../../../../lib/types'
+import { type Field, FieldType, StringType } from '../../../../../../lib/types'
 
 export const fields = {
   signatureRequestId: {
@@ -13,6 +13,7 @@ export const fields = {
     label: 'Signer email address',
     description: 'The email address of the signer to send a reminder to.',
     type: FieldType.STRING,
+    stringType: StringType.EMAIL,
     required: true,
   },
 } satisfies Record<string, Field>
