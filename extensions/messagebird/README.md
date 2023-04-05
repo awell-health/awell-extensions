@@ -10,7 +10,7 @@ In order to set up this extension, you will need to provide a MessageBird [API k
 
 ### Send SMS
 
-MessageBird's Programmable SMS API enables you to programmatically send SMS messages from withing a care flow.
+MessageBird's Programmable SMS API enables you to programmatically send SMS messages from within a care flow.
 
 [Read the official documentation](https://developers.messagebird.com/api/sms-messaging/#send-outbound-sms)
 
