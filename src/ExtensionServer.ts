@@ -1,36 +1,36 @@
-import { type FastifyBaseLogger } from 'fastify'
-import { google } from 'googleapis'
 import {
   PubSub,
-  type Topic,
+  type CreateSubscriptionOptions,
   type Message,
   type Subscription,
-  type CreateSubscriptionOptions,
+  type Topic,
 } from '@google-cloud/pubsub'
+import { type FastifyBaseLogger } from 'fastify'
 import { environment } from '../lib/environment'
 import {
+  type NewActivityPayload,
   type OnCompleteCallback,
   type OnErrorCallback,
-  type NewActivityPayload,
 } from '../lib/types'
 import { type Extension } from '../lib/types/Extension'
 
 export class ExtensionServer {
   log: FastifyBaseLogger
-  pubSubClient: PubSub
+  clients: PubSub[]
   activityCreatedTopic: Topic
   activityCompletedTopic: Topic
   subscriptions: Subscription[] = []
 
   constructor({ log }: { log: FastifyBaseLogger }) {
-    this.pubSubClient = new PubSub()
+    const pubSubClient = new PubSub()
     this.log = log
-    this.activityCreatedTopic = this.pubSubClient.topic(
+    this.activityCreatedTopic = pubSubClient.topic(
       environment.EXTENSION_ACTIVITY_CREATED_TOPIC
     )
-    this.activityCompletedTopic = this.pubSubClient.topic(
+    this.activityCompletedTopic = pubSubClient.topic(
       environment.EXTENSION_ACTIVITY_COMPLETED_TOPIC
     )
+    this.clients = [pubSubClient]
   }
 
   async init(): Promise<void> {
@@ -38,7 +38,7 @@ export class ExtensionServer {
       await this.activityCreatedTopic.exists()
     if (!activityCreatedTopicExists) {
       this.log.debug(
-        this.activityCreatedTopic.name,
+        { name: this.activityCreatedTopic.name },
         'Creating activity created topic'
       )
       await this.activityCreatedTopic.create()
@@ -47,23 +47,15 @@ export class ExtensionServer {
       await this.activityCompletedTopic.exists()
     if (!activityCompletedTopicExists) {
       this.log.debug(
-        this.activityCreatedTopic.name,
+        { name: this.activityCompletedTopic.name },
         'Creating activity completed topic'
       )
       await this.activityCompletedTopic.create()
     }
-    // Authorize the google api client to use the pubsub API
-    const auth = new google.auth.GoogleAuth({
-      scopes: [
-        'https://www.googleapis.com/auth/cloud-platform',
-        'https://www.googleapis.com/auth/pubsub',
-      ],
-    })
-    const authClient = await auth.getClient()
-    google.options({ auth: authClient })
   }
 
   async getSubscription(
+    pubSubClient: PubSub,
     topic: Topic | string,
     name: string,
     options?: CreateSubscriptionOptions
@@ -72,7 +64,7 @@ export class ExtensionServer {
       { topic: (topic as Topic).name, subName: name, options },
       'Retrieving custom actions extension subscription'
     )
-    const subscription = this.pubSubClient.subscription(name)
+    const subscription = pubSubClient.subscription(name)
 
     /**
      * There is a strange bug with the `exists` function in the pubsub client
@@ -81,16 +73,17 @@ export class ExtensionServer {
      * Using the google api client instead prevents this from happening.
      */
     const subscriptionExists = async (): Promise<boolean> => {
-      const response = await google
-        .pubsub('v1')
-        .projects.subscriptions.get({ subscription: subscription.name })
-      return response.status === 200
+      const [exists] = await subscription.exists()
+      return exists
     }
     if (await subscriptionExists()) {
       return subscription
     }
-    this.log.debug(subscription, 'Creating new topic subscription')
-    const [newSubscription] = await this.pubSubClient.createSubscription(
+    this.log.debug(
+      { subName: subscription.name },
+      'Creating new topic subscription'
+    )
+    const [newSubscription] = await pubSubClient.createSubscription(
       topic,
       name,
       options
@@ -99,80 +92,95 @@ export class ExtensionServer {
   }
 
   async registerExtension(extension: Extension): Promise<void> {
+    const pubSubClient = new PubSub()
     this.log.info({ key: extension.key }, 'Registering extension')
     await Object.values(extension.actions).reduce(
       async (previousAction, action) => {
         await previousAction
-        const subscription = await this.getSubscription(
-          this.activityCreatedTopic,
-          `${extension.key}-${action.key}`,
-          {
-            filter: `attributes.extension = "${extension.key}" AND attributes.action = "${action.key}"`,
-            enableExactlyOnceDelivery: true,
-          }
-        )
-        this.log.debug(action, 'Configuring extension action subscription')
-        const createOnCompleteCallback = (
-          payload: NewActivityPayload,
-          attributes: Record<string, string>
-        ): OnCompleteCallback => {
-          return async (params = {}) => {
-            const data = Buffer.from(
-              JSON.stringify({
-                activity: payload.activity,
-                resolution: 'success',
-                ...params,
+        try {
+          const subscription = await this.getSubscription(
+            pubSubClient,
+            this.activityCreatedTopic,
+            `${extension.key}-${action.key}`,
+            {
+              filter: `attributes.extension = "${extension.key}" AND attributes.action = "${action.key}"`,
+              enableExactlyOnceDelivery: true,
+            }
+          )
+          this.log.debug(
+            { extension: extension.key, action: action.key },
+            'Configuring extension action subscription'
+          )
+          const createOnCompleteCallback = (
+            payload: NewActivityPayload,
+            attributes: Record<string, string>
+          ): OnCompleteCallback => {
+            return async (params = {}) => {
+              const data = Buffer.from(
+                JSON.stringify({
+                  activity: payload.activity,
+                  resolution: 'success',
+                  ...params,
+                })
+              )
+              await this.activityCompletedTopic.publishMessage({
+                data,
+                attributes,
               })
-            )
-            await this.activityCompletedTopic.publishMessage({
-              data,
-              attributes,
-            })
+            }
           }
-        }
-        const createOnErrorCallback = (
-          payload: NewActivityPayload,
-          attributes: Record<string, string>
-        ): OnErrorCallback => {
-          return async (params = {}) => {
-            const data = Buffer.from(
-              JSON.stringify({
-                activity: payload.activity,
-                resolution: 'failure',
-                ...params,
+          const createOnErrorCallback = (
+            payload: NewActivityPayload,
+            attributes: Record<string, string>
+          ): OnErrorCallback => {
+            return async (params = {}) => {
+              const data = Buffer.from(
+                JSON.stringify({
+                  activity: payload.activity,
+                  resolution: 'failure',
+                  ...params,
+                })
+              )
+              await this.activityCompletedTopic.publishMessage({
+                data,
+                attributes,
               })
-            )
-            await this.activityCompletedTopic.publishMessage({
-              data,
-              attributes,
-            })
+            }
           }
-        }
 
-        const messageHandler = async (message: Message): Promise<void> => {
-          const { attributes } = message
-          const { extension: extensionKey, action: actionKey } = attributes
-          // Extra check on attributes. This mainly serves local testing with the
-          // pub sub emulator as it does not support filtering.
-          if (extensionKey === extension.key && actionKey === action.key) {
-            const payload: NewActivityPayload = JSON.parse(String(message.data))
-            this.log.debug(payload, 'New activity payload received')
-            void action.onActivityCreated(
-              payload,
-              createOnCompleteCallback(payload, attributes),
-              createOnErrorCallback(payload, attributes)
-            )
+          const messageHandler = async (message: Message): Promise<void> => {
+            const { attributes } = message
+            const { extension: extensionKey, action: actionKey } = attributes
+            // Extra check on attributes. This mainly serves local testing with the
+            // pub sub emulator as it does not support filtering.
+            if (extensionKey === extension.key && actionKey === action.key) {
+              const payload: NewActivityPayload = JSON.parse(
+                String(message.data)
+              )
+              this.log.debug(payload, 'New activity payload received')
+              void action.onActivityCreated(
+                payload,
+                createOnCompleteCallback(payload, attributes),
+                createOnErrorCallback(payload, attributes)
+              )
+            }
+            await message.ackWithResponse()
           }
-          await message.ackWithResponse()
+
+          // eslint-disable-next-line @typescript-eslint/no-misused-promises
+          subscription.on('message', messageHandler)
+
+          subscription.on('error', (error) => {
+            this.log.error(error, 'Subscription error')
+          })
+          this.subscriptions.push(subscription)
+        } catch (err) {
+          this.log.fatal(
+            { err, extension: extension.key, action: action.key },
+            'Extension registration failed'
+          )
+          throw err
         }
-
-        // eslint-disable-next-line @typescript-eslint/no-misused-promises
-        subscription.on('message', messageHandler)
-
-        subscription.on('error', (error) => {
-          this.log.error(error, 'Subscription error')
-        })
-        this.subscriptions.push(subscription)
       },
       Promise.resolve()
     )
@@ -187,6 +195,10 @@ export class ExtensionServer {
         'Closing subscription'
       )
       await subscription.close()
+    }, Promise.resolve())
+    await this.clients.reduce(async (close, client) => {
+      await close
+      await client.close()
     }, Promise.resolve())
   }
 }
