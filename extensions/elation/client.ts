@@ -4,15 +4,15 @@ import {
   type DataWrapperCtor,
 } from '../../lib/shared/client'
 import { type Find } from './types/generic'
-import { type CreateUpdatePatient, type Patient } from './types/patient'
+import { type PatientInput, type PatientResponse } from './types/patient'
 import {
   type Subscription,
   type SubscriptionRequest,
 } from './types/subscription'
 
 export class ElationDataWrapper extends DataWrapper {
-  public async getPatient(id: number): Promise<Patient> {
-    const req = this.Request<Patient>({
+  public async getPatient(id: number): Promise<PatientResponse> {
+    const req = this.Request<PatientResponse>({
       method: 'GET',
       url: `/patients/${id}`,
     })
@@ -21,9 +21,9 @@ export class ElationDataWrapper extends DataWrapper {
   }
 
   public async createPatient(
-    obj: Partial<CreateUpdatePatient>
-  ): Promise<Patient> {
-    const req = this.Request<Patient>({
+    obj: Partial<PatientInput>
+  ): Promise<PatientResponse> {
+    const req = this.Request<PatientResponse>({
       method: 'POST',
       url: `/patients`,
       data: obj,
@@ -34,9 +34,9 @@ export class ElationDataWrapper extends DataWrapper {
 
   public async updatePatient(
     id: number,
-    obj: Partial<CreateUpdatePatient>
-  ): Promise<Patient> {
-    const req = this.Request<Patient>({
+    obj: Partial<PatientInput>
+  ): Promise<PatientResponse> {
+    const req = this.Request<PatientResponse>({
       method: 'PUT',
       url: `/patients/${id}`,
       data: obj,
@@ -81,20 +81,20 @@ export const makeDataWrapper: DataWrapperCtor<ElationDataWrapper> = (
 ) => new ElationDataWrapper(token, baseUrl)
 
 export class ElationAPIClient extends APIClient<ElationDataWrapper> {
-  public async getPatient(id: number): Promise<Patient> {
+  public async getPatient(id: number): Promise<PatientResponse> {
     return await this.FetchData(async (dw) => await dw.getPatient(id))
   }
 
   public async createPatient(
-    obj: Partial<CreateUpdatePatient>
-  ): Promise<Patient> {
+    obj: Partial<PatientInput>
+  ): Promise<PatientResponse> {
     return await this.FetchData(async (dw) => await dw.createPatient(obj))
   }
 
   public async updatePatient(
     id: number,
-    obj: Partial<CreateUpdatePatient>
-  ): Promise<Patient> {
+    obj: Partial<PatientInput>
+  ): Promise<PatientResponse> {
     return await this.FetchData(async (dw) => await dw.updatePatient(id, obj))
   }
 
