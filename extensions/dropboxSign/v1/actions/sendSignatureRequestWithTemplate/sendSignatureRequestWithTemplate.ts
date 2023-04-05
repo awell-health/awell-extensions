@@ -5,6 +5,7 @@ import { type settings } from '../../../settings'
 import { isEmpty, isNil } from 'lodash'
 import DropboxSignSdk from '../../../common/sdk/dropboxSignSdk'
 import { isInTestMode } from '../../../common/utils'
+import { HttpError } from '@dropbox/sign'
 
 export const sendSignatureRequestWithTemplate: Action<
   typeof fields,
@@ -139,6 +140,28 @@ export const sendSignatureRequestWithTemplate: Action<
         },
       })
     } catch (err) {
+      if (err instanceof HttpError) {
+        const sdkErrorMessage = err.body?.error?.errorMsg
+
+        await onError({
+          events: [
+            {
+              date: new Date().toISOString(),
+              text: {
+                en: err.name,
+              },
+              error: {
+                category: 'SERVER_ERROR',
+                message: `${String(err?.statusCode)}: ${String(
+                  sdkErrorMessage
+                )}`,
+              },
+            },
+          ],
+        })
+        return
+      }
+
       const error = err as Error
       await onError({
         events: [

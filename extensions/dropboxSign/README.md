@@ -26,7 +26,10 @@ Returns the SignatureRequest specified by the signature request id parameter.
 
 Sends an email to the signer reminding them to sign the signature request. You cannot send a reminder within 1 hour of the last reminder that was sent. This includes manual AND automatic reminders.
 
-**NOTE:** This action can not be used with embedded signature requests.
+**Important:**
+
+- The email address specified to send the reminder to needs to be an email address of an actual signer linked to the signature request. If not, the action will fail.
+- This action can not be used with embedded signature requests.
 
 ### Cancel signature request
 

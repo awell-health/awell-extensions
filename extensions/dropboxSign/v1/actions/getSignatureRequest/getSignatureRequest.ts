@@ -4,6 +4,7 @@ import { Category } from '../../../../../lib/types/marketplace'
 import { type settings } from '../../../settings'
 import { isNil } from 'lodash'
 import DropboxSignSdk from '../../../common/sdk/dropboxSignSdk'
+import { HttpError } from '@dropbox/sign'
 
 export const getSignatureRequest: Action<typeof fields, typeof settings> = {
   key: 'getSignatureRequest',
@@ -83,6 +84,28 @@ export const getSignatureRequest: Action<typeof fields, typeof settings> = {
         },
       })
     } catch (err) {
+      if (err instanceof HttpError) {
+        const sdkErrorMessage = err.body?.error?.errorMsg
+
+        await onError({
+          events: [
+            {
+              date: new Date().toISOString(),
+              text: {
+                en: err.name,
+              },
+              error: {
+                category: 'SERVER_ERROR',
+                message: `${String(err?.statusCode)}: ${String(
+                  sdkErrorMessage
+                )}`,
+              },
+            },
+          ],
+        })
+        return
+      }
+
       const error = err as Error
       await onError({
         events: [
