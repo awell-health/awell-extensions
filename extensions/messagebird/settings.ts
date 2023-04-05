@@ -13,8 +13,8 @@ export const settings = {
     label: 'Report URL',
     key: 'reportUrl',
     obfuscated: false,
-    required: true,
+    required: false,
     description:
-      'The URL for delivery of status reports for the message. Must be HTTPS.',
+      'The URL for delivery of status reports for messages. Must be HTTPS.',
   },
 } satisfies Record<string, Setting>

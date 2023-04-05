@@ -1,10 +1,6 @@
-import { type Extension } from '@/types'
-import { AuthorType, Category } from '@/types/marketplace'
-import {
-  sendWhatsAppMessage,
-  sendSms,
-  sendTextToSpeechMessage,
-} from './v1/actions'
+import { type Extension } from '../../lib/types'
+import { AuthorType, Category } from '../../lib/types/marketplace'
+import { sendWhatsAppMessage, sendSms, sendVoiceMessage } from './v1/actions'
 import { settings } from './settings'
 
 export const MessageBird: Extension = {
@@ -20,7 +16,7 @@ export const MessageBird: Extension = {
   actions: {
     sendSms,
     sendWhatsAppMessage,
-    sendTextToSpeechMessage,
+    sendVoiceMessage,
   },
   settings,
 }
