@@ -8,11 +8,14 @@ import {
   type emailSchema
 } from "../validation/patient.zod"
 
-export type CreateUpdatePatient = z.infer<typeof patientSchema>
+export type PatientInput = z.infer<typeof patientSchema>
 
-export interface Patient extends Omit<CreateUpdatePatient, 'dob'> {
+/**
+ * There is a difference between `input` and `output` objects in Elation,
+ * some fields are readonly (not in input), some have different structure
+ */
+export interface PatientResponse extends PatientInput {
   id: number
-  dob: string
   primary_care_provider?: number | null
   phones?: Phone[]
   emails?: Email[]
@@ -30,10 +33,12 @@ interface Phone extends z.infer<typeof phoneSchema> {
   created_date: string
   deleted_date?: string | null
 }
+
 interface Email extends z.infer<typeof emailSchema> {
   created_date: string
   deleted_date?: string | null
 }
+
 interface Guarantor extends z.infer<typeof guarantorSchema> {
   id: number
 }
@@ -48,6 +53,7 @@ interface Insurance extends z.infer<typeof insuranceSchema> {
 interface PatientStatus extends z.infer<typeof patientStatusSchema> {
   last_status_change?: string | null
 }
+
 interface Consent {
   consented: boolean
   last_modified_date: string

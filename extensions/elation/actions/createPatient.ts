@@ -96,7 +96,7 @@ const fields = {
   ssn: {
     id: "ssn",
     label: "SSN",
-    description: "Social Security number. An integer with 9 digits",
+    description: "Social Security number. A number with 9 digits",
     type: FieldType.STRING
   },
   ethnicity: {
@@ -164,9 +164,7 @@ export const createPatient: Action<
 
       // API Call should produce AuthError or something dif.
       const api = new ElationAPIClient({
-        auth: {
-          ...settings,
-        },
+        auth: settings,
         baseUrl: base_url,
         makeDataWrapper,
       })
@@ -185,7 +183,7 @@ export const createPatient: Action<
               date: new Date().toISOString(),
               text: { en: error.message },
               error: {
-                category: 'BAD_REQUEST',
+                category: 'WRONG_INPUT',
                 message: error.message,
               },
             },

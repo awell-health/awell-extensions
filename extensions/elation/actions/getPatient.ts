@@ -121,9 +121,7 @@ export const getPatient: Action<
 
       // API Call should produce AuthError or something dif.
       const api = new ElationAPIClient({
-        auth: {
-          ...settings,
-        },
+        auth: settings,
         baseUrl: base_url,
         makeDataWrapper,
       })
@@ -160,7 +158,7 @@ export const getPatient: Action<
               date: new Date().toISOString(),
               text: { en: error.message },
               error: {
-                category: 'BAD_REQUEST',
+                category: 'WRONG_INPUT',
                 message: error.message,
               },
             },

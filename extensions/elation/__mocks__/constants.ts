@@ -1,6 +1,6 @@
-import { type CreateUpdatePatient } from "../types/patient";
+import { type PatientInput } from "../types/patient";
 
-export const patientExample: CreateUpdatePatient = {
+export const patientExample: PatientInput = {
     first_name: "Test",
     middle_name: "P",
     last_name: "Action",

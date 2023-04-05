@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { formatISO } from 'date-fns'
 
 export const numberId = z.coerce
     .number({
@@ -14,4 +15,4 @@ export const stringDate = z.coerce
             message: 'Requires date in valid format (YYYY-MM-DD)',
         }),
     })
-    .transform(arg => arg.toISOString().slice(0, 10))
+    .transform(arg => formatISO(arg, { representation: 'date' }))
