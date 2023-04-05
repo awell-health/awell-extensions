@@ -4,7 +4,7 @@ import { Category } from '../../../../../lib/types/marketplace'
 import { type settings } from '../../../settings'
 import { isEmpty, isNil } from 'lodash'
 import messagebirdSdk from '../../../common/sdk/messagebirdSdk'
-import { type voice, type languages } from 'messagebird/types/voice_messages'
+import { getVoice, getVoiceLanguage } from '../../../common/utils'
 
 export const sendVoiceMessage: Action<typeof fields, typeof settings> = {
   key: 'sendVoiceMessage',
@@ -59,8 +59,8 @@ export const sendVoiceMessage: Action<typeof fields, typeof settings> = {
         {
           recipients: [String(recipient)],
           body: String(body),
-          language: language as languages,
-          voice: voice as voice,
+          language: getVoiceLanguage(language),
+          voice: getVoice(voice),
           originator,
         },
         function (error, response) {
