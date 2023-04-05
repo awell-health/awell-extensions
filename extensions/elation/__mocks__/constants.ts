@@ -1,4 +1,4 @@
-import { type CreateUpdateAppointment } from '../types/appointment'
+import { type AppointmentInput } from '../types/appointment'
 import { type PatientInput } from '../types/patient'
 
 export const patientExample: PatientInput = {
@@ -23,7 +23,7 @@ export const patientExample: PatientInput = {
   previous_last_name: '',
 }
 
-export const appointmentExample: CreateUpdateAppointment = {
+export const appointmentExample: AppointmentInput = {
   scheduled_date: '2016-10-13T11:15:00Z',
   duration: 15,
   reason: 'Follow-Up',

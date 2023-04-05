@@ -1,9 +1,14 @@
 import { type z } from 'zod'
 import { type statusSchema, type appointmentSchema } from "../validation/appointment.zod";
 
-export type CreateUpdateAppointment = z.infer<typeof appointmentSchema>
+export type AppointmentInput = z.infer<typeof appointmentSchema>
 
-export interface Appointment extends Omit<CreateUpdateAppointment, 'service_location'> {
+/**
+ * There is a difference between `input` and `output` objects in Elation,
+ * some fields are readonly (not in input), some have different structure.
+ * `service_location` is omitted and re-declared due to type difference
+ */
+export interface AppointmentResponse extends Omit<AppointmentInput, 'service_location'> {
     id: number
     time_slot_type: string
     time_slot_status: string

@@ -102,9 +102,7 @@ export const createAppointment: Action<
 
       // API Call should produce AuthError or something dif.
       const api = new ElationAPIClient({
-        auth: {
-          ...settings,
-        },
+        auth: settings,
         baseUrl: base_url,
         makeDataWrapper,
       })
