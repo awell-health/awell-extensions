@@ -56,7 +56,6 @@ describe('Cancel signature request action', () => {
           subject: 'A subject',
           message: 'A message',
           signingRedirectUrl: 'https://developers.hellosign.com/',
-          customFields: undefined,
         },
         settings: {
           apiKey: 'apiKey',
