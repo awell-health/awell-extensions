@@ -4,6 +4,7 @@ import { Category } from '../../../../../lib/types/marketplace'
 import { type settings } from '../../../settings'
 import { isEmpty, isNil } from 'lodash'
 import DropboxSignSdk from '../../../common/sdk/dropboxSignSdk'
+import { isInTestMode } from '../../../common/utils'
 
 export const sendSignatureRequestWithTemplate: Action<
   typeof fields,
@@ -31,7 +32,7 @@ export const sendSignatureRequestWithTemplate: Action<
         signingRedirectUrl,
         customFields,
       },
-      settings: { apiKey },
+      settings: { apiKey, testMode },
     } = payload
 
     try {
@@ -117,8 +118,9 @@ export const sendSignatureRequestWithTemplate: Action<
         signers: [signer],
         title,
         signingRedirectUrl,
-        customFields,
+        customFields: customFields ?? [],
         signingOptions: defaultSigningOptions,
+        testMode: isInTestMode(String(testMode)),
         metadata: {
           awellPatientId: patientId,
           awellActivityId: activityId,

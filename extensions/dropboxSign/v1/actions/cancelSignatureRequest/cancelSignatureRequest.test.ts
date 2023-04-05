@@ -43,6 +43,7 @@ describe('Cancel signature request action', () => {
         settings: {
           apiKey: 'apiKey',
           clientId: 'client-id',
+          testMode: 'yes',
         },
       },
       onComplete,

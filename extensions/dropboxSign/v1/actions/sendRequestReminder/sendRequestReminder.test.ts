@@ -51,6 +51,7 @@ describe('Send request reminder action', () => {
         settings: {
           apiKey: 'apiKey',
           clientId: 'client-id',
+          testMode: 'yes',
         },
       },
       onComplete,
