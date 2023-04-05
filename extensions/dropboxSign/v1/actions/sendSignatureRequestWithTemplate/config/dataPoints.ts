@@ -1,4 +1,4 @@
-import { type DataPointDefinition } from '@/lib/types'
+import { type DataPointDefinition } from '../../../../../../lib/types'
 
 export const dataPoints = {
   signatureRequestId: {

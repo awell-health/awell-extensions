@@ -1,9 +1,10 @@
-import { type Action } from '@/types'
+import { type Action } from '../../../../../lib/types'
 import { fields } from './config'
-import { Category } from '@/types/marketplace'
-import { type settings } from '@/extensions/dropboxSign/settings'
+import { Category } from '../../../../../lib/types/marketplace'
+import { type settings } from '../../../settings'
 import { isEmpty, isNil } from 'lodash'
-import DropboxSignSdk from '@/extensions/dropboxSign/common/sdk/dropboxSignSdk'
+import DropboxSignSdk from '../../../common/sdk/dropboxSignSdk'
+import { HttpError } from '@dropbox/sign'
 
 export const sendRequestReminder: Action<typeof fields, typeof settings> = {
   key: 'sendRequestReminder',
@@ -12,6 +13,7 @@ export const sendRequestReminder: Action<typeof fields, typeof settings> = {
     'Sends an email to the signer reminding them to sign the signature request. You cannot send a reminder within 1 hour of the last reminder that was sent. This includes manual AND automatic reminders.',
   category: Category.DOCUMENT_MANAGEMENT,
   fields,
+  previewable: true,
   onActivityCreated: async (payload, onComplete, onError) => {
     const {
       fields: { signatureRequestId, signerEmailAddress },
@@ -59,49 +61,39 @@ export const sendRequestReminder: Action<typeof fields, typeof settings> = {
       const signatureRequestApi = new DropboxSignSdk.SignatureRequestApi()
       signatureRequestApi.username = apiKey
 
-      if (signatureRequestApi !== undefined) {
-        const data: DropboxSignSdk.SignatureRequestRemindRequest = {
-          emailAddress: String(signerEmailAddress),
-        }
+      const data: DropboxSignSdk.SignatureRequestRemindRequest = {
+        emailAddress: String(signerEmailAddress),
+      }
 
-        const result = signatureRequestApi.signatureRequestRemind(
-          String(signatureRequestId),
-          data
-        )
+      await signatureRequestApi.signatureRequestRemind(
+        String(signatureRequestId),
+        data
+      )
 
-        result
-          .then(async (response) => {
-            await onComplete()
-          })
-          .catch(async (error) => {
-            await onError({
-              events: [
-                {
-                  date: new Date().toISOString(),
-                  text: { en: 'Exception when calling Dropbox Sign API' },
-                  error: {
-                    category: 'SERVER_ERROR',
-                    message: error.message,
-                  },
-                },
-              ],
-            })
-          })
-      } else {
+      await onComplete()
+    } catch (err) {
+      if (err instanceof HttpError) {
+        const sdkErrorMessage = err.body?.error?.errorMsg
+
         await onError({
           events: [
             {
               date: new Date().toISOString(),
-              text: { en: 'Failed to initialize Dropbox Sign SDK.' },
+              text: {
+                en: err.name,
+              },
               error: {
-                category: 'SDK_ERROR',
-                message: 'Failed to initialize Dropbox Sign SDK.',
+                category: 'SERVER_ERROR',
+                message: `${String(err?.statusCode)}: ${String(
+                  sdkErrorMessage
+                )}`,
               },
             },
           ],
         })
+        return
       }
-    } catch (err) {
+
       const error = err as Error
       await onError({
         events: [

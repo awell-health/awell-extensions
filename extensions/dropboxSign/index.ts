@@ -1,5 +1,5 @@
-import { type Extension } from '@/types'
-import { AuthorType, Category } from '@/types/marketplace'
+import { type Extension } from '../../lib/types'
+import { AuthorType, Category } from '../../lib/types/marketplace'
 import {
   sendSignatureRequestWithTemplate,
   sendRequestReminder,

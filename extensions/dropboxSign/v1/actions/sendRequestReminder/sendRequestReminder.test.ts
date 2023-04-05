@@ -51,11 +51,13 @@ describe('Send request reminder action', () => {
         settings: {
           apiKey: 'apiKey',
           clientId: 'client-id',
+          testMode: 'yes',
         },
       },
       onComplete,
       jest.fn()
     )
+
     expect(mockFn).toHaveBeenCalled()
     expect(onComplete).toHaveBeenCalled()
     expect(onError).not.toHaveBeenCalled()
