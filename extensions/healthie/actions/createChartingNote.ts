@@ -114,7 +114,7 @@ export const createChartingNote: Action<
                 date: new Date().toISOString(),
                 text: { en: "Form doesn't have a question of type \"textarea\" (long text)." },
                 error: {
-                  category: 'SERVER_ERROR',
+                  category: 'WRONG_DATA',
                   message: `Form with id ${form_id}  doesn't have a "textarea" field`,
                 },
               },

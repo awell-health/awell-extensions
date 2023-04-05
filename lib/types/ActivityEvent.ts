@@ -8,6 +8,7 @@ export interface ActivityEvent {
       | 'BAD_REQUEST'
       | 'SERVER_ERROR'
       | 'WRONG_INPUT'
+      | 'WRONG_DATA'
     message: string
   }
 }
