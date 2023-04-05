@@ -13,6 +13,7 @@ export const getSignatureRequest: Action<typeof fields, typeof settings> = {
   category: Category.DOCUMENT_MANAGEMENT,
   fields,
   dataPoints,
+  previewable: true,
   onActivityCreated: async (payload, onComplete, onError) => {
     const {
       fields: { signatureRequestId },

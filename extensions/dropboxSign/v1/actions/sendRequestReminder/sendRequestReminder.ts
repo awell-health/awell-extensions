@@ -12,6 +12,7 @@ export const sendRequestReminder: Action<typeof fields, typeof settings> = {
     'Sends an email to the signer reminding them to sign the signature request. You cannot send a reminder within 1 hour of the last reminder that was sent. This includes manual AND automatic reminders.',
   category: Category.DOCUMENT_MANAGEMENT,
   fields,
+  previewable: true,
   onActivityCreated: async (payload, onComplete, onError) => {
     const {
       fields: { signatureRequestId, signerEmailAddress },
