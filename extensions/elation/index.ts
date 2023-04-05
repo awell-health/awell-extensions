@@ -9,7 +9,7 @@ export const Elation: Extension = {
   title: 'Elation',
   description: 'An elation example.',
   icon_url:
-    'https://www.multivu.com/players/English/8436251-elation-health-4c-medical-group-clinical-engagement-platform/image/ElationHealthlogo_1540425595855-HR.jpg',
+    'https://res.cloudinary.com/da7x4rzl4/image/upload/v1680683235/Awell%20Extensions/elation_favicon.png',
   category: Category.WORKFLOW,
   author: {
     authorType: AuthorType.AWELL,
