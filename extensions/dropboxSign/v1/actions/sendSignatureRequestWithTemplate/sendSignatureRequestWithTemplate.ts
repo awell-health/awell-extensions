@@ -15,6 +15,7 @@ export const sendSignatureRequestWithTemplate: Action<
   category: Category.DOCUMENT_MANAGEMENT,
   fields,
   dataPoints,
+  previewable: true,
   onActivityCreated: async (payload, onComplete, onError) => {
     const {
       patient: { id: patientId },

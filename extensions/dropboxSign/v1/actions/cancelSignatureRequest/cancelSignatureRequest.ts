@@ -12,6 +12,7 @@ export const cancelSignatureRequest: Action<typeof fields, typeof settings> = {
     'Cancels an incomplete signature request. This action is not reversible.',
   category: Category.DOCUMENT_MANAGEMENT,
   fields,
+  previewable: true,
   onActivityCreated: async (payload, onComplete, onError) => {
     const {
       fields: { signatureRequestId },
