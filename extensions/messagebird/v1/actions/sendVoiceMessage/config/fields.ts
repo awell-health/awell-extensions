@@ -6,12 +6,11 @@ export const fields = {
     label:
       'The sender of the message. This can be a telephone number (including country code) or an alphanumeric string.',
     type: FieldType.STRING,
-    stringType: StringType.PHONE,
     required: false,
   },
   recipient: {
     id: 'recipient',
-    label: 'MSISDNS of the recipient.',
+    label: 'The mobile number of the recipient.',
     type: FieldType.STRING,
     stringType: StringType.PHONE,
     required: true,
