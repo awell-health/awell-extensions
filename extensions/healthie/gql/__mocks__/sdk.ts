@@ -126,6 +126,16 @@ export const mockGetSdkReturn = {
       }
     }
   }),
+  deleteTask: jest.fn((args) => {
+    return {
+      data: {}
+    }
+  }),
+  updateTask: jest.fn((args) => {
+    return {
+      data: {}
+    }
+  }),
 }
 
 export const mockGetSdk = (params: any): any => {
