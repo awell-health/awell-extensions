@@ -1,4 +1,4 @@
-import { type Field, FieldType } from '../../../../../../lib/types'
+import { type Field, FieldType, StringType } from '../../../../../../lib/types'
 
 export const fields = {
   signerRole: {
@@ -21,6 +21,7 @@ export const fields = {
     label: 'Signer email address',
     description: 'The email address of the signer.',
     type: FieldType.STRING,
+    stringType: StringType.EMAIL,
     required: true,
   },
   templateId: {
