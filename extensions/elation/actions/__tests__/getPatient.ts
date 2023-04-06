@@ -34,6 +34,7 @@ describe('Simple get patient action', () => {
     expect(onComplete).toBeCalledWith({
       data_points: {
         ...patientExample,
+        mobile_phone: 'undefined',
         primary_physician: String(patientExample.primary_physician),
         caregiver_practice: String(patientExample.caregiver_practice),
       },
