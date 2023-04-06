@@ -1,3 +1,3 @@
-import { onCreatePatient } from './on_create_patient'
+import { onCreatePatient } from './onCreatePatient'
 
 export const webhooks = [onCreatePatient]
