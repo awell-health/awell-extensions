@@ -1,0 +1,12 @@
+mutation deleteTask($id: ID) {
+  deleteTask(input: { id: $id }) {
+    task {
+      id
+    }
+
+    messages {
+      field
+      message
+    }
+  }
+}
