@@ -85,18 +85,18 @@ export const getAppointment: Action<
         baseUrl: base_url,
         makeDataWrapper,
       })
-      const appointmentInfo = await api.getAppointment(appointmentId)
+      const appointment = await api.getAppointment(appointmentId)
       await onComplete({
         data_points: {
-          scheduledDate: appointmentInfo.scheduled_date,
-          reason: appointmentInfo.reason,
-          patientId: String(appointmentInfo.patient),
-          physicianId: String(appointmentInfo.physician),
-          practiceId: String(appointmentInfo.practice),
-          duration: String(appointmentInfo.duration),
-          description: appointmentInfo.description,
-          serviceLocationId: String(appointmentInfo.service_location?.id),
-          telehealthDetails: appointmentInfo.telehealth_details,
+          scheduledDate: appointment.scheduled_date,
+          reason: appointment.reason,
+          patientId: String(appointment.patient),
+          physicianId: String(appointment.physician),
+          practiceId: String(appointment.practice),
+          duration: String(appointment.duration),
+          description: appointment.description,
+          serviceLocationId: String(appointment.service_location?.id),
+          telehealthDetails: appointment.telehealth_details,
         },
       })
     } catch (err) {

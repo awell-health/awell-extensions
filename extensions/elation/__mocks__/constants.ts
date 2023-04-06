@@ -24,14 +24,14 @@ export const patientExample: PatientInput = {
 }
 
 export const appointmentExample: AppointmentInput = {
-  scheduled_date: '2016-10-13T11:15:00Z',
+  scheduled_date: '2023-04-07T10:15:00Z',
   duration: 15,
   reason: 'Follow-Up',
   description: 'follow up to procedure',
-  service_location: 13631735,
+  service_location: undefined,
   telehealth_details: 'video platform',
-  patient: 64058687489,
-  physician: 131074,
-  practice: 65540,
+  patient: 141375220285441,
+  physician: 141127177601026,
+  practice: 141127173275652,
   metadata: null,
 }
