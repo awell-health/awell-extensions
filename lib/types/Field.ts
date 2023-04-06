@@ -4,6 +4,7 @@ export enum FieldType {
   STRING = 'string',
   TEXT = 'text',
   NUMERIC = 'numeric',
+  DATE = 'date',
 }
 
 interface BaseField {
@@ -42,9 +43,15 @@ type TextField = BaseField & {
   type: FieldType.TEXT
 }
 
+type DateField = BaseField & {
+  type: FieldType.DATE
+  value?: string
+}
+
 export type Field =
   | TextField
   | NumericField
   | StringField
   | HtmlField
   | JsonField
+  | DateField
