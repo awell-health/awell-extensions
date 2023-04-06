@@ -10,9 +10,9 @@ export const settings = {
   },
   auth_url: {
     key: 'auth_url',
-    label: 'Password',
+    label: 'Authorization URL',
     obfuscated: false,
-    description: 'URL of Elation authentication endpoint',
+    description: 'Complete URL of Elation authentication endpoint',
     required: true,
   },
   client_id: {
