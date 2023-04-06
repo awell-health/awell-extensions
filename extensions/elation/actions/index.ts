@@ -5,9 +5,9 @@ import { createAppointment } from './createAppointment'
 import { getAppointment } from './getAppointment'
 
 export const actions = {
-    getPatient,
-    createPatient,
-    updatePatient,
-    createAppointment,
-    getAppointment
+  getPatient,
+  createPatient,
+  updatePatient,
+  createAppointment,
+  getAppointment,
 }

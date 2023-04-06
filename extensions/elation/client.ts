@@ -3,7 +3,10 @@ import {
   APIClient,
   type DataWrapperCtor,
 } from '../../lib/shared/client'
-import { type AppointmentResponse, type AppointmentInput } from './types/appointment'
+import {
+  type AppointmentResponse,
+  type AppointmentInput,
+} from './types/appointment'
 import { type Find } from './types/generic'
 import { type PatientInput, type PatientResponse } from './types/patient'
 import {
