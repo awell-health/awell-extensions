@@ -61,6 +61,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["lightship", "npm:7.1.1"],\
             ["lint-staged", "npm:13.1.2"],\
             ["lodash", "npm:4.17.21"],\
+            ["messagebird", "npm:4.0.1"],\
             ["node-fetch", "virtual:94e2650e81a726e7adc8f0f6e639be3d7648493f2f2b84c27eee40ecea9a62ed0532e681c130c39c234a2ad47b19ceeb2d6987857059ffec26dfbe9101153344#npm:2.6.9"],\
             ["pino-pretty", "npm:9.4.0"],\
             ["prettier", "npm:2.8.4"],\
@@ -174,6 +175,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["lightship", "npm:7.1.1"],\
             ["lint-staged", "npm:13.1.2"],\
             ["lodash", "npm:4.17.21"],\
+            ["messagebird", "npm:4.0.1"],\
             ["node-fetch", "virtual:94e2650e81a726e7adc8f0f6e639be3d7648493f2f2b84c27eee40ecea9a62ed0532e681c130c39c234a2ad47b19ceeb2d6987857059ffec26dfbe9101153344#npm:2.6.9"],\
             ["pino-pretty", "npm:9.4.0"],\
             ["prettier", "npm:2.8.4"],\
@@ -9891,6 +9893,18 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],\
           "packagePeers": [\
             "@types/node"\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["messagebird", [\
+        ["npm:4.0.1", {\
+          "packageLocation": "./.yarn/cache/messagebird-npm-4.0.1-ce01c611ef-94f7c70fa1.zip/node_modules/messagebird/",\
+          "packageDependencies": [\
+            ["messagebird", "npm:4.0.1"],\
+            ["jose", "npm:4.13.1"],\
+            ["safe-buffer", "npm:5.2.1"],\
+            ["scmp", "npm:2.1.0"]\
           ],\
           "linkType": "HARD"\
         }]\
