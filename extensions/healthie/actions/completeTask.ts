@@ -1,30 +1,22 @@
 import { isNil } from 'lodash'
 import { mapHealthieToActivityError } from '../errors'
-import {
-  FieldType,
-  type Action,
-  type Field,
-} from '../../../lib/types'
+import { FieldType, type Action, type Field } from '../../../lib/types'
 import { Category } from '../../../lib/types/marketplace'
 import { getSdk } from '../gql/sdk'
 import { initialiseClient } from '../graphqlClient'
 import { type settings } from '../settings'
 
-
 const fields = {
   id: {
     id: 'id',
-    label: 'ID',
+    label: 'Task ID',
     description: 'The id of the task in Healthie',
     type: FieldType.STRING,
     required: true,
   },
 } satisfies Record<string, Field>
 
-export const completeTask: Action<
-  typeof fields,
-  typeof settings
-> = {
+export const completeTask: Action<typeof fields, typeof settings> = {
   key: 'completeTask',
   category: Category.INTEGRATIONS,
   title: 'Complete task',
@@ -48,14 +40,14 @@ export const completeTask: Action<
             },
           ],
         })
-        return;
+        return
       }
 
       const client = initialiseClient(settings)
       if (client !== undefined) {
         const sdk = getSdk(client)
         const { data } = await sdk.updateTask({
-          input: { id, complete: true }
+          input: { id, complete: true },
         })
 
         if (!isNil(data.updateTask?.messages)) {
