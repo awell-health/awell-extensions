@@ -18,7 +18,7 @@ const fields = {
     id: 'appointmentId',
     label: 'Appointment ID',
     description: 'The appointment ID (a number)',
-    type: FieldType.NUMERIC,
+    type: FieldType.STRING,
     required: true,
   },
 } satisfies Record<string, Field>
@@ -26,40 +26,40 @@ const fields = {
 const dataPoints = {
   scheduledDate: {
     key: 'scheduledDate',
-    valueType: 'date'
+    valueType: 'string',
   },
   reason: {
     key: 'reason',
-    valueType: 'string'
+    valueType: 'string',
   },
-  patient: {
-    key: 'patient',
-    valueType: 'number'
+  patientId: {
+    key: 'patientId',
+    valueType: 'string',
   },
-  physician: {
-    key: 'physician',
-    valueType: 'number'
+  physicianId: {
+    key: 'physicianId',
+    valueType: 'string',
   },
-  practice: {
-    key: 'practice',
-    valueType: 'number'
+  practiceId: {
+    key: 'practiceId',
+    valueType: 'string',
   },
   duration: {
     key: 'duration',
-    valueType: 'number'
+    valueType: 'string',
   },
   description: {
     key: 'description',
-    valueType: 'string'
+    valueType: 'string',
   },
   serviceLocationId: {
     key: 'serviceLocationId',
-    valueType: 'number'
+    valueType: 'string',
   },
   telehealthDetails: {
     key: 'telehealthDetails',
-    valueType: 'string'
-  }
+    valueType: 'string',
+  },
 } satisfies Record<string, DataPointDefinition>
 
 export const getAppointment: Action<
@@ -76,7 +76,7 @@ export const getAppointment: Action<
   dataPoints,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
     try {
-      const { base_url, ...settings } = settingsSchema.parse(payload.settings);
+      const { base_url, ...settings } = settingsSchema.parse(payload.settings)
       const appointmentId = numberId.parse(payload.fields.appointmentId)
 
       // API Call should produce AuthError or something dif.
@@ -90,13 +90,13 @@ export const getAppointment: Action<
         data_points: {
           scheduledDate: appointmentInfo.scheduled_date,
           reason: appointmentInfo.reason,
-          patient: String(appointmentInfo.patient),
-          physician: String(appointmentInfo.physician),
-          practice: String(appointmentInfo.practice),
+          patientId: String(appointmentInfo.patient),
+          physicianId: String(appointmentInfo.physician),
+          practiceId: String(appointmentInfo.practice),
           duration: String(appointmentInfo.duration),
           description: appointmentInfo.description,
           serviceLocationId: String(appointmentInfo.service_location?.id),
-          telehealthDetails: appointmentInfo.telehealth_details
+          telehealthDetails: appointmentInfo.telehealth_details,
         },
       })
     } catch (err) {
@@ -124,8 +124,9 @@ export const getAppointment: Action<
               },
               error: {
                 category: 'BAD_REQUEST',
-                message: `${err.status ?? '(no status code)'} Error: ${err.message
-                  }`,
+                message: `${err.status ?? '(no status code)'} Error: ${
+                  err.message
+                }`,
               },
             },
           ],

@@ -22,7 +22,7 @@ describe('Simple create appointment action', () => {
     await createAppointment.onActivityCreated(
       {
         fields: {
-          ...appointmentExample
+          ...appointmentExample,
         },
         settings,
       } as any,
@@ -31,8 +31,8 @@ describe('Simple create appointment action', () => {
     )
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
-        appointmentId: '1'
-      }
+        appointmentId: '1',
+      },
     })
   })
 })

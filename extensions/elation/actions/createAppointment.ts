@@ -20,41 +20,43 @@ const fields = {
     label: 'Scheduled date',
     description: 'Datetime (ISO8601).',
     type: FieldType.STRING,
-    required: true
+    required: true,
   },
   reason: {
     id: 'reason',
     label: 'Reason',
-    description: 'Should not be free-text. The values are mapped to "appointment types" in the EMR. Maximum length of 50 characters.',
+    description:
+      'Should not be free-text. The values are mapped to "appointment types" in the EMR. Maximum length of 50 characters.',
     type: FieldType.STRING,
-    required: true
+    required: true,
   },
   patient: {
     id: 'patient',
     label: 'Patient',
     description: 'Patient ID',
-    type: FieldType.NUMERIC,
-    required: true
+    type: FieldType.STRING,
+    required: true,
   },
   physician: {
     id: 'physician',
     label: 'Physician',
     description: 'Physician ID',
-    type: FieldType.NUMERIC,
-    required: true
+    type: FieldType.STRING,
+    required: true,
   },
   practice: {
     id: 'practice',
     label: 'Practice',
     description: 'Practice ID',
-    type: FieldType.NUMERIC,
-    required: true
+    type: FieldType.STRING,
+    required: true,
   },
   duration: {
     id: 'duration',
     label: 'Duration',
-    description: 'Number (in minutes). Must be a multiple of 5 and between 1 to 1440.',
-    type: FieldType.NUMERIC,
+    description:
+      'Number (in minutes). Must be a multiple of 5 and between 1 to 1440.',
+    type: FieldType.STRING,
   },
   description: {
     id: 'description',
@@ -66,7 +68,7 @@ const fields = {
     id: 'service_location',
     label: 'Service location',
     description: 'Service location ID',
-    type: FieldType.NUMERIC,
+    type: FieldType.STRING,
   },
   telehealth_details: {
     id: 'telehealth_details',
@@ -97,7 +99,7 @@ export const createAppointment: Action<
   dataPoints,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
     try {
-      const { base_url, ...settings } = settingsSchema.parse(payload.settings);
+      const { base_url, ...settings } = settingsSchema.parse(payload.settings)
       const appointment = appointmentSchema.parse(payload.fields)
 
       // API Call should produce AuthError or something dif.
@@ -109,8 +111,8 @@ export const createAppointment: Action<
       const { id } = await api.createAppointment(appointment)
       await onComplete({
         data_points: {
-          appointmentId: String(id)
-        }
+          appointmentId: String(id),
+        },
       })
     } catch (err) {
       if (err instanceof ZodError) {
@@ -137,8 +139,9 @@ export const createAppointment: Action<
               },
               error: {
                 category: 'BAD_REQUEST',
-                message: `${err.status ?? '(no status code)'} Error: ${err.message
-                  }`,
+                message: `${err.status ?? '(no status code)'} Error: ${
+                  err.message
+                }`,
               },
             },
           ],

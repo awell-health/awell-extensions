@@ -29,16 +29,26 @@ describe('Simple get appointment action', () => {
       onComplete,
       jest.fn()
     )
-    const { patient, physician, practice, duration, service_location, scheduled_date, telehealth_details, metadata, ...appointmentFields } = appointmentExample;
+    const {
+      patient,
+      physician,
+      practice,
+      duration,
+      service_location,
+      scheduled_date,
+      telehealth_details,
+      metadata,
+      ...appointmentFields
+    } = appointmentExample
     expect(onComplete).toHaveBeenCalled()
     expect(onComplete).toBeCalledWith({
       data_points: {
         ...appointmentFields,
         scheduledDate: scheduled_date,
         telehealthDetails: telehealth_details,
-        patient: String(patient),
-        physician: String(physician),
-        practice: String(practice),
+        patientId: String(patient),
+        physicianId: String(physician),
+        practiceId: String(practice),
         duration: String(duration),
         serviceLocationId: String(service_location),
       },
