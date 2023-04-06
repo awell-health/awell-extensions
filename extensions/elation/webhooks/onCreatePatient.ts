@@ -1,6 +1,6 @@
 import { type DataPointDefinition, type Webhook } from '../../../lib/types'
 import { type SubscriptionEvent } from '../types/subscription'
-// not going to use these right now
+
 const dataPoints = {
   patientId: {
     key: 'patientId',
@@ -14,10 +14,9 @@ export const onCreatePatient: Webhook<
 > = {
   key: 'onCreatePatient',
   dataPoints,
-  onWebhookReceived: async (evt) => {
-    console.log(evt)
+  onWebhookReceived: async ({ data }) => {
     return {
-      data_points: { patientId: String(evt.data.id) },
+      data_points: { patientId: String(data.id) },
     }
   },
 }
