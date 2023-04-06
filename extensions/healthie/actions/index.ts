@@ -14,6 +14,8 @@ import { archivePatient } from './archivePatient'
 import { closeChatConversation } from './closeChatConversation'
 import { deleteAppointment } from './deleteAppointment'
 import { cancelAppointment } from './cancelAppointment'
+import { deleteTask } from './deleteTask'
+import { completeTask } from './completeTask'
 
 export const actions = {
   createAppointment,
@@ -40,5 +42,7 @@ export const actions = {
    *  Specs of this API endpoint are unclear so we are not sure what
    *  functional value it delivers in the current state. Needs to be revisited.
    **/
-  // createJournalEntry
+  // createJournalEntry,
+  deleteTask,
+  completeTask,
 }

@@ -867,6 +867,7 @@ export type AppointmentTypeAppointmentSettingInput = {
   allow_clients_to_cancel_appt?: InputMaybe<Scalars['Boolean']>;
   allow_clients_to_reschedule_appt?: InputMaybe<Scalars['Boolean']>;
   allow_past_appointment_rescheduling?: InputMaybe<Scalars['Boolean']>;
+  allow_specific_provider_pricing?: InputMaybe<Scalars['Boolean']>;
   appointment_type_reminder_override?: InputMaybe<Scalars['Boolean']>;
   booking_interval_restriction?: InputMaybe<Scalars['Int']>;
   buffer?: InputMaybe<Scalars['String']>;
@@ -7734,6 +7735,8 @@ export type OrganizationMembership = {
   notify_on_book?: Maybe<Scalars['Boolean']>;
   /** If true the user is notified when any appontment is cancelled within the org */
   notify_on_cancel?: Maybe<Scalars['Boolean']>;
+  /** if true, the user should get an email notification whenever a client payment fails or there is a chargeback. */
+  notify_on_payment_failure?: Maybe<Scalars['Boolean']>;
   /** The organization role */
   org_role?: Maybe<Scalars['String']>;
   /** If true, the user will see all org billing, not just individual */
@@ -13632,6 +13635,8 @@ export type UserPolicyInput = {
   insurance_plan_id?: InputMaybe<Scalars['String']>;
   name?: InputMaybe<Scalars['String']>;
   num?: InputMaybe<Scalars['String']>;
+  /** ID of related intake flow item which this policy was created for. Usually it is Insurance Form. Email notification will be triggered if this field is passed */
+  onboarding_item_id?: InputMaybe<Scalars['ID']>;
   payer_location?: InputMaybe<ClientLocationInput>;
   policy_phone_number?: InputMaybe<Scalars['String']>;
   priority_type?: InputMaybe<Scalars['String']>;
@@ -18122,12 +18127,14 @@ export type SignInPayload = {
 export type SignUpInput = {
   /** A unique identifier for the client performing the mutation. */
   clientMutationId?: InputMaybe<Scalars['String']>;
+  /** The ID of the provider to create a patient for. Required if signing up as a patient and invite_code is not present */
   dietitian_id?: InputMaybe<Scalars['String']>;
   email?: InputMaybe<Scalars['String']>;
   exploring_healthie_reason?: InputMaybe<Scalars['String']>;
   exploring_healthie_reason_other?: InputMaybe<Scalars['String']>;
   first_name?: InputMaybe<Scalars['String']>;
   first_url?: InputMaybe<Scalars['String']>;
+  /** Required if signing up as a patient and dietitian_id is not present */
   invite_code?: InputMaybe<Scalars['String']>;
   last_name?: InputMaybe<Scalars['String']>;
   legal_name?: InputMaybe<Scalars['String']>;
@@ -20065,6 +20072,7 @@ export type UpdateOrganizationMembershipInput = {
   notify_any_client_activity?: InputMaybe<Scalars['Boolean']>;
   notify_on_book?: InputMaybe<Scalars['Boolean']>;
   notify_on_cancel?: InputMaybe<Scalars['Boolean']>;
+  notify_on_payment_failure?: InputMaybe<Scalars['Boolean']>;
   /** Options are ["Standard", "Support"] */
   org_role?: InputMaybe<Scalars['String']>;
   phone_number?: InputMaybe<Scalars['String']>;
@@ -20859,6 +20867,13 @@ export type DeleteAppointmentMutationVariables = Exact<{
 
 export type DeleteAppointmentMutation = { __typename?: 'Mutation', deleteAppointment?: { __typename?: 'deleteAppointmentPayload', appointment?: { __typename?: 'Appointment', id: string } | null, messages?: Array<{ __typename?: 'FieldError', field?: string | null, message: string } | null> | null } | null };
 
+export type DeleteTaskMutationVariables = Exact<{
+  id?: InputMaybe<Scalars['ID']>;
+}>;
+
+
+export type DeleteTaskMutation = { __typename?: 'Mutation', deleteTask?: { __typename?: 'deleteTaskPayload', task?: { __typename?: 'Task', id: string } | null, messages?: Array<{ __typename?: 'FieldError', field?: string | null, message: string } | null> | null } | null };
+
 export type GetAppointmentQueryVariables = Exact<{
   id?: InputMaybe<Scalars['ID']>;
 }>;
@@ -20928,6 +20943,13 @@ export type UpdatePatientMutationVariables = Exact<{
 
 
 export type UpdatePatientMutation = { __typename?: 'Mutation', updateClient?: { __typename?: 'updateClientPayload', user?: { __typename?: 'User', id: string, first_name?: string | null, last_name?: string | null, legal_name?: string | null, email?: string | null } | null, messages?: Array<{ __typename?: 'FieldError', field?: string | null, message: string } | null> | null } | null };
+
+export type UpdateTaskMutationVariables = Exact<{
+  input: UpdateTaskInput;
+}>;
+
+
+export type UpdateTaskMutation = { __typename?: 'Mutation', updateTask?: { __typename?: 'updateTaskPayload', task?: { __typename?: 'Task', id: string } | null, messages?: Array<{ __typename?: 'FieldError', field?: string | null, message: string } | null> | null } | null };
 
 
 export const ApplyTagsToUserDocument = gql`
@@ -21061,6 +21083,19 @@ export const DeleteAppointmentDocument = gql`
     mutation deleteAppointment($id: ID, $deleteRecurring: Boolean) {
   deleteAppointment(input: {id: $id, deleteRecurring: $deleteRecurring}) {
     appointment {
+      id
+    }
+    messages {
+      field
+      message
+    }
+  }
+}
+    `;
+export const DeleteTaskDocument = gql`
+    mutation deleteTask($id: ID) {
+  deleteTask(input: {id: $id}) {
+    task {
       id
     }
     messages {
@@ -21243,6 +21278,19 @@ export const UpdatePatientDocument = gql`
   }
 }
     `;
+export const UpdateTaskDocument = gql`
+    mutation updateTask($input: updateTaskInput!) {
+  updateTask(input: $input) {
+    task {
+      id
+    }
+    messages {
+      field
+      message
+    }
+  }
+}
+    `;
 
 export type SdkFunctionWrapper = <T>(action: (requestHeaders?:Record<string, string>) => Promise<T>, operationName: string, operationType?: string) => Promise<T>;
 
@@ -21258,6 +21306,7 @@ const CreateLocationDocumentString = print(CreateLocationDocument);
 const CreatePatientDocumentString = print(CreatePatientDocument);
 const CreateTaskDocumentString = print(CreateTaskDocument);
 const DeleteAppointmentDocumentString = print(DeleteAppointmentDocument);
+const DeleteTaskDocumentString = print(DeleteTaskDocument);
 const GetAppointmentDocumentString = print(GetAppointmentDocument);
 const GetConversationListDocumentString = print(GetConversationListDocument);
 const GetFormTemplateDocumentString = print(GetFormTemplateDocument);
@@ -21267,6 +21316,7 @@ const SendChatMessageDocumentString = print(SendChatMessageDocument);
 const UpdateAppointmentDocumentString = print(UpdateAppointmentDocument);
 const UpdateConversationDocumentString = print(UpdateConversationDocument);
 const UpdatePatientDocumentString = print(UpdatePatientDocument);
+const UpdateTaskDocumentString = print(UpdateTaskDocument);
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
     applyTagsToUser(variables?: ApplyTagsToUserMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: ApplyTagsToUserMutation; extensions?: any; headers: Dom.Headers; status: number; }> {
@@ -21299,6 +21349,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     deleteAppointment(variables?: DeleteAppointmentMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: DeleteAppointmentMutation; extensions?: any; headers: Dom.Headers; status: number; }> {
         return withWrapper((wrappedRequestHeaders) => client.rawRequest<DeleteAppointmentMutation>(DeleteAppointmentDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'deleteAppointment', 'mutation');
     },
+    deleteTask(variables?: DeleteTaskMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: DeleteTaskMutation; extensions?: any; headers: Dom.Headers; status: number; }> {
+        return withWrapper((wrappedRequestHeaders) => client.rawRequest<DeleteTaskMutation>(DeleteTaskDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'deleteTask', 'mutation');
+    },
     getAppointment(variables?: GetAppointmentQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: GetAppointmentQuery; extensions?: any; headers: Dom.Headers; status: number; }> {
         return withWrapper((wrappedRequestHeaders) => client.rawRequest<GetAppointmentQuery>(GetAppointmentDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getAppointment', 'query');
     },
@@ -21325,6 +21378,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     updatePatient(variables: UpdatePatientMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: UpdatePatientMutation; extensions?: any; headers: Dom.Headers; status: number; }> {
         return withWrapper((wrappedRequestHeaders) => client.rawRequest<UpdatePatientMutation>(UpdatePatientDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'updatePatient', 'mutation');
+    },
+    updateTask(variables: UpdateTaskMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: UpdateTaskMutation; extensions?: any; headers: Dom.Headers; status: number; }> {
+        return withWrapper((wrappedRequestHeaders) => client.rawRequest<UpdateTaskMutation>(UpdateTaskDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'updateTask', 'mutation');
     }
   };
 }
