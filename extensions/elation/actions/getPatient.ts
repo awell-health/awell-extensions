@@ -18,7 +18,7 @@ const fields = {
     id: 'patientId',
     label: 'Patient ID',
     description: 'The patient ID (a number)',
-    type: FieldType.NUMERIC,
+    type: FieldType.STRING,
     required: true,
   },
 } satisfies Record<string, Field>
@@ -26,80 +26,84 @@ const fields = {
 const dataPoints = {
   first_name: {
     key: 'first_name',
-    valueType: 'string'
+    valueType: 'string',
   },
   last_name: {
     key: 'last_name',
-    valueType: 'string'
+    valueType: 'string',
   },
   dob: {
     key: 'dob',
-    valueType: 'date'
+    valueType: 'string',
   },
   sex: {
     key: 'sex',
-    valueType: 'string'
+    valueType: 'string',
   },
   primary_physician: {
     key: 'primary_physician',
-    valueType: 'number'
+    valueType: 'string',
   },
   caregiver_practice: {
     key: 'caregiver_practice',
-    valueType: 'number'
+    valueType: 'string',
+  },
+  mobile_phone: {
+    key: 'mobile_phone',
+    valueType: 'string',
   },
   middle_name: {
     key: 'middle_name',
-    valueType: 'string'
+    valueType: 'string',
   },
   actual_name: {
     key: 'actual_name',
-    valueType: 'string'
+    valueType: 'string',
   },
   gender_identity: {
     key: 'gender_identity',
-    valueType: 'string'
+    valueType: 'string',
   },
   legal_gender_marker: {
     key: 'legal_gender_marker',
-    valueType: 'string'
+    valueType: 'string',
   },
   pronouns: {
     key: 'pronouns',
-    valueType: 'string'
+    valueType: 'string',
   },
   sexual_orientation: {
     key: 'sexual_orientation',
-    valueType: 'string'
+    valueType: 'string',
   },
   ssn: {
     key: 'ssn',
-    valueType: 'string'
+    valueType: 'string',
   },
   ethnicity: {
     key: 'ethnicity',
-    valueType: 'string'
+    valueType: 'string',
   },
   race: {
     key: 'race',
-    valueType: 'string'
+    valueType: 'string',
   },
   preferred_language: {
     key: 'preferred_language',
-    valueType: 'string'
+    valueType: 'string',
   },
   notes: {
     key: 'notes',
-    valueType: 'string'
+    valueType: 'string',
   },
   previous_first_name: {
     key: 'previous_first_name',
-    valueType: 'string'
+    valueType: 'string',
   },
   previous_last_name: {
     key: 'previous_last_name',
-    valueType: 'string'
-  }
+    valueType: 'string',
+  },
 } satisfies Record<string, DataPointDefinition>
 
 export const getPatient: Action<
@@ -116,13 +120,15 @@ export const getPatient: Action<
   dataPoints,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
     try {
-      const { base_url, ...settings } = settingsSchema.parse(payload.settings);
+      const { base_url: baseUrl, ...auth } = settingsSchema.parse(
+        payload.settings
+      )
       const patientId = numberId.parse(payload.fields.patientId)
 
       // API Call should produce AuthError or something dif.
       const api = new ElationAPIClient({
-        auth: settings,
-        baseUrl: base_url,
+        auth,
+        baseUrl,
         makeDataWrapper,
       })
       const patientInfo = await api.getPatient(patientId)
@@ -134,6 +140,9 @@ export const getPatient: Action<
           sex: patientInfo.sex,
           primary_physician: String(patientInfo.primary_physician),
           caregiver_practice: String(patientInfo.caregiver_practice),
+          mobile_phone: String(
+            patientInfo.phones?.find((p) => p.phone_type === 'Mobile')?.phone
+          ),
           middle_name: patientInfo.middle_name,
           actual_name: patientInfo.actual_name,
           gender_identity: patientInfo.gender_identity,
@@ -146,7 +155,7 @@ export const getPatient: Action<
           preferred_language: patientInfo.preferred_language,
           notes: patientInfo.notes,
           previous_first_name: patientInfo.previous_first_name,
-          previous_last_name: patientInfo.previous_last_name
+          previous_last_name: patientInfo.previous_last_name,
         },
       })
     } catch (err) {
@@ -174,8 +183,9 @@ export const getPatient: Action<
               },
               error: {
                 category: 'BAD_REQUEST',
-                message: `${err.status ?? '(no status code)'} Error: ${err.message
-                  }`,
+                message: `${err.status ?? '(no status code)'} Error: ${
+                  err.message
+                }`,
               },
             },
           ],

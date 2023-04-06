@@ -5,8 +5,8 @@ import {
   type insuranceSchema,
   type guarantorSchema,
   type phoneSchema,
-  type emailSchema
-} from "../validation/patient.zod"
+  type emailSchema,
+} from '../validation/patient.zod'
 
 export type PatientInput = z.infer<typeof patientSchema>
 
