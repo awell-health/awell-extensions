@@ -28,7 +28,7 @@ export const sendEmailWithTemplate: Action<typeof fields, typeof settings> = {
         url: getApiUrl({ region }),
       })
 
-      await mg.messages.create(String(domain), {
+      await mg.messages.create(domain, {
         from: `${fromName} <${fromEmail}>`,
         to: [to],
         subject,
