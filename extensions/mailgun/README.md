@@ -11,6 +11,7 @@ In order to set up this extension, you will need to provide a:
 1. Mailgun API key
 2. Mailgun domain
 3. From name
+4. From email
 
 ## Custom Actions
 
