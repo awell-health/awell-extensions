@@ -26,7 +26,7 @@ const fields = {
 const dataPoints = {
   scheduledDate: {
     key: 'scheduledDate',
-    valueType: 'string',
+    valueType: 'date',
   },
   reason: {
     key: 'reason',
@@ -108,7 +108,7 @@ export const getAppointment: Action<
               date: new Date().toISOString(),
               text: { en: error.message },
               error: {
-                category: 'BAD_REQUEST',
+                category: 'SERVER_ERROR',
                 message: error.message,
               },
             },
