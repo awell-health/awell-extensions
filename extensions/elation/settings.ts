@@ -25,7 +25,7 @@ export const settings = {
   client_secret: {
     key: 'client_secret',
     label: 'Client Secret',
-    obfuscated: false,
+    obfuscated: true,
     description: 'Client Secret for OAuth2 Password authentication',
     required: true,
   },
