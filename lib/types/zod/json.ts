@@ -1,3 +1,6 @@
+/**
+ * https://github.com/colinhacks/zod/discussions/2215
+ */
 import { z } from 'zod'
 
 const literalSchema = z.union([z.string(), z.number(), z.boolean(), z.null()])
