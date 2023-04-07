@@ -66,8 +66,10 @@ __metadata:
     "@graphql-codegen/typescript-operations": ^3.0.2
     "@graphql-tools/apollo-engine-loader": ^7.3.26
     "@graphql-typed-document-node/core": ^3.1.2
+    "@mailchimp/mailchimp_transactional": ^1.0.50
     "@types/jest": ^29.4.0
     "@types/lodash": ^4.14.191
+    "@types/mailchimp__mailchimp_transactional": ^1.0.5
     "@types/node": ^18.13.0
     "@types/node-fetch": ^2.6.2
     "@types/showdown": ^2.0.0
@@ -2085,6 +2087,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@mailchimp/mailchimp_transactional@npm:^1.0.50":
+  version: 1.0.50
+  resolution: "@mailchimp/mailchimp_transactional@npm:1.0.50"
+  dependencies:
+    axios: ^0.21.1
+  checksum: 5a1f563f18ef71549ca154c6d63b26ee2786e03ba162229f6e2e404766f7d67c90a5d7931b0130d9b99c4cdf5a3796b51851166b5313c104cf195711613636a7
+  languageName: node
+  linkType: hard
+
 "@nodelib/fs.scandir@npm:2.1.5":
   version: 2.1.5
   resolution: "@nodelib/fs.scandir@npm:2.1.5"
@@ -2550,6 +2561,15 @@ __metadata:
   version: 4.0.2
   resolution: "@types/long@npm:4.0.2"
   checksum: d16cde7240d834cf44ba1eaec49e78ae3180e724cd667052b194a372f350d024cba8dd3f37b0864931683dab09ca935d52f0c4c1687178af5ada9fc85b0635f4
+  languageName: node
+  linkType: hard
+
+"@types/mailchimp__mailchimp_transactional@npm:^1.0.5":
+  version: 1.0.5
+  resolution: "@types/mailchimp__mailchimp_transactional@npm:1.0.5"
+  dependencies:
+    axios: ^0.21.1
+  checksum: 2ce6ec1163b1eb393f5a7b5c1bb9ebde7cc21da55fac3c97fff3ec25c672984a3538accedda5bbc2e71119bfd918c44d48fd562ee14cd45060407ace6a771c33
   languageName: node
   linkType: hard
 
@@ -3219,6 +3239,15 @@ __metadata:
     debug: ^4.0.0
     fastq: ^1.6.1
   checksum: 4c96922ea123d13b26cb78a071a8989fde62ee8580352b6d2f05b7976ed3d23efa663c12ee1be35501dfe65e12a769a2ea522bcdb7ca35a5ba4d86766467075a
+  languageName: node
+  linkType: hard
+
+"axios@npm:^0.21.1":
+  version: 0.21.4
+  resolution: "axios@npm:0.21.4"
+  dependencies:
+    follow-redirects: ^1.14.0
+  checksum: 44245f24ac971e7458f3120c92f9d66d1fc695e8b97019139de5b0cc65d9b8104647db01e5f46917728edfc0cfd88eb30fc4c55e6053eef4ace76768ce95ff3c
   languageName: node
   linkType: hard
 
@@ -5175,7 +5204,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"follow-redirects@npm:^1.14.4, follow-redirects@npm:^1.14.8, follow-redirects@npm:^1.15.0":
+"follow-redirects@npm:^1.14.0, follow-redirects@npm:^1.14.4, follow-redirects@npm:^1.14.8, follow-redirects@npm:^1.15.0":
   version: 1.15.2
   resolution: "follow-redirects@npm:1.15.2"
   peerDependenciesMeta:
