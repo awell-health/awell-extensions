@@ -8,7 +8,7 @@ export const fields = {
     description: 'Email address of the recipient.',
     type: FieldType.STRING,
     /**
-     * I am purposely not using the `email` strinType yet.
+     * I am purposely not using the `email` stringType yet.
      * More information here: https://awellhealth.atlassian.net/jira/polaris/projects/AH/ideas/view/548618?selectedIssue=AH-176&issueViewLayout=sidebar&issueViewSection=capture&focusedInsightId=3144292
      */
     // stringType: StringType.EMAIL,
