@@ -1,4 +1,4 @@
-import { startCareFlow } from './v1/actions'
+import { startCareFlow, updatePatient } from './v1/actions'
 import { type Extension } from '../../lib/types'
 import { settings } from './settings'
 import { webhooks } from './v1/webhooks'
@@ -17,6 +17,7 @@ export const Awell: Extension = {
   settings,
   actions: {
     startCareFlow,
+    updatePatient,
   },
   webhooks,
 }

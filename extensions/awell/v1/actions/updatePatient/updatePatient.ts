@@ -6,7 +6,7 @@ import { fromZodError } from 'zod-validation-error'
 import { ZodError } from 'zod'
 import AwellSdk from '../../sdk/awellSdk'
 
-export const startCareFlow: Action<typeof fields, typeof settings> = {
+export const updatePatient: Action<typeof fields, typeof settings> = {
   key: 'startCareFlow',
   category: Category.WORKFLOW,
   title: 'Start care flow',
@@ -16,14 +16,46 @@ export const startCareFlow: Action<typeof fields, typeof settings> = {
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
     try {
       const { apiUrl, apiKey } = validateSettings(payload.settings)
-      const { pathwayDefinitionId } = validateActionFields(payload.fields)
+      const {
+        patientCode,
+        firstName,
+        lastName,
+        birthDate,
+        email,
+        phone,
+        mobilePhone,
+        street,
+        state,
+        country,
+        city,
+        zip,
+        preferredLanguage,
+        sex,
+      } = validateActionFields(payload.fields)
       const { id: patientId } = validatePatientFields(payload.patient)
 
       const sdk = new AwellSdk({ apiUrl, apiKey })
 
-      await sdk.startCareFlow({
+      await sdk.updatePatient({
         patient_id: patientId,
-        pathway_definition_id: pathwayDefinitionId,
+        profile: {
+          patient_code: patientCode,
+          first_name: firstName,
+          last_name: lastName,
+          birth_date: birthDate,
+          email,
+          phone,
+          mobile_phone: mobilePhone,
+          address: {
+            street,
+            state,
+            country,
+            city,
+            zip,
+          },
+          preferred_language: preferredLanguage,
+          sex,
+        },
       })
 
       await onComplete()

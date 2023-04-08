@@ -1,9 +1,9 @@
 import { GraphQLClient } from 'graphql-request'
 import {
-  type CreatePatientPayload,
-  type CreatePatientInput,
   type StartPathwayInput,
   type StartPathwayPayload,
+  type UpdatePatientInput,
+  type UpdatePatientPayload,
 } from '../gql/graphql'
 import { isNil } from 'lodash'
 import { createPatientMutation, startPathwayMutation } from './graphql'
@@ -24,21 +24,10 @@ export default class AwellSdk {
     this.client = client
   }
 
-  async createPatient(input: CreatePatientInput): Promise<string> {
-    const data = await this.client.request<CreatePatientPayload>(
-      createPatientMutation
-    )
-
-    if (data.success && !isNil(data.patient)) {
-      return data.patient.id
-    }
-
-    throw new Error('Patient creation failed')
-  }
-
   async startCareFlow(input: StartPathwayInput): Promise<string> {
     const data = await this.client.request<StartPathwayPayload>(
-      startPathwayMutation
+      startPathwayMutation,
+      input
     )
 
     if (!isNil(data.pathway_id)) {
@@ -46,5 +35,18 @@ export default class AwellSdk {
     }
 
     throw new Error('Start care flow failed.')
+  }
+
+  async updatePatient(input: UpdatePatientInput): Promise<string> {
+    const data = await this.client.request<UpdatePatientPayload>(
+      createPatientMutation,
+      input
+    )
+
+    if (data.success && !isNil(data.patient)) {
+      return data.patient.id
+    }
+
+    throw new Error('Patient update failed')
   }
 }
