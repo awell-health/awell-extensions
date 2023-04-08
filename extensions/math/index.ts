@@ -1,4 +1,4 @@
-import { randomNumber } from './actions'
+import { generateRandomNumber } from './v1/actions'
 import { type Extension } from '../../lib/types'
 import { settings } from './settings'
 import { AuthorType, Category } from '../../lib/types/marketplace'
@@ -16,6 +16,6 @@ export const MathExtension: Extension = {
     authorType: AuthorType.AWELL,
   },
   actions: {
-    randomNumber,
+    generateRandomNumber,
   },
 }
