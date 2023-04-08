@@ -1,18 +1,19 @@
-import { type Field, FieldType } from '../../../../../../lib/types'
 import { z, type ZodTypeAny } from 'zod'
+import { type Field, FieldType } from '../../../../../../lib/types'
 
 export const fields = {
-  signatureRequestId: {
-    id: 'signatureRequestId',
-    label: 'Signature request ID',
-    description: 'The id of the incomplete SignatureRequest to cancel.',
+  signUrl: {
+    id: 'signUrl',
+    label: 'Sign URL',
+    description:
+      'Enter the sign URL generated via the "Create embedded signature request with template" action',
     type: FieldType.STRING,
     required: true,
   },
 } satisfies Record<string, Field>
 
 export const FieldsValidationSchema = z.object({
-  signatureRequestId: z.string(),
+  signUrl: z.string().url(),
 } satisfies Record<keyof typeof fields, ZodTypeAny>)
 
 export const validateActionFields = (
