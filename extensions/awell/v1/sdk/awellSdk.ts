@@ -1,14 +1,27 @@
 import { GraphQLClient } from 'graphql-request'
 import {
+  type UpdateBaselineInfoInput,
   type DeletePatientInput,
   type EmptyPayload,
   type StartPathwayInput,
   type StartPathwayPayload,
   type UpdatePatientInput,
   type UpdatePatientPayload,
+  type DeletePathwayInput,
+  type StopPathwayInput,
+  type CreatePatientInput,
+  type CreatePatientPayload,
 } from '../gql/graphql'
 import { isNil } from 'lodash'
-import { createPatientMutation, startPathwayMutation } from './graphql'
+import {
+  createPatientMutation,
+  deletePathwayMutation,
+  deletePatientMutation,
+  startPathwayMutation,
+  stopPathwayMutation,
+  updateBaselineInfoMutation,
+  updatePatientMutation,
+} from './graphql'
 
 export default class AwellSdk {
   readonly apiUrl: string
@@ -39,8 +52,8 @@ export default class AwellSdk {
     throw new Error('Start care flow failed.')
   }
 
-  async updatePatient(input: UpdatePatientInput): Promise<string> {
-    const data = await this.client.request<UpdatePatientPayload>(
+  async createPatient(input: CreatePatientInput): Promise<string> {
+    const data = await this.client.request<CreatePatientPayload>(
       createPatientMutation,
       input
     )
@@ -49,12 +62,25 @@ export default class AwellSdk {
       return data.patient.id
     }
 
-    throw new Error('Patient update failed')
+    throw new Error('Create patient failed.')
+  }
+
+  async updatePatient(input: UpdatePatientInput): Promise<string> {
+    const data = await this.client.request<UpdatePatientPayload>(
+      updatePatientMutation,
+      input
+    )
+
+    if (data.success && !isNil(data.patient)) {
+      return data.patient.id
+    }
+
+    throw new Error('Update patient failed.')
   }
 
   async deletePatient(input: DeletePatientInput): Promise<boolean> {
     const data = await this.client.request<EmptyPayload>(
-      createPatientMutation,
+      deletePatientMutation,
       input
     )
 
@@ -62,6 +88,45 @@ export default class AwellSdk {
       return true
     }
 
-    throw new Error('Patient update failed')
+    throw new Error('Delete patient failed.')
+  }
+
+  async deletePathway(input: DeletePathwayInput): Promise<boolean> {
+    const data = await this.client.request<EmptyPayload>(
+      deletePathwayMutation,
+      input
+    )
+
+    if (data.success) {
+      return true
+    }
+
+    throw new Error('Delete pathway failed.')
+  }
+
+  async stopPathway(input: StopPathwayInput): Promise<boolean> {
+    const data = await this.client.request<EmptyPayload>(
+      stopPathwayMutation,
+      input
+    )
+
+    if (data.success) {
+      return true
+    }
+
+    throw new Error('Stop pathway failed.')
+  }
+
+  async updateBaselineInfo(input: UpdateBaselineInfoInput): Promise<boolean> {
+    const data = await this.client.request<EmptyPayload>(
+      updateBaselineInfoMutation,
+      input
+    )
+
+    if (data.success) {
+      return true
+    }
+
+    throw new Error('Updating baseline info failed.')
   }
 }
