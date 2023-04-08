@@ -3,6 +3,7 @@ import { z } from 'zod'
 export const ResponseValidationSchema = z.object({
   body: z.object({
     signatureRequest: z.object({
+      signatureRequestId: z.string(),
       signatures: z
         .object({
           signatureId: z.string(),

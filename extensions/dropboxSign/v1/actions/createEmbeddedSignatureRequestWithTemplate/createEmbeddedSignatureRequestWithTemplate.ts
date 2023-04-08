@@ -83,7 +83,7 @@ export const createEmbeddedSignatureRequestWithTemplate: Action<
 
       const {
         body: {
-          signatureRequest: { signatures },
+          signatureRequest: { signatureRequestId, signatures },
         },
       } = validateEmbeddedSignatureRequestResponse(
         embeddedSignatureRequestResponse
@@ -106,6 +106,7 @@ export const createEmbeddedSignatureRequestWithTemplate: Action<
 
       await onComplete({
         data_points: {
+          signatureRequestId,
           signUrl,
           expiresAt,
         },
