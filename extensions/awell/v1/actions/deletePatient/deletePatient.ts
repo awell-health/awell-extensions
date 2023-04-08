@@ -12,7 +12,7 @@ export const deletePatient: Action<typeof fields, typeof settings> = {
   title: 'Delete patient',
   description: 'Delete the patient currently enrolled in the care flow.',
   fields,
-  previewable: true,
+  previewable: false,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
     try {
       const { apiUrl, apiKey } = validateSettings(payload.settings)
