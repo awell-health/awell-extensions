@@ -1,1 +1,1 @@
-export { generateRandomNumber } from './calculateDateDifference'
+export { calculateDateDifference } from './calculateDateDifference'
