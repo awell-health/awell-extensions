@@ -21,6 +21,7 @@ describe('Complete flow action', () => {
         },
         settings: {
           apiKey: 'abc123',
+          environment: 'production',
         },
       },
       onComplete,
