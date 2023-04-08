@@ -18,6 +18,7 @@ const mocksignatureRequestCreateEmbeddedWithTemplate = jest
     return {
       body: {
         signatureRequest: {
+          signatureRequestId: 'signature-request-id',
           signatures: [
             {
               signatureId: 'test-signature-id',
@@ -60,7 +61,7 @@ const mockEmbeddedApiEmbeddedSignUrl = jest
     }
   })
 
-describe('Cancel signature request action', () => {
+describe('Create embedded signature request with template', () => {
   const onComplete = jest.fn()
   const onError = jest.fn()
 
