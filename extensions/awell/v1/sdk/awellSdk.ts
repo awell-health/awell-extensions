@@ -1,5 +1,7 @@
 import { GraphQLClient } from 'graphql-request'
 import {
+  type DeletePatientInput,
+  type EmptyPayload,
   type StartPathwayInput,
   type StartPathwayPayload,
   type UpdatePatientInput,
@@ -45,6 +47,19 @@ export default class AwellSdk {
 
     if (data.success && !isNil(data.patient)) {
       return data.patient.id
+    }
+
+    throw new Error('Patient update failed')
+  }
+
+  async deletePatient(input: DeletePatientInput): Promise<boolean> {
+    const data = await this.client.request<EmptyPayload>(
+      createPatientMutation,
+      input
+    )
+
+    if (data.success) {
+      return true
     }
 
     throw new Error('Patient update failed')

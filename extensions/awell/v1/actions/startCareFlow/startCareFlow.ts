@@ -12,7 +12,7 @@ export const startCareFlow: Action<typeof fields, typeof settings> = {
   title: 'Start care flow',
   description: 'Start a new care flow from within the current care flow.',
   fields,
-  previewable: true,
+  previewable: false,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
     try {
       const { apiUrl, apiKey } = validateSettings(payload.settings)
