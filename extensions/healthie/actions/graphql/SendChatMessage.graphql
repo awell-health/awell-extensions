@@ -1,0 +1,13 @@
+mutation sendChatMessage($input: createNoteInput!) {
+  createNote(input: $input) {
+    messages {
+      field
+      message
+    }
+    note {
+      id
+      user_id
+      recipient_id
+    }
+  }
+}

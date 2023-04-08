@@ -1,0 +1,39 @@
+query getConversationList(
+  $offset: Int
+  $keywords: String
+  $active_status: String
+  $client_id: String
+  $read_status: String
+  $conversation_type: String
+  $provider_id: ID
+) {
+  conversationMembershipsCount(
+    keywords: $keywords
+    active_status: $active_status
+    client_id: $client_id
+    read_status: $read_status
+    conversation_type: $conversation_type
+    provider_id: $provider_id
+  )
+  conversationMemberships(
+    offset: $offset
+    keywords: $keywords
+    active_status: $active_status
+    client_id: $client_id
+    read_status: $read_status
+    conversation_type: $conversation_type
+    provider_id: $provider_id
+  ) {
+    id
+    display_name
+    archived
+    viewed
+    convo {
+      id
+      conversation_memberships_count
+      owner {
+        id
+      }
+    }
+  }
+}

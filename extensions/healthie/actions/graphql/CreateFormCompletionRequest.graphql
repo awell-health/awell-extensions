@@ -1,0 +1,12 @@
+mutation createFormCompletionRequest($input: createRequestedFormInput!) {
+  createRequestedFormCompletion(input: $input) {
+    requestedFormCompletion {
+      id
+    }
+
+    messages {
+      field
+      message
+    }
+  }
+}

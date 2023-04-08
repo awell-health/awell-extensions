@@ -9,6 +9,7 @@ const converter = new Showdown.Converter({
   underline: true,
 })
 const loadedDocumentations: Record<string, string> = {}
+const loadedChangelogs: Record<string, string> = {}
 
 const getAppRootDir = (): string => {
   let currentDir = __dirname
@@ -41,4 +42,22 @@ export const getExtensionDocumentation = (extensionKey: string): string => {
   const documentation = getHtmlFromMarkdownFile(extensionReadme)
   loadedDocumentations[extensionKey] = documentation
   return documentation
+}
+
+export const getExtensionChangelog = (extensionKey: string): string => {
+  if (has(loadedChangelogs, extensionKey)) {
+    return loadedChangelogs[extensionKey]
+  }
+
+  const extensionChangelogPath = path.join(
+    getAppRootDir(),
+    'extensions',
+    extensionKey,
+    'CHANGELOG.md'
+  )
+
+  const changelog = getHtmlFromMarkdownFile(extensionChangelogPath)
+  loadedChangelogs[extensionKey] = changelog
+
+  return changelog
 }

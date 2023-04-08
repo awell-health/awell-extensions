@@ -1,0 +1,12 @@
+mutation updateAppointment($input: updateAppointmentInput!) {
+  updateAppointment(input: $input) {
+    appointment {
+      id
+      date
+    }
+    messages {
+      field
+      message
+    }
+  }
+}

@@ -1,0 +1,1 @@
+export { createEmbeddedSignatureRequestWithTemplate } from './createEmbeddedSignatureRequestWithTemplate'
