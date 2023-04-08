@@ -1,0 +1,13 @@
+mutation removeTagFromUser($id: ID, $taggable_user_id: ID) {
+  removeAppliedTag(input: { id: $id, taggable_user_id: $taggable_user_id }) {
+    tag {
+      id
+      name
+    }
+
+    messages {
+      field
+      message
+    }
+  }
+}
