@@ -21,8 +21,6 @@ export const completeFlow: Action<typeof fields, typeof settings> = {
   onActivityCreated: async (payload, onComplete, onError) => {
     try {
       validateActionFields(payload.fields)
-
-      await onComplete()
     } catch (err) {
       if (err instanceof ZodError) {
         const error = fromZodError(err)
