@@ -19,6 +19,7 @@ export const embeddedSigning: Action<typeof fields, typeof settings> = {
       mode: 'single',
     },
   },
+  previewable: false,
   onActivityCreated: async (payload, onComplete, onError) => {
     try {
       validateActionFields(payload.fields)
