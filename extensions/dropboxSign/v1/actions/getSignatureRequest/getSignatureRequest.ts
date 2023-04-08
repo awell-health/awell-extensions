@@ -1,10 +1,12 @@
 import { type Action } from '../../../../../lib/types'
 import { fields, dataPoints } from './config'
 import { Category } from '../../../../../lib/types/marketplace'
-import { type settings } from '../../../settings'
-import { isNil } from 'lodash'
+import { validateSettings, type settings } from '../../../settings'
 import DropboxSignSdk from '../../../common/sdk/dropboxSignSdk'
 import { HttpError } from '@dropbox/sign'
+import { fromZodError } from 'zod-validation-error'
+import { ZodError } from 'zod'
+import { validateActionFields } from './config/fields'
 
 export const getSignatureRequest: Action<typeof fields, typeof settings> = {
   key: 'getSignatureRequest',
@@ -16,43 +18,9 @@ export const getSignatureRequest: Action<typeof fields, typeof settings> = {
   dataPoints,
   previewable: true,
   onActivityCreated: async (payload, onComplete, onError) => {
-    const {
-      fields: { signatureRequestId },
-      settings: { apiKey },
-    } = payload
-
     try {
-      if (isNil(signatureRequestId)) {
-        await onError({
-          events: [
-            {
-              date: new Date().toISOString(),
-              text: { en: 'Fields are missing' },
-              error: {
-                category: 'MISSING_FIELDS',
-                message: '`signatureRequestId` field is missing',
-              },
-            },
-          ],
-        })
-        return
-      }
-
-      if (isNil(apiKey)) {
-        await onError({
-          events: [
-            {
-              date: new Date().toISOString(),
-              text: { en: 'Missing an API key' },
-              error: {
-                category: 'MISSING_SETTINGS',
-                message: 'Missing an API key',
-              },
-            },
-          ],
-        })
-        return
-      }
+      const { signatureRequestId } = validateActionFields(payload.fields)
+      const { apiKey } = validateSettings(payload.settings)
 
       const signatureRequestApi = new DropboxSignSdk.SignatureRequestApi()
       signatureRequestApi.username = apiKey
@@ -84,6 +52,23 @@ export const getSignatureRequest: Action<typeof fields, typeof settings> = {
         },
       })
     } catch (err) {
+      if (err instanceof ZodError) {
+        const error = fromZodError(err)
+        await onError({
+          events: [
+            {
+              date: new Date().toISOString(),
+              text: { en: error.name },
+              error: {
+                category: 'WRONG_INPUT',
+                message: `${error.message}`,
+              },
+            },
+          ],
+        })
+        return
+      }
+
       if (err instanceof HttpError) {
         const sdkErrorMessage = err.body?.error?.errorMsg
 

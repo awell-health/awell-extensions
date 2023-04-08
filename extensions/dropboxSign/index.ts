@@ -5,7 +5,8 @@ import {
   sendRequestReminder,
   cancelSignatureRequest,
   getSignatureRequest,
-  // createEmbeddedSignatureRequestWithTemplate
+  createEmbeddedSignatureRequestWithTemplate,
+  embeddedSigning,
 } from './v1/actions'
 import { settings } from './settings'
 
@@ -25,10 +26,8 @@ export const DropboxSign: Extension = {
     sendRequestReminder,
     cancelSignatureRequest,
     getSignatureRequest,
-    /**
-     * Not supported yet
-     */
-    // createEmbeddedSignatureRequestWithTemplate
+    createEmbeddedSignatureRequestWithTemplate,
+    embeddedSigning,
   },
   settings,
 }
