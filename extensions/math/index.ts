@@ -1,4 +1,4 @@
-import { generateRandomNumber } from './v1/actions'
+import { generateRandomNumber, calculateDateDifference } from './v1/actions'
 import { type Extension } from '../../lib/types'
 import { settings } from './settings'
 import { AuthorType, Category } from '../../lib/types/marketplace'
@@ -17,5 +17,6 @@ export const MathExtension: Extension = {
   },
   actions: {
     generateRandomNumber,
+    calculateDateDifference,
   },
 }
