@@ -1,4 +1,5 @@
 import { type Setting } from '../../lib/types'
+import { z, type ZodTypeAny } from 'zod'
 
 export const settings = {
   apiUrl: {
@@ -16,3 +17,16 @@ export const settings = {
     description: 'Your orchestration API key.',
   },
 } satisfies Record<string, Setting>
+
+export const SettingsValidationSchema = z.object({
+  apiUrl: z.string(),
+  apiKey: z.string(),
+} satisfies Record<keyof typeof settings, ZodTypeAny>)
+
+export const validateSettings = (
+  settings: unknown
+): z.infer<typeof SettingsValidationSchema> => {
+  const parsedData = SettingsValidationSchema.parse(settings)
+
+  return parsedData
+}
