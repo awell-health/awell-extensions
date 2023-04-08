@@ -11,16 +11,16 @@ export const fields = {
   },
   flowLabel: {
     id: 'flowLabel',
-    label: 'Subject',
+    label: 'Flow label',
     description: 'The name of your flow',
     type: FieldType.STRING,
     required: true,
   },
   variantLabel: {
     id: 'variantLabel',
-    label: 'Body',
+    label: 'Variant label',
     description: 'The name of the variant.',
-    type: FieldType.HTML,
+    type: FieldType.STRING,
     required: false,
   },
 } satisfies Record<string, Field>
