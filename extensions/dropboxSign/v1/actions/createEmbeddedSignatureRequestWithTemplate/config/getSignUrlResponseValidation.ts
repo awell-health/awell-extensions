@@ -1,11 +1,14 @@
-import { formatISO } from 'date-fns'
+import { formatISO, fromUnixTime } from 'date-fns'
 import { z } from 'zod'
 
 export const ResponseValidationSchema = z.object({
   body: z.object({
     embedded: z.object({
       signUrl: z.string().url(),
-      expiresAt: z.coerce.date().transform((date) => formatISO(date)),
+      expiresAt: z
+        .number()
+        .transform((unixTimestamp) => fromUnixTime(unixTimestamp))
+        .transform((date) => formatISO(date)),
     }),
   }),
 })
