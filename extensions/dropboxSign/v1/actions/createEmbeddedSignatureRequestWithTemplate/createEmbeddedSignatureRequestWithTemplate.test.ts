@@ -101,7 +101,7 @@ describe('Cancel signature request action', () => {
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
         signUrl: 'https://developers.awellhealth.com',
-        expiresAt: '1970-01-18T19:24:34+01:00',
+        expiresAt: '2018-08-24T03:38:41+02:00',
       },
     })
     expect(onError).not.toHaveBeenCalled()
