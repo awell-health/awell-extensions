@@ -47,6 +47,7 @@ const mockEmbeddedApiEmbeddedSignUrl = jest
       body: {
         embedded: {
           signUrl: 'https://developers.awellhealth.com',
+          expiresAt: 1535074721,
         },
       },
       response: {
@@ -100,6 +101,7 @@ describe('Cancel signature request action', () => {
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
         signUrl: 'https://developers.awellhealth.com',
+        expiresAt: '1970-01-18T19:24:34+01:00',
       },
     })
     expect(onError).not.toHaveBeenCalled()

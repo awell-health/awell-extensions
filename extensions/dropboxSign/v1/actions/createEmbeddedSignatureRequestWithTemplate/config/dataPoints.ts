@@ -5,4 +5,8 @@ export const dataPoints = {
     key: 'signUrl',
     valueType: 'string',
   },
+  expiresAt: {
+    key: 'expiresAt',
+    valueType: 'date',
+  },
 } satisfies Record<string, DataPointDefinition>

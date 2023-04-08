@@ -99,16 +99,18 @@ export const createEmbeddedSignatureRequestWithTemplate: Action<
 
       const {
         body: {
-          embedded: { signUrl },
+          embedded: { signUrl, expiresAt },
         },
       } = validateGetSignUrlResponse(getEmbeddedSignUrlResponse)
 
       await onComplete({
         data_points: {
           signUrl,
+          expiresAt,
         },
       })
     } catch (err) {
+      console.log(err)
       if (err instanceof ZodError) {
         const error = fromZodError(err)
         await onError({
