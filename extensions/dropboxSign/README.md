@@ -23,6 +23,8 @@ Embedded signing behaves as a blocking action where the action is only completed
 1. First, add the "Create embedded signature request with template" action. This action will create an embedded signature request based on a template and return a **sign URL**.
 2. Second, add the "Embedded signing" action. In this action you will have to configure the **sign URL** you got from the first action.
 
+**Please note that the signing URL generated in the first step is only valid for 1 hour.** This means that from as soon as the first action is activated, the user has 1 hour to complete the signing request. When the sign URL has expired, the document cannot be signed anymore and and the process would have to be repeated.
+
 ### Send signature request with template
 
 Creates and sends a new SignatureRequest based off of a template specified with the template id parameter. The request will be send to specified signer via email. Please note that is a non-blocking action and that the care flow will automatically continue once the request is sent. It won't wait for the actual signing of the request.
