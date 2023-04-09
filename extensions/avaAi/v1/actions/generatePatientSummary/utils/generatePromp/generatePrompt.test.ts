@@ -1,32 +1,38 @@
 import { Sex } from '../../../../../../awell/gql/graphql'
 import { generatePrompt, promptQuestion } from './generatePrompt'
 
+const language = 'English'
+
 describe('Generate prompt for patient summary', () => {
   test('Should generate a prompt with all characteristics', async () => {
-    const result = generatePrompt({
-      id: 'patient-id',
-      profile: {
-        first_name: 'Nick',
-        last_name: 'Hellemans',
-        address: {
-          street: 'John Doe Street 20',
-          city: 'Kontich',
-          country: 'Belgium',
-          state: 'Antwerp',
-          zip: '2550',
+    const result = generatePrompt(
+      {
+        id: 'patient-id',
+        profile: {
+          first_name: 'Nick',
+          last_name: 'Hellemans',
+          address: {
+            street: 'John Doe Street 20',
+            city: 'Kontich',
+            country: 'Belgium',
+            state: 'Antwerp',
+            zip: '2550',
+          },
+          birth_date: '1993-11-30',
+          email: 'john.doe@awellhealth.com',
+          mobile_phone: '+32 xxx xx xx xx',
+          phone: '+32 xxx xx xx xx',
+          national_registry_number: '123456789',
+          patient_code: '98765',
+          preferred_language: 'en',
+          sex: Sex.Male,
         },
-        birth_date: '1993-11-30',
-        email: 'john.doe@awellhealth.com',
-        mobile_phone: '+32 xxx xx xx xx',
-        phone: '+32 xxx xx xx xx',
-        national_registry_number: '123456789',
-        patient_code: '98765',
-        preferred_language: 'en',
-        sex: Sex.Male,
       },
-    })
+      [],
+      language
+    )
 
-    expect(result).toBe(`${promptQuestion}
+    expect(result).toBe(`${promptQuestion(language)}
 
 Characteristic: First Name
 Value: Nick
@@ -98,10 +104,11 @@ Value: 2550`)
           sex: Sex.Male,
         },
       },
-      ['first_name', 'email', 'street', 'non_existing_char', '']
+      ['first_name', 'email', 'street', 'non_existing_char', ''],
+      language
     )
 
-    expect(result).toBe(`${promptQuestion}
+    expect(result).toBe(`${promptQuestion(language)}
 
 Characteristic: First Name
 Value: Nick
@@ -127,10 +134,11 @@ Value: John Doe Street 20`)
           },
         },
       },
-      ['first_name', 'last_name', 'sex', 'email', 'street']
+      ['first_name', 'last_name', 'sex', 'email', 'street'],
+      language
     )
 
-    expect(result).toBe(`${promptQuestion}
+    expect(result).toBe(`${promptQuestion(language)}
 
 Characteristic: First Name
 Value: Nick

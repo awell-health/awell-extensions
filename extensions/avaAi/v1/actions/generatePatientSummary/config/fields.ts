@@ -11,6 +11,14 @@ export const fields = {
     type: FieldType.STRING,
     required: false,
   },
+  language: {
+    id: 'language',
+    label: 'Language of the summary',
+    description:
+      'The language the summary will be written in. Defaults to "English"',
+    type: FieldType.STRING,
+    required: false,
+  },
 } satisfies Record<string, Field>
 
 export const FieldsValidationSchema = z.object({
@@ -29,6 +37,11 @@ export const FieldsValidationSchema = z.object({
         })
       )
   ),
+  language: z.optional(z.string()).transform((lang) => {
+    if (isNil(lang) || isEmpty(lang)) return 'English'
+
+    return lang
+  }),
 } satisfies Record<keyof typeof fields, ZodTypeAny>)
 
 export const validateActionFields = (
