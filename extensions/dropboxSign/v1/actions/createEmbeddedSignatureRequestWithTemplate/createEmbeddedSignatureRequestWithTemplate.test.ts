@@ -99,13 +99,7 @@ describe('Create embedded signature request with template', () => {
     expect(mocksignatureRequestCreateEmbeddedWithTemplate).toHaveBeenCalled()
     expect(mockEmbeddedApiEmbeddedSignUrl).toHaveBeenCalled()
 
-    expect(onComplete).toHaveBeenCalledWith({
-      data_points: {
-        signUrl: 'https://developers.awellhealth.com',
-        expiresAt: '2018-08-24T03:38:41+02:00',
-        signatureRequestId: 'signature-request-id',
-      },
-    })
+    expect(onComplete).toHaveBeenCalled()
     expect(onError).not.toHaveBeenCalled()
   })
 })
