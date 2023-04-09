@@ -7,9 +7,10 @@ import { DropboxSign } from './dropboxSign'
 import { Elation } from './elation'
 import { MessageBird } from './messagebird'
 import { Formsort } from './formsort'
-import { avaAi } from './avaAi'
+import { AvaAi } from './avaAi'
 
 export const extensions = [
+  AvaAi,
   Awell,
   HelloWorld,
   Healthie,
@@ -19,5 +20,4 @@ export const extensions = [
   Elation,
   MessageBird,
   Formsort,
-  avaAi,
 ]
