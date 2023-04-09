@@ -11,4 +11,5 @@ export enum Category {
   MEDICINE_MANAGEMENT = 'Medicine Management',
   DEMO = 'Demo',
   FORMS = 'Forms',
+  AI = 'Artificial Intelligence (AI)',
 }
