@@ -3,7 +3,7 @@ import { AuthorType, Category } from '../../lib/types/marketplace'
 import { generatePatientSummary } from './v1/actions'
 import { settings } from './settings'
 
-export const avaAi: Extension = {
+export const AvaAi: Extension = {
   key: 'avaAi',
   title: 'Ava - Awell Virtual (AI) Assistant',
   icon_url:
