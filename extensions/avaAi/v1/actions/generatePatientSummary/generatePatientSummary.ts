@@ -44,7 +44,6 @@ export const generatePatientSummary: Action<typeof fields, typeof settings> = {
 
       await onComplete({
         data_points: {
-          patientData: JSON.stringify(patient),
           prompt,
           patientSummary: String(result?.data?.choices[0]?.text),
         },
