@@ -21,7 +21,7 @@ export const generatePatientSummary: Action<typeof fields, typeof settings> = {
     try {
       const { patient } = payload
       const { openAiApiKey } = validateSettings(payload.settings)
-      const { characteristics } = validateActionFields(payload.fields)
+      const { characteristics, language } = validateActionFields(payload.fields)
 
       const configuration = new Configuration({
         apiKey: openAiApiKey,
@@ -29,7 +29,7 @@ export const generatePatientSummary: Action<typeof fields, typeof settings> = {
 
       const openai = new OpenAiSdk(configuration)
 
-      const prompt = generatePrompt(patient, characteristics)
+      const prompt = generatePrompt(patient, characteristics, language)
 
       const TOKENS_FOR_PROMPT = 400
       const TOKENS_FOR_COMPLETION = 100

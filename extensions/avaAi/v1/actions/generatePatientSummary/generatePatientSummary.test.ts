@@ -27,6 +27,7 @@ describe('Generate patient summary with Open AI', () => {
         },
         fields: {
           characteristics: '',
+          language: 'English',
         },
         settings: {
           openAiApiKey: 'an-api-key',

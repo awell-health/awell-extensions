@@ -1,12 +1,13 @@
 import { isEmpty, isNil, omit, pick, startCase } from 'lodash'
 import { type Patient } from '../../../../../../../lib/types/Patient'
 
-export const promptQuestion =
-  'Create a human-readable summary of a patient that only includes the below characteristics. The text should be written in the present tense.'
+export const promptQuestion = (language: string): string =>
+  `Create a human-readable summary of a person that only includes the below characteristics. The text should be written in the present tense. Write it in ${language}.`
 
 export const generatePrompt = (
   patient: Patient,
-  characteristics?: string[]
+  characteristics?: string[],
+  language: string = 'English'
 ): string => {
   const flattenedProfile = {
     ...omit(patient.profile, ['address']),
@@ -43,7 +44,7 @@ Value: ${String(Object.values(char)[0]).trim()}`
     })
     .join('\n\n')
 
-  return `${promptQuestion}
+  return `${promptQuestion(language)}
 
 ${characteristicsPrompt}`
 }
