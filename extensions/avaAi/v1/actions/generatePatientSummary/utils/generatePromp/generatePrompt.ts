@@ -2,7 +2,7 @@ import { isEmpty, isNil, omit, pick, startCase } from 'lodash'
 import { type Patient } from '../../../../../../../lib/types/Patient'
 
 export const promptQuestion =
-  'Create a human-readable summary of a patient that only includes the below characteristics. The text should be written in the present tense and make sure the age is printed in parentheses after the birth date only when the birth date is known.'
+  'Create a human-readable summary of a patient that only includes the below characteristics. The text should be written in the present tense.'
 
 export const generatePrompt = (
   patient: Patient,
