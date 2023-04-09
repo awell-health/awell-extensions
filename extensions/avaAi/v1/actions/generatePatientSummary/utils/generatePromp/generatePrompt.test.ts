@@ -28,49 +28,49 @@ describe('Generate prompt for patient summary', () => {
 
     expect(result).toBe(`${promptQuestion}
 
-Characteristic: first_name
+Characteristic: First Name
 Value: Nick
 
-Characteristic: last_name
+Characteristic: Last Name
 Value: Hellemans
 
-Characteristic: birth_date
+Characteristic: Birth Date
 Value: 1993-11-30
 
-Characteristic: email
+Characteristic: Email
 Value: john.doe@awellhealth.com
 
-Characteristic: mobile_phone
+Characteristic: Mobile Phone
 Value: +32 xxx xx xx xx
 
-Characteristic: phone
+Characteristic: Phone
 Value: +32 xxx xx xx xx
 
-Characteristic: national_registry_number
+Characteristic: National Registry Number
 Value: 123456789
 
-Characteristic: patient_code
+Characteristic: Patient Code
 Value: 98765
 
-Characteristic: preferred_language
+Characteristic: Preferred Language
 Value: en
 
-Characteristic: sex
+Characteristic: Sex
 Value: MALE
 
-Characteristic: street
+Characteristic: Street
 Value: John Doe Street 20
 
-Characteristic: city
+Characteristic: City
 Value: Kontich
 
-Characteristic: country
+Characteristic: Country
 Value: Belgium
 
-Characteristic: state
+Characteristic: State
 Value: Antwerp
 
-Characteristic: zip
+Characteristic: Zip
 Value: 2550`)
   })
 
@@ -103,17 +103,17 @@ Value: 2550`)
 
     expect(result).toBe(`${promptQuestion}
 
-Characteristic: first_name
+Characteristic: First Name
 Value: Nick
 
-Characteristic: email
+Characteristic: Email
 Value: john.doe@awellhealth.com
 
-Characteristic: street
+Characteristic: Street
 Value: John Doe Street 20`)
   })
 
-  test('Should generate a prompt with only with characteristics that are defined', async () => {
+  test('Should generate a prompt only with characteristics that are defined', async () => {
     const result = generatePrompt(
       {
         id: 'patient-id',
@@ -132,10 +132,10 @@ Value: John Doe Street 20`)
 
     expect(result).toBe(`${promptQuestion}
 
-Characteristic: first_name
+Characteristic: First Name
 Value: Nick
 
-Characteristic: email
+Characteristic: Email
 Value: john.doe@awellhealth.com`)
   })
 })

@@ -103,6 +103,7 @@ describe('Create embedded signature request with template', () => {
       data_points: {
         signUrl: 'https://developers.awellhealth.com',
         expiresAt: '2018-08-24T03:38:41+02:00',
+        signatureRequestId: 'signature-request-id',
       },
     })
     expect(onError).not.toHaveBeenCalled()
