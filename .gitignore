@@ -17,3 +17,6 @@ dist/*
 
 # local files
 *.local.*
+
+# projections file to easily jump to/from test file
+.projections.json
