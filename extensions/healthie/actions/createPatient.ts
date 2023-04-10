@@ -45,7 +45,7 @@ const fields = {
     description: 'Email address of the patient',
     type: FieldType.STRING,
     stringType: StringType.EMAIL,
-    required: true, // required until skipped_email is not handled
+    required: true, // TODO required until skipped_email is not handled
   },
   dob: {
     id: 'dob',
