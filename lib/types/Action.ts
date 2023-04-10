@@ -1,14 +1,14 @@
 import { type NewActivityPayload } from './NewActivityPayload'
-import { type Field } from './Field'
-import { type Setting } from './Setting'
+import type { Fields as FieldsType } from './Fields'
+import { type Settings as SettingsType } from './Settings'
 import { type OnCompleteCallback } from './OnCompleteCallback'
 import { type OnErrorCallback } from './OnErrorCallback'
 import { type DataPointDefinition } from './DataPointDefinition'
 import { type Category } from './marketplace'
 
 export interface Action<
-  Fields extends Record<string, Field>,
-  Settings extends Record<string, Setting>,
+  Fields extends FieldsType,
+  Settings extends SettingsType,
   DPKeys extends string = string
 > {
   key: string
@@ -19,11 +19,11 @@ export interface Action<
   fields: Fields
   previewable?: boolean
   onActivityCreated: (
-    payload: NewActivityPayload<keyof Settings, keyof Fields>,
+    payload: NewActivityPayload<Settings, Fields>,
     onComplete: OnCompleteCallback<DPKeys>,
     onError: OnErrorCallback
   ) => Promise<void>
-  // @Deprecated. Don't use unless you absolutey have to
+  // @Deprecated. Don't use unless you absolutely have to
   options?: {
     stakeholders?: {
       label: string
