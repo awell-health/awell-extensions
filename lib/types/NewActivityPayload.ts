@@ -4,21 +4,21 @@ import type { Fields as FieldsType } from './Fields'
 import { type Settings as SettingsType } from './Settings'
 
 // extract value from Field for type
-type FieldValue<T extends FieldType> = Extract<Field, { type: T }>['value']
+type FieldValueType<T extends FieldType> = Extract<Field, { type: T }>['value']
 
 // map field to a field value type based of field type prop
-type TypedFields<T extends FieldsType> = {
-  [K in keyof T]: FieldValue<T[K]['type']>
+type FieldValues<T extends FieldsType> = {
+  [K in keyof T]: FieldValueType<T[K]['type']>
 }
 
 export interface NewActivityPayload<
-  Settings extends SettingsType = never,
-  Fields extends FieldsType = never
+  Fields extends FieldsType = never,
+  Settings extends SettingsType = never
 > {
   activity: {
     id: string
   }
   patient: Patient
-  fields: TypedFields<Fields>
+  fields: FieldValues<Fields>
   settings: Record<keyof Settings, string | undefined>
 }

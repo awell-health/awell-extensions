@@ -19,7 +19,7 @@ export interface Action<
   fields: Fields
   previewable?: boolean
   onActivityCreated: (
-    payload: NewActivityPayload<Settings, Fields>,
+    payload: NewActivityPayload<Fields, Settings>,
     onComplete: OnCompleteCallback<DPKeys>,
     onError: OnErrorCallback
   ) => Promise<void>
