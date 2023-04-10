@@ -33,7 +33,6 @@ describe('createPatient action', () => {
           skipped_email: undefined,
           dob: undefined,
           dont_send_welcome: undefined,
-          testNumber: 1,
         },
         settings: {
           apiKey: 'apiKey',
