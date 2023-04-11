@@ -45,7 +45,6 @@ const fields = {
     description: 'Email address of the patient',
     type: FieldType.STRING,
     stringType: StringType.EMAIL,
-    required: true, // TODO required until skipped_email is not handled
   },
   dob: {
     id: 'dob',
@@ -60,10 +59,10 @@ const fields = {
     type: FieldType.STRING,
     stringType: StringType.PHONE,
   },
-  dont_send_welcome: {
-    id: 'dont_send_welcome',
-    label: "Don't send welcome",
-    description: 'Whether an invite email will be sent to the new patient.',
+  send_invite: {
+    id: 'send_invite',
+    label: 'Send invite email',
+    description: 'Should an invite email be sent to the new patient.',
     type: FieldType.BOOLEAN,
   },
   provider_id: {
@@ -104,7 +103,7 @@ export const createPatient: Action<
       provider_id,
       legal_name,
       // dob,
-      dont_send_welcome,
+      send_invite,
       skipped_email,
     } = fields
     try {
@@ -123,7 +122,7 @@ export const createPatient: Action<
         })
         return
       }
-
+      const dont_send_welcome = send_invite !== true
       const client = initialiseClient(settings)
       if (client !== undefined) {
         const sdk = getSdk(client)
