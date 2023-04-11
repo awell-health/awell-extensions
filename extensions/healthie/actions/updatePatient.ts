@@ -11,7 +11,6 @@ import { initialiseClient } from '../graphqlClient'
 import { type settings } from '../settings'
 import { mapHealthieToActivityError } from '../errors'
 
-
 const fields = {
   id: {
     id: 'id',
@@ -35,7 +34,8 @@ const fields = {
   legal_name: {
     id: 'legal_name',
     label: 'Legal name',
-    description: "The patient's legal name which will be used in CMS 1500 Claims, Invoices, and Superbills.",
+    description:
+      "The patient's legal name which will be used in CMS 1500 Claims, Invoices, and Superbills.",
     type: FieldType.STRING,
   },
   // ! TODO: BOOLEAN field implementation needed
@@ -63,12 +63,13 @@ const fields = {
     label: 'Phone number',
     description: 'Phone number of the patient',
     type: FieldType.STRING,
-    stringType: StringType.PHONE
+    stringType: StringType.PHONE,
   },
   provider_id: {
     id: 'provider_id',
     label: 'Provider ID',
-    description: "Also known as the `dietitian_id`. This is the ID of the provider. Defaults to the authenticated user's ID.",
+    description:
+      "Also known as the `dietitian_id`. This is the ID of the provider. Defaults to the authenticated user's ID.",
     type: FieldType.STRING,
   },
   user_group_id: {
@@ -110,19 +111,29 @@ const fields = {
   },
 } satisfies Record<string, Field>
 
-export const updatePatient: Action<
-  typeof fields,
-  typeof settings
-> = {
+export const updatePatient: Action<typeof fields, typeof settings> = {
   key: 'updatePatient',
-  category: Category.INTEGRATIONS,
+  category: Category.EHR_INTEGRATIONS,
   title: 'Update a patient',
   description: 'Update a patient in Healthie.',
   fields,
   previewable: true,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
     const { fields, settings } = payload
-    const { id, first_name, last_name, legal_name, email, phone_number, provider_id, gender, gender_identity, height, sex, user_group_id } = fields
+    const {
+      id,
+      first_name,
+      last_name,
+      legal_name,
+      email,
+      phone_number,
+      provider_id,
+      gender,
+      gender_identity,
+      height,
+      sex,
+      user_group_id,
+    } = fields
     try {
       if (isNil(id)) {
         await onError({
@@ -137,7 +148,7 @@ export const updatePatient: Action<
             },
           ],
         })
-        return;
+        return
       }
 
       const client = initialiseClient(settings)
@@ -156,8 +167,8 @@ export const updatePatient: Action<
             gender_identity,
             height,
             sex,
-            user_group_id
-          }
+            user_group_id,
+          },
         })
 
         if (!isNil(data.updateClient?.messages)) {

@@ -11,7 +11,6 @@ import { getSdk } from '../gql/sdk'
 import { initialiseClient } from '../graphqlClient'
 import { type settings } from '../settings'
 
-
 const fields = {
   id: {
     id: 'id',
@@ -23,14 +22,16 @@ const fields = {
   type: {
     id: 'type',
     label: 'Type',
-    description: 'The type of entry. Valid options are: ["MetricEntry", "FoodEntry", "WorkoutEntry", "MirrorEntry", "SleepEntry", "NoteEntry", "WaterIntakeEntry", "PoopEntry", "SymptomEntry"].',
+    description:
+      'The type of entry. Valid options are: ["MetricEntry", "FoodEntry", "WorkoutEntry", "MirrorEntry", "SleepEntry", "NoteEntry", "WaterIntakeEntry", "PoopEntry", "SymptomEntry"].',
     type: FieldType.STRING,
     required: true,
   },
   percieved_hungriness: {
     id: 'percieved_hungriness',
     label: 'Perceived hungriness',
-    description: 'A string index of hungriness. Valid options are: ["1", "2", "3"].',
+    description:
+      'A string index of hungriness. Valid options are: ["1", "2", "3"].',
     type: FieldType.NUMERIC,
   },
 } satisfies Record<string, Field>
@@ -48,7 +49,7 @@ export const createJournalEntry: Action<
   keyof typeof dataPoints
 > = {
   key: 'createJournalEntry',
-  category: Category.INTEGRATIONS,
+  category: Category.EHR_INTEGRATIONS,
   title: 'Create journal entry',
   description: 'Create journal entry in Healthie.',
   fields,
@@ -71,7 +72,7 @@ export const createJournalEntry: Action<
             },
           ],
         })
-        return;
+        return
       }
 
       const client = initialiseClient(settings)
@@ -81,8 +82,8 @@ export const createJournalEntry: Action<
           input: {
             user_id: id,
             type,
-            percieved_hungriness
-          }
+            percieved_hungriness,
+          },
         })
 
         if (!isNil(data.createEntry?.messages)) {
@@ -93,15 +94,13 @@ export const createJournalEntry: Action<
           return
         }
 
-        const journalEntryId = data.createEntry?.entry?.id;
+        const journalEntryId = data.createEntry?.entry?.id
 
-        await onComplete(
-          {
-            data_points: {
-              journalEntryId
-            }
-          }
-        )
+        await onComplete({
+          data_points: {
+            journalEntryId,
+          },
+        })
       } else {
         await onError({
           events: [

@@ -6,7 +6,7 @@ import { AuthorType, Category } from '../../lib/types/marketplace'
 
 export const Healthie: Extension = {
   key: 'healthie',
-  category: Category.INTEGRATIONS,
+  category: Category.EHR_INTEGRATIONS,
   title: 'Healthie',
   description: 'Connect to the Healthie API and receive webhooks',
   icon_url:

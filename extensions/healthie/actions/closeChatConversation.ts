@@ -1,15 +1,10 @@
 import { isNil } from 'lodash'
 import { mapHealthieToActivityError } from '../errors'
-import {
-  FieldType,
-  type Action,
-  type Field,
-} from '../../../lib/types'
+import { FieldType, type Action, type Field } from '../../../lib/types'
 import { Category } from '../../../lib/types/marketplace'
 import { getSdk } from '../gql/sdk'
 import { initialiseClient } from '../graphqlClient'
 import { type settings } from '../settings'
-
 
 const fields = {
   id: {
@@ -28,12 +23,9 @@ const fields = {
   },
 } satisfies Record<string, Field>
 
-export const closeChatConversation: Action<
-  typeof fields,
-  typeof settings
-> = {
+export const closeChatConversation: Action<typeof fields, typeof settings> = {
   key: 'closeChatConversation',
-  category: Category.INTEGRATIONS,
+  category: Category.EHR_INTEGRATIONS,
   title: 'Close chat conversation',
   description: 'Close chat conversation in Healthie.',
   fields,
@@ -55,7 +47,7 @@ export const closeChatConversation: Action<
             },
           ],
         })
-        return;
+        return
       }
 
       const client = initialiseClient(settings)
@@ -64,12 +56,14 @@ export const closeChatConversation: Action<
         const { data } = await sdk.updateConversation({
           input: {
             id,
-            closed_by_id: provider_id
-          }
+            closed_by_id: provider_id,
+          },
         })
 
         if (!isNil(data.updateConversation?.messages)) {
-          const errors = mapHealthieToActivityError(data.updateConversation?.messages)
+          const errors = mapHealthieToActivityError(
+            data.updateConversation?.messages
+          )
           await onError({
             events: errors,
           })

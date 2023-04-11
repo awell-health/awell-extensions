@@ -12,7 +12,6 @@ import { initialiseClient } from '../graphqlClient'
 import { type settings } from '../settings'
 import { mapHealthieToActivityError } from '../errors'
 
-
 const fields = {
   first_name: {
     id: 'first_name',
@@ -31,7 +30,8 @@ const fields = {
   legal_name: {
     id: 'legal_name',
     label: 'Legal name',
-    description: "The patient's legal name which will be used in CMS 1500 Claims, Invoices, and Superbills.",
+    description:
+      "The patient's legal name which will be used in CMS 1500 Claims, Invoices, and Superbills.",
     type: FieldType.STRING,
   },
   // ! TODO: BOOLEAN field implementation needed
@@ -46,7 +46,7 @@ const fields = {
     description: 'Email address of the patient',
     type: FieldType.STRING,
     stringType: StringType.EMAIL,
-    required: true // required until skipped_email is not handled
+    required: true, // required until skipped_email is not handled
   },
   // ! TODO: DATE field implementation needed
   // dob: {
@@ -60,7 +60,7 @@ const fields = {
     label: 'Phone number',
     description: 'Phone number of the patient',
     type: FieldType.STRING,
-    stringType: StringType.PHONE
+    stringType: StringType.PHONE,
   },
   // ! TODO: BOOLEAN field implementation needed
   // dont_send_welcome: {
@@ -72,7 +72,8 @@ const fields = {
   provider_id: {
     id: 'provider_id',
     label: 'Provider ID',
-    description: "Also known as the `dietitian_id`. This is the ID of the provider. Defaults to the authenticated user's ID.",
+    description:
+      "Also known as the `dietitian_id`. This is the ID of the provider. Defaults to the authenticated user's ID.",
     type: FieldType.STRING,
   },
 } satisfies Record<string, Field>
@@ -90,7 +91,7 @@ export const createPatient: Action<
   keyof typeof dataPoints
 > = {
   key: 'createPatient',
-  category: Category.INTEGRATIONS,
+  category: Category.EHR_INTEGRATIONS,
   title: 'Create a patient',
   description: 'Create a patient in Healthie.',
   fields,
@@ -98,7 +99,14 @@ export const createPatient: Action<
   previewable: true,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
     const { fields, settings } = payload
-    const { first_name, last_name, email, phone_number, provider_id, legal_name } = fields
+    const {
+      first_name,
+      last_name,
+      email,
+      phone_number,
+      provider_id,
+      legal_name,
+    } = fields
     try {
       if (isNil(first_name) || isNil(last_name)) {
         await onError({
@@ -113,7 +121,7 @@ export const createPatient: Action<
             },
           ],
         })
-        return;
+        return
       }
 
       const client = initialiseClient(settings)
@@ -126,8 +134,8 @@ export const createPatient: Action<
             legal_name,
             email,
             phone_number,
-            dietitian_id: provider_id === '' ? undefined : provider_id
-          }
+            dietitian_id: provider_id === '' ? undefined : provider_id,
+          },
         })
 
         if (!isNil(data.createClient?.messages)) {
@@ -138,7 +146,7 @@ export const createPatient: Action<
           return
         }
 
-        const healthiePatientId = data.createClient?.user?.id;
+        const healthiePatientId = data.createClient?.user?.id
 
         await onComplete({
           data_points: {

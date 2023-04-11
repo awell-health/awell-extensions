@@ -1,15 +1,10 @@
 import { isNil } from 'lodash'
 import { mapHealthieToActivityError } from '../errors'
-import {
-  FieldType,
-  type Action,
-  type Field,
-} from '../../../lib/types'
+import { FieldType, type Action, type Field } from '../../../lib/types'
 import { Category } from '../../../lib/types/marketplace'
 import { getSdk } from '../gql/sdk'
 import { initialiseClient } from '../graphqlClient'
 import { type settings } from '../settings'
-
 
 const fields = {
   id: {
@@ -28,12 +23,9 @@ const fields = {
   },
 } satisfies Record<string, Field>
 
-export const applyTagToPatient: Action<
-  typeof fields,
-  typeof settings
-> = {
+export const applyTagToPatient: Action<typeof fields, typeof settings> = {
   key: 'applyTagToPatient',
-  category: Category.INTEGRATIONS,
+  category: Category.EHR_INTEGRATIONS,
   title: 'Apply tag to a patient',
   description: 'Apply tag to a patient in Healthie.',
   fields,
@@ -55,7 +47,7 @@ export const applyTagToPatient: Action<
             },
           ],
         })
-        return;
+        return
       }
 
       const client = initialiseClient(settings)
@@ -68,7 +60,7 @@ export const applyTagToPatient: Action<
            * multiple tags simply by adding multiple actions.
            */
           ids: [id],
-          taggable_user_id: patient_id
+          taggable_user_id: patient_id,
         })
 
         if (!isNil(data.bulkApply?.messages)) {

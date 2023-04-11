@@ -47,7 +47,7 @@ export const getAppointment: Action<
   keyof typeof dataPoints
 > = {
   key: 'getAppointment',
-  category: Category.INTEGRATIONS,
+  category: Category.EHR_INTEGRATIONS,
   title: 'Get appointment',
   description: 'Retrieve the details of an appointment from Healthie.',
   fields,

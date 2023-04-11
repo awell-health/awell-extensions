@@ -1,27 +1,24 @@
 import { isNil } from 'lodash'
-import {
-  FieldType,
-  type Action,
-  type Field,
-} from '../../../lib/types'
+import { FieldType, type Action, type Field } from '../../../lib/types'
 import { Category } from '../../../lib/types/marketplace'
 import { getSdk } from '../gql/sdk'
 import { initialiseClient } from '../graphqlClient'
 import { type settings } from '../settings'
 
-
 const fields = {
   healthie_patient_id: {
     id: 'healthie_patient_id',
     label: 'Healthie Patient ID',
-    description: 'The ID of the patient you would like to create a charting note for.',
+    description:
+      'The ID of the patient you would like to create a charting note for.',
     type: FieldType.STRING,
     required: true,
   },
   form_id: {
     id: 'form_id',
     label: 'Form ID',
-    description: 'The ID of the form you would like to create the charting note against.',
+    description:
+      'The ID of the form you would like to create the charting note against.',
     type: FieldType.STRING,
     required: true,
   },
@@ -34,12 +31,9 @@ const fields = {
   },
 } satisfies Record<string, Field>
 
-export const createChartingNote: Action<
-  typeof fields,
-  typeof settings
-> = {
+export const createChartingNote: Action<typeof fields, typeof settings> = {
   key: 'createChartingNote',
-  category: Category.INTEGRATIONS,
+  category: Category.EHR_INTEGRATIONS,
   title: 'Create charting note',
   description: 'Create charting note in Healthie.',
   fields,
@@ -56,22 +50,23 @@ export const createChartingNote: Action<
               text: { en: 'Fields are missing' },
               error: {
                 category: 'MISSING_FIELDS',
-                message: '`healthie_patient_id`, `form_id` or `note_content` is missing',
+                message:
+                  '`healthie_patient_id`, `form_id` or `note_content` is missing',
               },
             },
           ],
         })
-        return;
+        return
       }
 
       const client = initialiseClient(settings)
       if (client !== undefined) {
         const sdk = getSdk(client)
         const { data } = await sdk.getFormTemplate({
-          id: form_id
+          id: form_id,
         })
 
-        const moduleForm = data.customModuleForm;
+        const moduleForm = data.customModuleForm
 
         if (isNil(moduleForm)) {
           await onError({
@@ -86,7 +81,7 @@ export const createChartingNote: Action<
               },
             ],
           })
-          return;
+          return
         }
 
         if (moduleForm.use_for_charting !== true) {
@@ -102,17 +97,21 @@ export const createChartingNote: Action<
               },
             ],
           })
-          return;
+          return
         }
 
-        const firstTextAreaField = moduleForm.custom_modules?.find(({ mod_type }) => mod_type === 'textarea')
+        const firstTextAreaField = moduleForm.custom_modules?.find(
+          ({ mod_type }) => mod_type === 'textarea'
+        )
 
         if (isNil(firstTextAreaField)) {
           await onError({
             events: [
               {
                 date: new Date().toISOString(),
-                text: { en: "Form doesn't have a question of type \"textarea\" (long text)." },
+                text: {
+                  en: 'Form doesn\'t have a question of type "textarea" (long text).',
+                },
                 error: {
                   category: 'WRONG_DATA',
                   message: `Form with id ${form_id}  doesn't have a "textarea" field`,
@@ -120,7 +119,7 @@ export const createChartingNote: Action<
               },
             ],
           })
-          return;
+          return
         }
 
         await sdk.createFormAnswerGroup({
@@ -132,10 +131,10 @@ export const createChartingNote: Action<
               {
                 custom_module_id: firstTextAreaField.id,
                 user_id: healthie_patient_id,
-                answer: note_content
-              }
-            ]
-          }
+                answer: note_content,
+              },
+            ],
+          },
         })
 
         await onComplete()

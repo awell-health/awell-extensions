@@ -18,7 +18,7 @@ const fields = {
 
 export const completeTask: Action<typeof fields, typeof settings> = {
   key: 'completeTask',
-  category: Category.INTEGRATIONS,
+  category: Category.EHR_INTEGRATIONS,
   title: 'Complete task',
   description: 'Complete task in Healthie.',
   fields,

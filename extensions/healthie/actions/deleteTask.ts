@@ -18,7 +18,7 @@ const fields = {
 
 export const deleteTask: Action<typeof fields, typeof settings> = {
   key: 'deleteTask',
-  category: Category.INTEGRATIONS,
+  category: Category.EHR_INTEGRATIONS,
   title: 'Delete task',
   description: 'Delete task in Healthie.',
   fields,

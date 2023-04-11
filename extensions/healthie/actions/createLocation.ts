@@ -11,7 +11,6 @@ import { getSdk } from '../gql/sdk'
 import { initialiseClient } from '../graphqlClient'
 import { type settings } from '../settings'
 
-
 const fields = {
   id: {
     id: 'id',
@@ -78,7 +77,7 @@ export const createLocation: Action<
   keyof typeof dataPoints
 > = {
   key: 'createLocation',
-  category: Category.INTEGRATIONS,
+  category: Category.EHR_INTEGRATIONS,
   title: 'Create location',
   description: 'Create location for a patient in Healthie.',
   fields,
@@ -101,7 +100,7 @@ export const createLocation: Action<
             },
           ],
         })
-        return;
+        return
       }
 
       const client = initialiseClient(settings)
@@ -116,27 +115,27 @@ export const createLocation: Action<
             city,
             zip,
             line1,
-            line2
-          }
+            line2,
+          },
         })
 
         if (!isNil(data.createLocation?.messages)) {
-          const errors = mapHealthieToActivityError(data.createLocation?.messages)
+          const errors = mapHealthieToActivityError(
+            data.createLocation?.messages
+          )
           await onError({
             events: errors,
           })
           return
         }
 
-        const locationId = data.createLocation?.location?.id;
+        const locationId = data.createLocation?.location?.id
 
-        await onComplete(
-          {
-            data_points: {
-              locationId
-            }
-          }
-        )
+        await onComplete({
+          data_points: {
+            locationId,
+          },
+        })
       } else {
         await onError({
           events: [

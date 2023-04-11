@@ -22,7 +22,8 @@ const fields = {
   provider_id: {
     id: 'provider_id',
     label: 'Provider ID',
-    description: 'The ID of the provider, the chat message will be sent in name of this provider.',
+    description:
+      'The ID of the provider, the chat message will be sent in name of this provider.',
     type: FieldType.STRING,
     required: true,
   },
@@ -48,7 +49,7 @@ export const sendChatMessage: Action<
   keyof typeof dataPoints
 > = {
   key: 'sendChatMessage',
-  category: Category.INTEGRATIONS,
+  category: Category.EHR_INTEGRATIONS,
   title: 'Send chat message',
   description: 'Send chat message in Healthie.',
   fields,
@@ -71,7 +72,7 @@ export const sendChatMessage: Action<
             },
           ],
         })
-        return;
+        return
       }
 
       const client = initialiseClient(settings)
@@ -81,30 +82,34 @@ export const sendChatMessage: Action<
         const createConversation = async (): Promise<Conversation> => {
           const { data } = await sdk.createConversation({
             owner_id: provider_id,
-            simple_added_users: `user-${healthie_patient_id}`
+            simple_added_users: `user-${healthie_patient_id}`,
           })
 
-          return data.createConversation?.conversation;
+          return data.createConversation?.conversation
         }
 
-        const sendMessage = async (conversationId: string): Promise<SendChatMessage> => {
+        const sendMessage = async (
+          conversationId: string
+        ): Promise<SendChatMessage> => {
           return await sdk.sendChatMessage({
             input: {
               conversation_id: conversationId,
-              content: message
-            }
+              content: message,
+            },
           })
         }
 
         const getConversation = async (): Promise<Conversation> => {
           const { data } = await sdk.getConversationList({
             client_id: healthie_patient_id,
-            active_status: "active",
-            conversation_type: "individual"
+            active_status: 'active',
+            conversation_type: 'individual',
           })
 
-          const conversations = data.conversationMemberships ?? [];
-          const conversation = conversations.find((value) => value?.convo?.owner?.id === provider_id)?.convo;
+          const conversations = data.conversationMemberships ?? []
+          const conversation = conversations.find(
+            (value) => value?.convo?.owner?.id === provider_id
+          )?.convo
 
           if (!isNil(conversation)) {
             return conversation
@@ -114,30 +119,33 @@ export const sendChatMessage: Action<
         }
 
         const conversation = await getConversation()
-        const conversationId = conversation?.id;
+        const conversationId = conversation?.id
 
         if (isNil(conversationId)) {
           await onError({
             events: [
               {
                 date: new Date().toISOString(),
-                text: { en: "Conversation doesn't exist nor couldn't be created!" },
+                text: {
+                  en: "Conversation doesn't exist nor couldn't be created!",
+                },
                 error: {
                   category: 'SERVER_ERROR',
-                  message: "Conversation doesn't exist nor couldn't be created!",
+                  message:
+                    "Conversation doesn't exist nor couldn't be created!",
                 },
               },
             ],
           })
-          return;
+          return
         }
 
         await sendMessage(conversationId)
 
         await onComplete({
           data_points: {
-            conversationId
-          }
+            conversationId,
+          },
         })
       } else {
         await onError({

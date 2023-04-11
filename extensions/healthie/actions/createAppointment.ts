@@ -60,7 +60,7 @@ export const createAppointment: Action<
   keyof typeof dataPoints
 > = {
   key: 'createAppointment',
-  category: Category.INTEGRATIONS,
+  category: Category.EHR_INTEGRATIONS,
   title: 'Create 1:1 appointment',
   description: 'Create a 1:1 appointment in Healthie.',
   fields,

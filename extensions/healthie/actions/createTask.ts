@@ -51,7 +51,7 @@ export const createTask: Action<
   keyof typeof dataPoints
 > = {
   key: 'createTask',
-  category: Category.INTEGRATIONS,
+  category: Category.EHR_INTEGRATIONS,
   title: 'Create task',
   description: 'Create a new task in healthie',
   fields,
