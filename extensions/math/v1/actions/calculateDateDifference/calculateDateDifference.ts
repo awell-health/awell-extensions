@@ -1,4 +1,4 @@
-import { type Action, type NewActivityPayload } from '../../../../../lib/types'
+import { type Action } from '../../../../../lib/types'
 import { Category } from '../../../../../lib/types/marketplace'
 import { type settings } from '../../../settings'
 import { fields, dataPoints, FieldsValidationSchema } from './config'
@@ -107,8 +107,3 @@ export const calculateDateDifference: Action<typeof fields, typeof settings> = {
     }
   },
 }
-
-export type DateDifferenceActivityPayload = NewActivityPayload<
-  keyof typeof settings,
-  keyof typeof fields
->
