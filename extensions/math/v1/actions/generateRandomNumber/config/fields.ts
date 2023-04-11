@@ -24,11 +24,3 @@ export const FieldsValidationSchema = z.object({
   min: z.coerce.number().int(),
   max: z.coerce.number().int(),
 } satisfies Record<keyof typeof fields, ZodTypeAny>)
-
-export const validateActionFields = (
-  fields: unknown
-): z.infer<typeof FieldsValidationSchema> => {
-  const parsedData = FieldsValidationSchema.parse(fields)
-
-  return parsedData
-}
