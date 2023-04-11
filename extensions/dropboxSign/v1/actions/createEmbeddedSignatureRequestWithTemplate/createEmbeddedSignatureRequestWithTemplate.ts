@@ -1,9 +1,17 @@
 import { type Action } from '../../../../../lib/types'
-import { fields } from './config'
+import {
+  fields,
+  dataPoints,
+  validateActionFields,
+  validateEmbeddedSignatureRequestResponse,
+  validateGetSignUrlResponse,
+} from './config'
 import { Category } from '../../../../../lib/types/marketplace'
-import { type settings } from '../../../settings'
-import { isEmpty, isNil } from 'lodash'
+import { validateSettings, type settings } from '../../../settings'
 import DropboxSignSdk from '../../../common/sdk/dropboxSignSdk'
+import { fromZodError } from 'zod-validation-error'
+import { ZodError } from 'zod'
+import { HttpError } from '@dropbox/sign'
 
 export const createEmbeddedSignatureRequestWithTemplate: Action<
   typeof fields,
@@ -15,11 +23,16 @@ export const createEmbeddedSignatureRequestWithTemplate: Action<
     'Let a stakeholder sign a request within Awell based off a template. The care flow will not progress until the request is signed.',
   category: Category.DOCUMENT_MANAGEMENT,
   fields,
+  dataPoints,
+  previewable: true,
   onActivityCreated: async (payload, onComplete, onError) => {
-    const {
-      patient: { id: patientId },
-      activity: { id: activityId },
-      fields: {
+    try {
+      const {
+        patient: { id: patientId },
+        activity: { id: activityId },
+      } = payload
+
+      const {
         signerRole,
         signerName,
         signerEmailAddress,
@@ -27,75 +40,16 @@ export const createEmbeddedSignatureRequestWithTemplate: Action<
         title,
         subject,
         message,
-        customFields,
-      },
-      settings: { apiKey, clientId },
-    } = payload
-
-    try {
-      const allRequiredFieldsHaveValues = [
-        signerRole,
-        signerName,
-        signerEmailAddress,
-        templateId,
-      ].every((field) => !isEmpty(field))
-
-      if (!allRequiredFieldsHaveValues) {
-        await onError({
-          events: [
-            {
-              date: new Date().toISOString(),
-              text: { en: 'Fields are missing' },
-              error: {
-                category: 'MISSING_FIELDS',
-                message:
-                  '`signerRole`, `signerName`, `signerEmailAddress`, or `templateId` is missing',
-              },
-            },
-          ],
-        })
-        return
-      }
-
-      if (!Array.isArray(customFields)) {
-        await onError({
-          events: [
-            {
-              date: new Date().toISOString(),
-              text: { en: 'Incorrect values for fields' },
-              error: {
-                category: 'WRONG_INPUT',
-                message: '`customFields` should be an array of objects.',
-              },
-            },
-          ],
-        })
-        return
-      }
-
-      if (isNil(apiKey) || isEmpty(clientId)) {
-        await onError({
-          events: [
-            {
-              date: new Date().toISOString(),
-              text: { en: 'Missing API key or Client ID' },
-              error: {
-                category: 'MISSING_SETTINGS',
-                message: 'Missing the API key or Client ID',
-              },
-            },
-          ],
-        })
-        return
-      }
+      } = validateActionFields(payload.fields)
+      const { apiKey, clientId, testMode } = validateSettings(payload.settings)
 
       const signatureRequestApi = new DropboxSignSdk.SignatureRequestApi()
       signatureRequestApi.username = apiKey
 
       const signer: DropboxSignSdk.SubSignatureRequestTemplateSigner = {
-        role: String(signerRole),
-        emailAddress: String(signerEmailAddress),
-        name: String(signerName),
+        role: signerRole,
+        emailAddress: signerEmailAddress,
+        name: signerName,
       }
 
       const defaultSigningOptions: DropboxSignSdk.SubSigningOptions = {
@@ -108,68 +62,96 @@ export const createEmbeddedSignatureRequestWithTemplate: Action<
 
       const data: DropboxSignSdk.SignatureRequestCreateEmbeddedWithTemplateRequest =
         {
-          clientId: String(clientId),
+          clientId,
           templateIds: [String(templateId)],
           subject,
           message,
           signers: [signer],
           title,
-          customFields,
           signingOptions: defaultSigningOptions,
-          /**
-           * Keep in test mode for now
-           */
-          testMode: true,
+          testMode,
           metadata: {
             awellPatientId: patientId,
             awellActivityId: activityId,
           },
         }
 
-      const embeddedSignatureRequest =
+      const embeddedSignatureRequestResponse =
         await signatureRequestApi.signatureRequestCreateEmbeddedWithTemplate(
           data
         )
 
-      const signatures =
-        embeddedSignatureRequest.body.signatureRequest?.signatures ?? []
+      const {
+        body: {
+          signatureRequest: { signatureRequestId, signatures },
+        },
+      } = validateEmbeddedSignatureRequestResponse(
+        embeddedSignatureRequestResponse
+      )
+
       const signatureId = signatures[0].signatureId
 
-      if (isEmpty(signatures) || isEmpty(signatureId)) {
+      const embeddedApi = new DropboxSignSdk.EmbeddedApi()
+      embeddedApi.username = apiKey
+
+      const getEmbeddedSignUrlResponse = await embeddedApi.embeddedSignUrl(
+        signatureId
+      )
+
+      const {
+        body: {
+          embedded: { signUrl, expiresAt },
+        },
+      } = validateGetSignUrlResponse(getEmbeddedSignUrlResponse)
+
+      await onComplete({
+        data_points: {
+          signatureRequestId,
+          signUrl,
+          expiresAt,
+        },
+      })
+    } catch (err) {
+      console.log(err)
+      if (err instanceof ZodError) {
+        const error = fromZodError(err)
         await onError({
           events: [
             {
               date: new Date().toISOString(),
-              text: { en: 'No signatures found.' },
+              text: { en: error.name },
+              error: {
+                category: 'WRONG_INPUT',
+                message: `${error.message}`,
+              },
+            },
+          ],
+        })
+        return
+      }
+
+      if (err instanceof HttpError) {
+        const sdkErrorMessage = err.body?.error?.errorMsg
+
+        await onError({
+          events: [
+            {
+              date: new Date().toISOString(),
+              text: {
+                en: err.name,
+              },
               error: {
                 category: 'SERVER_ERROR',
-                message: `No signatures found for embedded signature request with id ${String(
-                  embeddedSignatureRequest.body.signatureRequest
-                    ?.signatureRequestId
+                message: `${String(err?.statusCode)}: ${String(
+                  sdkErrorMessage
                 )}`,
               },
             },
           ],
         })
+        return
       }
 
-      /**
-       * Somehow I need to be able to pass the Sign URL to the front-end (Awell Hosted Pages)
-       * so it can use the `hellosign-embedded` sdk to open the URL in the front-end.
-       *
-       * What would make sense is that I can append the signUrl to the activity object so I can
-       * access it in Orchestration.
-       */
-      // const embeddedApi = new DropboxSignSdk.EmbeddedApi()
-      // embeddedApi.username = apiKey
-
-      // const embeddedSignUrlRequest = await embeddedApi.embeddedSignUrl(
-      //   String(signatureId)
-      // )
-      // const signUrl = String(embeddedSignUrlRequest.body.embedded?.signUrl)
-
-      await onComplete({})
-    } catch (err) {
       const error = err as Error
       await onError({
         events: [

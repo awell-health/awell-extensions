@@ -10,4 +10,6 @@ export enum Category {
   BILLING = 'Billing',
   MEDICINE_MANAGEMENT = 'Medicine Management',
   DEMO = 'Demo',
+  FORMS = 'Forms',
+  AI = 'Artificial Intelligence (AI)',
 }

@@ -1,3 +1,5 @@
+import { type Patient } from './Patient'
+
 export interface NewActivityPayload<
   SettingsKeys extends string | number | symbol = never,
   FieldsKeys extends string | number | symbol = never
@@ -5,19 +7,7 @@ export interface NewActivityPayload<
   activity: {
     id: string
   }
-  patient: {
-    id: string
-    profile?: {
-      email?: string
-      first_name?: string
-      last_name?: string
-      name?: string
-      phone?: string
-      mobile_phone?: string
-      patient_code?: string
-      sex?: 'MALE' | 'FEMALE' | 'NOT_KNOWN'
-    }
-  }
+  patient: Patient
   fields: Record<FieldsKeys, string | undefined>
   settings: Record<SettingsKeys, string | undefined>
 }
