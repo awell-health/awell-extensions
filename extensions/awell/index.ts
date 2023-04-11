@@ -1,4 +1,4 @@
-import { startCareFlow, updatePatient, deletePatient } from './v1/actions'
+import { startCareFlow, updatePatient } from './v1/actions'
 import { type Extension } from '../../lib/types'
 import { settings } from './settings'
 import { webhooks } from './v1/webhooks'
@@ -18,7 +18,7 @@ export const Awell: Extension = {
   actions: {
     startCareFlow,
     updatePatient,
-    deletePatient,
+    // deletePatient, Deleting the patient who is currently enrolled in the pathway seems dangerous
   },
   webhooks,
 }
