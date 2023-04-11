@@ -5,6 +5,7 @@ export enum FieldType {
   TEXT = 'text',
   NUMERIC = 'numeric',
   DATE = 'date',
+  BOOLEAN = 'boolean',
 }
 
 interface BaseField {
@@ -21,9 +22,12 @@ export enum StringType {
   PHONE = 'phone',
 }
 
+type BooleanField = BaseField & {
+  type: FieldType.BOOLEAN
+}
+
 type NumericField = BaseField & {
   type: FieldType.NUMERIC
-  value?: number
 }
 
 type StringField = BaseField & {
@@ -45,10 +49,10 @@ type TextField = BaseField & {
 
 type DateField = BaseField & {
   type: FieldType.DATE
-  value?: string
 }
 
 export type Field =
+  | BooleanField
   | TextField
   | NumericField
   | StringField
