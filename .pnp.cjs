@@ -52,6 +52,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["eslint-plugin-n", "virtual:d0a76b174a54d973a27fb74b962aa2f26df55e18a188b76dd96ab65ec80e4a0b001d63550589d8a4f2f542a16ec7ef50e51453b019e1529d4f43d2542f174b98#npm:15.6.1"],\
             ["eslint-plugin-promise", "virtual:d0a76b174a54d973a27fb74b962aa2f26df55e18a188b76dd96ab65ec80e4a0b001d63550589d8a4f2f542a16ec7ef50e51453b019e1529d4f43d2542f174b98#npm:6.1.1"],\
             ["fastify", "npm:4.13.0"],\
+            ["form-data", "npm:4.0.0"],\
             ["graphql", "npm:16.6.0"],\
             ["graphql-request", "virtual:d0a76b174a54d973a27fb74b962aa2f26df55e18a188b76dd96ab65ec80e4a0b001d63550589d8a4f2f542a16ec7ef50e51453b019e1529d4f43d2542f174b98#npm:5.1.0"],\
             ["graphql-tag", "virtual:d0a76b174a54d973a27fb74b962aa2f26df55e18a188b76dd96ab65ec80e4a0b001d63550589d8a4f2f542a16ec7ef50e51453b019e1529d4f43d2542f174b98#npm:2.12.6"],\
@@ -61,6 +62,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["lightship", "npm:7.1.1"],\
             ["lint-staged", "npm:13.1.2"],\
             ["lodash", "npm:4.17.21"],\
+            ["mailgun.js", "npm:8.2.1"],\
             ["messagebird", "npm:4.0.1"],\
             ["node-fetch", "virtual:94e2650e81a726e7adc8f0f6e639be3d7648493f2f2b84c27eee40ecea9a62ed0532e681c130c39c234a2ad47b19ceeb2d6987857059ffec26dfbe9101153344#npm:2.6.9"],\
             ["openai", "npm:3.2.1"],\
@@ -167,6 +169,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["eslint-plugin-n", "virtual:d0a76b174a54d973a27fb74b962aa2f26df55e18a188b76dd96ab65ec80e4a0b001d63550589d8a4f2f542a16ec7ef50e51453b019e1529d4f43d2542f174b98#npm:15.6.1"],\
             ["eslint-plugin-promise", "virtual:d0a76b174a54d973a27fb74b962aa2f26df55e18a188b76dd96ab65ec80e4a0b001d63550589d8a4f2f542a16ec7ef50e51453b019e1529d4f43d2542f174b98#npm:6.1.1"],\
             ["fastify", "npm:4.13.0"],\
+            ["form-data", "npm:4.0.0"],\
             ["graphql", "npm:16.6.0"],\
             ["graphql-request", "virtual:d0a76b174a54d973a27fb74b962aa2f26df55e18a188b76dd96ab65ec80e4a0b001d63550589d8a4f2f542a16ec7ef50e51453b019e1529d4f43d2542f174b98#npm:5.1.0"],\
             ["graphql-tag", "virtual:d0a76b174a54d973a27fb74b962aa2f26df55e18a188b76dd96ab65ec80e4a0b001d63550589d8a4f2f542a16ec7ef50e51453b019e1529d4f43d2542f174b98#npm:2.12.6"],\
@@ -176,6 +179,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["lightship", "npm:7.1.1"],\
             ["lint-staged", "npm:13.1.2"],\
             ["lodash", "npm:4.17.21"],\
+            ["mailgun.js", "npm:8.2.1"],\
             ["messagebird", "npm:4.0.1"],\
             ["node-fetch", "virtual:94e2650e81a726e7adc8f0f6e639be3d7648493f2f2b84c27eee40ecea9a62ed0532e681c130c39c234a2ad47b19ceeb2d6987857059ffec26dfbe9101153344#npm:2.6.9"],\
             ["openai", "npm:3.2.1"],\
@@ -4832,6 +4836,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["proxy-from-env", "npm:1.1.0"]\
           ],\
           "linkType": "HARD"\
+        }],\
+        ["npm:1.3.5", {\
+          "packageLocation": "./.yarn/cache/axios-npm-1.3.5-f8ffbd6db8-4d6bcf933b.zip/node_modules/axios/",\
+          "packageDependencies": [\
+            ["axios", "npm:1.3.5"],\
+            ["follow-redirects", "virtual:39e5c1e79ea63134f0cf339f4463df92854aaf708a45210afd29a0b4b9f67f95b34a1abbcabaae6d0033ad99a1d5f690ab51ed8e5d3283b87ccbc3a9ab3ec05f#npm:1.15.2"],\
+            ["form-data", "npm:4.0.0"],\
+            ["proxy-from-env", "npm:1.1.0"]\
+          ],\
+          "linkType": "HARD"\
         }]\
       ]],\
       ["babel-jest", [\
@@ -5034,6 +5048,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/balanced-match-npm-1.0.2-a53c126459-9706c088a2.zip/node_modules/balanced-match/",\
           "packageDependencies": [\
             ["balanced-match", "npm:1.0.2"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["base-64", [\
+        ["npm:1.0.0", {\
+          "packageLocation": "./.yarn/cache/base-64-npm-1.0.0-0683a6b836-d10b64a1fc.zip/node_modules/base-64/",\
+          "packageDependencies": [\
+            ["base-64", "npm:1.0.0"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -9744,6 +9767,18 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
+      ["mailgun.js", [\
+        ["npm:8.2.1", {\
+          "packageLocation": "./.yarn/cache/mailgun.js-npm-8.2.1-a80ed6f1ca-512b76a8b6.zip/node_modules/mailgun.js/",\
+          "packageDependencies": [\
+            ["mailgun.js", "npm:8.2.1"],\
+            ["axios", "npm:1.3.5"],\
+            ["base-64", "npm:1.0.0"],\
+            ["url-join", "npm:4.0.1"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
       ["make-dir", [\
         ["npm:3.1.0", {\
           "packageLocation": "./.yarn/cache/make-dir-npm-3.1.0-d1d7505142-484200020a.zip/node_modules/make-dir/",\
@@ -12672,6 +12707,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["uri-js", "npm:4.4.1"],\
             ["punycode", "npm:2.3.0"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["url-join", [\
+        ["npm:4.0.1", {\
+          "packageLocation": "./.yarn/cache/url-join-npm-4.0.1-e1f4415722-f74e868bf2.zip/node_modules/url-join/",\
+          "packageDependencies": [\
+            ["url-join", "npm:4.0.1"]\
           ],\
           "linkType": "HARD"\
         }]\
