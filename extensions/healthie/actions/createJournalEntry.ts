@@ -1,4 +1,4 @@
-import { isNil, toString } from 'lodash'
+import { isNil } from 'lodash'
 import { mapHealthieToActivityError } from '../errors'
 import {
   type DataPointDefinition,
@@ -82,7 +82,7 @@ export const createJournalEntry: Action<
           input: {
             user_id: id,
             type,
-            percieved_hungriness: toString(percieved_hungriness),
+            percieved_hungriness: String(percieved_hungriness),
           },
         })
 
