@@ -9,7 +9,8 @@ describe('createPatient action', () => {
   const onComplete = jest.fn()
 
   beforeAll(() => {
-    ;(getSdk as jest.Mock).mockImplementation(mockGetSdk)
+    const mockSdk = getSdk as jest.Mock
+    mockSdk.mockImplementation(mockGetSdk)
   })
 
   beforeEach(() => {
@@ -32,7 +33,7 @@ describe('createPatient action', () => {
           provider_id: undefined,
           skipped_email: undefined,
           dob: undefined,
-          dont_send_welcome: undefined,
+          send_invite: undefined,
         },
         settings: {
           apiKey: 'apiKey',
