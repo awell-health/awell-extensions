@@ -1,11 +1,12 @@
 import { type Action } from '../../../../../lib/types'
 import { fields, dataPoints } from './config'
 import { Category } from '../../../../../lib/types/marketplace'
-import { type settings } from '../../../settings'
-import { isEmpty, isNil } from 'lodash'
+import { validateSettings, type settings } from '../../../settings'
 import DropboxSignSdk from '../../../common/sdk/dropboxSignSdk'
-import { isInTestMode } from '../../../common/utils'
 import { HttpError } from '@dropbox/sign'
+import { fromZodError } from 'zod-validation-error'
+import { ZodError } from 'zod'
+import { validateActionFields } from './config/fields'
 
 export const sendSignatureRequestWithTemplate: Action<
   typeof fields,
@@ -19,10 +20,13 @@ export const sendSignatureRequestWithTemplate: Action<
   dataPoints,
   previewable: true,
   onActivityCreated: async (payload, onComplete, onError) => {
-    const {
-      patient: { id: patientId },
-      activity: { id: activityId },
-      fields: {
+    try {
+      const {
+        patient: { id: patientId },
+        activity: { id: activityId },
+      } = payload
+
+      const {
         signerRole,
         signerName,
         signerEmailAddress,
@@ -31,58 +35,16 @@ export const sendSignatureRequestWithTemplate: Action<
         subject,
         message,
         signingRedirectUrl,
-      },
-      settings: { apiKey, testMode },
-    } = payload
-
-    try {
-      const allRequiredFieldsHaveValues = [
-        signerRole,
-        signerName,
-        signerEmailAddress,
-        templateId,
-      ].every((field) => !isEmpty(field))
-
-      if (!allRequiredFieldsHaveValues) {
-        await onError({
-          events: [
-            {
-              date: new Date().toISOString(),
-              text: { en: 'Fields are missing' },
-              error: {
-                category: 'MISSING_FIELDS',
-                message:
-                  '`signerRole`, `signerName`, `signerEmailAddress`, or `templateId` is missing',
-              },
-            },
-          ],
-        })
-        return
-      }
-
-      if (isNil(apiKey)) {
-        await onError({
-          events: [
-            {
-              date: new Date().toISOString(),
-              text: { en: 'Missing an API key' },
-              error: {
-                category: 'MISSING_SETTINGS',
-                message: 'Missing an API key',
-              },
-            },
-          ],
-        })
-        return
-      }
+      } = validateActionFields(payload.fields)
+      const { apiKey, testMode } = validateSettings(payload.settings)
 
       const signatureRequestApi = new DropboxSignSdk.SignatureRequestApi()
       signatureRequestApi.username = apiKey
 
       const signer: DropboxSignSdk.SubSignatureRequestTemplateSigner = {
-        role: String(signerRole),
-        emailAddress: String(signerEmailAddress),
-        name: String(signerName),
+        role: signerRole,
+        emailAddress: signerEmailAddress,
+        name: signerName,
       }
 
       const defaultSigningOptions: DropboxSignSdk.SubSigningOptions = {
@@ -94,14 +56,14 @@ export const sendSignatureRequestWithTemplate: Action<
       }
 
       const data: DropboxSignSdk.SignatureRequestSendWithTemplateRequest = {
-        templateIds: [String(templateId)],
+        templateIds: [templateId],
         subject,
         message,
         signers: [signer],
         title,
         signingRedirectUrl,
         signingOptions: defaultSigningOptions,
-        testMode: isInTestMode(String(testMode)),
+        testMode,
         metadata: {
           awellPatientId: patientId,
           awellActivityId: activityId,
@@ -120,6 +82,23 @@ export const sendSignatureRequestWithTemplate: Action<
         },
       })
     } catch (err) {
+      if (err instanceof ZodError) {
+        const error = fromZodError(err)
+        await onError({
+          events: [
+            {
+              date: new Date().toISOString(),
+              text: { en: error.name },
+              error: {
+                category: 'WRONG_INPUT',
+                message: `${error.message}`,
+              },
+            },
+          ],
+        })
+        return
+      }
+
       if (err instanceof HttpError) {
         const sdkErrorMessage = err.body?.error?.errorMsg
 

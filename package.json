@@ -58,6 +58,7 @@
     "mailgun.js": "^8.2.1",
     "messagebird": "^4.0.1",
     "node-fetch": "2",
+    "openai": "^3.2.1",
     "showdown": "^2.1.0",
     "twilio": "^4.8.0",
     "zod": "^3.21.4",
