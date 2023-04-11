@@ -1,12 +1,29 @@
 import { z, ZodError } from 'zod'
 import { fromZodError } from 'zod-validation-error'
-import twilioSdk from '../twilio'
-import { FieldType, type Action, type Field } from '../../../lib/types'
-import { type settings } from '../settings'
-import { Category } from '../../../lib/types/marketplace'
-import { Message, Phone, Settings, validate } from '../validation'
+import twilioSdk from '../../common/sdk/twilio'
+import {
+  FieldType,
+  StringType,
+  type Action,
+  type Field,
+} from '../../../../lib/types'
+import { SettingsValidationSchema, type settings } from '../../settings'
+import { Category } from '../../../../lib/types/marketplace'
+import {
+  MessageValidationSchema,
+  PhoneValidationSchema,
+} from '../../common/validation'
+import { validate } from '../../../../lib/shared/validation'
 
 const fields = {
+  recipient: {
+    id: 'recipient',
+    label: '"To" phone number',
+    type: FieldType.STRING,
+    stringType: StringType.PHONE,
+    description: 'To what phone number would you like to send an SMS message?',
+    required: true,
+  },
   message: {
     id: 'message',
     label: 'Message',
@@ -15,42 +32,40 @@ const fields = {
   },
 } satisfies Record<string, Field>
 
-const PatientProfile = z.object({
-  mobile_phone: Phone,
+const Fields = z.object({
+  recipient: PhoneValidationSchema,
+  message: MessageValidationSchema,
 })
-
-const Patient = z.object({ profile: PatientProfile })
 
 const Schema = z.object({
-  patient: Patient,
-  fields: Message,
-  settings: Settings,
+  fields: Fields,
+  settings: SettingsValidationSchema,
 })
 
-export const patientSmsNotification: Action<typeof fields, typeof settings> = {
-  key: 'patientSmsNotification',
-  title: 'Send SMS to patient',
+export const smsNotification: Action<typeof fields, typeof settings> = {
+  key: 'smsNotification',
+  title: 'Send SMS to phone number',
+  description: 'Send an SMS message to a phone number.',
   category: Category.COMMUNICATION,
-  description: 'Send an SMS message to the patient enrolled in this care flow.',
   fields,
   onActivityCreated: async (payload, onComplete, onError) => {
     try {
       const {
-        patient: {
-          profile: { mobile_phone },
-        },
-        fields: { message },
+        fields: { recipient, message },
         settings: { accountSid, authToken, fromNumber },
       } = validate({ schema: Schema, payload })
+
       const client = twilioSdk(accountSid, authToken, {
         region: 'IE1',
         accountSid,
       })
+
       await client.messages.create({
         body: message,
         from: fromNumber,
-        to: mobile_phone,
+        to: recipient,
       })
+
       await onComplete()
     } catch (err) {
       if (err instanceof ZodError) {
