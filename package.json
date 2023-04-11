@@ -9,7 +9,6 @@
     "lint": "eslint **/*.ts",
     "postinstall": "husky install",
     "test": "jest",
-    "test:publish-new-activity": "ts-node-dev --transpile-only ./src/publish-new-activity.ts",
     "elation:webhook": "yarn esbuild ./extensions/elation/scripts/create_webhook.ts --bundle --platform=node | yarn node"
   },
   "devDependencies": {
