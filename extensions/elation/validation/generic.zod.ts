@@ -1,6 +1,10 @@
 import { z } from 'zod'
 import { formatISO } from 'date-fns'
 
+/**
+ * numberId is a REQUIRED field, so please use a z.coerce...optional() for non-
+ * required numbers
+ */
 export const numberId = z.coerce
   .number({
     invalid_type_error: 'Requires a valid ID (number)',
