@@ -1,11 +1,9 @@
 import { type Action, type NewActivityPayload } from '../../../../../lib/types'
 import { Category } from '../../../../../lib/types/marketplace'
 import { type settings } from '../../../settings'
-import { fields, dataPoints } from './config'
-import { validateDataPoints } from './config/dataPoints'
-import { validateActionFields } from './config/fields'
+import { fields, dataPoints, FieldsValidationSchema } from './config'
 import { fromZodError } from 'zod-validation-error'
-import { ZodError } from 'zod'
+import { z, ZodError } from 'zod'
 import {
   differenceInSeconds,
   differenceInMinutes,
@@ -15,6 +13,7 @@ import {
   differenceInMonths,
   differenceInYears,
 } from 'date-fns'
+import { validate } from '../../../../../lib/shared/validation'
 
 export const calculateDateDifference: Action<typeof fields, typeof settings> = {
   key: 'calculateDateDifference',
@@ -27,7 +26,12 @@ export const calculateDateDifference: Action<typeof fields, typeof settings> = {
   previewable: true,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
     try {
-      const { dateLeft, dateRight, unit } = validateActionFields(payload.fields)
+      const {
+        fields: { dateLeft, dateRight, unit },
+      } = validate({
+        schema: z.object({ fields: FieldsValidationSchema }),
+        payload,
+      })
 
       const calculateDifference = (): number => {
         if (unit === 'seconds') {
@@ -63,13 +67,9 @@ export const calculateDateDifference: Action<typeof fields, typeof settings> = {
 
       const dateDifference = calculateDifference()
 
-      const { dateDifference: validatedDateDifference } = validateDataPoints({
-        dateDifference,
-      })
-
       await onComplete({
         data_points: {
-          dateDifference: String(validatedDateDifference),
+          dateDifference: String(dateDifference),
         },
       })
     } catch (err) {
