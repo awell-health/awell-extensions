@@ -1,10 +1,15 @@
 import { type Action } from '../../../../../lib/types'
-import { validateSettings, type settings } from '../../../settings'
+import { SettingsValidationSchema, type settings } from '../../../settings'
 import { Category } from '../../../../../lib/types/marketplace'
-import { fields, validateActionFields, validatePatientFields } from './config'
+import {
+  fields,
+  FieldsValidationSchema,
+  PatientValidationSchema,
+} from './config'
 import { fromZodError } from 'zod-validation-error'
-import { ZodError } from 'zod'
+import { z, ZodError } from 'zod'
 import AwellSdk from '../../sdk/awellSdk'
+import { validate } from '../../../../../lib/shared/validation'
 
 export const updatePatient: Action<typeof fields, typeof settings> = {
   key: 'updatePatient',
@@ -15,24 +20,33 @@ export const updatePatient: Action<typeof fields, typeof settings> = {
   previewable: false,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
     try {
-      const { apiUrl, apiKey } = validateSettings(payload.settings)
       const {
-        patientCode,
-        firstName,
-        lastName,
-        birthDate,
-        email,
-        phone,
-        mobilePhone,
-        street,
-        state,
-        country,
-        city,
-        zip,
-        preferredLanguage,
-        sex,
-      } = validateActionFields(payload.fields)
-      const { id: patientId } = validatePatientFields(payload.patient)
+        settings: { apiUrl, apiKey },
+        fields: {
+          patientCode,
+          firstName,
+          lastName,
+          birthDate,
+          email,
+          phone,
+          mobilePhone,
+          street,
+          state,
+          country,
+          city,
+          zip,
+          preferredLanguage,
+          sex,
+        },
+        patient: { id: patientId },
+      } = validate({
+        schema: z.object({
+          fields: FieldsValidationSchema,
+          settings: SettingsValidationSchema,
+          patient: PatientValidationSchema,
+        }),
+        payload,
+      })
 
       const sdk = new AwellSdk({ apiUrl, apiKey })
 

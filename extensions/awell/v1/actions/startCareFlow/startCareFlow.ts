@@ -1,10 +1,15 @@
 import { type Action } from '../../../../../lib/types'
-import { validateSettings, type settings } from '../../../settings'
+import { SettingsValidationSchema, type settings } from '../../../settings'
 import { Category } from '../../../../../lib/types/marketplace'
-import { fields, validateActionFields, validatePatientFields } from './config'
+import {
+  fields,
+  PatientValidationSchema,
+  FieldsValidationSchema,
+} from './config'
 import { fromZodError } from 'zod-validation-error'
-import { ZodError } from 'zod'
+import { z, ZodError } from 'zod'
 import AwellSdk from '../../sdk/awellSdk'
+import { validate } from '../../../../twilio/validation'
 
 export const startCareFlow: Action<typeof fields, typeof settings> = {
   key: 'startCareFlow',
@@ -15,9 +20,18 @@ export const startCareFlow: Action<typeof fields, typeof settings> = {
   previewable: false,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
     try {
-      const { apiUrl, apiKey } = validateSettings(payload.settings)
-      const { pathwayDefinitionId } = validateActionFields(payload.fields)
-      const { id: patientId } = validatePatientFields(payload.patient)
+      const {
+        settings: { apiUrl, apiKey },
+        fields: { pathwayDefinitionId },
+        patient: { id: patientId },
+      } = validate({
+        schema: z.object({
+          fields: FieldsValidationSchema,
+          settings: SettingsValidationSchema,
+          patient: PatientValidationSchema,
+        }),
+        payload,
+      })
 
       const sdk = new AwellSdk({ apiUrl, apiKey })
 

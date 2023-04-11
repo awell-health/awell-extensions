@@ -14,11 +14,3 @@ export const fields = {
 export const FieldsValidationSchema = z.object({
   pathwayDefinitionId: z.string(),
 } satisfies Record<keyof typeof fields, ZodTypeAny>)
-
-export const validateActionFields = (
-  fields: unknown
-): z.infer<typeof FieldsValidationSchema> => {
-  const parsedData = FieldsValidationSchema.parse(fields)
-
-  return parsedData
-}

@@ -22,11 +22,3 @@ export const SettingsValidationSchema = z.object({
   apiUrl: z.string(),
   apiKey: z.string(),
 } satisfies Record<keyof typeof settings, ZodTypeAny>)
-
-export const validateSettings = (
-  settings: unknown
-): z.infer<typeof SettingsValidationSchema> => {
-  const parsedData = SettingsValidationSchema.parse(settings)
-
-  return parsedData
-}

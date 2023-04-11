@@ -1,10 +1,11 @@
 import { type Action } from '../../../../../lib/types'
-import { validateSettings, type settings } from '../../../settings'
+import { SettingsValidationSchema, type settings } from '../../../settings'
 import { Category } from '../../../../../lib/types/marketplace'
-import { fields, validatePatientFields } from './config'
+import { fields, PatientValidationSchema } from './config'
 import { fromZodError } from 'zod-validation-error'
-import { ZodError } from 'zod'
+import { z, ZodError } from 'zod'
 import AwellSdk from '../../sdk/awellSdk'
+import { validate } from '../../../../../lib/shared/validation'
 
 export const deletePatient: Action<typeof fields, typeof settings> = {
   key: 'deletePatient',
@@ -15,8 +16,16 @@ export const deletePatient: Action<typeof fields, typeof settings> = {
   previewable: false,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
     try {
-      const { apiUrl, apiKey } = validateSettings(payload.settings)
-      const { id: patientId } = validatePatientFields(payload.patient)
+      const {
+        settings: { apiUrl, apiKey },
+        patient: { id: patientId },
+      } = validate({
+        schema: z.object({
+          settings: SettingsValidationSchema,
+          patient: PatientValidationSchema,
+        }),
+        payload,
+      })
 
       const sdk = new AwellSdk({ apiUrl, apiKey })
 

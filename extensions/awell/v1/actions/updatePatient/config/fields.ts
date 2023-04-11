@@ -115,11 +115,3 @@ export const FieldsValidationSchema = z.object({
   preferredLanguage: z.optional(z.string()),
   sex: z.optional(z.enum([Sex.Female, Sex.Male, Sex.NotKnown])),
 } satisfies Record<keyof typeof fields, ZodTypeAny>)
-
-export const validateActionFields = (
-  fields: unknown
-): z.infer<typeof FieldsValidationSchema> => {
-  const parsedData = FieldsValidationSchema.parse(fields)
-
-  return parsedData
-}
