@@ -37,8 +37,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@graphql-codegen/typescript-operations", "virtual:d0a76b174a54d973a27fb74b962aa2f26df55e18a188b76dd96ab65ec80e4a0b001d63550589d8a4f2f542a16ec7ef50e51453b019e1529d4f43d2542f174b98#npm:3.0.2"],\
             ["@graphql-tools/apollo-engine-loader", "virtual:d0a76b174a54d973a27fb74b962aa2f26df55e18a188b76dd96ab65ec80e4a0b001d63550589d8a4f2f542a16ec7ef50e51453b019e1529d4f43d2542f174b98#npm:7.3.26"],\
             ["@graphql-typed-document-node/core", "virtual:d0a76b174a54d973a27fb74b962aa2f26df55e18a188b76dd96ab65ec80e4a0b001d63550589d8a4f2f542a16ec7ef50e51453b019e1529d4f43d2542f174b98#npm:3.1.2"],\
+            ["@mailchimp/mailchimp_transactional", "npm:1.0.50"],\
             ["@types/jest", "npm:29.4.0"],\
             ["@types/lodash", "npm:4.14.191"],\
+            ["@types/mailchimp__mailchimp_transactional", "npm:1.0.5"],\
             ["@types/node", "npm:18.13.0"],\
             ["@types/node-fetch", "npm:2.6.2"],\
             ["@types/showdown", "npm:2.0.0"],\
@@ -154,8 +156,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@graphql-codegen/typescript-operations", "virtual:d0a76b174a54d973a27fb74b962aa2f26df55e18a188b76dd96ab65ec80e4a0b001d63550589d8a4f2f542a16ec7ef50e51453b019e1529d4f43d2542f174b98#npm:3.0.2"],\
             ["@graphql-tools/apollo-engine-loader", "virtual:d0a76b174a54d973a27fb74b962aa2f26df55e18a188b76dd96ab65ec80e4a0b001d63550589d8a4f2f542a16ec7ef50e51453b019e1529d4f43d2542f174b98#npm:7.3.26"],\
             ["@graphql-typed-document-node/core", "virtual:d0a76b174a54d973a27fb74b962aa2f26df55e18a188b76dd96ab65ec80e4a0b001d63550589d8a4f2f542a16ec7ef50e51453b019e1529d4f43d2542f174b98#npm:3.1.2"],\
+            ["@mailchimp/mailchimp_transactional", "npm:1.0.50"],\
             ["@types/jest", "npm:29.4.0"],\
             ["@types/lodash", "npm:4.14.191"],\
+            ["@types/mailchimp__mailchimp_transactional", "npm:1.0.5"],\
             ["@types/node", "npm:18.13.0"],\
             ["@types/node-fetch", "npm:2.6.2"],\
             ["@types/showdown", "npm:2.0.0"],\
@@ -3391,6 +3395,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
+      ["@mailchimp/mailchimp_transactional", [\
+        ["npm:1.0.50", {\
+          "packageLocation": "./.yarn/cache/@mailchimp-mailchimp_transactional-npm-1.0.50-294e1cb7b1-5a1f563f18.zip/node_modules/@mailchimp/mailchimp_transactional/",\
+          "packageDependencies": [\
+            ["@mailchimp/mailchimp_transactional", "npm:1.0.50"],\
+            ["axios", "npm:0.21.4"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
       ["@nodelib/fs.scandir", [\
         ["npm:2.1.5", {\
           "packageLocation": "./.yarn/cache/@nodelib-fs.scandir-npm-2.1.5-89c67370dd-a970d595bd.zip/node_modules/@nodelib/fs.scandir/",\
@@ -3937,6 +3951,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@types-long-npm-4.0.2-e7bdc00dd4-d16cde7240.zip/node_modules/@types/long/",\
           "packageDependencies": [\
             ["@types/long", "npm:4.0.2"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["@types/mailchimp__mailchimp_transactional", [\
+        ["npm:1.0.5", {\
+          "packageLocation": "./.yarn/cache/@types-mailchimp__mailchimp_transactional-npm-1.0.5-fb67a99c7f-2ce6ec1163.zip/node_modules/@types/mailchimp__mailchimp_transactional/",\
+          "packageDependencies": [\
+            ["@types/mailchimp__mailchimp_transactional", "npm:1.0.5"],\
+            ["axios", "npm:0.21.4"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -4811,6 +4835,14 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["axios", [\
+        ["npm:0.21.4", {\
+          "packageLocation": "./.yarn/cache/axios-npm-0.21.4-e278873748-44245f24ac.zip/node_modules/axios/",\
+          "packageDependencies": [\
+            ["axios", "npm:0.21.4"],\
+            ["follow-redirects", "virtual:39e5c1e79ea63134f0cf339f4463df92854aaf708a45210afd29a0b4b9f67f95b34a1abbcabaae6d0033ad99a1d5f690ab51ed8e5d3283b87ccbc3a9ab3ec05f#npm:1.15.2"]\
+          ],\
+          "linkType": "HARD"\
+        }],\
         ["npm:0.24.0", {\
           "packageLocation": "./.yarn/cache/axios-npm-0.24.0-39e5c1e79e-468cf496c0.zip/node_modules/axios/",\
           "packageDependencies": [\
