@@ -1,11 +1,12 @@
-import { ZodError } from 'zod'
+import { z, ZodError } from 'zod'
 import { fromZodError } from 'zod-validation-error'
 import twilioSdk from '../../../common/sdk/twilio'
 import { type Action } from '../../../../../lib/types'
 import { type settings } from '../../../settings'
 import { Category } from '../../../../../lib/types/marketplace'
-import { validateSettings } from '../../../settings'
-import { validateActionFields, fields } from './config'
+import { SettingsValidationSchema } from '../../../settings'
+import { FieldsValidationSchema, fields } from './config'
+import { validate } from '../../../../../lib/shared/validation'
 
 export const sendSms: Action<typeof fields, typeof settings> = {
   key: 'sendSms',
@@ -15,10 +16,16 @@ export const sendSms: Action<typeof fields, typeof settings> = {
   fields,
   onActivityCreated: async (payload, onComplete, onError) => {
     try {
-      const { accountSid, authToken, fromNumber } = validateSettings(
-        payload.settings
-      )
-      const { recipient, message } = validateActionFields(payload.fields)
+      const {
+        settings: { accountSid, authToken, fromNumber },
+        fields: { recipient, message },
+      } = validate({
+        schema: z.object({
+          settings: SettingsValidationSchema,
+          fields: FieldsValidationSchema,
+        }),
+        payload,
+      })
 
       const client = twilioSdk(accountSid, authToken, {
         region: 'IE1',

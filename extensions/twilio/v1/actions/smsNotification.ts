@@ -13,7 +13,7 @@ import {
   MessageValidationSchema,
   PhoneValidationSchema,
 } from '../../common/validation'
-import { validate } from '../validation'
+import { validate } from '../../../../lib/shared/validation'
 
 const fields = {
   recipient: {
@@ -54,6 +54,7 @@ export const smsNotification: Action<typeof fields, typeof settings> = {
         fields: { recipient, message },
         settings: { accountSid, authToken, fromNumber },
       } = validate({ schema: Schema, payload })
+
       const client = twilioSdk(accountSid, authToken, {
         region: 'IE1',
         accountSid,

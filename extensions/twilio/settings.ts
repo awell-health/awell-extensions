@@ -32,11 +32,3 @@ export const SettingsValidationSchema = z.object({
   authToken: z.string().min(1, { message: 'Missing Twilio auth token' }),
   fromNumber: PhoneValidationSchema,
 } satisfies Record<keyof typeof settings, ZodTypeAny>)
-
-export const validateSettings = (
-  fields: unknown
-): z.infer<typeof SettingsValidationSchema> => {
-  const parsedData = SettingsValidationSchema.parse(fields)
-
-  return parsedData
-}

@@ -8,7 +8,7 @@ import {
   MessageValidationSchema,
   PhoneValidationSchema,
 } from '../../common/validation'
-import { validate } from '../validation'
+import { validate } from '../../../../lib/shared/validation'
 
 const fields = {
   message: {
