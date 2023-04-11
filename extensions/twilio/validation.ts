@@ -7,7 +7,10 @@ export const Phone = z.custom<'Phone'>((val) => {
 }, 'Invalid phone number')
 
 export const Message = z.object({
-  message: z.string().min(1, { message: 'Missing or empty message' }),
+  message: z
+    .string()
+    .min(1, { message: 'Missing or empty message' })
+    .max(1600, { message: 'Message can not be longer than 1600 characters' }),
 })
 
 export const Settings = z.object({
