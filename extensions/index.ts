@@ -10,6 +10,7 @@ import { MathExtension } from './math'
 import { Mailgun } from './mailgun'
 import { Formsort } from './formsort'
 // import { AvaAi } from './avaAi'
+import { Mailchimp } from './mailchimp'
 
 export const extensions = [
   // AvaAi, Best to disable this until we cleared out data privacy & HIPAA with OpenAI
@@ -24,4 +25,5 @@ export const extensions = [
   MessageBird,
   MathExtension,
   Formsort,
+  Mailchimp,
 ]
