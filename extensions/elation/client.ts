@@ -3,6 +3,10 @@ import {
   APIClient,
   type DataWrapperCtor,
 } from '../../lib/shared/client'
+import {
+  type AppointmentResponse,
+  type AppointmentInput,
+} from './types/appointment'
 import { type Find } from './types/generic'
 import { type PatientInput, type PatientResponse } from './types/patient'
 import {
@@ -11,6 +15,27 @@ import {
 } from './types/subscription'
 
 export class ElationDataWrapper extends DataWrapper {
+  public async getAppointment(id: number): Promise<AppointmentResponse> {
+    const req = this.Request<AppointmentResponse>({
+      method: 'GET',
+      url: `/appointments/${id}`,
+    })
+    const res = await req
+    return res
+  }
+
+  public async createAppointment(
+    obj: Partial<AppointmentInput>
+  ): Promise<AppointmentResponse> {
+    const req = this.Request<AppointmentResponse>({
+      method: 'POST',
+      url: `/appointments`,
+      data: obj,
+    })
+    const res = await req
+    return res
+  }
+
   public async getPatient(id: number): Promise<PatientResponse> {
     const req = this.Request<PatientResponse>({
       method: 'GET',
@@ -81,6 +106,16 @@ export const makeDataWrapper: DataWrapperCtor<ElationDataWrapper> = (
 ) => new ElationDataWrapper(token, baseUrl)
 
 export class ElationAPIClient extends APIClient<ElationDataWrapper> {
+  public async getAppointment(id: number): Promise<AppointmentResponse> {
+    return await this.FetchData(async (dw) => await dw.getAppointment(id))
+  }
+
+  public async createAppointment(
+    obj: Partial<AppointmentInput>
+  ): Promise<AppointmentResponse> {
+    return await this.FetchData(async (dw) => await dw.createAppointment(obj))
+  }
+
   public async getPatient(id: number): Promise<PatientResponse> {
     return await this.FetchData(async (dw) => await dw.getPatient(id))
   }

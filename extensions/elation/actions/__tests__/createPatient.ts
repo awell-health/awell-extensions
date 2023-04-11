@@ -21,25 +21,25 @@ describe('Simple create patient action', () => {
     await createPatient.onActivityCreated(
       {
         fields: {
-          first_name: "Test",
-          middle_name: "P",
-          last_name: "Action",
-          actual_name: "local test action",
-          gender_identity: "man",
-          legal_gender_marker: "M",
-          pronouns: "he_him_his",
-          sex: "Male",
-          sexual_orientation: "unknown",
+          first_name: 'Test',
+          middle_name: 'P',
+          last_name: 'Action',
+          actual_name: 'local test action',
+          gender_identity: 'man',
+          legal_gender_marker: 'M',
+          pronouns: 'he_him_his',
+          sex: 'Male',
+          sexual_orientation: 'unknown',
           primary_physician: 141127177601026,
           caregiver_practice: 141127173275652,
-          dob: "1940-08-29",
-          ssn: "123456789",
-          race: "Asian",
-          preferred_language: "English",
-          ethnicity: "Not Hispanic or Latino",
-          notes: "This is test Notes",
-          previous_first_name: "",
-          previous_last_name: "",
+          dob: '1940-08-29',
+          ssn: '123456789',
+          race: 'Asian',
+          preferred_language: 'English',
+          ethnicity: 'Not Hispanic or Latino',
+          notes: 'This is test Notes',
+          previous_first_name: '',
+          previous_last_name: '',
         },
         settings,
       } as any,
@@ -48,8 +48,8 @@ describe('Simple create patient action', () => {
     )
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
-        patientId: '1'
-      }
+        patientId: '1',
+      },
     })
   })
 })
