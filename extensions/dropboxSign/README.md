@@ -12,6 +12,19 @@ In order to set up this extension, you will need to provide the following settin
 
 ## Custom Actions
 
+### Embedded signing
+
+Embedded Signing gives users the ability to sign documents directly from Awell Hosted Pages using Dropbox Sign's embedded signing feature. First an embedded signature request with a template is created and then a signing URL is generated for the signature request. Via the signing URL, we can let the user sign the request from within Awell.
+
+Embedded signing behaves as a blocking action where the action is only completed when the signature request is effectively signed.
+
+**In order to add embedded signing, you need to add 2 actions to you care flow:**
+
+1. First, add the "Create embedded signature request with template" action. This action will create an embedded signature request based on a template and return a **sign URL**.
+2. Second, add the "Embedded signing" action. In this action you will have to configure the **sign URL** you got from the first action.
+
+**Please note that the signing URL generated in the first step is only valid for 1 hour.** This means that from as soon as the first action is activated, the user has 1 hour to complete the signing request. When the sign URL has expired, the document cannot be signed anymore and and the process would have to be repeated.
+
 ### Send signature request with template
 
 Creates and sends a new SignatureRequest based off of a template specified with the template id parameter. The request will be send to specified signer via email. Please note that is a non-blocking action and that the care flow will automatically continue once the request is sent. It won't wait for the actual signing of the request.
@@ -34,20 +47,3 @@ Sends an email to the signer reminding them to sign the signature request. You c
 ### Cancel signature request
 
 Cancels an incomplete signature request. This action is not reversible.
-
-## Coming soon
-
-### Create embedded signature request with template
-
-Embedded Signing gives users the ability to sign documents directly from the Awell apps using Dropbox Sign's embedded signing feature. First an embedded signature request with a template is created and then a signing URL is generated for the signature request. Via the signing URL, we can let the user sign the request from within our apps.
-
-Additionally, embedded signing behaves as a blocking action where the action is only completed when the signature request is effectively signed.
-
-Below you can find an overview of all Awell Apps and whether they support embedded signing:
-
-| App                           | Supported |
-|-------------------------------|-----------|
-| Awell Hosted Pages            | No        |
-| Your app (custom integration) | No        |
-| Awell Care                    | No        |
-| Awell MyCare                  | No        |

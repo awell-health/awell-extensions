@@ -7,8 +7,11 @@ import { DropboxSign } from './dropboxSign'
 import { Elation } from './elation'
 import { MessageBird } from './messagebird'
 import { Mailgun } from './mailgun'
+import { Formsort } from './formsort'
+// import { AvaAi } from './avaAi'
 
 export const extensions = [
+  // AvaAi, Best to disable this until we cleared out data privacy & HIPAA with OpenAI
   Awell,
   HelloWorld,
   Healthie,
@@ -18,4 +21,5 @@ export const extensions = [
   Elation,
   Mailgun,
   MessageBird,
+  Formsort,
 ]
