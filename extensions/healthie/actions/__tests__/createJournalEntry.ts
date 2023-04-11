@@ -9,7 +9,8 @@ describe('createJournalEntry action', () => {
   const onComplete = jest.fn()
 
   beforeAll(() => {
-    ;(getSdk as jest.Mock).mockImplementation(mockGetSdk)
+    const mock = getSdk as jest.Mock
+    mock.mockImplementation(mockGetSdk)
   })
 
   beforeEach(() => {
