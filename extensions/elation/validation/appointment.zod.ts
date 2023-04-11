@@ -26,7 +26,7 @@ export const appointmentSchema = z
     reason: z.string().max(50).nonempty(),
     description: z.string().max(500).optional(),
     status: statusSchema.optional(),
-    service_location: numberId.nullish(),
+    service_location: z.coerce.number().int().min(1).optional(),
     telehealth_details: z.string().optional(),
     patient: numberId,
     physician: numberId,
