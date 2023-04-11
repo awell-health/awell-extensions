@@ -1,6 +1,6 @@
 import { calculateDateDifference } from './calculateDateDifference'
 
-describe('Send SMS', () => {
+describe('Calculate date difference', () => {
   const onComplete = jest.fn()
   const onError = jest.fn()
 

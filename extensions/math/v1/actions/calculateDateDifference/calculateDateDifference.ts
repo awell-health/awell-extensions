@@ -14,6 +14,7 @@ import {
   differenceInYears,
 } from 'date-fns'
 import { validate } from '../../../../../lib/shared/validation'
+import { AssertionError } from 'node:assert'
 
 export const calculateDateDifference: Action<typeof fields, typeof settings> = {
   key: 'calculateDateDifference',
@@ -34,35 +35,35 @@ export const calculateDateDifference: Action<typeof fields, typeof settings> = {
       })
 
       const calculateDifference = (): number => {
-        if (unit === 'seconds') {
-          return differenceInSeconds(dateLeft, dateRight)
+        switch (unit) {
+          case 'seconds': {
+            return differenceInSeconds(dateLeft, dateRight)
+          }
+          case 'minutes': {
+            return differenceInMinutes(dateLeft, dateRight)
+          }
+          case 'hours': {
+            return differenceInHours(dateLeft, dateRight)
+          }
+          case 'days': {
+            return differenceInDays(dateLeft, dateRight)
+          }
+          case 'weeks': {
+            return differenceInWeeks(dateLeft, dateRight)
+          }
+          case 'months': {
+            return differenceInMonths(dateLeft, dateRight)
+          }
+          case 'years': {
+            return differenceInYears(dateLeft, dateRight)
+          }
+          default: {
+            throw new AssertionError({
+              message:
+                "`unit` should be captured by validation. We shouldn't reach this error.",
+            })
+          }
         }
-
-        if (unit === 'minutes') {
-          return differenceInMinutes(dateLeft, dateRight)
-        }
-
-        if (unit === 'hours') {
-          return differenceInHours(dateLeft, dateRight)
-        }
-
-        if (unit === 'days') {
-          return differenceInDays(dateLeft, dateRight)
-        }
-
-        if (unit === 'weeks') {
-          return differenceInWeeks(dateLeft, dateRight)
-        }
-
-        if (unit === 'months') {
-          return differenceInMonths(dateLeft, dateRight)
-        }
-
-        if (unit === 'years') {
-          return differenceInYears(dateLeft, dateRight)
-        }
-
-        return 0
       }
 
       const dateDifference = calculateDifference()
@@ -95,7 +96,7 @@ export const calculateDateDifference: Action<typeof fields, typeof settings> = {
         events: [
           {
             date: new Date().toISOString(),
-            text: { en: 'Something went wrong while orchestration the action' },
+            text: { en: 'Something went wrong while orchestrating the action' },
             error: {
               category: 'SERVER_ERROR',
               message: error.message,
