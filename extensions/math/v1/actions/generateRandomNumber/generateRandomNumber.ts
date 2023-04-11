@@ -1,4 +1,4 @@
-import { type Action, type NewActivityPayload } from '../../../../../lib/types'
+import { type Action } from '../../../../../lib/types'
 import { Category } from '../../../../../lib/types/marketplace'
 import { type settings } from '../../../settings'
 import { fields, dataPoints } from './config'
@@ -69,8 +69,3 @@ export const generateRandomNumber: Action<typeof fields, typeof settings> = {
     }
   },
 }
-
-export type RandomNumberActivityPayload = NewActivityPayload<
-  keyof typeof settings,
-  keyof typeof fields
->
