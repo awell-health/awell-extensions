@@ -1,6 +1,6 @@
 import { type Extension } from '../../lib/types'
 import { AuthorType, Category } from '../../lib/types/marketplace'
-import { smsNotification, patientSmsNotification } from './actions'
+import { sendSms } from './v2/actions'
 import { settings } from './settings'
 
 export const Twilio: Extension = {
@@ -13,8 +13,7 @@ export const Twilio: Extension = {
     authorType: AuthorType.AWELL,
   },
   actions: {
-    smsNotification,
-    patientSmsNotification,
+    sendSms,
   },
   settings,
 }
