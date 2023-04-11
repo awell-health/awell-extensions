@@ -24,38 +24,31 @@ export enum StringType {
 
 type BooleanField = BaseField & {
   type: FieldType.BOOLEAN
-  value?: boolean
 }
 
 type NumericField = BaseField & {
   type: FieldType.NUMERIC
-  value?: number
 }
 
 type StringField = BaseField & {
   type: FieldType.STRING
   stringType?: StringType
-  value?: string
 }
 
 type HtmlField = BaseField & {
   type: FieldType.HTML
-  value?: string
 }
 
 type JsonField = BaseField & {
   type: FieldType.JSON
-  value?: string
 }
 
 type TextField = BaseField & {
   type: FieldType.TEXT
-  value?: string
 }
 
 type DateField = BaseField & {
   type: FieldType.DATE
-  value?: string // ISO format
 }
 
 export type Field =
