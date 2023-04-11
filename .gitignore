@@ -20,3 +20,6 @@ dist/*
 
 # projections file to easily jump to/from test file
 .projections.json
+
+# Jetbrains ide 
+.idea
