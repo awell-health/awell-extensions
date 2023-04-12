@@ -1,4 +1,4 @@
-import { Sex } from '../../../../../../awell/gql/graphql'
+import { Sex } from '../../../../../../awell/v1/gql/graphql'
 import { generatePrompt, promptQuestion } from './generatePrompt'
 
 const language = 'English'
