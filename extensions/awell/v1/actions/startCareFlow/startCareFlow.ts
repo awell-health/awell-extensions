@@ -9,15 +9,16 @@ import {
 import { fromZodError } from 'zod-validation-error'
 import { z, ZodError } from 'zod'
 import AwellSdk from '../../sdk/awellSdk'
-import { validate } from '../../../../twilio/validation'
+import { validate } from '../../../../../lib/shared/validation'
 
 export const startCareFlow: Action<typeof fields, typeof settings> = {
   key: 'startCareFlow',
   category: Category.WORKFLOW,
   title: 'Start care flow',
-  description: 'Start a new care flow from within the current care flow.',
+  description:
+    'Start a new care flow for the patient currently enrolled in the care flow.',
   fields,
-  previewable: false,
+  previewable: false, // We don't have pathways in Preview, only cases.
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
     try {
       const {
