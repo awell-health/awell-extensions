@@ -11,8 +11,7 @@ import { validateActionFields } from './config/fields'
 export const getSignatureRequest: Action<typeof fields, typeof settings> = {
   key: 'getSignatureRequest',
   title: 'Get signature request',
-  description:
-    'Returns the SignatureRequest specified by the signature request id.',
+  description: 'Get details about a signature request.',
   category: Category.DOCUMENT_MANAGEMENT,
   fields,
   dataPoints,

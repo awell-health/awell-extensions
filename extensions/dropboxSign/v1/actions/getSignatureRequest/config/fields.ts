@@ -5,7 +5,8 @@ export const fields = {
   signatureRequestId: {
     id: 'signatureRequestId',
     label: 'Signature request ID',
-    description: 'The id of the incomplete SignatureRequest to cancel.',
+    description:
+      'The id of the SignatureRequest you want to retrieve the details for.',
     type: FieldType.STRING,
     required: true,
   },

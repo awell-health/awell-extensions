@@ -6,7 +6,7 @@ export const fields = {
   to: {
     id: 'to',
     label: 'To',
-    description: 'Email address of the recipient.',
+    description: 'The email address of the recipient.',
     type: FieldType.STRING,
     /**
      * I am purposely not using the `email` stringType yet.

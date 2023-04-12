@@ -16,14 +16,14 @@ const fields = {
   first_name: {
     id: 'first_name',
     label: 'First name',
-    description: 'First name of the patient',
+    description: 'The first name of the patient.',
     type: FieldType.STRING,
     required: true,
   },
   last_name: {
     id: 'last_name',
     label: 'Last name',
-    description: 'Last name of the patient',
+    description: 'The last name of the patient.',
     type: FieldType.STRING,
     required: true,
   },
@@ -36,40 +36,44 @@ const fields = {
   },
   skipped_email: {
     id: 'skipped_email',
-    label: 'Skipped email',
+    label: 'Skipped email.',
+    description:
+      'When set to "false", an `email` is not required to create the patient.',
     type: FieldType.BOOLEAN,
   },
   email: {
     id: 'email',
     label: 'Email',
-    description: 'Email address of the patient',
+    description: 'The email address of the patient.',
     type: FieldType.STRING,
     stringType: StringType.EMAIL,
+    required: true, // required until skipped_email is not handled
   },
   dob: {
     id: 'dob',
     label: 'Date of birth',
-    description: 'Date of birth of the patient',
+    description: 'The date of birth of the patient.',
     type: FieldType.DATE,
   },
   phone_number: {
     id: 'phone_number',
     label: 'Phone number',
-    description: 'Phone number of the patient',
+    description: 'The phone number of the patient.',
     type: FieldType.STRING,
     stringType: StringType.PHONE,
   },
   send_invite: {
     id: 'send_invite',
     label: 'Send invite email',
-    description: 'Should an invite email be sent to the new patient.',
+    description:
+      'Whether an invite email should be sent to the newly created patient.',
     type: FieldType.BOOLEAN,
   },
   provider_id: {
     id: 'provider_id',
     label: 'Provider ID',
     description:
-      "Also known as the `dietitian_id`. This is the ID of the provider. Defaults to the authenticated user's ID.",
+      'This is the ID of the provider and defaults to the user the API key is associated with. Also known as the `dietitian_id`.',
     type: FieldType.STRING,
   },
 } satisfies Record<string, Field>
@@ -87,7 +91,7 @@ export const createPatient: Action<
   keyof typeof dataPoints
 > = {
   key: 'createPatient',
-  category: Category.INTEGRATIONS,
+  category: Category.EHR_INTEGRATIONS,
   title: 'Create a patient',
   description: 'Create a patient in Healthie.',
   fields,

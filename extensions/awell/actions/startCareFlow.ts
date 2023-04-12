@@ -30,14 +30,14 @@ const fields = {
   id: {
     id: 'id',
     label: 'Care flow definition ID',
-    description: 'The identifier of the care flow definition to start',
+    description: 'The identifier of the care flow definition to start.',
     type: FieldType.STRING,
   },
   patientId: {
     id: 'patientId',
     label: 'Patient ID',
     description:
-      'The patient identifier. If not provided an anonymous patient is created',
+      'The patient identifier. If not provided, an anonymous patient is created.',
     type: FieldType.STRING,
     required: false,
   },
@@ -64,9 +64,10 @@ export const startCareFlow: Action<typeof fields, typeof settings> = {
   key: 'startCareFlow',
   category: Category.WORKFLOW,
   title: 'Start new care flow',
-  description: 'Start a new care flow from within the current care flow.',
+  description:
+    'Start a new care flow for the patient currently enrolled in the care flow.',
   fields,
-  previewable: true,
+  previewable: false, // We don't have pathways in Preview, only cases.
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
     const { fields, settings } = payload
     const { id, patientId } = fields

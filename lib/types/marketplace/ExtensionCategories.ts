@@ -1,6 +1,6 @@
 export enum Category {
   COMMUNICATION = 'Communication',
-  INTEGRATIONS = 'Integrations',
+  EHR_INTEGRATIONS = 'EHR Integrations',
   DOCUMENT_MANAGEMENT = 'Document Management',
   CONTENT_AND_FILES = 'Content & Files',
   WORKFLOW = 'Workflow',

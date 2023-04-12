@@ -11,9 +11,11 @@ import { validate } from '../../../../../lib/shared/validation'
 export const sendEmailWithTemplate: Action<typeof fields, typeof settings> = {
   key: 'sendEmailWithTemplate',
   title: 'Send email with template',
-  description: 'Send an email based on a template.',
+  description:
+    'Send an email based on a template to a recipient of your choice.',
   category: Category.COMMUNICATION,
   fields,
+  previewable: false,
   onActivityCreated: async (payload, onComplete, onError) => {
     try {
       const {

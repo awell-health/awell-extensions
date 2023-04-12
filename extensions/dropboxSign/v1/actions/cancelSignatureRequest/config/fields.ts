@@ -5,7 +5,8 @@ export const fields = {
   signatureRequestId: {
     id: 'signatureRequestId',
     label: 'Signature request ID',
-    description: 'The id of the incomplete SignatureRequest to cancel.',
+    description:
+      'The id of the SignatureRequest to cancel. Please note you can only cancel incomplete signature requests.',
     type: FieldType.STRING,
     required: true,
   },

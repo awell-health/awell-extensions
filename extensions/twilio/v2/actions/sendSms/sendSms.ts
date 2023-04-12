@@ -11,9 +11,10 @@ import { validate } from '../../../../../lib/shared/validation'
 export const sendSms: Action<typeof fields, typeof settings> = {
   key: 'sendSms',
   title: 'Send SMS',
-  description: 'Send an SMS message.',
+  description: 'Send an SMS message to a recipient of your choice.',
   category: Category.COMMUNICATION,
   fields,
+  previewable: false,
   onActivityCreated: async (payload, onComplete, onError) => {
     try {
       const {

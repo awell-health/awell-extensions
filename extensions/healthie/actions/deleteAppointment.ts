@@ -1,34 +1,27 @@
 import { isNil } from 'lodash'
 import { mapHealthieToActivityError } from '../errors'
-import {
-  FieldType,
-  type Action,
-  type Field,
-} from '../../../lib/types'
+import { FieldType, type Action, type Field } from '../../../lib/types'
 import { Category } from '../../../lib/types/marketplace'
 import { getSdk } from '../gql/sdk'
 import { initialiseClient } from '../graphqlClient'
 import { type settings } from '../settings'
 
-
 const fields = {
   id: {
     id: 'id',
     label: 'ID',
-    description: 'The id of the appointment in Healthie',
+    description:
+      'The id of the appointment in Healthie you would like to delete.',
     type: FieldType.STRING,
     required: true,
   },
 } satisfies Record<string, Field>
 
-export const deleteAppointment: Action<
-  typeof fields,
-  typeof settings
-> = {
+export const deleteAppointment: Action<typeof fields, typeof settings> = {
   key: 'deleteAppointment',
-  category: Category.INTEGRATIONS,
+  category: Category.EHR_INTEGRATIONS,
   title: 'Delete appointment',
-  description: 'Delete appointment in Healthie.',
+  description: 'Delete an appointment in Healthie.',
   fields,
   previewable: true,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
@@ -48,18 +41,20 @@ export const deleteAppointment: Action<
             },
           ],
         })
-        return;
+        return
       }
 
       const client = initialiseClient(settings)
       if (client !== undefined) {
         const sdk = getSdk(client)
         const { data } = await sdk.deleteAppointment({
-          id
+          id,
         })
 
         if (!isNil(data.deleteAppointment?.messages)) {
-          const errors = mapHealthieToActivityError(data.deleteAppointment?.messages)
+          const errors = mapHealthieToActivityError(
+            data.deleteAppointment?.messages
+          )
           await onError({
             events: errors,
           })

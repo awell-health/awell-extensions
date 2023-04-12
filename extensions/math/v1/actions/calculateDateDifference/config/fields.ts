@@ -21,7 +21,7 @@ export const fields = {
     id: 'unit',
     label: 'The unit you would like to calculate the difference in',
     description:
-      '"seconds", "minutes", "hours", "days", "weeks", "months", "years"',
+      'Choose one of "seconds", "minutes", "hours", "days", "weeks", "months", "years".',
     required: true,
     type: FieldType.STRING,
   },

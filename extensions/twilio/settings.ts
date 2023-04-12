@@ -8,14 +8,14 @@ export const settings = {
     key: 'accountSid',
     obfuscated: true,
     required: true,
-    description: 'Find your Account SID at twilio.com/console',
+    description: 'Find your Account SID at twilio.com/console.',
   },
   authToken: {
     label: 'Auth token',
     key: 'authToken',
     obfuscated: true,
     required: true,
-    description: 'Find your Auth Token at twilio.com/console',
+    description: 'Find your Auth Token at twilio.com/console.',
   },
   fromNumber: {
     label: '"From" number',

@@ -6,8 +6,7 @@ export const settings = {
     key: 'apiKey',
     obfuscated: true,
     required: true,
-    description:
-      'Enter an API key so Awell can communicate with the MessageBird API.',
+    description: 'Your MessageBird API key.',
   },
   reportUrl: {
     label: 'Report URL',

@@ -12,7 +12,7 @@ export const sendRequestReminder: Action<typeof fields, typeof settings> = {
   key: 'sendRequestReminder',
   title: 'Send request reminder',
   description:
-    'Sends an email to the signer reminding them to sign the signature request. You cannot send a reminder within 1 hour of the last reminder that was sent. This includes manual AND automatic reminders.',
+    'Sends an email to the signer reminding them to sign the signature request.',
   category: Category.DOCUMENT_MANAGEMENT,
   fields,
   previewable: true,

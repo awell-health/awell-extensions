@@ -11,31 +11,31 @@ import { initialiseClient } from '../graphqlClient'
 import { type settings } from '../settings'
 import { mapHealthieToActivityError } from '../errors'
 
-
 const fields = {
   id: {
     id: 'id',
     label: 'ID',
-    description: 'The id of the patient in Healthie',
+    description: 'The id of the patient in Healthie.',
     type: FieldType.STRING,
     required: true,
   },
   first_name: {
     id: 'first_name',
     label: 'First name',
-    description: 'First name of the patient',
+    description: 'The first name of the patient.',
     type: FieldType.STRING,
   },
   last_name: {
     id: 'last_name',
     label: 'Last name',
-    description: 'Last name of the patient',
+    description: 'The last name of the patient.',
     type: FieldType.STRING,
   },
   legal_name: {
     id: 'legal_name',
     label: 'Legal name',
-    description: "The patient's legal name which will be used in CMS 1500 Claims, Invoices, and Superbills.",
+    description:
+      "The patient's legal name which will be used in CMS 1500 Claims, Invoices, and Superbills.",
     type: FieldType.STRING,
   },
   // ! TODO: BOOLEAN field implementation needed
@@ -47,7 +47,7 @@ const fields = {
   email: {
     id: 'email',
     label: 'Email',
-    description: 'Email address of the patient',
+    description: 'The email address of the patient.',
     type: FieldType.STRING,
     stringType: StringType.EMAIL,
   },
@@ -61,14 +61,15 @@ const fields = {
   phone_number: {
     id: 'phone_number',
     label: 'Phone number',
-    description: 'Phone number of the patient',
+    description: 'The phone number of the patient.',
     type: FieldType.STRING,
-    stringType: StringType.PHONE
+    stringType: StringType.PHONE,
   },
   provider_id: {
     id: 'provider_id',
     label: 'Provider ID',
-    description: "Also known as the `dietitian_id`. This is the ID of the provider. Defaults to the authenticated user's ID.",
+    description:
+      'This is the ID of the provider and defaults to the user the API key is associated with. Also known as the `dietitian_id`.',
     type: FieldType.STRING,
   },
   user_group_id: {
@@ -87,13 +88,14 @@ const fields = {
   height: {
     id: 'height',
     label: 'Height',
-    description: 'Height of the patient',
+    description: 'The height of the patient.',
     type: FieldType.STRING,
   },
   gender: {
     id: 'gender',
     label: 'Gender',
-    description: 'Either "Female", "Male", or "Other"',
+    description:
+      'The gender of the patient. Either "Female", "Male", or "Other".',
     type: FieldType.STRING,
   },
   gender_identity: {
@@ -105,24 +107,34 @@ const fields = {
   sex: {
     id: 'sex',
     label: 'Sex',
-    description: 'Either "Female", "Male"',
+    description: 'The sex of the patient. Either "Female", "Male".',
     type: FieldType.STRING,
   },
 } satisfies Record<string, Field>
 
-export const updatePatient: Action<
-  typeof fields,
-  typeof settings
-> = {
+export const updatePatient: Action<typeof fields, typeof settings> = {
   key: 'updatePatient',
-  category: Category.INTEGRATIONS,
+  category: Category.EHR_INTEGRATIONS,
   title: 'Update a patient',
   description: 'Update a patient in Healthie.',
   fields,
   previewable: true,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
     const { fields, settings } = payload
-    const { id, first_name, last_name, legal_name, email, phone_number, provider_id, gender, gender_identity, height, sex, user_group_id } = fields
+    const {
+      id,
+      first_name,
+      last_name,
+      legal_name,
+      email,
+      phone_number,
+      provider_id,
+      gender,
+      gender_identity,
+      height,
+      sex,
+      user_group_id,
+    } = fields
     try {
       if (isNil(id)) {
         await onError({
@@ -137,7 +149,7 @@ export const updatePatient: Action<
             },
           ],
         })
-        return;
+        return
       }
 
       const client = initialiseClient(settings)
@@ -156,8 +168,8 @@ export const updatePatient: Action<
             gender_identity,
             height,
             sex,
-            user_group_id
-          }
+            user_group_id,
+          },
         })
 
         if (!isNil(data.updateClient?.messages)) {

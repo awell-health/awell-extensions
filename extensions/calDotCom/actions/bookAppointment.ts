@@ -1,4 +1,9 @@
-import { type DataPointDefinition, FieldType, type Action, type Field } from '../../../lib/types'
+import {
+  type DataPointDefinition,
+  FieldType,
+  type Action,
+  type Field,
+} from '../../../lib/types'
 import { Category } from '../../../lib/types/marketplace'
 import { type settings } from '../settings'
 
@@ -6,6 +11,8 @@ const fields = {
   calLink: {
     id: 'calLink',
     label: 'Cal Link',
+    description:
+      'The Cal Link that you want to embed e.g. "john". Just give the username. No need to give the full URL https://cal.com/john.',
     type: FieldType.STRING,
     required: true,
   },
@@ -28,9 +35,10 @@ export const bookAppointment: Action<typeof fields, typeof settings> = {
   options: {
     stakeholders: {
       label: 'Stakeholder',
-      mode: 'single'
-    }
+      mode: 'single',
+    },
   },
+  previewable: false, // We don't have Awell Hosted Pages in Preview so cannot be previewed.
   onActivityCreated: async (payload, onComplete, onError) => {
     const {
       fields: { calLink },
