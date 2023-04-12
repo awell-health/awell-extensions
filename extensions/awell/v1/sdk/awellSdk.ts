@@ -40,51 +40,48 @@ export default class AwellSdk {
   }
 
   async startCareFlow(input: StartPathwayInput): Promise<string> {
-    const data = await this.client.request<StartPathwayPayload>(
-      startPathwayMutation,
-      input
-    )
+    const data = await this.client.request<{
+      startPathway: StartPathwayPayload
+    }>(startPathwayMutation, { input })
 
-    if (!isNil(data.pathway_id)) {
-      return data.pathway_id
+    if (!isNil(data.startPathway.pathway_id)) {
+      return data.startPathway.pathway_id
     }
 
     throw new Error('Start care flow failed.')
   }
 
   async createPatient(input: CreatePatientInput): Promise<string> {
-    const data = await this.client.request<CreatePatientPayload>(
-      createPatientMutation,
-      input
-    )
+    const data = await this.client.request<{
+      createPatient: CreatePatientPayload
+    }>(createPatientMutation, { input })
 
-    if (data.success && !isNil(data.patient)) {
-      return data.patient.id
+    if (data.createPatient.success && !isNil(data.createPatient.patient)) {
+      return data.createPatient.patient.id
     }
 
     throw new Error('Create patient failed.')
   }
 
   async updatePatient(input: UpdatePatientInput): Promise<string> {
-    const data = await this.client.request<UpdatePatientPayload>(
-      updatePatientMutation,
-      input
-    )
+    const data = await this.client.request<{
+      updatePatient: UpdatePatientPayload
+    }>(updatePatientMutation, { input })
 
-    if (data.success && !isNil(data.patient)) {
-      return data.patient.id
+    if (data.updatePatient.success && !isNil(data.updatePatient.patient)) {
+      return data.updatePatient.patient.id
     }
 
     throw new Error('Update patient failed.')
   }
 
   async deletePatient(input: DeletePatientInput): Promise<boolean> {
-    const data = await this.client.request<EmptyPayload>(
+    const data = await this.client.request<{ deletePatient: EmptyPayload }>(
       deletePatientMutation,
-      input
+      { input }
     )
 
-    if (data.success) {
+    if (data.deletePatient.success) {
       return true
     }
 
@@ -92,12 +89,12 @@ export default class AwellSdk {
   }
 
   async deletePathway(input: DeletePathwayInput): Promise<boolean> {
-    const data = await this.client.request<EmptyPayload>(
+    const data = await this.client.request<{ deletePathway: EmptyPayload }>(
       deletePathwayMutation,
-      input
+      { input }
     )
 
-    if (data.success) {
+    if (data.deletePathway.success) {
       return true
     }
 
@@ -105,12 +102,14 @@ export default class AwellSdk {
   }
 
   async stopPathway(input: StopPathwayInput): Promise<boolean> {
-    const data = await this.client.request<EmptyPayload>(
+    const data = await this.client.request<{ stopPathway: EmptyPayload }>(
       stopPathwayMutation,
-      input
+      {
+        input,
+      }
     )
 
-    if (data.success) {
+    if (data.stopPathway.success) {
       return true
     }
 
@@ -118,12 +117,11 @@ export default class AwellSdk {
   }
 
   async updateBaselineInfo(input: UpdateBaselineInfoInput): Promise<boolean> {
-    const data = await this.client.request<EmptyPayload>(
-      updateBaselineInfoMutation,
-      input
-    )
+    const data = await this.client.request<{
+      updateBaselineInfo: EmptyPayload
+    }>(updateBaselineInfoMutation, { input })
 
-    if (data.success) {
+    if (data.updateBaselineInfo.success) {
       return true
     }
 
