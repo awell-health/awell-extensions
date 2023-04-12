@@ -10,7 +10,7 @@ const fields = {
   id: {
     id: 'id',
     label: 'ID',
-    description: 'The id of the patient in Healthie',
+    description: 'The id of the patient in Healthie.',
     type: FieldType.STRING,
     required: true,
   },
@@ -20,7 +20,7 @@ export const archivePatient: Action<typeof fields, typeof settings> = {
   key: 'archivePatient',
   category: Category.EHR_INTEGRATIONS,
   title: 'Archive patient',
-  description: 'Archive patient in Healthie.',
+  description: 'Archive a patient in Healthie.',
   fields,
   previewable: true,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {

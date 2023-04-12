@@ -8,7 +8,7 @@ export const MessageBird: Extension = {
   title: 'MessageBird',
   icon_url: 'https://developers.messagebird.com/img/glyph.svg',
   description:
-    'MessageBird is a cloud-based SMS marketing platform designed to help businesses engage with customers across a variety of channels including WhatsApp, voice, live chat and more.',
+    'MessageBird is a cloud-based communication platform with support for a variety of channels including WhatsApp, voice, live chat and more.',
   category: Category.COMMUNICATION,
   author: {
     authorType: AuthorType.AWELL,

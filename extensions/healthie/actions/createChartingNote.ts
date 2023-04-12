@@ -35,7 +35,7 @@ export const createChartingNote: Action<typeof fields, typeof settings> = {
   key: 'createChartingNote',
   category: Category.EHR_INTEGRATIONS,
   title: 'Create charting note',
-  description: 'Create charting note in Healthie.',
+  description: 'Create a charting note in Healthie.',
   fields,
   previewable: true,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {

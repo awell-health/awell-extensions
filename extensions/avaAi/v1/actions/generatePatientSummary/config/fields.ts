@@ -15,7 +15,7 @@ export const fields = {
     id: 'language',
     label: 'Language of the summary',
     description:
-      'The language the summary will be written in. Defaults to "English"',
+      'The language the summary will be written in. Defaults to "English".',
     type: FieldType.STRING,
     required: false,
   },

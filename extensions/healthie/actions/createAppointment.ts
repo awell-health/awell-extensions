@@ -21,7 +21,7 @@ const fields = {
     id: 'otherPartyId',
     label: 'Provider ID',
     description:
-      'ID of the provider the appointment is with. If none provided, will use the user the API key is associated with.',
+      'The ID of the provider the appointment is with. If none provided, the user the API key is associated with will be used.',
     type: FieldType.STRING,
   },
   contactTypeId: {
@@ -34,7 +34,7 @@ const fields = {
   appointmentTypeId: {
     id: 'appointmentTypeId',
     label: 'Appointment type ID',
-    description: 'The ID of the appointment type',
+    description: 'The ID of the appointment type.',
     type: FieldType.STRING,
     required: true,
   },

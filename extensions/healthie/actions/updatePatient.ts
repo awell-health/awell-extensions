@@ -15,20 +15,20 @@ const fields = {
   id: {
     id: 'id',
     label: 'ID',
-    description: 'The id of the patient in Healthie',
+    description: 'The id of the patient in Healthie.',
     type: FieldType.STRING,
     required: true,
   },
   first_name: {
     id: 'first_name',
     label: 'First name',
-    description: 'First name of the patient',
+    description: 'The first name of the patient.',
     type: FieldType.STRING,
   },
   last_name: {
     id: 'last_name',
     label: 'Last name',
-    description: 'Last name of the patient',
+    description: 'The last name of the patient.',
     type: FieldType.STRING,
   },
   legal_name: {
@@ -47,7 +47,7 @@ const fields = {
   email: {
     id: 'email',
     label: 'Email',
-    description: 'Email address of the patient',
+    description: 'The email address of the patient.',
     type: FieldType.STRING,
     stringType: StringType.EMAIL,
   },
@@ -61,7 +61,7 @@ const fields = {
   phone_number: {
     id: 'phone_number',
     label: 'Phone number',
-    description: 'Phone number of the patient',
+    description: 'The phone number of the patient.',
     type: FieldType.STRING,
     stringType: StringType.PHONE,
   },
@@ -69,7 +69,7 @@ const fields = {
     id: 'provider_id',
     label: 'Provider ID',
     description:
-      "Also known as the `dietitian_id`. This is the ID of the provider. Defaults to the authenticated user's ID.",
+      'This is the ID of the provider and defaults to the user the API key is associated with. Also known as the `dietitian_id`.',
     type: FieldType.STRING,
   },
   user_group_id: {
@@ -88,13 +88,14 @@ const fields = {
   height: {
     id: 'height',
     label: 'Height',
-    description: 'Height of the patient',
+    description: 'The height of the patient.',
     type: FieldType.STRING,
   },
   gender: {
     id: 'gender',
     label: 'Gender',
-    description: 'Either "Female", "Male", or "Other"',
+    description:
+      'The gender of the patient. Either "Female", "Male", or "Other".',
     type: FieldType.STRING,
   },
   gender_identity: {
@@ -106,7 +107,7 @@ const fields = {
   sex: {
     id: 'sex',
     label: 'Sex',
-    description: 'Either "Female", "Male"',
+    description: 'The sex of the patient. Either "Female", "Male".',
     type: FieldType.STRING,
   },
 } satisfies Record<string, Field>

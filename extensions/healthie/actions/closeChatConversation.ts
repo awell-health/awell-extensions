@@ -10,14 +10,14 @@ const fields = {
   id: {
     id: 'id',
     label: 'ID',
-    description: 'The id of the conversation in Healthie',
+    description: 'The id of the conversation in Healthie.',
     type: FieldType.STRING,
     required: true,
   },
   provider_id: {
     id: 'provider_id',
     label: 'Provider ID',
-    description: 'This is the ID of the provider.',
+    description: 'The ID of the provider that closes the conversation.',
     type: FieldType.STRING,
     required: true,
   },
@@ -27,7 +27,7 @@ export const closeChatConversation: Action<typeof fields, typeof settings> = {
   key: 'closeChatConversation',
   category: Category.EHR_INTEGRATIONS,
   title: 'Close chat conversation',
-  description: 'Close chat conversation in Healthie.',
+  description: 'Close a chat conversation in Healthie.',
   fields,
   previewable: true,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {

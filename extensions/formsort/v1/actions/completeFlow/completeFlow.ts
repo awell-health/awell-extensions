@@ -9,7 +9,8 @@ import { ZodError } from 'zod'
 export const completeFlow: Action<typeof fields, typeof settings> = {
   key: 'completeFlow',
   title: 'Complete flow',
-  description: 'Let a stakeholder complete a Formsort flow.',
+  description:
+    'Let a stakeholder complete a Formsort flow with Awell Hosted Pages.',
   category: Category.FORMS,
   fields,
   options: {
@@ -18,6 +19,7 @@ export const completeFlow: Action<typeof fields, typeof settings> = {
       mode: 'single',
     },
   },
+  previewable: false, // We don't have Awell Hosted Pages in Preview so cannot be previewed.
   onActivityCreated: async (payload, onComplete, onError) => {
     try {
       validateActionFields(payload.fields)

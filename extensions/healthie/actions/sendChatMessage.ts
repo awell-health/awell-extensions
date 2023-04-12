@@ -15,7 +15,8 @@ const fields = {
   healthie_patient_id: {
     id: 'healthie_patient_id',
     label: 'Healthie Patient ID',
-    description: 'The ID of the patient in Healthie.',
+    description:
+      'The ID of the patient in Healthie you would like to send a chat message to.',
     type: FieldType.STRING,
     required: true,
   },
@@ -51,7 +52,7 @@ export const sendChatMessage: Action<
   key: 'sendChatMessage',
   category: Category.EHR_INTEGRATIONS,
   title: 'Send chat message',
-  description: 'Send chat message in Healthie.',
+  description: 'Send a chat message to a patient in Healthie.',
   fields,
   dataPoints,
   previewable: true,

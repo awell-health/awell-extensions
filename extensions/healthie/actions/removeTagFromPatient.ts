@@ -27,7 +27,7 @@ export const removeTagFromPatient: Action<typeof fields, typeof settings> = {
   key: 'removeTagFromPatient',
   category: Category.EHR_INTEGRATIONS,
   title: 'Remove tag from a patient',
-  description: 'Remove tag from a patient in Healthie.',
+  description: 'Remove a tag from a patient in Healthie.',
   fields,
   previewable: true,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {

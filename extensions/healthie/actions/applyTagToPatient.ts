@@ -27,7 +27,7 @@ export const applyTagToPatient: Action<typeof fields, typeof settings> = {
   key: 'applyTagToPatient',
   category: Category.EHR_INTEGRATIONS,
   title: 'Apply tag to a patient',
-  description: 'Apply tag to a patient in Healthie.',
+  description: 'Apply a tag to a patient in Healthie.',
   fields,
   previewable: true,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {

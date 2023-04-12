@@ -68,9 +68,9 @@ export const getAppointment: Action<
   keyof typeof dataPoints
 > = {
   key: 'getAppointment',
-  category: Category.INTEGRATIONS,
+  category: Category.EHR_INTEGRATIONS,
   title: 'Get Appointment',
-  description: "Get appointment using elation's scheduling api.",
+  description: "Retrieve an appointment using Elation's scheduling API.",
   fields,
   previewable: true,
   dataPoints,

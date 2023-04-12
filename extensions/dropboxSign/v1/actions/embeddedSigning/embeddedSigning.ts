@@ -19,7 +19,7 @@ export const embeddedSigning: Action<typeof fields, typeof settings> = {
       mode: 'single',
     },
   },
-  previewable: false,
+  previewable: false, // We don't have Awell Hosted Pages in Preview so cannot be previewed.
   onActivityCreated: async (payload, onComplete, onError) => {
     try {
       validateActionFields(payload.fields)

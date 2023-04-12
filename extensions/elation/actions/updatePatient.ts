@@ -164,7 +164,7 @@ export const updatePatient: Action<
   key: 'updatePatient',
   category: Category.EHR_INTEGRATIONS,
   title: 'Update Patient',
-  description: "Update patient profile using elation's patient api.",
+  description: "Update a patient profile using Elation's patient API.",
   fields,
   previewable: true,
   dataPoints,

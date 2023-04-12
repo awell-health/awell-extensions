@@ -10,7 +10,8 @@ const fields = {
   id: {
     id: 'id',
     label: 'ID',
-    description: 'The id of the appointment in Healthie',
+    description:
+      'The id of the appointment in Healthie you would like to delete.',
     type: FieldType.STRING,
     required: true,
   },
@@ -20,7 +21,7 @@ export const deleteAppointment: Action<typeof fields, typeof settings> = {
   key: 'deleteAppointment',
   category: Category.EHR_INTEGRATIONS,
   title: 'Delete appointment',
-  description: 'Delete appointment in Healthie.',
+  description: 'Delete an appointment in Healthie.',
   fields,
   previewable: true,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {

@@ -5,7 +5,7 @@ export const fields = {
   clientLabel: {
     id: 'clientLabel',
     label: 'Client label',
-    description: 'The name of your client.',
+    description: 'The name (id) of your client.',
     type: FieldType.STRING,
     required: true,
   },

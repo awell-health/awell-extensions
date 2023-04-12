@@ -29,7 +29,7 @@ export const sendFormCompletionRequest: Action<typeof fields, typeof settings> =
     key: 'sendFormCompletionRequest',
     category: Category.EHR_INTEGRATIONS,
     title: 'Send form completion request',
-    description: 'Send form completion request in Healthie.',
+    description: 'Send a form completion request to a patient in Healthie.',
     fields,
     previewable: true,
     onActivityCreated: async (payload, onComplete, onError): Promise<void> => {

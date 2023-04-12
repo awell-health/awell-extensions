@@ -13,7 +13,7 @@ const fields = {
   appointmentId: {
     id: 'appointmentId',
     label: 'Appointment ID',
-    description: 'The identifier of the appointment',
+    description: 'The identifier of the appointment you want to retrieve.',
     type: FieldType.STRING,
   },
 } satisfies Record<string, Field>
@@ -49,7 +49,7 @@ export const getAppointment: Action<
   key: 'getAppointment',
   category: Category.EHR_INTEGRATIONS,
   title: 'Get appointment',
-  description: 'Retrieve the details of an appointment from Healthie.',
+  description: 'Retrieve the details of an appointment in Healthie.',
   fields,
   dataPoints,
   previewable: true,

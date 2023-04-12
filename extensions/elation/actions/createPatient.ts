@@ -161,7 +161,7 @@ export const createPatient: Action<
   key: 'createPatient',
   category: Category.EHR_INTEGRATIONS,
   title: 'Create Patient',
-  description: "Create patient profile using elation's patient api.",
+  description: "Create a patient profile using Elation's patient API.",
   fields,
   previewable: true,
   dataPoints,
