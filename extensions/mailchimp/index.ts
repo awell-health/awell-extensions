@@ -6,7 +6,8 @@ import { settings } from './settings'
 export const Mailchimp: Extension = {
   key: 'mailchimp',
   title: 'Mailchimp',
-  icon_url: 'https://assets.stickpng.com/images/62a2148e443b787d5837123e.png',
+  icon_url:
+    'https://res.cloudinary.com/da7x4rzl4/image/upload/v1681285075/Awell%20Extensions/Mailchimp-Logo.png',
   description:
     'Mailchimp is an all-in-one marketing platform that helps businesses to design, send, and manage email campaigns.',
   category: Category.COMMUNICATION,
