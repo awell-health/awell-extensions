@@ -10,7 +10,7 @@ const fields = {
   id: {
     id: 'id',
     label: 'Task ID',
-    description: 'The id of the task in Healthie',
+    description: 'The id of the task in Healthie.',
     type: FieldType.STRING,
     required: true,
   },
@@ -18,9 +18,9 @@ const fields = {
 
 export const completeTask: Action<typeof fields, typeof settings> = {
   key: 'completeTask',
-  category: Category.INTEGRATIONS,
+  category: Category.EHR_INTEGRATIONS,
   title: 'Complete task',
-  description: 'Complete task in Healthie.',
+  description: 'Complete a task in Healthie.',
   fields,
   previewable: true,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {

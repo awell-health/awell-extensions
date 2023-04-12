@@ -11,9 +11,10 @@ import { ZodError } from 'zod'
 export const sendEmail: Action<typeof fields, typeof settings> = {
   key: 'sendEmail',
   title: 'Send email',
-  description: 'Send an email.',
+  description: 'Send an email to a recipient of your choice.',
   category: Category.COMMUNICATION,
   fields,
+  previewable: false,
   onActivityCreated: async (payload, onComplete, onError) => {
     try {
       const { to, subject, body } = validateActionFields(payload.fields)

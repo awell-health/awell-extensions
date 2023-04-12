@@ -13,6 +13,6 @@ export const settings = {
     label: 'API key',
     obfuscated: true,
     required: true,
-    description: 'Your healthie API key.',
+    description: 'Your Healthie API key.',
   },
 } satisfies Record<string, Setting>

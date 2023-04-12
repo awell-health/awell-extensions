@@ -1,41 +1,33 @@
 import { isNil } from 'lodash'
 import { mapHealthieToActivityError } from '../errors'
-import {
-  FieldType,
-  type Action,
-  type Field,
-} from '../../../lib/types'
+import { FieldType, type Action, type Field } from '../../../lib/types'
 import { Category } from '../../../lib/types/marketplace'
 import { getSdk } from '../gql/sdk'
 import { initialiseClient } from '../graphqlClient'
 import { type settings } from '../settings'
 
-
 const fields = {
   id: {
     id: 'id',
     label: 'ID',
-    description: 'The id of the conversation in Healthie',
+    description: 'The id of the conversation in Healthie.',
     type: FieldType.STRING,
     required: true,
   },
   provider_id: {
     id: 'provider_id',
     label: 'Provider ID',
-    description: 'This is the ID of the provider.',
+    description: 'The ID of the provider that closes the conversation.',
     type: FieldType.STRING,
     required: true,
   },
 } satisfies Record<string, Field>
 
-export const closeChatConversation: Action<
-  typeof fields,
-  typeof settings
-> = {
+export const closeChatConversation: Action<typeof fields, typeof settings> = {
   key: 'closeChatConversation',
-  category: Category.INTEGRATIONS,
+  category: Category.EHR_INTEGRATIONS,
   title: 'Close chat conversation',
-  description: 'Close chat conversation in Healthie.',
+  description: 'Close a chat conversation in Healthie.',
   fields,
   previewable: true,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
@@ -55,7 +47,7 @@ export const closeChatConversation: Action<
             },
           ],
         })
-        return;
+        return
       }
 
       const client = initialiseClient(settings)
@@ -64,12 +56,14 @@ export const closeChatConversation: Action<
         const { data } = await sdk.updateConversation({
           input: {
             id,
-            closed_by_id: provider_id
-          }
+            closed_by_id: provider_id,
+          },
         })
 
         if (!isNil(data.updateConversation?.messages)) {
-          const errors = mapHealthieToActivityError(data.updateConversation?.messages)
+          const errors = mapHealthieToActivityError(
+            data.updateConversation?.messages
+          )
           await onError({
             events: errors,
           })

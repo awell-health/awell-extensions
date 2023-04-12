@@ -1,4 +1,9 @@
-import { type DataPointDefinition, FieldType, type Action, type Field } from '../../../lib/types'
+import {
+  type DataPointDefinition,
+  FieldType,
+  type Action,
+  type Field,
+} from '../../../lib/types'
 import { Category } from '../../../lib/types/marketplace'
 import CalComApi from '../calComApi'
 import { type settings } from '../settings'
@@ -46,6 +51,7 @@ export const getBooking: Action<typeof fields, typeof settings> = {
   category: Category.SCHEDULING,
   fields,
   dataPoints,
+  previewable: false,
   onActivityCreated: async (payload, onComplete, onError) => {
     const {
       fields: { bookingId },
@@ -62,7 +68,7 @@ export const getBooking: Action<typeof fields, typeof settings> = {
       })
     } else {
       try {
-        const calComApi = new CalComApi(apiKey);
+        const calComApi = new CalComApi(apiKey)
         const { booking } = await calComApi.getBooking(bookingId)
 
         await onComplete({

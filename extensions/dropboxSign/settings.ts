@@ -16,7 +16,7 @@ export const settings = {
     key: 'clientId',
     obfuscated: false,
     required: true,
-    description: 'The client id of the API app created in Dropbox Sign.',
+    description: 'The client ID of the app created in Dropbox Sign.',
   },
   testMode: {
     label: 'Test mode',

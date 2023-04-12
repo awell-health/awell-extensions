@@ -15,7 +15,7 @@ const fields = {
   id: {
     id: 'id',
     label: 'ID',
-    description: 'The id of the patient in Healthie',
+    description: 'The id of the patient in Healthie.',
     type: FieldType.STRING,
     required: true,
   },
@@ -49,9 +49,9 @@ export const createJournalEntry: Action<
   keyof typeof dataPoints
 > = {
   key: 'createJournalEntry',
-  category: Category.INTEGRATIONS,
+  category: Category.EHR_INTEGRATIONS,
   title: 'Create journal entry',
-  description: 'Create journal entry in Healthie.',
+  description: 'Create a journal entry in Healthie.',
   fields,
   dataPoints,
   previewable: true,

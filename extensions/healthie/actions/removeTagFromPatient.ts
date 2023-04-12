@@ -1,15 +1,10 @@
 import { isNil } from 'lodash'
 import { mapHealthieToActivityError } from '../errors'
-import {
-  FieldType,
-  type Action,
-  type Field,
-} from '../../../lib/types'
+import { FieldType, type Action, type Field } from '../../../lib/types'
 import { Category } from '../../../lib/types/marketplace'
 import { getSdk } from '../gql/sdk'
 import { initialiseClient } from '../graphqlClient'
 import { type settings } from '../settings'
-
 
 const fields = {
   id: {
@@ -28,14 +23,11 @@ const fields = {
   },
 } satisfies Record<string, Field>
 
-export const removeTagFromPatient: Action<
-  typeof fields,
-  typeof settings
-> = {
+export const removeTagFromPatient: Action<typeof fields, typeof settings> = {
   key: 'removeTagFromPatient',
-  category: Category.INTEGRATIONS,
+  category: Category.EHR_INTEGRATIONS,
   title: 'Remove tag from a patient',
-  description: 'Remove tag from a patient in Healthie.',
+  description: 'Remove a tag from a patient in Healthie.',
   fields,
   previewable: true,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
@@ -55,7 +47,7 @@ export const removeTagFromPatient: Action<
             },
           ],
         })
-        return;
+        return
       }
 
       const client = initialiseClient(settings)
@@ -63,11 +55,13 @@ export const removeTagFromPatient: Action<
         const sdk = getSdk(client)
         const { data } = await sdk.removeTagFromUser({
           id,
-          taggable_user_id: patient_id
+          taggable_user_id: patient_id,
         })
 
         if (!isNil(data.removeAppliedTag?.messages)) {
-          const errors = mapHealthieToActivityError(data.removeAppliedTag?.messages)
+          const errors = mapHealthieToActivityError(
+            data.removeAppliedTag?.messages
+          )
           await onError({
             events: errors,
           })

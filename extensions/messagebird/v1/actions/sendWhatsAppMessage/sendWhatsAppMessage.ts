@@ -8,9 +8,10 @@ import messagebirdSdk from '../../../common/sdk/messagebirdSdk'
 export const sendWhatsAppMessage: Action<typeof fields, typeof settings> = {
   key: 'sendWhatsAppMessage',
   title: 'Send WhatsApp message',
-  description: 'Send a WhatsApp message.',
+  description: 'Send a WhatsApp message to a recipient of your choice.',
   category: Category.COMMUNICATION,
   fields,
+  previewable: false,
   onActivityCreated: async (payload, onComplete, onError) => {
     const {
       fields: { from, to, content },

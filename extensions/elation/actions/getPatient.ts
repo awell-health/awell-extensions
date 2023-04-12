@@ -112,9 +112,9 @@ export const getPatient: Action<
   keyof typeof dataPoints
 > = {
   key: 'getPatient',
-  category: Category.INTEGRATIONS,
+  category: Category.EHR_INTEGRATIONS,
   title: 'Get Patient',
-  description: "Get patient profile using elation's patient api.",
+  description: "Retrieve a patient profile using Elation's patient API.",
   fields,
   previewable: true,
   dataPoints,
