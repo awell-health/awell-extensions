@@ -13,7 +13,3 @@ Starts a new care flow for the patient enrolled in your current care flow.
 ### Update patient
 
 Allows updating patient data for the patient currently enrolled in the care flow.
-
-### Delete patient
-
-Delete the patient that is currently enrolled in the care flow.
