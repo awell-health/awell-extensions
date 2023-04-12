@@ -1,25 +1,18 @@
 import { GraphQLClient } from 'graphql-request'
 import {
-  type UpdateBaselineInfoInput,
   type DeletePatientInput,
+  type StopPathwayInput,
   type EmptyPayload,
   type StartPathwayInput,
   type StartPathwayPayload,
   type UpdatePatientInput,
   type UpdatePatientPayload,
-  type DeletePathwayInput,
-  type StopPathwayInput,
-  type CreatePatientInput,
-  type CreatePatientPayload,
 } from '../gql/graphql'
 import { isNil } from 'lodash'
 import {
-  createPatientMutation,
-  deletePathwayMutation,
   deletePatientMutation,
   startPathwayMutation,
   stopPathwayMutation,
-  updateBaselineInfoMutation,
   updatePatientMutation,
 } from './graphql'
 
@@ -51,18 +44,6 @@ export default class AwellSdk {
     throw new Error('Start care flow failed.')
   }
 
-  async createPatient(input: CreatePatientInput): Promise<string> {
-    const data = await this.client.request<{
-      createPatient: CreatePatientPayload
-    }>(createPatientMutation, { input })
-
-    if (data.createPatient.success && !isNil(data.createPatient.patient)) {
-      return data.createPatient.patient.id
-    }
-
-    throw new Error('Create patient failed.')
-  }
-
   async updatePatient(input: UpdatePatientInput): Promise<string> {
     const data = await this.client.request<{
       updatePatient: UpdatePatientPayload
@@ -88,19 +69,6 @@ export default class AwellSdk {
     throw new Error('Delete patient failed.')
   }
 
-  async deletePathway(input: DeletePathwayInput): Promise<boolean> {
-    const data = await this.client.request<{ deletePathway: EmptyPayload }>(
-      deletePathwayMutation,
-      { input }
-    )
-
-    if (data.deletePathway.success) {
-      return true
-    }
-
-    throw new Error('Delete pathway failed.')
-  }
-
   async stopPathway(input: StopPathwayInput): Promise<boolean> {
     const data = await this.client.request<{ stopPathway: EmptyPayload }>(
       stopPathwayMutation,
@@ -114,17 +82,5 @@ export default class AwellSdk {
     }
 
     throw new Error('Stop pathway failed.')
-  }
-
-  async updateBaselineInfo(input: UpdateBaselineInfoInput): Promise<boolean> {
-    const data = await this.client.request<{
-      updateBaselineInfo: EmptyPayload
-    }>(updateBaselineInfoMutation, { input })
-
-    if (data.updateBaselineInfo.success) {
-      return true
-    }
-
-    throw new Error('Updating baseline info failed.')
   }
 }
