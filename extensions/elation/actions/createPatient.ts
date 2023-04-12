@@ -206,7 +206,7 @@ export const createPatient: Action<
                 en: `${err.status ?? '(no status code)'} Error: ${err.message}`,
               },
               error: {
-                category: 'BAD_REQUEST',
+                category: 'SERVER_ERROR',
                 message: `${err.status ?? '(no status code)'} Error: ${
                   err.message
                 }`,

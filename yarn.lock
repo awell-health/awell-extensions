@@ -66,8 +66,10 @@ __metadata:
     "@graphql-codegen/typescript-operations": ^3.0.2
     "@graphql-tools/apollo-engine-loader": ^7.3.26
     "@graphql-typed-document-node/core": ^3.1.2
+    "@mailchimp/mailchimp_transactional": ^1.0.50
     "@types/jest": ^29.4.0
     "@types/lodash": ^4.14.191
+    "@types/mailchimp__mailchimp_transactional": ^1.0.5
     "@types/node": ^18.13.0
     "@types/node-fetch": ^2.6.2
     "@types/showdown": ^2.0.0
@@ -81,6 +83,7 @@ __metadata:
     eslint-plugin-n: ^15.6.1
     eslint-plugin-promise: ^6.1.1
     fastify: ^4.13.0
+    form-data: ^4.0.0
     graphql: ^16.6.0
     graphql-request: 5.1.0
     graphql-tag: ^2.12.6
@@ -90,6 +93,7 @@ __metadata:
     lightship: ^7.1.1
     lint-staged: ^13.1.2
     lodash: ^4.17.21
+    mailgun.js: ^8.2.1
     messagebird: ^4.0.1
     node-fetch: 2
     openai: ^3.2.1
@@ -2086,6 +2090,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@mailchimp/mailchimp_transactional@npm:^1.0.50":
+  version: 1.0.50
+  resolution: "@mailchimp/mailchimp_transactional@npm:1.0.50"
+  dependencies:
+    axios: ^0.21.1
+  checksum: 5a1f563f18ef71549ca154c6d63b26ee2786e03ba162229f6e2e404766f7d67c90a5d7931b0130d9b99c4cdf5a3796b51851166b5313c104cf195711613636a7
+  languageName: node
+  linkType: hard
+
 "@nodelib/fs.scandir@npm:2.1.5":
   version: 2.1.5
   resolution: "@nodelib/fs.scandir@npm:2.1.5"
@@ -2551,6 +2564,15 @@ __metadata:
   version: 4.0.2
   resolution: "@types/long@npm:4.0.2"
   checksum: d16cde7240d834cf44ba1eaec49e78ae3180e724cd667052b194a372f350d024cba8dd3f37b0864931683dab09ca935d52f0c4c1687178af5ada9fc85b0635f4
+  languageName: node
+  linkType: hard
+
+"@types/mailchimp__mailchimp_transactional@npm:^1.0.5":
+  version: 1.0.5
+  resolution: "@types/mailchimp__mailchimp_transactional@npm:1.0.5"
+  dependencies:
+    axios: ^0.21.1
+  checksum: 2ce6ec1163b1eb393f5a7b5c1bb9ebde7cc21da55fac3c97fff3ec25c672984a3538accedda5bbc2e71119bfd918c44d48fd562ee14cd45060407ace6a771c33
   languageName: node
   linkType: hard
 
@@ -3223,6 +3245,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"axios@npm:^0.21.1":
+  version: 0.21.4
+  resolution: "axios@npm:0.21.4"
+  dependencies:
+    follow-redirects: ^1.14.0
+  checksum: 44245f24ac971e7458f3120c92f9d66d1fc695e8b97019139de5b0cc65d9b8104647db01e5f46917728edfc0cfd88eb30fc4c55e6053eef4ace76768ce95ff3c
+  languageName: node
+  linkType: hard
+
 "axios@npm:^0.24.0":
   version: 0.24.0
   resolution: "axios@npm:0.24.0"
@@ -3238,6 +3269,17 @@ __metadata:
   dependencies:
     follow-redirects: ^1.14.8
   checksum: d9eb58ff4bc0b36a04783fc9ff760e9245c829a5a1052ee7ca6013410d427036b1d10d04e7380c02f3508c5eaf3485b1ae67bd2adbfec3683704745c8d7a6e1a
+  languageName: node
+  linkType: hard
+
+"axios@npm:^1.3.3":
+  version: 1.3.5
+  resolution: "axios@npm:1.3.5"
+  dependencies:
+    follow-redirects: ^1.15.0
+    form-data: ^4.0.0
+    proxy-from-env: ^1.1.0
+  checksum: 4d6bcf933b1cdff86d4993752aaeeeedc4a7f7a4b1c942847f6884bb13fc6106610ff826b076acf0b08d8ced55dee9344bb9a11f3624c3e70ab1da1a40bb5506
   languageName: node
   linkType: hard
 
@@ -3376,6 +3418,13 @@ __metadata:
   version: 1.0.2
   resolution: "balanced-match@npm:1.0.2"
   checksum: 9706c088a283058a8a99e0bf91b0a2f75497f185980d9ffa8b304de1d9e58ebda7c72c07ebf01dadedaac5b2907b2c6f566f660d62bd336c3468e960403b9d65
+  languageName: node
+  linkType: hard
+
+"base-64@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "base-64@npm:1.0.0"
+  checksum: d10b64a1fc9b2c5a5f39f1ce1e6c9d1c5b249222bbfa3a0604c592d90623caf74419983feadd8a170f27dc0c3389704f72faafa3e645aeb56bfc030c93ff074a
   languageName: node
   linkType: hard
 
@@ -5176,7 +5225,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"follow-redirects@npm:^1.14.4, follow-redirects@npm:^1.14.8, follow-redirects@npm:^1.15.0":
+"follow-redirects@npm:^1.14.0, follow-redirects@npm:^1.14.4, follow-redirects@npm:^1.14.8, follow-redirects@npm:^1.15.0":
   version: 1.15.2
   resolution: "follow-redirects@npm:1.15.2"
   peerDependenciesMeta:
@@ -7334,6 +7383,17 @@ __metadata:
   version: 0.3.3
   resolution: "lru_map@npm:0.3.3"
   checksum: ca9dd43c65ed7a4f117c548028101c5b6855e10923ea9d1f635af53ad20c5868ff428c364d454a7b57fe391b89c704982275410c3c5099cca5aeee00d76e169a
+  languageName: node
+  linkType: hard
+
+"mailgun.js@npm:^8.2.1":
+  version: 8.2.1
+  resolution: "mailgun.js@npm:8.2.1"
+  dependencies:
+    axios: ^1.3.3
+    base-64: ^1.0.0
+    url-join: ^4.0.1
+  checksum: 512b76a8b688cc2b88c14472a2c7c9715dd927c5bb588a6197c2eed8b9effc8edddb3a7c99a1f2993c5f205154b24585db5fa573c15701401759b8702258b944
   languageName: node
   linkType: hard
 
@@ -9889,6 +9949,13 @@ __metadata:
   dependencies:
     punycode: ^2.1.0
   checksum: 7167432de6817fe8e9e0c9684f1d2de2bb688c94388f7569f7dbdb1587c9f4ca2a77962f134ec90be0cc4d004c939ff0d05acc9f34a0db39a3c797dada262633
+  languageName: node
+  linkType: hard
+
+"url-join@npm:^4.0.1":
+  version: 4.0.1
+  resolution: "url-join@npm:4.0.1"
+  checksum: f74e868bf25dbc8be6a8d7237d4c36bb5b6c62c72e594d5ab1347fe91d6af7ccd9eb5d621e30152e4da45c2e9a26bec21390e911ab54a62d4d82e76028374ee5
   languageName: node
   linkType: hard
 

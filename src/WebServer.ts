@@ -15,6 +15,7 @@ import {
   getExtensionChangelog,
   getExtensionDocumentation,
 } from './documentation'
+import { logger } from './logger'
 
 type ExtensionWebConfig = Omit<Extension, 'actions' | 'webhooks'> & {
   actions: Record<
@@ -44,17 +45,7 @@ const getExtensionConfig = (extension: Extension): ExtensionWebConfig => {
 }
 
 const webServer = Fastify({
-  logger: {
-    transport: environment.PRETTY_LOGS
-      ? {
-          target: 'pino-pretty',
-          options: {
-            colorize: true,
-          },
-        }
-      : undefined,
-    level: environment.LOG_LEVEL,
-  },
+  logger,
 })
 
 void webServer.register(cors, {

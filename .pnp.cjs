@@ -37,8 +37,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@graphql-codegen/typescript-operations", "virtual:d0a76b174a54d973a27fb74b962aa2f26df55e18a188b76dd96ab65ec80e4a0b001d63550589d8a4f2f542a16ec7ef50e51453b019e1529d4f43d2542f174b98#npm:3.0.2"],\
             ["@graphql-tools/apollo-engine-loader", "virtual:d0a76b174a54d973a27fb74b962aa2f26df55e18a188b76dd96ab65ec80e4a0b001d63550589d8a4f2f542a16ec7ef50e51453b019e1529d4f43d2542f174b98#npm:7.3.26"],\
             ["@graphql-typed-document-node/core", "virtual:d0a76b174a54d973a27fb74b962aa2f26df55e18a188b76dd96ab65ec80e4a0b001d63550589d8a4f2f542a16ec7ef50e51453b019e1529d4f43d2542f174b98#npm:3.1.2"],\
+            ["@mailchimp/mailchimp_transactional", "npm:1.0.50"],\
             ["@types/jest", "npm:29.4.0"],\
             ["@types/lodash", "npm:4.14.191"],\
+            ["@types/mailchimp__mailchimp_transactional", "npm:1.0.5"],\
             ["@types/node", "npm:18.13.0"],\
             ["@types/node-fetch", "npm:2.6.2"],\
             ["@types/showdown", "npm:2.0.0"],\
@@ -52,6 +54,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["eslint-plugin-n", "virtual:d0a76b174a54d973a27fb74b962aa2f26df55e18a188b76dd96ab65ec80e4a0b001d63550589d8a4f2f542a16ec7ef50e51453b019e1529d4f43d2542f174b98#npm:15.6.1"],\
             ["eslint-plugin-promise", "virtual:d0a76b174a54d973a27fb74b962aa2f26df55e18a188b76dd96ab65ec80e4a0b001d63550589d8a4f2f542a16ec7ef50e51453b019e1529d4f43d2542f174b98#npm:6.1.1"],\
             ["fastify", "npm:4.13.0"],\
+            ["form-data", "npm:4.0.0"],\
             ["graphql", "npm:16.6.0"],\
             ["graphql-request", "virtual:d0a76b174a54d973a27fb74b962aa2f26df55e18a188b76dd96ab65ec80e4a0b001d63550589d8a4f2f542a16ec7ef50e51453b019e1529d4f43d2542f174b98#npm:5.1.0"],\
             ["graphql-tag", "virtual:d0a76b174a54d973a27fb74b962aa2f26df55e18a188b76dd96ab65ec80e4a0b001d63550589d8a4f2f542a16ec7ef50e51453b019e1529d4f43d2542f174b98#npm:2.12.6"],\
@@ -61,6 +64,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["lightship", "npm:7.1.1"],\
             ["lint-staged", "npm:13.1.2"],\
             ["lodash", "npm:4.17.21"],\
+            ["mailgun.js", "npm:8.2.1"],\
             ["messagebird", "npm:4.0.1"],\
             ["node-fetch", "virtual:94e2650e81a726e7adc8f0f6e639be3d7648493f2f2b84c27eee40ecea9a62ed0532e681c130c39c234a2ad47b19ceeb2d6987857059ffec26dfbe9101153344#npm:2.6.9"],\
             ["openai", "npm:3.2.1"],\
@@ -152,8 +156,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@graphql-codegen/typescript-operations", "virtual:d0a76b174a54d973a27fb74b962aa2f26df55e18a188b76dd96ab65ec80e4a0b001d63550589d8a4f2f542a16ec7ef50e51453b019e1529d4f43d2542f174b98#npm:3.0.2"],\
             ["@graphql-tools/apollo-engine-loader", "virtual:d0a76b174a54d973a27fb74b962aa2f26df55e18a188b76dd96ab65ec80e4a0b001d63550589d8a4f2f542a16ec7ef50e51453b019e1529d4f43d2542f174b98#npm:7.3.26"],\
             ["@graphql-typed-document-node/core", "virtual:d0a76b174a54d973a27fb74b962aa2f26df55e18a188b76dd96ab65ec80e4a0b001d63550589d8a4f2f542a16ec7ef50e51453b019e1529d4f43d2542f174b98#npm:3.1.2"],\
+            ["@mailchimp/mailchimp_transactional", "npm:1.0.50"],\
             ["@types/jest", "npm:29.4.0"],\
             ["@types/lodash", "npm:4.14.191"],\
+            ["@types/mailchimp__mailchimp_transactional", "npm:1.0.5"],\
             ["@types/node", "npm:18.13.0"],\
             ["@types/node-fetch", "npm:2.6.2"],\
             ["@types/showdown", "npm:2.0.0"],\
@@ -167,6 +173,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["eslint-plugin-n", "virtual:d0a76b174a54d973a27fb74b962aa2f26df55e18a188b76dd96ab65ec80e4a0b001d63550589d8a4f2f542a16ec7ef50e51453b019e1529d4f43d2542f174b98#npm:15.6.1"],\
             ["eslint-plugin-promise", "virtual:d0a76b174a54d973a27fb74b962aa2f26df55e18a188b76dd96ab65ec80e4a0b001d63550589d8a4f2f542a16ec7ef50e51453b019e1529d4f43d2542f174b98#npm:6.1.1"],\
             ["fastify", "npm:4.13.0"],\
+            ["form-data", "npm:4.0.0"],\
             ["graphql", "npm:16.6.0"],\
             ["graphql-request", "virtual:d0a76b174a54d973a27fb74b962aa2f26df55e18a188b76dd96ab65ec80e4a0b001d63550589d8a4f2f542a16ec7ef50e51453b019e1529d4f43d2542f174b98#npm:5.1.0"],\
             ["graphql-tag", "virtual:d0a76b174a54d973a27fb74b962aa2f26df55e18a188b76dd96ab65ec80e4a0b001d63550589d8a4f2f542a16ec7ef50e51453b019e1529d4f43d2542f174b98#npm:2.12.6"],\
@@ -176,6 +183,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["lightship", "npm:7.1.1"],\
             ["lint-staged", "npm:13.1.2"],\
             ["lodash", "npm:4.17.21"],\
+            ["mailgun.js", "npm:8.2.1"],\
             ["messagebird", "npm:4.0.1"],\
             ["node-fetch", "virtual:94e2650e81a726e7adc8f0f6e639be3d7648493f2f2b84c27eee40ecea9a62ed0532e681c130c39c234a2ad47b19ceeb2d6987857059ffec26dfbe9101153344#npm:2.6.9"],\
             ["openai", "npm:3.2.1"],\
@@ -3387,6 +3395,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
+      ["@mailchimp/mailchimp_transactional", [\
+        ["npm:1.0.50", {\
+          "packageLocation": "./.yarn/cache/@mailchimp-mailchimp_transactional-npm-1.0.50-294e1cb7b1-5a1f563f18.zip/node_modules/@mailchimp/mailchimp_transactional/",\
+          "packageDependencies": [\
+            ["@mailchimp/mailchimp_transactional", "npm:1.0.50"],\
+            ["axios", "npm:0.21.4"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
       ["@nodelib/fs.scandir", [\
         ["npm:2.1.5", {\
           "packageLocation": "./.yarn/cache/@nodelib-fs.scandir-npm-2.1.5-89c67370dd-a970d595bd.zip/node_modules/@nodelib/fs.scandir/",\
@@ -3933,6 +3951,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@types-long-npm-4.0.2-e7bdc00dd4-d16cde7240.zip/node_modules/@types/long/",\
           "packageDependencies": [\
             ["@types/long", "npm:4.0.2"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["@types/mailchimp__mailchimp_transactional", [\
+        ["npm:1.0.5", {\
+          "packageLocation": "./.yarn/cache/@types-mailchimp__mailchimp_transactional-npm-1.0.5-fb67a99c7f-2ce6ec1163.zip/node_modules/@types/mailchimp__mailchimp_transactional/",\
+          "packageDependencies": [\
+            ["@types/mailchimp__mailchimp_transactional", "npm:1.0.5"],\
+            ["axios", "npm:0.21.4"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -4807,6 +4835,14 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["axios", [\
+        ["npm:0.21.4", {\
+          "packageLocation": "./.yarn/cache/axios-npm-0.21.4-e278873748-44245f24ac.zip/node_modules/axios/",\
+          "packageDependencies": [\
+            ["axios", "npm:0.21.4"],\
+            ["follow-redirects", "virtual:39e5c1e79ea63134f0cf339f4463df92854aaf708a45210afd29a0b4b9f67f95b34a1abbcabaae6d0033ad99a1d5f690ab51ed8e5d3283b87ccbc3a9ab3ec05f#npm:1.15.2"]\
+          ],\
+          "linkType": "HARD"\
+        }],\
         ["npm:0.24.0", {\
           "packageLocation": "./.yarn/cache/axios-npm-0.24.0-39e5c1e79e-468cf496c0.zip/node_modules/axios/",\
           "packageDependencies": [\
@@ -4827,6 +4863,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/axios-npm-1.3.4-01ea685178-7440edefcf.zip/node_modules/axios/",\
           "packageDependencies": [\
             ["axios", "npm:1.3.4"],\
+            ["follow-redirects", "virtual:39e5c1e79ea63134f0cf339f4463df92854aaf708a45210afd29a0b4b9f67f95b34a1abbcabaae6d0033ad99a1d5f690ab51ed8e5d3283b87ccbc3a9ab3ec05f#npm:1.15.2"],\
+            ["form-data", "npm:4.0.0"],\
+            ["proxy-from-env", "npm:1.1.0"]\
+          ],\
+          "linkType": "HARD"\
+        }],\
+        ["npm:1.3.5", {\
+          "packageLocation": "./.yarn/cache/axios-npm-1.3.5-f8ffbd6db8-4d6bcf933b.zip/node_modules/axios/",\
+          "packageDependencies": [\
+            ["axios", "npm:1.3.5"],\
             ["follow-redirects", "virtual:39e5c1e79ea63134f0cf339f4463df92854aaf708a45210afd29a0b4b9f67f95b34a1abbcabaae6d0033ad99a1d5f690ab51ed8e5d3283b87ccbc3a9ab3ec05f#npm:1.15.2"],\
             ["form-data", "npm:4.0.0"],\
             ["proxy-from-env", "npm:1.1.0"]\
@@ -5034,6 +5080,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/balanced-match-npm-1.0.2-a53c126459-9706c088a2.zip/node_modules/balanced-match/",\
           "packageDependencies": [\
             ["balanced-match", "npm:1.0.2"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["base-64", [\
+        ["npm:1.0.0", {\
+          "packageLocation": "./.yarn/cache/base-64-npm-1.0.0-0683a6b836-d10b64a1fc.zip/node_modules/base-64/",\
+          "packageDependencies": [\
+            ["base-64", "npm:1.0.0"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -9744,6 +9799,18 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
+      ["mailgun.js", [\
+        ["npm:8.2.1", {\
+          "packageLocation": "./.yarn/cache/mailgun.js-npm-8.2.1-a80ed6f1ca-512b76a8b6.zip/node_modules/mailgun.js/",\
+          "packageDependencies": [\
+            ["mailgun.js", "npm:8.2.1"],\
+            ["axios", "npm:1.3.5"],\
+            ["base-64", "npm:1.0.0"],\
+            ["url-join", "npm:4.0.1"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
       ["make-dir", [\
         ["npm:3.1.0", {\
           "packageLocation": "./.yarn/cache/make-dir-npm-3.1.0-d1d7505142-484200020a.zip/node_modules/make-dir/",\
@@ -12672,6 +12739,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["uri-js", "npm:4.4.1"],\
             ["punycode", "npm:2.3.0"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["url-join", [\
+        ["npm:4.0.1", {\
+          "packageLocation": "./.yarn/cache/url-join-npm-4.0.1-e1f4415722-f74e868bf2.zip/node_modules/url-join/",\
+          "packageDependencies": [\
+            ["url-join", "npm:4.0.1"]\
           ],\
           "linkType": "HARD"\
         }]\

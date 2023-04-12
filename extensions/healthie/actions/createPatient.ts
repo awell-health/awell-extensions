@@ -34,12 +34,11 @@ const fields = {
       "The patient's legal name which will be used in CMS 1500 Claims, Invoices, and Superbills.",
     type: FieldType.STRING,
   },
-  // ! TODO: BOOLEAN field implementation needed
-  // skipped_email: {
-  //   id: 'skipped_email',
-  //   label: 'Skipped email',
-  //   type: FieldType.BOOLEAN,
-  // },
+  skipped_email: {
+    id: 'skipped_email',
+    label: 'Skipped email',
+    type: FieldType.BOOLEAN,
+  },
   email: {
     id: 'email',
     label: 'Email',
@@ -48,13 +47,12 @@ const fields = {
     stringType: StringType.EMAIL,
     required: true, // required until skipped_email is not handled
   },
-  // ! TODO: DATE field implementation needed
-  // dob: {
-  //   id: 'dob',
-  //   label: 'Date of birth',
-  //   description: 'Date of birth of the patient',
-  //   type: FieldType.DATE,
-  // },
+  dob: {
+    id: 'dob',
+    label: 'Date of birth',
+    description: 'Date of birth of the patient',
+    type: FieldType.DATE,
+  },
   phone_number: {
     id: 'phone_number',
     label: 'Phone number',
@@ -62,13 +60,12 @@ const fields = {
     type: FieldType.STRING,
     stringType: StringType.PHONE,
   },
-  // ! TODO: BOOLEAN field implementation needed
-  // dont_send_welcome: {
-  //   id: 'dont_send_welcome',
-  //   label: "Don't send welcome",
-  //   description: 'Whether an invite email will be sent to the new patient.',
-  //   type: FieldType.BOOLEAN,
-  // },
+  send_invite: {
+    id: 'send_invite',
+    label: 'Send invite email',
+    description: 'Should an invite email be sent to the new patient.',
+    type: FieldType.BOOLEAN,
+  },
   provider_id: {
     id: 'provider_id',
     label: 'Provider ID',
@@ -106,6 +103,9 @@ export const createPatient: Action<
       phone_number,
       provider_id,
       legal_name,
+      // dob,
+      send_invite,
+      skipped_email,
     } = fields
     try {
       if (isNil(first_name) || isNil(last_name)) {
@@ -123,7 +123,7 @@ export const createPatient: Action<
         })
         return
       }
-
+      const dont_send_welcome = send_invite !== true
       const client = initialiseClient(settings)
       if (client !== undefined) {
         const sdk = getSdk(client)
@@ -135,6 +135,8 @@ export const createPatient: Action<
             email,
             phone_number,
             dietitian_id: provider_id === '' ? undefined : provider_id,
+            skipped_email,
+            dont_send_welcome,
           },
         })
 

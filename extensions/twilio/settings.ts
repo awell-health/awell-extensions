@@ -1,4 +1,6 @@
 import { type Setting } from '../../lib/types'
+import { z, type ZodTypeAny } from 'zod'
+import { PhoneValidationSchema } from './common/validation'
 
 export const settings = {
   accountSid: {
@@ -24,3 +26,9 @@ export const settings = {
       '"From" specifies the Twilio phone number, short code, or messaging service that will send the text messages. This must be a Twilio phone number that you own.',
   },
 } satisfies Record<string, Setting>
+
+export const SettingsValidationSchema = z.object({
+  accountSid: z.string().min(1, { message: 'Missing Twilio account SID' }),
+  authToken: z.string().min(1, { message: 'Missing Twilio auth token' }),
+  fromNumber: PhoneValidationSchema,
+} satisfies Record<keyof typeof settings, ZodTypeAny>)

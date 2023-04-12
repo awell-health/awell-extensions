@@ -7,15 +7,15 @@ export const mockGetSdkReturn = {
       data: {
         createConversation: {
           conversation: {
-            id: 'conversation-1'
-          }
-        }
-      }
+            id: 'conversation-1',
+          },
+        },
+      },
     }
   }),
   sendChatMessage: jest.fn((args) => {
     return {
-      data: {}
+      data: {},
     }
   }),
   createPatient: jest.fn((args) => {
@@ -23,10 +23,10 @@ export const mockGetSdkReturn = {
       data: {
         createClient: {
           user: {
-            id: "patient-1",
+            id: 'patient-1',
           },
         },
-      }
+      },
     }
   }),
   updatePatient: jest.fn((args) => {
@@ -34,22 +34,24 @@ export const mockGetSdkReturn = {
       data: {
         updateClient: {
           user: {
-            id: "patient-1",
+            id: 'patient-1',
           },
         },
-      }
+      },
     }
   }),
   applyTagsToUser: jest.fn((args) => {
     return {
       data: {
         bulkApply: {
-          tags: [{
-            id: "tag-1",
-            name: "Tag",
-          }],
+          tags: [
+            {
+              id: 'tag-1',
+              name: 'Tag',
+            },
+          ],
         },
-      }
+      },
     }
   }),
   removeTagFromUser: jest.fn((args) => {
@@ -57,11 +59,11 @@ export const mockGetSdkReturn = {
       data: {
         removeAppliedTag: {
           tag: {
-            id: "tag-1",
-            name: "Tag",
+            id: 'tag-1',
+            name: 'Tag',
           },
         },
-      }
+      },
     }
   }),
   getFormTemplate: jest.fn((args) => {
@@ -72,21 +74,21 @@ export const mockGetSdkReturn = {
           custom_modules: [
             {
               id: 'question-1',
-              mod_type: 'textarea'
-            }
-          ]
+              mod_type: 'textarea',
+            },
+          ],
         },
-      }
+      },
     }
   }),
   createFormAnswerGroup: jest.fn((args) => {
     return {
-      data: {}
+      data: {},
     }
   }),
   createFormCompletionRequest: jest.fn((args) => {
     return {
-      data: {}
+      data: {},
     }
   }),
   createLocation: jest.fn((args) => {
@@ -94,25 +96,25 @@ export const mockGetSdkReturn = {
       data: {
         createLocation: {
           location: {
-            id: 'location-1'
-          }
+            id: 'location-1',
+          },
         },
-      }
+      },
     }
   }),
   updateConversation: jest.fn((args) => {
     return {
-      data: {}
+      data: {},
     }
   }),
   deleteAppointment: jest.fn((args) => {
     return {
-      data: {}
+      data: {},
     }
   }),
   updateAppointment: jest.fn((args) => {
     return {
-      data: {}
+      data: {},
     }
   }),
   createJournalEntry: jest.fn((args) => {
@@ -120,26 +122,26 @@ export const mockGetSdkReturn = {
       data: {
         createEntry: {
           entry: {
-            id: 'entry-1'
-          }
+            id: 'entry-1',
+          },
         },
-      }
+      },
     }
   }),
   deleteTask: jest.fn((args) => {
     return {
-      data: {}
+      data: {},
     }
   }),
   updateTask: jest.fn((args) => {
     return {
-      data: {}
+      data: {},
     }
   }),
 }
 
 export const mockGetSdk = (params: any): any => {
-  return mockGetSdkReturn;
-};
+  return mockGetSdkReturn
+}
 
 export const getSdk = jest.fn(mockGetSdk)
