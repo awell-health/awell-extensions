@@ -167,12 +167,13 @@ export const createPatient: Action<
   dataPoints,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
     try {
-      const { base_url, ...settings } = settingsSchema.parse(payload.settings)
+      const { base_url, auth_url, ...auth_request_settings } = settingsSchema.parse(payload.settings)
       const patient = patientSchema.parse(payload.fields)
 
       // API Call should produce AuthError or something dif.
       const api = new ElationAPIClient({
-        auth: settings,
+        authUrl: auth_url,
+        requestConfig: auth_request_settings,
         baseUrl: base_url,
         makeDataWrapper,
       })

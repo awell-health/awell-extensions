@@ -13,6 +13,10 @@ import {
   type Subscription,
   type SubscriptionRequest,
 } from './types/subscription'
+import {
+  type OAuthGrantPasswordRequest,
+  OAuthPassword,
+} from '../../lib/shared/auth'
 
 export class ElationDataWrapper extends DataWrapper {
   public async getAppointment(id: number): Promise<AppointmentResponse> {
@@ -105,7 +109,28 @@ export const makeDataWrapper: DataWrapperCtor<ElationDataWrapper> = (
   baseUrl: string
 ) => new ElationDataWrapper(token, baseUrl)
 
+interface ElationAPIClientConstructorProps {
+  authUrl: string
+  requestConfig: Omit<OAuthGrantPasswordRequest, 'grant_type'>
+  baseUrl: string
+  makeDataWrapper: DataWrapperCtor<ElationDataWrapper>
+}
+
 export class ElationAPIClient extends APIClient<ElationDataWrapper> {
+  public constructor({
+    authUrl,
+    requestConfig,
+    ...opts
+  }: ElationAPIClientConstructorProps) {
+    super({
+      ...opts,
+      auth: new OAuthPassword({
+        auth_url: authUrl,
+        request_config: requestConfig,
+      }),
+    })
+  }
+
   public async getAppointment(id: number): Promise<AppointmentResponse> {
     return await this.FetchData(async (dw) => await dw.getAppointment(id))
   }

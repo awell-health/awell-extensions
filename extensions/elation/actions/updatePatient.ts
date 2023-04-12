@@ -172,13 +172,14 @@ export const updatePatient: Action<
     try {
       const { patient_id, ...patientFields } = payload.fields
 
-      const { base_url, ...settings } = settingsSchema.parse(payload.settings)
+      const { base_url, auth_url, ...auth_request_settings } = settingsSchema.parse(payload.settings)
       const patient = patientSchema.parse(patientFields)
       const patientId = numberId.parse(patient_id)
 
       // API Call should produce AuthError or something dif.
       const api = new ElationAPIClient({
-        auth: settings,
+        authUrl: auth_url,
+        requestConfig: auth_request_settings,
         baseUrl: base_url,
         makeDataWrapper,
       })

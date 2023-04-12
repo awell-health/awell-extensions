@@ -9,7 +9,7 @@
  */
 
 import Axios, { type AxiosInstance, type AxiosRequestConfig } from 'axios'
-import { type OAuthOpts, OAuthPassword } from './auth'
+import { type OAuth } from './auth'
 
 export type DataWrapperCtor<DW extends DataWrapper> = (
   token: string,
@@ -38,17 +38,16 @@ export abstract class DataWrapper {
 }
 
 export abstract class APIClient<DW extends DataWrapper> {
-  // i'm just handling password rn. we can worry about extending later.
-  readonly auth: OAuthPassword
+  readonly auth: OAuth
   readonly baseUrl: string
   readonly ctor: DataWrapperCtor<DW>
 
   public constructor(opts: {
-    auth: OAuthOpts
+    auth: OAuth
     baseUrl: string
     makeDataWrapper: DataWrapperCtor<DW>
   }) {
-    this.auth = new OAuthPassword(opts.auth)
+    this.auth = opts.auth
     this.baseUrl = opts.baseUrl
     this.ctor = opts.makeDataWrapper
   }
