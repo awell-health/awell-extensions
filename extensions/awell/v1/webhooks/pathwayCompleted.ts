@@ -1,4 +1,4 @@
-import { type DataPointDefinition, type Webhook } from '../../../lib/types'
+import { type DataPointDefinition, type Webhook } from '../../../../lib/types'
 
 const dataPoints = {
   pathway_definition_id: {

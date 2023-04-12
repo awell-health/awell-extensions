@@ -1,7 +1,7 @@
-import { actions } from './actions'
+import { startCareFlow, updatePatient } from './v1/actions'
 import { type Extension } from '../../lib/types'
 import { settings } from './settings'
-import { webhooks } from './webhooks'
+import { webhooks } from './v1/webhooks'
 import { AuthorType, Category } from '../../lib/types/marketplace'
 
 export const Awell: Extension = {
@@ -15,6 +15,10 @@ export const Awell: Extension = {
     authorType: AuthorType.AWELL,
   },
   settings,
-  actions,
+  actions: {
+    startCareFlow,
+    updatePatient,
+    // deletePatient, Deleting the patient who is currently enrolled in the pathway seems dangerous
+  },
   webhooks,
 }

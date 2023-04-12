@@ -1,4 +1,5 @@
 import { type Setting } from '../../lib/types'
+import { z, type ZodTypeAny } from 'zod'
 
 export const settings = {
   apiUrl: {
@@ -16,3 +17,8 @@ export const settings = {
     description: 'Your Awell (Orchestration) API key.',
   },
 } satisfies Record<string, Setting>
+
+export const SettingsValidationSchema = z.object({
+  apiUrl: z.string(),
+  apiKey: z.string(),
+} satisfies Record<keyof typeof settings, ZodTypeAny>)
