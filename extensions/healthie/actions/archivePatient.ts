@@ -1,34 +1,26 @@
 import { isNil } from 'lodash'
 import { mapHealthieToActivityError } from '../errors'
-import {
-  FieldType,
-  type Action,
-  type Field,
-} from '../../../lib/types'
+import { FieldType, type Action, type Field } from '../../../lib/types'
 import { Category } from '../../../lib/types/marketplace'
 import { getSdk } from '../gql/sdk'
 import { initialiseClient } from '../graphqlClient'
 import { type settings } from '../settings'
 
-
 const fields = {
   id: {
     id: 'id',
     label: 'ID',
-    description: 'The id of the patient in Healthie',
+    description: 'The id of the patient in Healthie.',
     type: FieldType.STRING,
     required: true,
   },
 } satisfies Record<string, Field>
 
-export const archivePatient: Action<
-  typeof fields,
-  typeof settings
-> = {
+export const archivePatient: Action<typeof fields, typeof settings> = {
   key: 'archivePatient',
-  category: Category.INTEGRATIONS,
+  category: Category.EHR_INTEGRATIONS,
   title: 'Archive patient',
-  description: 'Archive patient in Healthie.',
+  description: 'Archive a patient in Healthie.',
   fields,
   previewable: true,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
@@ -48,7 +40,7 @@ export const archivePatient: Action<
             },
           ],
         })
-        return;
+        return
       }
 
       const client = initialiseClient(settings)
@@ -57,8 +49,8 @@ export const archivePatient: Action<
         const { data } = await sdk.updatePatient({
           input: {
             id,
-            active: false
-          }
+            active: false,
+          },
         })
 
         if (!isNil(data.updateClient?.messages)) {

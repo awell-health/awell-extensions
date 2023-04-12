@@ -26,14 +26,14 @@ const fields = {
   content: {
     id: 'content',
     label: 'Content',
-    description: 'Content of the Task',
+    description: 'The content of the Task.',
     type: FieldType.TEXT,
     required: true,
   },
   dueDate: {
     id: 'dueDate',
     label: 'Due date',
-    description: 'The due date of the task',
+    description: 'The due date of the task.',
     type: FieldType.STRING,
   },
 } satisfies Record<string, Field>
@@ -51,9 +51,9 @@ export const createTask: Action<
   keyof typeof dataPoints
 > = {
   key: 'createTask',
-  category: Category.INTEGRATIONS,
+  category: Category.EHR_INTEGRATIONS,
   title: 'Create task',
-  description: 'Create a new task in healthie',
+  description: 'Create a new task in Healthie.',
   fields,
   dataPoints,
   previewable: true,

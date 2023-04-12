@@ -11,7 +11,7 @@ const genderIdentityEnum = z.enum([
   'nonbinary',
   'option_not_listed',
   'prefer_not_to_say',
-  'two_spirit'
+  'two_spirit',
 ])
 
 const legalGenderMarkerEnum = z.enum(['M', 'F', 'X', 'U'])
@@ -20,15 +20,10 @@ const pronounsEnum = z.enum([
   'he_him_his',
   'she_her_hers',
   'they_them_theirs',
-  'not_listed'
+  'not_listed',
 ])
 
-const sexEnum = z.enum([
-  'Male',
-  'Female',
-  'Other',
-  'Unknown'
-])
+const sexEnum = z.enum(['Male', 'Female', 'Other', 'Unknown'])
 
 const sexualOrientationEnum = z.enum([
   'unknown',
@@ -39,7 +34,7 @@ const sexualOrientationEnum = z.enum([
   'prefer_not_to_say',
   'lesbian',
   'queer',
-  'asexual'
+  'asexual',
 ])
 
 const raceEnum = z.enum([
@@ -50,7 +45,7 @@ const raceEnum = z.enum([
   'Native Hawaiian or Other Pacific Islander',
   'White',
   'Other',
-  'Declined to specify'
+  'Declined to specify',
 ])
 
 const ethnicityEnum = z.enum([
@@ -58,7 +53,7 @@ const ethnicityEnum = z.enum([
   'Hispanic or Latino',
   'Not Hispanic or Latino',
   'Unknown',
-  'Declined to specify'
+  'Declined to specify',
 ])
 
 const phoneTypeEnum = z.enum([
@@ -68,7 +63,7 @@ const phoneTypeEnum = z.enum([
   'Work',
   'Night',
   'Fax',
-  'Other'
+  'Other',
 ])
 
 const relationshipEnum = z.enum([
@@ -80,22 +75,19 @@ const relationshipEnum = z.enum([
   'Parent',
   'Sibling',
   'Spouse',
-  'Other'
-]);
-
-const insuranceRankEnum = z.enum([
-  'primary',
-  'secondary',
-  'tertiary'
+  'Other',
 ])
+
+const insuranceRankEnum = z.enum(['primary', 'secondary', 'tertiary'])
 
 const paymentProgramEnum = z.enum([
   'Medicare Part B',
   'Medicare Advantage',
-  'Medicaid', 'Commercial - HMSA',
+  'Medicaid',
+  'Commercial - HMSA',
   'Commercial - SFHP',
   'Commercial - Other',
-  "Worker's Compensation"
+  "Worker's Compensation",
 ])
 
 const inactiveReasonEnum = z.enum([
@@ -103,15 +95,10 @@ const inactiveReasonEnum = z.enum([
   'patient left on bad terms',
   'patient left on good terms',
   'practice ended relationship',
-  'unknown'
+  'unknown',
 ])
 
-const patientStatusEnum = z.enum([
-  'active',
-  'deceased',
-  'inactive',
-  'prospect'
-])
+const patientStatusEnum = z.enum(['active', 'deceased', 'inactive', 'prospect'])
 
 // Schemas
 const addressSchema = z.object({
@@ -119,7 +106,7 @@ const addressSchema = z.object({
   address_line2: z.string().max(35).nullish(),
   city: z.string().max(50),
   state: z.string().max(2),
-  zip: z.string().max(9)
+  zip: z.string().max(9),
 })
 
 export const phoneSchema = z.object({
@@ -176,12 +163,12 @@ export const patientStatusSchema = z.object({
   deceased_date: stringDate.nullish(),
   inactive_reason: inactiveReasonEnum.nullish(),
   notes: z.string().nullish(),
-  status: patientStatusEnum
+  status: patientStatusEnum,
 })
 
 const preferenceSchema = z.object({
   preferred_pharmacy_1: z.string().nullish(),
-  preferred_pharmacy_2: z.string().nullish()
+  preferred_pharmacy_2: z.string().nullish(),
 })
 
 const emergencyContactSchema = z.object({
@@ -193,48 +180,50 @@ const emergencyContactSchema = z.object({
   address_line2: z.string().max(35).nullish(),
   city: z.string().max(50).nullish(),
   state: z.string().max(2).nullish(),
-  zip: z.string().max(10).nullish()
+  zip: z.string().max(10).nullish(),
 })
 
 const employerSchema = z.object({
   code: z.string(),
   name: z.string(),
-  description: z.string()
+  description: z.string(),
 })
 
-export const patientSchema = z.object({
-  first_name: z.string().max(70), // required for POST and PUT
-  middle_name: z.string().max(50).nullish(),
-  last_name: z.string().max(70), // required for POST and PUT
-  actual_name: z.string().max(150).nullish(),
-  gender_identity: genderIdentityEnum.nullish(),
-  legal_gender_marker: legalGenderMarkerEnum.nullish(),
-  pronouns: pronounsEnum.nullish(),
-  sex: sexEnum, // required for POST and PUT
-  sexual_orientation: sexualOrientationEnum.nullish(),
-  primary_physician: numberId, // required for POST and PUT
-  caregiver_practice: numberId, // required for POST and PUT
-  dob: stringDate, // required for POST and PUT
-  ssn: z.string().length(9).nullish(),
-  race: raceEnum.nullish(),
-  preferred_language: z.string().nullish(),
-  ethnicity: ethnicityEnum.nullish(),
-  notes: z.string().max(500).nullish(),
-  vip: z.boolean().nullish(),
-  address: addressSchema.strict().nullish(),
-  phones: z.array(phoneSchema.strict()).max(2).nullish(),
-  emails: z.array(emailSchema.strict()).nullish(),
-  guarantor: guarantorSchema.strict().nullish(),
-  insurances: z.array(insuranceSchema.strict()).nullish(),
-  deleted_insurances: z.array(insuranceSchema.strict()).nullish(),
-  tags: z.array(z.string().max(100)).max(10).nullish(),
-  patient_status: patientStatusSchema.strict().nullish(),
-  preference: preferenceSchema.strict().nullish(),
-  emergency_contact: emergencyContactSchema.strict().nullish(),
-  primary_care_provider_npi: z.string().length(10).nullish(),
-  previous_first_name: z.string().max(70).nullish(),
-  previous_last_name: z.string().max(70).nullish(),
-  master_patient: numberId.nullish(), // ? type not in docs
-  employer: employerSchema.strict().nullish(),
-  metadata: z.object({}).passthrough().nullish(),
-}).strict()
+export const patientSchema = z
+  .object({
+    first_name: z.string().max(70), // required for POST and PUT
+    middle_name: z.string().max(50).nullish(),
+    last_name: z.string().max(70), // required for POST and PUT
+    actual_name: z.string().max(150).nullish(),
+    gender_identity: genderIdentityEnum.nullish(),
+    legal_gender_marker: legalGenderMarkerEnum.nullish(),
+    pronouns: pronounsEnum.nullish(),
+    sex: sexEnum, // required for POST and PUT
+    sexual_orientation: sexualOrientationEnum.nullish(),
+    primary_physician: numberId, // required for POST and PUT
+    caregiver_practice: numberId, // required for POST and PUT
+    dob: stringDate, // required for POST and PUT
+    ssn: z.string().length(9).nullish(),
+    race: raceEnum.nullish(),
+    preferred_language: z.string().nullish(),
+    ethnicity: ethnicityEnum.nullish(),
+    notes: z.string().max(500).nullish(),
+    vip: z.boolean().nullish(),
+    address: addressSchema.strict().nullish(),
+    phones: z.array(phoneSchema.strict()).max(2).nullish(),
+    emails: z.array(emailSchema.strict()).nullish(),
+    guarantor: guarantorSchema.strict().nullish(),
+    insurances: z.array(insuranceSchema.strict()).nullish(),
+    deleted_insurances: z.array(insuranceSchema.strict()).nullish(),
+    tags: z.array(z.string().max(100)).max(10).nullish(),
+    patient_status: patientStatusSchema.strict().nullish(),
+    preference: preferenceSchema.strict().nullish(),
+    emergency_contact: emergencyContactSchema.strict().nullish(),
+    primary_care_provider_npi: z.string().length(10).nullish(),
+    previous_first_name: z.string().max(70).nullish(),
+    previous_last_name: z.string().max(70).nullish(),
+    master_patient: numberId.nullish(), // ? type not in docs
+    employer: employerSchema.strict().nullish(),
+    metadata: z.object({}).passthrough().nullish(),
+  })
+  .strict()

@@ -1,23 +1,56 @@
+import { type Patient } from './Patient'
+import type { FieldType } from './Field'
+import type { Fields as FieldsType } from './Fields'
+import { type Settings as SettingsType } from './Settings'
+
+type TypeValueMap =
+  | {
+      type: FieldType.BOOLEAN
+      value?: boolean
+    }
+  | {
+      type: FieldType.NUMERIC
+      value?: number
+    }
+  | {
+      type: FieldType.STRING
+      value?: string
+    }
+  | {
+      type: FieldType.HTML
+      value?: string
+    }
+  | {
+      type: FieldType.JSON
+      value?: string
+    }
+  | {
+      type: FieldType.TEXT
+      value?: string
+    }
+  | {
+      type: FieldType.DATE
+      value?: string // ISO format
+    }
+// extract value for type
+type FieldValueType<T extends FieldType> = Extract<
+  TypeValueMap,
+  { type: T }
+>['value']
+
+// map field to a field value type based of field type prop
+type FieldValues<T extends FieldsType> = {
+  [K in keyof T]: FieldValueType<T[K]['type']>
+}
+
 export interface NewActivityPayload<
-  SettingsKeys extends string | number | symbol = never,
-  FieldsKeys extends string | number | symbol = never
+  Fields extends FieldsType = never,
+  Settings extends SettingsType = never
 > {
   activity: {
     id: string
   }
-  patient: {
-    id: string
-    profile?: {
-      email?: string
-      first_name?: string
-      last_name?: string
-      name?: string
-      phone?: string
-      mobile_phone?: string
-      patient_code?: string
-      sex?: 'MALE' | 'FEMALE' | 'NOT_KNOWN'
-    }
-  }
-  fields: Record<FieldsKeys, string | undefined>
-  settings: Record<SettingsKeys, string | undefined>
+  patient: Patient
+  fields: FieldValues<Fields>
+  settings: Record<keyof Settings, string | undefined>
 }

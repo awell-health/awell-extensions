@@ -14,7 +14,7 @@ export const settings = {
     label: 'API key',
     obfuscated: true,
     required: true,
-    description: 'Your orchestration API key.',
+    description: 'Your Awell (Orchestration) API key.',
   },
 } satisfies Record<string, Setting>
 

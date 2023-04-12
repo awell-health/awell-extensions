@@ -11,56 +11,55 @@ import { getSdk } from '../gql/sdk'
 import { initialiseClient } from '../graphqlClient'
 import { type settings } from '../settings'
 
-
 const fields = {
   id: {
     id: 'id',
     label: 'ID',
-    description: 'The id of the patient in Healthie',
+    description: 'The id of the patient in Healthie.',
     type: FieldType.STRING,
     required: true,
   },
   name: {
     id: 'name',
     label: 'Name',
-    description: 'The name of the address',
+    description: 'The name of the address.',
     type: FieldType.STRING,
   },
   country: {
     id: 'country',
     label: 'Country',
-    description: 'The country of the patient',
+    description: 'The country of the patient.',
     type: FieldType.STRING,
   },
   state: {
     id: 'state',
     label: 'State',
-    description: "The state patient's lives in",
+    description: "The state patient's lives in.",
     type: FieldType.STRING,
   },
   city: {
     id: 'city',
     label: 'City',
-    description: 'The city of the patient',
+    description: 'The city of the patient.',
     type: FieldType.STRING,
   },
   zip: {
     id: 'zip',
     label: 'Zip code',
-    description: 'The zip code of the patient',
+    description: 'The zip code of the patient.',
     type: FieldType.STRING,
   },
   line1: {
     id: 'line1',
     label: 'Line 1',
-    description: 'The Line 1 of the address',
+    description: 'The line 1 of the address.',
     type: FieldType.STRING,
     required: true,
   },
   line2: {
     id: 'line2',
     label: 'Line 2',
-    description: 'The Line 2 of the address',
+    description: 'The line 2 of the address.',
     type: FieldType.STRING,
   },
 } satisfies Record<string, Field>
@@ -78,9 +77,9 @@ export const createLocation: Action<
   keyof typeof dataPoints
 > = {
   key: 'createLocation',
-  category: Category.INTEGRATIONS,
+  category: Category.EHR_INTEGRATIONS,
   title: 'Create location',
-  description: 'Create location for a patient in Healthie.',
+  description: 'Create a location for a patient in Healthie.',
   fields,
   dataPoints,
   previewable: true,
@@ -101,7 +100,7 @@ export const createLocation: Action<
             },
           ],
         })
-        return;
+        return
       }
 
       const client = initialiseClient(settings)
@@ -116,27 +115,27 @@ export const createLocation: Action<
             city,
             zip,
             line1,
-            line2
-          }
+            line2,
+          },
         })
 
         if (!isNil(data.createLocation?.messages)) {
-          const errors = mapHealthieToActivityError(data.createLocation?.messages)
+          const errors = mapHealthieToActivityError(
+            data.createLocation?.messages
+          )
           await onError({
             events: errors,
           })
           return
         }
 
-        const locationId = data.createLocation?.location?.id;
+        const locationId = data.createLocation?.location?.id
 
-        await onComplete(
-          {
-            data_points: {
-              locationId
-            }
-          }
-        )
+        await onComplete({
+          data_points: {
+            locationId,
+          },
+        })
       } else {
         await onError({
           events: [

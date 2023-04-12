@@ -1,4 +1,6 @@
 import { type Setting } from '../../lib/types'
+import { z, type ZodTypeAny } from 'zod'
+import { PhoneValidationSchema } from './common/validation'
 
 export const settings = {
   accountSid: {
@@ -6,14 +8,14 @@ export const settings = {
     key: 'accountSid',
     obfuscated: true,
     required: true,
-    description: 'Find your Account SID at twilio.com/console',
+    description: 'Find your Account SID at twilio.com/console.',
   },
   authToken: {
     label: 'Auth token',
     key: 'authToken',
     obfuscated: true,
     required: true,
-    description: 'Find your Auth Token at twilio.com/console',
+    description: 'Find your Auth Token at twilio.com/console.',
   },
   fromNumber: {
     label: '"From" number',
@@ -24,3 +26,9 @@ export const settings = {
       '"From" specifies the Twilio phone number, short code, or messaging service that will send the text messages. This must be a Twilio phone number that you own.',
   },
 } satisfies Record<string, Setting>
+
+export const SettingsValidationSchema = z.object({
+  accountSid: z.string().min(1, { message: 'Missing Twilio account SID' }),
+  authToken: z.string().min(1, { message: 'Missing Twilio auth token' }),
+  fromNumber: PhoneValidationSchema,
+} satisfies Record<keyof typeof settings, ZodTypeAny>)

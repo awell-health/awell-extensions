@@ -1,6 +1,6 @@
 export enum Category {
   COMMUNICATION = 'Communication',
-  INTEGRATIONS = 'Integrations',
+  EHR_INTEGRATIONS = 'EHR Integrations',
   DOCUMENT_MANAGEMENT = 'Document Management',
   CONTENT_AND_FILES = 'Content & Files',
   WORKFLOW = 'Workflow',
@@ -10,4 +10,6 @@ export enum Category {
   BILLING = 'Billing',
   MEDICINE_MANAGEMENT = 'Medicine Management',
   DEMO = 'Demo',
+  FORMS = 'Forms',
+  AI = 'Artificial Intelligence (AI)',
 }

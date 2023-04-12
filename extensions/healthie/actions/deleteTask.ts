@@ -10,7 +10,7 @@ const fields = {
   id: {
     id: 'id',
     label: 'Task ID',
-    description: 'The id of the task in Healthie',
+    description: 'The id of the task in Healthie you would like to delete.',
     type: FieldType.STRING,
     required: true,
   },
@@ -18,9 +18,9 @@ const fields = {
 
 export const deleteTask: Action<typeof fields, typeof settings> = {
   key: 'deleteTask',
-  category: Category.INTEGRATIONS,
+  category: Category.EHR_INTEGRATIONS,
   title: 'Delete task',
-  description: 'Delete task in Healthie.',
+  description: 'Delete a task in Healthie.',
   fields,
   previewable: true,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {

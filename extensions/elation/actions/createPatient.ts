@@ -159,9 +159,9 @@ export const createPatient: Action<
   keyof typeof dataPoints
 > = {
   key: 'createPatient',
-  category: Category.INTEGRATIONS,
+  category: Category.EHR_INTEGRATIONS,
   title: 'Create Patient',
-  description: "Create patient profile using elation's patient api.",
+  description: "Create a patient profile using Elation's patient API.",
   fields,
   previewable: true,
   dataPoints,
@@ -206,7 +206,7 @@ export const createPatient: Action<
                 en: `${err.status ?? '(no status code)'} Error: ${err.message}`,
               },
               error: {
-                category: 'BAD_REQUEST',
+                category: 'SERVER_ERROR',
                 message: `${err.status ?? '(no status code)'} Error: ${
                   err.message
                 }`,

@@ -13,7 +13,8 @@ const fields = {
   patientId: {
     id: 'patientId',
     label: 'Patient ID',
-    description: 'The patient identifier',
+    description:
+      'The ID of the patient in Healthie you would like to retrieve.',
     type: FieldType.STRING,
   },
 } satisfies Record<string, Field>
@@ -59,7 +60,7 @@ export const getPatient: Action<
   keyof typeof dataPoints
 > = {
   key: 'getPatient',
-  category: Category.INTEGRATIONS,
+  category: Category.EHR_INTEGRATIONS,
   title: 'Get patient',
   description: 'Retrieve the details of a patient in Healthie.',
   fields,
@@ -82,7 +83,7 @@ export const getPatient: Action<
             gender: data.user?.gender,
             phoneNumber: data.user?.phone_number,
             groupName: data.user?.user_group?.name,
-            primaryProviderId: data.user?.dietitian_id
+            primaryProviderId: data.user?.dietitian_id,
           },
         })
       } else {

@@ -1,4 +1,5 @@
 import { type Field, FieldType } from '../../../../../../lib/types'
+import { z, type ZodTypeAny } from 'zod'
 
 export const fields = {
   signerRole: {
@@ -53,12 +54,22 @@ export const fields = {
     type: FieldType.STRING,
     required: false,
   },
-  customFields: {
-    id: 'customFields',
-    label: 'Custom fields',
-    description:
-      'An array defining values and options for custom fields. Required when a custom field exists in the template.',
-    type: FieldType.JSON,
-    required: false,
-  },
 } satisfies Record<string, Field>
+
+export const FieldsValidationSchema = z.object({
+  signerRole: z.string(),
+  signerName: z.string(),
+  signerEmailAddress: z.string().email(),
+  templateId: z.string(),
+  title: z.optional(z.string()),
+  subject: z.optional(z.string()),
+  message: z.optional(z.string()),
+} satisfies Record<keyof typeof fields, ZodTypeAny>)
+
+export const validateActionFields = (
+  fields: unknown
+): z.infer<typeof FieldsValidationSchema> => {
+  const parsedData = FieldsValidationSchema.parse(fields)
+
+  return parsedData
+}
