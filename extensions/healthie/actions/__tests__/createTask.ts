@@ -28,6 +28,10 @@ describe('createTask action', () => {
           assignToUserId: undefined,
           content: 'content',
           dueDate: undefined,
+          isReminderEnabled: false,
+          reminderIntervalType: undefined,
+          reminderIntervalValue: undefined,
+          reminderTime: undefined,
         },
         settings: {
           apiKey: 'apiKey',
