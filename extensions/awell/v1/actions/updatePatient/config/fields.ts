@@ -104,7 +104,7 @@ export const FieldsValidationSchema = z.object({
   firstName: z.optional(z.string()),
   lastName: z.optional(z.string()),
   birthDate: z.optional(z.coerce.date().transform((date) => formatISO(date))),
-  email: z.optional(z.string()),
+  email: z.optional(z.string().email('Value passed is not an email address')),
   phone: z.optional(z.string()),
   mobilePhone: z.optional(z.string()),
   street: z.optional(z.string()),
