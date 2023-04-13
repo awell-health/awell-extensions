@@ -40,16 +40,11 @@ export abstract class DataWrapper {
 export abstract class APIClient<DW extends DataWrapper> {
   readonly auth: OAuth
   readonly baseUrl: string
-  readonly ctor: DataWrapperCtor<DW>
+  abstract readonly ctor: DataWrapperCtor<DW>
 
-  public constructor(opts: {
-    auth: OAuth
-    baseUrl: string
-    makeDataWrapper: DataWrapperCtor<DW>
-  }) {
+  protected constructor(opts: { auth: OAuth; baseUrl: string }) {
     this.auth = opts.auth
     this.baseUrl = opts.baseUrl
-    this.ctor = opts.makeDataWrapper
   }
 
   /**
