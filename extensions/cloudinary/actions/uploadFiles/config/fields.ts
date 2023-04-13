@@ -9,7 +9,7 @@ export const fields = {
     description:
       'The name of an upload preset defined for your product environment. If left empty, the preset defined in the extension settings will be used.',
     type: FieldType.STRING,
-    required: true,
+    required: false,
   },
   folder: {
     id: 'folder',
