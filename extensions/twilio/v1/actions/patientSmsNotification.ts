@@ -4,11 +4,11 @@ import twilioSdk from '../../common/sdk/twilio'
 import { FieldType, type Action, type Field } from '../../../../lib/types'
 import { SettingsValidationSchema, type settings } from '../../settings'
 import { Category } from '../../../../lib/types/marketplace'
+import { MessageValidationSchema } from '../../common/validation'
 import {
-  MessageValidationSchema,
-  PhoneValidationSchema,
-} from '../../common/validation'
-import { validate } from '../../../../lib/shared/validation'
+  RequiredPhoneValidationSchema,
+  validate,
+} from '../../../../lib/shared/validation'
 
 const fields = {
   message: {
@@ -20,7 +20,7 @@ const fields = {
 } satisfies Record<string, Field>
 
 const PatientProfile = z.object({
-  mobile_phone: PhoneValidationSchema,
+  mobile_phone: RequiredPhoneValidationSchema,
 })
 
 const PatientValidationSchema = z.object({ profile: PatientProfile })

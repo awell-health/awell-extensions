@@ -1,9 +1,7 @@
 import { z, type ZodTypeAny } from 'zod'
+import { RequiredPhoneValidationSchema } from '../../../../../../lib/shared/validation'
 import { type Field, FieldType, StringType } from '../../../../../../lib/types'
-import {
-  MessageValidationSchema,
-  PhoneValidationSchema,
-} from '../../../../common/validation'
+import { MessageValidationSchema } from '../../../../common/validation'
 
 export const fields = {
   recipient: {
@@ -24,6 +22,6 @@ export const fields = {
 } satisfies Record<string, Field>
 
 export const FieldsValidationSchema = z.object({
-  recipient: PhoneValidationSchema,
+  recipient: RequiredPhoneValidationSchema,
   message: MessageValidationSchema,
 } satisfies Record<keyof typeof fields, ZodTypeAny>)

@@ -24,8 +24,8 @@ describe('Update patient', () => {
           lastName: 'Doe',
           birthDate: '1993-11-30',
           email: 'john.doe@awellhealth.com',
-          phone: '+32xxxxxxxxx',
-          mobilePhone: '+32xxxxxxxxx',
+          phone: undefined,
+          mobilePhone: undefined,
           street: 'Doe Street',
           state: 'Doe York',
           country: 'United Doe',
@@ -85,6 +85,51 @@ describe('Update patient', () => {
             category: 'WRONG_INPUT',
             message:
               'Validation error: Value passed is not an email address at "fields.email"',
+          },
+        }),
+      ]),
+    })
+  })
+
+  test('Should call onError when phone is not a possible phone number', async () => {
+    await updatePatient.onActivityCreated(
+      {
+        activity: {
+          id: 'activity-id',
+        },
+        patient: { id: 'test-patient' },
+        fields: {
+          patientCode: undefined,
+          firstName: undefined,
+          lastName: undefined,
+          birthDate: undefined,
+          email: undefined,
+          phone: 'This is not a phone number',
+          mobilePhone: undefined,
+          street: undefined,
+          state: undefined,
+          country: undefined,
+          city: undefined,
+          zip: undefined,
+          preferredLanguage: undefined,
+          sex: undefined,
+        },
+        settings: {
+          apiUrl: 'an-api-url',
+          apiKey: 'an-api-key',
+        },
+      },
+      onComplete,
+      onError
+    )
+    expect(onComplete).not.toHaveBeenCalled()
+    expect(onError).toHaveBeenCalledWith({
+      events: expect.arrayContaining([
+        expect.objectContaining({
+          error: {
+            category: 'WRONG_INPUT',
+            message:
+              'Validation error: Invalid (optional) phone number at "fields.phone"',
           },
         }),
       ]),
