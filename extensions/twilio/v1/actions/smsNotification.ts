@@ -9,11 +9,11 @@ import {
 } from '../../../../lib/types'
 import { SettingsValidationSchema, type settings } from '../../settings'
 import { Category } from '../../../../lib/types/marketplace'
+import { MessageValidationSchema } from '../../common/validation'
 import {
-  MessageValidationSchema,
-  PhoneValidationSchema,
-} from '../../common/validation'
-import { validate } from '../../../../lib/shared/validation'
+  RequiredPhoneValidationSchema,
+  validate,
+} from '../../../../lib/shared/validation'
 
 const fields = {
   recipient: {
@@ -33,7 +33,7 @@ const fields = {
 } satisfies Record<string, Field>
 
 const Fields = z.object({
-  recipient: PhoneValidationSchema,
+  recipient: RequiredPhoneValidationSchema,
   message: MessageValidationSchema,
 })
 
