@@ -1,3 +1,5 @@
+import { ZodError } from 'zod'
+import { fromZodError } from 'zod-validation-error'
 import {
   FieldType,
   type Action,
@@ -8,6 +10,7 @@ import { Category } from '../../../lib/types/marketplace'
 import { getSdk } from '../gql/sdk'
 import { initialiseClient } from '../graphqlClient'
 import { type settings } from '../settings'
+import { createTaskSchema } from '../validation/createTask.zod'
 
 const fields = {
   patientId: {
@@ -59,8 +62,11 @@ export const createTask: Action<
   previewable: true,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
     const { fields, settings } = payload
-    const { patientId, assignToUserId, content, dueDate } = fields
+
     try {
+      const { patientId, assignToUserId, content, dueDate } =
+        createTaskSchema.parse(fields)
+
       const client = initialiseClient(settings)
       if (client !== undefined) {
         const sdk = getSdk(client)
@@ -90,19 +96,35 @@ export const createTask: Action<
         })
       }
     } catch (err) {
-      const error = err as Error
-      await onError({
-        events: [
-          {
-            date: new Date().toISOString(),
-            text: { en: 'Healthie API reported an error' },
-            error: {
-              category: 'SERVER_ERROR',
-              message: error.message,
+      if (err instanceof ZodError) {
+        const error = fromZodError(err)
+        await onError({
+          events: [
+            {
+              date: new Date().toISOString(),
+              text: { en: error.message },
+              error: {
+                category: 'WRONG_INPUT',
+                message: error.message,
+              },
             },
-          },
-        ],
-      })
+          ],
+        })
+      } else {
+        const error = err as Error
+        await onError({
+          events: [
+            {
+              date: new Date().toISOString(),
+              text: { en: 'Healthie API reported an error' },
+              error: {
+                category: 'SERVER_ERROR',
+                message: error.message,
+              },
+            },
+          ],
+        })
+      }
     }
   },
 }
