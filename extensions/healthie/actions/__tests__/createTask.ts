@@ -11,10 +11,10 @@ const samplePayload = {
   },
   patient: { id: 'test-patient' },
   fields: {
-    patientId: undefined,
-    assignToUserId: undefined,
+    patientId: 'a-patient-id',
+    assignToUserId: 'a-user-id',
     content: 'content',
-    dueDate: undefined,
+    dueDate: '2023-01-01',
     isReminderEnabled: false,
     reminderIntervalType: undefined,
     reminderIntervalValue: undefined,
@@ -27,10 +27,10 @@ const samplePayload = {
 }
 
 const sampleTask = {
-  patientId: undefined,
-  assignToUserId: undefined,
+  client_id: 'a-patient-id',
+  user_id: 'a-user-id',
   content: 'content',
-  dueDate: undefined,
+  due_date: '2023-01-01',
   reminder: undefined,
 }
 
