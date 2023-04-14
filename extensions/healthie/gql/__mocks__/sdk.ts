@@ -138,6 +138,17 @@ export const mockGetSdkReturn = {
       data: {},
     }
   }),
+  createTask: jest.fn((args) => {
+    return {
+      data: {
+        createTask: {
+          task: {
+            id: 'task-1',
+          },
+        },
+      },
+    }
+  }),
 }
 
 export const mockGetSdk = (params: any): any => {
