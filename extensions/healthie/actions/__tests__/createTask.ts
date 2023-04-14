@@ -159,6 +159,12 @@ describe('createTask action', () => {
         {
           reminderIntervalValue: 'tuesday',
         },
+        {
+          reminderIntervalValue: 'wednesday,thursday',
+        },
+        {
+          reminderIntervalValue: 'Friday, Saturday',
+        },
       ])('Should call onComplete when %p', async (value) => {
         await createTask.onActivityCreated(
           {
@@ -175,16 +181,16 @@ describe('createTask action', () => {
           onError
         )
 
-        expect(onComplete).toHaveBeenCalled()
         expect(mockGetSdkReturn.createTask).toHaveBeenCalledWith({
           ...sampleTask,
           reminder: {
             is_enabled: true,
             interval_type: 'weekly',
-            interval_value: value.reminderIntervalValue,
+            interval_value: value.reminderIntervalValue.toLowerCase(),
             reminder_time: 1,
           },
         })
+        expect(onComplete).toHaveBeenCalled()
       })
 
       test('Should call onError when reminderIntervalValue is not known day of week', async () => {
