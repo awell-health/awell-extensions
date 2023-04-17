@@ -15,6 +15,7 @@ export interface OAuthGrantPasswordRequest extends OAuthGrantRequestBase {
 
 export interface OAuthGrantClientCredentialsRequest
   extends OAuthGrantRequestBase {
+  audience?: string
   grant_type: 'client_credentials'
 }
 
