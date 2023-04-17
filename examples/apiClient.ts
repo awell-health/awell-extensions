@@ -5,14 +5,14 @@ import { OAuthClientCredentials } from '../lib/shared/auth'
  * This is an example of implementing data wrappers and API clients
  */
 
-export class SampleDataWrapper extends DataWrapper {
+class SampleDataWrapper extends DataWrapper {
   public async hello(): Promise<'world'> {
     // This is where the actual API call would be made with `this.Request()`
     return 'world'
   }
 }
 
-export class SampleAPIClient extends APIClient<SampleDataWrapper> {
+class SampleAPIClient extends APIClient<SampleDataWrapper> {
   readonly ctor: DataWrapperCtor<SampleDataWrapper> = (
     token: string,
     baseUrl: string
@@ -41,4 +41,23 @@ export class SampleAPIClient extends APIClient<SampleDataWrapper> {
   public async hello(): Promise<'world'> {
     return await this.FetchData<'world'>(async (dw) => await dw.hello())
   }
+}
+
+/**
+ * Sometimes it's easier to use a constructor fxn for the api client.
+ * In the case below, we validate the extension's settings as:
+ * payloadSettings: Record<keyof typeof settings, string | undefined>
+ * by parsing the settings according to our zod schema:
+ * const { base_url, ... } = settingsSchema.parse(payloadSettings)
+ */
+export const makeSampleAPIClient = (
+  payloadSettings: Record<string, string | undefined>
+): SampleAPIClient => {
+  const { base_url, auth_url, ...auth_request_settings } = payloadSettings
+
+  return new SampleAPIClient({
+    authUrl: auth_url,
+    requestConfig: auth_request_settings,
+    baseUrl: base_url,
+  })
 }
