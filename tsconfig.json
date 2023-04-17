@@ -11,7 +11,8 @@
   "include": [
     "lib/**/*.ts",
     "extensions/**/*.ts",
-    "src/**/*.ts"
+    "src/**/*.ts",
+    "examples/**/*.ts"
   ],
   "exclude": [
     "**/scripts/*.ts"

@@ -1,13 +1,26 @@
 import * as Axios from 'axios'
 import { URLSearchParams } from 'url'
 
-export interface OAuthGrantPasswordRequest {
+interface OAuthGrantRequestBase {
   client_id: string
   client_secret: string
+  scope?: string
+}
+
+export interface OAuthGrantPasswordRequest extends OAuthGrantRequestBase {
   username: string
   password: string
   grant_type: 'password'
 }
+
+export interface OAuthGrantClientCredentialsRequest
+  extends OAuthGrantRequestBase {
+  grant_type: 'client_credentials'
+}
+
+export type OAuthGrantRequest =
+  | OAuthGrantPasswordRequest
+  | OAuthGrantClientCredentialsRequest
 
 export interface OAuthRefreshTokenRequest {
   client_id: string
@@ -24,7 +37,8 @@ export interface OAuthAccessTokenResponse {
   refresh_token: string
 }
 
-export type OAuthOpts = Omit<OAuthGrantPasswordRequest, 'grant_type'> & {
+export interface OAuthOpts {
+  request_config: OAuthGrantRequest
   auth_url: string
 }
 
@@ -34,23 +48,18 @@ export type OAuthOpts = Omit<OAuthGrantPasswordRequest, 'grant_type'> & {
  *
  * TODO: save the token object somewhere retrievable, and use refresh token to refresh it
  */
-export class OAuthPassword {
-  readonly grantRequest: OAuthGrantPasswordRequest
+export class OAuth {
+  readonly grantRequest: OAuthGrantRequest
   readonly refreshRequest: (refreshTok: string) => OAuthRefreshTokenRequest
   readonly _client: Axios.AxiosInstance
 
-  public constructor(opts: OAuthOpts) {
-    this.grantRequest = {
-      client_id: opts.client_id,
-      client_secret: opts.client_secret,
-      username: opts.username,
-      password: opts.password,
-      grant_type: 'password',
-    }
+  public constructor({ auth_url, request_config }: OAuthOpts) {
+    this.grantRequest = { ...request_config }
+
     this.refreshRequest = (tok) => {
       return {
-        client_id: opts.client_id,
-        client_secret: opts.client_secret,
+        client_id: request_config.client_id,
+        client_secret: request_config.client_secret,
         grant_type: 'refresh_token',
         refresh_token: tok,
       }
@@ -59,14 +68,14 @@ export class OAuthPassword {
     // In testing, we don't currently need the basic auth for elation,
     // even though they include it in their docs. keeping here, regardless.
     const authVal = Buffer.from(
-      `${opts.client_id}:${opts.client_secret}`
+      `${request_config.client_id}:${request_config.client_secret}`
     ).toString('base64')
     const headers = {
       authorization: `Basic ${authVal}`,
       'content-type': 'application/x-www-form-urlencoded',
     }
     this._client = Axios.default.create({
-      baseURL: opts.auth_url,
+      baseURL: auth_url,
       headers,
       validateStatus: (status) => {
         return status >= 200 && status < 300
@@ -111,5 +120,34 @@ export class OAuthPassword {
     })
     const res = await req
     return res.data
+  }
+}
+
+export interface OAuthOptsWithoutGrantType<T> {
+  auth_url: string
+  request_config: Omit<T, 'grant_type'>
+}
+
+export class OAuthClientCredentials extends OAuth {
+  public constructor({
+    auth_url,
+    request_config,
+  }: OAuthOptsWithoutGrantType<OAuthGrantClientCredentialsRequest>) {
+    super({
+      auth_url,
+      request_config: { ...request_config, grant_type: 'client_credentials' },
+    })
+  }
+}
+
+export class OAuthPassword extends OAuth {
+  public constructor({
+    auth_url,
+    request_config,
+  }: OAuthOptsWithoutGrantType<OAuthGrantPasswordRequest>) {
+    super({
+      auth_url,
+      request_config: { ...request_config, grant_type: 'password' },
+    })
   }
 }

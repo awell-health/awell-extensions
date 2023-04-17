@@ -32,4 +32,15 @@ const ElationAPIClientMock = jest.fn().mockImplementation((params) => {
   }
 })
 
-export { ElationAPIClientMock as ElationAPIClient }
+const { makeAPIClient } = jest.requireActual('../client')
+
+const makeAPIClientMock = jest.fn((args) => {
+  makeAPIClient(args)
+
+  return new ElationAPIClientMock(args)
+})
+
+export {
+  ElationAPIClientMock as ElationAPIClient,
+  makeAPIClientMock as makeAPIClient,
+}

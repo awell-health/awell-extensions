@@ -7,10 +7,9 @@ import {
 } from '../../../lib/types'
 import { Category } from '../../../lib/types/marketplace'
 import { type settings } from '../settings'
-import { ElationAPIClient, makeDataWrapper } from '../client'
+import { makeAPIClient } from '../client'
 import { fromZodError } from 'zod-validation-error'
 import { AxiosError } from 'axios'
-import { settingsSchema } from '../validation/settings.zod'
 import { numberId } from '../validation/generic.zod'
 
 const fields = {
@@ -120,17 +119,10 @@ export const getPatient: Action<
   dataPoints,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
     try {
-      const { base_url: baseUrl, ...auth } = settingsSchema.parse(
-        payload.settings
-      )
       const patientId = numberId.parse(payload.fields.patientId)
 
       // API Call should produce AuthError or something dif.
-      const api = new ElationAPIClient({
-        auth,
-        baseUrl,
-        makeDataWrapper,
-      })
+      const api = makeAPIClient(payload.settings)
       const patientInfo = await api.getPatient(patientId)
       await onComplete({
         data_points: {
