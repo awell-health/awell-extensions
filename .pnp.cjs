@@ -60,7 +60,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["graphql-tag", "virtual:d0a76b174a54d973a27fb74b962aa2f26df55e18a188b76dd96ab65ec80e4a0b001d63550589d8a4f2f542a16ec7ef50e51453b019e1529d4f43d2542f174b98#npm:2.12.6"],\
             ["husky", "npm:8.0.3"],\
             ["jest", "virtual:d0a76b174a54d973a27fb74b962aa2f26df55e18a188b76dd96ab65ec80e4a0b001d63550589d8a4f2f542a16ec7ef50e51453b019e1529d4f43d2542f174b98#npm:29.4.3"],\
-            ["libphonenumber-js", "npm:1.10.21"],\
+            ["libphonenumber-js", "npm:1.10.26"],\
             ["lightship", "npm:7.1.1"],\
             ["lint-staged", "npm:13.1.2"],\
             ["lodash", "npm:4.17.21"],\
@@ -179,7 +179,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["graphql-tag", "virtual:d0a76b174a54d973a27fb74b962aa2f26df55e18a188b76dd96ab65ec80e4a0b001d63550589d8a4f2f542a16ec7ef50e51453b019e1529d4f43d2542f174b98#npm:2.12.6"],\
             ["husky", "npm:8.0.3"],\
             ["jest", "virtual:d0a76b174a54d973a27fb74b962aa2f26df55e18a188b76dd96ab65ec80e4a0b001d63550589d8a4f2f542a16ec7ef50e51453b019e1529d4f43d2542f174b98#npm:29.4.3"],\
-            ["libphonenumber-js", "npm:1.10.21"],\
+            ["libphonenumber-js", "npm:1.10.26"],\
             ["lightship", "npm:7.1.1"],\
             ["lint-staged", "npm:13.1.2"],\
             ["lodash", "npm:4.17.21"],\
@@ -9490,10 +9490,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["libphonenumber-js", [\
-        ["npm:1.10.21", {\
-          "packageLocation": "./.yarn/cache/libphonenumber-js-npm-1.10.21-cda854035e-0ffac0db45.zip/node_modules/libphonenumber-js/",\
+        ["npm:1.10.26", {\
+          "packageLocation": "./.yarn/cache/libphonenumber-js-npm-1.10.26-d53d956578-125cbe60ea.zip/node_modules/libphonenumber-js/",\
           "packageDependencies": [\
-            ["libphonenumber-js", "npm:1.10.21"]\
+            ["libphonenumber-js", "npm:1.10.26"]\
           ],\
           "linkType": "HARD"\
         }]\
