@@ -42,7 +42,7 @@ const dataPoints = {
   },
   phoneNumber: {
     key: 'phoneNumber',
-    valueType: 'string',
+    valueType: 'telephone',
   },
   primaryProviderId: {
     key: 'primaryProviderId',
