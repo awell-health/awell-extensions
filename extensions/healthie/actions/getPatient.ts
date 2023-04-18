@@ -1,3 +1,4 @@
+import { E164PhoneValidationSchema } from '../../../lib/shared/validation'
 import {
   FieldType,
   type Action,
@@ -42,6 +43,10 @@ const dataPoints = {
   },
   phoneNumber: {
     key: 'phoneNumber',
+    valueType: 'string',
+  },
+  validatedPhoneNumber: {
+    key: 'validatedPhoneNumber',
     valueType: 'telephone',
   },
   primaryProviderId: {
@@ -74,6 +79,11 @@ export const getPatient: Action<
       if (client !== undefined) {
         const sdk = getSdk(client)
         const { data } = await sdk.getUser({ id: patientId })
+
+        const phoneValidationResult = E164PhoneValidationSchema.safeParse(
+          data.user?.phone_number
+        )
+
         await onComplete({
           data_points: {
             firstName: data.user?.first_name,
@@ -82,9 +92,27 @@ export const getPatient: Action<
             email: data.user?.email,
             gender: data.user?.gender,
             phoneNumber: data.user?.phone_number,
+            validatedPhoneNumber: phoneValidationResult.success
+              ? phoneValidationResult.data
+              : undefined,
             groupName: data.user?.user_group?.name,
             primaryProviderId: data.user?.dietitian_id,
           },
+          events: phoneValidationResult.success
+            ? []
+            : [
+                {
+                  date: new Date().toISOString(),
+                  text: {
+                    en: "Phone number from Healthie not stored because it isn't a valid E.164 phone number",
+                  },
+                  error: {
+                    category: 'WRONG_DATA',
+                    message:
+                      "Phone number from Healthie not stored because it isn't a valid E.164 phone number",
+                  },
+                },
+              ],
         })
       } else {
         await onError({
