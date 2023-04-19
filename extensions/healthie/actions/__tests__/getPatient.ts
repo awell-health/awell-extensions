@@ -140,7 +140,7 @@ describe('getPatient action', () => {
     )
   })
 
-  describe('date validation', () => {
+  describe('dob validation', () => {
     test.each([
       {
         healthiePhone: '+48 123 456 789',
