@@ -1,4 +1,4 @@
 export interface DataPointDefinition {
   key: string
-  valueType: 'string' | 'number' | 'date'
+  valueType: 'string' | 'number' | 'date' | 'boolean'
 }
