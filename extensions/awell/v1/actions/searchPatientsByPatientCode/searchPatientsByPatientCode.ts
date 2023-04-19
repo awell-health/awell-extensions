@@ -14,7 +14,8 @@ export const searchPatientsByPatientCode: Action<
   key: 'searchPatientsByPatientCode',
   category: Category.WORKFLOW,
   title: 'Search patient (by patient code)',
-  description: 'Search for a patient based on the patient code.',
+  description:
+    "Search whether the current patient already exists. Search happens based on the `patient_code` field which is taken from the patient's profile.",
   fields,
   dataPoints,
   previewable: false, // We don't have patients in Preview, only cases.
