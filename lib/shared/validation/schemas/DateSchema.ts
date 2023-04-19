@@ -9,7 +9,7 @@ export const DateOnlySchema = z.coerce
   })
   .transform((arg) => formatISO(arg, { representation: 'date' }))
 
-export const DateIsoSchema = z.coerce
+export const DateTimeSchema = z.coerce
   .date({
     errorMap: () => ({
       message: 'Requires date in valid format (ISO8601)',

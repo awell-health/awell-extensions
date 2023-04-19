@@ -1,4 +1,7 @@
-import { E164PhoneValidationSchema } from '../../../lib/shared/validation'
+import {
+  DateTimeSchema,
+  E164PhoneValidationSchema,
+} from '../../../lib/shared/validation'
 import {
   FieldType,
   type Action,
@@ -83,12 +86,15 @@ export const getPatient: Action<
         const phoneValidationResult = E164PhoneValidationSchema.safeParse(
           data.user?.phone_number
         )
+        const dobValidationResult = DateTimeSchema.safeParse(data.user?.dob)
 
         await onComplete({
           data_points: {
             firstName: data.user?.first_name,
             lastName: data.user?.last_name,
-            dob: data.user?.dob,
+            dob: dobValidationResult.success
+              ? dobValidationResult.data
+              : data.user?.dob,
             email: data.user?.email,
             gender: data.user?.gender,
             phoneNumber: data.user?.phone_number,

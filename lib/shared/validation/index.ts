@@ -3,6 +3,6 @@ export {
   OptionalPhoneValidationSchema,
   RequiredPhoneValidationSchema,
   E164PhoneValidationSchema,
-  DateIsoSchema,
+  DateTimeSchema,
   DateOnlySchema,
 } from './schemas'
