@@ -35,7 +35,7 @@ const dataPoints = {
   },
   dob: {
     key: 'dob',
-    valueType: 'string',
+    valueType: 'date',
   },
   gender: {
     key: 'gender',
