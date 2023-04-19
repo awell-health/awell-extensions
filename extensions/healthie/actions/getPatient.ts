@@ -99,7 +99,7 @@ export const getPatient: Action<
             primaryProviderId: data.user?.dietitian_id,
           },
           events: phoneValidationResult.success
-            ? []
+            ? undefined
             : [
                 {
                   date: new Date().toISOString(),
