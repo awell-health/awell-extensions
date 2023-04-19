@@ -14,6 +14,10 @@ describe('Send email', () => {
   test('Should call the onComplete callback', async () => {
     await sendEmail.onActivityCreated(
       {
+        pathway: {
+          id: 'pathway-id',
+          definition_id: 'pathway-definition-id',
+        },
         activity: {
           id: 'activity-id',
         },
@@ -43,6 +47,10 @@ describe('Send email', () => {
   test('Should call the onError callback when there is a validation error', async () => {
     await sendEmail.onActivityCreated(
       {
+        pathway: {
+          id: 'pathway-id',
+          definition_id: 'pathway-definition-id',
+        },
         activity: {
           id: 'activity-id',
         },

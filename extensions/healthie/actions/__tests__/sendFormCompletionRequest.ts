@@ -19,6 +19,10 @@ describe('sendFormCompletionRequest action', () => {
   test("Should send form completion request", async () => {
     await sendFormCompletionRequest.onActivityCreated(
       {
+        pathway: {
+          id: 'pathway-id',
+          definition_id: 'pathway-definition-id',
+        },
         activity: {
           id: 'activity-id',
         },

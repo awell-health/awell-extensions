@@ -14,6 +14,10 @@ describe('Generate patient summary with Open AI', () => {
   test('Should call the onComplete callback', async () => {
     await generatePatientSummary.onActivityCreated(
       {
+        pathway: {
+          id: 'pathway-id',
+          definition_id: 'pathway-definition-id',
+        },
         activity: {
           id: 'activity-id',
         },

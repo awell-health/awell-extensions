@@ -19,6 +19,10 @@ describe('applyTagToPatient action', () => {
   test("Should apply tag to a patient", async () => {
     await applyTagToPatient.onActivityCreated(
       {
+        pathway: {
+          id: 'pathway-id',
+          definition_id: 'pathway-definition-id',
+        },
         activity: {
           id: 'activity-id',
         },

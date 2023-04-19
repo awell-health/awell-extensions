@@ -19,6 +19,10 @@ describe('closeChatConversation action', () => {
   test("Should close a conversation", async () => {
     await closeChatConversation.onActivityCreated(
       {
+        pathway: {
+          id: 'pathway-id',
+          definition_id: 'pathway-definition-id',
+        },
         activity: {
           id: 'activity-id',
         },

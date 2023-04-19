@@ -19,6 +19,10 @@ describe('cancelAppointment action', () => {
   test("Should cancel an appointment", async () => {
     await cancelAppointment.onActivityCreated(
       {
+        pathway: {
+          id: 'pathway-id',
+          definition_id: 'pathway-definition-id',
+        },
         activity: {
           id: 'activity-id',
         },

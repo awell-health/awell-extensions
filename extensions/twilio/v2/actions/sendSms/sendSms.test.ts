@@ -12,6 +12,10 @@ describe('Send SMS action', () => {
   test('Should call the onComplete callback', async () => {
     await sendSms.onActivityCreated(
       {
+        pathway: {
+          id: 'pathway-id',
+          definition_id: 'pathway-definition-id',
+        },
         activity: {
           id: 'activity-id',
         },
@@ -36,6 +40,10 @@ describe('Send SMS action', () => {
   test('Should call the onError callback when there is no recipient', async () => {
     await sendSms.onActivityCreated(
       {
+        pathway: {
+          id: 'pathway-id',
+          definition_id: 'pathway-definition-id',
+        },
         activity: {
           id: 'activity-id',
         },
@@ -60,6 +68,10 @@ describe('Send SMS action', () => {
   test('Should call the onError callback when there is no message', async () => {
     await sendSms.onActivityCreated(
       {
+        pathway: {
+          id: 'pathway-id',
+          definition_id: 'pathway-definition-id',
+        },
         activity: {
           id: 'activity-id',
         },

@@ -19,6 +19,10 @@ describe('updatePatient action', () => {
   test("Should update patient", async () => {
     await updatePatient.onActivityCreated(
       {
+        pathway: {
+          id: 'pathway-id',
+          definition_id: 'pathway-definition-id',
+        },
         activity: {
           id: 'activity-id',
         },

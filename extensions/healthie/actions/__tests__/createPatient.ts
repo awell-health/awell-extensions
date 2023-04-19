@@ -20,6 +20,10 @@ describe('createPatient action', () => {
   test('Should create a new patient', async () => {
     await createPatient.onActivityCreated(
       {
+        pathway: {
+          id: 'pathway-id',
+          definition_id: 'pathway-definition-id',
+        },
         activity: {
           id: 'activity-id',
         },

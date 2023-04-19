@@ -12,6 +12,10 @@ describe('Simple sms notification action', () => {
   test('Should call the onComplete callback', async () => {
     await smsNotification.onActivityCreated(
       {
+        pathway: {
+          id: 'pathway-id',
+          definition_id: 'pathway-definition-id',
+        },
         activity: {
           id: 'activity-id',
         },
@@ -36,6 +40,10 @@ describe('Simple sms notification action', () => {
   test('Should call the onError callback', async () => {
     await smsNotification.onActivityCreated(
       {
+        pathway: {
+          id: 'pathway-id',
+          definition_id: 'pathway-definition-id',
+        },
         activity: {
           id: 'activity-id',
         },

@@ -10,6 +10,10 @@ describe('Generate random number', () => {
 
   test('Should call onComplete', async () => {
     const mockOnActivityCreateParams = {
+      pathway: {
+        id: 'pathway-id',
+        definition_id: 'pathway-definition-id',
+      },
       activity: { id: 'test-activity' },
       patient: { id: 'test-patient' },
       fields: {
@@ -29,6 +33,10 @@ describe('Generate random number', () => {
   })
   test('Should call onError if fields.min is undefined', async () => {
     const mockOnActivityCreateParams = {
+      pathway: {
+        id: 'pathway-id',
+        definition_id: 'pathway-definition-id',
+      },
       activity: { id: 'test-activity' },
       patient: { id: 'test-patient' },
       fields: {
@@ -48,6 +56,10 @@ describe('Generate random number', () => {
   })
   test('Should call onError if fields.max is undefined', async () => {
     const mockOnActivityCreateParams = {
+      pathway: {
+        id: 'pathway-id',
+        definition_id: 'pathway-definition-id',
+      },
       activity: { id: 'test-activity' },
       patient: { id: 'test-patient' },
       fields: {
@@ -67,6 +79,10 @@ describe('Generate random number', () => {
   })
   test('Check for difference between min and max', async () => {
     const mockOnActivityCreateParams = {
+      pathway: {
+        id: 'pathway-id',
+        definition_id: 'pathway-definition-id',
+      },
       activity: { id: 'test-activity' },
       patient: { id: 'test-patient' },
       fields: {
