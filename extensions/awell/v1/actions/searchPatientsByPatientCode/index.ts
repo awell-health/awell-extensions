@@ -1,0 +1,1 @@
+export { searchPatientsByPatientCode } from './searchPatientsByPatientCode'
