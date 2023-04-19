@@ -8,6 +8,7 @@ import {
   type DataPointDefinition,
   type Field,
 } from '../../../lib/types'
+import { type ActivityEvent } from '../../../lib/types/ActivityEvent'
 import { Category } from '../../../lib/types/marketplace'
 import { getSdk } from '../gql/sdk'
 import { initialiseClient } from '../graphqlClient'
@@ -99,21 +100,41 @@ export const getPatient: Action<
             groupName: data.user?.user_group?.name,
             primaryProviderId: data.user?.dietitian_id,
           },
-          events: phoneValidationResult.success
-            ? undefined
-            : [
-                {
-                  date: new Date().toISOString(),
-                  text: {
-                    en: "Phone number from Healthie not stored because it isn't a valid E.164 phone number",
-                  },
-                  error: {
-                    category: 'WRONG_DATA',
-                    message:
-                      "Phone number from Healthie not stored because it isn't a valid E.164 phone number",
-                  },
-                },
-              ],
+          events:
+            phoneValidationResult.success && dobValidationResult.success
+              ? undefined
+              : ([
+                  ...(phoneValidationResult.success
+                    ? []
+                    : [
+                        {
+                          date: new Date().toISOString(),
+                          text: {
+                            en: "Phone number from Healthie not stored because it isn't a valid E.164 phone number",
+                          },
+                          error: {
+                            category: 'WRONG_DATA',
+                            message:
+                              "Phone number from Healthie not stored because it isn't a valid E.164 phone number",
+                          },
+                        },
+                      ]),
+                  ...(dobValidationResult.success
+                    ? []
+                    : [
+                        {
+                          date: new Date().toISOString(),
+                          text: {
+                            en: "DOB from Healthie not stored because it isn't a valid ISO8601 date",
+                          },
+                          error: {
+                            category: 'WRONG_DATA',
+                            message:
+                              "DOB from Healthie not stored because it isn't a valid ISO8601 date",
+                          },
+                        },
+                      ]),
+                ] as ActivityEvent[]),
         })
       } else {
         await onError({
