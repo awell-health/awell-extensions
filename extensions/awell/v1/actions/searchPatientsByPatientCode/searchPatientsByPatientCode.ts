@@ -42,7 +42,7 @@ export const searchPatientsByPatientCode: Action<
 
       const numberOfPatientsFound = results.length
       const patientAlreadyExists = numberOfPatientsFound > 0
-      const awellPatientIds = results.map((result) => result.id).join(', ')
+      const awellPatientIds = results.map((result) => result.id).join(',')
 
       await onComplete({
         data_points: {

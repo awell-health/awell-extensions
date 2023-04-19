@@ -61,7 +61,7 @@ describe('Search patients by patient code', () => {
       data_points: {
         patientAlreadyExists: 'true',
         numberOfPatientsFound: '2',
-        awellPatientIds: 'patient-id-1, patient-id-2',
+        awellPatientIds: 'patient-id-1,patient-id-2',
       },
     })
     expect(onError).not.toHaveBeenCalled()
