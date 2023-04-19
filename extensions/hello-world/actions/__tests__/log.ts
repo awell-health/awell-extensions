@@ -5,6 +5,10 @@ describe('HelloWorld - log', () => {
     const onComplete = jest.fn()
     await log.onActivityCreated(
       {
+        pathway: {
+          id: 'pathway-id',
+          definition_id: 'pathway-definition-id',
+        },
         activity: { id: 'test-activity' },
         patient: { id: 'test-patient' },
         fields: {
@@ -23,6 +27,10 @@ describe('HelloWorld - log', () => {
     const onComplete = jest.fn()
     await log.onActivityCreated(
       {
+        pathway: {
+          id: 'pathway-id',
+          definition_id: 'pathway-definition-id',
+        },
         activity: { id: 'test-activity' },
         patient: { id: 'test-patient' },
         fields: {
@@ -41,6 +49,10 @@ describe('HelloWorld - log', () => {
     const onComplete = jest.fn()
     await log.onActivityCreated(
       {
+        pathway: {
+          id: 'pathway-id',
+          definition_id: 'pathway-definition-id',
+        },
         activity: { id: 'test-activity' },
         patient: { id: 'test-patient' },
         fields: {

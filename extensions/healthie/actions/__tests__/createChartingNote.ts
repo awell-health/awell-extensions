@@ -19,6 +19,10 @@ describe('createChartingNote action', () => {
   test("Should create a charting note", async () => {
     await createChartingNote.onActivityCreated(
       {
+        pathway: {
+          id: 'pathway-id',
+          definition_id: 'pathway-definition-id',
+        },
         activity: {
           id: 'activity-id',
         },

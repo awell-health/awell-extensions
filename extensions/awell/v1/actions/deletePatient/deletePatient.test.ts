@@ -14,6 +14,10 @@ describe('Update patient', () => {
   test('Should call the onComplete callback', async () => {
     await deletePatient.onActivityCreated(
       {
+        pathway: {
+          id: 'pathway-id',
+          definition_id: 'pathway-definition-id',
+        },
         activity: {
           id: 'activity-id',
         },

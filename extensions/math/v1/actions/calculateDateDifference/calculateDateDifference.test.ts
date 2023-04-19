@@ -12,6 +12,10 @@ describe('Calculate date difference', () => {
   test('Date difference in seconds', async () => {
     await calculateDateDifference.onActivityCreated(
       {
+        pathway: {
+          id: 'pathway-id',
+          definition_id: 'pathway-definition-id',
+        },
         activity: {
           id: 'activity-id',
         },
@@ -38,6 +42,10 @@ describe('Calculate date difference', () => {
   test('Date difference in minutes', async () => {
     await calculateDateDifference.onActivityCreated(
       {
+        pathway: {
+          id: 'pathway-id',
+          definition_id: 'pathway-definition-id',
+        },
         activity: {
           id: 'activity-id',
         },
@@ -64,6 +72,10 @@ describe('Calculate date difference', () => {
   test('Date difference in hours', async () => {
     await calculateDateDifference.onActivityCreated(
       {
+        pathway: {
+          id: 'pathway-id',
+          definition_id: 'pathway-definition-id',
+        },
         activity: {
           id: 'activity-id',
         },
@@ -90,6 +102,10 @@ describe('Calculate date difference', () => {
   test('Date difference in days', async () => {
     await calculateDateDifference.onActivityCreated(
       {
+        pathway: {
+          id: 'pathway-id',
+          definition_id: 'pathway-definition-id',
+        },
         activity: {
           id: 'activity-id',
         },
@@ -116,6 +132,10 @@ describe('Calculate date difference', () => {
   test('Date difference in weeks', async () => {
     await calculateDateDifference.onActivityCreated(
       {
+        pathway: {
+          id: 'pathway-id',
+          definition_id: 'pathway-definition-id',
+        },
         activity: {
           id: 'activity-id',
         },
@@ -142,6 +162,10 @@ describe('Calculate date difference', () => {
   test('Date difference in months', async () => {
     await calculateDateDifference.onActivityCreated(
       {
+        pathway: {
+          id: 'pathway-id',
+          definition_id: 'pathway-definition-id',
+        },
         activity: {
           id: 'activity-id',
         },
@@ -168,6 +192,10 @@ describe('Calculate date difference', () => {
   test('Date difference in years', async () => {
     await calculateDateDifference.onActivityCreated(
       {
+        pathway: {
+          id: 'pathway-id',
+          definition_id: 'pathway-definition-id',
+        },
         activity: {
           id: 'activity-id',
         },
@@ -194,6 +222,10 @@ describe('Calculate date difference', () => {
   test('Date difference in non-supported unit should throw an error', async () => {
     await calculateDateDifference.onActivityCreated(
       {
+        pathway: {
+          id: 'pathway-id',
+          definition_id: 'pathway-definition-id',
+        },
         activity: {
           id: 'activity-id',
         },

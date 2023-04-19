@@ -19,6 +19,10 @@ describe('deleteTask action', () => {
   test("Should delete a task", async () => {
     await deleteTask.onActivityCreated(
       {
+        pathway: {
+          id: 'pathway-id',
+          definition_id: 'pathway-definition-id',
+        },
         activity: {
           id: 'activity-id',
         },

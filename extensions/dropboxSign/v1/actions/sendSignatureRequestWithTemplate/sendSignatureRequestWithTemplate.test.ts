@@ -43,6 +43,10 @@ describe('Cancel signature request action', () => {
   test('Should call the onComplete callback', async () => {
     await sendSignatureRequestWithTemplate.onActivityCreated(
       {
+        pathway: {
+          id: 'pathway-id',
+          definition_id: 'pathway-definition-id',
+        },
         activity: {
           id: 'activity-id',
         },
