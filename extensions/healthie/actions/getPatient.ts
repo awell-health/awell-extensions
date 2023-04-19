@@ -1,18 +1,14 @@
 import {
-  DateTimeSchema,
-  E164PhoneValidationSchema,
-} from '../../../lib/shared/validation'
-import {
   FieldType,
   type Action,
   type DataPointDefinition,
   type Field,
 } from '../../../lib/types'
-import { type ActivityEvent } from '../../../lib/types/ActivityEvent'
 import { Category } from '../../../lib/types/marketplace'
 import { getSdk } from '../gql/sdk'
 import { initialiseClient } from '../graphqlClient'
 import { type settings } from '../settings'
+import { validateGetPatient } from '../validation/getPatient.zod'
 
 const fields = {
   patientId: {
@@ -80,61 +76,23 @@ export const getPatient: Action<
         const sdk = getSdk(client)
         const { data } = await sdk.getUser({ id: patientId })
 
-        const phoneValidationResult = E164PhoneValidationSchema.safeParse(
-          data.user?.phone_number
-        )
-        const dobValidationResult = DateTimeSchema.safeParse(data.user?.dob)
+        const {
+          data: { dob, phoneNumber },
+          events,
+        } = validateGetPatient(data.user)
 
         await onComplete({
           data_points: {
             firstName: data.user?.first_name,
             lastName: data.user?.last_name,
-            dob: dobValidationResult.success
-              ? dobValidationResult.data
-              : undefined,
+            dob,
             email: data.user?.email,
             gender: data.user?.gender,
-            phoneNumber: phoneValidationResult.success
-              ? phoneValidationResult.data
-              : undefined,
+            phoneNumber,
             groupName: data.user?.user_group?.name,
             primaryProviderId: data.user?.dietitian_id,
           },
-          events:
-            phoneValidationResult.success && dobValidationResult.success
-              ? undefined
-              : ([
-                  ...(phoneValidationResult.success
-                    ? []
-                    : [
-                        {
-                          date: new Date().toISOString(),
-                          text: {
-                            en: "Phone number from Healthie not stored because it isn't a valid E.164 phone number",
-                          },
-                          error: {
-                            category: 'WRONG_DATA',
-                            message:
-                              "Phone number from Healthie not stored because it isn't a valid E.164 phone number",
-                          },
-                        },
-                      ]),
-                  ...(dobValidationResult.success
-                    ? []
-                    : [
-                        {
-                          date: new Date().toISOString(),
-                          text: {
-                            en: "DOB from Healthie not stored because it isn't a valid ISO8601 date",
-                          },
-                          error: {
-                            category: 'WRONG_DATA',
-                            message:
-                              "DOB from Healthie not stored because it isn't a valid ISO8601 date",
-                          },
-                        },
-                      ]),
-                ] as ActivityEvent[]),
+          events,
         })
       } else {
         await onError({
