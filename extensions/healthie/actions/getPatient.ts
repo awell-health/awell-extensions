@@ -46,10 +46,6 @@ const dataPoints = {
   },
   phoneNumber: {
     key: 'phoneNumber',
-    valueType: 'string',
-  },
-  validatedPhoneNumber: {
-    key: 'validatedPhoneNumber',
     valueType: 'telephone',
   },
   primaryProviderId: {
@@ -94,11 +90,10 @@ export const getPatient: Action<
             lastName: data.user?.last_name,
             dob: dobValidationResult.success
               ? dobValidationResult.data
-              : data.user?.dob,
+              : undefined,
             email: data.user?.email,
             gender: data.user?.gender,
-            phoneNumber: data.user?.phone_number,
-            validatedPhoneNumber: phoneValidationResult.success
+            phoneNumber: phoneValidationResult.success
               ? phoneValidationResult.data
               : undefined,
             groupName: data.user?.user_group?.name,

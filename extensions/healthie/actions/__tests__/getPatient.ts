@@ -7,16 +7,22 @@ jest.mock('../../graphqlClient')
 
 describe('getPatient action', () => {
   const onComplete = jest.fn()
-  const DATE_MOCK = new Date()
+  const DATE_MOCK = new Date('1990-01-01T00:00:00Z')
+  const DATE_FNS_STRING = '1990-01-01T00:00:00Z'
 
   beforeAll(() => {
     const mockSdk = getSdk as jest.Mock
     mockSdk.mockImplementation(mockGetSdk)
-    jest.spyOn(global, 'Date').mockImplementation(() => DATE_MOCK)
+    jest.useFakeTimers()
+    jest.setSystemTime(DATE_MOCK)
   })
 
   beforeEach(() => {
     jest.clearAllMocks()
+  })
+
+  afterAll(() => {
+    jest.useRealTimers()
   })
 
   describe('phone number validation', () => {
@@ -59,11 +65,10 @@ describe('getPatient action', () => {
           data_points: {
             firstName: returnValue.data.user.first_name,
             lastName: returnValue.data.user.last_name,
-            dob: returnValue.data.user.dob,
+            dob: DATE_FNS_STRING,
             email: returnValue.data.user.email,
             gender: returnValue.data.user.gender,
-            phoneNumber: healthiePhone,
-            validatedPhoneNumber: validatedPhone,
+            phoneNumber: validatedPhone,
             groupName: returnValue.data.user.user_group.name,
             primaryProviderId: returnValue.data.user.dietitian_id,
           },
@@ -110,11 +115,10 @@ describe('getPatient action', () => {
           data_points: {
             firstName: returnValue.data.user.first_name,
             lastName: returnValue.data.user.last_name,
-            dob: returnValue.data.user.dob,
+            dob: DATE_FNS_STRING,
             email: returnValue.data.user.email,
             gender: returnValue.data.user.gender,
-            phoneNumber: healthiePhone,
-            validatedPhoneNumber: validatedPhone,
+            phoneNumber: validatedPhone,
             groupName: returnValue.data.user.user_group.name,
             primaryProviderId: returnValue.data.user.dietitian_id,
           },
