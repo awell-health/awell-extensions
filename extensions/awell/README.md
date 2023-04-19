@@ -27,3 +27,11 @@ Search whether, apart from the patient currently enrolled in the care flow, anot
 1. patientAlreadyExists: a boolean which will be true if minimum one patient with the patient code already exists.
 2. numberOfPatientsFound: the number of patients found with the same patient code.
 3. awellPatientIds: a comma-separated string of all Awell patient ids (except the current patient) that have the same patient code as the patient currently enrolled in the care flow. Will return an empty string when there are no other patients with the same patient code.
+
+### Is patient already enrolled in care flow
+
+Checks whether the patient is already enrolled in the current care flow definition. You can specify the care flow status that will be taken into account.
+
+**Action fields:**
+
+- pathwayStatus: A comma-separated string of care flow statuses that will be used when looking for care flows the patient is already enrolled in. By default, we only look at active care flows. Options: "active", "completed", "missing_baseline_info", "starting", and "stopped".
