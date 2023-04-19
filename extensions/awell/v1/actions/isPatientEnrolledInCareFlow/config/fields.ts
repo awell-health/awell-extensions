@@ -10,7 +10,7 @@ export const fields = {
     description:
       'A comma-separated string of care flow statuses that will be used when looking for care flows the patient is already enrolled in. By default, we only look at active care flows. Options: "active" "completed", "missing_baseline_info", "starting", and "stopped".',
     type: FieldType.STRING,
-    required: true,
+    required: false,
   },
 } satisfies Record<string, Field>
 
