@@ -45,6 +45,10 @@ describe('getPatient action', () => {
 
         await getPatient.onActivityCreated(
           {
+            pathway: {
+              id: 'pathway-id',
+              definition_id: 'pathway-definition-id',
+            },
             activity: {
               id: 'activity-id',
             },
@@ -95,6 +99,10 @@ describe('getPatient action', () => {
 
         await getPatient.onActivityCreated(
           {
+            pathway: {
+              id: 'pathway-id',
+              definition_id: 'pathway-definition-id',
+            },
             activity: {
               id: 'activity-id',
             },
@@ -188,6 +196,10 @@ describe('getPatient action', () => {
 
         await getPatient.onActivityCreated(
           {
+            pathway: {
+              id: 'pathway-id',
+              definition_id: 'pathway-definition-id',
+            },
             activity: {
               id: 'activity-id',
             },
@@ -255,6 +267,10 @@ describe('getPatient action', () => {
 
         await getPatient.onActivityCreated(
           {
+            pathway: {
+              id: 'pathway-id',
+              definition_id: 'pathway-definition-id',
+            },
             activity: {
               id: 'activity-id',
             },
