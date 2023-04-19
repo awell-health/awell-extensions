@@ -12,6 +12,10 @@ describe('Upload files action', () => {
   test('Should not call the onComplete callback', async () => {
     await uploadFiles.onActivityCreated(
       {
+        pathway: {
+          id: 'pathway-id',
+          definition_id: 'pathway-definition-id',
+        },
         activity: {
           id: 'activity-id',
         },

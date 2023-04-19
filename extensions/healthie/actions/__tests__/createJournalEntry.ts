@@ -20,6 +20,10 @@ describe('createJournalEntry action', () => {
   test('Should create a journal entry', async () => {
     await createJournalEntry.onActivityCreated(
       {
+        pathway: {
+          id: 'pathway-id',
+          definition_id: 'pathway-definition-id',
+        },
         activity: {
           id: 'activity-id',
         },

@@ -19,6 +19,10 @@ describe('completeTask action', () => {
   test("Should complete a task", async () => {
     await completeTask.onActivityCreated(
       {
+        pathway: {
+          id: 'pathway-id',
+          definition_id: 'pathway-definition-id',
+        },
         activity: {
           id: 'activity-id',
         },

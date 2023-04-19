@@ -2,6 +2,7 @@ import { type Patient } from './Patient'
 import type { FieldType } from './Field'
 import type { Fields as FieldsType } from './Fields'
 import { type Settings as SettingsType } from './Settings'
+import { type Pathway } from './Pathway'
 
 type TypeValueMap =
   | {
@@ -51,6 +52,7 @@ export interface NewActivityPayload<
     id: string
   }
   patient: Patient
+  pathway: Pathway
   fields: FieldValues<Fields>
   settings: Record<keyof Settings, string | undefined>
 }

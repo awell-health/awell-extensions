@@ -19,6 +19,10 @@ describe('sendChatMessage action', () => {
   test("Should create a new message when it doesn't exist", async () => {
     await sendChatMessage.onActivityCreated(
       {
+        pathway: {
+          id: 'pathway-id',
+          definition_id: 'pathway-definition-id',
+        },
         activity: {
           id: 'activity-id',
         },
@@ -63,6 +67,10 @@ describe('sendChatMessage action', () => {
     })
     await sendChatMessage.onActivityCreated(
       {
+        pathway: {
+          id: 'pathway-id',
+          definition_id: 'pathway-definition-id',
+        },
         activity: {
           id: 'activity-id',
         },

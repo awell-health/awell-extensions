@@ -10,6 +10,10 @@ describe('Complete flow action', () => {
   test('Should not call the onComplete callback', async () => {
     await embeddedSigning.onActivityCreated(
       {
+        pathway: {
+          id: 'pathway-id',
+          definition_id: 'pathway-definition-id',
+        },
         activity: {
           id: 'activity-id',
         },

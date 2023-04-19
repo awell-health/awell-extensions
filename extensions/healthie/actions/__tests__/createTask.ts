@@ -6,6 +6,10 @@ jest.mock('../../gql/sdk')
 jest.mock('../../graphqlClient')
 
 const samplePayload = {
+  pathway: {
+    id: 'pathway-id',
+    definition_id: 'pathway-definition-id',
+  },
   activity: {
     id: 'activity-id',
   },
