@@ -139,4 +139,164 @@ describe('getPatient action', () => {
       }
     )
   })
+
+  describe('date validation', () => {
+    test.each([
+      {
+        healthiePhone: '+48 123 456 789',
+        validatedPhone: '+48123456789',
+        healthieDate: '1990-01-01',
+        validatedDate: '1990-01-01T00:00:00Z',
+      },
+      {
+        healthiePhone: '+48 123 456 789',
+        validatedPhone: '+48123456789',
+        healthieDate: '1990 01 01',
+        validatedDate: '1990-01-01T00:00:00Z',
+      },
+      {
+        healthiePhone: '+48 123 456 789',
+        validatedPhone: '+48123456789',
+        healthieDate: '1990/01/ 01',
+        validatedDate: '1990-01-01T00:00:00Z',
+      },
+      {
+        healthiePhone: '+48 123 456 789',
+        validatedPhone: '+48123456789',
+        healthieDate: '01- 01-1990',
+        validatedDate: '1990-01-01T00:00:00Z',
+      },
+    ])(
+      '$#. Should parse dob to "$validatedDate" when healthie returns "$healthieDate"',
+      async ({
+        healthiePhone,
+        validatedPhone,
+        healthieDate,
+        validatedDate,
+      }) => {
+        const returnValue = mockGetSdkReturn.getUser({})
+        mockGetSdkReturn.getUser.mockReturnValueOnce({
+          data: {
+            user: {
+              ...returnValue.data.user,
+              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+              phone_number: healthiePhone,
+              dob: healthieDate,
+            },
+          },
+        })
+
+        await getPatient.onActivityCreated(
+          {
+            activity: {
+              id: 'activity-id',
+            },
+            patient: { id: 'test-patient' },
+            fields: {
+              patientId: 'patient-1',
+            },
+            settings: {
+              apiKey: 'apiKey',
+              apiUrl: 'test-url',
+            },
+          },
+          onComplete,
+          jest.fn()
+        )
+
+        expect(onComplete).toHaveBeenCalledWith({
+          data_points: {
+            firstName: returnValue.data.user.first_name,
+            lastName: returnValue.data.user.last_name,
+            dob: validatedDate,
+            email: returnValue.data.user.email,
+            gender: returnValue.data.user.gender,
+            phoneNumber: validatedPhone,
+            groupName: returnValue.data.user.user_group.name,
+            primaryProviderId: returnValue.data.user.dietitian_id,
+          },
+          events: undefined,
+        })
+      }
+    )
+
+    test.each([
+      {
+        healthiePhone: '+48 123 456 789',
+        validatedPhone: '+48123456789',
+        healthieDate: '1990 30 01',
+        validatedDate: undefined,
+      },
+      {
+        healthiePhone: '+48 123 456 789',
+        validatedPhone: '+48123456789',
+        healthieDate: '',
+        validatedDate: undefined,
+      },
+    ])(
+      '$#. Should log event and return "undefined" for validatedDate when healthie returns "$healthieDate"',
+      async ({
+        healthiePhone,
+        validatedPhone,
+        healthieDate,
+        validatedDate,
+      }) => {
+        const returnValue = mockGetSdkReturn.getUser({})
+        mockGetSdkReturn.getUser.mockReturnValueOnce({
+          data: {
+            user: {
+              ...returnValue.data.user,
+              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+              phone_number: healthiePhone,
+              dob: healthieDate,
+            },
+          },
+        })
+
+        await getPatient.onActivityCreated(
+          {
+            activity: {
+              id: 'activity-id',
+            },
+            patient: { id: 'test-patient' },
+            fields: {
+              patientId: 'patient-1',
+            },
+            settings: {
+              apiKey: 'apiKey',
+              apiUrl: 'test-url',
+            },
+          },
+          onComplete,
+          jest.fn()
+        )
+
+        expect(onComplete).toHaveBeenCalledWith({
+          data_points: {
+            firstName: returnValue.data.user.first_name,
+            lastName: returnValue.data.user.last_name,
+            dob: validatedDate,
+            email: returnValue.data.user.email,
+            gender: returnValue.data.user.gender,
+            phoneNumber: validatedPhone,
+            groupName: returnValue.data.user.user_group.name,
+            primaryProviderId: returnValue.data.user.dietitian_id,
+          },
+          events: [
+            {
+              date: DATE_MOCK.toISOString(),
+              error: {
+                category: 'WRONG_DATA',
+                message:
+                  "DOB from Healthie not stored because it isn't a valid ISO8601 date",
+              },
+              text: {
+                en: "DOB from Healthie not stored because it isn't a valid ISO8601 date",
+              },
+            },
+          ],
+        })
+      }
+    )
+  })
 })
