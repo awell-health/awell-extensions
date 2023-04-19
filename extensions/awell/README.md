@@ -20,9 +20,9 @@ Allows updating patient data for the patient currently enrolled in the care flow
 
 ### Search patients by patient code
 
-Search whether in the list of patients of the current patient already exists. Search happens on the `patient_code` field which is taken from the patient's profile.
+Search whether the current patient already exists. Search happens based on the `patient_code` field which is taken from the patient's profile.
 
-**Returns two data points:**
+**Returns the below data points:**
 
 1. patientAlreadyExists: a boolean which will be true if minimum one patient with the patient code already exists.
 2. numberOfPatientsFound: the number of patients found with the same patient code.
