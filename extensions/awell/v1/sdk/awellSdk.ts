@@ -9,6 +9,8 @@ import {
   type UpdatePatientPayload,
   type QuerySearchPatientsByPatientCodeArgs,
   type SearchPatientsPayload,
+  type UserProfile,
+  type User,
 } from '../gql/graphql'
 import { isNil } from 'lodash'
 import {
@@ -89,7 +91,13 @@ export default class AwellSdk {
 
   async searchPatientsByPatientCode(
     input: QuerySearchPatientsByPatientCodeArgs
-  ): Promise<Array<{ id: string }>> {
+  ): Promise<
+    Array<
+      Pick<User, 'id'> & {
+        profile: Pick<UserProfile, 'patient_code'>
+      }
+    >
+  > {
     const data = await this.client.request<{
       searchPatientsByPatientCode: SearchPatientsPayload
     }>(searchPatientByPatientCodeQuery, input)
@@ -99,6 +107,9 @@ export default class AwellSdk {
         (patient) => {
           return {
             id: patient.id,
+            profile: {
+              patient_code: patient.profile?.patient_code,
+            },
           }
         }
       )

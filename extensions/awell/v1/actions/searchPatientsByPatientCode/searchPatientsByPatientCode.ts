@@ -24,6 +24,7 @@ export const searchPatientsByPatientCode: Action<
       const {
         settings: { apiUrl, apiKey },
         patient: {
+          id: patientId,
           profile: { patient_code },
         },
       } = validate({
@@ -40,9 +41,20 @@ export const searchPatientsByPatientCode: Action<
         patient_code,
       })
 
-      const numberOfPatientsFound = results.length
+      /**
+       * When searching for other patients with the same patient code,
+       * we need to exclude the current patient from the search results.
+       * Otherwise the result would always be true.
+       */
+      const resultsWithoutCurrentPatient = results.filter(
+        (res) => res.id !== patientId
+      )
+
+      const numberOfPatientsFound = resultsWithoutCurrentPatient.length
       const patientAlreadyExists = numberOfPatientsFound > 0
-      const awellPatientIds = results.map((result) => result.id).join(',')
+      const awellPatientIds = resultsWithoutCurrentPatient
+        .map((result) => result.id)
+        .join(',')
 
       await onComplete({
         data_points: {
