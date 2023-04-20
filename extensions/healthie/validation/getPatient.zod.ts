@@ -39,12 +39,15 @@ export const validateGetPatient = (
                   {
                     date: new Date().toISOString(),
                     text: {
-                      en: "Phone number from Healthie not stored because it isn't a valid E.164 phone number",
+                      en: `Phone number from Healthie (${String(
+                        user?.phone_number
+                      )}) not stored because it isn't a valid E.164 phone number`,
                     },
                     error: {
                       category: 'WRONG_DATA',
-                      message:
-                        "Phone number from Healthie not stored because it isn't a valid E.164 phone number",
+                      message: `Phone number from Healthie (${String(
+                        user?.phone_number
+                      )}) not stored because it isn't a valid E.164 phone number`,
                     },
                   },
                 ]),
@@ -54,12 +57,15 @@ export const validateGetPatient = (
                   {
                     date: new Date().toISOString(),
                     text: {
-                      en: "DOB from Healthie not stored because it isn't a valid ISO8601 date",
+                      en: `DOB from Healthie (${String(
+                        user?.dob
+                      )}) not stored because it isn't a valid ISO8601 date`,
                     },
                     error: {
                       category: 'WRONG_DATA',
-                      message:
-                        "DOB from Healthie not stored because it isn't a valid ISO8601 date",
+                      message: `DOB from Healthie (${String(
+                        user?.dob
+                      )}) not stored because it isn't a valid ISO8601 date`,
                     },
                   },
                 ]),

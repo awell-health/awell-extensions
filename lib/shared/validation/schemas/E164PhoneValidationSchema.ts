@@ -9,8 +9,7 @@ export const E164PhoneValidationSchema = z
   .string()
   .transform((value) => {
     try {
-      const phone = parsePhoneNumberWithError(value)
-      return phone
+      return parsePhoneNumberWithError(value)
     } catch (error) {
       return error as ParseError
     }

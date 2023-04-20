@@ -137,11 +137,14 @@ describe('getPatient action', () => {
               date: DATE_MOCK.toISOString(),
               error: {
                 category: 'WRONG_DATA',
-                message:
-                  "Phone number from Healthie not stored because it isn't a valid E.164 phone number",
+                message: `Phone number from Healthie (${String(
+                  healthiePhone
+                )}) not stored because it isn't a valid E.164 phone number`,
               },
               text: {
-                en: "Phone number from Healthie not stored because it isn't a valid E.164 phone number",
+                en: `Phone number from Healthie (${String(
+                  healthiePhone
+                )}) not stored because it isn't a valid E.164 phone number`,
               },
             },
           ],
@@ -291,11 +294,14 @@ describe('getPatient action', () => {
               date: DATE_MOCK.toISOString(),
               error: {
                 category: 'WRONG_DATA',
-                message:
-                  "DOB from Healthie not stored because it isn't a valid ISO8601 date",
+                message: `DOB from Healthie (${String(
+                  healthieDate
+                )}) not stored because it isn't a valid ISO8601 date`,
               },
               text: {
-                en: "DOB from Healthie not stored because it isn't a valid ISO8601 date",
+                en: `DOB from Healthie (${String(
+                  healthieDate
+                )}) not stored because it isn't a valid ISO8601 date`,
               },
             },
           ],
