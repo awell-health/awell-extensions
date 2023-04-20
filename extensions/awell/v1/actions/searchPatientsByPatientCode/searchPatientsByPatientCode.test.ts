@@ -6,7 +6,7 @@ jest.mock('../../sdk/awellSdk')
 
 const mockFn = jest
   .spyOn(AwellSdk.prototype, 'searchPatientsByPatientCode')
-  .mockImplementation(async (input: QuerySearchPatientsByPatientCodeArgs) => {
+  .mockImplementationOnce(async (input: QuerySearchPatientsByPatientCodeArgs) => {
     console.log('mocked AwellSdk.searchPatientsByPatientCode', input)
 
     return [
