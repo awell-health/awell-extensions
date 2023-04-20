@@ -1,6 +1,6 @@
 import { isNil } from 'lodash'
 import { z } from 'zod'
-import { stringDate } from './generic.zod'
+import { DateOnlySchema } from '../../../lib/shared/validation'
 
 const intervalTypeEnum = z.enum(['daily', 'weekly', 'once'])
 const intervalValueWeeklyEnum = z.enum([
@@ -70,7 +70,7 @@ const reminderSchema = z
      */
     z.object({
       reminderIntervalType: z.literal(intervalTypeEnum.enum.once),
-      reminderIntervalValue: stringDate,
+      reminderIntervalValue: DateOnlySchema,
       isReminderEnabled: z.literal(true),
       reminderTime: z.coerce.number(),
     }),
@@ -99,6 +99,6 @@ export const createTaskSchema = z
     patientId: z.string().nonempty().optional(),
     assignToUserId: z.string().nonempty().optional(),
     content: z.string().nonempty(),
-    dueDate: stringDate.optional(),
+    dueDate: DateOnlySchema.optional(),
   })
   .and(reminderSchema)

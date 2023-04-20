@@ -18,6 +18,23 @@ export const mockGetSdkReturn = {
       data: {},
     }
   }),
+  getUser: jest.fn((args) => {
+    return {
+      data: {
+        user: {
+          id: 'patient-1',
+          first_name: 'first',
+          last_name: 'last',
+          dob: '1990-01-01',
+          email: 'test@test.com',
+          gender: 'F',
+          phone_number: '+1 (555) 555-1234',
+          user_group: { name: 'group' },
+          dietitian_id: 'dietitian_id',
+        },
+      },
+    }
+  }),
   createPatient: jest.fn((args) => {
     return {
       data: {

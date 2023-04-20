@@ -53,7 +53,7 @@
     "graphql": "^16.6.0",
     "graphql-request": "5.1.0",
     "graphql-tag": "^2.12.6",
-    "libphonenumber-js": "^1.10.21",
+    "libphonenumber-js": "^1.10.26",
     "lightship": "^7.1.1",
     "lodash": "^4.17.21",
     "mailgun.js": "^8.2.1",
