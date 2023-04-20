@@ -5,6 +5,10 @@ export const dataPoints = {
     key: 'result',
     valueType: 'boolean',
   },
+  nbrOfResults: {
+    key: 'nbrOfResults',
+    valueType: 'number',
+  },
   careFlowIds: {
     key: 'careFlowIds',
     valueType: 'string',

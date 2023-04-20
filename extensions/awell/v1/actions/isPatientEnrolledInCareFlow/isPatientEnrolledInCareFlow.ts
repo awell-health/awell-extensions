@@ -80,12 +80,12 @@ export const isPatientEnrolledInCareFlow: Action<
           })
 
       const careFlows = getCareFlowsThatMatchFilters()
-      const isPatientEnrolledInCareFlowResult =
-        getCareFlowsThatMatchFilters().length > 0
+      const isPatientEnrolledInCareFlowResult = careFlows.length > 0
 
       await onComplete({
         data_points: {
           result: String(isPatientEnrolledInCareFlowResult),
+          nbrOfResults: String(careFlows.length),
           careFlowIds: careFlows.map((careFlow) => careFlow.id).join(','),
         },
       })

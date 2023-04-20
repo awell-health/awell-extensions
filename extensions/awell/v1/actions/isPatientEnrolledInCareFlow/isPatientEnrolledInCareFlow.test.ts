@@ -1,26 +1,13 @@
 import { PathwayStatus } from '../../gql/graphql'
 import AwellSdk from '../../sdk/awellSdk'
 import { isPatientEnrolledInCareFlow } from './isPatientEnrolledInCareFlow'
-import {
-  careFlowInstanceOne,
-  mockPatienCareFlowsResponse,
-  getPathwayTestData,
-  careFlowInstanceThree,
-  careFlowInstanceTwo,
-  careFlowInstanceFive,
-} from './__testdata__/patientCareFlows.fixture'
 
 jest.mock('../../sdk/awellSdk')
 
-const mockFn = jest
-  .spyOn(AwellSdk.prototype, 'getPatientCareFlows')
-  .mockImplementation(
-    async (input: { patient_id: string; status?: string[] }) => {
-      console.log('mocked AwellSdk.searchPatientsByPatientCode', input)
-
-      return mockPatienCareFlowsResponse
-    }
-  )
+const mockGetPatientCareFlowsFn = jest.spyOn(
+  AwellSdk.prototype,
+  'getPatientCareFlows'
+)
 
 describe('Is patient already enrolled in care flow action', () => {
   const onComplete = jest.fn()
@@ -32,9 +19,31 @@ describe('Is patient already enrolled in care flow action', () => {
   })
 
   test('Should call the onComplete callback and return true if patient is already enrolled in the care flow', async () => {
+    mockGetPatientCareFlowsFn.mockReturnValueOnce(
+      Promise.resolve([
+        {
+          id: 'pathway-instance-id-1', // current care flow
+          title: 'Pathway definition one',
+          pathway_definition_id: 'pathway-definition-1',
+          release_id: 'release-1',
+          status: PathwayStatus.Active,
+        },
+        {
+          id: 'pathway-instance-id-2',
+          title: 'Pathway definition one',
+          pathway_definition_id: 'pathway-definition-1',
+          release_id: 'release-1',
+          status: PathwayStatus.Active,
+        },
+      ])
+    )
+
     await isPatientEnrolledInCareFlow.onActivityCreated(
       {
-        pathway: getPathwayTestData(careFlowInstanceOne),
+        pathway: {
+          id: 'pathway-instance-id-1',
+          definition_id: 'pathway-definition-1',
+        },
         activity: {
           id: 'activity-id',
         },
@@ -54,22 +63,35 @@ describe('Is patient already enrolled in care flow action', () => {
       onError
     )
 
-    expect(mockFn).toHaveBeenCalled()
+    // expect(mockFn).toHaveBeenCalled()
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
         result: 'true',
-        careFlowIds: careFlowInstanceTwo.id,
+        nbrOfResults: '1',
+        careFlowIds: 'pathway-instance-id-2',
       },
     })
     expect(onError).not.toHaveBeenCalled()
   })
 
-  test('Should call the onComplete callback and return false if patient is not yet enrolled in the care flow', async () => {
+  test('Should call the onComplete callback and return false if patient is not yet enrolled in another care flow with same care flow definition id', async () => {
+    mockGetPatientCareFlowsFn.mockReturnValueOnce(
+      Promise.resolve([
+        {
+          id: 'pathway-instance-id-1', // Current care flow
+          title: 'Pathway definition one',
+          pathway_definition_id: 'pathway-definition-1',
+          release_id: 'release-1',
+          status: PathwayStatus.Active,
+        },
+      ])
+    )
+
     await isPatientEnrolledInCareFlow.onActivityCreated(
       {
         pathway: {
-          id: 'pathway-instance-id-999',
-          definition_id: 'pathway-definition-999',
+          id: 'pathway-instance-id-1',
+          definition_id: 'pathway-definition-1',
         },
         activity: {
           id: 'activity-id',
@@ -90,10 +112,10 @@ describe('Is patient already enrolled in care flow action', () => {
       onError
     )
 
-    expect(mockFn).toHaveBeenCalled()
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
         result: 'false',
+        nbrOfResults: '0',
         careFlowIds: '',
       },
     })
@@ -101,9 +123,31 @@ describe('Is patient already enrolled in care flow action', () => {
   })
 
   test('Should call the onComplete callback and return true if patient is already enrolled in a completed care flow when status includes "completed" care flows', async () => {
+    mockGetPatientCareFlowsFn.mockReturnValueOnce(
+      Promise.resolve([
+        {
+          id: 'pathway-instance-id-1', // current care flow
+          title: 'Pathway definition one',
+          pathway_definition_id: 'pathway-definition-1',
+          release_id: 'release-1',
+          status: PathwayStatus.Active,
+        },
+        {
+          id: 'pathway-instance-id-2',
+          title: 'Pathway definition one',
+          pathway_definition_id: 'pathway-definition-1',
+          release_id: 'release-1',
+          status: PathwayStatus.Completed,
+        },
+      ])
+    )
+
     await isPatientEnrolledInCareFlow.onActivityCreated(
       {
-        pathway: getPathwayTestData(careFlowInstanceThree),
+        pathway: {
+          id: 'pathway-instance-id-1',
+          definition_id: 'pathway-definition-1',
+        },
         activity: {
           id: 'activity-id',
         },
@@ -111,7 +155,7 @@ describe('Is patient already enrolled in care flow action', () => {
           id: 'a-patient-id',
         },
         fields: {
-          pathwayStatus: `${PathwayStatus.Completed}, ${PathwayStatus.Stopped}`,
+          pathwayStatus: `${PathwayStatus.Completed}`,
           careFlowDefinitionIds: undefined,
         },
         settings: {
@@ -123,20 +167,42 @@ describe('Is patient already enrolled in care flow action', () => {
       onError
     )
 
-    expect(mockFn).toHaveBeenCalled()
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
-        result: 'false',
-        careFlowIds: '',
+        result: 'true',
+        nbrOfResults: '1',
+        careFlowIds: 'pathway-instance-id-2',
       },
     })
     expect(onError).not.toHaveBeenCalled()
   })
 
-  test('Should call the onComplete callback and return true if patient is already enrolled in another care flow and when careFlowDefinitionIds filter is specified', async () => {
+  test('Should call the onComplete callback and return true if patient is already enrolled in another care flow when careFlowDefinitionIds filter is specified', async () => {
+    mockGetPatientCareFlowsFn.mockReturnValueOnce(
+      Promise.resolve([
+        {
+          id: 'pathway-instance-id-1', // current care flow
+          title: 'Pathway definition one',
+          pathway_definition_id: 'pathway-definition-1',
+          release_id: 'release-1',
+          status: PathwayStatus.Active,
+        },
+        {
+          id: 'pathway-instance-id-2',
+          title: 'Pathway definition two',
+          pathway_definition_id: 'pathway-definition-2',
+          release_id: 'release-1',
+          status: PathwayStatus.Active,
+        },
+      ])
+    )
+
     await isPatientEnrolledInCareFlow.onActivityCreated(
       {
-        pathway: getPathwayTestData(careFlowInstanceOne),
+        pathway: {
+          id: 'pathway-instance-id-1',
+          definition_id: 'pathway-definition-1',
+        },
         activity: {
           id: 'activity-id',
         },
@@ -156,20 +222,49 @@ describe('Is patient already enrolled in care flow action', () => {
       onError
     )
 
-    expect(mockFn).toHaveBeenCalled()
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
         result: 'true',
-        careFlowIds: careFlowInstanceThree.id,
+        nbrOfResults: '1',
+        careFlowIds: 'pathway-instance-id-2',
       },
     })
     expect(onError).not.toHaveBeenCalled()
   })
 
   test('Should call the onComplete callback and return true if patient is already in more than one other active or completed care flow', async () => {
+    mockGetPatientCareFlowsFn.mockReturnValueOnce(
+      Promise.resolve([
+        {
+          id: 'pathway-instance-id-1', // current care flow
+          title: 'Pathway definition one',
+          pathway_definition_id: 'pathway-definition-1',
+          release_id: 'release-1',
+          status: PathwayStatus.Active,
+        },
+        {
+          id: 'pathway-instance-id-2',
+          title: 'Pathway definition one',
+          pathway_definition_id: 'pathway-definition-1',
+          release_id: 'release-1',
+          status: PathwayStatus.Active,
+        },
+        {
+          id: 'pathway-instance-id-3',
+          title: 'Pathway definition one',
+          pathway_definition_id: 'pathway-definition-1',
+          release_id: 'release-1',
+          status: PathwayStatus.Completed,
+        },
+      ])
+    )
+
     await isPatientEnrolledInCareFlow.onActivityCreated(
       {
-        pathway: getPathwayTestData(careFlowInstanceOne),
+        pathway: {
+          id: 'pathway-instance-id-1',
+          definition_id: 'pathway-definition-1',
+        },
         activity: {
           id: 'activity-id',
         },
@@ -189,11 +284,11 @@ describe('Is patient already enrolled in care flow action', () => {
       onError
     )
 
-    expect(mockFn).toHaveBeenCalled()
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
         result: 'true',
-        careFlowIds: `${careFlowInstanceTwo.id},${careFlowInstanceFive.id}`,
+        nbrOfResults: '2',
+        careFlowIds: 'pathway-instance-id-2,pathway-instance-id-3',
       },
     })
     expect(onError).not.toHaveBeenCalled()
