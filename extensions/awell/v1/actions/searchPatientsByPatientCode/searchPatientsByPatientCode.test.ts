@@ -6,18 +6,26 @@ jest.mock('../../sdk/awellSdk')
 
 const mockFn = jest
   .spyOn(AwellSdk.prototype, 'searchPatientsByPatientCode')
-  .mockImplementationOnce(async (input: QuerySearchPatientsByPatientCodeArgs) => {
-    console.log('mocked AwellSdk.searchPatientsByPatientCode', input)
+  .mockImplementationOnce(
+    async (input: QuerySearchPatientsByPatientCodeArgs) => {
+      console.log('mocked AwellSdk.searchPatientsByPatientCode', input)
 
-    return [
-      {
-        id: 'patient-id-1',
-      },
-      {
-        id: 'patient-id-2',
-      },
-    ]
-  })
+      return [
+        {
+          id: 'patient-id-1',
+          profile: {
+            patient_code: '123',
+          },
+        },
+        {
+          id: 'patient-id-2',
+          profile: {
+            patient_code: '123',
+          },
+        },
+      ]
+    }
+  )
 
 describe('Search patients by patient code', () => {
   const onComplete = jest.fn()
@@ -39,9 +47,9 @@ describe('Search patients by patient code', () => {
           id: 'activity-id',
         },
         patient: {
-          id: 'test-patient',
+          id: 'patient-id-1',
           profile: {
-            patient_code: '12345',
+            patient_code: '123',
           },
         },
         fields: {
@@ -60,8 +68,8 @@ describe('Search patients by patient code', () => {
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
         patientAlreadyExists: 'true',
-        numberOfPatientsFound: '2',
-        awellPatientIds: 'patient-id-1,patient-id-2',
+        numberOfPatientsFound: '1',
+        awellPatientIds: 'patient-id-2',
       },
     })
     expect(onError).not.toHaveBeenCalled()

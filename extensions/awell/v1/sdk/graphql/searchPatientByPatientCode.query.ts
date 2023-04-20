@@ -4,6 +4,9 @@ query SearchPatientsByPatientCode($patient_code: String!) {
       success
       patients {
         id
+        profile {
+          patient_code
+        }
       }
     }
   }
