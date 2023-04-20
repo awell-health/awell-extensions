@@ -8,6 +8,7 @@ import { Category } from '../../../lib/types/marketplace'
 import { getSdk } from '../gql/sdk'
 import { initialiseClient } from '../graphqlClient'
 import { type settings } from '../settings'
+import { validateGetPatient } from '../validation/getPatient.zod'
 
 const fields = {
   patientId: {
@@ -30,7 +31,7 @@ const dataPoints = {
   },
   dob: {
     key: 'dob',
-    valueType: 'string',
+    valueType: 'date',
   },
   gender: {
     key: 'gender',
@@ -42,7 +43,7 @@ const dataPoints = {
   },
   phoneNumber: {
     key: 'phoneNumber',
-    valueType: 'string',
+    valueType: 'telephone',
   },
   primaryProviderId: {
     key: 'primaryProviderId',
@@ -74,17 +75,24 @@ export const getPatient: Action<
       if (client !== undefined) {
         const sdk = getSdk(client)
         const { data } = await sdk.getUser({ id: patientId })
+
+        const {
+          data: { dob, phoneNumber },
+          events,
+        } = validateGetPatient(data.user)
+
         await onComplete({
           data_points: {
             firstName: data.user?.first_name,
             lastName: data.user?.last_name,
-            dob: data.user?.dob,
+            dob,
             email: data.user?.email,
             gender: data.user?.gender,
-            phoneNumber: data.user?.phone_number,
+            phoneNumber,
             groupName: data.user?.user_group?.name,
             primaryProviderId: data.user?.dietitian_id,
           },
+          events,
         })
       } else {
         await onError({
