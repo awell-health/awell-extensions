@@ -11,10 +11,13 @@ import {
   type SearchPatientsPayload,
   type UserProfile,
   type User,
+  type PatientPathwaysPayload,
+  type PatientPathway,
 } from '../gql/graphql'
 import { isNil } from 'lodash'
 import {
   deletePatientMutation,
+  patientPathwaysQuery,
   startPathwayMutation,
   stopPathwayMutation,
   updatePatientMutation,
@@ -118,5 +121,20 @@ export default class AwellSdk {
     }
 
     throw new Error('Search patients failed.')
+  }
+
+  async getPatientCareFlows(input: {
+    patient_id: string
+    status?: string[]
+  }): Promise<PatientPathway[]> {
+    const data = await this.client.request<{
+      patientPathways: PatientPathwaysPayload
+    }>(patientPathwaysQuery, input)
+
+    if (data.patientPathways.success) {
+      return data.patientPathways.patientPathways
+    }
+
+    throw new Error('Stop pathway failed.')
   }
 }
