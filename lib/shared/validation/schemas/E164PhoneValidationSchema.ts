@@ -4,6 +4,7 @@ import {
   type PhoneNumber,
   type ParseError,
 } from 'libphonenumber-js'
+import { makeStringOptional } from '../generic'
 
 export const E164PhoneValidationSchema = z
   .string()
@@ -25,3 +26,7 @@ export const E164PhoneValidationSchema = z
   .transform((value) => {
     return (value as PhoneNumber).number
   })
+
+export const E164PhoneValidationOptionalSchema = makeStringOptional(
+  E164PhoneValidationSchema
+)

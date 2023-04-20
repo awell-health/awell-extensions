@@ -1,5 +1,6 @@
 import { z } from 'zod'
 import { formatISO } from 'date-fns'
+import { makeStringOptional } from '../generic'
 
 export const DateOnlySchema = z.coerce
   .date({
@@ -16,3 +17,6 @@ export const DateTimeSchema = z.coerce
     }),
   })
   .transform((arg) => formatISO(arg))
+
+export const DateOnlyOptionalSchema = makeStringOptional(DateOnlySchema)
+export const DateTimeOptionalSchema = makeStringOptional(DateTimeSchema)

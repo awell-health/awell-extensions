@@ -1,14 +1,10 @@
 import { type E164Number } from 'libphonenumber-js'
 import {
-  DateTimeSchema,
-  E164PhoneValidationSchema,
+  DateTimeOptionalSchema,
+  E164PhoneValidationOptionalSchema,
 } from '../../../lib/shared/validation'
-import { makeStringOptional } from '../../../lib/shared/validation/generic'
 import { type ActivityEvent } from '../../../lib/types/ActivityEvent'
 import { type GetUserQuery } from '../gql/sdk'
-
-const optionalPhoneSchema = makeStringOptional(E164PhoneValidationSchema)
-const optionalDobSchema = makeStringOptional(DateTimeSchema)
 
 interface ValidateResult {
   data: { phoneNumber?: E164Number; dob?: string }
@@ -17,10 +13,10 @@ interface ValidateResult {
 export const validateGetPatient = (
   user: GetUserQuery['user']
 ): ValidateResult => {
-  const phoneValidationResult = optionalPhoneSchema.safeParse(
+  const phoneValidationResult = E164PhoneValidationOptionalSchema.safeParse(
     user?.phone_number
   )
-  const dobValidationResult = optionalDobSchema.safeParse(user?.dob)
+  const dobValidationResult = DateTimeOptionalSchema.safeParse(user?.dob)
 
   return {
     data: {
