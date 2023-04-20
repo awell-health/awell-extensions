@@ -69,7 +69,7 @@ export default class AwellSdk {
     throw new Error('Delete patient failed.')
   }
 
-  async stopPathway(input: StopPathwayInput): Promise<boolean> {
+  async stopCareFlow(input: StopPathwayInput): Promise<boolean> {
     const data = await this.client.request<{ stopPathway: EmptyPayload }>(
       stopPathwayMutation,
       {
