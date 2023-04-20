@@ -18,6 +18,20 @@ Stops the care flow the patient is currently enrolled in. A reason is why you ar
 
 Allows updating patient data for the patient currently enrolled in the care flow.
 
+### Is patient already enrolled in care flow
+
+Checks whether the patient is already enrolled in a care flow definition. The care flow the patient is currently enrolled in does not count and is excluded from the results.
+
+**Action fields:**
+
+- pathwayStatus: a comma-separated string of care flow statuses that will be used when looking for care flows the patient is already enrolled in. By default, we only look at active care flows. Options: "active", "completed", "missing_baseline_info", "starting", and "stopped".
+- careFlowDefinitionIds: a comma-separated string of care flow definition ids that will be used when looking for care flows the patient is already enrolled in. By default, we only search for care flows that match the current care flow definition id (i.e. is the patient already included in the current care flow?).
+
+**Data points:**
+
+- Result: a boolean indicating whether patient is already enrolled in another care flow that matches your criteria (status & care flow definition id)
+- Care flow IDs: a comma-separated string of care flow ids that matched your search criteria. Will be empty when result is `false` because then there are no other care flow ids that match your criteria.
+
 ### Search patients by patient code
 
 Search whether, apart from the patient currently enrolled in the care flow, another patient with the same `patient_code` already exists.

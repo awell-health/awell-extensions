@@ -5,4 +5,8 @@ export const dataPoints = {
     key: 'result',
     valueType: 'boolean',
   },
+  careFlowIds: {
+    key: 'careFlowIds',
+    valueType: 'string',
+  },
 } satisfies Record<string, DataPointDefinition>
