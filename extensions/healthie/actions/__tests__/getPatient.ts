@@ -30,6 +30,8 @@ describe('getPatient action', () => {
       { healthiePhone: '+1 (555) 555-1234', validatedPhone: '+15555551234' },
       { healthiePhone: '+48 123 456 789', validatedPhone: '+48123456789' },
       { healthiePhone: '(+48) 123 456/789', validatedPhone: '+48123456789' },
+      { healthiePhone: '', validatedPhone: undefined },
+      { healthiePhone: undefined, validatedPhone: undefined },
     ])(
       '$#. Should parse phone to "$validatedPhone" when healthie returns "$healthiePhone"',
       async ({ healthiePhone, validatedPhone }) => {
@@ -38,7 +40,7 @@ describe('getPatient action', () => {
           data: {
             user: {
               ...returnValue.data.user,
-              phone_number: healthiePhone,
+              phone_number: healthiePhone as string,
             },
           },
         })
@@ -82,8 +84,8 @@ describe('getPatient action', () => {
     )
 
     test.each([
-      { healthiePhone: '', validatedPhone: undefined },
-      { healthiePhone: undefined, validatedPhone: undefined },
+      { healthiePhone: '555-1234', validatedPhone: undefined },
+      { healthiePhone: '(555) 555-1234', validatedPhone: undefined },
     ])(
       '$#. Should log event and return "undefined" for validatedPhone when healthie returns "$healthiePhone"',
       async ({ healthiePhone, validatedPhone }) => {
@@ -92,7 +94,7 @@ describe('getPatient action', () => {
           data: {
             user: {
               ...returnValue.data.user,
-              phone_number: healthiePhone as string,
+              phone_number: healthiePhone,
             },
           },
         })
@@ -151,45 +153,46 @@ describe('getPatient action', () => {
   describe('dob validation', () => {
     test.each([
       {
-        healthiePhone: '+48 123 456 789',
-        validatedPhone: '+48123456789',
         healthieDate: '1990-01-01',
         validatedDate: '1990-01-01T00:00:00Z',
       },
       {
-        healthiePhone: '+48 123 456 789',
-        validatedPhone: '+48123456789',
         healthieDate: '1990 01 01',
         validatedDate: '1990-01-01T00:00:00Z',
       },
       {
-        healthiePhone: '+48 123 456 789',
-        validatedPhone: '+48123456789',
         healthieDate: '1990/01/ 01',
         validatedDate: '1990-01-01T00:00:00Z',
       },
       {
-        healthiePhone: '+48 123 456 789',
-        validatedPhone: '+48123456789',
         healthieDate: '01- 01-1990',
         validatedDate: '1990-01-01T00:00:00Z',
       },
+      {
+        healthieDate: '01 01 1990',
+        validatedDate: '1990-01-01T00:00:00Z',
+      },
+      {
+        healthieDate: '1990 01 01',
+        validatedDate: '1990-01-01T00:00:00Z',
+      },
+      {
+        healthieDate: '',
+        validatedDate: undefined,
+      },
+      {
+        healthieDate: undefined,
+        validatedDate: undefined,
+      },
     ])(
       '$#. Should parse dob to "$validatedDate" when healthie returns "$healthieDate"',
-      async ({
-        healthiePhone,
-        validatedPhone,
-        healthieDate,
-        validatedDate,
-      }) => {
+      async ({ healthieDate, validatedDate }) => {
         const returnValue = mockGetSdkReturn.getUser({})
         mockGetSdkReturn.getUser.mockReturnValueOnce({
           data: {
             user: {
               ...returnValue.data.user,
-              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-              phone_number: healthiePhone,
-              dob: healthieDate,
+              dob: healthieDate as string,
             },
           },
         })
@@ -223,7 +226,7 @@ describe('getPatient action', () => {
             dob: validatedDate,
             email: returnValue.data.user.email,
             gender: returnValue.data.user.gender,
-            phoneNumber: validatedPhone,
+            phoneNumber: '+15555551234',
             groupName: returnValue.data.user.user_group.name,
             primaryProviderId: returnValue.data.user.dietitian_id,
           },
@@ -234,32 +237,17 @@ describe('getPatient action', () => {
 
     test.each([
       {
-        healthiePhone: '+48 123 456 789',
-        validatedPhone: '+48123456789',
         healthieDate: '1990 30 01',
-        validatedDate: undefined,
-      },
-      {
-        healthiePhone: '+48 123 456 789',
-        validatedPhone: '+48123456789',
-        healthieDate: '',
         validatedDate: undefined,
       },
     ])(
       '$#. Should log event and return "undefined" for validatedDate when healthie returns "$healthieDate"',
-      async ({
-        healthiePhone,
-        validatedPhone,
-        healthieDate,
-        validatedDate,
-      }) => {
+      async ({ healthieDate, validatedDate }) => {
         const returnValue = mockGetSdkReturn.getUser({})
         mockGetSdkReturn.getUser.mockReturnValueOnce({
           data: {
             user: {
               ...returnValue.data.user,
-              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-              phone_number: healthiePhone,
               dob: healthieDate,
             },
           },
@@ -294,7 +282,7 @@ describe('getPatient action', () => {
             dob: validatedDate,
             email: returnValue.data.user.email,
             gender: returnValue.data.user.gender,
-            phoneNumber: validatedPhone,
+            phoneNumber: '+15555551234',
             groupName: returnValue.data.user.user_group.name,
             primaryProviderId: returnValue.data.user.dietitian_id,
           },
