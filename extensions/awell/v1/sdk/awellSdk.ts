@@ -7,6 +7,8 @@ import {
   type StartPathwayPayload,
   type UpdatePatientInput,
   type UpdatePatientPayload,
+  type QuerySearchPatientsByPatientCodeArgs,
+  type SearchPatientsPayload,
 } from '../gql/graphql'
 import { isNil } from 'lodash'
 import {
@@ -14,6 +16,7 @@ import {
   startPathwayMutation,
   stopPathwayMutation,
   updatePatientMutation,
+  searchPatientByPatientCodeQuery,
 } from './graphql'
 
 export default class AwellSdk {
@@ -82,5 +85,27 @@ export default class AwellSdk {
     }
 
     throw new Error('Stop pathway failed.')
+  }
+
+  async searchPatientsByPatientCode(
+    input: QuerySearchPatientsByPatientCodeArgs
+  ): Promise<Array<{ id: string }>> {
+    const data = await this.client.request<{
+      searchPatientsByPatientCode: SearchPatientsPayload
+    }>(searchPatientByPatientCodeQuery, input)
+
+    if (data.searchPatientsByPatientCode.success) {
+      const patientIdsArray = data.searchPatientsByPatientCode.patients.map(
+        (patient) => {
+          return {
+            id: patient.id,
+          }
+        }
+      )
+
+      return patientIdsArray
+    }
+
+    throw new Error('Search patients failed.')
   }
 }
