@@ -29,8 +29,9 @@ Checks whether the patient is already enrolled in a care flow definition. The ca
 
 **Data points:**
 
-- Result: a boolean indicating whether the patient is already enrolled in another care flow that matches your criteria (status & care flow definition id)
-- Care flow IDs: a comma-separated string of care flow ids that matched your search criteria. It will be empty when the result is `false` because then there are no other care flow ids that match your criteria.
+- result: a boolean indicating whether the patient is already enrolled in another care flow that matches your criteria (status & care flow definition id)
+- numberOfResults: the number of care flows found for the patient that match the criteria.
+- careFlowIds: a comma-separated string of care flow ids that matched your search criteria. It will be empty when the result is `false` because then there are no other care flow ids that match your criteria.
 
 ### Search patients by patient code
 
