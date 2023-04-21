@@ -2,7 +2,7 @@ import { type Field, FieldType, StringType } from '../../../../../../lib/types'
 import { z, type ZodTypeAny } from 'zod'
 import { formatISO } from 'date-fns'
 import { Sex } from '../../../gql/graphql'
-import { OptionalPhoneValidationSchema } from '../../../../../../lib/shared/validation'
+import { E164PhoneValidationOptionalSchema } from '../../../../../../lib/shared/validation'
 
 export const fields = {
   patientCode: {
@@ -106,8 +106,8 @@ export const FieldsValidationSchema = z.object({
   lastName: z.optional(z.string()),
   birthDate: z.optional(z.coerce.date().transform((date) => formatISO(date))),
   email: z.optional(z.string().email('Value passed is not an email address')),
-  phone: OptionalPhoneValidationSchema,
-  mobilePhone: OptionalPhoneValidationSchema,
+  phone: E164PhoneValidationOptionalSchema,
+  mobilePhone: E164PhoneValidationOptionalSchema,
   street: z.optional(z.string()),
   state: z.optional(z.string()),
   country: z.optional(z.string()),
