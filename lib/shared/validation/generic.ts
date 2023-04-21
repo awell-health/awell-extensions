@@ -2,6 +2,7 @@ import { z } from 'zod'
 
 /**
  * Allows `undefined` and empty strings `''` to be used as a valid value for a string schema.
+ * Returns `undefined` in those two cases.
  */
 export const makeStringOptional = <T extends z.ZodTypeAny>(
   schema: T
