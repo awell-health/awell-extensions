@@ -7,7 +7,7 @@ export const settings = {
     label: 'Cloud name',
     description:
       'Your Cloudinary product environment cloud name. This can be found in the Cloudinary console.',
-    obfuscated: true,
+    obfuscated: false,
     required: true,
   },
   uploadPreset: {
