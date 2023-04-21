@@ -1,6 +1,6 @@
 import { type Setting } from '../../lib/types'
 import { z, type ZodTypeAny } from 'zod'
-import { RequiredPhoneValidationSchema } from '../../lib/shared/validation'
+import { E164PhoneValidationSchema } from '../../lib/shared/validation'
 
 export const settings = {
   accountSid: {
@@ -30,5 +30,5 @@ export const settings = {
 export const SettingsValidationSchema = z.object({
   accountSid: z.string().min(1, { message: 'Missing Twilio account SID' }),
   authToken: z.string().min(1, { message: 'Missing Twilio auth token' }),
-  fromNumber: RequiredPhoneValidationSchema,
+  fromNumber: E164PhoneValidationSchema,
 } satisfies Record<keyof typeof settings, ZodTypeAny>)

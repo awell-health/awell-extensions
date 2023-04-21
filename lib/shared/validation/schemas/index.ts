@@ -1,5 +1,3 @@
-export { OptionalPhoneValidationSchema } from './OptionalPhoneValidationSchema'
-export { RequiredPhoneValidationSchema } from './RequiredPhoneValidationSchema'
 export {
   E164PhoneValidationSchema,
   E164PhoneValidationOptionalSchema,

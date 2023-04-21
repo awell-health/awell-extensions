@@ -141,7 +141,7 @@ describe('Update patient', () => {
           error: {
             category: 'WRONG_INPUT',
             message:
-              'Validation error: Invalid (optional) phone number at "fields.phone"',
+              'Validation error: Phone number is invalid (NOT_A_NUMBER) at "fields.phone"',
           },
         }),
       ]),
