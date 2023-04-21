@@ -11,7 +11,7 @@ import { SettingsValidationSchema, type settings } from '../../settings'
 import { Category } from '../../../../lib/types/marketplace'
 import { MessageValidationSchema } from '../../common/validation'
 import {
-  RequiredPhoneValidationSchema,
+  E164PhoneValidationSchema,
   validate,
 } from '../../../../lib/shared/validation'
 
@@ -33,7 +33,7 @@ const fields = {
 } satisfies Record<string, Field>
 
 const Fields = z.object({
-  recipient: RequiredPhoneValidationSchema,
+  recipient: E164PhoneValidationSchema,
   message: MessageValidationSchema,
 })
 

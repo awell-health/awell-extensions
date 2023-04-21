@@ -6,7 +6,7 @@ import { SettingsValidationSchema, type settings } from '../../settings'
 import { Category } from '../../../../lib/types/marketplace'
 import { MessageValidationSchema } from '../../common/validation'
 import {
-  RequiredPhoneValidationSchema,
+  E164PhoneValidationSchema,
   validate,
 } from '../../../../lib/shared/validation'
 
@@ -20,7 +20,7 @@ const fields = {
 } satisfies Record<string, Field>
 
 const PatientProfile = z.object({
-  mobile_phone: RequiredPhoneValidationSchema,
+  mobile_phone: E164PhoneValidationSchema,
 })
 
 const PatientValidationSchema = z.object({ profile: PatientProfile })
