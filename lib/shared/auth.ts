@@ -1,5 +1,7 @@
 import * as Axios from 'axios'
 import { URLSearchParams } from 'url'
+import { type CacheService, NoCache } from './cache/cache'
+import { createHash } from 'node:crypto'
 
 interface OAuthGrantRequestBase {
   client_id: string
@@ -46,16 +48,21 @@ export interface OAuthOpts {
 /**
  * In the future, this class should be responsible for not only getting the access token,
  * but also saving the access token _somehwere_ and then refreshing it when it's expired.
- *
- * TODO: save the token object somewhere retrievable, and use refresh token to refresh it
  */
 export class OAuth {
   readonly grantRequest: OAuthGrantRequest
   readonly refreshRequest: (refreshTok: string) => OAuthRefreshTokenRequest
+  readonly cacheService: CacheService<string> = new NoCache()
   readonly _client: Axios.AxiosInstance
+  private readonly configHash: string
 
   public constructor({ auth_url, request_config }: OAuthOpts) {
     this.grantRequest = { ...request_config }
+
+    // A hash used to identify the client in cache.
+    this.configHash = createHash('sha256')
+      .update(JSON.stringify(request_config))
+      .digest('hex')
 
     this.refreshRequest = (tok) => {
       return {
@@ -85,10 +92,47 @@ export class OAuth {
   }
 
   /**
-   * Responsible for hitting the auth server and getting a fresh access token.
-   * @returns a token object
+   * Invalidates the cached access token. Next time `authenticate()` is called, this will result in cache miss
+   * and re-authentication.
    */
-  public async authenticate(): Promise<OAuthAccessTokenResponse> {
+  public async invalidateCachedToken(): Promise<void> {
+    await this.cacheService.unset(this.configHash)
+  }
+
+  private async getCachedToken(): Promise<string | null> {
+    return await this.cacheService.get(this.configHash)
+  }
+
+  private async getCachedRefreshToken(): Promise<string | null> {
+    return await this.cacheService.get(`${this.configHash}-refresh`)
+  }
+
+  /**
+   * Stores both the access token, and the refresh token if one is provided.
+   *
+   * @param response Success response from the authentication endpoint
+   * @private
+   */
+  private async storeToken(response: OAuthAccessTokenResponse): Promise<void> {
+    await this.cacheService.set(
+      this.configHash,
+      response.access_token,
+      response.expires_in
+    )
+
+    if (response.refresh_token !== '') {
+      await this.cacheService.set(
+        `${this.configHash}-refresh`,
+        response.refresh_token
+      )
+    }
+  }
+
+  /**
+   * Responsible for hitting the auth server and getting a fresh access token.
+   * @private
+   */
+  private async authenticate(): Promise<OAuthAccessTokenResponse> {
     const req = this._client.post<OAuthAccessTokenResponse>(
       '/',
       new URLSearchParams(Object.entries(this.grantRequest)).toString()
@@ -111,11 +155,44 @@ export class OAuth {
   }
 
   /**
-   * We aren't currently using the refresh token but including here for the future.
+   * Retrieves the cached token, or re-authenticates in case of cache miss.
+   * @returns the access token string
+   */
+  public async getAccessToken(): Promise<string> {
+    const cachedToken = await this.getCachedToken()
+    if (cachedToken !== null) {
+      return cachedToken
+    }
+
+    const refreshToken = await this.getCachedRefreshToken()
+    if (refreshToken !== null) {
+      try {
+        const token = await this.authenticateUsingRefreshToken(refreshToken)
+        await this.storeToken(token)
+        return token.access_token
+      } catch (e) {
+        const err = e as Axios.AxiosError
+        // 401 means the refresh token is invalid, in this case we silence the error and fall back to normal authentication
+        if (err.response == null || err.response.status !== 401) {
+          console.error('Error while using refresh token')
+          throw err
+        }
+      }
+    }
+
+    const token = await this.authenticate()
+    await this.storeToken(token)
+    return token.access_token
+  }
+
+  /**
+   * Responsible for hitting the authentication endpoint with the refresh token
    * @param tok the refresh token
    * @returns a new token object.
    */
-  public async refreshToken(tok: string): Promise<OAuthAccessTokenResponse> {
+  public async authenticateUsingRefreshToken(
+    tok: string
+  ): Promise<OAuthAccessTokenResponse> {
     const req = this._client.post<OAuthAccessTokenResponse>('/', {
       body: new URLSearchParams(Object.entries(this.refreshRequest(tok))),
     })

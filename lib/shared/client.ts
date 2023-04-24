@@ -8,7 +8,11 @@
  * Please see `${workspaceFolder}/extensions/elation/client` for an example of extending the base classes.
  */
 
-import Axios, { type AxiosInstance, type AxiosRequestConfig } from 'axios'
+import Axios, {
+  type AxiosInstance,
+  type AxiosRequestConfig,
+  type AxiosError,
+} from 'axios'
 import { type OAuth } from './auth'
 
 export type DataWrapperCtor<DW extends DataWrapper> = (
@@ -63,7 +67,14 @@ export abstract class APIClient<DW extends DataWrapper> {
     try {
       const res = await apiCall(dw)
       return res
-    } catch (err) {
+    } catch (e) {
+      const err = e as AxiosError
+      if (err.response !== null) {
+        if (err.status === 401) {
+          await this.auth.invalidateCachedToken()
+          return await this.FetchData<T>(apiCall)
+        }
+      }
       if (isRetry !== true) {
         await new Promise((resolve) => setTimeout(resolve, 250))
         return await this.FetchData<T>(apiCall, true)
@@ -77,7 +88,7 @@ export abstract class APIClient<DW extends DataWrapper> {
    * @returns DataWrapper
    */
   private async _getDataWrapper(): Promise<DW> {
-    const token = await this.auth.authenticate()
-    return this.ctor(token.access_token, this.baseUrl)
+    const token = await this.auth.getAccessToken()
+    return this.ctor(token, this.baseUrl)
   }
 }
