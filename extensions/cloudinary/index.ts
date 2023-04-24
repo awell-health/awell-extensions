@@ -5,7 +5,7 @@ import { settings } from './settings'
 
 export const Cloudinary: Extension = {
   key: 'cloudinary',
-  title: 'Cloudinary',
+  title: 'Cloudinary (alpha)',
   icon_url:
     'https://res.cloudinary.com/da7x4rzl4/image/upload/v1681407040/Awell%20Extensions/cloudinary_logo.png',
   description:

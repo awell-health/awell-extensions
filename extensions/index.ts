@@ -11,12 +11,12 @@ import { Mailgun } from './mailgun'
 import { Formsort } from './formsort'
 // import { AvaAi } from './avaAi'
 import { Mailchimp } from './mailchimp'
-// import { Cloudinary } from './cloudinary'
+import { Cloudinary } from './cloudinary'
 
 export const extensions = [
   // AvaAi, Best to disable this until we cleared out data privacy & HIPAA with OpenAI
   Awell,
-  // Cloudinary, Not ready yet for release in v1.0.3
+  Cloudinary,
   HelloWorld,
   Healthie,
   Twilio,
