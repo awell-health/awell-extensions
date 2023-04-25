@@ -38,12 +38,11 @@ const fields = {
       "The patient's legal name which will be used in CMS 1500 Claims, Invoices, and Superbills.",
     type: FieldType.STRING,
   },
-  // ! TODO: BOOLEAN field implementation needed
-  // skipped_email: {
-  //   id: 'skipped_email',
-  //   label: 'Skipped email',
-  //   type: FieldType.BOOLEAN,
-  // },
+  skipped_email: {
+    id: 'skipped_email',
+    label: 'Skipped email',
+    type: FieldType.BOOLEAN,
+  },
   email: {
     id: 'email',
     label: 'Email',
@@ -51,13 +50,12 @@ const fields = {
     type: FieldType.STRING,
     stringType: StringType.EMAIL,
   },
-  // ! TODO: DATE field implementation needed
-  // dob: {
-  //   id: 'dob',
-  //   label: 'Date of birth',
-  //   description: 'Date of birth of the patient',
-  //   type: FieldType.DATE,
-  // },
+  dob: {
+    id: 'dob',
+    label: 'Date of birth',
+    description: 'Date of birth of the patient',
+    type: FieldType.DATE,
+  },
   phone_number: {
     id: 'phone_number',
     label: 'Phone number',
@@ -78,13 +76,12 @@ const fields = {
     description: 'The user group the patient belongs to.',
     type: FieldType.STRING,
   },
-  // ! TODO: BOOLEAN field implementation needed
-  // active: {
-  //   id: 'active',
-  //   label: 'Active',
-  //   description: 'Whether the patient is still active.',
-  //   type: FieldType.BOOLEAN,
-  // },
+  active: {
+    id: 'active',
+    label: 'Active',
+    description: 'Whether the patient is still active.',
+    type: FieldType.BOOLEAN,
+  },
   height: {
     id: 'height',
     label: 'Height',
@@ -134,6 +131,9 @@ export const updatePatient: Action<typeof fields, typeof settings> = {
       height,
       sex,
       user_group_id,
+      active,
+      dob,
+      skipped_email,
     } = fields
     try {
       if (isNil(id)) {
@@ -169,6 +169,9 @@ export const updatePatient: Action<typeof fields, typeof settings> = {
             height,
             sex,
             user_group_id,
+            active,
+            dob,
+            skipped_email,
           },
         })
 

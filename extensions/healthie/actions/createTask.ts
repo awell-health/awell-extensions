@@ -37,7 +37,7 @@ const fields = {
     id: 'dueDate',
     label: 'Due date',
     description: 'The due date of the task.',
-    type: FieldType.STRING,
+    type: FieldType.DATE,
   },
   isReminderEnabled: {
     id: 'isReminderEnabled',
