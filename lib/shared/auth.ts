@@ -117,7 +117,7 @@ export class OAuth {
     await this.cacheService.set(
       this.configHash,
       response.access_token,
-      response.expires_in
+      Date.now() + response.expires_in * 1000
     )
 
     if (response.refresh_token !== '') {
@@ -190,12 +190,13 @@ export class OAuth {
    * @param tok the refresh token
    * @returns a new token object.
    */
-  public async authenticateUsingRefreshToken(
+  private async authenticateUsingRefreshToken(
     tok: string
   ): Promise<OAuthAccessTokenResponse> {
-    const req = this._client.post<OAuthAccessTokenResponse>('/', {
-      body: new URLSearchParams(Object.entries(this.refreshRequest(tok))),
-    })
+    const req = this._client.post<OAuthAccessTokenResponse>(
+      '/',
+      new URLSearchParams(Object.entries(this.refreshRequest(tok))).toString()
+    )
     const res = await req
     return res.data
   }
