@@ -3,6 +3,8 @@ import { createClient } from 'redis'
 import { GenericContainer, type StartedTestContainer } from 'testcontainers'
 import { type CacheService } from '../../cache'
 
+jest.unmock('redis');
+
 describe('Redis token cache', () => {
   const key = 'test-key'
   const value = 'test-value'
