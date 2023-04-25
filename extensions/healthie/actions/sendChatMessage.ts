@@ -96,6 +96,11 @@ export const sendChatMessage: Action<
             input: {
               conversation_id: conversationId,
               content: message,
+              /**
+               * Send the message in name of the specified provider.
+               * If empty or blank, it defaults to the authenticated user.
+               */
+              user_id: provider_id,
             },
           })
         }
