@@ -1,6 +1,6 @@
-import { getSdk } from "../../gql/sdk"
-import { mockGetSdk, mockGetSdkReturn } from "../../gql/__mocks__/sdk"
-import { updatePatient } from "../updatePatient"
+import { getSdk } from '../../gql/sdk'
+import { mockGetSdk, mockGetSdkReturn } from '../../gql/__mocks__/sdk'
+import { updatePatient } from '../updatePatient'
 
 jest.mock('../../gql/sdk')
 jest.mock('../../graphqlClient')
@@ -9,14 +9,14 @@ describe('updatePatient action', () => {
   const onComplete = jest.fn()
 
   beforeAll(() => {
-    (getSdk as jest.Mock).mockImplementation(mockGetSdk)
+    ;(getSdk as jest.Mock).mockImplementation(mockGetSdk)
   })
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    jest.clearAllMocks()
   })
 
-  test("Should update patient", async () => {
+  test('Should update patient', async () => {
     await updatePatient.onActivityCreated(
       {
         pathway: {
@@ -40,10 +40,13 @@ describe('updatePatient action', () => {
           height: undefined,
           sex: undefined,
           user_group_id: undefined,
+          active: true,
+          dob: '1990-01-01',
+          skipped_email: false,
         },
         settings: {
           apiKey: 'apiKey',
-          apiUrl: 'test-url'
+          apiUrl: 'test-url',
         },
       },
       onComplete,

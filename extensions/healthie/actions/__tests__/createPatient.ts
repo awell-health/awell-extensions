@@ -36,7 +36,6 @@ describe('createPatient action', () => {
           phone_number: undefined,
           provider_id: undefined,
           skipped_email: undefined,
-          dob: undefined,
           send_invite: undefined,
         },
         settings: {
