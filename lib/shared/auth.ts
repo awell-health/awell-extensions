@@ -92,7 +92,7 @@ export class OAuth {
   }
 
   /**
-   * Invalidates the cached access token. Next time `authenticate()` is called, this will result in cache miss
+   * Invalidates the cached access token. Next time `getAccessToken()` is called, this will result in cache miss
    * and re-authentication.
    */
   public async invalidateCachedToken(): Promise<void> {
