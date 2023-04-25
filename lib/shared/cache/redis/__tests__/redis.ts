@@ -5,6 +5,9 @@ import { type CacheService } from '../../cache'
 
 jest.unmock('redis');
 
+// Set a longer timeout since we need to pull redis image
+jest.setTimeout(120 * 1000);
+
 describe('Redis token cache', () => {
   const key = 'test-key'
   const value = 'test-value'
