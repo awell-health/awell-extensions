@@ -47,7 +47,7 @@ const fields = {
     description: 'The email address of the patient.',
     type: FieldType.STRING,
     stringType: StringType.EMAIL,
-    required: true, // required until skipped_email is not handled
+    required: true, // required until conditional field validation is implemented (based on `skipped_email`)
   },
   dob: {
     id: 'dob',
@@ -106,7 +106,7 @@ export const createPatient: Action<
       phone_number,
       provider_id,
       legal_name,
-      // dob,
+      dob,
       send_invite,
       skipped_email,
     } = fields
@@ -140,6 +140,7 @@ export const createPatient: Action<
             dietitian_id: provider_id === '' ? undefined : provider_id,
             skipped_email,
             dont_send_welcome,
+            dob,
           },
         })
 
