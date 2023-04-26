@@ -14,6 +14,23 @@ Starts a new care flow for the patient enrolled in your current care flow.
 
 Stops the care flow the patient is currently enrolled in. A reason is why you are stopping the care flow is mandatory.
 
+**Passing baseline info:**
+Please read the documentation on [our developer hub](https://developers.awellhealth.com/awell-orchestration/api-reference/mutations/start-pathway) to learn more about how to pass baseline info.
+
+**Example of how to configure a value for the baseline info action field:**
+```json
+[
+    {
+        "data_point_definition_id": "age",
+        "value": "29",
+    },
+    {
+        "data_point_definition_id": "dob",
+        "value": "1993-11-30",
+    }
+]
+```
+
 ### Update patient
 
 Allows updating patient data for the patient currently enrolled in the care flow.

@@ -24,6 +24,12 @@ describe('Start care flow', () => {
         patient: { id: 'test-patient' },
         fields: {
           pathwayDefinitionId: 'a-pathway-definition-id',
+          baselineInfo: JSON.stringify([
+            {
+              data_point_definition_id: 'an-id',
+              value: 'a-value',
+            },
+          ]),
         },
         settings: {
           apiUrl: 'an-api-url',
