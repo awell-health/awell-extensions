@@ -53,7 +53,7 @@ export const clientCredentialsSettings = {
   },
   audience: {
     key: 'audience',
-    label: 'Client Secret',
+    label: 'Audience',
     obfuscated: false,
     description: 'The audience for OAuth2 client credentials authentication.',
     required: false,
