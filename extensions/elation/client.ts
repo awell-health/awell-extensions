@@ -18,6 +18,7 @@ import {
 } from './types/subscription'
 import { settingsSchema } from './validation/settings.zod'
 import { elationCacheService } from './cache'
+import { type PhysicianResponse } from './types/physician'
 
 export class ElationDataWrapper extends DataWrapper {
   public async getAppointment(id: number): Promise<AppointmentResponse> {
@@ -103,6 +104,13 @@ export class ElationDataWrapper extends DataWrapper {
     })
     await req
   }
+
+  public async findPhysicians(): Promise<PhysicianResponse> {
+    return await this.Request({
+      method: 'GET',
+      url: '/app/physicians/',
+    })
+  }
 }
 
 interface ElationAPIClientConstructorProps {
@@ -173,6 +181,10 @@ export class ElationAPIClient extends APIClient<ElationDataWrapper> {
     await this.FetchData(async (dw) => {
       await dw.deleteSubscription(id)
     })
+  }
+
+  public async findPhysicians(): Promise<PhysicianResponse> {
+    return await this.FetchData(async (dw) => await dw.findPhysicians())
   }
 }
 
