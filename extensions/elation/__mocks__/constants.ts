@@ -1,5 +1,6 @@
 import { type AppointmentInput } from '../types/appointment'
 import { type PatientInput } from '../types/patient'
+import { type PhysicianResponse } from '../types/physician'
 
 export const patientExample: PatientInput = {
   first_name: 'Test',
@@ -34,4 +35,19 @@ export const appointmentExample: AppointmentInput = {
   physician: 141127177601026,
   practice: 141127173275652,
   metadata: null,
+}
+
+export const physicianResponseExample: PhysicianResponse = {
+  id: 1,
+  is_active: true,
+  practice: 1,
+  user_id: 1,
+  credentials: undefined,
+  email: 'test@test.com',
+  first_name: 'First',
+  last_name: 'Last',
+  license: '1',
+  license_state: 'NY',
+  npi: '1234567890',
+  specialty: 'Cardiology',
 }
