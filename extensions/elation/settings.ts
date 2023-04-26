@@ -1,5 +1,5 @@
 import { type Setting } from '../../lib/types'
-import { clientCredentialsSettings } from '../../lib/shared/settings/oauth'
+import { passwordSettings } from '../../lib/shared/settings/oauth'
 
 export const settings = {
   base_url: {
@@ -9,5 +9,5 @@ export const settings = {
     description: 'The base URL of Elation API.',
     required: true,
   },
-  ...clientCredentialsSettings,
+  ...passwordSettings,
 } satisfies Record<string, Setting>
