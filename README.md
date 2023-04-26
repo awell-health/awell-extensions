@@ -10,7 +10,7 @@ Of course, we also welcome [discussions](https://github.com/awell-health/awell-e
 
 ## Building your own extension
 
-We encourage you to fork the repo and build custom actions and webhooks to support your organization's needs. We have provided a sample `hello world` extension, which is located in `./extensions/hello-world`.
+We encourage you to fork the repo and build custom actions and webhooks to support your organization's needs. We have provided a sample `hello world` extension, which is located in `./extensions/hello-world`, as well as a sample extension that uses OAuth2 Client Credentials, located in `./examples/extensions/oauth2-client-credentials`.
 
 ### Actions and webhooks
 
