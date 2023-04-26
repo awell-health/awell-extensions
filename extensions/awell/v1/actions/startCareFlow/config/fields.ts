@@ -49,7 +49,7 @@ export const FieldsValidationSchema = z.object({
               code: 'custom',
               message: `Item "${String(
                 obj
-              )}" in baseline info array should is not an object.`,
+              )}" in baseline info array is not an object.`,
             })
             return z.NEVER
           }
