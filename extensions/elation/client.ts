@@ -7,7 +7,7 @@ import {
   type AppointmentResponse,
   type AppointmentInput,
 } from './types/appointment'
-import { type Find } from './types/generic'
+import { type ElationCollection, type Find } from './types/generic'
 import { type PatientInput, type PatientResponse } from './types/patient'
 import {
   type Subscription,
@@ -106,7 +106,7 @@ export class ElationDataWrapper extends DataWrapper {
     await req
   }
 
-  public async findPhysicians(): Promise<PhysicianResponse> {
+  public async findPhysicians(): Promise<ElationCollection<PhysicianResponse>> {
     return await this.Request({
       method: 'GET',
       url: '/app/physicians/',
@@ -183,7 +183,7 @@ export class ElationAPIClient extends APIClient<ElationDataWrapper> {
     })
   }
 
-  public async findPhysicians(): Promise<PhysicianResponse> {
+  public async findPhysicians(): Promise<ElationCollection<PhysicianResponse>> {
     return await this.FetchData(async (dw) => await dw.findPhysicians())
   }
 }
