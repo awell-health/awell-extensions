@@ -25,14 +25,14 @@ export const FieldsValidationSchema = z.object({
   pathwayDefinitionId: z.string(),
   baselineInfo: z
     .optional(z.string())
-    .transform((str, ctx): BaselineInfoInput[] => {
-      if (isNil(str) || isEmpty(str)) return []
+    .transform((str, ctx): BaselineInfoInput[] | undefined => {
+      if (isNil(str) || isEmpty(str)) return undefined
 
       try {
         const parsedJson = JSON.parse(str)
 
         if (isEmpty(parsedJson)) {
-          return []
+          return undefined
         }
 
         if (!Array.isArray(parsedJson)) {
