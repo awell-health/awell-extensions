@@ -108,7 +108,7 @@ export class ElationDataWrapper extends DataWrapper {
   public async findPhysicians(): Promise<ElationCollection<PhysicianResponse>> {
     return await this.Request({
       method: 'GET',
-      url: '/app/physicians/',
+      url: '/physicians/',
     })
   }
 }
