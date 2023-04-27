@@ -88,7 +88,6 @@ export const createNonVisitNote: Action<
     try {
       const note = nonVisitNoteSchema.parse(payload.fields)
 
-      // API Call should produce AuthError or something dif.
       const api = makeAPIClient(payload.settings)
       const { id } = await api.createNonVisitNote(note)
       await onComplete({

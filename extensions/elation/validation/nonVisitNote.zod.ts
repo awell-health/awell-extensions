@@ -7,6 +7,7 @@ import {
 
 const nonVisitNoteTypeEnum = z.enum(['email', 'nonvisit', 'phone'])
 
+// All values taken from Elation's API
 const bulletCategoryEnum = z.enum([
   'Problem',
   'Past',
