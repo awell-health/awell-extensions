@@ -5,6 +5,7 @@ import {
   fields,
   PatientValidationSchema,
   FieldsValidationSchema,
+  dataPoints,
 } from './config'
 import { fromZodError } from 'zod-validation-error'
 import { z, ZodError } from 'zod'
@@ -18,6 +19,7 @@ export const startCareFlow: Action<typeof fields, typeof settings> = {
   description:
     'Start a new care flow for the patient currently enrolled in the care flow.',
   fields,
+  dataPoints,
   previewable: false, // We don't have pathways in Preview, only cases.
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
     try {
@@ -36,13 +38,17 @@ export const startCareFlow: Action<typeof fields, typeof settings> = {
 
       const sdk = new AwellSdk({ apiUrl, apiKey })
 
-      await sdk.startCareFlow({
+      const careFlowId = await sdk.startCareFlow({
         patient_id: patientId,
         pathway_definition_id: pathwayDefinitionId,
         data_points: baselineInfo,
       })
 
-      await onComplete()
+      await onComplete({
+        data_points: {
+          careFlowId,
+        },
+      })
     } catch (err) {
       if (err instanceof ZodError) {
         const error = fromZodError(err)
