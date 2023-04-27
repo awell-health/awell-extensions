@@ -32,11 +32,11 @@ const dataPoints = {
   },
   startTime: {
     key: 'startTime',
-    valueType: 'string',
+    valueType: 'date',
   },
   endTime: {
     key: 'endTime',
-    valueType: 'string',
+    valueType: 'date',
   },
   status: {
     key: 'status',
