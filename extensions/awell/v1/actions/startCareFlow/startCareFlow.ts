@@ -23,7 +23,7 @@ export const startCareFlow: Action<typeof fields, typeof settings> = {
     try {
       const {
         settings: { apiUrl, apiKey },
-        fields: { pathwayDefinitionId },
+        fields: { pathwayDefinitionId, baselineInfo },
         patient: { id: patientId },
       } = validate({
         schema: z.object({
@@ -39,6 +39,7 @@ export const startCareFlow: Action<typeof fields, typeof settings> = {
       await sdk.startCareFlow({
         patient_id: patientId,
         pathway_definition_id: pathwayDefinitionId,
+        data_points: baselineInfo,
       })
 
       await onComplete()
