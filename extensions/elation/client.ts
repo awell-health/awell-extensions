@@ -20,6 +20,10 @@ import {
 import { settingsSchema } from './validation/settings.zod'
 import { type settings } from './settings'
 import { type PhysicianResponse } from './types/physician'
+import {
+  type NonVisitNoteInput,
+  type NonVisitNoteResponse,
+} from './types/nonVisitNote'
 
 export class ElationDataWrapper extends DataWrapper {
   public async getAppointment(id: number): Promise<AppointmentResponse> {
@@ -121,6 +125,41 @@ export class ElationDataWrapper extends DataWrapper {
       params,
     })
   }
+
+  public async getNonVisitNote(id: number): Promise<NonVisitNoteResponse> {
+    return await this.Request({
+      method: 'GET',
+      url: `/non_visit_notes/${id}`,
+    })
+  }
+
+  public async createNonVisitNote(
+    obj: NonVisitNoteInput
+  ): Promise<NonVisitNoteResponse> {
+    return await this.Request({
+      method: 'POST',
+      url: '/non_visit_notes/',
+      data: obj,
+    })
+  }
+
+  public async updateNonVisitNote(
+    id: number,
+    obj: Partial<NonVisitNoteInput>
+  ): Promise<NonVisitNoteResponse> {
+    return await this.Request({
+      method: 'PUT',
+      url: `/non_visit_notes/${id}`,
+      data: obj,
+    })
+  }
+
+  public async deleteNonVisitNote(id: number): Promise<void> {
+    await this.Request({
+      method: 'PUT',
+      url: `/non_visit_notes/${id}`,
+    })
+  }
 }
 
 interface ElationAPIClientConstructorProps {
@@ -204,6 +243,31 @@ export class ElationAPIClient extends APIClient<ElationDataWrapper> {
     return await this.FetchData(
       async (dw) => await dw.findPhysicians({ params })
     )
+  }
+
+  public async getNonVisitNote(id: number): Promise<NonVisitNoteResponse> {
+    return await this.FetchData(async (dw) => await dw.getNonVisitNote(id))
+  }
+
+  public async createNonVisitNote(
+    obj: NonVisitNoteInput
+  ): Promise<NonVisitNoteResponse> {
+    return await this.FetchData(async (dw) => await dw.createNonVisitNote(obj))
+  }
+
+  public async updateNonVisitNote(
+    id: number,
+    obj: Partial<NonVisitNoteInput>
+  ): Promise<NonVisitNoteResponse> {
+    return await this.FetchData(
+      async (dw) => await dw.updateNonVisitNote(id, obj)
+    )
+  }
+
+  public async deleteNonVisitNote(id: number): Promise<void> {
+    await this.FetchData(async (dw) => {
+      await dw.deleteNonVisitNote(id)
+    })
   }
 }
 
