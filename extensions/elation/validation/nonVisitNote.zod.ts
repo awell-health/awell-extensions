@@ -47,7 +47,6 @@ export const bulletSchema = z.object({
 export const nonVisitNoteSchema = z
   .object({
     type: nonVisitNoteTypeEnum.default(nonVisitNoteTypeEnum.enum.nonvisit),
-    bullets: z.array(bulletSchema),
     patient: NumericIdSchema,
     practice: NumericIdSchema.optional(),
     document_date: DateTimeSchema,
@@ -57,4 +56,4 @@ export const nonVisitNoteSchema = z
       true
     ).optional(),
   })
-  .strict()
+  .and(bulletSchema.transform((bullet) => ({ bullets: [bullet] })))
