@@ -10,6 +10,9 @@ import { nonVisitNoteSchema } from '../validation/nonVisitNote.zod'
 import { NumericIdSchema } from '../../../lib/shared/validation'
 import { isNil } from 'lodash'
 
+/**
+ * Although fields are not required, editing of e.g. bullet text requires providing a bullet id and an author
+ */
 const fields = {
   nonVisitNoteId: {
     id: 'nonVisitNoteId',
@@ -23,7 +26,7 @@ const fields = {
     label: 'Non-Visit Note Bullet ID',
     description: 'ID of a bullet in a note',
     type: FieldType.NUMERIC,
-    required: true,
+    required: false,
   },
   text: {
     id: 'text',
@@ -98,7 +101,7 @@ export const updateNonVisitNote: Action<typeof fields, typeof settings> = {
       // partial - all fields are optional
       const note = nonVisitNoteSchema.partial().parse({
         ...fields,
-        bullets: isNil(text)
+        bullets: isNil(nonVisitNoteBulletId)
           ? undefined
           : [{ id: nonVisitNoteBulletId, text, author }],
         document_date: documentDate,
