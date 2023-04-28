@@ -70,6 +70,10 @@ const dataPoints = {
     key: 'nonVisitNoteId',
     valueType: 'number',
   },
+  nonVisitNoteBulletId: {
+    key: 'nonVisitNoteBulletId',
+    valueType: 'number',
+  },
 } satisfies Record<string, DataPointDefinition>
 
 export const createNonVisitNote: Action<
@@ -96,10 +100,11 @@ export const createNonVisitNote: Action<
       })
 
       const api = makeAPIClient(payload.settings)
-      const { id } = await api.createNonVisitNote(note)
+      const { id, bullets } = await api.createNonVisitNote(note)
       await onComplete({
         data_points: {
           nonVisitNoteId: String(id),
+          nonVisitNoteBulletId: String(bullets[0].id),
         },
       })
     } catch (err) {

@@ -18,6 +18,13 @@ const fields = {
     type: FieldType.NUMERIC,
     required: true,
   },
+  nonVisitNoteBulletId: {
+    id: 'nonVisitNoteBulletId',
+    label: 'Non-Visit Note Bullet ID',
+    description: 'ID of a bullet in a note',
+    type: FieldType.NUMERIC,
+    required: true,
+  },
   text: {
     id: 'text',
     label: 'Text',
@@ -80,6 +87,7 @@ export const updateNonVisitNote: Action<typeof fields, typeof settings> = {
     try {
       const {
         nonVisitNoteId,
+        nonVisitNoteBulletId,
         author,
         chartDate,
         documentDate,
@@ -90,7 +98,9 @@ export const updateNonVisitNote: Action<typeof fields, typeof settings> = {
       // partial - all fields are optional
       const note = nonVisitNoteSchema.partial().parse({
         ...fields,
-        bullets: isNil(text) ? undefined : [{ text, author }],
+        bullets: isNil(text)
+          ? undefined
+          : [{ id: nonVisitNoteBulletId, text, author }],
         document_date: documentDate,
         chart_date: chartDate,
       })

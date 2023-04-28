@@ -46,6 +46,7 @@ describe('Create non-visit note action', () => {
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
         nonVisitNoteId: String(nonVisitNoteResponseExample.id),
+        nonVisitNoteBulletId: String(nonVisitNoteResponseExample.bullets[0].id),
       },
     })
   })

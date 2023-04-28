@@ -30,6 +30,7 @@ describe('Update non-visit note action', () => {
     {
       input: {
         nonVisitNoteId: nonVisitNoteResponseExample.id,
+        nonVisitNoteBulletId: nonVisitNoteResponseExample.bullets[0].id,
         author: nonVisitNoteResponseExample.bullets[0].author,
         text: nonVisitNoteResponseExample.bullets[0].text,
         chartDate: nonVisitNoteResponseExample.chart_date,
@@ -45,6 +46,7 @@ describe('Update non-visit note action', () => {
     {
       input: {
         nonVisitNoteId: 1,
+        nonVisitNoteBulletId: 1,
         author: 1,
         text: 'abc',
         chartDate: '2023-01-01',
@@ -57,6 +59,7 @@ describe('Update non-visit note action', () => {
     {
       input: {
         nonVisitNoteId: 1,
+        nonVisitNoteBulletId: 1,
         author: undefined,
         text: undefined,
         chartDate: undefined,
@@ -69,6 +72,7 @@ describe('Update non-visit note action', () => {
   ] as Array<{
     input: {
       nonVisitNoteId: number
+      nonVisitNoteBulletId: number
       author: number
       text: string
       chartDate: string

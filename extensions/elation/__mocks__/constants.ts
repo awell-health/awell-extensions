@@ -58,6 +58,7 @@ export const nonVisitNoteResponseExample: NonVisitNoteResponse = {
   type: 'nonvisit',
   bullets: [
     {
+      id: 1,
       author: 1,
       category: 'Problem',
       text: 'Test',

@@ -40,6 +40,7 @@ const bulletCategoryEnum = z.enum([
 ])
 
 export const bulletSchema = z.object({
+  id: NumericIdSchema.optional(),
   text: z.string().nonempty(),
   author: NumericIdSchema,
   category: bulletCategoryEnum.default(bulletCategoryEnum.enum.Problem),

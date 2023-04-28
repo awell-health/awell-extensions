@@ -157,7 +157,7 @@ export class ElationDataWrapper extends DataWrapper {
 
   public async deleteNonVisitNote(id: number): Promise<void> {
     await this.Request({
-      method: 'PUT',
+      method: 'DELETE',
       url: `/non_visit_notes/${id}`,
     })
   }
