@@ -1,5 +1,6 @@
 import { ZodError } from 'zod'
 import {
+  FieldType,
   type Action,
   type DataPointDefinition,
   type Field,
@@ -10,7 +11,29 @@ import { makeAPIClient } from '../client'
 import { fromZodError } from 'zod-validation-error'
 import { AxiosError } from 'axios'
 
-const fields = {} satisfies Record<string, Field>
+const fields = {
+  firstName: {
+    id: 'firstName',
+    label: 'First Name',
+    description: 'First Name to search for.',
+    type: FieldType.STRING,
+    required: false,
+  },
+  lastName: {
+    id: 'lastName',
+    label: 'Last Name',
+    description: 'Last Name to search for.',
+    type: FieldType.STRING,
+    required: false,
+  },
+  npi: {
+    id: 'npi',
+    label: 'NPI (National Provider Identifier)',
+    description: 'NPI to search for.',
+    type: FieldType.STRING,
+    required: false,
+  },
+} satisfies Record<string, Field>
 
 const dataPoints = {
   physicianId: {
@@ -61,9 +84,16 @@ export const findPhysician: Action<
   dataPoints,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
     try {
+      const { firstName, lastName, npi } = payload.fields
       // API Call should produce AuthError or something dif.
       const api = makeAPIClient(payload.settings)
-      const physiciansList = await api.findPhysicians()
+      const physiciansList = await api.findPhysicians({
+        params: {
+          first_name: firstName,
+          last_name: lastName,
+          npi,
+        },
+      })
 
       if (physiciansList.count > 1) {
         await onError({
