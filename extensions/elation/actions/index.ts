@@ -7,6 +7,7 @@ import { findPhysician } from './findPhysician'
 import { createNonVisitNote } from './createNonVisitNote'
 import { updateNonVisitNote } from './updateNonVisitNote'
 import { getNonVisitNote } from './getNonVisitNote'
+import { deleteNonVisitNote } from './deleteNonVisitNote'
 
 export const actions = {
   getPatient,
@@ -18,4 +19,5 @@ export const actions = {
   createNonVisitNote,
   updateNonVisitNote,
   getNonVisitNote,
+  deleteNonVisitNote,
 }
