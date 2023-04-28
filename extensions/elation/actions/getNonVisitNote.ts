@@ -12,6 +12,7 @@ import { makeAPIClient } from '../client'
 import { fromZodError } from 'zod-validation-error'
 import { AxiosError } from 'axios'
 import { NumericIdSchema } from '../../../lib/shared/validation'
+import { isNil } from 'lodash'
 
 const fields = {
   nonVisitNoteId: {
@@ -83,8 +84,11 @@ export const getNonVisitNote: Action<
           chartDate: chart_date,
           documentDate: document_date,
           patientId: String(patient),
-          practiceId: String(practice),
-          tags: tags?.length !== 0 ? tags?.join(',') : undefined,
+          practiceId: !isNil(practice) ? String(practice) : undefined,
+          tags:
+            tags?.length !== 0
+              ? tags?.map((tag) => tag.id).join(',')
+              : undefined,
         },
       })
     } catch (err) {
