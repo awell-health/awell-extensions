@@ -6,6 +6,7 @@ import { getAppointment } from './getAppointment'
 import { findPhysician } from './findPhysician'
 import { createNonVisitNote } from './createNonVisitNote'
 import { updateNonVisitNote } from './updateNonVisitNote'
+import { getNonVisitNote } from './getNonVisitNote'
 
 export const actions = {
   getPatient,
@@ -16,4 +17,5 @@ export const actions = {
   findPhysician,
   createNonVisitNote,
   updateNonVisitNote,
+  getNonVisitNote,
 }
