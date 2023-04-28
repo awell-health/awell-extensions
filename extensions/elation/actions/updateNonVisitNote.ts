@@ -8,6 +8,7 @@ import { fromZodError } from 'zod-validation-error'
 import { AxiosError } from 'axios'
 import { nonVisitNoteSchema } from '../validation/nonVisitNote.zod'
 import { NumericIdSchema } from '../../../lib/shared/validation'
+import { isNil } from 'lodash'
 
 const fields = {
   nonVisitNoteId: {
@@ -89,7 +90,7 @@ export const updateNonVisitNote: Action<typeof fields, typeof settings> = {
       // partial - all fields are optional
       const note = nonVisitNoteSchema.partial().parse({
         ...fields,
-        bullets: [{ text, author }],
+        bullets: isNil(text) ? undefined : [{ text, author }],
         document_date: documentDate,
         chart_date: chartDate,
       })
