@@ -55,23 +55,28 @@ describe('Create non-visit note action', () => {
     { input: '1,2' },
     { input: '1,' },
     { input: '1,2, 3' },
-  ])('$#. Should validate correctly when tags equal "$input"', async () => {
-    await createNonVisitNote.onActivityCreated(
-      {
-        fields: {
-          author: nonVisitNoteResponseExample.bullets[0].author,
-          text: nonVisitNoteResponseExample.bullets[0].text,
-          chartDate: nonVisitNoteResponseExample.chart_date,
-          documentDate: nonVisitNoteResponseExample.document_date,
-          patient: nonVisitNoteResponseExample.patient,
-          practice: undefined,
-          tags: undefined,
-        },
-        settings,
-      } as any,
-      onComplete,
-      onError
-    )
-    expect(onError).not.toHaveBeenCalled()
-  })
+    { input: '1,2, 3, 4 ,' },
+    { input: undefined },
+  ])(
+    '$#. Should validate correctly when tags equal "$input"',
+    async ({ input }) => {
+      await createNonVisitNote.onActivityCreated(
+        {
+          fields: {
+            author: nonVisitNoteResponseExample.bullets[0].author,
+            text: nonVisitNoteResponseExample.bullets[0].text,
+            chartDate: nonVisitNoteResponseExample.chart_date,
+            documentDate: nonVisitNoteResponseExample.document_date,
+            patient: nonVisitNoteResponseExample.patient,
+            practice: undefined,
+            tags: input,
+          },
+          settings,
+        } as any,
+        onComplete,
+        onError
+      )
+      expect(onError).not.toHaveBeenCalled()
+    }
+  )
 })

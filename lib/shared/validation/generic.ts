@@ -29,7 +29,11 @@ export const validateCommaSeparatedList = <
     .toLowerCase()
     .refine(
       (value) => {
-        const currentValues = value.split(',').map((el) => el.trim())
+        // remove any spaces and trailling comma
+        const currentValues = value
+          .replace(/,\s*$/, '')
+          .split(',')
+          .map((el) => el.trim())
 
         if (typeof possibleValuesOrValidator === 'function') {
           return currentValues.every(possibleValuesOrValidator)
