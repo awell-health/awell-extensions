@@ -86,6 +86,7 @@ export const updateNonVisitNote: Action<typeof fields, typeof settings> = {
         ...fields
       } = payload.fields
       const noteId = NumericIdSchema.parse(nonVisitNoteId)
+      // partial - all fields are optional
       const note = nonVisitNoteSchema.partial().parse({
         ...fields,
         bullets: [{ text, author }],

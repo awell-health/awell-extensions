@@ -148,7 +148,8 @@ export class ElationDataWrapper extends DataWrapper {
     obj: Partial<NonVisitNoteInput>
   ): Promise<NonVisitNoteResponse> {
     return await this.Request({
-      method: 'PUT',
+      // PATCH - makes all fields optional in Elation (PUT requires all fields)
+      method: 'PATCH',
       url: `/non_visit_notes/${id}`,
       data: obj,
     })
