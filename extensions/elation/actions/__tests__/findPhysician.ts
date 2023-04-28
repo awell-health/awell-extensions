@@ -29,7 +29,11 @@ describe('Simple find physician action', () => {
   test('Should return with correct data_points', async () => {
     await findPhysician.onActivityCreated(
       {
-        fields: {},
+        fields: {
+          firstName: undefined,
+          lastName: undefined,
+          npi: undefined,
+        },
         settings,
       } as any,
       onComplete,
@@ -58,7 +62,7 @@ describe('Simple find physician action', () => {
     })
     await findPhysician.onActivityCreated(
       {
-        fields: {},
+        fields: { firstName: undefined, lastName: undefined, npi: undefined },
         settings,
       } as any,
       onComplete,

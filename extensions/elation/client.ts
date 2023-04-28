@@ -105,10 +105,19 @@ export class ElationDataWrapper extends DataWrapper {
     await req
   }
 
-  public async findPhysicians(): Promise<ElationCollection<PhysicianResponse>> {
+  public async findPhysicians({
+    params,
+  }: {
+    params?: {
+      first_name?: string
+      last_name?: string
+      npi?: string
+    }
+  }): Promise<ElationCollection<PhysicianResponse>> {
     return await this.Request({
       method: 'GET',
       url: '/physicians/',
+      params,
     })
   }
 }
@@ -183,8 +192,18 @@ export class ElationAPIClient extends APIClient<ElationDataWrapper> {
     })
   }
 
-  public async findPhysicians(): Promise<ElationCollection<PhysicianResponse>> {
-    return await this.FetchData(async (dw) => await dw.findPhysicians())
+  public async findPhysicians({
+    params,
+  }: {
+    params?: {
+      first_name?: string
+      last_name?: string
+      npi?: string
+    }
+  }): Promise<ElationCollection<PhysicianResponse>> {
+    return await this.FetchData(
+      async (dw) => await dw.findPhysicians({ params })
+    )
   }
 }
 
