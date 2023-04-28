@@ -32,8 +32,8 @@ describe('Create non-visit note action', () => {
         fields: {
           author: nonVisitNoteResponseExample.bullets[0].author,
           text: nonVisitNoteResponseExample.bullets[0].text,
-          chart_date: nonVisitNoteResponseExample.chart_date,
-          document_date: nonVisitNoteResponseExample.document_date,
+          chartDate: nonVisitNoteResponseExample.chart_date,
+          documentDate: nonVisitNoteResponseExample.document_date,
           patient: nonVisitNoteResponseExample.patient,
           practice: undefined,
           tags: undefined,
@@ -61,8 +61,8 @@ describe('Create non-visit note action', () => {
         fields: {
           author: nonVisitNoteResponseExample.bullets[0].author,
           text: nonVisitNoteResponseExample.bullets[0].text,
-          chart_date: nonVisitNoteResponseExample.chart_date,
-          document_date: nonVisitNoteResponseExample.document_date,
+          chartDate: nonVisitNoteResponseExample.chart_date,
+          documentDate: nonVisitNoteResponseExample.document_date,
           patient: nonVisitNoteResponseExample.patient,
           practice: undefined,
           tags: undefined,

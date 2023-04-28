@@ -45,16 +45,15 @@ export const bulletSchema = z.object({
   category: bulletCategoryEnum.default(bulletCategoryEnum.enum.Problem),
 })
 
-export const nonVisitNoteSchema = z
-  .object({
-    type: nonVisitNoteTypeEnum.default(nonVisitNoteTypeEnum.enum.nonvisit),
-    patient: NumericIdSchema,
-    practice: NumericIdSchema.optional(),
-    document_date: DateTimeSchema,
-    chart_date: DateTimeSchema,
-    tags: validateCommaSeparatedList(
-      (value) => NumericIdSchema.safeParse(value).success,
-      true
-    ).optional(),
-  })
-  .and(bulletSchema.transform((bullet) => ({ bullets: [bullet] })))
+export const nonVisitNoteSchema = z.object({
+  type: nonVisitNoteTypeEnum.default(nonVisitNoteTypeEnum.enum.nonvisit),
+  bullets: z.array(bulletSchema),
+  patient: NumericIdSchema,
+  practice: NumericIdSchema.optional(),
+  document_date: DateTimeSchema,
+  chart_date: DateTimeSchema,
+  tags: validateCommaSeparatedList(
+    (value) => NumericIdSchema.safeParse(value).success,
+    true
+  ).optional(),
+})

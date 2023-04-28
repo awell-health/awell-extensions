@@ -42,15 +42,15 @@ const fields = {
     type: FieldType.NUMERIC,
     required: false,
   },
-  document_date: {
-    id: 'document_date',
+  documentDate: {
+    id: 'documentDate',
     label: 'Document Date',
     description: 'Date in ISO 8601 format',
     type: FieldType.DATE,
     required: true,
   },
-  chart_date: {
-    id: 'chart_date',
+  chartDate: {
+    id: 'chartDate',
     label: 'Chart Date',
     description: 'Date in ISO 8601 format',
     type: FieldType.DATE,
@@ -86,7 +86,14 @@ export const createNonVisitNote: Action<
   dataPoints,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
     try {
-      const note = nonVisitNoteSchema.parse(payload.fields)
+      const { author, chartDate, documentDate, text, ...fields } =
+        payload.fields
+      const note = nonVisitNoteSchema.parse({
+        ...fields,
+        bullets: [{ text, author }],
+        document_date: documentDate,
+        chart_date: chartDate,
+      })
 
       const api = makeAPIClient(payload.settings)
       const { id } = await api.createNonVisitNote(note)
