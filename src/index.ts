@@ -1,5 +1,8 @@
 import { createLightship } from 'lightship'
-import { ExtensionServer } from './ExtensionServer'
+import {
+  ExtensionActivityServer,
+  ExtensionWebhookServer,
+} from './ExtensionServer'
 import { extensions } from '../extensions'
 import { webServer } from './WebServer'
 import { environment } from '../lib/environment'
@@ -7,24 +10,37 @@ import { environment } from '../lib/environment'
 const start = async (): Promise<void> => {
   const lightship = await createLightship()
   const log = webServer.log
-  const extensionServer = new ExtensionServer({
+  const extensionActivityServer = new ExtensionActivityServer({
+    log,
+  })
+  const extensionWebhookServer = new ExtensionWebhookServer({
     log,
   })
   lightship.registerShutdownHandler(async () => {
-    log.info('Shutting down extension server')
-    await extensionServer.shutDown()
+    log.info('Shutting down extension activities server')
+    await extensionActivityServer.shutDown()
+    log.info('Shutting down extension webhook server')
+    await extensionWebhookServer.shutDown()
     log.info('Shutting down web server')
     await webServer.close()
   })
   try {
     await webServer.listen({ port: environment.PORT, host: '::' })
-    log.info('Initialising extension server')
-    await extensionServer.init()
+    log.info('Initialising extension activities server')
+    await extensionActivityServer.init()
     await extensions.reduce(async (register, extension) => {
       await register
-      await extensionServer.registerExtension(extension)
+      await extensionActivityServer.registerExtensionActivities(extension)
     }, Promise.resolve())
-    log.info('Extension registration completed successfully')
+    log.info('Extension activity registration completed successfully')
+    // doing the same thing with a webhooks server for now.
+    log.info('Initializing extension webhooks server')
+    await extensionWebhookServer.init()
+    await extensions.reduce(async (register, extension) => {
+      await register
+      await extensionWebhookServer.registerExtensionWebhooks(extension)
+    }, Promise.resolve())
+
     lightship.signalReady()
   } catch (err) {
     log.fatal(err, 'Extension server failed to start')
