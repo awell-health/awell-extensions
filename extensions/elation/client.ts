@@ -7,7 +7,7 @@ import {
   type AppointmentResponse,
   type AppointmentInput,
 } from './types/appointment'
-import { type ElationCollection, type Find } from './types/generic'
+import { type ElationCollection } from './types/generic'
 import { type PatientInput, type PatientResponse } from './types/patient'
 import {
   type Subscription,
@@ -78,7 +78,7 @@ export class ElationDataWrapper extends DataWrapper {
   }
 
   public async findSubscriptions(): Promise<Subscription[]> {
-    const req = this.Request<Find<Subscription[]>>({
+    const req = this.Request<ElationCollection<Subscription>>({
       method: 'GET',
       url: '/app/subscriptions/',
     })
