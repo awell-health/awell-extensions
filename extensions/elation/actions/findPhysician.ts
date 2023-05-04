@@ -85,7 +85,7 @@ export const findPhysician: Action<
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
     try {
       const { firstName, lastName, npi } = payload.fields
-      // API Call should produce AuthError or something dif.
+
       const api = makeAPIClient(payload.settings)
       const physiciansList = await api.findPhysicians({
         params: {
@@ -95,7 +95,7 @@ export const findPhysician: Action<
         },
       })
 
-      if (physiciansList.count > 1) {
+      if (physiciansList.count !== 1) {
         await onError({
           events: [
             {
