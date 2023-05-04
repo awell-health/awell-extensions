@@ -49,6 +49,14 @@ const fields = {
     type: FieldType.NUMERIC,
     required: false,
   },
+  category: {
+    id: 'category',
+    label: 'Category',
+    description:
+      'Category of a note. Defaults to "Problem". One from the list: "Problem", "Past", "Family", "Social", "Instr", "PE", "ROS", "Med", "Data", "Assessment", "Test", "Tx", "Narrative", "Followup", "Reason", "Plan", "Objective", "Hpi", "Allergies", "Habits", "Assessplan", "Consultant", "Attending", "Dateprocedure", "Surgical", "Orders", "Referenced", "Procedure".',
+    type: FieldType.STRING,
+    required: false,
+  },
   practice: {
     id: 'practice',
     label: 'Practice',
@@ -95,6 +103,7 @@ export const updateNonVisitNote: Action<typeof fields, typeof settings> = {
         chartDate,
         documentDate,
         text,
+        category,
         ...fields
       } = payload.fields
       const noteId = NumericIdSchema.parse(nonVisitNoteId)
@@ -103,7 +112,7 @@ export const updateNonVisitNote: Action<typeof fields, typeof settings> = {
         ...fields,
         bullets: isNil(nonVisitNoteBulletId)
           ? undefined
-          : [{ id: nonVisitNoteBulletId, text, author }],
+          : [{ id: nonVisitNoteBulletId, text, author, category }],
         document_date: documentDate,
         chart_date: chartDate,
       })

@@ -33,6 +33,7 @@ describe('Update non-visit note action', () => {
         nonVisitNoteBulletId: nonVisitNoteResponseExample.bullets[0].id,
         author: nonVisitNoteResponseExample.bullets[0].author,
         text: nonVisitNoteResponseExample.bullets[0].text,
+        category: nonVisitNoteResponseExample.bullets[0].category,
         chartDate: nonVisitNoteResponseExample.chart_date,
         documentDate: nonVisitNoteResponseExample.document_date,
         patient: nonVisitNoteResponseExample.patient,
@@ -49,6 +50,7 @@ describe('Update non-visit note action', () => {
         nonVisitNoteBulletId: 1,
         author: 1,
         text: 'abc',
+        category: 'Problem',
         chartDate: '2023-01-01',
         documentDate: '2023-01-01',
         patient: 101,
@@ -59,13 +61,14 @@ describe('Update non-visit note action', () => {
     {
       input: {
         nonVisitNoteId: 1,
-        nonVisitNoteBulletId: 1,
+        nonVisitNoteBulletId: undefined,
         author: undefined,
         text: undefined,
+        category: undefined,
         chartDate: undefined,
         documentDate: undefined,
         patient: undefined,
-        practice: undefined,
+        practice: 1,
         tags: undefined,
       },
     },
@@ -75,6 +78,7 @@ describe('Update non-visit note action', () => {
       nonVisitNoteBulletId: number
       author: number
       text: string
+      category: string
       chartDate: string
       documentDate: string
       patient: number

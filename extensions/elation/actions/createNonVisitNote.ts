@@ -35,6 +35,14 @@ const fields = {
     type: FieldType.NUMERIC,
     required: true,
   },
+  category: {
+    id: 'category',
+    label: 'Category',
+    description:
+      'Category of a note. Defaults to "Problem". One from the list: "Problem", "Past", "Family", "Social", "Instr", "PE", "ROS", "Med", "Data", "Assessment", "Test", "Tx", "Narrative", "Followup", "Reason", "Plan", "Objective", "Hpi", "Allergies", "Habits", "Assessplan", "Consultant", "Attending", "Dateprocedure", "Surgical", "Orders", "Referenced", "Procedure".',
+    type: FieldType.STRING,
+    required: false,
+  },
   practice: {
     id: 'practice',
     label: 'Practice',
@@ -90,11 +98,11 @@ export const createNonVisitNote: Action<
   dataPoints,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
     try {
-      const { author, chartDate, documentDate, text, ...fields } =
+      const { author, chartDate, documentDate, text, category, ...fields } =
         payload.fields
       const note = nonVisitNoteSchema.parse({
         ...fields,
-        bullets: [{ text, author }],
+        bullets: [{ text, author, category }],
         document_date: documentDate,
         chart_date: chartDate,
       })
