@@ -5,8 +5,8 @@ import {
   type Message,
 } from '@google-cloud/pubsub'
 import type { FastifyReply, FastifyRequest } from 'fastify'
-
 import { randomUUID } from 'crypto'
+import { isNil } from 'lodash'
 
 import { environment } from '../lib/environment'
 import type {
@@ -16,7 +16,6 @@ import type {
   WebhookPreProcessedPayload,
   WebhookProcessedPayload,
 } from '../lib/types'
-import { isNil } from 'lodash'
 
 const pubSubClient = new PubSub()
 
@@ -37,6 +36,10 @@ export const createAndRegisterHandler = async (
   reply: FastifyReply,
   extension: Extension
 ): Promise<RegisterHandlerResponse> => {
+
+  // deconstructing the request so the body can be used in its raw form to validate
+  // TODO: extract raw body
+  const { headers } = request
   // we must first create the callback constructor functions for the handler.
 
   /**
@@ -44,12 +47,14 @@ export const createAndRegisterHandler = async (
    * preProcessed subscription.
    * */
   const createOnErrorCallback = (
-    payload: WebhookPreProcessedPayload,
+    payload: WebhookPreProcessedPayload<any>,
     attributes: Attributes
   ): OnWebhookError => {
-    return async ({ response, events } = { response: { statusCode: 400 } }) => {
+    return async (params) => {
+      const { response = { statusCode: 400 }, events } = params
       const webhookProcessedPayload: WebhookProcessedPayload = {
         response,
+        events,
         inboundWebhookLogKey: payload.inboundWebhookLogRequestId,
       }
       const data = Buffer.from(JSON.stringify(webhookProcessedPayload))
@@ -71,14 +76,14 @@ export const createAndRegisterHandler = async (
    * set of datapoints that the orchestrator can add into the pathway.
    * */
   const createOnCompleteCallback = (
-    payload: WebhookPreProcessedPayload,
+    payload: WebhookPreProcessedPayload<any>,
     attributes: Attributes
   ): OnWebhookSuccess => {
-    return async (
-      { response, events, data_points } = { response: { statusCode: 200 } }
-    ) => {
+    return async (params) => {
+      const { response = {statusCode: 200 }, events, data_points } = params
       const webhookProcessedPayload: WebhookProcessedPayload = {
         response,
+        events,
         data_points,
         inboundWebhookLogKey: payload.inboundWebhookLogRequestId,
       }
@@ -93,25 +98,24 @@ export const createAndRegisterHandler = async (
 
   const webhookHandler = async (message: Message): Promise<void> => {
     const { data, attributes } = message
-    const payload: WebhookPreProcessedPayload = JSON.parse(String(data))
     const {
-      // extension: extensionKey, // i don't think we need this bc of above
       webhook_key: webhookActionKey,
-      headers,
     } = attributes
-    const theWebhook = extension.webhooks?.find(
+    const webhook = extension.webhooks?.find(
       (w) => w.key === webhookActionKey
-    )
-    if (isNil(theWebhook)) {
+      )
+    if (isNil(webhook)) {
       await reply
-        .code(404)
-        .send(`unable to find a webhook key with the name ${webhookActionKey}`)
+      .code(404)
+      .send(`unable to find a webhook key with the name ${webhookActionKey}`)
     } else {
-      console.log('handling webhook...')
-      await theWebhook.onWebhookReceived(
+      // I'm currently not sure what kind of "safety" this type definition provides...
+      const payload: WebhookPreProcessedPayload<Parameters<(typeof webhook)['onWebhookReceived']>[0]['payload']> = JSON.parse(String(data))
+      console.log(`processing webhook ${webhookActionKey}`)
+      await webhook.onWebhookReceived(
         {
           payload: payload.payload,
-          headers: JSON.parse(headers),
+          headers,
           rawBody: Buffer.from(String(payload)),
           settings: payload.settings,
         },

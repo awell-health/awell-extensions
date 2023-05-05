@@ -1,7 +1,7 @@
 import { createLightship } from 'lightship'
 import {
   ExtensionActivityServer,
-  ExtensionWebhookServer,
+  // ExtensionWebhookServer,
 } from './ExtensionServer'
 import { extensions } from '../extensions'
 import { webServer } from './WebServer'
@@ -13,14 +13,9 @@ const start = async (): Promise<void> => {
   const extensionActivityServer = new ExtensionActivityServer({
     log,
   })
-  const extensionWebhookServer = new ExtensionWebhookServer({
-    log,
-  })
   lightship.registerShutdownHandler(async () => {
     log.info('Shutting down extension activities server')
     await extensionActivityServer.shutDown()
-    log.info('Shutting down extension webhook server')
-    await extensionWebhookServer.shutDown()
     log.info('Shutting down web server')
     await webServer.close()
   })
@@ -33,14 +28,6 @@ const start = async (): Promise<void> => {
       await extensionActivityServer.registerExtensionActivities(extension)
     }, Promise.resolve())
     log.info('Extension activity registration completed successfully')
-    // doing the same thing with a webhooks server for now.
-    log.info('Initializing extension webhooks server')
-    await extensionWebhookServer.init()
-    await extensions.reduce(async (register, extension) => {
-      await register
-      await extensionWebhookServer.registerExtensionWebhooks(extension)
-    }, Promise.resolve())
-
     lightship.signalReady()
   } catch (err) {
     log.fatal(err, 'Extension server failed to start')
