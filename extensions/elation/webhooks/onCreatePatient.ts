@@ -1,4 +1,5 @@
 import { type DataPointDefinition, type Webhook } from '../../../lib/types'
+import { type PatientResponse } from '../types/patient'
 import { type SubscriptionEvent } from '../types/subscription'
 
 const dataPoints = {
@@ -14,9 +15,19 @@ export const onCreatePatient: Webhook<
 > = {
   key: 'onCreatePatient',
   dataPoints,
-  onWebhookReceived: async ({ data }) => {
-    return {
-      data_points: { patientId: String(data.id) },
+  onWebhookReceived: async ({ payload, settings }, onSuccess, onError) => {
+    if (payload.resource !== 'patients') {
+      await onError({
+        response: {
+          statusCode: 400,
+          message: 'wrong data resource'
+        }
+      })
+    } else {
+      const patientInfo = payload.data as PatientResponse
+      await onSuccess( {
+        data_points: { patientId: String(patientInfo.id) },
+      })
     }
   },
 }

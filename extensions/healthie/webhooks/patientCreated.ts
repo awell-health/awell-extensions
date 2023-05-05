@@ -1,4 +1,5 @@
 import { type DataPointDefinition, type Webhook } from '../../../lib/types'
+import { isNil } from 'lodash'
 
 const dataPoints = {
   patientId: {
@@ -16,9 +17,16 @@ interface Payload {
 export const patientCreated: Webhook<keyof typeof dataPoints, Payload> = {
   key: 'patientCreated',
   dataPoints,
-  onWebhookReceived: async ({ resource_id }) => ({
-    data_points: {
-      patientId: resource_id,
-    },
-  }),
+  onWebhookReceived: async ({ payload, settings}, onSuccess, onError) => {
+    const { resource_id } = payload
+    if (isNil(resource_id)) {
+      await onError({})
+    } else {
+      await onSuccess({
+        data_points: {
+          patientId: resource_id,
+        },
+      })
+    }
+  },
 }
