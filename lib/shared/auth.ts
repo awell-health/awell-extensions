@@ -1,6 +1,6 @@
 import * as Axios from 'axios'
 import { URLSearchParams } from 'url'
-import { type CacheService, NoCache } from './cache/cache'
+import { type CacheService, NoCache } from '../../src/cache/cache'
 import { createHash } from 'node:crypto'
 
 interface OAuthGrantRequestBase {
@@ -43,6 +43,7 @@ export interface OAuthAccessTokenResponse {
 export interface OAuthOpts {
   request_config: OAuthGrantRequest
   auth_url: string
+  cacheService?: CacheService<string>
 }
 
 /**
@@ -52,12 +53,14 @@ export interface OAuthOpts {
 export class OAuth {
   readonly grantRequest: OAuthGrantRequest
   readonly refreshRequest: (refreshTok: string) => OAuthRefreshTokenRequest
-  readonly cacheService: CacheService<string> = new NoCache()
+  readonly cacheService: CacheService<string>
   readonly _client: Axios.AxiosInstance
   private readonly configHash: string
 
-  public constructor({ auth_url, request_config }: OAuthOpts) {
+  public constructor({ auth_url, request_config, cacheService }: OAuthOpts) {
     this.grantRequest = { ...request_config }
+
+    this.cacheService = cacheService ?? new NoCache()
 
     // A hash used to identify the client in cache.
     this.configHash = createHash('sha256')
@@ -202,18 +205,17 @@ export class OAuth {
   }
 }
 
-export interface OAuthOptsWithoutGrantType<T> {
-  auth_url: string
+export interface OAuthOptsWithoutGrantType<T> extends Omit<OAuthOpts, 'request_config'> {
   request_config: Omit<T, 'grant_type'>
 }
 
 export class OAuthClientCredentials extends OAuth {
   public constructor({
-    auth_url,
     request_config,
+    ...rest
   }: OAuthOptsWithoutGrantType<OAuthGrantClientCredentialsRequest>) {
     super({
-      auth_url,
+      ...rest,
       request_config: { ...request_config, grant_type: 'client_credentials' },
     })
   }
@@ -221,11 +223,11 @@ export class OAuthClientCredentials extends OAuth {
 
 export class OAuthPassword extends OAuth {
   public constructor({
-    auth_url,
     request_config,
+    ...rest
   }: OAuthOptsWithoutGrantType<OAuthGrantPasswordRequest>) {
     super({
-      auth_url,
+      ...rest,
       request_config: { ...request_config, grant_type: 'password' },
     })
   }

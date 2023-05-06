@@ -1,9 +1,9 @@
 import MockAdapter from 'axios-mock-adapter'
-import { RedisCache } from '../cache/redis/redis'
+import { RedisCache } from '../../../src/cache/redis/redis'
 import { OAuth } from '../auth'
 import qs from 'querystring'
 
-jest.mock('../cache/redis/redis')
+jest.mock('../../../src/cache/redis/redis')
 
 class TestOAuth extends OAuth {
   readonly cacheService = new RedisCache({})
