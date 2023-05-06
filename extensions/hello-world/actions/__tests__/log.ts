@@ -19,7 +19,8 @@ describe('HelloWorld - log', () => {
         },
       },
       onComplete,
-      jest.fn()
+      jest.fn(),
+      {}
     )
     expect(onComplete).toHaveBeenCalled()
   })
@@ -41,7 +42,8 @@ describe('HelloWorld - log', () => {
         },
       },
       onComplete,
-      jest.fn()
+      jest.fn(),
+      {}
     )
     expect(onComplete).toHaveBeenCalled()
   })
@@ -63,7 +65,8 @@ describe('HelloWorld - log', () => {
         },
       },
       onComplete,
-      jest.fn()
+      jest.fn(),
+      {}
     )
     expect(onComplete).toHaveBeenCalled()
   })

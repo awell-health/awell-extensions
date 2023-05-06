@@ -61,7 +61,8 @@ describe('Search patients by patient code', () => {
         },
       },
       onComplete,
-      onError
+      onError,
+      {}
     )
 
     expect(mockFn).toHaveBeenCalled()

@@ -1,6 +1,6 @@
-import { getSdk } from "../../gql/sdk"
-import { mockGetSdk, mockGetSdkReturn } from "../../gql/__mocks__/sdk"
-import { completeTask } from "../completeTask"
+import { getSdk } from '../../gql/sdk'
+import { mockGetSdk, mockGetSdkReturn } from '../../gql/__mocks__/sdk'
+import { completeTask } from '../completeTask'
 
 jest.mock('../../gql/sdk')
 jest.mock('../../graphqlClient')
@@ -9,14 +9,14 @@ describe('completeTask action', () => {
   const onComplete = jest.fn()
 
   beforeAll(() => {
-    (getSdk as jest.Mock).mockImplementation(mockGetSdk)
+    ;(getSdk as jest.Mock).mockImplementation(mockGetSdk)
   })
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    jest.clearAllMocks()
   })
 
-  test("Should complete a task", async () => {
+  test('Should complete a task', async () => {
     await completeTask.onActivityCreated(
       {
         pathway: {
@@ -28,22 +28,23 @@ describe('completeTask action', () => {
         },
         patient: { id: 'test-patient' },
         fields: {
-          id: 'task-1'
+          id: 'task-1',
         },
         settings: {
           apiKey: 'apiKey',
-          apiUrl: 'test-url'
+          apiUrl: 'test-url',
         },
       },
       onComplete,
-      jest.fn()
+      jest.fn(),
+      {}
     )
 
     expect(mockGetSdkReturn.updateTask).toHaveBeenCalledWith({
       input: {
         id: 'task-1',
-        complete: true
-      }
+        complete: true,
+      },
     })
     expect(onComplete).toHaveBeenCalled()
   })

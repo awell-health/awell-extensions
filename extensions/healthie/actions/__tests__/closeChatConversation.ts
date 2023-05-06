@@ -1,6 +1,6 @@
-import { getSdk } from "../../gql/sdk"
-import { mockGetSdk, mockGetSdkReturn } from "../../gql/__mocks__/sdk"
-import { closeChatConversation } from "../closeChatConversation"
+import { getSdk } from '../../gql/sdk'
+import { mockGetSdk, mockGetSdkReturn } from '../../gql/__mocks__/sdk'
+import { closeChatConversation } from '../closeChatConversation'
 
 jest.mock('../../gql/sdk')
 jest.mock('../../graphqlClient')
@@ -9,14 +9,14 @@ describe('closeChatConversation action', () => {
   const onComplete = jest.fn()
 
   beforeAll(() => {
-    (getSdk as jest.Mock).mockImplementation(mockGetSdk)
+    ;(getSdk as jest.Mock).mockImplementation(mockGetSdk)
   })
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    jest.clearAllMocks()
   })
 
-  test("Should close a conversation", async () => {
+  test('Should close a conversation', async () => {
     await closeChatConversation.onActivityCreated(
       {
         pathway: {
@@ -29,22 +29,23 @@ describe('closeChatConversation action', () => {
         patient: { id: 'test-patient' },
         fields: {
           id: 'conversation-1',
-          provider_id: 'provider-1'
+          provider_id: 'provider-1',
         },
         settings: {
           apiKey: 'apiKey',
-          apiUrl: 'test-url'
+          apiUrl: 'test-url',
         },
       },
       onComplete,
-      jest.fn()
+      jest.fn(),
+      {}
     )
 
     expect(mockGetSdkReturn.updateConversation).toHaveBeenCalledWith({
       input: {
         id: 'conversation-1',
-        closed_by_id: 'provider-1'
-      }
+        closed_by_id: 'provider-1',
+      },
     })
     expect(onComplete).toHaveBeenCalled()
   })

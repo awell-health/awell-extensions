@@ -60,7 +60,8 @@ describe('Is patient already enrolled in care flow action', () => {
         },
       },
       onComplete,
-      onError
+      onError,
+      {}
     )
 
     // expect(mockFn).toHaveBeenCalled()
@@ -109,7 +110,8 @@ describe('Is patient already enrolled in care flow action', () => {
         },
       },
       onComplete,
-      onError
+      onError,
+      {}
     )
 
     expect(onComplete).toHaveBeenCalledWith({
@@ -164,7 +166,8 @@ describe('Is patient already enrolled in care flow action', () => {
         },
       },
       onComplete,
-      onError
+      onError,
+      {}
     )
 
     expect(onComplete).toHaveBeenCalledWith({
@@ -219,7 +222,8 @@ describe('Is patient already enrolled in care flow action', () => {
         },
       },
       onComplete,
-      onError
+      onError,
+      {}
     )
 
     expect(onComplete).toHaveBeenCalledWith({
@@ -281,7 +285,8 @@ describe('Is patient already enrolled in care flow action', () => {
         },
       },
       onComplete,
-      onError
+      onError,
+      {}
     )
 
     expect(onComplete).toHaveBeenCalledWith({

@@ -35,7 +35,8 @@ describe('Send voice message', () => {
         },
       },
       onComplete,
-      onError
+      onError,
+      {}
     )
     expect(onComplete).toHaveBeenCalled()
     expect(onError).not.toHaveBeenCalled()

@@ -32,7 +32,8 @@ describe('Upload files action', () => {
         },
       },
       onComplete,
-      jest.fn()
+      jest.fn(),
+      {}
     )
 
     /**

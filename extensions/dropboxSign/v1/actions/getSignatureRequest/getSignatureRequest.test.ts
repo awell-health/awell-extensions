@@ -58,7 +58,8 @@ describe('Get signature request action', () => {
         },
       },
       onComplete,
-      jest.fn()
+      jest.fn(),
+      {}
     )
 
     expect(mockFn).toHaveBeenCalled()

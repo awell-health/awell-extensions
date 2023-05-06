@@ -31,7 +31,8 @@ describe('Start care flow', () => {
         },
       },
       onComplete,
-      onError
+      onError,
+      {}
     )
     expect(onComplete).toHaveBeenCalled()
     expect(onError).not.toHaveBeenCalled()

@@ -31,7 +31,8 @@ describe('Simple sms notification action', () => {
         },
       },
       onComplete,
-      onError
+      onError,
+      {}
     )
     expect(onComplete).toHaveBeenCalled()
     expect(onError).not.toHaveBeenCalled()
@@ -59,7 +60,8 @@ describe('Simple sms notification action', () => {
         },
       },
       onComplete,
-      onError
+      onError,
+      {}
     )
     expect(onComplete).not.toHaveBeenCalled()
     expect(onError).toHaveBeenCalled()

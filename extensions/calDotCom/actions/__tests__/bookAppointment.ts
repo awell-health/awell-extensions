@@ -26,7 +26,8 @@ describe('Simple book appointment action', () => {
         },
       },
       onComplete,
-      jest.fn()
+      jest.fn(),
+      {}
     )
     expect(onComplete).not.toHaveBeenCalled()
   })

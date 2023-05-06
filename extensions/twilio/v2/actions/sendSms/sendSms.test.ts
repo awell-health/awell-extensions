@@ -31,7 +31,8 @@ describe('Send SMS action', () => {
         },
       },
       onComplete,
-      onError
+      onError,
+      {}
     )
     expect(onComplete).toHaveBeenCalled()
     expect(onError).not.toHaveBeenCalled()
@@ -59,7 +60,8 @@ describe('Send SMS action', () => {
         },
       },
       onComplete,
-      onError
+      onError,
+      {}
     )
     expect(onComplete).not.toHaveBeenCalled()
     expect(onError).toHaveBeenCalled()
@@ -87,7 +89,8 @@ describe('Send SMS action', () => {
         },
       },
       onComplete,
-      onError
+      onError,
+      {}
     )
     expect(onComplete).not.toHaveBeenCalled()
     expect(onError).toHaveBeenCalled()

@@ -51,7 +51,7 @@ describe('createTask action', () => {
   })
 
   test('Should create a task', async () => {
-    await createTask.onActivityCreated(samplePayload, onComplete, onError)
+    await createTask.onActivityCreated(samplePayload, onComplete, onError, {})
 
     expect(mockGetSdkReturn.createTask).toHaveBeenCalled()
     expect(onComplete).toHaveBeenCalledWith({
@@ -75,7 +75,8 @@ describe('createTask action', () => {
               },
             },
             onComplete,
-            onError
+            onError,
+            {}
           )
 
           expect(onComplete).toHaveBeenCalled()
@@ -93,7 +94,8 @@ describe('createTask action', () => {
             },
           },
           onComplete,
-          onError
+          onError,
+          {}
         )
 
         expect(onError).toHaveBeenCalled()
@@ -120,7 +122,8 @@ describe('createTask action', () => {
             },
           },
           onComplete,
-          onError
+          onError,
+          {}
         )
 
         expect(onComplete).toHaveBeenCalled()
@@ -148,7 +151,8 @@ describe('createTask action', () => {
             },
           },
           onComplete,
-          onError
+          onError,
+          {}
         )
 
         expect(onError).toHaveBeenCalled()
@@ -182,7 +186,8 @@ describe('createTask action', () => {
             },
           },
           onComplete,
-          onError
+          onError,
+          {}
         )
 
         expect(mockGetSdkReturn.createTask).toHaveBeenCalledWith({
@@ -210,7 +215,8 @@ describe('createTask action', () => {
             },
           },
           onComplete,
-          onError
+          onError,
+          {}
         )
 
         expect(onError).toHaveBeenCalled()
@@ -231,7 +237,8 @@ describe('createTask action', () => {
             },
           },
           onComplete,
-          onError
+          onError,
+          {}
         )
 
         expect(onComplete).toHaveBeenCalled()
@@ -259,7 +266,8 @@ describe('createTask action', () => {
             },
           },
           onComplete,
-          onError
+          onError,
+          {}
         )
 
         expect(onError).toHaveBeenCalled()

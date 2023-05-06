@@ -37,7 +37,8 @@ describe('Send email', () => {
         },
       },
       onComplete,
-      onError
+      onError,
+      {}
     )
 
     expect(onComplete).toHaveBeenCalled()
@@ -70,7 +71,8 @@ describe('Send email', () => {
         },
       },
       onComplete,
-      onError
+      onError,
+      {}
     )
     expect(onComplete).not.toHaveBeenCalled()
     expect(onError).toHaveBeenCalled()

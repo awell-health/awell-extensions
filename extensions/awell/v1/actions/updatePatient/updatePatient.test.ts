@@ -44,7 +44,8 @@ describe('Update patient', () => {
         },
       },
       onComplete,
-      onError
+      onError,
+      {}
     )
     expect(onComplete).toHaveBeenCalled()
     expect(onError).not.toHaveBeenCalled()
@@ -83,7 +84,8 @@ describe('Update patient', () => {
         },
       },
       onComplete,
-      onError
+      onError,
+      {}
     )
     expect(onComplete).not.toHaveBeenCalled()
     expect(onError).toHaveBeenCalledWith({
@@ -132,7 +134,8 @@ describe('Update patient', () => {
         },
       },
       onComplete,
-      onError
+      onError,
+      {}
     )
     expect(onComplete).not.toHaveBeenCalled()
     expect(onError).toHaveBeenCalledWith({

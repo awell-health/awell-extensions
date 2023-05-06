@@ -26,7 +26,8 @@ describe('Generate random number', () => {
     await generateRandomNumber.onActivityCreated(
       mockOnActivityCreateParams,
       onComplete,
-      onError
+      onError,
+      {}
     )
 
     expect(onComplete).toHaveBeenCalled()
@@ -49,7 +50,8 @@ describe('Generate random number', () => {
     await generateRandomNumber.onActivityCreated(
       mockOnActivityCreateParams,
       onComplete,
-      onError
+      onError,
+      {}
     )
 
     expect(onError).toHaveBeenCalled()
@@ -72,7 +74,8 @@ describe('Generate random number', () => {
     await generateRandomNumber.onActivityCreated(
       mockOnActivityCreateParams,
       onComplete,
-      onError
+      onError,
+      {}
     )
 
     expect(onError).toHaveBeenCalled()
@@ -95,7 +98,8 @@ describe('Generate random number', () => {
     await generateRandomNumber.onActivityCreated(
       mockOnActivityCreateParams,
       onComplete,
-      onError
+      onError,
+      {}
     )
 
     expect(onComplete).toBeCalledWith({

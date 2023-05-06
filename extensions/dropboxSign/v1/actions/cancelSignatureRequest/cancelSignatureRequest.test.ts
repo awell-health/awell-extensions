@@ -51,7 +51,8 @@ describe('Cancel signature request action', () => {
         },
       },
       onComplete,
-      onError
+      onError,
+      {}
     )
 
     expect(mockFn).toHaveBeenCalled()

@@ -37,7 +37,8 @@ describe('sendFormCompletionRequest action', () => {
         },
       },
       onComplete,
-      jest.fn()
+      jest.fn(),
+      {}
     )
 
     expect(mockGetSdkReturn.createFormCompletionRequest).toHaveBeenCalled()
