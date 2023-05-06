@@ -28,7 +28,8 @@ describe('Simple get patient action', () => {
         settings,
       } as any,
       onComplete,
-      jest.fn()
+      jest.fn(),
+      {}
     )
     expect(onComplete).toHaveBeenCalled()
     expect(onComplete).toBeCalledWith({
@@ -55,7 +56,8 @@ describe('Simple get patient action', () => {
         settings,
       } as any,
       onComplete,
-      onError
+      onError,
+      {}
     )
     expect(onError).toHaveBeenCalled()
     expect(onError).toHaveReturnedWith(

@@ -8,10 +8,11 @@ import {
 } from '../../../lib/types'
 import { Category } from '../../../lib/types/marketplace'
 import { type settings } from '../settings'
-import { makeAPIClient } from '../client'
+import { elationAPIClientInjector } from '../clientUtils'
 import { fromZodError } from 'zod-validation-error'
 import { AxiosError } from 'axios'
 import { patientSchema } from '../validation/patient.zod'
+import { wrapActivity } from '../../../lib/shared/wrapActivity'
 
 const fields = {
   first_name: {
@@ -164,65 +165,67 @@ export const createPatient: Action<
   fields,
   previewable: true,
   dataPoints,
-  onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
-    try {
-      const patient = patientSchema.parse(payload.fields)
+  onActivityCreated: wrapActivity(elationAPIClientInjector)(
+    async (payload, onComplete, onError, options, api): Promise<void> => {
+      try {
+        const patient = patientSchema.parse(payload.fields)
 
-      // API Call should produce AuthError or something dif.
-      const api = makeAPIClient(payload.settings)
-      const { id } = await api.createPatient(patient)
-      await onComplete({
-        data_points: {
-          patientId: String(id),
-        },
-      })
-    } catch (err) {
-      if (err instanceof ZodError) {
-        const error = fromZodError(err)
-        await onError({
-          events: [
-            {
-              date: new Date().toISOString(),
-              text: { en: error.message },
-              error: {
-                category: 'WRONG_INPUT',
-                message: error.message,
-              },
-            },
-          ],
+        const { id } = await api.createPatient(patient)
+        await onComplete({
+          data_points: {
+            patientId: String(id),
+          },
         })
-      } else if (err instanceof AxiosError) {
-        await onError({
-          events: [
-            {
-              date: new Date().toISOString(),
-              text: {
-                en: `${err.status ?? '(no status code)'} Error: ${err.message}`,
+      } catch (err) {
+        if (err instanceof ZodError) {
+          const error = fromZodError(err)
+          await onError({
+            events: [
+              {
+                date: new Date().toISOString(),
+                text: { en: error.message },
+                error: {
+                  category: 'WRONG_INPUT',
+                  message: error.message,
+                },
               },
-              error: {
-                category: 'SERVER_ERROR',
-                message: `${err.status ?? '(no status code)'} Error: ${
-                  err.message
-                }`,
+            ],
+          })
+        } else if (err instanceof AxiosError) {
+          await onError({
+            events: [
+              {
+                date: new Date().toISOString(),
+                text: {
+                  en: `${err.status ?? '(no status code)'} Error: ${
+                    err.message
+                  }`,
+                },
+                error: {
+                  category: 'SERVER_ERROR',
+                  message: `${err.status ?? '(no status code)'} Error: ${
+                    err.message
+                  }`,
+                },
               },
-            },
-          ],
-        })
-      } else {
-        const message = (err as Error).message
-        await onError({
-          events: [
-            {
-              date: new Date().toISOString(),
-              text: { en: message },
-              error: {
-                category: 'SERVER_ERROR',
-                message,
+            ],
+          })
+        } else {
+          const message = (err as Error).message
+          await onError({
+            events: [
+              {
+                date: new Date().toISOString(),
+                text: { en: message },
+                error: {
+                  category: 'SERVER_ERROR',
+                  message,
+                },
               },
-            },
-          ],
-        })
+            ],
+          })
+        }
       }
     }
-  },
+  ),
 }

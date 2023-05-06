@@ -34,6 +34,7 @@ describe('Redis token cache', () => {
   })
 
   afterAll(async () => {
+    await cache.destroy()
     await container.stop()
   })
 

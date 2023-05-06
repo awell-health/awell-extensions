@@ -27,7 +27,8 @@ describe('Simple create appointment action', () => {
         settings,
       } as any,
       onComplete,
-      jest.fn()
+      jest.fn(),
+      {}
     )
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {

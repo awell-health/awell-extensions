@@ -1,16 +1,21 @@
-import { type CacheService } from '../cache'
+import { Cache } from '../cache'
 
 import { createClient, type RedisClientType } from 'redis'
 
-export class RedisCache implements CacheService<string> {
+export class RedisCache extends Cache<string> {
   private readonly client: RedisClientType
 
   constructor({ client }: { client?: RedisClientType }) {
+    super()
     this.client = client ?? createClient()
   }
 
   async init(): Promise<void> {
     await this.client.connect()
+  }
+
+  async destroy(): Promise<void> {
+    await this.client.disconnect()
   }
 
   async set(key: string, data: string, expiresAt?: number): Promise<void> {

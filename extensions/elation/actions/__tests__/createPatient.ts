@@ -44,7 +44,8 @@ describe('Simple create patient action', () => {
         settings,
       } as any,
       onComplete,
-      jest.fn()
+      jest.fn(),
+      {}
     )
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {

@@ -16,8 +16,8 @@ const ElationAPIClientMock = jest.fn().mockImplementation((params) => {
         id: 1,
         ...appointmentExample,
         service_location: {
-          id: appointmentExample.service_location
-        }
+          id: appointmentExample.service_location,
+        },
       }
     }),
     getAppointment: jest.fn((params) => {
@@ -25,22 +25,11 @@ const ElationAPIClientMock = jest.fn().mockImplementation((params) => {
         id: 1,
         ...appointmentExample,
         service_location: {
-          id: appointmentExample.service_location
-        }
+          id: appointmentExample.service_location,
+        },
       }
     }),
   }
 })
 
-const { makeAPIClient } = jest.requireActual('../client')
-
-const makeAPIClientMock = jest.fn((args) => {
-  makeAPIClient(args)
-
-  return new ElationAPIClientMock(args)
-})
-
-export {
-  ElationAPIClientMock as ElationAPIClient,
-  makeAPIClientMock as makeAPIClient,
-}
+export { ElationAPIClientMock as ElationAPIClient }

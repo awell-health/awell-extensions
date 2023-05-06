@@ -27,7 +27,8 @@ describe('Simple get appointment action', () => {
         settings,
       } as any,
       onComplete,
-      jest.fn()
+      jest.fn(),
+      {}
     )
     const {
       patient,

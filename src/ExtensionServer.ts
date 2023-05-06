@@ -13,6 +13,8 @@ import {
   type OnErrorCallback,
 } from '../lib/types'
 import { type Extension } from '../lib/types/Extension'
+import { type CacheService } from './cache/cache'
+import { InMemoryCache } from './cache/memory/memory'
 
 export class ExtensionServer {
   log: FastifyBaseLogger
@@ -20,6 +22,7 @@ export class ExtensionServer {
   activityCreatedTopic: Topic
   activityCompletedTopic: Topic
   subscriptions: Subscription[] = []
+  authCacheService: CacheService<string>
 
   constructor({ log }: { log: FastifyBaseLogger }) {
     const pubSubClient = new PubSub()
@@ -31,6 +34,7 @@ export class ExtensionServer {
       environment.EXTENSION_ACTIVITY_COMPLETED_TOPIC
     )
     this.clients = [pubSubClient]
+    this.authCacheService = new InMemoryCache({ maxEntries: 500 })
   }
 
   async init(): Promise<void> {
@@ -161,7 +165,10 @@ export class ExtensionServer {
               void action.onActivityCreated(
                 payload,
                 createOnCompleteCallback(payload, attributes),
-                createOnErrorCallback(payload, attributes)
+                createOnErrorCallback(payload, attributes),
+                {
+                  authCacheService: this.authCacheService,
+                }
               )
             }
             await message.ackWithResponse()
@@ -188,6 +195,7 @@ export class ExtensionServer {
   }
 
   async shutDown(): Promise<void> {
+    await this.authCacheService.destroy()
     await this.subscriptions.reduce(async (close, subscription) => {
       await close
       this.log.debug(

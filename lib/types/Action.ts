@@ -5,6 +5,7 @@ import { type OnCompleteCallback } from './OnCompleteCallback'
 import { type OnErrorCallback } from './OnErrorCallback'
 import { type DataPointDefinition } from './DataPointDefinition'
 import { type Category } from './marketplace'
+import { type CacheService } from '../../src/cache/cache'
 
 export interface Action<
   Fields extends FieldsType,
@@ -21,7 +22,10 @@ export interface Action<
   onActivityCreated: (
     payload: NewActivityPayload<Fields, Settings>,
     onComplete: OnCompleteCallback<DPKeys>,
-    onError: OnErrorCallback
+    onError: OnErrorCallback,
+    options: {
+      authCacheService?: CacheService<string>
+    }
   ) => Promise<void>
   // @Deprecated. Don't use unless you absolutely have to
   options?: {

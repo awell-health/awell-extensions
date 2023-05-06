@@ -1,4 +1,4 @@
-import { type CacheService } from '../cache'
+import { Cache } from '../cache'
 import { LRU } from './lru'
 
 interface CacheElement<T> {
@@ -6,16 +6,15 @@ interface CacheElement<T> {
   expiresAt?: number
 }
 
-export class InMemoryCache implements CacheService<string> {
+export class InMemoryCache extends Cache<string> {
   private readonly maxEntries: number
   private readonly lru: LRU<CacheElement<string>>
 
   constructor({ maxEntries }: { maxEntries?: number }) {
+    super()
     this.maxEntries = maxEntries ?? -1
     this.lru = new LRU<CacheElement<string>>(this.maxEntries)
   }
-
-  init(): void {}
 
   set(key: string, data: string, expiresAt?: number): void {
     this.lru.set(key, { value: data, expiresAt })

@@ -17,8 +17,7 @@ import {
   type OAuthGrantPasswordRequest,
   OAuthPassword,
 } from '../../lib/shared/auth'
-import { settingsSchema } from './validation/settings.zod'
-import { type settings } from './settings'
+import type { CacheService } from '../../src/cache/cache'
 
 export class ElationDataWrapper extends DataWrapper {
   public async getAppointment(id: number): Promise<AppointmentResponse> {
@@ -110,6 +109,7 @@ interface ElationAPIClientConstructorProps {
   authUrl: string
   requestConfig: Omit<OAuthGrantPasswordRequest, 'grant_type'>
   baseUrl: string
+  cacheService?: CacheService<string>
 }
 
 export class ElationAPIClient extends APIClient<ElationDataWrapper> {
@@ -121,11 +121,13 @@ export class ElationAPIClient extends APIClient<ElationDataWrapper> {
   public constructor({
     authUrl,
     requestConfig,
+    cacheService,
     ...opts
   }: ElationAPIClientConstructorProps) {
     super({
       ...opts,
       auth: new OAuthPassword({
+        cacheService,
         auth_url: authUrl,
         request_config: requestConfig,
       }),
@@ -174,17 +176,4 @@ export class ElationAPIClient extends APIClient<ElationDataWrapper> {
       await dw.deleteSubscription(id)
     })
   }
-}
-
-export const makeAPIClient = (
-  payloadSettings: Record<keyof typeof settings, string | undefined>
-): ElationAPIClient => {
-  const { base_url, auth_url, ...auth_request_settings } =
-    settingsSchema.parse(payloadSettings)
-
-  return new ElationAPIClient({
-    authUrl: auth_url,
-    requestConfig: auth_request_settings,
-    baseUrl: base_url,
-  })
 }
