@@ -4,6 +4,8 @@ class RedisCacheMock implements CacheService<string> {
   private readonly storage: Map<string, { value: string; expiresAt?: number }> =
     new Map<string, { value: string; expiresAt?: number }>()
 
+  async init(): Promise<void> {}
+
   async set(key: string, data: string, expiresAt?: number): Promise<void> {
     this.storage.set(key, { value: data, expiresAt })
   }

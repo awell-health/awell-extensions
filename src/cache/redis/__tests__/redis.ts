@@ -3,10 +3,10 @@ import { createClient } from 'redis'
 import { GenericContainer, type StartedTestContainer } from 'testcontainers'
 import { type CacheService } from '../../cache'
 
-jest.unmock('redis');
+jest.unmock('redis')
 
 // Set a longer timeout since we need to pull redis image
-jest.setTimeout(120 * 1000);
+jest.setTimeout(120 * 1000)
 
 describe('Redis token cache', () => {
   const key = 'test-key'
@@ -29,6 +29,8 @@ describe('Redis token cache', () => {
         },
       }),
     })
+
+    await cache.init()
   })
 
   afterAll(async () => {

@@ -1,4 +1,5 @@
 export interface CacheService<T> {
+  init: () => void | Promise<void>;
   get: (key: string) => T | null | Promise<T | null>;
   /**
    * Associates a key with a value
@@ -15,6 +16,7 @@ export interface CacheService<T> {
  * A dummy cache class
  */
 export class NoCache implements CacheService<any> {
+  init(): void {}
   get(key: string): null { return null }
   set(key: string, data: any): void {}
   unset(key: string): void {}

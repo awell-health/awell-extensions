@@ -15,6 +15,8 @@ export class InMemoryCache implements CacheService<string> {
     this.lru = new LRU<CacheElement<string>>(this.maxEntries)
   }
 
+  init(): void {}
+
   set(key: string, data: string, expiresAt?: number): void {
     this.lru.set(key, { value: data, expiresAt })
   }
