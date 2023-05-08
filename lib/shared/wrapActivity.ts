@@ -1,26 +1,15 @@
 import type {
-  Action,
   Fields as FieldsType,
   Settings as SettingsType,
   WrappedOnActivityCreated,
   ActivityWrapperInjector,
+  RequiredServices,
+  ActionWithServices,
 } from '../types'
 
-type MultipleInjectors<AdditionalArgs extends unknown[][]> = {
-  [N in keyof AdditionalArgs]: ActivityWrapperInjector<AdditionalArgs[N]>
-}
-
-type Flatten<T> = T extends []
-  ? []
-  : T extends [infer T0]
-  ? [...Flatten<T0>]
-  : T extends [infer T0, ...infer Ts]
-  ? [...Flatten<T0>, ...Flatten<Ts>]
-  : [T]
-
 export const wrapActivity =
-  <AdditionalArgs extends unknown[][]>(
-    ...injectors: MultipleInjectors<AdditionalArgs>
+  <AdditionalArgs extends unknown[], Services extends RequiredServices>(
+    injector: ActivityWrapperInjector<AdditionalArgs, Services>
   ) =>
   <
     Fields extends FieldsType,
@@ -28,18 +17,18 @@ export const wrapActivity =
     DPKeys extends string = string
   >(
     wrappedFunction: WrappedOnActivityCreated<
-      Flatten<AdditionalArgs>,
+      AdditionalArgs,
       Fields,
       Settings,
-      DPKeys
+      DPKeys,
+      Services
     >
-  ): Action<Fields, Settings, DPKeys>['onActivityCreated'] =>
+  ): ActionWithServices<
+    Fields,
+    Settings,
+    Services,
+    DPKeys
+  >['onActivityCreated'] =>
   async (...args) => {
-    console.log(injectors)
-    await wrappedFunction(
-      ...args,
-      ...(injectors.flatMap((injector) =>
-        injector(...args)
-      ) as Flatten<AdditionalArgs>)
-    )
+    await wrappedFunction(...args, ...injector(...args))
   }

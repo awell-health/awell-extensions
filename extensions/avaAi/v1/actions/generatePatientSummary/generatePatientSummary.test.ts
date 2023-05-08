@@ -38,8 +38,7 @@ describe('Generate patient summary with Open AI', () => {
         },
       },
       onComplete,
-      onError,
-      {}
+      onError
     )
 
     expect(onComplete).toHaveBeenCalled()

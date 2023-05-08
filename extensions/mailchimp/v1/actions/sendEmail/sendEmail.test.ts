@@ -34,8 +34,7 @@ describe('Send email', () => {
         },
       },
       onComplete,
-      onError,
-      {}
+      onError
     )
 
     expect(onComplete).toHaveBeenCalled()

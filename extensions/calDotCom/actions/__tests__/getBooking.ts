@@ -27,8 +27,7 @@ describe('Simple getBooking action', () => {
         },
       },
       onComplete,
-      jest.fn(),
-      {}
+      jest.fn()
     )
     expect(onComplete).toHaveBeenCalled()
   })

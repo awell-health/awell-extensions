@@ -7,14 +7,17 @@ import {
 } from '@google-cloud/pubsub'
 import { type FastifyBaseLogger } from 'fastify'
 import { environment } from '../lib/environment'
-import {
-  type NewActivityPayload,
-  type OnCompleteCallback,
-  type OnErrorCallback,
+import type {
+  NewActivityPayload,
+  OnCompleteCallback,
+  OnErrorCallback,
+  PickedServices,
+  Extension,
 } from '../lib/types'
-import { type Extension } from '../lib/types/Extension'
-import { type CacheService } from './cache/cache'
 import { InMemoryCache } from './cache/memory/memory'
+import { ServiceContainer } from './ServiceContainer'
+import type { Services } from './services'
+import type { CacheService } from './cache/cache'
 
 export class ExtensionServer {
   log: FastifyBaseLogger
@@ -22,7 +25,7 @@ export class ExtensionServer {
   activityCreatedTopic: Topic
   activityCompletedTopic: Topic
   subscriptions: Subscription[] = []
-  authCacheService: CacheService<string>
+  serviceContainer: ServiceContainer<keyof Services>
 
   constructor({ log }: { log: FastifyBaseLogger }) {
     const pubSubClient = new PubSub()
@@ -34,7 +37,12 @@ export class ExtensionServer {
       environment.EXTENSION_ACTIVITY_COMPLETED_TOPIC
     )
     this.clients = [pubSubClient]
-    this.authCacheService = new InMemoryCache({ maxEntries: 500 })
+    this.serviceContainer = new ServiceContainer<keyof Services>()
+
+    this.serviceContainer.register(
+      'authCacheService',
+      () => new InMemoryCache({ maxEntries: 500 })
+    )
   }
 
   async init(): Promise<void> {
@@ -162,14 +170,30 @@ export class ExtensionServer {
                 String(message.data)
               )
               this.log.debug(payload, 'New activity payload received')
-              void action.onActivityCreated(
-                payload,
-                createOnCompleteCallback(payload, attributes),
-                createOnErrorCallback(payload, attributes),
-                {
-                  authCacheService: this.authCacheService,
-                }
-              )
+
+              if ('services' in action) {
+                const serviceNames = action.services
+
+                const services =
+                  serviceNames == null
+                    ? undefined
+                    : await Promise.all(
+                      serviceNames.map(this.serviceContainer.get)
+                    )
+
+                void action.onActivityCreated(
+                  payload,
+                  createOnCompleteCallback(payload, attributes),
+                  createOnErrorCallback(payload, attributes),
+                  services as PickedServices<typeof serviceNames>
+                )
+              } else {
+                void action.onActivityCreated(
+                  payload,
+                  createOnCompleteCallback(payload, attributes),
+                  createOnErrorCallback(payload, attributes),
+                )
+              }
             }
             await message.ackWithResponse()
           }
@@ -195,7 +219,9 @@ export class ExtensionServer {
   }
 
   async shutDown(): Promise<void> {
-    await this.authCacheService.destroy()
+    await (
+      await this.serviceContainer.get<CacheService<string>>('authCacheService')
+    ).destroy()
     await this.subscriptions.reduce(async (close, subscription) => {
       await close
       this.log.debug(

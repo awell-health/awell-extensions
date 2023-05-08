@@ -36,8 +36,7 @@ describe('deleteAppointment action', () => {
         },
       },
       onComplete,
-      jest.fn(),
-      {}
+      jest.fn()
     )
 
     expect(mockGetSdkReturn.deleteAppointment).toHaveBeenCalledWith({

@@ -2,18 +2,17 @@
 import { ZodError } from 'zod'
 import {
   FieldType,
-  type Action,
   type DataPointDefinition,
   type Field,
 } from '../../../lib/types'
 import { Category } from '../../../lib/types/marketplace'
-import { type settings } from '../settings'
 import { elationAPIClientInjector } from '../clientUtils'
 import { fromZodError } from 'zod-validation-error'
 import { AxiosError } from 'axios'
 import { patientSchema } from '../validation/patient.zod'
 import { numberId } from '../validation/generic.zod'
 import { wrapActivity } from '../../../lib/shared/wrapActivity'
+import type { ElationAction } from '../types/action'
 
 const fields = {
   patient_id: {
@@ -156,9 +155,8 @@ const fields = {
 
 const dataPoints = {} satisfies Record<string, DataPointDefinition>
 
-export const updatePatient: Action<
+export const updatePatient: ElationAction<
   typeof fields,
-  typeof settings,
   keyof typeof dataPoints
 > = {
   key: 'updatePatient',
@@ -168,8 +166,9 @@ export const updatePatient: Action<
   fields,
   previewable: true,
   dataPoints,
+  services: ['authCacheService'],
   onActivityCreated: wrapActivity(elationAPIClientInjector)(
-    async (payload, onComplete, onError, options, api): Promise<void> => {
+    async (payload, onComplete, onError, services, api): Promise<void> => {
       try {
         const { patient_id, ...patientFields } = payload.fields
         const patient = patientSchema.parse(patientFields)

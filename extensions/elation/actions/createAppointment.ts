@@ -2,17 +2,16 @@
 import { ZodError } from 'zod'
 import {
   FieldType,
-  type Action,
   type DataPointDefinition,
   type Field,
 } from '../../../lib/types'
 import { Category } from '../../../lib/types/marketplace'
-import { type settings } from '../settings'
 import { elationAPIClientInjector } from '../clientUtils'
 import { fromZodError } from 'zod-validation-error'
 import { AxiosError } from 'axios'
 import { appointmentSchema } from '../validation/appointment.zod'
 import { wrapActivity } from '../../../lib/shared/wrapActivity'
+import type { ElationAction } from '../types/action'
 
 const fields = {
   scheduled_date: {
@@ -85,9 +84,8 @@ const dataPoints = {
   },
 } satisfies Record<string, DataPointDefinition>
 
-export const createAppointment: Action<
+export const createAppointment: ElationAction<
   typeof fields,
-  typeof settings,
   keyof typeof dataPoints
 > = {
   key: 'createAppointment',
@@ -97,8 +95,9 @@ export const createAppointment: Action<
   fields,
   previewable: true,
   dataPoints,
+  services: ['authCacheService'],
   onActivityCreated: wrapActivity(elationAPIClientInjector)(
-    async (payload, onComplete, onError, options, api): Promise<void> => {
+    async (payload, onComplete, onError, services, api): Promise<void> => {
       try {
         const appointment = appointmentSchema.parse(payload.fields)
         const { id } = await api.createAppointment(appointment)

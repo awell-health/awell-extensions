@@ -36,8 +36,7 @@ describe('deleteTask action', () => {
         },
       },
       onComplete,
-      jest.fn(),
-      {}
+      jest.fn()
     )
 
     expect(mockGetSdkReturn.deleteTask).toHaveBeenCalledWith({

@@ -64,8 +64,7 @@ describe('getPatient action', () => {
             },
           },
           onComplete,
-          jest.fn(),
-          {}
+          jest.fn()
         )
 
         expect(onComplete).toHaveBeenCalledWith({
@@ -119,8 +118,7 @@ describe('getPatient action', () => {
             },
           },
           onComplete,
-          jest.fn(),
-          {}
+          jest.fn()
         )
 
         expect(onComplete).toHaveBeenCalledWith({
@@ -221,8 +219,7 @@ describe('getPatient action', () => {
             },
           },
           onComplete,
-          jest.fn(),
-          {}
+          jest.fn()
         )
 
         expect(onComplete).toHaveBeenCalledWith({
@@ -278,8 +275,7 @@ describe('getPatient action', () => {
             },
           },
           onComplete,
-          jest.fn(),
-          {}
+          jest.fn()
         )
 
         expect(onComplete).toHaveBeenCalledWith({

@@ -97,8 +97,7 @@ describe('Create embedded signature request with template', () => {
         },
       },
       onComplete,
-      jest.fn(),
-      {}
+      jest.fn()
     )
 
     expect(mocksignatureRequestCreateEmbeddedWithTemplate).toHaveBeenCalled()

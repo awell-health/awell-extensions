@@ -29,8 +29,7 @@ describe('Complete flow action', () => {
         },
       },
       onComplete,
-      jest.fn(),
-      {}
+      jest.fn()
     )
 
     /**

@@ -59,8 +59,7 @@ describe('Send request reminder action', () => {
         },
       },
       onComplete,
-      jest.fn(),
-      {}
+      jest.fn()
     )
 
     expect(mockFn).toHaveBeenCalled()

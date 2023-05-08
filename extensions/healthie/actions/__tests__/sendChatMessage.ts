@@ -38,8 +38,7 @@ describe('sendChatMessage action', () => {
         },
       },
       onComplete,
-      jest.fn(),
-      {}
+      jest.fn()
     )
 
     expect(mockGetSdkReturn.getConversationList).toHaveReturnedWith({ data: { conversationMemberships: [] } })
@@ -87,8 +86,7 @@ describe('sendChatMessage action', () => {
         },
       },
       onComplete,
-      jest.fn(),
-      {}
+      jest.fn()
     )
 
     expect(mockGetSdkReturn.createConversation).not.toHaveBeenCalled()

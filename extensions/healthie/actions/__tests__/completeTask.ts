@@ -36,8 +36,7 @@ describe('completeTask action', () => {
         },
       },
       onComplete,
-      jest.fn(),
-      {}
+      jest.fn()
     )
 
     expect(mockGetSdkReturn.updateTask).toHaveBeenCalledWith({

@@ -3,15 +3,18 @@ import type { Settings as SettingsType } from './Settings'
 import type { NewActivityPayload } from './NewActivityPayload'
 import type { OnCompleteCallback } from './OnCompleteCallback'
 import type { OnErrorCallback } from './OnErrorCallback'
-import type { CacheService } from '../../src/cache/cache'
+import type { PickedServices, RequiredServices } from './Action'
 
-export type ActivityWrapperInjector<AdditionalArgs extends unknown[]> = <
+export type ActivityWrapperInjector<
+  AdditionalArgs extends unknown[],
+  Services extends RequiredServices | undefined = undefined
+> = <
   Fields extends FieldsType,
   Settings extends SettingsType,
-  DPKeys extends string = string
+  DPKeys extends string = string,
 >(
   payload: NewActivityPayload<Fields, Settings>,
   onComplete: OnCompleteCallback<DPKeys>,
   onError: OnErrorCallback,
-  options: { authCacheService?: CacheService<string> }
+  services: PickedServices<Services>
 ) => AdditionalArgs

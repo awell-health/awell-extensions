@@ -5,11 +5,20 @@ import { type OnCompleteCallback } from './OnCompleteCallback'
 import { type OnErrorCallback } from './OnErrorCallback'
 import { type DataPointDefinition } from './DataPointDefinition'
 import { type Category } from './marketplace'
-import { type CacheService } from '../../src/cache/cache'
+import { type Services } from '../../src/services'
 
-export interface Action<
+export type RequiredServices = ReadonlyArray<keyof Services>
+
+type UnionOf<T extends RequiredServices | undefined> = {
+  [N in keyof T]: T[N]
+}[keyof T & number]
+export type PickedServices<T extends RequiredServices | undefined> = Pick<
+  Services,
+  UnionOf<T> & keyof Services
+>
+
+interface CommonActionProps<
   Fields extends FieldsType,
-  Settings extends SettingsType,
   DPKeys extends string = string
 > {
   key: string
@@ -19,14 +28,6 @@ export interface Action<
   dataPoints?: Record<DPKeys, DataPointDefinition>
   fields: Fields
   previewable?: boolean
-  onActivityCreated: (
-    payload: NewActivityPayload<Fields, Settings>,
-    onComplete: OnCompleteCallback<DPKeys>,
-    onError: OnErrorCallback,
-    options: {
-      authCacheService?: CacheService<string>
-    }
-  ) => Promise<void>
   // @Deprecated. Don't use unless you absolutely have to
   options?: {
     stakeholders?: {
@@ -35,3 +36,39 @@ export interface Action<
     }
   }
 }
+
+export interface ActionWithoutServices<
+  Fields extends FieldsType,
+  Settings extends SettingsType,
+  DPKeys extends string = string
+> extends CommonActionProps<Fields, DPKeys> {
+  onActivityCreated: (
+    payload: NewActivityPayload<Fields, Settings>,
+    onComplete: OnCompleteCallback<DPKeys>,
+    onError: OnErrorCallback
+  ) => Promise<void>
+}
+
+export interface ActionWithServices<
+  Fields extends FieldsType,
+  Settings extends SettingsType,
+  Services extends RequiredServices,
+  DPKeys extends string = string
+> extends CommonActionProps<Fields, DPKeys> {
+  services: Services
+  onActivityCreated: (
+    payload: NewActivityPayload<Fields, Settings>,
+    onComplete: OnCompleteCallback<DPKeys>,
+    onError: OnErrorCallback,
+    services: PickedServices<Services>
+  ) => Promise<void>
+}
+
+export type Action<
+  Fields extends FieldsType,
+  Settings extends SettingsType,
+  DPKeys extends string = string,
+  Services extends RequiredServices | undefined = undefined
+> = Services extends undefined
+  ? ActionWithoutServices<Fields, Settings, DPKeys>
+  : ActionWithServices<Fields, Settings, Services & RequiredServices, DPKeys>

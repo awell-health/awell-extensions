@@ -37,8 +37,7 @@ describe('removeTagFromPatient action', () => {
         },
       },
       onComplete,
-      jest.fn(),
-      {}
+      jest.fn()
     )
 
     expect(mockGetSdkReturn.removeTagFromUser).toHaveBeenCalled()

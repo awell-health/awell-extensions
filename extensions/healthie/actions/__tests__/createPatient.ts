@@ -45,8 +45,7 @@ describe('createPatient action', () => {
         },
       },
       onComplete,
-      jest.fn(),
-      {}
+      jest.fn()
     )
 
     expect(mockGetSdkReturn.createPatient).toHaveBeenCalled()

@@ -20,7 +20,8 @@ export const makeAPIClient = (
 }
 
 export const elationAPIClientInjector: ActivityWrapperInjector<
-  [ElationAPIClient]
-> = (payload, onComplete, onError, options): [ElationAPIClient] => [
-  makeAPIClient(payload.settings, options?.authCacheService),
+  [ElationAPIClient],
+  ['authCacheService']
+> = (payload, onComplete, onError, services): [ElationAPIClient] => [
+  makeAPIClient(payload.settings, services.authCacheService),
 ]

@@ -39,8 +39,7 @@ describe('createJournalEntry action', () => {
         },
       },
       onComplete,
-      jest.fn(),
-      {}
+      jest.fn()
     )
 
     expect(mockGetSdkReturn.createJournalEntry).toHaveBeenCalled()

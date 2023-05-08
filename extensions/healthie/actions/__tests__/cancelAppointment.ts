@@ -36,8 +36,7 @@ describe('cancelAppointment action', () => {
         },
       },
       onComplete,
-      jest.fn(),
-      {}
+      jest.fn()
     )
 
     expect(mockGetSdkReturn.updateAppointment).toHaveBeenCalledWith({

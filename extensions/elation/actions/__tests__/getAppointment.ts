@@ -1,5 +1,6 @@
 import { getAppointment } from '../getAppointment'
 import { appointmentExample } from '../../__mocks__/constants'
+import { NoCache } from '../../../../src/cache/cache'
 
 jest.mock('../../client')
 
@@ -28,7 +29,7 @@ describe('Simple get appointment action', () => {
       } as any,
       onComplete,
       jest.fn(),
-      {}
+      { authCacheService: new NoCache() }
     )
     const {
       patient,

@@ -11,6 +11,6 @@ export interface Extension {
   settings: Settings
   icon_url: string
   author: Author
-  actions: Record<string, Action<any, Settings, string>> // any used here because we use much more narrower type in Action payload
+  actions: Record<string, Action<any, Settings, string, any>> // any used here because we use much more narrower type in Action payload
   webhooks?: Array<Webhook<string, any>>
 }

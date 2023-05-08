@@ -43,8 +43,7 @@ describe('createLocation action', () => {
         },
       },
       onComplete,
-      jest.fn(),
-      {}
+      jest.fn()
     )
 
     expect(mockGetSdkReturn.createLocation).toHaveBeenCalled()

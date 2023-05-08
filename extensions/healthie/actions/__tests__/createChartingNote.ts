@@ -38,8 +38,7 @@ describe('createChartingNote action', () => {
         },
       },
       onComplete,
-      jest.fn(),
-      {}
+      jest.fn()
     )
 
     expect(mockGetSdkReturn.getFormTemplate).toHaveBeenCalled()

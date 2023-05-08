@@ -28,8 +28,7 @@ describe('Calculate date difference', () => {
         settings: {},
       },
       onComplete,
-      onError,
-      {}
+      onError
     )
 
     expect(onComplete).toBeCalledWith({
@@ -59,8 +58,7 @@ describe('Calculate date difference', () => {
         settings: {},
       },
       onComplete,
-      onError,
-      {}
+      onError
     )
 
     expect(onComplete).toBeCalledWith({
@@ -90,8 +88,7 @@ describe('Calculate date difference', () => {
         settings: {},
       },
       onComplete,
-      onError,
-      {}
+      onError
     )
 
     expect(onComplete).toBeCalledWith({
@@ -121,8 +118,7 @@ describe('Calculate date difference', () => {
         settings: {},
       },
       onComplete,
-      onError,
-      {}
+      onError
     )
 
     expect(onComplete).toBeCalledWith({
@@ -152,8 +148,7 @@ describe('Calculate date difference', () => {
         settings: {},
       },
       onComplete,
-      onError,
-      {}
+      onError
     )
 
     expect(onComplete).toBeCalledWith({
@@ -183,8 +178,7 @@ describe('Calculate date difference', () => {
         settings: {},
       },
       onComplete,
-      onError,
-      {}
+      onError
     )
 
     expect(onComplete).toBeCalledWith({
@@ -214,8 +208,7 @@ describe('Calculate date difference', () => {
         settings: {},
       },
       onComplete,
-      onError,
-      {}
+      onError
     )
 
     expect(onComplete).toBeCalledWith({
@@ -245,8 +238,7 @@ describe('Calculate date difference', () => {
         settings: {},
       },
       onComplete,
-      onError,
-      {}
+      onError
     )
 
     expect(onComplete).not.toHaveBeenCalled()

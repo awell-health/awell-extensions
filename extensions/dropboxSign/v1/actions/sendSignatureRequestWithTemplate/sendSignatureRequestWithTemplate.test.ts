@@ -68,8 +68,7 @@ describe('Cancel signature request action', () => {
         },
       },
       onComplete,
-      jest.fn(),
-      {}
+      jest.fn()
     )
     expect(mockFn).toHaveBeenCalled()
     expect(onComplete).toHaveBeenCalled()

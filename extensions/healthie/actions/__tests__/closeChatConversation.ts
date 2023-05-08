@@ -37,8 +37,7 @@ describe('closeChatConversation action', () => {
         },
       },
       onComplete,
-      jest.fn(),
-      {}
+      jest.fn()
     )
 
     expect(mockGetSdkReturn.updateConversation).toHaveBeenCalledWith({
