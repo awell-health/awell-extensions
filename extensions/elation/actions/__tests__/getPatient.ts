@@ -1,7 +1,7 @@
 import { getPatient } from '../getPatient'
 import { type ActivityEvent } from '../../../../lib/types/ActivityEvent'
 import { patientExample } from '../../__mocks__/constants'
-import { NoCache } from '../../../../src/cache/cache'
+import { NoCache } from '../../../../services/cache/cache'
 
 jest.mock('../../client')
 

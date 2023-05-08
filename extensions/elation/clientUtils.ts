@@ -1,7 +1,7 @@
 import type { ActivityWrapperInjector } from '../../lib/types'
 import { ElationAPIClient } from './client'
 import type { settings } from './settings'
-import type { CacheService } from '../../src/cache/cache'
+import type { CacheService } from '../../services/cache/cache'
 import { settingsSchema } from './validation/settings.zod'
 
 export const makeAPIClient = (

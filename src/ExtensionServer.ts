@@ -14,10 +14,10 @@ import type {
   PickedServices,
   Extension,
 } from '../lib/types'
-import { InMemoryCache } from './cache/memory/memory'
-import { ServiceContainer } from './ServiceContainer'
-import type { Services } from './services'
-import type { CacheService } from './cache/cache'
+import { InMemoryCache } from '../services/cache/memory/memory'
+import { ServiceContainer } from '../services/ServiceContainer'
+import type { Services } from '../services/services'
+import type { CacheService } from '../services/cache/cache'
 
 export class ExtensionServer {
   log: FastifyBaseLogger
@@ -178,8 +178,8 @@ export class ExtensionServer {
                   serviceNames == null
                     ? undefined
                     : await Promise.all(
-                      serviceNames.map(this.serviceContainer.get)
-                    )
+                        serviceNames.map(this.serviceContainer.get)
+                      )
 
                 void action.onActivityCreated(
                   payload,
@@ -191,7 +191,7 @@ export class ExtensionServer {
                 void action.onActivityCreated(
                   payload,
                   createOnCompleteCallback(payload, attributes),
-                  createOnErrorCallback(payload, attributes),
+                  createOnErrorCallback(payload, attributes)
                 )
               }
             }

@@ -1,6 +1,6 @@
 import * as Axios from 'axios'
 import { URLSearchParams } from 'url'
-import { type CacheService, NoCache } from '../../src/cache/cache'
+import { type CacheService, NoCache } from '../../services/cache/cache'
 import { createHash } from 'node:crypto'
 
 interface OAuthGrantRequestBase {

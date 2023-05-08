@@ -1,6 +1,6 @@
 import { appointmentExample } from '../../__mocks__/constants'
 import { createAppointment } from '../createAppointment'
-import { NoCache } from '../../../../src/cache/cache'
+import { NoCache } from '../../../../services/cache/cache'
 
 jest.mock('../../client')
 

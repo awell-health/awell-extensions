@@ -11,6 +11,7 @@
   "include": [
     "lib/**/*.ts",
     "extensions/**/*.ts",
+    "services/**/*.ts",
     "src/**/*.ts",
     "examples/**/*.ts"
   ],

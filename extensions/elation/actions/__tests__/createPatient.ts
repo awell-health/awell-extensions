@@ -1,5 +1,5 @@
 import { createPatient } from '../createPatient'
-import { NoCache } from '../../../../src/cache/cache'
+import { NoCache } from '../../../../services/cache/cache'
 
 jest.mock('../../client')
 

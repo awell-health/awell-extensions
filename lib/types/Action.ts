@@ -5,7 +5,7 @@ import { type OnCompleteCallback } from './OnCompleteCallback'
 import { type OnErrorCallback } from './OnErrorCallback'
 import { type DataPointDefinition } from './DataPointDefinition'
 import { type Category } from './marketplace'
-import { type Services } from '../../src/services'
+import { type Services } from '../../services/services'
 
 export type RequiredServices = ReadonlyArray<keyof Services>
 

@@ -17,7 +17,7 @@ import {
   type OAuthGrantPasswordRequest,
   OAuthPassword,
 } from '../../lib/shared/auth'
-import type { CacheService } from '../../src/cache/cache'
+import type { CacheService } from '../../services/cache/cache'
 
 export class ElationDataWrapper extends DataWrapper {
   public async getAppointment(id: number): Promise<AppointmentResponse> {
