@@ -31,13 +31,13 @@ describe('Update non-visit note action', () => {
       input: {
         nonVisitNoteId: nonVisitNoteResponseExample.id,
         nonVisitNoteBulletId: nonVisitNoteResponseExample.bullets[0].id,
-        author: nonVisitNoteResponseExample.bullets[0].author,
+        authorId: nonVisitNoteResponseExample.bullets[0].author,
         text: nonVisitNoteResponseExample.bullets[0].text,
         category: nonVisitNoteResponseExample.bullets[0].category,
         chartDate: nonVisitNoteResponseExample.chart_date,
         documentDate: nonVisitNoteResponseExample.document_date,
-        patient: nonVisitNoteResponseExample.patient,
-        practice: nonVisitNoteResponseExample.patient,
+        patientId: nonVisitNoteResponseExample.patient,
+        practiceId: nonVisitNoteResponseExample.patient,
         tags:
           nonVisitNoteResponseExample.tags?.length !== 0
             ? nonVisitNoteResponseExample.tags?.join(',')
@@ -48,13 +48,13 @@ describe('Update non-visit note action', () => {
       input: {
         nonVisitNoteId: 1,
         nonVisitNoteBulletId: 1,
-        author: 1,
+        authorId: 1,
         text: 'abc',
         category: 'Problem',
         chartDate: '2023-01-01',
         documentDate: '2023-01-01',
-        patient: 101,
-        practice: 102,
+        patientId: 101,
+        practiceId: 102,
         tags: '1,',
       },
     },
@@ -62,13 +62,13 @@ describe('Update non-visit note action', () => {
       input: {
         nonVisitNoteId: 1,
         nonVisitNoteBulletId: undefined,
-        author: undefined,
+        authorId: undefined,
         text: undefined,
         category: undefined,
         chartDate: undefined,
         documentDate: undefined,
-        patient: undefined,
-        practice: 1,
+        patientId: undefined,
+        practiceId: 1,
         tags: undefined,
       },
     },
@@ -76,13 +76,13 @@ describe('Update non-visit note action', () => {
     input: {
       nonVisitNoteId: number
       nonVisitNoteBulletId: number
-      author: number
+      authorId: number
       text: string
       category: string
       chartDate: string
       documentDate: string
-      patient: number
-      practice: number
+      patientId: number
+      practiceId: number
       tags: string
     }
   }>)(

@@ -21,15 +21,15 @@ const fields = {
     type: FieldType.STRING,
     required: true,
   },
-  author: {
-    id: 'author',
+  authorId: {
+    id: 'authorId',
     label: 'Author',
     description: 'Author of a note. Should be ID of a User.',
     type: FieldType.NUMERIC,
     required: true,
   },
-  patient: {
-    id: 'patient',
+  patientId: {
+    id: 'patientId',
     label: 'Patient',
     description: 'ID of a Patient',
     type: FieldType.NUMERIC,
@@ -43,8 +43,8 @@ const fields = {
     type: FieldType.STRING,
     required: false,
   },
-  practice: {
-    id: 'practice',
+  practiceId: {
+    id: 'practiceId',
     label: 'Practice',
     description: 'ID of a Practice',
     type: FieldType.NUMERIC,
@@ -98,11 +98,21 @@ export const createNonVisitNote: Action<
   dataPoints,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
     try {
-      const { author, chartDate, documentDate, text, category, ...fields } =
-        payload.fields
+      const {
+        authorId,
+        chartDate,
+        documentDate,
+        text,
+        category,
+        patientId,
+        practiceId,
+        ...fields
+      } = payload.fields
       const note = nonVisitNoteSchema.parse({
         ...fields,
-        bullets: [{ text, author, category }],
+        patient: patientId,
+        practice: practiceId,
+        bullets: [{ text, author: authorId, category }],
         document_date: documentDate,
         chart_date: chartDate,
       })

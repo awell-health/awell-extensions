@@ -36,16 +36,16 @@ const fields = {
     type: FieldType.STRING,
     required: false,
   },
-  author: {
-    id: 'author',
+  authorId: {
+    id: 'authorId',
     label: 'Author',
     description:
       'Author of a note. Should be ID of a User. Required when "Bullet ID" is provided.',
     type: FieldType.NUMERIC,
     required: false,
   },
-  patient: {
-    id: 'patient',
+  patientId: {
+    id: 'patientId',
     label: 'Patient',
     description: 'ID of a Patient',
     type: FieldType.NUMERIC,
@@ -59,8 +59,8 @@ const fields = {
     type: FieldType.STRING,
     required: false,
   },
-  practice: {
-    id: 'practice',
+  practiceId: {
+    id: 'practiceId',
     label: 'Practice',
     description: 'ID of a Practice.',
     type: FieldType.NUMERIC,
@@ -101,20 +101,24 @@ export const updateNonVisitNote: Action<typeof fields, typeof settings> = {
       const {
         nonVisitNoteId,
         nonVisitNoteBulletId,
-        author,
+        authorId,
         chartDate,
         documentDate,
         text,
         category,
+        patientId,
+        practiceId,
         ...fields
       } = payload.fields
       const noteId = NumericIdSchema.parse(nonVisitNoteId)
       // partial - all fields are optional
       const note = nonVisitNoteSchema.partial().parse({
         ...fields,
+        patient: patientId,
+        practice: practiceId,
         bullets: isNil(nonVisitNoteBulletId)
           ? undefined
-          : [{ id: nonVisitNoteBulletId, text, author, category }],
+          : [{ id: nonVisitNoteBulletId, text, author: authorId, category }],
         document_date: documentDate,
         chart_date: chartDate,
       })
