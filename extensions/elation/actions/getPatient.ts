@@ -17,18 +17,18 @@ const fields = {
     id: 'patientId',
     label: 'Patient ID',
     description: 'The patient ID (a number)',
-    type: FieldType.STRING,
+    type: FieldType.NUMERIC,
     required: true,
   },
 } satisfies Record<string, Field>
 
 const dataPoints = {
-  first_name: {
-    key: 'first_name',
+  firstName: {
+    key: 'firstName',
     valueType: 'string',
   },
-  last_name: {
-    key: 'last_name',
+  lastName: {
+    key: 'lastName',
     valueType: 'string',
   },
   dob: {
@@ -39,40 +39,40 @@ const dataPoints = {
     key: 'sex',
     valueType: 'string',
   },
-  primary_physician: {
-    key: 'primary_physician',
+  primaryPhysicianId: {
+    key: 'primaryPhysicianId',
+    valueType: 'number',
+  },
+  caregiverPracticeId: {
+    key: 'caregiverPracticeId',
+    valueType: 'number',
+  },
+  mobilePhone: {
+    key: 'mobilePhone',
     valueType: 'string',
   },
-  caregiver_practice: {
-    key: 'caregiver_practice',
+  middleName: {
+    key: 'middleName',
     valueType: 'string',
   },
-  mobile_phone: {
-    key: 'mobile_phone',
+  actualName: {
+    key: 'actualName',
     valueType: 'string',
   },
-  middle_name: {
-    key: 'middle_name',
+  genderIdentity: {
+    key: 'genderIdentity',
     valueType: 'string',
   },
-  actual_name: {
-    key: 'actual_name',
-    valueType: 'string',
-  },
-  gender_identity: {
-    key: 'gender_identity',
-    valueType: 'string',
-  },
-  legal_gender_marker: {
-    key: 'legal_gender_marker',
+  legalGenderMarker: {
+    key: 'legalGenderMarker',
     valueType: 'string',
   },
   pronouns: {
     key: 'pronouns',
     valueType: 'string',
   },
-  sexual_orientation: {
-    key: 'sexual_orientation',
+  sexualOrientation: {
+    key: 'sexualOrientation',
     valueType: 'string',
   },
   ssn: {
@@ -87,20 +87,20 @@ const dataPoints = {
     key: 'race',
     valueType: 'string',
   },
-  preferred_language: {
-    key: 'preferred_language',
+  preferredLanguage: {
+    key: 'preferredLanguage',
     valueType: 'string',
   },
   notes: {
     key: 'notes',
     valueType: 'string',
   },
-  previous_first_name: {
-    key: 'previous_first_name',
+  previousFirstName: {
+    key: 'previousFirstName',
     valueType: 'string',
   },
-  previous_last_name: {
-    key: 'previous_last_name',
+  previousLastName: {
+    key: 'previousLastName',
     valueType: 'string',
   },
 } satisfies Record<string, DataPointDefinition>
@@ -126,28 +126,28 @@ export const getPatient: Action<
       const patientInfo = await api.getPatient(patientId)
       await onComplete({
         data_points: {
-          first_name: patientInfo.first_name,
-          last_name: patientInfo.last_name,
+          firstName: patientInfo.first_name,
+          lastName: patientInfo.last_name,
           dob: patientInfo.dob,
           sex: patientInfo.sex,
-          primary_physician: String(patientInfo.primary_physician),
-          caregiver_practice: String(patientInfo.caregiver_practice),
-          mobile_phone: String(
+          primaryPhysicianId: String(patientInfo.primary_physician),
+          caregiverPracticeId: String(patientInfo.caregiver_practice),
+          mobilePhone: String(
             patientInfo.phones?.find((p) => p.phone_type === 'Mobile')?.phone
           ),
-          middle_name: patientInfo.middle_name,
-          actual_name: patientInfo.actual_name,
-          gender_identity: patientInfo.gender_identity,
-          legal_gender_marker: patientInfo.legal_gender_marker,
+          middleName: patientInfo.middle_name,
+          actualName: patientInfo.actual_name,
+          genderIdentity: patientInfo.gender_identity,
+          legalGenderMarker: patientInfo.legal_gender_marker,
           pronouns: patientInfo.pronouns,
-          sexual_orientation: patientInfo.sexual_orientation,
+          sexualOrientation: patientInfo.sexual_orientation,
           ssn: patientInfo.ssn,
           ethnicity: patientInfo.ethnicity,
           race: patientInfo.race,
-          preferred_language: patientInfo.preferred_language,
+          preferredLanguage: patientInfo.preferred_language,
           notes: patientInfo.notes,
-          previous_first_name: patientInfo.previous_first_name,
-          previous_last_name: patientInfo.previous_last_name,
+          previousFirstName: patientInfo.previous_first_name,
+          previousLastName: patientInfo.previous_last_name,
         },
       })
     } catch (err) {

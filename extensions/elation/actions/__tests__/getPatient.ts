@@ -33,10 +33,26 @@ describe('Simple get patient action', () => {
     expect(onComplete).toHaveBeenCalled()
     expect(onComplete).toBeCalledWith({
       data_points: {
-        ...patientExample,
-        mobile_phone: 'undefined',
-        primary_physician: String(patientExample.primary_physician),
-        caregiver_practice: String(patientExample.caregiver_practice),
+        firstName: patientExample.first_name,
+        lastName: patientExample.last_name,
+        dob: patientExample.dob,
+        sex: patientExample.sex,
+        primaryPhysicianId: String(patientExample.primary_physician),
+        caregiverPracticeId: String(patientExample.caregiver_practice),
+        mobilePhone: 'undefined',
+        middleName: patientExample.middle_name,
+        actualName: patientExample.actual_name,
+        genderIdentity: patientExample.gender_identity,
+        legalGenderMarker: patientExample.legal_gender_marker,
+        pronouns: patientExample.pronouns,
+        sexualOrientation: patientExample.sexual_orientation,
+        ssn: patientExample.ssn,
+        ethnicity: patientExample.ethnicity,
+        race: patientExample.race,
+        preferredLanguage: patientExample.preferred_language,
+        notes: patientExample.notes,
+        previousFirstName: patientExample.previous_first_name,
+        previousLastName: patientExample.previous_last_name,
       },
     })
   })
