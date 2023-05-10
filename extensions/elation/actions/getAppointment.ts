@@ -17,7 +17,7 @@ const fields = {
     id: 'appointmentId',
     label: 'Appointment ID',
     description: 'The appointment ID (a number)',
-    type: FieldType.STRING,
+    type: FieldType.NUMERIC,
     required: true,
   },
 } satisfies Record<string, Field>
@@ -33,19 +33,19 @@ const dataPoints = {
   },
   patientId: {
     key: 'patientId',
-    valueType: 'string',
+    valueType: 'number',
   },
   physicianId: {
     key: 'physicianId',
-    valueType: 'string',
+    valueType: 'number',
   },
   practiceId: {
     key: 'practiceId',
-    valueType: 'string',
+    valueType: 'number',
   },
   duration: {
     key: 'duration',
-    valueType: 'string',
+    valueType: 'number',
   },
   description: {
     key: 'description',
@@ -53,7 +53,7 @@ const dataPoints = {
   },
   serviceLocationId: {
     key: 'serviceLocationId',
-    valueType: 'string',
+    valueType: 'number',
   },
   telehealthDetails: {
     key: 'telehealthDetails',
