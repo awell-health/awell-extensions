@@ -31,7 +31,7 @@ Required fields include:
 
 There are also a number of optional fields.
 
-**NOTE: We currently do not support nested objects, so the entire patient object supported by elation's API is not yet exposed**. Please reach out to us if you're looking to add a particular field or set of fields. 
+**NOTE: We currently do not support nested objects, so the entire patient object supported by elation's API is not yet exposed**. Please reach out to us if you're looking to add a particular field or set of fields.
 
 ### Get Patient
 
@@ -70,3 +70,26 @@ You can also include a duration (default to 15 minutes, or whatever has been set
 ### Get Appointment
 
 Get an appointment using an appointment ID. View all of the fields supported by the API.
+
+### Create Non-Visit Note
+
+The non-visit note is a special kind of note that, as the name suggests, is not associated with a visit. These notes, in their simplest form, provide a chronological account of information about the patient.
+
+### Update Non-Visit Note
+
+Updates the non-visit note identified by an ID. Only ID is required by default, however editing any of `text`, `author` or `category` requires `Bullet ID` and both `text` and `author` to be provided.
+
+### Delete Non-Visit Note
+
+Deletes the non-visit note identified by an ID.
+
+### Get Non-Visit Note
+
+Gets the non-visit note identified by an ID. Fields are saved as data points:
+- `authorId`
+- `text`
+- `chartDate`
+- `documentDate`
+- `patientId`
+- `practiceId`
+- `tags` (comma-separated list)

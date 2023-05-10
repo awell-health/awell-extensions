@@ -27,21 +27,20 @@ export const validateCommaSeparatedList = <
     .string()
     .trim()
     .toLowerCase()
+    .transform((value) =>
+      // remove any spaces and trailling comma
+      value
+        .replace(/,\s*$/, '')
+        .split(',')
+        .map((el) => el.trim())
+    )
     .refine(
       (value) => {
-        // remove any spaces and trailling comma
-        const currentValues = value
-          .replace(/,\s*$/, '')
-          .split(',')
-          .map((el) => el.trim())
-
         if (typeof possibleValuesOrValidator === 'function') {
-          return currentValues.every(possibleValuesOrValidator)
+          return value.every(possibleValuesOrValidator)
         }
 
-        return currentValues.every((el) =>
-          possibleValuesOrValidator.includes(el)
-        )
+        return value.every((el) => possibleValuesOrValidator.includes(el))
       },
       {
         message: `Should be comma-separated list of values${
@@ -53,6 +52,6 @@ export const validateCommaSeparatedList = <
     )
 
   return (
-    returnArray ? schema.transform((value) => value.split(',')) : schema
+    returnArray ? schema : schema.transform((value) => value.join(','))
   ) as ReturnType
 }
