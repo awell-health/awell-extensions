@@ -1,7 +1,9 @@
 import { type ElationCollection } from '../types/generic'
+import { type NonVisitNoteResponse } from '../types/nonVisitNote'
 import { type PhysicianResponse } from '../types/physician'
 import {
   appointmentExample,
+  nonVisitNoteResponseExample,
   patientExample,
   physicianResponseExample,
 } from './constants'
@@ -42,6 +44,18 @@ export const mockClientReturn = {
       previous: null,
       results: [physicianResponseExample],
     }
+  }),
+  createNonVisitNote: jest.fn((): NonVisitNoteResponse => {
+    return nonVisitNoteResponseExample
+  }),
+  getNonVisitNote: jest.fn((): NonVisitNoteResponse => {
+    return nonVisitNoteResponseExample
+  }),
+  updateNonVisitNote: jest.fn((): NonVisitNoteResponse => {
+    return nonVisitNoteResponseExample
+  }),
+  deleteNonVisitNote: jest.fn(() => {
+    return {}
   }),
 }
 const ElationAPIClientMock = jest.fn((params) => {
