@@ -9,3 +9,49 @@ export const makeStringOptional = <T extends z.ZodTypeAny>(
 ): z.ZodUnion<
   [z.ZodOptional<T>, z.ZodEffects<z.ZodLiteral<''>, undefined, ''>]
 > => z.union([schema.optional(), z.literal('').transform(() => undefined)])
+
+/**
+ * Checks whether comma-separated list of values is valid.
+ * If `shouldReturnArray` is true, transforms string to array.
+ */
+export const validateCommaSeparatedList = <
+  ReturnArray extends boolean,
+  ReturnType = ReturnArray extends true
+    ? z.ZodEffects<z.ZodEffects<z.ZodString, string, string>, string[], string>
+    : z.ZodEffects<z.ZodString, string, string>
+>(
+  possibleValuesOrValidator: string[] | ((value: string) => boolean),
+  returnArray: ReturnArray = false as ReturnArray
+): ReturnType => {
+  const schema = z
+    .string()
+    .trim()
+    .toLowerCase()
+    .transform((value) =>
+      // remove any spaces and trailling comma
+      value
+        .replace(/,\s*$/, '')
+        .split(',')
+        .map((el) => el.trim())
+    )
+    .refine(
+      (value) => {
+        if (typeof possibleValuesOrValidator === 'function') {
+          return value.every(possibleValuesOrValidator)
+        }
+
+        return value.every((el) => possibleValuesOrValidator.includes(el))
+      },
+      {
+        message: `Should be comma-separated list of values${
+          typeof possibleValuesOrValidator === 'function'
+            ? ' and match validator'
+            : `: ${possibleValuesOrValidator.join(', ')}`
+        }`,
+      }
+    )
+
+  return (
+    returnArray ? schema : schema.transform((value) => value.join(','))
+  ) as ReturnType
+}

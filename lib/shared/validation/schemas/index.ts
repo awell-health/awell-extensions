@@ -8,3 +8,4 @@ export {
   DateOnlyOptionalSchema,
   DateTimeOptionalSchema,
 } from './DateSchema'
+export { NumericIdSchema } from './NumericIdSchema'
