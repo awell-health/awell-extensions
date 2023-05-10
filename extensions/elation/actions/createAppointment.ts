@@ -14,8 +14,8 @@ import { AxiosError } from 'axios'
 import { appointmentSchema } from '../validation/appointment.zod'
 
 const fields = {
-  scheduled_date: {
-    id: 'scheduled_date',
+  scheduledDate: {
+    id: 'scheduledDate',
     label: 'Scheduled date',
     description: 'Datetime (ISO8601).',
     type: FieldType.STRING,
@@ -29,25 +29,25 @@ const fields = {
     type: FieldType.STRING,
     required: true,
   },
-  patient: {
-    id: 'patient',
-    label: 'Patient',
-    description: 'Patient ID',
-    type: FieldType.STRING,
+  patientId: {
+    id: 'patientId',
+    label: 'Patient ID',
+    description: '',
+    type: FieldType.NUMERIC,
     required: true,
   },
-  physician: {
-    id: 'physician',
-    label: 'Physician',
-    description: 'Physician ID',
-    type: FieldType.STRING,
+  physicianId: {
+    id: 'physicianId',
+    label: 'Physician ID',
+    description: '',
+    type: FieldType.NUMERIC,
     required: true,
   },
-  practice: {
-    id: 'practice',
-    label: 'Practice',
-    description: 'Practice ID',
-    type: FieldType.STRING,
+  practiceId: {
+    id: 'practiceId',
+    label: 'Practice ID',
+    description: '',
+    type: FieldType.NUMERIC,
     required: true,
   },
   duration: {
@@ -55,7 +55,7 @@ const fields = {
     label: 'Duration',
     description:
       'Number (in minutes). Must be a multiple of 5 and between 1 to 1440.',
-    type: FieldType.STRING,
+    type: FieldType.NUMERIC,
   },
   description: {
     id: 'description',
@@ -63,14 +63,14 @@ const fields = {
     description: 'Maximum length of 500 characters.',
     type: FieldType.STRING,
   },
-  service_location: {
-    id: 'service_location',
-    label: 'Service location',
-    description: 'Service location ID',
-    type: FieldType.STRING,
+  serviceLocationId: {
+    id: 'serviceLocationId',
+    label: 'Service location ID',
+    description: '',
+    type: FieldType.NUMERIC,
   },
-  telehealth_details: {
-    id: 'telehealth_details',
+  telehealthDetails: {
+    id: 'telehealthDetails',
     label: 'Telehealth details',
     description: '',
     type: FieldType.STRING,
@@ -80,7 +80,7 @@ const fields = {
 const dataPoints = {
   appointmentId: {
     key: 'appointmentId',
-    valueType: 'string',
+    valueType: 'number',
   },
 } satisfies Record<string, DataPointDefinition>
 
@@ -98,7 +98,24 @@ export const createAppointment: Action<
   dataPoints,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
     try {
-      const appointment = appointmentSchema.parse(payload.fields)
+      const {
+        scheduledDate,
+        patientId,
+        physicianId,
+        practiceId,
+        serviceLocationId,
+        telehealthDetails,
+        ...fields
+      } = payload.fields
+      const appointment = appointmentSchema.parse({
+        ...fields,
+        scheduled_date: scheduledDate,
+        patient: patientId,
+        physician: physicianId,
+        practice: practiceId,
+        service_location: serviceLocationId,
+        telehealth_details: telehealthDetails,
+      })
 
       // API Call should produce AuthError or something dif.
       const api = makeAPIClient(payload.settings)
