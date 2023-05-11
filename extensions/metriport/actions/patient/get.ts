@@ -6,6 +6,7 @@ import { handleErrorMessage } from '../../shared/errorHandler'
 import { getFields } from './fields'
 import { stringId } from '../../validation/generic.zod'
 import { patientDataPoints } from './dataPoints'
+import { isNil } from 'lodash'
 
 export const getPatient: Action<
   typeof getFields,
@@ -26,9 +27,22 @@ export const getPatient: Action<
       const api = createMetriportApi(payload.settings)
       const patient = await api.getPatient(patientId)
 
+      if (isNil(patient.personalIdentifiers)) {
+        throw new Error('Patient does not have any personal identifiers.')
+      }
+
+      if (Array.isArray(patient.address)) {
+        patient.address = patient.address[0]
+      }
+
+      if (Array.isArray(patient.contact)) {
+        patient.contact = patient.contact[0]
+      }
+
       const driversLicense = patient.personalIdentifiers.find(
         (id) => id.type === 'driversLicense'
       )
+
       await onComplete({
         data_points: {
           firstName: patient.firstName,
