@@ -19,5 +19,5 @@ export const actions = {
   removeLink,
   listDocuments,
   queryDocs,
-  getUrl
+  getUrl,
 }

@@ -4,7 +4,8 @@ export const listFields = {
   patientId: {
     id: 'patientId',
     label: 'Patient ID',
-    description: 'The ID of the Patient for which to list their available Documents',
+    description:
+      'The ID of the Patient for which to list their available Documents',
     type: FieldType.STRING,
     required: true,
   },
