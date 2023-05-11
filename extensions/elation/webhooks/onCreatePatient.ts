@@ -14,7 +14,7 @@ export const onCreatePatient: Webhook<
 > = {
   key: 'onCreatePatient',
   dataPoints,
-  onWebhookReceived: async ({ data }) => {
+  onWebhookReceived: async ({ payload: { data } }) => {
     return {
       data_points: { patientId: String(data.id) },
     }

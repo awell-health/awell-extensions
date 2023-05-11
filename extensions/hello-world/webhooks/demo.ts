@@ -19,7 +19,7 @@ interface Payload {
 export const demo: Webhook<keyof typeof dataPoints, Payload> = {
   key: 'demo',
   dataPoints,
-  onWebhookReceived: async ({ eventType, hello }) => ({
+  onWebhookReceived: async ({ payload: { eventType, hello } }) => ({
     data_points: {
       eventType,
       hello,

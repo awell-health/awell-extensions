@@ -24,7 +24,7 @@ interface Payload {
 export const pathwayCompleted: Webhook<keyof typeof dataPoints, Payload> = {
   key: 'pathwayCompleted',
   dataPoints,
-  onWebhookReceived: async ({ pathway, complete_date }) => ({
+  onWebhookReceived: async ({ payload: { pathway, complete_date } }) => ({
     pathway_id: pathway.id,
     patient_id: pathway.patient_id,
     data_points: {

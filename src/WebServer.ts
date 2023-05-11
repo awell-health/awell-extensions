@@ -1,16 +1,14 @@
-import Fastify from 'fastify'
 import cors from '@fastify/cors'
+import Fastify from 'fastify'
 import { mapValues, omit } from 'lodash'
-import { environment } from '../lib/environment'
+import { extensions } from '../extensions'
 import {
+  type Action,
+  type Extension,
   type Field,
   type Setting,
-  type Extension,
-  type Action,
   type Webhook,
 } from '../lib/types'
-import { extensions } from '../extensions'
-import { PubSub } from '@google-cloud/pubsub'
 import {
   getExtensionChangelog,
   getExtensionDocumentation,
@@ -66,40 +64,6 @@ webServer.get('/:extensionKey', async (request, reply) => {
     await reply.status(404).send()
   } else {
     await reply.send(getExtensionConfig(extension))
-  }
-})
-
-const pubSubClient = new PubSub()
-const webhookTopic = pubSubClient.topic(
-  environment.EXTENSION_WEBHOOK_RECEIVED_TOPIC
-)
-webServer.post('/:extensionKey/webhook/:endpoint', async (request, reply) => {
-  const { extensionKey, endpoint } = request.params as {
-    extensionKey: string
-    endpoint: string
-  }
-  const extension = extensions.find(({ key }) => key === extensionKey)
-  if (extension === undefined) {
-    await reply.status(404).send()
-  } else {
-    await reply.status(200).send()
-    const payload = request.body
-    const { webhooks = [] } = extension
-    await Promise.all(
-      webhooks.map(async (webhook) => {
-        const dataPoints = await webhook.onWebhookReceived(payload)
-        const data = Buffer.from(JSON.stringify(dataPoints))
-        await webhookTopic.publishMessage({
-          data,
-          attributes: {
-            extension: extension.key,
-            endpoint,
-            webhook: webhook.key,
-            environment: environment.AWELL_ENVIRONMENT,
-          },
-        })
-      })
-    )
   }
 })
 

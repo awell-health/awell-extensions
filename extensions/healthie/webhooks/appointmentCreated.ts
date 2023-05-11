@@ -16,7 +16,7 @@ interface Payload {
 export const appointmentCreated: Webhook<keyof typeof dataPoints, Payload> = {
   key: 'appointmentCreated',
   dataPoints,
-  onWebhookReceived: async ({ resource_id }) => ({
+  onWebhookReceived: async ({ payload: { resource_id } }) => ({
     data_points: {
       appointmentId: resource_id,
     },
