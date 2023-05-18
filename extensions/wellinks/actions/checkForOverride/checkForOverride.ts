@@ -1,8 +1,8 @@
-import { type Field, FieldType, type Action, type DataPointDefinition } from "../../../lib/types";
-import { Category } from "../../../lib/types/marketplace";
-import { getSdk } from "../gql/sdk";
-import { initialiseClient } from "../graphqlClient";
-import { type settings } from "../settings";
+import { type Field, FieldType, type Action, type DataPointDefinition } from "../../../../lib/types";
+import { Category } from "../../../../lib/types/marketplace";
+import { type GetChartingItemsQuery, getSdk } from "../../gql/sdk";
+import { initialiseClient } from "../../graphqlClient";
+import { type settings } from "../../settings";
 
 // Purpose: 
 const fields = {
@@ -12,13 +12,6 @@ const fields = {
         description: 'The ID of the patiet to check an override for.',
         type: FieldType.STRING,
         required: true,
-    },
-    date: {
-        id: 'date',
-        label: 'Date',
-        description: 'The date from which you want to search for a form. If null, the search will be from the beginning of the patient history',
-        type: FieldType.DATE,
-        required: false,
     }
 } satisfies Record<string, Field>
 
@@ -49,32 +42,33 @@ export const checkForOverride: Action< typeof fields, typeof settings, keyof typ
         const { patientId } = fields
         try {
             const client = initialiseClient(settings)
-            if (client != null) {
+
+            if (client !== undefined) {
                 const sdk = getSdk(client)
                 const { data } = await sdk.getChartingItems({ user_id: patientId, custom_module_form_id: "281216"})
 
                 if (data.chartingItems != null) {
                     
-                    const overrideForms = data.chartingItems.filter(
-                        (value) => value?.form_answer_group?.form_answers.find((value) => value.custom_module_id === SELECT_EVENT_TYPE_QUESTION_ID)?.answer === "Override Scheduling Reminder Automations"
-                    )
-                    const overrideDates = overrideForms.map((form) => form?.form_answer_group?.form_answers.find((value) => value.custom_module_id === START_SENDING_SCHEDULED_REMINDERS_QUESTION_ID)?.answer)
-                    const dates = overrideDates.map((strDate) =>  { 
-                        if (strDate !== null && strDate !== undefined) {
-                            return new Date(strDate)
-                        } else {
-                            return null
-                        }
-                    })
+                    // const overrideForms = data.chartingItems.filter(
+                    //     (value) => value?.form_answer_group?.form_answers.find((value) => value.custom_module_id === SELECT_EVENT_TYPE_QUESTION_ID)?.answer === "Override Scheduling Reminder Automations"
+                    // )
+                    // const overrideDates = overrideForms.map((form) => form?.form_answer_group?.form_answers.find((value) => value.custom_module_id === START_SENDING_SCHEDULED_REMINDERS_QUESTION_ID)?.answer)
+                    // const dates = overrideDates.map((strDate) =>  { 
+                    //     if (strDate !== null && strDate !== undefined) {
+                    //         return new Date(strDate)
+                    //     } else {
+                    //         return null
+                    //     }
+                    // })
                     
-                    const now = new Date()
-                    const latestOverride = dates.sort((a, b) => (a?.getTime() ?? 0) - (b?.getTime() ?? 0))[0]
-                    
-                        if (latestOverride !== null && latestOverride > now) {
+                    // const now = new Date()
+                    // const latestOverride = dates.sort((a, b) => (a?.getTime() ?? 0) - (b?.getTime() ?? 0))[0]
+                        const active = parseListOfForms(data.chartingItems)
+                        if (active.active) {
                         await onComplete({
                                 data_points: {
                                     activeOverride: "true",
-                                    overrideDate: dates[0]?.toISOString()
+                                    overrideDate: active.date?.toISOString()
                                 }
                             })
                         }
@@ -124,4 +118,32 @@ export const checkForOverride: Action< typeof fields, typeof settings, keyof typ
 
         }
     },
+}
+
+function parseListOfForms(data: GetChartingItemsQuery["chartingItems"]): {active: boolean, date: Date | null} {
+    if(data === null || data === undefined) {
+        return {
+            active: false,
+            date: null
+        }
+    } else {
+    const overrideForms = data.filter(
+        (value) => value?.form_answer_group?.form_answers.find((value) => value.custom_module_id === SELECT_EVENT_TYPE_QUESTION_ID)?.answer === "Override Scheduling Reminder Automations"
+    )
+    const overrideDates = overrideForms.map((form) => form?.form_answer_group?.form_answers.find((value) => value.custom_module_id === START_SENDING_SCHEDULED_REMINDERS_QUESTION_ID)?.answer)
+    const dates = overrideDates.map((strDate) =>  { 
+        if (strDate !== null && strDate !== undefined) {
+            return new Date(strDate)
+        } else {
+            return null
+        }
+    })
+    
+    const now = new Date()
+    const latestOverride = dates.sort((a, b) => (a?.getTime() ?? 0) - (b?.getTime() ?? 0))[0]
+    return {
+        active: latestOverride !== null && latestOverride > now,
+        date: dates[0]}
+    }
+
 }
