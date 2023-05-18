@@ -15,10 +15,6 @@ const fields = {
     }
 } satisfies Record<string, Field>
 
-
-const SELECT_EVENT_TYPE_QUESTION_ID = "2602707"
-const START_SENDING_SCHEDULED_REMINDERS_QUESTION_ID = "3860906"
-
 const dataPoints = {
     activeOverride: {
         key: 'activeOverride',
@@ -45,34 +41,18 @@ export const checkForOverride: Action< typeof fields, typeof settings, keyof typ
 
             if (client !== undefined) {
                 const sdk = getSdk(client)
-                const { data } = await sdk.getChartingItems({ user_id: patientId, custom_module_form_id: "281216"})
+                const { data } = await sdk.getChartingItems({ user_id: patientId, custom_module_form_id: settings.memberEventFormId})
 
                 if (data.chartingItems != null) {
-                    
-                    // const overrideForms = data.chartingItems.filter(
-                    //     (value) => value?.form_answer_group?.form_answers.find((value) => value.custom_module_id === SELECT_EVENT_TYPE_QUESTION_ID)?.answer === "Override Scheduling Reminder Automations"
-                    // )
-                    // const overrideDates = overrideForms.map((form) => form?.form_answer_group?.form_answers.find((value) => value.custom_module_id === START_SENDING_SCHEDULED_REMINDERS_QUESTION_ID)?.answer)
-                    // const dates = overrideDates.map((strDate) =>  { 
-                    //     if (strDate !== null && strDate !== undefined) {
-                    //         return new Date(strDate)
-                    //     } else {
-                    //         return null
-                    //     }
-                    // })
-                    
-                    // const now = new Date()
-                    // const latestOverride = dates.sort((a, b) => (a?.getTime() ?? 0) - (b?.getTime() ?? 0))[0]
-                        const active = parseListOfForms(data.chartingItems)
-                        if (active.active) {
-                        await onComplete({
-                                data_points: {
-                                    activeOverride: "true",
-                                    overrideDate: active.date?.toISOString()
-                                }
-                            })
-                        }
-                    
+                    const active = parseListOfForms(data.chartingItems, settings.selectEventTypeQuestion ?? "", settings.startSendingRemindersQuestions ?? "")
+                    if (active.active) {
+                    await onComplete({
+                            data_points: {
+                                activeOverride: "true",
+                                overrideDate: active.date?.toISOString()
+                            }
+                        })
+                    }
                 } else {
                     await onError({
                         events: [
@@ -120,7 +100,7 @@ export const checkForOverride: Action< typeof fields, typeof settings, keyof typ
     },
 }
 
-function parseListOfForms(data: GetChartingItemsQuery["chartingItems"]): {active: boolean, date: Date | null} {
+function parseListOfForms(data: GetChartingItemsQuery["chartingItems"], eventTypeQuestionId: string, startDateQuestionId: string): {active: boolean, date: Date | null} {
     if(data === null || data === undefined) {
         return {
             active: false,
@@ -128,9 +108,9 @@ function parseListOfForms(data: GetChartingItemsQuery["chartingItems"]): {active
         }
     } else {
     const overrideForms = data.filter(
-        (value) => value?.form_answer_group?.form_answers.find((value) => value.custom_module_id === SELECT_EVENT_TYPE_QUESTION_ID)?.answer === "Override Scheduling Reminder Automations"
+        (value) => value?.form_answer_group?.form_answers.find((value) => value.custom_module_id === eventTypeQuestionId)?.answer === "Override Scheduling Reminder Automations"
     )
-    const overrideDates = overrideForms.map((form) => form?.form_answer_group?.form_answers.find((value) => value.custom_module_id === START_SENDING_SCHEDULED_REMINDERS_QUESTION_ID)?.answer)
+    const overrideDates = overrideForms.map((form) => form?.form_answer_group?.form_answers.find((value) => value.custom_module_id === startDateQuestionId)?.answer)
     const dates = overrideDates.map((strDate) =>  { 
         if (strDate !== null && strDate !== undefined) {
             return new Date(strDate)

@@ -6,7 +6,7 @@ jest.mock('../../gql/sdk')
 jest.mock('../../graphqlClient')
 
 
-describe('checkForOverride action', () => {
+describe('the checkForOverride action', () => {
     const onComplete = jest.fn()
     const onError = jest.fn()
  
@@ -19,7 +19,7 @@ describe('checkForOverride action', () => {
         jest.clearAllMocks()
     })
 
-    test('Should cause an error', async () => {
+    test('when given an empty list, should raise an error', async () => {
         (getSdk as jest.Mock).mockReturnValueOnce(
             {
                 ...mockGetSdkReturn,
@@ -44,7 +44,10 @@ describe('checkForOverride action', () => {
                 },
                 settings: {
                     apiKey: 'apiKey',
-                    apiUrl: 'test-url'
+                    apiUrl: 'test-url',
+                    selectEventTypeQuestion: '2602707',
+                    startSendingRemindersQuestions: '3860906',
+                    memberEventFormId: '281216'
                 },
             },
             onComplete,
@@ -70,7 +73,7 @@ describe('checkForOverride action', () => {
         })
     })
 
-    test('Should call onComplete when there is a proper return', async() => {
+    test('when given a proper list of charting items, uses the onComplete', async() => {
         (getSdk as jest.Mock).mockReturnValueOnce(
             {
                 ...mockGetSdkReturn,
@@ -118,7 +121,10 @@ describe('checkForOverride action', () => {
                 },
                 settings: {
                     apiKey: 'apiKey',
-                    apiUrl: 'test-url'
+                    apiUrl: 'test-url',
+                    selectEventTypeQuestion: '2602707',
+                    startSendingRemindersQuestions: '3860906',
+                    memberEventFormId: '281216'
                 },
             },
             onComplete,
