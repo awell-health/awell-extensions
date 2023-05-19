@@ -1,10 +1,10 @@
 import { type Field, FieldType, type Action, type DataPointDefinition } from "../../../../lib/types";
 import { Category } from "../../../../lib/types/marketplace";
-import { type GetChartingItemsQuery, getSdk } from "../../gql/sdk";
-import { initialiseClient } from "../../graphqlClient";
+import { type GetChartingItemsQuery, getSdk } from "../../gql/wellinksSdk";
+import { initialiseClient } from "../../wellinksGraphqlClient";
 import { type settings } from "../../settings";
+import { isNil } from "lodash";
 
-// Purpose: 
 const fields = {
     patientId: {
         id: 'patientId',
@@ -39,17 +39,24 @@ export const checkForOverride: Action< typeof fields, typeof settings, keyof typ
         try {
             const client = initialiseClient(settings)
 
-            if (client !== undefined) {
+            if (!isNil(client)) {
                 const sdk = getSdk(client)
                 const { data } = await sdk.getChartingItems({ user_id: patientId, custom_module_form_id: settings.memberEventFormId})
 
-                if (data.chartingItems != null) {
+                if (!isNil(data.chartingItems)) {
                     const active = parseListOfForms(data.chartingItems, settings.selectEventTypeQuestion ?? "", settings.startSendingRemindersQuestions ?? "")
                     if (active.active) {
-                    await onComplete({
+                        await onComplete({
                             data_points: {
                                 activeOverride: "true",
                                 overrideDate: active.date?.toISOString()
+                            }
+                        })
+                    } else {
+                        await onComplete({
+                            data_points: {
+                                activeOverride: "false",
+                                overrideDate: null
                             }
                         })
                     }
@@ -101,7 +108,7 @@ export const checkForOverride: Action< typeof fields, typeof settings, keyof typ
 }
 
 function parseListOfForms(data: GetChartingItemsQuery["chartingItems"], eventTypeQuestionId: string, startDateQuestionId: string): {active: boolean, date: Date | null} {
-    if(data === null || data === undefined) {
+    if(isNil(data)) {
         return {
             active: false,
             date: null
@@ -112,7 +119,7 @@ function parseListOfForms(data: GetChartingItemsQuery["chartingItems"], eventTyp
     )
     const overrideDates = overrideForms.map((form) => form?.form_answer_group?.form_answers.find((value) => value.custom_module_id === startDateQuestionId)?.answer)
     const dates = overrideDates.map((strDate) =>  { 
-        if (strDate !== null && strDate !== undefined) {
+        if (!isNil(strDate)) {
             return new Date(strDate)
         } else {
             return null

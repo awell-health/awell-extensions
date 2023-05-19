@@ -1,9 +1,9 @@
-import { getSdk } from "../../gql/sdk"
-import { mockGetSdk, mockGetSdkReturn } from "../../gql/__mocks__/sdk"
+import { getSdk } from "../../gql/wellinksSdk"
+import { mockGetSdk, mockGetSdkReturn } from "../../gql/__mocks__/wellinksSdk"
 import { checkForOverride } from "./checkForOverride"
 
-jest.mock('../../gql/sdk')
-jest.mock('../../graphqlClient')
+jest.mock('../../gql/wellinksSdk')
+jest.mock('../../wellinksGraphqlClient')
 
 
 describe('the checkForOverride action', () => {
@@ -95,7 +95,7 @@ describe('the checkForOverride action', () => {
                                         {
                                             custom_module_id: "3860906",
                                             label: "Start Sending Schedule Reminders On",
-                                            answer: "2023-09-05"
+                                            answer: "2030-09-05"
                                         }
                                     ]
                                 }
