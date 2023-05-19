@@ -3,21 +3,21 @@ import { Category } from '../../../../lib/types/marketplace'
 import { type settings } from '../../settings'
 import { createMetriportApi } from '../../client'
 import { handleErrorMessage } from '../../shared/errorHandler'
-import { listFields } from './fields'
+import { getUrlFields } from './fields'
 import { startQuerySchema } from './validation'
-import { documentsDataPoints as dataPoints } from './dataPoints'
+import { documentUrlPoints as dataPoints } from './dataPoints'
 
-export const listDocuments: Action<
-  typeof listFields,
+export const getUrl: Action<
+  typeof getUrlFields,
   typeof settings,
   keyof typeof dataPoints
 > = {
-  key: 'listDocs',
+  key: 'getUrl',
   category: Category.EHR_INTEGRATIONS,
-  title: 'List Documents',
+  title: 'Get Document URL',
   description:
-    'Queries for all available document metadata for the specified patient across HIEs.',
-  fields: listFields,
+    'Fetches the document from S3 and sends a presigned URL.',
+  fields: getUrlFields,
   previewable: true,
   dataPoints,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
@@ -26,13 +26,11 @@ export const listDocuments: Action<
 
       const api = createMetriportApi(payload.settings)
 
-      const resp = await api.listDocuments(patientId, facilityId)
+      const resp = await api.getDocumentUrl(patientId, facilityId)
 
       await onComplete({
         data_points: {
-          queryStatus: resp.queryStatus,
-          queryProgressTotal: resp.queryProgress.total,
-          queryProgressComplete: resp.queryProgress.complete,
+          url: resp.url,
         },
       })
     } catch (err) {
