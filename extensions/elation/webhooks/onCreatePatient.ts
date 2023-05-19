@@ -14,9 +14,19 @@ export const onCreatePatient: Webhook<
 > = {
   key: 'onCreatePatient',
   dataPoints,
-  onWebhookReceived: async ({ data }) => {
-    return {
-      data_points: { patientId: String(data.id) },
+  onWebhookReceived: async ({ payload, settings }, onSuccess, onError) => {
+    const { data, resource } = payload
+    if (resource !== 'patients') {
+      await onError({
+        response: {
+          statusCode: 400,
+          message: 'resource must be patients',
+        },
+      })
+    } else {
+      await onSuccess({
+        data_points: { patientId: String(data.id) },
+      })
     }
   },
 }

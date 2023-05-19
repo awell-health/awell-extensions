@@ -87,7 +87,7 @@ webServer.post('/:extensionKey/webhook/:endpoint', async (request, reply) => {
     const { webhooks = [] } = extension
     await Promise.all(
       webhooks.map(async (webhook) => {
-        const dataPoints = await webhook.onWebhookReceived(payload)
+        await webhook.onWebhookReceived(payload)
         const data = Buffer.from(JSON.stringify(dataPoints))
         await webhookTopic.publishMessage({
           data,

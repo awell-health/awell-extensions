@@ -19,10 +19,13 @@ interface Payload {
 export const demo: Webhook<keyof typeof dataPoints, Payload> = {
   key: 'demo',
   dataPoints,
-  onWebhookReceived: async ({ eventType, hello }) => ({
-    data_points: {
-      eventType,
-      hello,
-    },
-  }),
+  onWebhookReceived: async ({ payload }, onSuccess, onError) => {
+    const { eventType, hello } = payload
+    await onSuccess({
+      data_points: {
+        eventType,
+        hello,
+      },
+    })
+  },
 }
