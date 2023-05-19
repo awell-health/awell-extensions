@@ -52,6 +52,13 @@ export const checkForOverride: Action< typeof fields, typeof settings, keyof typ
                                 overrideDate: active.date?.toISOString()
                             }
                         })
+                    } else {
+                        await onComplete({
+                            data_points: {
+                                activeOverride: "false",
+                                overrideDate: null
+                            }
+                        })
                     }
                 } else {
                     await onError({

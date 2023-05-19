@@ -95,7 +95,7 @@ describe('the checkForOverride action', () => {
                                         {
                                             custom_module_id: "3860906",
                                             label: "Start Sending Schedule Reminders On",
-                                            answer: "2023-09-05"
+                                            answer: "2030-09-05"
                                         }
                                     ]
                                 }
