@@ -8,3 +8,7 @@ export const startQuerySchema = z.object({
     .string({ errorMap: () => ({ message: 'Missing facilityId' }) })
     .min(1),
 })
+
+export const getUrlSchema = z.object({
+  fileName: z.string({ errorMap: () => ({ message: 'Missing fileName' }) }),
+})
