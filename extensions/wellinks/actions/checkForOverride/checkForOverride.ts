@@ -102,7 +102,6 @@ export const checkForOverride: Action< typeof fields, typeof settings, keyof typ
                     }
                 ]
             })
-
         }
     },
 }

@@ -3,6 +3,13 @@ export const mockGetSdkReturn = {
         return { data: { 
             // chartingItems: null
          }}
+    }),
+    getScheduledAppointments: jest.fn((args) => {
+        return { 
+            data: {
+
+            }
+        }
     })
 }
 

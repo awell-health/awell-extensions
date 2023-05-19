@@ -16,7 +16,7 @@ export const CHARTING_ITEMS_QUERY = /* GraphQl */`
   }`
 
 export const SCHEDULED_APPOINTMENTS_QUERY = /* GraphQl */`
-  query searchForAppointments($user_id: ID, $appointment_type_id: ID, $status: String) {
+  query getScheduledAppointments($user_id: ID, $appointment_type_id: ID, $status: String) {
     appointments(user_id: $user_id, filter_by_appointment_type_id: $appointment_type_id, filter_by_appointment_status: $status, filter:"future") {
         id
         provider_name

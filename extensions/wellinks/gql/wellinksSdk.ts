@@ -21569,14 +21569,14 @@ export type GetChartingItemsQueryVariables = Exact<{
 
 export type GetChartingItemsQuery = { __typename?: 'Query', chartingItems?: Array<{ __typename?: 'ChartingItemType', id?: string | null, created_at?: string | null, form_answer_group?: { __typename?: 'FormAnswerGroup', id: string, created_at?: string | null, form_answers: Array<{ __typename?: 'FormAnswer', custom_module_id?: string | null, label?: string | null, answer?: string | null }> } | null } | null> | null };
 
-export type SearchForAppointmentsQueryVariables = Exact<{
+export type GetScheduledAppointmentsQueryVariables = Exact<{
   user_id?: InputMaybe<Scalars['ID']>;
   appointment_type_id?: InputMaybe<Scalars['ID']>;
   status?: InputMaybe<Scalars['String']>;
 }>;
 
 
-export type SearchForAppointmentsQuery = { __typename?: 'Query', appointments?: Array<{ __typename?: 'Appointment', id: string, provider_name?: string | null, date?: string | null } | null> | null };
+export type GetScheduledAppointmentsQuery = { __typename?: 'Query', appointments?: Array<{ __typename?: 'Appointment', id: string, provider_name?: string | null, date?: string | null } | null> | null };
 
 
 export const GetChartingItemsDocument = gql`
@@ -21596,13 +21596,13 @@ export const GetChartingItemsDocument = gql`
   }
 }
     `;
-export const SearchForAppointmentsDocument = gql`
-    query searchForAppointments($user_id: ID, $appointment_type_id: ID, $status: String) {
+export const GetScheduledAppointmentsDocument = gql`
+    query getScheduledAppointments($user_id: ID, $appointment_type_id: ID, $status: String) {
   appointments(
     user_id: $user_id
     filter_by_appointment_type_id: $appointment_type_id
     filter_by_appointment_status: $status
-    filter: "past"
+    filter: "future"
   ) {
     id
     provider_name
@@ -21616,14 +21616,14 @@ export type SdkFunctionWrapper = <T>(action: (requestHeaders?:Record<string, str
 
 const defaultWrapper: SdkFunctionWrapper = (action, _operationName, _operationType) => action();
 const GetChartingItemsDocumentString = print(GetChartingItemsDocument);
-const SearchForAppointmentsDocumentString = print(SearchForAppointmentsDocument);
+const GetScheduledAppointmentsDocumentString = print(GetScheduledAppointmentsDocument);
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
     getChartingItems(variables?: GetChartingItemsQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: GetChartingItemsQuery; extensions?: any; headers: Dom.Headers; status: number; }> {
         return withWrapper((wrappedRequestHeaders) => client.rawRequest<GetChartingItemsQuery>(GetChartingItemsDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getChartingItems', 'query');
     },
-    searchForAppointments(variables?: SearchForAppointmentsQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: SearchForAppointmentsQuery; extensions?: any; headers: Dom.Headers; status: number; }> {
-        return withWrapper((wrappedRequestHeaders) => client.rawRequest<SearchForAppointmentsQuery>(SearchForAppointmentsDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'searchForAppointments', 'query');
+    getScheduledAppointments(variables?: GetScheduledAppointmentsQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: GetScheduledAppointmentsQuery; extensions?: any; headers: Dom.Headers; status: number; }> {
+        return withWrapper((wrappedRequestHeaders) => client.rawRequest<GetScheduledAppointmentsQuery>(GetScheduledAppointmentsDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getScheduledAppointments', 'query');
     }
   };
 }
