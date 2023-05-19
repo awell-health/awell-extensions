@@ -7,11 +7,11 @@ export const documentsDataPoints = {
   },
   queryProgressTotal: {
     key: 'queryProgressTotal',
-    valueType: 'number',
+    valueType: 'string',
   },
   queryProgressComplete: {
     key: 'queryProgressComplete',
-    valueType: 'number',
+    valueType: 'string',
   },
 } satisfies Record<string, DataPointDefinition>
 

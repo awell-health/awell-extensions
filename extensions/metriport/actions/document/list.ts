@@ -31,8 +31,8 @@ export const listDocuments: Action<
       await onComplete({
         data_points: {
           queryStatus: resp.queryStatus,
-          queryProgressTotal: resp.queryProgress.total,
-          queryProgressComplete: resp.queryProgress.complete,
+          queryProgressTotal: String(resp.queryProgress?.total),
+          queryProgressComplete: String(resp.queryProgress?.completed),
         },
       })
     } catch (err) {

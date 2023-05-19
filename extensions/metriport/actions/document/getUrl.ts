@@ -4,7 +4,7 @@ import { type settings } from '../../settings'
 import { createMetriportApi } from '../../client'
 import { handleErrorMessage } from '../../shared/errorHandler'
 import { getUrlFields } from './fields'
-import { startQuerySchema } from './validation'
+import { getUrlSchema } from './validation'
 import { documentUrlPoints as dataPoints } from './dataPoints'
 
 export const getUrl: Action<
@@ -22,11 +22,11 @@ export const getUrl: Action<
   dataPoints,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
     try {
-      const { patientId, facilityId } = startQuerySchema.parse(payload.fields)
+      const { fileName } = getUrlSchema.parse(payload.fields)
 
       const api = createMetriportApi(payload.settings)
 
-      const resp = await api.getDocumentUrl(patientId, facilityId)
+      const resp = await api.getDocumentUrl(fileName)
 
       await onComplete({
         data_points: {
