@@ -1,17 +1,11 @@
-import { type Action, type DataPointDefinition } from '../../../../lib/types'
+import { type Action } from '../../../../lib/types'
 import { Category } from '../../../../lib/types/marketplace'
 import { type settings } from '../../settings'
 import { createMetriportApi } from '../../client'
 import { handleErrorMessage } from '../../shared/errorHandler'
 import { listFields } from './fields'
 import { startQuerySchema } from './validation'
-
-const dataPoints = {
-  patientId: {
-    key: 'patientId',
-    valueType: 'string',
-  },
-} satisfies Record<string, DataPointDefinition>
+import { documentsDataPoints as dataPoints } from './dataPoints'
 
 export const queryDocs: Action<
   typeof listFields,
@@ -32,11 +26,13 @@ export const queryDocs: Action<
 
       const api = createMetriportApi(payload.settings)
 
-      await api.startDocumentQuery(patientId, facilityId)
+      const resp = await api.startDocumentQuery(patientId, facilityId)
 
       await onComplete({
         data_points: {
-          patientId: String(patientId),
+          queryStatus: resp.queryStatus,
+          queryProgressTotal: String(resp.queryProgress?.total),
+          queryProgressComplete: String(resp.queryProgress?.completed),
         },
       })
     } catch (err) {

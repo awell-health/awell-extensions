@@ -1,15 +1,23 @@
-import { createOrganization } from './organization/create'
-import { updateOrganization } from './organization/update'
-import { getOrganization } from './organization/get'
-import { createFacility } from './facility/create'
-import { updateFacility } from './facility/update'
-import { getFacility } from './facility/get'
+import { getPatient } from './patient/get'
+import { updatePatient } from './patient/update'
+import { createPatient } from './patient/create'
+import { deletePatient } from './patient/delete'
+import { getAllLinks } from './link/getAll'
+import { createLink } from './link/create'
+import { removeLink } from './link/remove'
+import { listDocuments } from './document/list'
+import { queryDocs } from './document/query'
+import { getUrl } from './document/getUrl'
 
 export const actions = {
-  createOrganization,
-  updateOrganization,
-  getOrganization,
-  createFacility,
-  updateFacility,
-  getFacility,
+  getPatient,
+  createPatient,
+  updatePatient,
+  deletePatient,
+  getAllLinks,
+  createLink,
+  removeLink,
+  listDocuments,
+  queryDocs,
+  getUrl
 }
