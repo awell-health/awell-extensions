@@ -67,11 +67,7 @@ __metadata:
     "@graphql-tools/apollo-engine-loader": ^7.3.26
     "@graphql-typed-document-node/core": ^3.1.2
     "@mailchimp/mailchimp_transactional": ^1.0.50
-<<<<<<< HEAD
     "@metriport/api": ^3.1.5
-=======
-    "@metriport/api": ^3.1.4
->>>>>>> main
     "@types/jest": ^29.4.0
     "@types/lodash": ^4.14.191
     "@types/mailchimp__mailchimp_transactional": ^1.0.5
@@ -81,10 +77,6 @@ __metadata:
     "@typescript-eslint/eslint-plugin": ^5.52.0
     axios: ^1.3.4
     date-fns: ^2.29.3
-<<<<<<< HEAD
-=======
-    dayjs: ^1.11.7
->>>>>>> main
     driver-license-validator: ^3.1.1
     eslint: ^8.34.0
     eslint-config-prettier: ^8.6.0
@@ -2109,7 +2101,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-<<<<<<< HEAD
 "@metriport/api@npm:^3.1.5":
   version: 3.1.5
   resolution: "@metriport/api@npm:3.1.5"
@@ -2118,15 +2109,6 @@ __metadata:
     dayjs: ^1.11.7
     zod: ^3.20.2
   checksum: 761c139f0b1940ccd5484f1d93f8d9269cf83541fc42663c26a6d1898f554cae5fe6b0b44ed808edac867209f76361b5e454d84f60e81635a552fbe40209c5ff
-=======
-"@metriport/api@npm:^3.1.4":
-  version: 3.1.4
-  resolution: "@metriport/api@npm:3.1.4"
-  dependencies:
-    axios: ^1.3.4
-    zod: ^3.20.2
-  checksum: 39f6623d3d8561a0177f89f4b3e31b50bc2d9eb37818d04db49686b9258bc1227219a6a3739bd0a670beb7bdeaf49f0b0d31225477d7ecd9425eb42a4bc53d1d
->>>>>>> main
   languageName: node
   linkType: hard
 
