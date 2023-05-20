@@ -8,7 +8,7 @@ const dataPoints = {
   },
 } satisfies Record<string, DataPointDefinition>
 
-interface Payload {
+export interface Payload {
   resource_id: string
   resource_id_type: string
   event_type: string
@@ -40,3 +40,5 @@ export const patientCreated: Webhook<keyof typeof dataPoints, Payload> = {
     }
   },
 }
+
+export type PatientCreated = typeof patientCreated

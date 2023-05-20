@@ -30,3 +30,5 @@ export const onCreatePatient: Webhook<
     }
   },
 }
+
+export type OnCreatePatient = typeof onCreatePatient

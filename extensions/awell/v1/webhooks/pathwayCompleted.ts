@@ -12,7 +12,7 @@ const dataPoints = {
   },
 } satisfies Record<string, DataPointDefinition>
 
-interface Payload {
+export interface PathwayCompletedPayload {
   complete_date: string
   pathway: {
     id: string
@@ -22,7 +22,10 @@ interface Payload {
   event_type: 'pathway.completed'
 }
 
-export const pathwayCompleted: Webhook<keyof typeof dataPoints, Payload> = {
+export const pathwayCompleted: Webhook<
+  keyof typeof dataPoints,
+  PathwayCompletedPayload
+> = {
   key: 'pathwayCompleted',
   dataPoints,
   onWebhookReceived: async ({ payload }, onSuccess, onError) => {
@@ -46,3 +49,5 @@ export const pathwayCompleted: Webhook<keyof typeof dataPoints, Payload> = {
     }
   },
 }
+
+export type PathwayCompletedWebhook = typeof pathwayCompleted

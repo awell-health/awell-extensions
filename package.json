@@ -15,13 +15,13 @@
   },
   "homepage": "https://github.com/awell-health/awell-extensions#readme",
   "scripts": {
-    "dev": "PRETTY_LOGS=true LOG_LEVEL=debug ts-node-dev --clear --transpile-only ./src/index.ts",
     "clean": "rimraf dist/*",
     "build": "tsc",
     "start": "node dist/src/index.js",
     "lint": "eslint **/*.ts",
     "postinstall": "husky install",
-    "test": "jest"
+    "test": "jest",
+    "prepack": "tsc"
   },
   "types": "dist/src/index.d.ts",
   "files": [
