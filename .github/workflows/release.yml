@@ -27,13 +27,24 @@ jobs:
 
       - name: Setup .yarnrc.yml
         run: |
-          yarn config set npmRegistryServer "https://npm.pkg.github.com"
           yarn config set npmAlwaysAuth true
           yarn config set npmAuthToken $NPM_AUTH_TOKEN
         env:
-          NPM_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_AUTH_TOKEN: ${{ secrets.NPM_AWELL_EXTENSIONS_CI }}
 
-      - name: Publish to GitHub Registry
+      # - name: Publish to GitHub Registry
+      #   run: |
+      #     pkg_version=$(cat package.json | jq -r '.version')
+      #     branch=${GITHUB_REF##*/}
+          
+      #     if [[ $branch != "main" ]]; then
+      #       yarn version "$pkg_version-beta$GITHUB_RUN_NUMBER"
+      #       yarn npm publish --tag beta --access public
+      #     else
+      #       yarn npm publish --access public
+      #     fi
+
+      - name: Publish to NPM Registry
         run: |
           pkg_version=$(cat package.json | jq -r '.version')
           branch=${GITHUB_REF##*/}
@@ -42,5 +53,6 @@ jobs:
             yarn version "$pkg_version-beta$GITHUB_RUN_NUMBER"
             yarn npm publish --tag beta --access public
           else
+            yarn version "$pkg_version"
             yarn npm publish --access public
           fi

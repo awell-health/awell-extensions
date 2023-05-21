@@ -1,10 +1,7 @@
 {
   "name": "@awell-health/awell-extensions",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "packageManager": "yarn@3.4.1",
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com"
-  },
   "main": "dist/src/index.js",
   "repository": {
     "type": "git",
