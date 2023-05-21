@@ -13,6 +13,10 @@ import { MathExtension } from './math'
 import { MessageBird } from './messagebird'
 import { Metriport } from './metriport'
 import { Twilio } from './twilio'
+import * as json from './markdown.json'
+
+export type Markdown = Record<string, { readme: string; changelog: string }>
+export const markdown: Markdown = json
 
 export const extensions = [
   // AvaAi, Best to disable this until we cleared out data privacy & HIPAA with OpenAI

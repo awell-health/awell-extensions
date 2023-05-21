@@ -1,3 +1,1 @@
-import { extensions } from '../extensions'
-
-export default extensions
+export * from '../extensions'
