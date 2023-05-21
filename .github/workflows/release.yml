@@ -1,6 +1,10 @@
 name: Package Release
 
-on: push
+on:
+  pull_request:
+    branches: [ "main" ]
+  push:
+    branches: [ "main" ]
 
 jobs:
   deploy:
@@ -22,27 +26,12 @@ jobs:
       - name: yarn install
         run: yarn
 
-      - name: build
-        run: yarn build
-
       - name: Setup .yarnrc.yml
         run: |
           yarn config set npmAlwaysAuth true
           yarn config set npmAuthToken $NPM_AUTH_TOKEN
         env:
           NPM_AUTH_TOKEN: ${{ secrets.NPM_AWELL_EXTENSIONS_CI }}
-
-      # - name: Publish to GitHub Registry
-      #   run: |
-      #     pkg_version=$(cat package.json | jq -r '.version')
-      #     branch=${GITHUB_REF##*/}
-          
-      #     if [[ $branch != "main" ]]; then
-      #       yarn version "$pkg_version-beta$GITHUB_RUN_NUMBER"
-      #       yarn npm publish --tag beta --access public
-      #     else
-      #       yarn npm publish --access public
-      #     fi
 
       - name: Publish to NPM Registry
         run: |
