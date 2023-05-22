@@ -4,6 +4,10 @@ process.env.TZ = 'UTC'
 
 module.exports = {
   preset: 'ts-jest',
+  moduleNameMapper: {
+    // Mock for the driver license validator due to build issue
+    'driver-license-validator': '<rootDir>/extensions/metriport/__mocks__/drivers-license-validator.ts',
+  },
   testEnvironment: 'node',
   modulePathIgnorePatterns: ['<rootDir>/dist/'],
 }
