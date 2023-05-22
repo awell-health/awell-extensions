@@ -11,3 +11,7 @@ You will need to provide the API URL and Key for the Wellinks Healthie instance.
 ## Check for Override
 
 Checks to see if the patient in Healthie has an active Override form.
+
+## Check for Scheduled Appointments
+
+Checks to see if the patient in Healthie has an appointment of a specific type scheduled in the future.
