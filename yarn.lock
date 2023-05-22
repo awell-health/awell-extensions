@@ -2101,8 +2101,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-<<<<<<< HEAD
-=======
 "@metriport/api@npm:^3.1.5":
   version: 3.1.5
   resolution: "@metriport/api@npm:3.1.5"
@@ -2114,7 +2112,6 @@ __metadata:
   languageName: node
   linkType: hard
 
->>>>>>> f739736 (yarn install)
 "@nodelib/fs.scandir@npm:2.1.5":
   version: 2.1.5
   resolution: "@nodelib/fs.scandir@npm:2.1.5"
