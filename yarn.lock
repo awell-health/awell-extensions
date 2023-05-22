@@ -67,7 +67,6 @@ __metadata:
     "@graphql-tools/apollo-engine-loader": ^7.3.26
     "@graphql-typed-document-node/core": ^3.1.2
     "@mailchimp/mailchimp_transactional": ^1.0.50
-    "@metriport/api": ^3.1.5
     "@types/jest": ^29.4.0
     "@types/lodash": ^4.14.191
     "@types/mailchimp__mailchimp_transactional": ^1.0.5
@@ -2098,17 +2097,6 @@ __metadata:
   dependencies:
     axios: ^0.21.1
   checksum: 5a1f563f18ef71549ca154c6d63b26ee2786e03ba162229f6e2e404766f7d67c90a5d7931b0130d9b99c4cdf5a3796b51851166b5313c104cf195711613636a7
-  languageName: node
-  linkType: hard
-
-"@metriport/api@npm:^3.1.5":
-  version: 3.1.5
-  resolution: "@metriport/api@npm:3.1.5"
-  dependencies:
-    axios: ^1.3.4
-    dayjs: ^1.11.7
-    zod: ^3.20.2
-  checksum: 761c139f0b1940ccd5484f1d93f8d9269cf83541fc42663c26a6d1898f554cae5fe6b0b44ed808edac867209f76361b5e454d84f60e81635a552fbe40209c5ff
   languageName: node
   linkType: hard
 
