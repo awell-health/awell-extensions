@@ -67,11 +67,7 @@ __metadata:
     "@graphql-tools/apollo-engine-loader": ^7.3.26
     "@graphql-typed-document-node/core": ^3.1.2
     "@mailchimp/mailchimp_transactional": ^1.0.50
-<<<<<<< HEAD
     "@metriport/api": ^3.1.5
-=======
-    "@metriport/api": ^3.1.4
->>>>>>> cefad1f (fix(): fixed errors from yarn build and removed package-lock.json)
     "@types/jest": ^29.4.0
     "@types/lodash": ^4.14.191
     "@types/mailchimp__mailchimp_transactional": ^1.0.5
