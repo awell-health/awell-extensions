@@ -5,9 +5,9 @@ import { settings } from './settings'
 
 export const Cloudinary: Extension = {
   key: 'cloudinary',
-  title: 'Cloudinary (alpha)',
+  title: 'Cloudinary',
   icon_url:
-    'https://res.cloudinary.com/da7x4rzl4/image/upload/v1681407040/Awell%20Extensions/cloudinary_logo.png',
+    'https://res.cloudinary.com/da7x4rzl4/image/upload/v1684740031/Awell%20Extensions/cloudinary_web_favicon.png',
   description:
     'Cloudinary is a cloud-based image and video management platform for storing, managing, and delivering digital media assets.',
   category: Category.CONTENT_AND_FILES,

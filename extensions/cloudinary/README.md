@@ -8,12 +8,15 @@ The platform offers features such as image and video transformation, automatic i
 
 ### Upload files
 
-This action allows a given stakeholder to upload one or many files (all file types allowed).
+This action allows a given stakeholder to upload one or many files (all file types allowed). Additionally, you can specify in what folder you would like to upload the assets.
 
 **Prerequisites:**
 
-- You have a Cloudinary account
-- You have created an upload preset that allows for unsigned uploads
+1. You have a Cloudinary account
+2. You have created an upload preset that allows for unsigned uploads
 
 **Limitations:**
-Currently, the URL(s) of the uploaded file(s) are not sent back to Awell. In order to make sure you can easily retrieve the files a stakeholder uploaded, all uploaded files will have the following context fields: `patientId`, `activityId`, and `pathwayId`. Additionally, you have the ability to add tags to files as well.
+
+- You cannot manage or browse uploaded file(s) in Awell. You can only do that in Cloudinary. To make searching files as easy as possible, you can assign tags to uploaded files and each uploaded file automatically has metadata attached (pathway id and activity id)
+- Only support for unsigned uploads
+- As a user, you cannot delete files you already uploaded
