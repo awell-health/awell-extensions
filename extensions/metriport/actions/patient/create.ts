@@ -99,7 +99,7 @@ export const convertToMetriportPatient = (
     })
 
     if (valid) {
-      ;(patientMetriport.personalIdentifiers ?? []).push({
+      (patientMetriport.personalIdentifiers ?? []).push({
         type: 'driversLicense',
         value: patient.driversLicenseValue,
         state: usStateSchema.parse(patient.driversLicenseState),
