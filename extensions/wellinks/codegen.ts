@@ -6,7 +6,7 @@ const config: CodegenConfig = {
     schema: 'https://staging-api.gethealthie.com/graphql',
     documents: 'extensions/wellinks/graphql/*.ts',
     generates: {
-      'extensions/wellinks/gql/sdk.ts': {
+      'extensions/wellinks/gql/wellinksSdk.ts': {
         plugins: [
           'typescript',
           'typescript-operations',
