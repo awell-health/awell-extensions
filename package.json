@@ -49,7 +49,7 @@
     "@metriport/api": "^3.1.5",
     "axios": "^1.3.4",
     "date-fns": "^2.29.3",
-    "driver-license-validator": "^3.1.1",
+    "driver-license-validator": "2.0.2",
     "fastify": "^4.13.0",
     "form-data": "^4.0.0",
     "graphql": "^16.6.0",
