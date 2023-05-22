@@ -1,4 +1,4 @@
-name: Package Release
+name: Test and Package Release
 
 on:
   pull_request:
@@ -25,6 +25,12 @@ jobs:
 
       - name: yarn install
         run: yarn
+
+      - name: Compile Typescript
+        run: yarn build
+      
+      - name: Run tests
+        run: yarn test
 
       - name: Setup .yarnrc.yml
         run: |
