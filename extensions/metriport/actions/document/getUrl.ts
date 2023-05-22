@@ -15,8 +15,7 @@ export const getUrl: Action<
   key: 'getUrl',
   category: Category.EHR_INTEGRATIONS,
   title: 'Get Document URL',
-  description:
-    'Fetches the document from S3 and sends a presigned URL.',
+  description: 'Fetches the document from S3 and sends a presigned URL.',
   fields: getUrlFields,
   previewable: true,
   dataPoints,
