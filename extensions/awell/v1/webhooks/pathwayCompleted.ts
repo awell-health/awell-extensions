@@ -1,3 +1,4 @@
+import { isNil } from 'lodash'
 import { type DataPointDefinition, type Webhook } from '../../../../lib/types'
 
 const dataPoints = {
@@ -11,7 +12,7 @@ const dataPoints = {
   },
 } satisfies Record<string, DataPointDefinition>
 
-interface Payload {
+export interface PathwayCompletedPayload {
   complete_date: string
   pathway: {
     id: string
@@ -21,15 +22,32 @@ interface Payload {
   event_type: 'pathway.completed'
 }
 
-export const pathwayCompleted: Webhook<keyof typeof dataPoints, Payload> = {
+export const pathwayCompleted: Webhook<
+  keyof typeof dataPoints,
+  PathwayCompletedPayload
+> = {
   key: 'pathwayCompleted',
   dataPoints,
-  onWebhookReceived: async ({ pathway, complete_date }) => ({
-    pathway_id: pathway.id,
-    patient_id: pathway.patient_id,
-    data_points: {
-      pathway_definition_id: pathway.pathway_definition_id,
-      complete_date,
-    },
-  }),
+  onWebhookReceived: async ({ payload }, onSuccess, onError) => {
+    const { pathway, complete_date } = payload
+    if (isNil(pathway.pathway_definition_id)) {
+      await onError({
+        response: {
+          statusCode: 400,
+          message: 'Pathway definition id is required',
+        },
+      })
+    } else {
+      await onSuccess({
+        patient_id: pathway.patient_id,
+        pathway_id: pathway.id,
+        data_points: {
+          pathway_definition_id: pathway.pathway_definition_id,
+          complete_date,
+        },
+      })
+    }
+  },
 }
+
+export type PathwayCompletedWebhook = typeof pathwayCompleted
