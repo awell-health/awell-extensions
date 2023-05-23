@@ -8,6 +8,7 @@ import { Category } from '../../../lib/types/marketplace'
 import { getSdk } from '../gql/sdk'
 import { initialiseClient } from '../graphqlClient'
 import { type settings } from '../settings'
+import { convertDate } from '../validation/dateValidation'
 
 const fields = {
   appointmentId: {
@@ -63,12 +64,13 @@ export const getAppointment: Action<
         const { data } = await sdk.getAppointment({
           id: appointmentId,
         })
+        const date = convertDate(data.appointment?.date)
         await onComplete({
           data_points: {
             appointmentTypeId: data.appointment?.appointment_type?.id,
             appointmentTypeName: data.appointment?.appointment_type?.name,
             contactType: data.appointment?.contact_type,
-            date: data.appointment?.date,
+            date,
             patientId: data?.appointment?.user?.id,
           },
         })
