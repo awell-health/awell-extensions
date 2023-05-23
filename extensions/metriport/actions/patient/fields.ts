@@ -54,7 +54,7 @@ export const createFields = {
     id: 'phone',
     label: 'Phone',
     description: `The Patient's 10 digit phone number, formatted 1234567899`,
-    type: FieldType.NUMERIC,
+    type: FieldType.STRING,
   },
   email: {
     id: 'email',

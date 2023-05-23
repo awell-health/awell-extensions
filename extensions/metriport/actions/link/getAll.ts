@@ -34,11 +34,7 @@ export const getAllLinks: Action<
 
       await api.listLinks(patientId, facilityId)
 
-      await onComplete({
-        data_points: {
-          patientId: String(patientId),
-        },
-      })
+      await onComplete()
     } catch (err) {
       await handleErrorMessage(err, onError)
     }

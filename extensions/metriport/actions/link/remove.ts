@@ -35,11 +35,7 @@ export const removeLink: Action<
 
       await api.removeLink(patientId, facilityId, linkSource)
 
-      await onComplete({
-        data_points: {
-          patientId: String(patientId),
-        },
-      })
+      await onComplete()
     } catch (err) {
       await handleErrorMessage(err, onError)
     }
