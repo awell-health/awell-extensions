@@ -6,60 +6,62 @@ Through a single integration, our API enables modern health companies to get the
 
 As a developer-first interoperability solution, Metriport is powering the next wave of innovative companies, accelerating a revolution in digital health.
 
-To learn more visit https://www.metriport.com/
+To learn more visit [https://www.metriport.com/](https://www.metriport.com/)
 # Extension settings
 
 In order to set up this extension, **you will need to provide a Metriport API key**. You can obtain an API key via the Metriport dashboard by selecting the `Developers tab`. To learn more on how to get started with Metriport visit our [quick start docs](https://docs.metriport.com/medical-api/getting-started/quickstart) for our Medical API. Also, to better understand how our API keys work check out the [API Keys section](https://docs.metriport.com/home/api-info/api-keys) of our docs as well.
 
 # Custom Actions
 
-**GENERAL NOTE: When providing a facilityId it must be the id of the facility the patient belongs to.**
+**GENERAL NOTE: Make sure to create Organizations and Facilities in Metriport before using this extension. A Patient must be associated with a Facility by providing the facilityId when stated in the actions.**
 
-## Create patient
+## Create Patient
 
-Creates a Patient in Metriport for the specified Facility where the patient is receiving care.
+Creates a Patient in Metriport for the specified Facility where the Patient is receiving care.
 
-## Update patient
+Visit [endpoint docs](https://docs.metriport.com/medical-api/api-reference/patient/create-patient) for more info.
+
+## Update Patient
 
 Updates the specified Patient.
 
-## Get patient
+Visit [endpoint docs](https://docs.metriport.com/medical-api/api-reference/patient/update-patient) for more info.
+
+## Get Patient
 
 Retrieves the specified Patient.
 
-## Remove patient
+Visit [endpoint docs](https://docs.metriport.com/medical-api/api-reference/patient/get-patient) for more info.
 
-Removes a patient at Metriport and at HIEs the patient is linked to.
+## Remove Patient
 
-## Get all links
+Removes a Patient at Metriport and at HIEs the Patient is linked to.
 
-Builds and returns the current state of a patient's links across HIEs.
+Visit [endpoint docs](https://docs.metriport.com/medical-api/api-reference/patient/delete-patient) for more info.
 
-## Create link
-
-Creates link between a patient at Metriport and an entity (person/patient) on an HIE (medical data source).
-
-## Remove link
-
-Removes a link between a patient at Metriport and an entity (person/patient) on an HIE (medical data source).
-
-## List documents
+## List Documents
 
 Lists all Documents that can be retrieved for a Patient.
 
-**NOTE: It also returns the status of querying document references across HIEs, indicating whether there is an asynchronous query in progress (status processing) or not (status completed). If the query is in progress, you will also receive the total number of documents to be queried as well as the ones that have already been completed.**
+Visit [endpoint docs](https://docs.metriport.com/medical-api/api-reference/document/list-documents) for more info.
 
-## Query documents
+**NOTE: It also returns the status of querying Document references across HIEs, indicating whether there is an asynchronous query in progress (status processing) or not (status completed). If the query is in progress, you will also receive the total number of Documents to be queried as well as the ones that have already been completed.**
 
-Triggers a document query for the specified patient across HIEs.
+## Query Documents
 
-**NOTE: When executed, this endpoint triggers an asynchronous document query with HIEs and immediately returns the status of document query, processing .**
+Triggers a Document query for the specified Patient across HIEs.
 
-## Get document url
+Visit [endpoint docs](https://docs.metriport.com/medical-api/api-reference/document/start-document-query) for more info.
 
-Gets a presigned URL for downloading the specified document.
+**NOTE: When executed, this endpoint triggers an asynchronous Document query with HIEs and immediately returns the status of Document query, processing .**
 
-**NOTE: This endpoint returns a URL which you can use to download the specified document using the file name provided from the List Documents endpoint.**
+## Get Document Url
+
+Gets a presigned URL for downloading the specified Document.
+
+Visit [endpoint docs](https://docs.metriport.com/medical-api/api-reference/document/get-document) for more info.
+
+**NOTE: This endpoint returns a URL which you can use to download the specified Document using the file name provided from the List Documents endpoint.**
 
 ## More Info
 
