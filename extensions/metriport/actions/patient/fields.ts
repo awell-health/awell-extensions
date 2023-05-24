@@ -54,7 +54,7 @@ export const createFields = {
     id: 'phone',
     label: 'Phone',
     description: `The Patient's 10 digit phone number, formatted 1234567899`,
-    type: FieldType.NUMERIC,
+    type: FieldType.STRING,
   },
   email: {
     id: 'email',
@@ -68,7 +68,7 @@ export const updateFields = {
   id: {
     id: 'id',
     label: 'Patient ID',
-    description: 'The ID of the patient to update',
+    description: 'The ID of the Patient to update',
     type: FieldType.STRING,
     required: true,
   },
@@ -79,7 +79,7 @@ export const getFields = {
   patientId: {
     id: 'patientId',
     label: 'Patient ID',
-    description: 'The patient ID',
+    description: 'The Patient ID',
     type: FieldType.STRING,
     required: true,
   },
