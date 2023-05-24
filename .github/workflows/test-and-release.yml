@@ -1,0 +1,53 @@
+name: Test and Package Release
+
+on:
+  pull_request:
+    branches: [ "main" ]
+  push:
+    branches: [ "main" ]
+
+jobs:
+  deploy:
+    permissions:
+      packages: write
+      contents: read
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: yarn install
+        run: yarn
+
+      - name: Compile Typescript
+        run: yarn build
+      
+      - name: Run tests
+        run: yarn test
+
+      - name: Setup .yarnrc.yml
+        run: |
+          yarn config set npmAlwaysAuth true
+          yarn config set npmAuthToken $NPM_AUTH_TOKEN
+        env:
+          NPM_AUTH_TOKEN: ${{ secrets.NPM_AWELL_EXTENSIONS_CI }}
+
+      - name: Publish to NPM Registry
+        run: |
+          pkg_version=$(cat package.json | jq -r '.version')
+          branch=${GITHUB_REF##*/}
+          
+          if [[ $branch != "main" ]]; then
+            yarn version "$pkg_version-beta$GITHUB_RUN_NUMBER"
+            yarn npm publish --tag beta --access public
+          else
+            yarn version "$pkg_version"
+            yarn npm publish --access public
+          fi

@@ -12,3 +12,4 @@
 # Test files
 **/__tests__
 **/__mocks__
+**/*.test.ts

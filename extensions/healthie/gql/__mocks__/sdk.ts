@@ -1,3 +1,8 @@
+import {
+  type GetAppointmentQuery,
+  type GetAppointmentQueryVariables,
+} from '../sdk'
+
 export const mockGetSdkReturn = {
   getConversationList: jest.fn((args) => {
     return { data: { conversationMemberships: [] } }
@@ -162,6 +167,18 @@ export const mockGetSdkReturn = {
           task: {
             id: 'task-1',
           },
+        },
+      },
+    }
+  }),
+  getAppointment: jest.fn<
+    { data: GetAppointmentQuery },
+    [GetAppointmentQueryVariables]
+  >((args) => {
+    return {
+      data: {
+        appointment: {
+          id: 'appointment-1',
         },
       },
     }

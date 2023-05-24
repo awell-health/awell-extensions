@@ -1,0 +1,6 @@
+{
+    "": {
+        "readme": "this will be overwritten",
+        "changelog": "by the build script"
+    }
+}
