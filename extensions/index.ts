@@ -13,6 +13,7 @@ import { MathExtension } from './math'
 import { MessageBird } from './messagebird'
 import { Metriport } from './metriport'
 import { Twilio } from './twilio'
+import { Wellinks } from './wellinks'
 import * as json from './markdown.json'
 
 export type Markdown = Record<string, { readme: string; changelog: string }>
@@ -34,4 +35,5 @@ export const extensions = [
   MessageBird,
   Metriport,
   Twilio,
+  Wellinks,
 ]
