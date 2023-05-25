@@ -35,6 +35,7 @@ export const checkForScheduledAppointment: Action< typeof fields, typeof setting
     title: 'Check for a Scheduled Appointment',
     description: 'Check that a patient has an appointment of a certain type scheduled in the future',
     fields,
+    dataPoints,
     previewable: true,
     onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
         const { fields, settings } = payload
