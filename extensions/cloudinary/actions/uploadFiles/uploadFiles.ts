@@ -1,5 +1,4 @@
-import { type Action } from '../../../../lib/types'
-import { Category } from '../../../../lib/types/marketplace'
+import { type Action, Category } from '@awell-health/awell-extensions-types'
 import { SettingsValidationSchema, type settings } from '../../settings'
 import { fields } from './config'
 import { fromZodError } from 'zod-validation-error'

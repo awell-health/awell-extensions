@@ -3,8 +3,8 @@ import {
   type Action,
   type DataPointDefinition,
   type Field,
-} from '../../../lib/types'
-import { Category } from '../../../lib/types/marketplace'
+  Category,
+} from '@awell-health/awell-extensions-types'
 import { type settings } from '../settings'
 
 const fields = {

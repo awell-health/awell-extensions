@@ -1,4 +1,4 @@
-import { type Field, FieldType } from '../../../../../../lib/types'
+import { type Field, FieldType } from '@awell-health/awell-extensions-types'
 import { z, type ZodTypeAny } from 'zod'
 
 export const fields = {

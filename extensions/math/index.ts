@@ -1,7 +1,7 @@
 import { generateRandomNumber, calculateDateDifference } from './v1/actions'
-import { type Extension } from '../../lib/types'
+import { type Extension } from '@awell-health/awell-extensions-types'
 import { settings } from './settings'
-import { AuthorType, Category } from '../../lib/types/marketplace'
+import { AuthorType, Category } from '@awell-health/awell-extensions-types'
 
 export const MathExtension: Extension = {
   key: 'math',

@@ -1,5 +1,4 @@
-import { type Action } from '../../../../lib/types'
-import { Category } from '../../../../lib/types/marketplace'
+import { type Action, Category } from '@awell-health/awell-extensions-types'
 import { type settings } from '../../settings'
 import { createMetriportApi } from '../../client'
 import { handleErrorMessage } from '../../shared/errorHandler'

@@ -1,6 +1,6 @@
 import { isEmpty, isNil } from 'lodash'
 import { z, type ZodTypeAny } from 'zod'
-import { FieldType, type Field } from '../../../../../../lib/types'
+import { FieldType, type Field } from '@awell-health/awell-extensions-types'
 import { PathwayStatus } from '../../../gql/graphql'
 
 export const fields = {

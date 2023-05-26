@@ -6,9 +6,9 @@ import {
   StringType,
   type Action,
   type Field,
-} from '../../../../lib/types'
+  Category,
+} from '@awell-health/awell-extensions-types'
 import { SettingsValidationSchema, type settings } from '../../settings'
-import { Category } from '../../../../lib/types/marketplace'
 import { MessageValidationSchema } from '../../common/validation'
 import {
   E164PhoneValidationSchema,

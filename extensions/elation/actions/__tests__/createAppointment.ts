@@ -1,6 +1,5 @@
 import { appointmentExample } from '../../__mocks__/constants'
 import { createAppointment } from '../createAppointment'
-import { NoCache } from '../../../../services/cache/cache'
 
 jest.mock('../../client')
 
@@ -28,8 +27,7 @@ describe('Simple create appointment action', () => {
         settings,
       } as any,
       onComplete,
-      jest.fn(),
-      { authCacheService: new NoCache() }
+      jest.fn()
     )
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {

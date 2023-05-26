@@ -1,6 +1,6 @@
 import { isEmpty, isNil } from 'lodash'
 import { z, type ZodTypeAny } from 'zod'
-import { type Field, FieldType } from '../../../../../lib/types'
+import { type Field, FieldType } from '@awell-health/awell-extensions-types'
 
 export const fields = {
   uploadPreset: {

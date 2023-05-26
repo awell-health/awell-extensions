@@ -1,4 +1,4 @@
-import { type Setting } from '../../lib/types'
+import { type Setting } from '@awell-health/awell-extensions-types'
 
 export const settings = {
   apiKey: {

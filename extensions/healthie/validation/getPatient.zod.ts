@@ -3,7 +3,7 @@ import {
   DateTimeOptionalSchema,
   E164PhoneValidationOptionalSchema,
 } from '../../../lib/shared/validation'
-import { type ActivityEvent } from '../../../lib/types/ActivityEvent'
+import { type ActivityEvent } from '@awell-health/awell-extensions-types'
 import { type GetUserQuery } from '../gql/sdk'
 
 interface ValidateResult {

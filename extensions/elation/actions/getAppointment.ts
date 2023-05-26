@@ -1,15 +1,14 @@
 import { ZodError } from 'zod'
 import {
   FieldType,
+  Category,
   type DataPointDefinition,
   type Field,
-} from '../../../lib/types'
-import { Category } from '../../../lib/types/marketplace'
-import { elationAPIClientInjector } from '../clientUtils'
+} from '@awell-health/awell-extensions-types'
+import { makeAPIClient } from '../clientUtils'
 import { fromZodError } from 'zod-validation-error'
 import { AxiosError } from 'axios'
 import { numberId } from '../validation/generic.zod'
-import { wrapActivity } from '../../../lib/shared/wrapActivity'
 import type { ElationAction } from '../types/action'
 
 const fields = {
@@ -72,76 +71,71 @@ export const getAppointment: ElationAction<
   fields,
   previewable: true,
   dataPoints,
-  services: ['authCacheService'],
-  onActivityCreated: wrapActivity(elationAPIClientInjector)(
-    async (payload, onComplete, onError, services, api): Promise<void> => {
-      try {
-        const appointmentId = numberId.parse(payload.fields.appointmentId)
-
-        const appointment = await api.getAppointment(appointmentId)
-        await onComplete({
-          data_points: {
-            scheduledDate: appointment.scheduled_date,
-            reason: appointment.reason,
-            patientId: String(appointment.patient),
-            physicianId: String(appointment.physician),
-            practiceId: String(appointment.practice),
-            duration: String(appointment.duration),
-            description: appointment.description,
-            serviceLocationId: String(appointment.service_location?.id),
-            telehealthDetails: appointment.telehealth_details,
-          },
+  onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
+    try {
+      const appointmentId = numberId.parse(payload.fields.appointmentId)
+      const api = makeAPIClient(payload.settings)
+      const appointment = await api.getAppointment(appointmentId)
+      await onComplete({
+        data_points: {
+          scheduledDate: appointment.scheduled_date,
+          reason: appointment.reason,
+          patientId: String(appointment.patient),
+          physicianId: String(appointment.physician),
+          practiceId: String(appointment.practice),
+          duration: String(appointment.duration),
+          description: appointment.description,
+          serviceLocationId: String(appointment.service_location?.id),
+          telehealthDetails: appointment.telehealth_details,
+        },
+      })
+    } catch (err) {
+      if (err instanceof ZodError) {
+        const error = fromZodError(err)
+        await onError({
+          events: [
+            {
+              date: new Date().toISOString(),
+              text: { en: error.message },
+              error: {
+                category: 'SERVER_ERROR',
+                message: error.message,
+              },
+            },
+          ],
         })
-      } catch (err) {
-        if (err instanceof ZodError) {
-          const error = fromZodError(err)
-          await onError({
-            events: [
-              {
-                date: new Date().toISOString(),
-                text: { en: error.message },
-                error: {
-                  category: 'SERVER_ERROR',
-                  message: error.message,
-                },
+      } else if (err instanceof AxiosError) {
+        await onError({
+          events: [
+            {
+              date: new Date().toISOString(),
+              text: {
+                en: `${err.status ?? '(no status code)'} Error: ${err.message}`,
               },
-            ],
-          })
-        } else if (err instanceof AxiosError) {
-          await onError({
-            events: [
-              {
-                date: new Date().toISOString(),
-                text: {
-                  en: `${err.status ?? '(no status code)'} Error: ${
-                    err.message
-                  }`,
-                },
-                error: {
-                  category: 'BAD_REQUEST',
-                  message: `${err.status ?? '(no status code)'} Error: ${
-                    err.message
-                  }`,
-                },
+              error: {
+                category: 'BAD_REQUEST',
+                message: `${err.status ?? '(no status code)'} Error: ${
+                  err.message
+                }`,
               },
-            ],
-          })
-        } else {
-          const message = (err as Error).message
-          await onError({
-            events: [
-              {
-                date: new Date().toISOString(),
-                text: { en: message },
-                error: {
-                  category: 'SERVER_ERROR',
-                  message,
-                },
+            },
+          ],
+        })
+      } else {
+        const message = (err as Error).message
+        await onError({
+          events: [
+            {
+              date: new Date().toISOString(),
+              text: { en: message },
+              error: {
+                category: 'SERVER_ERROR',
+                message,
               },
-            ],
-          })
-        }
+            },
+          ],
+        })
       }
     }
-  ),
+  },
 }

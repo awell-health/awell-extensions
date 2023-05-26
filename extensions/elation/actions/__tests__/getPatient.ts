@@ -1,7 +1,6 @@
 import { getPatient } from '../getPatient'
-import { type ActivityEvent } from '../../../../lib/types/ActivityEvent'
+import { type ActivityEvent } from '@awell-health/awell-extensions-types'
 import { patientExample } from '../../__mocks__/constants'
-import { NoCache } from '../../../../services/cache/cache'
 
 jest.mock('../../client')
 
@@ -29,8 +28,7 @@ describe('Simple get patient action', () => {
         settings,
       } as any,
       onComplete,
-      jest.fn(),
-      { authCacheService: new NoCache() }
+      jest.fn()
     )
     expect(onComplete).toHaveBeenCalled()
     expect(onComplete).toBeCalledWith({
@@ -57,8 +55,7 @@ describe('Simple get patient action', () => {
         settings,
       } as any,
       onComplete,
-      onError,
-      { authCacheService: new NoCache() }
+      onError
     )
     expect(onError).toHaveBeenCalled()
     expect(onError).toHaveReturnedWith(

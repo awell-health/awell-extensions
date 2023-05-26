@@ -1,4 +1,4 @@
-import { type Setting } from '../../types'
+import type { Setting } from '@awell-health/awell-extensions-types'
 
 const base = {
   auth_url: {
@@ -48,7 +48,8 @@ export const clientCredentialsSettings = {
     key: 'client_secret',
     label: 'Client Secret',
     obfuscated: true,
-    description: 'The client secret for OAuth2 client credentials authentication.',
+    description:
+      'The client secret for OAuth2 client credentials authentication.',
     required: true,
   },
   audience: {

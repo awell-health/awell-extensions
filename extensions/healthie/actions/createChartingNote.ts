@@ -1,6 +1,10 @@
 import { isNil } from 'lodash'
-import { FieldType, type Action, type Field } from '../../../lib/types'
-import { Category } from '../../../lib/types/marketplace'
+import {
+  FieldType,
+  type Action,
+  type Field,
+  Category,
+} from '@awell-health/awell-extensions-types'
 import { getSdk } from '../gql/sdk'
 import { initialiseClient } from '../graphqlClient'
 import { type settings } from '../settings'

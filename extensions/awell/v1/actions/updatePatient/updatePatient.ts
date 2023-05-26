@@ -1,6 +1,5 @@
-import { type Action } from '../../../../../lib/types'
+import { type Action, Category } from '@awell-health/awell-extensions-types'
 import { SettingsValidationSchema, type settings } from '../../../settings'
-import { Category } from '../../../../../lib/types/marketplace'
 import {
   fields,
   FieldsValidationSchema,

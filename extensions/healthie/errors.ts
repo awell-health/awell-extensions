@@ -1,5 +1,5 @@
 import { isNil } from "lodash";
-import { type ActivityEvent } from "../../lib/types/ActivityEvent";
+import { type ActivityEvent } from "@awell-health/awell-extensions-types";
 import { type FieldError } from "./gql/sdk";
 
 

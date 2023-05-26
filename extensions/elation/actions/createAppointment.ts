@@ -2,15 +2,14 @@
 import { ZodError } from 'zod'
 import {
   FieldType,
+  Category,
   type DataPointDefinition,
   type Field,
-} from '../../../lib/types'
-import { Category } from '../../../lib/types/marketplace'
-import { elationAPIClientInjector } from '../clientUtils'
+} from '@awell-health/awell-extensions-types'
+import { makeAPIClient } from '../clientUtils'
 import { fromZodError } from 'zod-validation-error'
 import { AxiosError } from 'axios'
 import { appointmentSchema } from '../validation/appointment.zod'
-import { wrapActivity } from '../../../lib/shared/wrapActivity'
 import type { ElationAction } from '../types/action'
 
 const fields = {
@@ -95,67 +94,63 @@ export const createAppointment: ElationAction<
   fields,
   previewable: true,
   dataPoints,
-  services: ['authCacheService'],
-  onActivityCreated: wrapActivity(elationAPIClientInjector)(
-    async (payload, onComplete, onError, services, api): Promise<void> => {
-      try {
-        const appointment = appointmentSchema.parse(payload.fields)
-        const { id } = await api.createAppointment(appointment)
-        await onComplete({
-          data_points: {
-            appointmentId: String(id),
-          },
+  onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
+    try {
+      const appointment = appointmentSchema.parse(payload.fields)
+      const api = makeAPIClient(payload.settings)
+      const { id } = await api.createAppointment(appointment)
+      await onComplete({
+        data_points: {
+          appointmentId: String(id),
+        },
+      })
+    } catch (err) {
+      if (err instanceof ZodError) {
+        const error = fromZodError(err)
+        await onError({
+          events: [
+            {
+              date: new Date().toISOString(),
+              text: { en: error.message },
+              error: {
+                category: 'SERVER_ERROR',
+                message: error.message,
+              },
+            },
+          ],
         })
-      } catch (err) {
-        if (err instanceof ZodError) {
-          const error = fromZodError(err)
-          await onError({
-            events: [
-              {
-                date: new Date().toISOString(),
-                text: { en: error.message },
-                error: {
-                  category: 'SERVER_ERROR',
-                  message: error.message,
-                },
+      } else if (err instanceof AxiosError) {
+        await onError({
+          events: [
+            {
+              date: new Date().toISOString(),
+              text: {
+                en: `${err.status ?? '(no status code)'} Error: ${err.message}`,
               },
-            ],
-          })
-        } else if (err instanceof AxiosError) {
-          await onError({
-            events: [
-              {
-                date: new Date().toISOString(),
-                text: {
-                  en: `${err.status ?? '(no status code)'} Error: ${
-                    err.message
-                  }`,
-                },
-                error: {
-                  category: 'BAD_REQUEST',
-                  message: `${err.status ?? '(no status code)'} Error: ${
-                    err.message
-                  }`,
-                },
+              error: {
+                category: 'BAD_REQUEST',
+                message: `${err.status ?? '(no status code)'} Error: ${
+                  err.message
+                }`,
               },
-            ],
-          })
-        } else {
-          const message = (err as Error).message
-          await onError({
-            events: [
-              {
-                date: new Date().toISOString(),
-                text: { en: message },
-                error: {
-                  category: 'SERVER_ERROR',
-                  message,
-                },
+            },
+          ],
+        })
+      } else {
+        const message = (err as Error).message
+        await onError({
+          events: [
+            {
+              date: new Date().toISOString(),
+              text: { en: message },
+              error: {
+                category: 'SERVER_ERROR',
+                message,
               },
-            ],
-          })
-        }
+            },
+          ],
+        })
       }
     }
-  ),
+  },
 }

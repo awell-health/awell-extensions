@@ -1,15 +1,14 @@
 import { ZodError } from 'zod'
 import {
   FieldType,
+  Category,
   type DataPointDefinition,
   type Field,
-} from '../../../lib/types'
-import { Category } from '../../../lib/types/marketplace'
-import { elationAPIClientInjector } from '../clientUtils'
+} from '@awell-health/awell-extensions-types'
+import { makeAPIClient } from '../clientUtils'
 import { fromZodError } from 'zod-validation-error'
 import { AxiosError } from 'axios'
 import { numberId } from '../validation/generic.zod'
-import { wrapActivity } from '../../../lib/shared/wrapActivity'
 import type { ElationAction } from '../types/action'
 
 const fields = {
@@ -114,90 +113,86 @@ export const getPatient: ElationAction<typeof fields, keyof typeof dataPoints> =
     fields,
     previewable: true,
     dataPoints,
-    services: ['authCacheService'],
-    onActivityCreated: wrapActivity(elationAPIClientInjector)(
-      async (payload, onComplete, onError, services, api): Promise<void> => {
-        try {
-          const patientId = numberId.parse(payload.fields.patientId)
-
-          const patientInfo = await api.getPatient(patientId)
-          await onComplete({
-            data_points: {
-              first_name: patientInfo.first_name,
-              last_name: patientInfo.last_name,
-              dob: patientInfo.dob,
-              sex: patientInfo.sex,
-              primary_physician: String(patientInfo.primary_physician),
-              caregiver_practice: String(patientInfo.caregiver_practice),
-              mobile_phone: String(
-                patientInfo.phones?.find((p) => p.phone_type === 'Mobile')
-                  ?.phone
-              ),
-              middle_name: patientInfo.middle_name,
-              actual_name: patientInfo.actual_name,
-              gender_identity: patientInfo.gender_identity,
-              legal_gender_marker: patientInfo.legal_gender_marker,
-              pronouns: patientInfo.pronouns,
-              sexual_orientation: patientInfo.sexual_orientation,
-              ssn: patientInfo.ssn,
-              ethnicity: patientInfo.ethnicity,
-              race: patientInfo.race,
-              preferred_language: patientInfo.preferred_language,
-              notes: patientInfo.notes,
-              previous_first_name: patientInfo.previous_first_name,
-              previous_last_name: patientInfo.previous_last_name,
-            },
+    onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
+      try {
+        const patientId = numberId.parse(payload.fields.patientId)
+        const api = makeAPIClient(payload.settings)
+        const patientInfo = await api.getPatient(patientId)
+        await onComplete({
+          data_points: {
+            first_name: patientInfo.first_name,
+            last_name: patientInfo.last_name,
+            dob: patientInfo.dob,
+            sex: patientInfo.sex,
+            primary_physician: String(patientInfo.primary_physician),
+            caregiver_practice: String(patientInfo.caregiver_practice),
+            mobile_phone: String(
+              patientInfo.phones?.find((p) => p.phone_type === 'Mobile')?.phone
+            ),
+            middle_name: patientInfo.middle_name,
+            actual_name: patientInfo.actual_name,
+            gender_identity: patientInfo.gender_identity,
+            legal_gender_marker: patientInfo.legal_gender_marker,
+            pronouns: patientInfo.pronouns,
+            sexual_orientation: patientInfo.sexual_orientation,
+            ssn: patientInfo.ssn,
+            ethnicity: patientInfo.ethnicity,
+            race: patientInfo.race,
+            preferred_language: patientInfo.preferred_language,
+            notes: patientInfo.notes,
+            previous_first_name: patientInfo.previous_first_name,
+            previous_last_name: patientInfo.previous_last_name,
+          },
+        })
+      } catch (err) {
+        if (err instanceof ZodError) {
+          const error = fromZodError(err)
+          await onError({
+            events: [
+              {
+                date: new Date().toISOString(),
+                text: { en: error.message },
+                error: {
+                  category: 'WRONG_INPUT',
+                  message: error.message,
+                },
+              },
+            ],
           })
-        } catch (err) {
-          if (err instanceof ZodError) {
-            const error = fromZodError(err)
-            await onError({
-              events: [
-                {
-                  date: new Date().toISOString(),
-                  text: { en: error.message },
-                  error: {
-                    category: 'WRONG_INPUT',
-                    message: error.message,
-                  },
+        } else if (err instanceof AxiosError) {
+          await onError({
+            events: [
+              {
+                date: new Date().toISOString(),
+                text: {
+                  en: `${err.status ?? '(no status code)'} Error: ${
+                    err.message
+                  }`,
                 },
-              ],
-            })
-          } else if (err instanceof AxiosError) {
-            await onError({
-              events: [
-                {
-                  date: new Date().toISOString(),
-                  text: {
-                    en: `${err.status ?? '(no status code)'} Error: ${
-                      err.message
-                    }`,
-                  },
-                  error: {
-                    category: 'SERVER_ERROR',
-                    message: `${err.status ?? '(no status code)'} Error: ${
-                      err.message
-                    }`,
-                  },
+                error: {
+                  category: 'SERVER_ERROR',
+                  message: `${err.status ?? '(no status code)'} Error: ${
+                    err.message
+                  }`,
                 },
-              ],
-            })
-          } else {
-            const message = (err as Error).message
-            await onError({
-              events: [
-                {
-                  date: new Date().toISOString(),
-                  text: { en: message },
-                  error: {
-                    category: 'SERVER_ERROR',
-                    message,
-                  },
+              },
+            ],
+          })
+        } else {
+          const message = (err as Error).message
+          await onError({
+            events: [
+              {
+                date: new Date().toISOString(),
+                text: { en: message },
+                error: {
+                  category: 'SERVER_ERROR',
+                  message,
                 },
-              ],
-            })
-          }
+              },
+            ],
+          })
         }
       }
-    ),
+    },
   }

@@ -1,5 +1,4 @@
 import { createPatient } from '../createPatient'
-import { NoCache } from '../../../../services/cache/cache'
 
 jest.mock('../../client')
 
@@ -45,8 +44,7 @@ describe('Simple create patient action', () => {
         settings,
       } as any,
       onComplete,
-      jest.fn(),
-      { authCacheService: new NoCache() }
+      jest.fn()
     )
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {

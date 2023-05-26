@@ -1,4 +1,4 @@
-import { type DataPointDefinition } from '../../../../lib/types'
+import { type DataPointDefinition } from '@awell-health/awell-extensions-types'
 import { address } from '../../shared/dataPoints'
 
 export const patientIdDataPoint = {

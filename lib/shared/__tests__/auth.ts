@@ -1,12 +1,10 @@
 import MockAdapter from 'axios-mock-adapter'
-import { RedisCache } from '../../../services/cache/redis/redis'
 import { OAuth } from '../auth'
 import qs from 'querystring'
-
-jest.mock('../../../services/cache/redis/redis')
+import { CacheMock } from '../services/CacheMock'
 
 class TestOAuth extends OAuth {
-  readonly cacheService = new RedisCache({})
+  readonly cacheService = new CacheMock()
 }
 
 describe('OAuth token cache flow', () => {

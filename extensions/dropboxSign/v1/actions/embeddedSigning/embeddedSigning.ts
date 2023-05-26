@@ -1,6 +1,5 @@
-import { type Action } from '../../../../../lib/types'
+import { type Action, Category } from '@awell-health/awell-extensions-types'
 import { fields } from './config'
-import { Category } from '../../../../../lib/types/marketplace'
 import { type settings } from '../../../settings'
 import { validateActionFields } from './config/fields'
 import { fromZodError } from 'zod-validation-error'

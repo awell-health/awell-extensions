@@ -1,5 +1,4 @@
 import { updatePatient } from '../updatePatient'
-import { NoCache } from '../../../../services/cache/cache'
 
 jest.mock('../../client')
 
@@ -46,8 +45,7 @@ describe('Simple update patient action', () => {
         settings,
       } as any,
       onComplete,
-      jest.fn(),
-      { authCacheService: new NoCache() }
+      jest.fn()
     )
     expect(onComplete).toHaveBeenCalled()
   })

@@ -1,6 +1,5 @@
-import { type Action } from '../../../../../lib/types'
+import { type Action, Category } from '@awell-health/awell-extensions-types'
 import { fields } from './config'
-import { Category } from '../../../../../lib/types/marketplace'
 import { SettingsValidationSchema, type settings } from '../../../settings'
 import mailchimpSdk from '../../../common/sdk/mailchimpSdk'
 import { FieldsValidationSchema } from './config/fields'

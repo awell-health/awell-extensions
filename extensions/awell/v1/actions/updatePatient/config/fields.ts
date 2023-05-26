@@ -1,4 +1,4 @@
-import { type Field, FieldType, StringType } from '../../../../../../lib/types'
+import { type Field, FieldType, StringType } from '@awell-health/awell-extensions-types'
 import { z, type ZodTypeAny } from 'zod'
 import { formatISO } from 'date-fns'
 import { Sex } from '../../../gql/graphql'

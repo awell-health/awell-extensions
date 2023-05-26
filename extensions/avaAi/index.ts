@@ -1,5 +1,5 @@
-import { type Extension } from '../../lib/types'
-import { AuthorType, Category } from '../../lib/types/marketplace'
+import { type Extension } from '@awell-health/awell-extensions-types'
+import { AuthorType, Category } from '@awell-health/awell-extensions-types'
 import { generatePatientSummary } from './v1/actions'
 import { settings } from './settings'
 

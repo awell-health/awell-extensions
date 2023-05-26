@@ -1,4 +1,4 @@
-import { type Field, FieldType, StringType } from '../../../../../../lib/types'
+import { type Field, FieldType, StringType } from '@awell-health/awell-extensions-types'
 
 export const fields = {
   originator: {

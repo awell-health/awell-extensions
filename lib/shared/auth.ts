@@ -1,7 +1,8 @@
 import * as Axios from 'axios'
 import { URLSearchParams } from 'url'
-import { type CacheService, NoCache } from '../../services/cache/cache'
 import { createHash } from 'node:crypto'
+import type { CacheService } from '@awell-health/awell-extensions-types'
+import { NoCache } from './services/NoCache'
 
 interface OAuthGrantRequestBase {
   client_id: string
@@ -205,7 +206,8 @@ export class OAuth {
   }
 }
 
-export interface OAuthOptsWithoutGrantType<T> extends Omit<OAuthOpts, 'request_config'> {
+export interface OAuthOptsWithoutGrantType<T>
+  extends Omit<OAuthOpts, 'request_config'> {
   request_config: Omit<T, 'grant_type'>
 }
 

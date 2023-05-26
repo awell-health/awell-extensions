@@ -1,5 +1,4 @@
-import { type Field, FieldType, type Action, type DataPointDefinition } from "../../../../lib/types";
-import { Category } from "../../../../lib/types/marketplace";
+import { type Field, FieldType, type Action, type DataPointDefinition, Category } from "@awell-health/awell-extensions-types";
 import { type GetChartingItemsQuery, getSdk } from "../../gql/wellinksSdk";
 import { initialiseClient } from "../../wellinksGraphqlClient";
 import { type settings } from "../../settings";

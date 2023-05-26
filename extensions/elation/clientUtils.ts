@@ -1,15 +1,15 @@
-import type { ActivityWrapperInjector } from '../../lib/types'
 import { ElationAPIClient } from './client'
 import type { settings } from './settings'
-import type { CacheService } from '../../services/cache/cache'
+import { ServiceContainer } from '@awell-health/awell-extensions-types'
 import { settingsSchema } from './validation/settings.zod'
 
 export const makeAPIClient = (
-  payloadSettings: Record<keyof typeof settings, string | undefined>,
-  cacheService?: CacheService<string>
+  payloadSettings: Record<keyof typeof settings, string | undefined>
 ): ElationAPIClient => {
   const { base_url, auth_url, ...auth_request_settings } =
     settingsSchema.parse(payloadSettings)
+
+  const cacheService = ServiceContainer.get('authCacheService')
 
   return new ElationAPIClient({
     cacheService,
@@ -18,10 +18,3 @@ export const makeAPIClient = (
     baseUrl: base_url,
   })
 }
-
-export const elationAPIClientInjector: ActivityWrapperInjector<
-  [ElationAPIClient],
-  ['authCacheService']
-> = (payload, onComplete, onError, services): [ElationAPIClient] => [
-  makeAPIClient(payload.settings, services.authCacheService),
-]

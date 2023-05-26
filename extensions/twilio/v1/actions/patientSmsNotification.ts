@@ -1,9 +1,13 @@
 import { z, ZodError } from 'zod'
 import { fromZodError } from 'zod-validation-error'
 import twilioSdk from '../../common/sdk/twilio'
-import { FieldType, type Action, type Field } from '../../../../lib/types'
+import {
+  FieldType,
+  type Action,
+  type Field,
+  Category,
+} from '@awell-health/awell-extensions-types'
 import { SettingsValidationSchema, type settings } from '../../settings'
-import { Category } from '../../../../lib/types/marketplace'
 import { MessageValidationSchema } from '../../common/validation'
 import {
   E164PhoneValidationSchema,

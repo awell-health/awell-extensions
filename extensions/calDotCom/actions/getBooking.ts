@@ -1,10 +1,10 @@
 import {
   type DataPointDefinition,
   FieldType,
+  Category,
   type Action,
   type Field,
-} from '../../../lib/types'
-import { Category } from '../../../lib/types/marketplace'
+} from '@awell-health/awell-extensions-types'
 import CalComApi from '../calComApi'
 import { type settings } from '../settings'
 

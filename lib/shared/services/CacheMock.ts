@@ -1,6 +1,9 @@
-import { Cache } from '../../cache'
+import type { CacheService } from '@awell-health/awell-extensions-types'
 
-class RedisCacheMock extends Cache<string> {
+export class CacheMock implements CacheService<string> {
+  async init(): Promise<void> {}
+  async destroy(): Promise<void> {}
+
   private readonly storage: Map<string, { value: string; expiresAt?: number }> =
     new Map<string, { value: string; expiresAt?: number }>()
 
@@ -26,8 +29,4 @@ class RedisCacheMock extends Cache<string> {
   async unset(key: string): Promise<void> {
     this.storage.delete(key)
   }
-}
-
-export {
-  RedisCacheMock as RedisCache
 }

@@ -1,6 +1,5 @@
-import { type Action } from '../../../../../lib/types'
+import { type Action, Category } from '@awell-health/awell-extensions-types'
 import { fields, dataPoints } from './config'
-import { Category } from '../../../../../lib/types/marketplace'
 import { validateSettings, type settings } from '../../../settings'
 import DropboxSignSdk from '../../../common/sdk/dropboxSignSdk'
 import { HttpError } from '@dropbox/sign'
