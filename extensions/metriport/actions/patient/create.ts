@@ -21,7 +21,7 @@ export const createPatient: Action<
   category: Category.EHR_INTEGRATIONS,
   title: 'Create Patient',
   description:
-    'Creates a Patient in Metriport for the specified Facility where the patient is receiving care.',
+    'Creates a Patient in Metriport for the specified Facility where the Patient is receiving care.',
   fields: createFields,
   previewable: true,
   dataPoints: patientIdDataPoint,

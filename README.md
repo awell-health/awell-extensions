@@ -6,11 +6,23 @@ You can find all the documentation [here](https://developers.awellhealth.com/awe
 
 Read about our contributing guidelines [here](https://developers.awellhealth.com/awell-extensions/docs/getting-started/contributing-guidelines). To contribute code, you'll need to first fork the repository. Once you have forked the repository, create your extension (or make your changes) and submit a pull request for our team to review.
 
+**Reviews may take 24 hours or longer. To help smooth the process, please be sure your `settings`, `fields`, and `datapoints` are well defined and documented.**
+
 Of course, we also welcome [discussions](https://github.com/awell-health/awell-extensions/discussions)... show us what you're working on!
 
 ## Building your own extension
 
 We encourage you to fork the repo and build custom actions and webhooks to support your organization's needs. We have provided a sample `hello world` extension, which is located in `./extensions/hello-world`.
+
+## Releasing Extensions
+
+When updates are made to the public extensions repository, the release process involves:
+- Packaging a new release by merging into the `main` branch (internal engineers can test locally by creating a `release/vX.X.X` branch)
+- Updating the `@awell-health/awell-extensions` dependency version in our private `awell-extension-server` repository
+- Publishing a release of our private repository
+- Deploying that release to staging/sandbox/production environments
+
+This process is currently manual, and we ask you to please be patient with our PR reviews and deployments while we work to automate this process.
 
 ### Actions and webhooks
 

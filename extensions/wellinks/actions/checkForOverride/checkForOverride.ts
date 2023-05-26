@@ -31,6 +31,7 @@ export const checkForOverride: Action< typeof fields, typeof settings, keyof typ
     title: 'Check if a patient has an active Override',
     description: 'Check if a patient has an active Override form in Healthie.',
     fields,
+    dataPoints,
     previewable: true, 
     onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
         const { fields, settings} = payload
