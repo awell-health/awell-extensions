@@ -48,6 +48,5 @@ jobs:
             yarn version "$pkg_version-beta$GITHUB_RUN_NUMBER"
             yarn npm publish --tag beta --access public
           else
-            yarn version "$pkg_version"
             yarn npm publish --access public
           fi
