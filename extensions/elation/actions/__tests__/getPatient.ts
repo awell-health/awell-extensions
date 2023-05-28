@@ -1,5 +1,5 @@
 import { getPatient } from '../getPatient'
-import { type ActivityEvent } from '../../../../lib/types/ActivityEvent'
+import { type ActivityEvent } from '@awell-health/extensions-core'
 import { patientExample } from '../../__mocks__/constants'
 
 jest.mock('../../client')

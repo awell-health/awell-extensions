@@ -1,5 +1,8 @@
 import { isNil } from 'lodash'
-import { type DataPointDefinition, type Webhook } from '../../../lib/types'
+import {
+  type DataPointDefinition,
+  type Webhook,
+} from '@awell-health/extensions-core'
 
 const dataPoints = {
   patientId: {

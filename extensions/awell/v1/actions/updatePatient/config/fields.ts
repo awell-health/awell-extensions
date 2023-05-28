@@ -1,8 +1,12 @@
-import { type Field, FieldType, StringType } from '../../../../../../lib/types'
+import {
+  type Field,
+  FieldType,
+  StringType,
+} from '@awell-health/extensions-core'
 import { z, type ZodTypeAny } from 'zod'
 import { formatISO } from 'date-fns'
 import { Sex } from '../../../gql/graphql'
-import { E164PhoneValidationOptionalSchema } from '../../../../../../lib/shared/validation'
+import { E164PhoneValidationOptionalSchema } from '@awell-health/extensions-core'
 
 export const fields = {
   patientCode: {

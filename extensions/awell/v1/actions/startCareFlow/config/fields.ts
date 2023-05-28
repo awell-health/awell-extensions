@@ -1,4 +1,4 @@
-import { type Field, FieldType } from '../../../../../../lib/types'
+import { type Field, FieldType } from '@awell-health/extensions-core'
 import { z, type ZodTypeAny } from 'zod'
 import { type BaselineInfoInput } from '../../../gql/graphql'
 import { isEmpty, isNil } from 'lodash'

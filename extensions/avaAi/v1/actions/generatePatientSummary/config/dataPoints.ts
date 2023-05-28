@@ -1,4 +1,4 @@
-import { type DataPointDefinition } from '../../../../../../lib/types'
+import { type DataPointDefinition } from '@awell-health/extensions-core'
 
 export const dataPoints = {
   prompt: {

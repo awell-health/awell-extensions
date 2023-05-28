@@ -1,6 +1,6 @@
-import { type Setting } from '../../lib/types'
+import { type Setting } from '@awell-health/extensions-core'
 import { z, type ZodTypeAny } from 'zod'
-import { E164PhoneValidationSchema } from '../../lib/shared/validation'
+import { E164PhoneValidationSchema } from '@awell-health/extensions-core'
 
 export const settings = {
   accountSid: {

@@ -1,11 +1,14 @@
 import {
-  DataWrapper,
   APIClient,
+  DataWrapper,
+  OAuthPassword,
   type DataWrapperCtor,
-} from '../../lib/shared/client'
+  type OAuthGrantPasswordRequest,
+} from '@awell-health/extensions-core'
+import { type settings } from './settings'
 import {
-  type AppointmentResponse,
   type AppointmentInput,
+  type AppointmentResponse,
 } from './types/appointment'
 import { type Find } from './types/generic'
 import { type PatientInput, type PatientResponse } from './types/patient'
@@ -13,12 +16,7 @@ import {
   type Subscription,
   type SubscriptionRequest,
 } from './types/subscription'
-import {
-  type OAuthGrantPasswordRequest,
-  OAuthPassword,
-} from '../../lib/shared/auth'
 import { settingsSchema } from './validation/settings.zod'
-import { type settings } from './settings'
 
 export class ElationDataWrapper extends DataWrapper {
   public async getAppointment(id: number): Promise<AppointmentResponse> {

@@ -1,4 +1,8 @@
-import { type Field, FieldType, StringType } from '../../../../../../lib/types'
+import {
+  type Field,
+  FieldType,
+  StringType,
+} from '@awell-health/extensions-core'
 
 export const fields = {
   from: {

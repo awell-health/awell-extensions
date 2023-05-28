@@ -45,5 +45,5 @@ Datapoints are decided at ![BUILD] time and can be used by the designers as inpu
 Fields and datapoints provide you, the builders and designers, a powerful mechanism to take in variable data at one point in a care flow and use it in another place. The possibilities are endless!
 
 ### Extending OAuth
-For those who require OAuth2.0 in your flows, there is a base client located at `/lib/shared/`. By extending that base client, you can include more complex authentication flows in your custom actions. Please see `./extensions/elation/client.ts` for an example of how you can create DataWrappers, API Clients, and the necessary datawrapper constructor that must be passed to the API client to create your flows.
+For those who require OAuth2.0 in your flows, there is a base client available in `@awell-health/extensions-core`. By extending that base client, you can include more complex authentication flows in your custom actions. Please see `./extensions/elation/client.ts` for an example of how you can create DataWrappers, API Clients, and the necessary datawrapper constructor that must be passed to the API client to create your flows.
 Currently supported are Resource Owner Password Grant and Client Credentials Grant.

@@ -1,8 +1,8 @@
 import { log } from './actions'
-import { type Extension } from '../../lib/types'
+import { type Extension } from '@awell-health/extensions-core'
 import { settings } from './settings'
 import { webhooks } from './webhooks'
-import { AuthorType, Category } from '../../lib/types/marketplace'
+import { AuthorType, Category } from '@awell-health/extensions-core'
 
 export const HelloWorld: Extension = {
   key: 'hello-world',

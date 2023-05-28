@@ -5,10 +5,10 @@ import {
   stopCareFlow,
   isPatientEnrolledInCareFlow,
 } from './v1/actions'
-import { type Extension } from '../../lib/types'
+import { type Extension } from '@awell-health/extensions-core'
 import { settings } from './settings'
 import { webhooks } from './v1/webhooks'
-import { AuthorType, Category } from '../../lib/types/marketplace'
+import { AuthorType, Category } from '@awell-health/extensions-core'
 
 export const Awell: Extension = {
   key: 'awell',
