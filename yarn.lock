@@ -57,6 +57,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@awell-health/awell-extensions@workspace:."
   dependencies:
+    "@awell-health/extensions-core": 0.1.5
     "@dropbox/sign": ^1.1.3
     "@graphql-codegen/cli": ^3.2.2
     "@graphql-codegen/typescript": ^3.0.2
@@ -106,6 +107,18 @@ __metadata:
     zod-validation-error: ^1.0.1
   languageName: unknown
   linkType: soft
+
+"@awell-health/extensions-core@npm:0.1.5":
+  version: 0.1.5
+  resolution: "@awell-health/extensions-core@npm:0.1.5"
+  dependencies:
+    axios: ^1.4.0
+    date-fns: ^2.30.0
+    libphonenumber-js: ^1.10.30
+    zod: ^3.21.4
+  checksum: fef79ce2d39874ed3b7e68b2a143a0a75729b0667048c1664b31c52f2736605fde525b3f29ac3f6cafcc7b8d35efff8b1f6bd64322e1a63699a7f37fc2d5c3b8
+  languageName: node
+  linkType: hard
 
 "@babel/code-frame@npm:^7.0.0, @babel/code-frame@npm:^7.12.13, @babel/code-frame@npm:^7.18.6":
   version: 7.18.6
@@ -898,6 +911,15 @@ __metadata:
   dependencies:
     regenerator-runtime: ^0.13.11
   checksum: 7b33e25bfa9e0e1b9e8828bb61b2d32bdd46b41b07ba7cb43319ad08efc6fda8eb89445193e67d6541814627df0ca59122c0ea795e412b99c5183a0540d338ab
+  languageName: node
+  linkType: hard
+
+"@babel/runtime@npm:^7.21.0":
+  version: 7.22.3
+  resolution: "@babel/runtime@npm:7.22.3"
+  dependencies:
+    regenerator-runtime: ^0.13.11
+  checksum: 8fc50785ca4cba749fed90bffca7e6fd52d4709755654e95b8d2a945fc034b56fb8c2e8a0183fea7c4abb86bf5fa77678c0ea35163b6920649833d180c34c234
   languageName: node
   linkType: hard
 
@@ -2873,6 +2895,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"axios@npm:^1.4.0":
+  version: 1.4.0
+  resolution: "axios@npm:1.4.0"
+  dependencies:
+    follow-redirects: ^1.15.0
+    form-data: ^4.0.0
+    proxy-from-env: ^1.1.0
+  checksum: 7fb6a4313bae7f45e89d62c70a800913c303df653f19eafec88e56cea2e3821066b8409bc68be1930ecca80e861c52aa787659df0ffec6ad4d451c7816b9386b
+  languageName: node
+  linkType: hard
+
 "babel-jest@npm:^29.4.3":
   version: 29.4.3
   resolution: "babel-jest@npm:29.4.3"
@@ -3630,6 +3663,15 @@ __metadata:
   version: 2.29.3
   resolution: "date-fns@npm:2.29.3"
   checksum: e01cf5b62af04e05dfff921bb9c9933310ed0e1ae9a81eb8653452e64dc841acf7f6e01e1a5ae5644d0337e9a7f936175fd2cb6819dc122fdd9c5e86c56be484
+  languageName: node
+  linkType: hard
+
+"date-fns@npm:^2.30.0":
+  version: 2.30.0
+  resolution: "date-fns@npm:2.30.0"
+  dependencies:
+    "@babel/runtime": ^7.21.0
+  checksum: f7be01523282e9bb06c0cd2693d34f245247a29098527d4420628966a2d9aad154bd0e90a6b1cf66d37adcb769cd108cf8a7bd49d76db0fb119af5cdd13644f4
   languageName: node
   linkType: hard
 
@@ -6227,6 +6269,13 @@ __metadata:
   version: 1.10.26
   resolution: "libphonenumber-js@npm:1.10.26"
   checksum: 125cbe60eaf040eab80481e469a2db1874746be59fd716cfe53d720a5d2c5fb057dd6db14c9aafd044374da8c5a8d870fa0102ac635c680decc92169d17b303e
+  languageName: node
+  linkType: hard
+
+"libphonenumber-js@npm:^1.10.30":
+  version: 1.10.30
+  resolution: "libphonenumber-js@npm:1.10.30"
+  checksum: 677bdd25b709cc55f10c599df09e67b501554578e4700ae31d9f2153b4e6847710d2454b4551f19df3e443eb836c0f287a12159ee6acd931150407c0eaf010a0
   languageName: node
   linkType: hard
 

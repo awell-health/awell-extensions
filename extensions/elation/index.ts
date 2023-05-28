@@ -1,7 +1,7 @@
 import { actions } from './actions'
-import { type Extension } from '../../lib/types'
+import { type Extension } from '@awell-health/extensions-core'
 import { settings } from './settings'
-import { AuthorType, Category } from '../../lib/types/marketplace'
+import { AuthorType, Category } from '@awell-health/extensions-core'
 import { webhooks } from './webhooks'
 
 export const Elation: Extension = {

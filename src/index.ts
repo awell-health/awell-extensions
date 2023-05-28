@@ -1,2 +1,2 @@
 export * from '../extensions'
-export * as Types from '../lib/types/index'
+export * as Types from '@awell-health/extensions-core'

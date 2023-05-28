@@ -1,6 +1,6 @@
-import { type Action } from '../../../../../lib/types'
+import { type Action } from '@awell-health/extensions-core'
 import { SettingsValidationSchema, type settings } from '../../../settings'
-import { Category } from '../../../../../lib/types/marketplace'
+import { Category , validate } from '@awell-health/extensions-core'
 import {
   fields,
   PatientValidationSchema,
@@ -10,7 +10,6 @@ import {
 import { fromZodError } from 'zod-validation-error'
 import { z, ZodError } from 'zod'
 import AwellSdk from '../../sdk/awellSdk'
-import { validate } from '../../../../../lib/shared/validation'
 
 export const startCareFlow: Action<typeof fields, typeof settings> = {
   key: 'startCareFlow',

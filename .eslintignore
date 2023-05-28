@@ -1,2 +1,3 @@
+dist
 **/*/gql/*.ts
 jest.config.js

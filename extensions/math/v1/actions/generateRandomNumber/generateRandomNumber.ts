@@ -1,11 +1,10 @@
-import { type Action } from '../../../../../lib/types'
-import { Category } from '../../../../../lib/types/marketplace'
+import { type Action } from '@awell-health/extensions-core'
+import { Category , validate } from '@awell-health/extensions-core'
 import { type settings } from '../../../settings'
 import { fields, dataPoints } from './config'
 import { FieldsValidationSchema } from './config/fields'
 import { fromZodError } from 'zod-validation-error'
 import { z, ZodError } from 'zod'
-import { validate } from '../../../../../lib/shared/validation'
 
 export const generateRandomNumber: Action<typeof fields, typeof settings> = {
   key: 'generateRandomNumber',

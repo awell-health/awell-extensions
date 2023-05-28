@@ -1,7 +1,6 @@
 import { isNil } from 'lodash'
 import { z, type ZodTypeAny } from 'zod'
-import { type Field, FieldType } from '../../../../../../lib/types'
-import { type json } from '../../../../../../lib/types/zod/json'
+import { type Field, FieldType , type json } from '@awell-health/extensions-core'
 
 export const fields = {
   to: {

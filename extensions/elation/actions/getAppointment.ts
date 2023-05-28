@@ -4,8 +4,8 @@ import {
   type Action,
   type DataPointDefinition,
   type Field,
-} from '../../../lib/types'
-import { Category } from '../../../lib/types/marketplace'
+} from '@awell-health/extensions-core'
+import { Category } from '@awell-health/extensions-core'
 import { type settings } from '../settings'
 import { makeAPIClient } from '../client'
 import { fromZodError } from 'zod-validation-error'

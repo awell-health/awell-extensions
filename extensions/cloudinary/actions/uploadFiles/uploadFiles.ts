@@ -1,10 +1,9 @@
-import { type Action } from '../../../../lib/types'
-import { Category } from '../../../../lib/types/marketplace'
+import { type Action } from '@awell-health/extensions-core'
+import { Category , validate } from '@awell-health/extensions-core'
 import { SettingsValidationSchema, type settings } from '../../settings'
 import { fields } from './config'
 import { fromZodError } from 'zod-validation-error'
 import { z, ZodError } from 'zod'
-import { validate } from '../../../../lib/shared/validation'
 import { FieldsValidationSchema } from './config/fields'
 
 export const uploadFiles: Action<typeof fields, typeof settings> = {

@@ -1,5 +1,5 @@
 import { z, type ZodTypeAny } from 'zod'
-import { type DataPointDefinition } from '../../../../../../lib/types'
+import { type DataPointDefinition } from '@awell-health/extensions-core'
 
 export const dataPoints = {
   generatedNumber: {

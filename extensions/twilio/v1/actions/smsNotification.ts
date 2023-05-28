@@ -6,14 +6,13 @@ import {
   StringType,
   type Action,
   type Field,
-} from '../../../../lib/types'
+} from '@awell-health/extensions-core'
 import { SettingsValidationSchema, type settings } from '../../settings'
-import { Category } from '../../../../lib/types/marketplace'
-import { MessageValidationSchema } from '../../common/validation'
-import {
+import { Category ,
   E164PhoneValidationSchema,
   validate,
-} from '../../../../lib/shared/validation'
+} from '@awell-health/extensions-core'
+import { MessageValidationSchema } from '../../common/validation'
 
 const fields = {
   recipient: {

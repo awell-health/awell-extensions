@@ -2,8 +2,8 @@ import { type E164Number } from 'libphonenumber-js'
 import {
   DateTimeOptionalSchema,
   E164PhoneValidationOptionalSchema,
-} from '../../../lib/shared/validation'
-import { type ActivityEvent } from '../../../lib/types/ActivityEvent'
+} from '@awell-health/extensions-core'
+import { type ActivityEvent } from '@awell-health/extensions-core'
 import { type GetUserQuery } from '../gql/sdk'
 
 interface ValidateResult {

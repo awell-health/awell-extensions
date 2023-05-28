@@ -1,5 +1,9 @@
-import { APIClient, DataWrapper, type DataWrapperCtor } from '../lib/shared/client'
-import { OAuthClientCredentials } from '../lib/shared/auth'
+import {
+  APIClient,
+  DataWrapper,
+  type DataWrapperCtor,
+} from '@awell-health/extensions-core'
+import { OAuthClientCredentials } from '@awell-health/extensions-core'
 
 /**
  * This is an example of implementing data wrappers and API clients

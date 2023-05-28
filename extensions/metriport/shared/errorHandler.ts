@@ -1,7 +1,7 @@
 import { fromZodError } from 'zod-validation-error'
 import { ZodError } from 'zod'
 import { AxiosError } from 'axios'
-import { type OnErrorCallback } from '../../../lib/types'
+import { type OnErrorCallback } from '@awell-health/extensions-core'
 
 export const handleErrorMessage = async (
   err: any,

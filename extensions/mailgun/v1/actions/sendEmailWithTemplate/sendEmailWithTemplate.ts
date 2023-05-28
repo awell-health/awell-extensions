@@ -1,6 +1,6 @@
-import { type Action } from '../../../../../lib/types'
+import { type Action } from '@awell-health/extensions-core'
 import { fields } from './config'
-import { Category } from '../../../../../lib/types/marketplace'
+import { Category } from '@awell-health/extensions-core'
 import { validateSettings, type settings } from '../../../settings'
 import mailgunSdk from '../../../common/sdk/mailgunSdk'
 import { getApiUrl } from '../../../common/utils'

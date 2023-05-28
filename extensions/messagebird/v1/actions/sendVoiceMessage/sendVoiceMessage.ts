@@ -1,6 +1,6 @@
-import { type Action } from '../../../../../lib/types'
+import { type Action } from '@awell-health/extensions-core'
 import { fields } from './config'
-import { Category } from '../../../../../lib/types/marketplace'
+import { Category } from '@awell-health/extensions-core'
 import { type settings } from '../../../settings'
 import { isEmpty, isNil } from 'lodash'
 import messagebirdSdk from '../../../common/sdk/messagebirdSdk'

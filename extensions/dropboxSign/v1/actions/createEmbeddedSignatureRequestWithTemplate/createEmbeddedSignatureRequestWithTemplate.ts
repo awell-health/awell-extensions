@@ -1,4 +1,4 @@
-import { type Action } from '../../../../../lib/types'
+import { type Action } from '@awell-health/extensions-core'
 import {
   fields,
   dataPoints,
@@ -6,7 +6,7 @@ import {
   validateEmbeddedSignatureRequestResponse,
   validateGetSignUrlResponse,
 } from './config'
-import { Category } from '../../../../../lib/types/marketplace'
+import { Category } from '@awell-health/extensions-core'
 import { validateSettings, type settings } from '../../../settings'
 import DropboxSignSdk from '../../../common/sdk/dropboxSignSdk'
 import { fromZodError } from 'zod-validation-error'

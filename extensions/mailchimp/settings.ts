@@ -1,5 +1,5 @@
 import { z, type ZodTypeAny } from 'zod'
-import { type Setting } from '../../lib/types'
+import { type Setting } from '@awell-health/extensions-core'
 
 export const settings = {
   apiKey: {
