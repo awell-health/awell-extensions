@@ -28,7 +28,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         [null, {\
           "packageLocation": "./",\
           "packageDependencies": [\
-            ["@awell-health/extensions-core", "npm:0.1.5"],\
+            ["@awell-health/extensions-core", "npm:0.1.6"],\
             ["@dropbox/sign", "npm:1.1.3"],\
             ["@graphql-codegen/cli", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:3.2.2"],\
             ["@graphql-codegen/typescript", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:3.0.2"],\
@@ -145,7 +145,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./",\
           "packageDependencies": [\
             ["@awell-health/awell-extensions", "workspace:."],\
-            ["@awell-health/extensions-core", "npm:0.1.5"],\
+            ["@awell-health/extensions-core", "npm:0.1.6"],\
             ["@dropbox/sign", "npm:1.1.3"],\
             ["@graphql-codegen/cli", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:3.2.2"],\
             ["@graphql-codegen/typescript", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:3.0.2"],\
@@ -198,10 +198,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@awell-health/extensions-core", [\
-        ["npm:0.1.5", {\
-          "packageLocation": "./.yarn/cache/@awell-health-extensions-core-npm-0.1.5-0ba4d4a940-fef79ce2d3.zip/node_modules/@awell-health/extensions-core/",\
+        ["npm:0.1.6", {\
+          "packageLocation": "./.yarn/cache/@awell-health-extensions-core-npm-0.1.6-0555bf8f3e-6c89e9ffe8.zip/node_modules/@awell-health/extensions-core/",\
           "packageDependencies": [\
-            ["@awell-health/extensions-core", "npm:0.1.5"],\
+            ["@awell-health/extensions-core", "npm:0.1.6"],\
             ["axios", "npm:1.4.0"],\
             ["date-fns", "npm:2.30.0"],\
             ["libphonenumber-js", "npm:1.10.30"],\
