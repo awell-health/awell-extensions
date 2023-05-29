@@ -1,10 +1,8 @@
 import { actions } from './actions'
 import { type Extension } from '@awell-health/extensions-core'
 import { settings } from './settings'
-import { AuthorType, Category, cache } from '@awell-health/extensions-core'
+import { AuthorType, Category } from '@awell-health/extensions-core'
 import { webhooks } from './webhooks'
-
-export const elationCacheService = new cache.InMemoryCache()
 
 export const Elation: Extension = {
   key: 'elation',

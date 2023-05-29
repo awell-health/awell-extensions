@@ -17,7 +17,7 @@ import {
   type SubscriptionRequest,
 } from './types/subscription'
 import { settingsSchema } from './validation/settings.zod'
-import { elationCacheService } from '.'
+import { elationCacheService } from './cache'
 
 export class ElationDataWrapper extends DataWrapper {
   public async getAppointment(id: number): Promise<AppointmentResponse> {
