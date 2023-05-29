@@ -17,6 +17,7 @@ import {
   type SubscriptionRequest,
 } from './types/subscription'
 import { settingsSchema } from './validation/settings.zod'
+import { elationCacheService } from '.'
 
 export class ElationDataWrapper extends DataWrapper {
   public async getAppointment(id: number): Promise<AppointmentResponse> {
@@ -126,6 +127,7 @@ export class ElationAPIClient extends APIClient<ElationDataWrapper> {
       auth: new OAuthPassword({
         auth_url: authUrl,
         request_config: requestConfig,
+        cacheService: elationCacheService,
       }),
     })
   }
