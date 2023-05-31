@@ -1,6 +1,6 @@
 import { isNil } from 'lodash'
 import { z } from 'zod'
-import { DateOnlySchema } from '../../../lib/shared/validation'
+import { DateOnlySchema } from '@awell-health/extensions-core'
 
 const intervalTypeEnum = z.enum(['daily', 'weekly', 'once'])
 const intervalValueWeeklyEnum = z.enum([

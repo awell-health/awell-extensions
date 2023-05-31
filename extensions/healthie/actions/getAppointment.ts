@@ -3,8 +3,8 @@ import {
   type Action,
   type DataPointDefinition,
   type Field,
-} from '../../../lib/types'
-import { Category } from '../../../lib/types/marketplace'
+} from '@awell-health/extensions-core'
+import { Category } from '@awell-health/extensions-core'
 import { getSdk } from '../gql/sdk'
 import { initialiseClient } from '../graphqlClient'
 import { type settings } from '../settings'

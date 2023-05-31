@@ -1,6 +1,10 @@
 import { z, type ZodTypeAny } from 'zod'
-import { E164PhoneValidationSchema } from '../../../../../../lib/shared/validation'
-import { type Field, FieldType, StringType } from '../../../../../../lib/types'
+import { E164PhoneValidationSchema } from '@awell-health/extensions-core'
+import {
+  type Field,
+  FieldType,
+  StringType,
+} from '@awell-health/extensions-core'
 import { MessageValidationSchema } from '../../../../common/validation'
 
 export const fields = {

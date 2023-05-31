@@ -1,4 +1,4 @@
-import { type Setting } from '../../lib/types'
+import { type Setting } from '@awell-health/extensions-core'
 import { z, type ZodTypeAny } from 'zod'
 
 export const settings = {

@@ -1,5 +1,5 @@
 import { isEmpty, isNil, omit, pick, startCase } from 'lodash'
-import { type Patient } from '../../../../../../../lib/types/Patient'
+import { type Patient } from '@awell-health/extensions-core'
 
 export const promptQuestion = (language: string): string =>
   `Create a human-readable summary of a person that only includes the below characteristics. The text should be written in the present tense. Write it in ${language}.`

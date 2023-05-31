@@ -1,7 +1,11 @@
 import { isNil } from 'lodash'
 import { mapHealthieToActivityError } from '../errors'
-import { FieldType, type Action, type Field } from '../../../lib/types'
-import { Category } from '../../../lib/types/marketplace'
+import {
+  FieldType,
+  type Action,
+  type Field,
+} from '@awell-health/extensions-core'
+import { Category } from '@awell-health/extensions-core'
 import { getSdk } from '../gql/sdk'
 import { initialiseClient } from '../graphqlClient'
 import { type settings } from '../settings'

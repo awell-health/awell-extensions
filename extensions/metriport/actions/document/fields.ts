@@ -1,4 +1,4 @@
-import { FieldType, type Field } from '../../../../lib/types'
+import { FieldType, type Field } from '@awell-health/extensions-core'
 
 export const listFields = {
   patientId: {

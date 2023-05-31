@@ -1,5 +1,5 @@
-import { type Action } from '../../../../../lib/types'
-import { Category } from '../../../../../lib/types/marketplace'
+import { type Action } from '@awell-health/extensions-core'
+import { Category , validate } from '@awell-health/extensions-core'
 import { type settings } from '../../../settings'
 import { fields, dataPoints, FieldsValidationSchema } from './config'
 import { fromZodError } from 'zod-validation-error'
@@ -13,7 +13,6 @@ import {
   differenceInMonths,
   differenceInYears,
 } from 'date-fns'
-import { validate } from '../../../../../lib/shared/validation'
 import { AssertionError } from 'node:assert'
 
 export const calculateDateDifference: Action<typeof fields, typeof settings> = {
