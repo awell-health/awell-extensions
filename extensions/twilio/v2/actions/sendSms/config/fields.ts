@@ -1,5 +1,8 @@
 import { z, type ZodTypeAny } from 'zod'
-import { E164PhoneValidationSchema } from '@awell-health/extensions-core'
+import {
+  E164PhoneValidationSchema,
+  E164PhoneValidationOptionalSchema,
+} from '@awell-health/extensions-core'
 import {
   type Field,
   FieldType,
@@ -8,6 +11,15 @@ import {
 import { MessageValidationSchema } from '../../../../common/validation'
 
 export const fields = {
+  from: {
+    label: '"From" number',
+    id: 'from',
+    type: FieldType.STRING,
+    stringType: StringType.PHONE,
+    required: false,
+    description:
+      'The phone number that will send the text messages, it must be a Twilio phone number that you own. When left blank, the "From" number from the extension settings will be used.',
+  },
   recipient: {
     id: 'recipient',
     label: '"To" phone number',
@@ -27,5 +39,6 @@ export const fields = {
 
 export const FieldsValidationSchema = z.object({
   recipient: E164PhoneValidationSchema,
+  from: E164PhoneValidationOptionalSchema,
   message: MessageValidationSchema,
 } satisfies Record<keyof typeof fields, ZodTypeAny>)
