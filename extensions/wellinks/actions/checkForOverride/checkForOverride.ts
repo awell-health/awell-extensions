@@ -125,44 +125,33 @@ export const checkForOverride: Action<
   },
 }
 
-function parseListOfForms(
-  data: GetChartingItemsQuery['chartingItems'],
-  eventTypeQuestionId: string,
-  startDateQuestionId: string
-): { active: boolean; date: Date | null } {
-  if (isNil(data)) {
-    return {
-      active: false,
-      date: null,
-    }
-  } else {
-    const overrideForms = data.filter(
-      (value) =>
-        value?.form_answer_group?.form_answers.find(
-          (value) => value.custom_module_id === eventTypeQuestionId
-        )?.answer === 'Override Scheduling Reminder Automations'
-    )
-    const overrideDates = overrideForms.map(
-      (form) =>
-        form?.form_answer_group?.form_answers.find(
-          (value) => value.custom_module_id === startDateQuestionId
-        )?.answer
-    )
-    const dates = overrideDates.map((strDate) => {
-      if (!isNil(strDate)) {
-        return new Date(strDate)
-      } else {
-        return null
-      }
-    })
+function parseListOfForms(data: GetChartingItemsQuery["chartingItems"], eventTypeQuestionId: string, startDateQuestionId: string): {active: boolean, date: Date | null} {
+    if(isNil(data)) {
+        return {
+            active: false,
+            date: null
+        }
+    } else {
+        const overrideForms = data.filter(
+            (value) => value?.form_answer_group?.form_answers.find((value) => value.custom_module_id === eventTypeQuestionId)?.answer === "Override Scheduling Reminder Automations"
+        )
 
-    const now = new Date()
-    const latestOverride = dates.sort(
-      (a, b) => (a?.getTime() ?? 0) - (b?.getTime() ?? 0)
-    )[0]
-    return {
-      active: latestOverride !== null && latestOverride > now,
-      date: dates[0],
+        
+        overrideForms.sort((a,b) => (new Date(b?.created_at ?? '').getTime() - new Date(a?.created_at ?? '').getTime()))
+        const latestOverrideForm = overrideForms[0]
+        const overrideEndDate = latestOverrideForm?.form_answer_group?.form_answers.find((value) => value.custom_module_id === startDateQuestionId)?.answer
+        const now = new Date()
+
+        if (!isNil(overrideEndDate)) {
+            return {
+                active: overrideEndDate !== null && overrideEndDate !== undefined && new Date(overrideEndDate) > now,
+                date: new Date(overrideEndDate) 
+            }
+        } else {
+            return {
+                active: false,
+                date: null
+            }
+        }
     }
-  }
 }

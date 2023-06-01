@@ -73,7 +73,7 @@ describe('the checkForOverride action', () => {
         })
     })
 
-    test('when given a proper list of charting items, uses the onComplete', async() => {
+    test('when given a list of charting items where the most recent Override form has an end date in the past, uses the onComplete', async() => {
         (getSdk as jest.Mock).mockReturnValueOnce(
             {
                 ...mockGetSdkReturn,
@@ -96,6 +96,26 @@ describe('the checkForOverride action', () => {
                                             custom_module_id: "3860906",
                                             label: "Start Sending Schedule Reminders On",
                                             answer: "2030-09-05"
+                                        }
+                                    ]
+                                }
+                            },
+                            {
+                                id: "1111",
+                                created_at: "2023-05-16 11:41:00 -0400",
+                                form_answer_group: {
+                                    id: "2222",
+                                    created_at: "2023-05-16 11:41:00 -0400",
+                                    form_answers: [
+                                        {
+                                            custom_module_id: "2602707",
+                                            label: "Please select the event type",
+                                            answer: "Override Scheduling Reminder Automations"
+                                        },
+                                        {
+                                            custom_module_id: "3860906",
+                                            label: "Start Sending Schedule Reminders On",
+                                            answer: "2000-09-05"
                                         }
                                     ]
                                 }
@@ -132,6 +152,98 @@ describe('the checkForOverride action', () => {
         )
 
         expect(mockGetSdkReturn.getChartingItems).toHaveBeenCalled()
-        expect(onComplete).toHaveBeenCalled()
+        expect(onComplete).toHaveBeenCalledWith({
+            data_points: {
+                activeOverride: 'false',
+                overrideDate: null,
+            },
+          })
+    })
+
+    test('when given a list of charting items where the most recent Override form has an end date in the future, uses the onComplete', async() => {
+        (getSdk as jest.Mock).mockReturnValueOnce(
+            {
+                ...mockGetSdkReturn,
+                getChartingItems: mockGetSdkReturn.getChartingItems.mockReturnValueOnce({ 
+                    data: { 
+                        chartingItems: [
+                            {
+                                id: "1111",
+                                created_at: "2023-05-16 10:41:00 -0400",
+                                form_answer_group: {
+                                    id: "2222",
+                                    created_at: "2023-05-16 10:41:00 -0400",
+                                    form_answers: [
+                                        {
+                                            custom_module_id: "2602707",
+                                            label: "Please select the event type",
+                                            answer: "Override Scheduling Reminder Automations"
+                                        },
+                                        {
+                                            custom_module_id: "3860906",
+                                            label: "Start Sending Schedule Reminders On",
+                                            answer: "2030-09-05"
+                                        }
+                                    ]
+                                }
+                            },
+                            {
+                                id: "1111",
+                                created_at: "2023-05-16 01:41:00 -0400",
+                                form_answer_group: {
+                                    id: "2222",
+                                    created_at: "2023-05-16 01:41:00 -0400",
+                                    form_answers: [
+                                        {
+                                            custom_module_id: "2602707",
+                                            label: "Please select the event type",
+                                            answer: "Override Scheduling Reminder Automations"
+                                        },
+                                        {
+                                            custom_module_id: "3860906",
+                                            label: "Start Sending Schedule Reminders On",
+                                            answer: "2000-09-05"
+                                        }
+                                    ]
+                                }
+                            }
+                        ]
+                    }
+                })
+            }
+        )
+        
+        await checkForOverride.onActivityCreated(
+            {
+                pathway: {
+                    id: 'pathway-id',
+                    definition_id: 'pathway-definition-id'
+                },
+                activity: {
+                    id: 'activity-id'
+                },
+                patient: { id: 'test-patient' },
+                fields: {
+                    patientId: 'patientIdTest'
+                },
+                settings: {
+                    apiKey: 'apiKey',
+                    apiUrl: 'test-url',
+                    selectEventTypeQuestion: '2602707',
+                    startSendingRemindersQuestions: '3860906',
+                    memberEventFormId: '281216'
+                },
+            },
+            onComplete,
+            onError
+        )
+
+        expect(mockGetSdkReturn.getChartingItems).toHaveBeenCalled()
+        expect(onComplete).toHaveBeenCalledWith({
+            data_points: {
+                activeOverride: 'true',
+                overrideDate: '2030-09-05T00:00:00.000Z',
+            },
+          })
     })
 })
