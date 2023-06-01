@@ -11,14 +11,6 @@ import {
 import { MessageValidationSchema } from '../../../../common/validation'
 
 export const fields = {
-  recipient: {
-    id: 'recipient',
-    label: '"To" phone number',
-    type: FieldType.STRING,
-    stringType: StringType.PHONE,
-    description: 'The phone number you would like to send the text message to.',
-    required: true,
-  },
   from: {
     label: '"From" number',
     id: 'from',
@@ -27,6 +19,14 @@ export const fields = {
     required: false,
     description:
       'The phone number that will send the text messages, it must be a Twilio phone number that you own. When left blank, the "From" number from the extension settings will be used.',
+  },
+  recipient: {
+    id: 'recipient',
+    label: '"To" phone number',
+    type: FieldType.STRING,
+    stringType: StringType.PHONE,
+    description: 'The phone number you would like to send the text message to.',
+    required: true,
   },
   message: {
     id: 'message',
