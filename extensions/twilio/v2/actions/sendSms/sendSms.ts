@@ -3,7 +3,7 @@ import { fromZodError } from 'zod-validation-error'
 import twilioSdk from '../../../common/sdk/twilio'
 import { type Action } from '@awell-health/extensions-core'
 import { type settings } from '../../../settings'
-import { Category , validate } from '@awell-health/extensions-core'
+import { Category, validate } from '@awell-health/extensions-core'
 import { SettingsValidationSchema } from '../../../settings'
 import { FieldsValidationSchema, fields } from './config'
 
@@ -17,8 +17,8 @@ export const sendSms: Action<typeof fields, typeof settings> = {
   onActivityCreated: async (payload, onComplete, onError) => {
     try {
       const {
-        settings: { accountSid, authToken, fromNumber },
-        fields: { recipient, message },
+        settings: { accountSid, authToken, fromNumber: defaultFromNumber },
+        fields: { recipient, message, from },
       } = validate({
         schema: z.object({
           settings: SettingsValidationSchema,
@@ -34,7 +34,7 @@ export const sendSms: Action<typeof fields, typeof settings> = {
 
       await client.messages.create({
         body: message,
-        from: fromNumber,
+        from: from ?? defaultFromNumber,
         to: recipient,
       })
 
