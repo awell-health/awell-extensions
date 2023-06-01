@@ -26,7 +26,7 @@ export const fields = {
     stringType: StringType.PHONE,
     required: false,
     description:
-      '"From" specifies the Twilio phone number, short code, or messaging service that will send the text messages. This must be a Twilio phone number that you own.',
+      'The phone number that will send the text messages, it must be a Twilio phone number that you own. When left blank, the "From" number from the extension settings will be used.',
   },
   message: {
     id: 'message',
