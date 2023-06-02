@@ -3,6 +3,9 @@ jest.mock('../../calComApi')
 
 describe('Simple getBooking action', () => {
   const onComplete = jest.fn()
+  const settings = {
+    apiKey: 'apiKey',
+  }
 
   beforeEach(() => {
     onComplete.mockClear()
@@ -22,13 +25,17 @@ describe('Simple getBooking action', () => {
         fields: {
           bookingId: '123',
         },
-        settings: {
-          apiKey: 'apiKey',
-        },
+        settings,
       },
       onComplete,
       jest.fn()
     )
-    expect(onComplete).toHaveBeenCalled()
+    expect(onComplete).toHaveBeenCalledWith({
+      data_points: {
+        cancelUrl: `https://app.cal.com/booking/test?cancel=true`,
+        rescheduleUrl: `https://app.cal.com/reschedule/test`,
+        eventTypeId: '123',
+      },
+    })
   })
 })
