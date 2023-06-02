@@ -4,9 +4,9 @@ const mock = jest.fn().mockImplementation((params) => {
   return {
     getBooking: jest.fn((params) => {
       console.log('Mocking cal.com api', params)
-      return { booking: { id: 'test' } }
+      return { booking: { id: 'test', uid: 'test', eventTypeId: '123' } }
     }),
-  };
-});
+  }
+})
 
-export default mock;
+export default mock
