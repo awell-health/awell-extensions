@@ -38,8 +38,8 @@ export const checkForOverride: Action<
 > = {
   key: 'checkForOverride',
   category: Category.SCHEDULING,
-  title: 'Check if a patient has an active Override',
-  description: 'Check if a patient has an active Override form in Healthie.',
+  title: 'Check if a patient has an active Override for Scheduling Reminders',
+  description: 'Check if a patient has an active Override form in Healthie for Scheduling Reminders.',
   fields,
   dataPoints,
   previewable: true,
