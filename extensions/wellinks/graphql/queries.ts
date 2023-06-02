@@ -23,3 +23,15 @@ export const SCHEDULED_APPOINTMENTS_QUERY = /* GraphQl */`
         date
     }
   }`
+
+export const CONVERSATION_MEMBERSHIPS_QUERY = /* GraphQL */`
+  query getConversationMemberships ($client_id: String) {
+    conversationMemberships(client_id: $client_id){
+        convo {
+            last_message_content
+            updated_at
+            dietitian_id
+            patient_id
+        }
+    }
+  }`
