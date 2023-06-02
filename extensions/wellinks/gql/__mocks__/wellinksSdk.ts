@@ -10,6 +10,12 @@ export const mockGetSdkReturn = {
 
             }
         }
+    }),
+    getConversationMemberships: jest.fn((args) => {
+        return { 
+            data: {
+
+        }}
     })
 }
 

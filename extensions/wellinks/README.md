@@ -15,3 +15,5 @@ Checks to see if the patient in Healthie has an active Override form.
 ## Check for Scheduled Appointments
 
 Checks to see if the patient in Healthie has an appointment of a specific type scheduled in the future.
+
+## Check for Chat
