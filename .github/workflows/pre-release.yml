@@ -1,0 +1,39 @@
+name: Publish pre-release package
+
+on:
+  push:
+    branches:
+      - "release/*"
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: yarn install
+        run: yarn
+
+      - name: Compile Typescript
+        run: yarn build
+      
+      - name: Setup .yarnrc.yml
+        run: |
+          yarn config set npmAlwaysAuth true
+          yarn config set npmAuthToken $NPM_AUTH_TOKEN
+        env:
+          NPM_AUTH_TOKEN: ${{ secrets.NPM_AWELL_EXTENSIONS_CI }}
+
+      - name: Publish to NPM Registry
+        run: |
+          pkg_version=$(cat package.json | jq -r '.version')
+          yarn version "$pkg_version-beta$GITHUB_RUN_NUMBER"
+          yarn npm publish --tag beta --access public
