@@ -1,16 +1,17 @@
-name: Test and Package Release
+name: New version created
 
 on:
   push:
-    branches:
-      - "main"
+    tags: ['*']
 
 jobs:
-  deploy:
+  publish:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+        with:
+          token: ${{secrets.VERSION_BUMP_TOKEN}}
 
       - name: Install Node.js
         uses: actions/setup-node@v3
@@ -19,14 +20,11 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: yarn install
+      - name: Install dependencies
         run: yarn
 
       - name: Compile Typescript
         run: yarn build
-
-      - name: Run tests
-        run: yarn test
 
       - name: Setup .yarnrc.yml
         run: |
@@ -49,11 +47,3 @@ jobs:
             -H "X-GitHub-Api-Version: 2022-11-28" \
             https://api.github.com/repos/awell-health/awell-extension-server/actions/workflows/update-dependency.yml/dispatches \
             -d '{"ref":"main","inputs":{"dependency":"@awell-health/awell-extensions","version":"'"$CURRENT_VERSION"'"}}'
-
-      - name: Commit and push updated version
-        run: |
-          git config --global user.name "Awell CI"
-          git config --global user.email "ci@awellhealth.com"
-          git add package.json .yarn/versions
-          git commit -m "ci: bump version"
-          git push
