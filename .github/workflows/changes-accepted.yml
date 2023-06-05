@@ -31,5 +31,5 @@ jobs:
           git config --global user.name "Awell CI"
           git config --global user.email "ci@awellhealth.com"
           git add package.json .yarn/versions
-          git commit -m "ci: bump version [skip ci]" && git push
-          git tag $new_version && git push origin $new_version
+          git commit -m "ci: bump version to $new_version [skip ci]" && git push
+          git tag -a $new_version -m "ci: bump version to $new_version" && git push origin $new_version
