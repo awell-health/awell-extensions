@@ -47,7 +47,6 @@ jobs:
 
       - name: Publish to NPM Registry
         run: |
-          yarn version -i patch
           yarn npm publish --access public
       - name: Redeploy the extension server
         run: |
