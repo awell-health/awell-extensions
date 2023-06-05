@@ -1,0 +1,35 @@
+name: Changes accepted
+
+on:
+  push:
+    branches:
+      - "main"
+
+jobs:
+  update-version:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          token: ${{secrets.VERSION_BUMP_TOKEN}}
+
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Install dependencies
+        run: yarn
+
+      - name: Commit and push updated version
+        run: |
+          yarn version -i patch
+          new_version=$(cat package.json | jq -r '.version')
+          git config --global user.name "Awell CI"
+          git config --global user.email "ci@awellhealth.com"
+          git add package.json .yarn/versions
+          git commit -m "ci: bump version [skip ci]" && git push
+          git tag $new_version && git push origin $new_version
