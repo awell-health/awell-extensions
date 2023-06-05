@@ -6,7 +6,7 @@ on:
       - "release/*"
 
 jobs:
-  deploy:
+  publish-beta:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -19,7 +19,7 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: yarn install
+      - name: Install dependencies
         run: yarn
 
       - name: Compile Typescript
