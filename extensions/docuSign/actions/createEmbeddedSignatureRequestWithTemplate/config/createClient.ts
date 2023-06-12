@@ -3,7 +3,7 @@ import DocuSignSdk from 'docusign-esign'
 /**
  * Creates a DocuSign `ApiClient` and authorizes with JWT
  */
-export const createClient = async ({
+export const createApiClient = async ({
   integrationKey,
   userId,
   rsaKey,
@@ -15,7 +15,7 @@ export const createClient = async ({
   baseUrl: string
 }): Promise<DocuSignSdk.ApiClient> => {
   const client = new DocuSignSdk.ApiClient()
-  client.setBasePath(baseUrl)
+  client.setBasePath(`${baseUrl}/restapi`)
 
   const authResult = await client.requestJWTUserToken(
     integrationKey,
@@ -26,7 +26,7 @@ export const createClient = async ({
   )
   client.addDefaultHeader(
     'Authorization',
-    `Bearer ${(authResult?.body?.accessToken as string) ?? ''}`
+    `Bearer ${(authResult?.body?.access_token as string) ?? ''}`
   )
 
   return client
