@@ -38,7 +38,7 @@ export const settings = {
     label: 'Base API URL (DocuSign)',
     key: 'baseApiUrl',
     obfuscated: false,
-    required: true,
+    required: false,
     description:
       'Base API URL for API calls matching your environment on DocuSign. Defaults to: https://demo.docusign.net. Remember that this URL MUST match the one you registered for your app in DocuSign settings. Can be obtained from Account Base URI section of the Apps and Keys page or the "base_uri" property in the response of a call to the "/oauth/userinfo"',
   },
