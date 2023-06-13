@@ -24,6 +24,8 @@ export const createEmbeddedSignatureRequestWithTemplate: Action<
     try {
       const {
         patient: { id: patientId },
+        // @ts-expect-error Remove when `sessionId` will actually be added
+        activity: { sessionId },
       } = payload
 
       const {
@@ -34,23 +36,21 @@ export const createEmbeddedSignatureRequestWithTemplate: Action<
         subject,
         message,
       } = validateActionFields(payload.fields)
-      const { accountId, baseUrl, integrationKey, rsaKey, userId } =
-        validateSettings(payload.settings)
+      const {
+        accountId,
+        baseApiUrl,
+        baseAppUrl,
+        integrationKey,
+        rsaKey,
+        userId,
+      } = validateSettings(payload.settings)
 
       const client = await createApiClient({
         integrationKey,
         userId,
         rsaKey,
-        baseUrl,
+        baseUrl: baseApiUrl,
       })
-
-      // const signer = DocuSignSdk.Signer.constructFromObject({
-      //   email: signerEmailAddress,
-      //   name: signerName,
-      //   roleName: signerRole,
-      //   recipientId: '1',
-      //   clientUserId: patientId,
-      // })
 
       const signer = DocuSignSdk.TemplateRole.constructFromObject({
         email: signerEmailAddress,
@@ -78,7 +78,7 @@ export const createEmbeddedSignatureRequestWithTemplate: Action<
         email: signerEmailAddress,
         userName: signerName,
         clientUserId: patientId,
-        returnUrl: 'http://localhost',
+        returnUrl: `${baseAppUrl}?sessionId=${sessionId as string}`,
       })
 
       const viewRequestResult = await envelopesApi.createRecipientView(

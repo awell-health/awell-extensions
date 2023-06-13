@@ -34,13 +34,21 @@ export const settings = {
     description:
       "This is for the integration key you obtained above and can also be created on the Apps and Keys page. You only need the private key, and it can only be copied once. Make sure to retain it for your records. Provide it in Base64 format - if you copy the key as is, it will not be valid as newlines and formatting won't be persisted.",
   },
-  baseUrl: {
-    label: 'Base URL',
-    key: 'baseUrl',
+  baseApiUrl: {
+    label: 'Base API URL (DocuSign)',
+    key: 'baseApiUrl',
     obfuscated: false,
     required: true,
     description:
-      'Base URL for API calls matching your environment. Can be obtained from Account Base URI section of the Apps and Keys page or the "base_uri" property in the response of a call to the "/oauth/userinfo"',
+      'Base API URL for API calls matching your environment on DocuSign. Defaults to: https://demo.docusign.net. Remember that this URL MUST match the one you registered for your app in DocuSign settings. Can be obtained from Account Base URI section of the Apps and Keys page or the "base_uri" property in the response of a call to the "/oauth/userinfo"',
+  },
+  baseAppUrl: {
+    label: 'Base App URL',
+    key: 'baseAppUrl',
+    obfuscated: false,
+    required: false,
+    description:
+      'Base App URL for your application. Set when you self host your application or use production environment. Defaults to: "https://goto.development.awell.health"',
   },
 } satisfies Record<string, Setting>
 
@@ -49,7 +57,8 @@ export const SettingsValidationSchema = z.object({
   accountId: z.string(),
   userId: z.string(),
   rsaKey: z.string(),
-  baseUrl: z.string().url(),
+  baseApiUrl: z.string().url().default('https://demo.docusign.net'),
+  baseAppUrl: z.string().url().default('https://goto.development.awell.health'),
 } satisfies Record<keyof typeof settings, ZodTypeAny>)
 
 export const validateSettings = (
