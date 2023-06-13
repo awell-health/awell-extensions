@@ -1,7 +1,7 @@
 import { type Extension } from '@awell-health/extensions-core'
 import { AuthorType, Category } from '@awell-health/extensions-core'
 import {
-  // createEmbeddedSignatureRequestWithTemplate,
+  createEmbeddedSignatureRequestWithTemplate,
   embeddedSigning,
 } from './actions'
 import { settings } from './settings'
@@ -17,7 +17,7 @@ export const DocuSign: Extension = {
     authorType: AuthorType.AWELL,
   },
   actions: {
-    // createEmbeddedSignatureRequestWithTemplate,
+    createEmbeddedSignatureRequestWithTemplate,
     embeddedSigning,
   },
   settings,
