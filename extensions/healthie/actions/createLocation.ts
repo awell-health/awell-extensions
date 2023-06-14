@@ -1,5 +1,5 @@
 import { isNil } from 'lodash'
-import { mapHealthieToActivityError } from '../errors'
+import { HealthieError, mapHealthieToActivityError } from '../errors'
 import {
   type DataPointDefinition,
   FieldType,
@@ -119,16 +119,6 @@ export const createLocation: Action<
           },
         })
 
-        if (!isNil(data.createLocation?.messages)) {
-          const errors = mapHealthieToActivityError(
-            data.createLocation?.messages
-          )
-          await onError({
-            events: errors,
-          })
-          return
-        }
-
         const locationId = data.createLocation?.location?.id
 
         await onComplete({
@@ -151,19 +141,26 @@ export const createLocation: Action<
         })
       }
     } catch (err) {
-      const error = err as Error
-      await onError({
-        events: [
-          {
-            date: new Date().toISOString(),
-            text: { en: 'Healthie API reported an error' },
-            error: {
-              category: 'SERVER_ERROR',
-              message: error.message,
+      if (err instanceof HealthieError) {
+        const errors = mapHealthieToActivityError(err.errors)
+        await onError({
+          events: errors,
+        })
+      } else {
+        const error = err as Error
+        await onError({
+          events: [
+            {
+              date: new Date().toISOString(),
+              text: { en: 'Healthie API reported an error' },
+              error: {
+                category: 'SERVER_ERROR',
+                message: error.message,
+              },
             },
-          },
-        ],
-      })
+          ],
+        })
+      }
     }
   },
 }

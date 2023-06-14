@@ -1,5 +1,5 @@
 import { isNil } from 'lodash'
-import { mapHealthieToActivityError } from '../errors'
+import { HealthieError, mapHealthieToActivityError } from '../errors'
 import {
   type DataPointDefinition,
   type Action,
@@ -86,14 +86,6 @@ export const createJournalEntry: Action<
           },
         })
 
-        if (!isNil(data.createEntry?.messages)) {
-          const errors = mapHealthieToActivityError(data.createEntry?.messages)
-          await onError({
-            events: errors,
-          })
-          return
-        }
-
         const journalEntryId = data.createEntry?.entry?.id
 
         await onComplete({
@@ -116,19 +108,26 @@ export const createJournalEntry: Action<
         })
       }
     } catch (err) {
-      const error = err as Error
-      await onError({
-        events: [
-          {
-            date: new Date().toISOString(),
-            text: { en: 'Healthie API reported an error' },
-            error: {
-              category: 'SERVER_ERROR',
-              message: error.message,
+      if (err instanceof HealthieError) {
+        const errors = mapHealthieToActivityError(err.errors)
+        await onError({
+          events: errors,
+        })
+      } else {
+        const error = err as Error
+        await onError({
+          events: [
+            {
+              date: new Date().toISOString(),
+              text: { en: 'Healthie API reported an error' },
+              error: {
+                category: 'SERVER_ERROR',
+                message: error.message,
+              },
             },
-          },
-        ],
-      })
+          ],
+        })
+      }
     }
   },
 }
