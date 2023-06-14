@@ -46,9 +46,9 @@ export const mapHealthieToActivityError = (
     text: { en: 'Healthie API reported an error' },
     error: {
       category: 'SERVER_ERROR',
-      message: `Message: ${error.message}${
-        isNil(error.field) ? '' : `; Field: "${error.field}"`
-      }`,
+      message: `${
+        isNil(error.field) ? 'Message: ' : `Field "${error.field}": `
+      }${error.message};`,
     },
   }))
 }
