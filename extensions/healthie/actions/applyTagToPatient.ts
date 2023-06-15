@@ -1,5 +1,5 @@
 import { isNil } from 'lodash'
-import { mapHealthieToActivityError } from '../errors'
+import { HealthieError, mapHealthieToActivityError } from '../errors'
 import {
   FieldType,
   type Action,
@@ -57,7 +57,7 @@ export const applyTagToPatient: Action<typeof fields, typeof settings> = {
       const client = initialiseClient(settings)
       if (client !== undefined) {
         const sdk = getSdk(client)
-        const { data } = await sdk.applyTagsToUser({
+        await sdk.applyTagsToUser({
           /**
            * Although the Healthie API allows assigning multiple tags in a single API call, we decided that
            * the action only assigns one as this simplifies the action code. A user can still assign
@@ -66,14 +66,6 @@ export const applyTagToPatient: Action<typeof fields, typeof settings> = {
           ids: [id],
           taggable_user_id: patient_id,
         })
-
-        if (!isNil(data.bulkApply?.messages)) {
-          const errors = mapHealthieToActivityError(data.bulkApply?.messages)
-          await onError({
-            events: errors,
-          })
-          return
-        }
 
         await onComplete()
       } else {
@@ -91,19 +83,26 @@ export const applyTagToPatient: Action<typeof fields, typeof settings> = {
         })
       }
     } catch (err) {
-      const error = err as Error
-      await onError({
-        events: [
-          {
-            date: new Date().toISOString(),
-            text: { en: 'Healthie API reported an error' },
-            error: {
-              category: 'SERVER_ERROR',
-              message: error.message,
+      if (err instanceof HealthieError) {
+        const errors = mapHealthieToActivityError(err.errors)
+        await onError({
+          events: errors,
+        })
+      } else {
+        const error = err as Error
+        await onError({
+          events: [
+            {
+              date: new Date().toISOString(),
+              text: { en: 'Healthie API reported an error' },
+              error: {
+                category: 'SERVER_ERROR',
+                message: error.message,
+              },
             },
-          },
-        ],
-      })
+          ],
+        })
+      }
     }
   },
 }

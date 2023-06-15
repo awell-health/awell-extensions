@@ -1,5 +1,5 @@
 import { isNil } from 'lodash'
-import { mapHealthieToActivityError } from '../errors'
+import { HealthieError, mapHealthieToActivityError } from '../errors'
 import {
   FieldType,
   type Action,
@@ -50,17 +50,9 @@ export const completeTask: Action<typeof fields, typeof settings> = {
       const client = initialiseClient(settings)
       if (client !== undefined) {
         const sdk = getSdk(client)
-        const { data } = await sdk.updateTask({
+        await sdk.updateTask({
           input: { id, complete: true },
         })
-
-        if (!isNil(data.updateTask?.messages)) {
-          const errors = mapHealthieToActivityError(data.updateTask?.messages)
-          await onError({
-            events: errors,
-          })
-          return
-        }
 
         await onComplete()
       } else {
@@ -78,19 +70,26 @@ export const completeTask: Action<typeof fields, typeof settings> = {
         })
       }
     } catch (err) {
-      const error = err as Error
-      await onError({
-        events: [
-          {
-            date: new Date().toISOString(),
-            text: { en: 'Healthie API reported an error' },
-            error: {
-              category: 'SERVER_ERROR',
-              message: error.message,
+      if (err instanceof HealthieError) {
+        const errors = mapHealthieToActivityError(err.errors)
+        await onError({
+          events: errors,
+        })
+      } else {
+        const error = err as Error
+        await onError({
+          events: [
+            {
+              date: new Date().toISOString(),
+              text: { en: 'Healthie API reported an error' },
+              error: {
+                category: 'SERVER_ERROR',
+                message: error.message,
+              },
             },
-          },
-        ],
-      })
+          ],
+        })
+      }
     }
   },
 }

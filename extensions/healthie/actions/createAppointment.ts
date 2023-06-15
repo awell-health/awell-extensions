@@ -5,6 +5,7 @@ import {
   type Field,
 } from '@awell-health/extensions-core'
 import { Category } from '@awell-health/extensions-core'
+import { HealthieError, mapHealthieToActivityError } from '../errors'
 import { getSdk } from '../gql/sdk'
 import { initialiseClient } from '../graphqlClient'
 import { type settings } from '../settings'
@@ -106,19 +107,26 @@ export const createAppointment: Action<
         })
       }
     } catch (err) {
-      const error = err as Error
-      await onError({
-        events: [
-          {
-            date: new Date().toISOString(),
-            text: { en: 'Healthie API reported an error' },
-            error: {
-              category: 'SERVER_ERROR',
-              message: error.message,
+      if (err instanceof HealthieError) {
+        const errors = mapHealthieToActivityError(err.errors)
+        await onError({
+          events: errors,
+        })
+      } else {
+        const error = err as Error
+        await onError({
+          events: [
+            {
+              date: new Date().toISOString(),
+              text: { en: 'Healthie API reported an error' },
+              error: {
+                category: 'SERVER_ERROR',
+                message: error.message,
+              },
             },
-          },
-        ],
-      })
+          ],
+        })
+      }
     }
   },
 }

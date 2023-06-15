@@ -11,6 +11,7 @@ import { getSdk } from '../gql/sdk'
 import { initialiseClient } from '../graphqlClient'
 import { type settings } from '../settings'
 import { createTaskSchema } from '../validation/createTask.zod'
+import { HealthieError, mapHealthieToActivityError } from '../errors'
 
 const fields = {
   patientId: {
@@ -124,7 +125,12 @@ export const createTask: Action<
         })
       }
     } catch (err) {
-      if (err instanceof ZodError) {
+      if (err instanceof HealthieError) {
+        const errors = mapHealthieToActivityError(err.errors)
+        await onError({
+          events: errors,
+        })
+      } else if (err instanceof ZodError) {
         const error = fromZodError(err)
         await onError({
           events: [
