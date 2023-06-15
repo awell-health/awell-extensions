@@ -28,11 +28,19 @@ describe('responseMiddleware', () => {
   test('Should throw error when containing messages', async () => {
     expect(() => {
       responseMiddlewareMock(response)
-    }).toThrowError({
-      name: 'HealthieError',
-      message:
-        'Error in Healthie: invalid object name or field, or a record is not found.',
-    })
+    }).toThrowError(
+      expect.objectContaining({
+        name: 'HealthieError',
+        message:
+          'Error in Healthie: invalid object name or field, or a record is not found.',
+        errors: [
+          {
+            field: 'base',
+            message: 'You do not have permission to create this task.',
+          },
+        ],
+      })
+    )
   })
 
   test.each([{ messages: [] }, { messages: null }, { messages: undefined }])(
