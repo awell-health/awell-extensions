@@ -1,7 +1,20 @@
 import { GraphQLClient } from 'graphql-request'
+import { type PatchedRequestInit } from 'graphql-request/dist/types'
 import { isNil } from 'lodash'
 import { getHealthieErrorFromResponse, HealthieError } from './errors'
 import { type settings } from './settings'
+
+export const responseMiddleware: Required<PatchedRequestInit>['responseMiddleware'] =
+  (response) => {
+    if (response instanceof HealthieError) {
+      return
+    }
+
+    const errors = getHealthieErrorFromResponse(response)
+    if (!isNil(errors) && errors.length > 0) {
+      throw new HealthieError(errors)
+    }
+  }
 
 export const initialiseClient = (
   s: Record<keyof typeof settings, string | undefined>
@@ -13,16 +26,7 @@ export const initialiseClient = (
         AuthorizationSource: 'API',
         Authorization: `Basic ${apiKey}`,
       },
-      responseMiddleware: (response) => {
-        if (response instanceof HealthieError) {
-          return
-        }
-
-        const errors = getHealthieErrorFromResponse(response)
-        if (!isNil(errors) && errors.length > 0) {
-          throw new HealthieError(errors)
-        }
-      },
+      responseMiddleware,
     })
   }
   return undefined
