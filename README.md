@@ -24,6 +24,16 @@ When updates are made to the public extensions repository, the release process i
 
 This process is currently manual, and we ask you to please be patient with our PR reviews and deployments while we work to automate this process.
 
+### Testing extension actions
+
+Extension actions can be tested in three ways. You can:
+1. Create unit tests (recommended);
+2. Use Cloud Pub/sub emulator ([instructions](https://developers.awellhealth.com/awell-extensions/docs/custom-actions/test-your-custom-actions)); or
+3. Test deployed extensions in Awell Studio
+
+Testing extensions in design is a great way to test your extension actions because it allows you to interact with real world components. If you want to test your extension in Awell Studio, be sure to set `previewable: true` in the extension action's settings.
+Finally, if your extension action requires some sort of asynchronous completion by the user (e.g. cal.com's extension allows a user to book an appointment in Awell Hosted Pages), then you *will not* be able to set `previewable: true` and the extension is not testable in this way.
+
 ### Actions and webhooks
 
 Please read about [custom actions](https://developers.awellhealth.com/awell-extensions/docs/custom-actions/what-are-custom-actions) and [webhooks](https://developers.awellhealth.com/awell-extensions/docs/webhooks/what-are-webhooks) to learn about how you can use them to support no-code flows for your care ops builders.
