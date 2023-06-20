@@ -14,7 +14,7 @@ import {
     patientId: {
       id: 'patientId',
       label: 'Patient ID',
-      description: 'The ID of the patiet to check an override for.',
+      description: 'The ID of the patient to check an override for.',
       type: FieldType.STRING,
       required: true,
     },
@@ -22,7 +22,7 @@ import {
         id: 'appointmentTime',
         label: 'Appointment Time',
         description: 'The time of the appointment to check against.',
-        type: FieldType.STRING,
+        type: FieldType.DATE,
         required: true,
       },
   } satisfies Record<string, Field>
