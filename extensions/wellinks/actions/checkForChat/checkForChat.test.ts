@@ -143,7 +143,7 @@ describe('the checkForChat action', () => {
         })
     })
 
-    test('when given a list of conversationMemberships where there is not a message sent 24 hours after the appointmentDate returns false', async() => {
+    test('when given a list of conversationMemberships where there is not a message sent at least 24 hours after the appointmentDate returns false', async() => {
         (getSdk as jest.Mock).mockReturnValueOnce(
             {
                 ...mockGetSdkReturn,
@@ -153,7 +153,7 @@ describe('the checkForChat action', () => {
                             {
                                 "convo": {
                                     "last_message_content": "There is no message within 24 hours of the appointment date",
-                                    "updated_at": "2023-05-30 15:00:00 -0500",
+                                    "updated_at": "2023-01-30 15:00:00 -0500",
                                     "dietitian_id": "coachId",
                                     "patient_id": "37616"
                                 }
@@ -161,7 +161,7 @@ describe('the checkForChat action', () => {
                             {
                                 "convo": {
                                     "last_message_content": "\nHi Ash, after talking with you today I thought I’d share this resource with you, http://www.findhelp.org/.\nThis is a helpful way to find housing support in your area. By entering your zip code, you can find local resources. \nLet me know what you learn and what options you are considering. I’m excited to hear more. Talk to you soon.\n",
-                                    "updated_at": "2023-05-31 15:41:38 -0500",
+                                    "updated_at": "2023-05-01 00:00:01 -0500",
                                     "dietitian_id": null,
                                     "patient_id": null
                                 }
