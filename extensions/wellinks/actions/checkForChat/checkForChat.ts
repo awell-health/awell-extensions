@@ -70,12 +70,13 @@ import {
                 for (const conversation of conversationMemberships) {
                     // check if dates are within 24 hours of each other
                     
-                    if (areDatesWithinDay(new Date(conversation?.convo?.updated_at ?? ''), new Date(appointmentTime ?? ''))) {
+                    if (areDatesMoreThanADayApart(new Date(conversation?.convo?.updated_at ?? ''), new Date(appointmentTime ?? ''))) {
                         await onComplete({
                             data_points: {
                                 messageSent: 'true',
                             }
                         }) 
+                      return
                     }
                 }
                 await onComplete({
@@ -129,7 +130,7 @@ import {
     },
   }
   
-  function areDatesWithinDay(date1: Date, date2: Date): boolean {
+  function areDatesMoreThanADayApart(date1: Date, date2: Date): boolean {
     const oneDay = 1000 * 60 * 60 * 24
     return date1.getTime() > (date2.getTime() + oneDay)
   }
