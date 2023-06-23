@@ -44,7 +44,7 @@ export const sendSmsWithMessagingService: Action<
                 code: z.ZodIssueCode.custom,
                 fatal: true,
                 message:
-                  '"Messaging Service SID" is missing in both settings and fields',
+                  '"Messaging Service SID" is missing in both settings and in the action field.',
               })
             }
           }),
