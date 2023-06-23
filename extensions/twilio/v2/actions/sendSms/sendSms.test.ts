@@ -170,7 +170,7 @@ describe('Send SMS (with from number) action', () => {
             error: {
               category: 'BAD_REQUEST',
               message:
-                'Validation error: "From" number is missing in both settings and fields',
+                'Validation error: "From" number is missing in both settings and in the action field.',
             },
           }),
         ]),
