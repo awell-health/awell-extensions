@@ -22,17 +22,19 @@ const reminderSchema = z
     z.object({
       reminderIntervalType: z.literal(undefined),
       reminderIntervalValue: z.literal(undefined),
+      reminderIntervalValueOnce: z.literal(undefined),
       isReminderEnabled: z.union([z.literal(false), z.literal(undefined)]),
       reminderTime: z.literal(undefined),
     }),
     /**
      * If `isReminderEnabled` is true,
      * and `reminderIntervalType` is 'daily'
-     * then `reminderIntervalValue` is obsolete
+     * then `reminderIntervalValue` and `reminderIntervalValueOnce` is obsolete
      */
     z.object({
       reminderIntervalType: z.literal(intervalTypeEnum.enum.daily),
       reminderIntervalValue: z.literal(undefined),
+      reminderIntervalValueOnce: z.literal(undefined),
       isReminderEnabled: z.literal(true),
       reminderTime: z.coerce.number(),
     }),
@@ -40,6 +42,7 @@ const reminderSchema = z
      * If `isReminderEnabled` is true,
      * and `reminderIntervalType` is 'weekly'
      * then `reminderIntervalValue` should be a comma-separated string of days of the week
+     * and `reminderIntervalValueOnce` is obsolete
      */
     z.object({
       reminderIntervalType: z.literal(intervalTypeEnum.enum.weekly),
@@ -60,26 +63,46 @@ const reminderSchema = z
             )}`,
           }
         ),
+      reminderIntervalValueOnce: z.literal(undefined),
       isReminderEnabled: z.literal(true),
       reminderTime: z.coerce.number(),
     }),
     /**
      * If `isReminderEnabled` is true,
      * and `reminderIntervalType` is 'once'
-     * then `reminderIntervalValue` should be an ISO8601 date
+     * then `reminderIntervalValueOnce` should be an ISO8601 date
+     * and `reminderIntervalValue` is obsolete (left for compatibility purposes)
      */
     z.object({
       reminderIntervalType: z.literal(intervalTypeEnum.enum.once),
-      reminderIntervalValue: DateOnlySchema,
+      // ! preserve for compatibility reasons (use as a fallback)
+      reminderIntervalValue: DateOnlySchema.optional(),
+      reminderIntervalValueOnce: DateOnlySchema.optional(),
       isReminderEnabled: z.literal(true),
       reminderTime: z.coerce.number(),
     }),
   ])
+  .superRefine((value, context) => {
+    // if type is `once` and both values are not set
+    if (
+      value.reminderIntervalType === intervalTypeEnum.enum.once &&
+      isNil(value.reminderIntervalValue) &&
+      isNil(value.reminderIntervalValueOnce)
+    ) {
+      context.addIssue({
+        code: z.ZodIssueCode.invalid_date,
+        fatal: true,
+        path: ['reminderIntervalValueOnce'],
+        message: 'Value is not a valid ISO8601 date',
+      })
+    }
+  })
   .transform(
     ({
       isReminderEnabled,
       reminderIntervalType,
       reminderIntervalValue,
+      reminderIntervalValueOnce,
       reminderTime,
     }) => ({
       reminder:
@@ -88,7 +111,9 @@ const reminderSchema = z
           : {
               is_enabled: true,
               interval_type: reminderIntervalType,
-              interval_value: reminderIntervalValue,
+              interval_value:
+                // ! `reminderIntervalValue` left for compatibility
+                reminderIntervalValueOnce ?? reminderIntervalValue,
               reminder_time: reminderTime,
             },
     })
