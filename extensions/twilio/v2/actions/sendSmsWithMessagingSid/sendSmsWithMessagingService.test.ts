@@ -1,7 +1,7 @@
-import { sendSms } from './sendSms'
+import { sendSmsWithMessagingService } from './sendSmsWithMessagingService'
 import twilioSdk from '../../../common/sdk/twilio'
 
-describe('Send SMS (with from number) action', () => {
+describe('Send SMS (with Messaging Service) action', () => {
   const onComplete = jest.fn()
   const onError = jest.fn()
   const getLastTwilioClient = (): any =>
@@ -13,7 +13,7 @@ describe('Send SMS (with from number) action', () => {
   })
 
   test('Should call the onComplete callback', async () => {
-    await sendSms.onActivityCreated(
+    await sendSmsWithMessagingService.onActivityCreated(
       {
         pathway: {
           id: 'pathway-id',
@@ -26,13 +26,13 @@ describe('Send SMS (with from number) action', () => {
         fields: {
           message: 'Message content',
           recipient: '+32494000000',
-          from: '',
+          messagingServiceSid: '',
         },
         settings: {
           accountSid: 'AC-accountSid',
           authToken: 'authToken',
-          fromNumber: '+19144542596',
-          messagingServiceSid: undefined,
+          fromNumber: undefined,
+          messagingServiceSid: 'service-id-settings',
         },
       },
       onComplete,
@@ -43,7 +43,7 @@ describe('Send SMS (with from number) action', () => {
   })
 
   test('Should call the onError callback when there is no recipient', async () => {
-    await sendSms.onActivityCreated(
+    await sendSmsWithMessagingService.onActivityCreated(
       {
         pathway: {
           id: 'pathway-id',
@@ -56,13 +56,13 @@ describe('Send SMS (with from number) action', () => {
         fields: {
           message: 'Message content',
           recipient: '',
-          from: '',
+          messagingServiceSid: '',
         },
         settings: {
           accountSid: 'AC-accountSid',
           authToken: 'authToken',
-          fromNumber: '+19144542596',
-          messagingServiceSid: undefined,
+          fromNumber: undefined,
+          messagingServiceSid: 'service-id-settings',
         },
       },
       onComplete,
@@ -73,7 +73,7 @@ describe('Send SMS (with from number) action', () => {
   })
 
   test('Should call the onError callback when there is no message', async () => {
-    await sendSms.onActivityCreated(
+    await sendSmsWithMessagingService.onActivityCreated(
       {
         pathway: {
           id: 'pathway-id',
@@ -86,13 +86,13 @@ describe('Send SMS (with from number) action', () => {
         fields: {
           message: '',
           recipient: '+19144542596',
-          from: '',
+          messagingServiceSid: '',
         },
         settings: {
           accountSid: 'AC-accountSid',
           authToken: 'authToken',
-          fromNumber: '+19144542596',
-          messagingServiceSid: undefined,
+          fromNumber: undefined,
+          messagingServiceSid: 'service-id-settings',
         },
       },
       onComplete,
@@ -102,7 +102,7 @@ describe('Send SMS (with from number) action', () => {
     expect(onError).toHaveBeenCalled()
   })
 
-  describe("'From' number", () => {
+  describe("'Messaging Service SID'", () => {
     const basePayload = {
       pathway: {
         id: 'pathway-id',
@@ -115,54 +115,68 @@ describe('Send SMS (with from number) action', () => {
       fields: {
         message: 'Message content',
         recipient: '+32494000000',
-        from: '+32494000000',
+        messagingServiceSid: 'service-id-fields',
       },
       settings: {
         accountSid: 'AC-accountSid',
         authToken: 'authToken',
-        fromNumber: '+19144542596',
-        messagingServiceSid: undefined,
+        fromNumber: undefined,
+        messagingServiceSid: 'service-id-settings',
       },
     }
 
     test('Should use one provided in action fields', async () => {
-      await sendSms.onActivityCreated(basePayload, onComplete, onError)
+      await sendSmsWithMessagingService.onActivityCreated(
+        basePayload,
+        onComplete,
+        onError
+      )
       expect(
-        getLastTwilioClient().messages.create.mock.calls.at(-1)[0].from
-      ).toEqual(basePayload.fields.from)
+        getLastTwilioClient().messages.create.mock.calls.at(-1)[0]
+          .messagingServiceSid
+      ).toEqual(basePayload.fields.messagingServiceSid)
       expect(onComplete).toHaveBeenCalled()
       expect(onError).not.toHaveBeenCalled()
     })
 
-    test('Should fallback to settings if no number is provided', async () => {
+    test('Should fallback to settings if no messagingServiceSid is provided', async () => {
       const payloadWithoutFrom = {
         ...basePayload,
         fields: {
           message: 'Message content',
           recipient: '+32494000000',
-          from: undefined,
+          messagingServiceSid: undefined,
         },
       }
 
-      await sendSms.onActivityCreated(payloadWithoutFrom, onComplete, onError)
+      await sendSmsWithMessagingService.onActivityCreated(
+        payloadWithoutFrom,
+        onComplete,
+        onError
+      )
       expect(
-        getLastTwilioClient().messages.create.mock.calls.at(-1)[0].from
-      ).toEqual(payloadWithoutFrom.settings.fromNumber)
+        getLastTwilioClient().messages.create.mock.calls.at(-1)[0]
+          .messagingServiceSid
+      ).toEqual(payloadWithoutFrom.settings.messagingServiceSid)
       expect(onComplete).toHaveBeenCalled()
       expect(onError).not.toHaveBeenCalled()
     })
 
-    test('Should throw error if no number is provided in both settings and fields', async () => {
+    test('Should throw error if no messagingServiceSid is provided in both settings and fields', async () => {
       const payloadWithoutFrom = {
         ...basePayload,
-        settings: { ...basePayload.settings, fromNumber: undefined },
+        settings: { ...basePayload.settings, messagingServiceSid: undefined },
         fields: {
           ...basePayload.fields,
-          from: undefined,
+          messagingServiceSid: undefined,
         },
       }
 
-      await sendSms.onActivityCreated(payloadWithoutFrom, onComplete, onError)
+      await sendSmsWithMessagingService.onActivityCreated(
+        payloadWithoutFrom,
+        onComplete,
+        onError
+      )
       expect(onComplete).not.toHaveBeenCalled()
       expect(onError).toHaveBeenCalledWith({
         events: expect.arrayContaining([
@@ -170,7 +184,7 @@ describe('Send SMS (with from number) action', () => {
             error: {
               category: 'BAD_REQUEST',
               message:
-                'Validation error: "From" number is missing in both settings and fields',
+                'Validation error: "Messaging Service SID" is missing in both settings and fields',
             },
           }),
         ]),

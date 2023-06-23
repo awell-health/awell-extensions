@@ -1,6 +1,8 @@
-import { type Setting } from '@awell-health/extensions-core'
+import {
+  E164PhoneValidationOptionalSchema,
+  type Setting,
+} from '@awell-health/extensions-core'
 import { z, type ZodTypeAny } from 'zod'
-import { E164PhoneValidationSchema } from '@awell-health/extensions-core'
 
 export const settings = {
   accountSid: {
@@ -38,6 +40,6 @@ export const settings = {
 export const SettingsValidationSchema = z.object({
   accountSid: z.string().min(1, { message: 'Missing Twilio account SID' }),
   authToken: z.string().min(1, { message: 'Missing Twilio auth token' }),
-  fromNumber: E164PhoneValidationSchema.optional(),
+  fromNumber: E164PhoneValidationOptionalSchema,
   messagingServiceSid: z.string().optional(),
 } satisfies Record<keyof typeof settings, ZodTypeAny>)
