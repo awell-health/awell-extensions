@@ -83,6 +83,7 @@ const reminderSchema = z
     }),
   ])
   .superRefine((value, context) => {
+    // if type is `once` and both values are not set
     if (
       value.reminderIntervalType === intervalTypeEnum.enum.once &&
       isNil(value.reminderIntervalValue) &&
