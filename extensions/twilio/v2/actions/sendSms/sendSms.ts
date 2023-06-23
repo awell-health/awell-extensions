@@ -6,11 +6,13 @@ import { type settings } from '../../../settings'
 import { Category, validate } from '@awell-health/extensions-core'
 import { SettingsValidationSchema } from '../../../settings'
 import { FieldsValidationSchema, fields } from './config'
+import { isNil } from 'lodash'
 
 export const sendSms: Action<typeof fields, typeof settings> = {
   key: 'sendSms',
-  title: 'Send SMS',
-  description: 'Send an SMS message to a recipient of your choice.',
+  title: 'Send SMS (with from number)',
+  description:
+    'Send a text message from a given telephone number to a recipient of your choice.',
   category: Category.COMMUNICATION,
   fields,
   previewable: false,
@@ -20,10 +22,21 @@ export const sendSms: Action<typeof fields, typeof settings> = {
         settings: { accountSid, authToken, fromNumber: defaultFromNumber },
         fields: { recipient, message, from },
       } = validate({
-        schema: z.object({
-          settings: SettingsValidationSchema,
-          fields: FieldsValidationSchema,
-        }),
+        schema: z
+          .object({
+            settings: SettingsValidationSchema,
+            fields: FieldsValidationSchema,
+          })
+          .superRefine((value, ctx) => {
+            // if both `from` values missing - throw error
+            if (isNil(value.settings.fromNumber) && isNil(value.fields.from)) {
+              ctx.addIssue({
+                code: z.ZodIssueCode.custom,
+                fatal: true,
+                message: '"From" number is missing in both settings and fields',
+              })
+            }
+          }),
         payload,
       })
 

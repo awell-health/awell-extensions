@@ -4,7 +4,8 @@ import twilioSdk from '../../../common/sdk/twilio'
 describe('Send SMS action', () => {
   const onComplete = jest.fn()
   const onError = jest.fn()
-  const getLastTwilioClient = (): any => (twilioSdk as any as jest.Mock<typeof twilioSdk>).mock.results.at(-1)?.value
+  const getLastTwilioClient = (): any =>
+    (twilioSdk as any as jest.Mock<typeof twilioSdk>).mock.results.at(-1)?.value
 
   beforeEach(() => {
     onComplete.mockClear()
@@ -31,6 +32,7 @@ describe('Send SMS action', () => {
           accountSid: 'AC-accountSid',
           authToken: 'authToken',
           fromNumber: '+19144542596',
+          messagingServiceSid: undefined,
         },
       },
       onComplete,
@@ -60,6 +62,7 @@ describe('Send SMS action', () => {
           accountSid: 'AC-accountSid',
           authToken: 'authToken',
           fromNumber: '+19144542596',
+          messagingServiceSid: undefined,
         },
       },
       onComplete,
@@ -89,6 +92,7 @@ describe('Send SMS action', () => {
           accountSid: 'AC-accountSid',
           authToken: 'authToken',
           fromNumber: '+19144542596',
+          messagingServiceSid: undefined,
         },
       },
       onComplete,
@@ -117,16 +121,15 @@ describe('Send SMS action', () => {
         accountSid: 'AC-accountSid',
         authToken: 'authToken',
         fromNumber: '+19144542596',
+        messagingServiceSid: undefined,
       },
     }
 
     test('Should use one provided in action fields', async () => {
-      await sendSms.onActivityCreated(
-        basePayload,
-        onComplete,
-        onError
-      )
-      expect(getLastTwilioClient().messages.create.mock.calls.at(-1)[0].from).toEqual(basePayload.fields.from)
+      await sendSms.onActivityCreated(basePayload, onComplete, onError)
+      expect(
+        getLastTwilioClient().messages.create.mock.calls.at(-1)[0].from
+      ).toEqual(basePayload.fields.from)
       expect(onComplete).toHaveBeenCalled()
       expect(onError).not.toHaveBeenCalled()
     })
@@ -137,18 +140,42 @@ describe('Send SMS action', () => {
         fields: {
           message: 'Message content',
           recipient: '+32494000000',
-          from: '',
+          from: undefined,
         },
       }
 
-      await sendSms.onActivityCreated(
-        payloadWithoutFrom,
-        onComplete,
-        onError
-      )
-      expect(getLastTwilioClient().messages.create.mock.calls.at(-1)[0].from).toEqual(payloadWithoutFrom.settings.fromNumber)
+      await sendSms.onActivityCreated(payloadWithoutFrom, onComplete, onError)
+      expect(
+        getLastTwilioClient().messages.create.mock.calls.at(-1)[0].from
+      ).toEqual(payloadWithoutFrom.settings.fromNumber)
       expect(onComplete).toHaveBeenCalled()
       expect(onError).not.toHaveBeenCalled()
+    })
+
+    test('Should throw error if no number is provided in both settings and fields', async () => {
+      const payloadWithoutFrom = {
+        ...basePayload,
+        settings: { ...basePayload.settings, fromNumber: undefined },
+        fields: {
+          message: 'Message content',
+          recipient: '+32494000000',
+          from: undefined,
+        },
+      }
+
+      await sendSms.onActivityCreated(payloadWithoutFrom, onComplete, onError)
+      expect(onComplete).not.toHaveBeenCalled()
+      expect(onError).toHaveBeenCalledWith({
+        events: expect.arrayContaining([
+          expect.objectContaining({
+            error: {
+              category: 'BAD_REQUEST',
+              message:
+                'Validation error: "From" number is missing in both settings and fields',
+            },
+          }),
+        ]),
+      })
     })
   })
 })
