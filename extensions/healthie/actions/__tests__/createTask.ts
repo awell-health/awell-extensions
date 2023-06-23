@@ -22,6 +22,7 @@ const samplePayload = {
     isReminderEnabled: false,
     reminderIntervalType: undefined,
     reminderIntervalValue: undefined,
+    reminderIntervalValueOnce: undefined,
     reminderTime: undefined,
   },
   settings: {
@@ -217,7 +218,7 @@ describe('createTask action', () => {
       })
     })
 
-    describe('Reminder = once', () => {
+    describe('Reminder = once (legacy - reminderIntervalValue)', () => {
       test('Should call onComplete when reminderIntervalValue is correct date', async () => {
         await createTask.onActivityCreated(
           {
@@ -255,6 +256,55 @@ describe('createTask action', () => {
               reminderIntervalType: 'once',
               isReminderEnabled: true,
               reminderIntervalValue: '',
+              reminderTime: 1,
+            },
+          },
+          onComplete,
+          onError
+        )
+
+        expect(onError).toHaveBeenCalled()
+      })
+    })
+
+    describe('Reminder = once (reminderIntervalValueOnce)', () => {
+      test('Should call onComplete when reminderIntervalValueOnce is correct date', async () => {
+        await createTask.onActivityCreated(
+          {
+            ...samplePayload,
+            fields: {
+              ...samplePayload.fields,
+              reminderIntervalType: 'once',
+              reminderTime: 1,
+              isReminderEnabled: true,
+              reminderIntervalValueOnce: '2023-04-13',
+            },
+          },
+          onComplete,
+          onError
+        )
+
+        expect(onComplete).toHaveBeenCalled()
+        expect(mockGetSdkReturn.createTask).toHaveBeenCalledWith({
+          ...sampleTask,
+          reminder: {
+            is_enabled: true,
+            interval_type: 'once',
+            interval_value: '2023-04-13',
+            reminder_time: 1,
+          },
+        })
+      })
+
+      test('Should call onError when reminderIntervalValueOnce is incorrect date', async () => {
+        await createTask.onActivityCreated(
+          {
+            ...samplePayload,
+            fields: {
+              ...samplePayload.fields,
+              reminderIntervalType: 'once',
+              isReminderEnabled: true,
+              reminderIntervalValueOnce: '',
               reminderTime: 1,
             },
           },

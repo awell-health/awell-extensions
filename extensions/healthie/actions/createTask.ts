@@ -50,15 +50,24 @@ const fields = {
     id: 'reminderIntervalType',
     label: 'Reminder interval type',
     description:
-      'At what interval would you like to send reminders? The options are "daily", "weekly", "once"',
+      'At what interval would you like to send reminders? The options are "daily", "weekly", "once".',
     type: FieldType.STRING,
   },
   reminderIntervalValue: {
     id: 'reminderIntervalValue',
-    label: 'Reminder interval value',
+    label: 'Reminder interval value (weekly)',
     description:
-      'When interval type is set to "daily", leave this field blank. For "weekly" interval, send in comma separated all lower-case days of the week (e.g wednesday, friday). For "once", send in the date in ISO8601 format (e.g 2020-11-28).',
+      'When interval type is set to "daily" or "once", leave this field blank. For "weekly" interval, send in comma separated all lower-case days of the week (e.g wednesday, friday).',
     type: FieldType.STRING,
+    required: false,
+  },
+  reminderIntervalValueOnce: {
+    id: 'reminderIntervalValueOnce',
+    label: 'Reminder interval value (once)',
+    description:
+      'When the interval type is set to "daily" or "weekly", leave this field blank. For "once" interval, set or select a date.',
+    type: FieldType.DATE,
+    required: false,
   },
   reminderTime: {
     id: 'reminderTime',
