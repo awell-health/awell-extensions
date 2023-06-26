@@ -26,10 +26,6 @@ export const settings = {
   },
 } satisfies Record<string, Setting>
 
-export const RegionValidationSchema = z.optional(
-  z.enum(['EU', 'eu', 'US', 'us'])
-)
-
 export const SettingsValidationSchema = z.object({
   apiKey: z.string(),
   fromName: z.string(),

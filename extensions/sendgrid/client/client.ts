@@ -1,5 +1,6 @@
 import sendgridMail, { type MailService } from '@sendgrid/mail'
 import sendgridClient, { type Client } from '@sendgrid/client'
+import { type MailApi, type MarketingApi } from './types'
 
 export class SendgridClient {
   private readonly _sendgridClient: Client
@@ -13,7 +14,19 @@ export class SendgridClient {
     this._mailService.setClient(this._sendgridClient)
   }
 
-  readonly mail: { send: MailService['send'] } = {
+  readonly mail: MailApi = {
     send: async (args) => await this._mailService.send(args),
   } as const
+
+  readonly marketing: MarketingApi = {
+    contacts: {
+      addOrUpdate: async (args) => {
+        return await (this._sendgridClient.request({
+          url: '/v3/marketing/contacts',
+          method: 'PUT',
+          body: JSON.stringify(args),
+        }) as ReturnType<MarketingApi['contacts']['addOrUpdate']>)
+      },
+    } as const,
+  }
 }

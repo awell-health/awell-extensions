@@ -39,6 +39,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@mailchimp/mailchimp_transactional", "npm:1.0.50"],\
             ["@metriport/api", "npm:3.1.5"],\
             ["@sendgrid/client", "npm:7.7.0"],\
+            ["@sendgrid/helpers", "npm:7.7.0"],\
             ["@sendgrid/mail", "npm:7.7.0"],\
             ["@types/jest", "npm:29.4.0"],\
             ["@types/lodash", "npm:4.14.191"],\
@@ -158,6 +159,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@mailchimp/mailchimp_transactional", "npm:1.0.50"],\
             ["@metriport/api", "npm:3.1.5"],\
             ["@sendgrid/client", "npm:7.7.0"],\
+            ["@sendgrid/helpers", "npm:7.7.0"],\
             ["@sendgrid/mail", "npm:7.7.0"],\
             ["@types/jest", "npm:29.4.0"],\
             ["@types/lodash", "npm:4.14.191"],\
