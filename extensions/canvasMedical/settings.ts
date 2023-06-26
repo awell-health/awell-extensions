@@ -1,5 +1,4 @@
-import { type Setting } from '../../lib/types'
-import { passwordSettings } from '../../lib/shared/settings/oauth'
+import { type Setting, passwordSettings } from '@awell-health/extensions-core'
 
 export const settings = {
   base_url: {
