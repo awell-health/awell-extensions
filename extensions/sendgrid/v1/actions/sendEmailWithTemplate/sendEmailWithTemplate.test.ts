@@ -1,7 +1,10 @@
-import { sendgridSdkMock } from '../../../mocks/sendgridSdk'
+import {
+  SendgridClient,
+  SendgridClientMockImplementation,
+} from '../../../__mocks__/client'
 import { sendEmailWithTemplate } from '..'
 
-jest.mock('@sendgrid/mail', () => sendgridSdkMock)
+jest.mock('../../../client', () => ({ SendgridClient }))
 
 describe('Send email with template', () => {
   const onComplete = jest.fn()
@@ -38,7 +41,7 @@ describe('Send email with template', () => {
       onComplete,
       onError
     )
-    expect(sendgridSdkMock.send).toHaveBeenCalledWith({
+    expect(SendgridClientMockImplementation.mail.send).toHaveBeenCalledWith({
       from: {
         email: 'from@test.com',
         name: 'fromName',

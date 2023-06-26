@@ -5,7 +5,7 @@ import { SettingsValidationSchema, type settings } from '../../../settings'
 import { FieldsValidationSchema } from './config/fields'
 import { fromZodError } from 'zod-validation-error'
 import { z, ZodError } from 'zod'
-import sendgridSdk from '@sendgrid/mail'
+import { SendgridClient } from '../../../client'
 
 export const sendEmail: Action<typeof fields, typeof settings> = {
   key: 'sendEmail',
@@ -32,8 +32,8 @@ export const sendEmail: Action<typeof fields, typeof settings> = {
         payload,
       })
 
-      sendgridSdk.setApiKey(apiKey)
-      await sendgridSdk.send({
+      const sendgridClient = new SendgridClient({ apiKey })
+      await sendgridClient.mail.send({
         from: {
           email: fromEmail,
           name: fromName,

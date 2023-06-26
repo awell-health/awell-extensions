@@ -38,6 +38,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@graphql-typed-document-node/core", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:3.1.2"],\
             ["@mailchimp/mailchimp_transactional", "npm:1.0.50"],\
             ["@metriport/api", "npm:3.1.5"],\
+            ["@sendgrid/client", "npm:7.7.0"],\
             ["@sendgrid/mail", "npm:7.7.0"],\
             ["@types/jest", "npm:29.4.0"],\
             ["@types/lodash", "npm:4.14.191"],\
@@ -156,6 +157,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@graphql-typed-document-node/core", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:3.1.2"],\
             ["@mailchimp/mailchimp_transactional", "npm:1.0.50"],\
             ["@metriport/api", "npm:3.1.5"],\
+            ["@sendgrid/client", "npm:7.7.0"],\
             ["@sendgrid/mail", "npm:7.7.0"],\
             ["@types/jest", "npm:29.4.0"],\
             ["@types/lodash", "npm:4.14.191"],\
