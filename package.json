@@ -35,6 +35,7 @@
     "@graphql-codegen/typescript-operations": "^3.0.2",
     "@graphql-tools/apollo-engine-loader": "^7.3.26",
     "@graphql-typed-document-node/core": "^3.1.2",
+    "@sendgrid/mail": "^7.7.0",
     "@types/jest": "^29.4.0",
     "@types/lodash": "^4.14.191",
     "@types/mailchimp__mailchimp_transactional": "^1.0.5",
