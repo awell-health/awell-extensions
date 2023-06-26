@@ -1,6 +1,6 @@
 import { type Extension } from '@awell-health/extensions-core'
 import { AuthorType, Category } from '@awell-health/extensions-core'
-import { sendSms } from './v2/actions'
+import { sendSms, sendSmsWithMessagingService } from './v2/actions'
 import { settings } from './settings'
 
 export const Twilio: Extension = {
@@ -14,6 +14,7 @@ export const Twilio: Extension = {
   },
   actions: {
     sendSms,
+    sendSmsWithMessagingService,
   },
   settings,
 }

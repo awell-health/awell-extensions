@@ -8,19 +8,26 @@ import { SettingsValidationSchema } from '../../../settings'
 import { FieldsValidationSchema, fields } from './config'
 import { isNil } from 'lodash'
 
-export const sendSms: Action<typeof fields, typeof settings> = {
-  key: 'sendSms',
-  title: 'Send SMS (with from number)',
+export const sendSmsWithMessagingService: Action<
+  typeof fields,
+  typeof settings
+> = {
+  key: 'sendSmsWithMessagingService',
+  title: 'Send SMS (with Messaging Service)',
   description:
-    'Send a text message from a given telephone number to a recipient of your choice.',
+    'Send a text message from a Messaging Service to a recipient of your choice.',
   category: Category.COMMUNICATION,
   fields,
   previewable: false,
   onActivityCreated: async (payload, onComplete, onError) => {
     try {
       const {
-        settings: { accountSid, authToken, fromNumber: defaultFromNumber },
-        fields: { recipient, message, from },
+        settings: {
+          accountSid,
+          authToken,
+          messagingServiceSid: defaultMessagingServiceSid,
+        },
+        fields: { recipient, message, messagingServiceSid },
       } = validate({
         schema: z
           .object({
@@ -29,12 +36,15 @@ export const sendSms: Action<typeof fields, typeof settings> = {
           })
           .superRefine((value, ctx) => {
             // if both `from` values missing - throw error
-            if (isNil(value.settings.fromNumber) && isNil(value.fields.from)) {
+            if (
+              isNil(value.settings.messagingServiceSid) &&
+              isNil(value.fields.messagingServiceSid)
+            ) {
               ctx.addIssue({
                 code: z.ZodIssueCode.custom,
                 fatal: true,
                 message:
-                  '"From" number is missing in both settings and in the action field.',
+                  '"Messaging Service SID" is missing in both settings and in the action field.',
               })
             }
           }),
@@ -48,7 +58,7 @@ export const sendSms: Action<typeof fields, typeof settings> = {
 
       await client.messages.create({
         body: message,
-        from: from ?? defaultFromNumber,
+        messagingServiceSid: messagingServiceSid ?? defaultMessagingServiceSid,
         to: recipient,
       })
 
