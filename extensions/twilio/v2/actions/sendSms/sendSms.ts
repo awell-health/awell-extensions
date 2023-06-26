@@ -33,7 +33,8 @@ export const sendSms: Action<typeof fields, typeof settings> = {
               ctx.addIssue({
                 code: z.ZodIssueCode.custom,
                 fatal: true,
-                message: '"From" number is missing in both settings and fields',
+                message:
+                  '"From" number is missing in both settings and in the action field.',
               })
             }
           }),

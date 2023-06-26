@@ -184,7 +184,7 @@ describe('Send SMS (with Messaging Service) action', () => {
             error: {
               category: 'BAD_REQUEST',
               message:
-                'Validation error: "Messaging Service SID" is missing in both settings and fields',
+                'Validation error: "Messaging Service SID" is missing in both settings and in the action field.',
             },
           }),
         ]),
