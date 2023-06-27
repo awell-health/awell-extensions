@@ -6,7 +6,15 @@ You can find all the documentation [here](https://developers.awellhealth.com/awe
 
 Read about our contributing guidelines [here](https://developers.awellhealth.com/awell-extensions/docs/getting-started/contributing-guidelines). To contribute code, you'll need to first fork the repository. Once you have forked the repository, create your extension (or make your changes) and submit a pull request for our team to review.
 
-**Reviews may take 24 hours or longer. To help smooth the process, please be sure your `settings`, `fields`, and `datapoints` are well defined and documented.**
+## "How long will it take for my PR to be reviewed?"
+
+**Reviews may take between 2-5 business days to complete.** Please review our [contributing guidelines](https://developers.awellhealth.com/awell-extensions/docs/getting-started/contributing-guidelines) for our internal guidelines around PR reviews.
+
+To help keep the PR process smooth, please try and remember to:
+- Make sure your `settings`, `fields`, and `datapoints` are well defined and documented, including the use of [zod validation](https://zod.dev/);
+- You have unittest coverage for your extension (see below for more details);
+- You have included/updated the `README.md` and `CHANGELOG.md` files with your changes;
+- Your code is formatted using `prettier` and `eslint` (see below for more details).
 
 Of course, we also welcome [discussions](https://github.com/awell-health/awell-extensions/discussions)... show us what you're working on!
 
