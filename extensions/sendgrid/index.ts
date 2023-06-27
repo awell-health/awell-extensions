@@ -1,6 +1,10 @@
 import { type Extension } from '@awell-health/extensions-core'
 import { AuthorType, Category } from '@awell-health/extensions-core'
-import { sendEmail, sendEmailWithTemplate } from './v1/actions'
+import {
+  sendEmail,
+  sendEmailWithTemplate,
+  addOrUpdateContact,
+} from './v1/actions'
 import { settings } from './settings'
 
 export const Sendgrid: Extension = {
@@ -16,6 +20,7 @@ export const Sendgrid: Extension = {
   actions: {
     sendEmail,
     sendEmailWithTemplate,
+    addOrUpdateContact,
   },
   settings,
 }

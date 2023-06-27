@@ -24,7 +24,10 @@ export class SendgridClient {
         return await (this._sendgridClient.request({
           url: '/v3/marketing/contacts',
           method: 'PUT',
-          body: JSON.stringify(args),
+          body: JSON.stringify({
+            contacts: args.contacts,
+            list_ids: args.listIds,
+          }),
         }) as ReturnType<MarketingApi['contacts']['addOrUpdate']>)
       },
     } as const,

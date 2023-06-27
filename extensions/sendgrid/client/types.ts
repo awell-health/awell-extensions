@@ -14,6 +14,7 @@ export interface Contact {
   last_name?: string
   postal_code?: string
   state_province_region?: string
+  custom_fields?: object
 }
 
 export interface MailApi {
