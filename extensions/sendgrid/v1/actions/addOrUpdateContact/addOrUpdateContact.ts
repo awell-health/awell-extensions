@@ -5,7 +5,11 @@ import { SettingsValidationSchema, type settings } from '../../../settings'
 import { FieldsValidationSchema } from './config/fields'
 import { fromZodError } from 'zod-validation-error'
 import { z, ZodError } from 'zod'
-import { SendgridClient } from '../../../client'
+import {
+  SendgridClient,
+  ResponseError,
+  mapSendgridErrorsToActivityErrors,
+} from '../../../client'
 
 export const addOrUpdateContact: Action<typeof fields, typeof settings> = {
   key: 'addOrUpdateContact',
@@ -53,6 +57,13 @@ export const addOrUpdateContact: Action<typeof fields, typeof settings> = {
               },
             },
           ],
+        })
+        return
+      } else if (err instanceof ResponseError) {
+        const events = mapSendgridErrorsToActivityErrors(err)
+
+        await onError({
+          events,
         })
         return
       }

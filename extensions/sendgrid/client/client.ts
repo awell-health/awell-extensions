@@ -1,6 +1,9 @@
 import sendgridMail, { type MailService } from '@sendgrid/mail'
 import sendgridClient, { type Client } from '@sendgrid/client'
+import { ResponseError } from '@sendgrid/helpers/classes'
 import { type MailApi, type MarketingApi } from './types'
+import { type ActivityEvent } from '@awell-health/extensions-core'
+import { isNil } from 'lodash'
 
 export class SendgridClient {
   private readonly _sendgridClient: Client
@@ -33,3 +36,67 @@ export class SendgridClient {
     } as const,
   }
 }
+
+interface ResponseErrorDetailed extends Omit<ResponseError, 'response'> {
+  response: {
+    body: {
+      errors: Array<
+        | {
+            message: string
+            field?: string
+            help?: string
+          }
+        | string
+      >
+    }
+  }
+}
+
+const isDetailedError = (error: any): error is ResponseErrorDetailed => {
+  return (
+    typeof error.response.body === 'object' &&
+    'errors' in error.response.body &&
+    Array.isArray(error.response.body.errors)
+  )
+}
+
+export const mapSendgridErrorsToActivityErrors = (
+  error: ResponseError
+): ActivityEvent[] => {
+  const errorTitle = `${error.message} (${error.code})`
+
+  if (isDetailedError(error)) {
+    const errorList = error.response.body.errors
+
+    return errorList.map((errorItem) => {
+      const text =
+        typeof errorItem === 'string'
+          ? errorItem
+          : `${!isNil(errorItem.field) ? `${errorItem.field}: ` : ''}${
+              errorItem.message
+            }${!isNil(errorItem.help) ? `; Help: ${errorItem.help}` : ''}`
+      return {
+        date: new Date().toISOString(),
+        text: { en: text },
+        error: {
+          category: 'SERVER_ERROR',
+          message: text,
+        },
+      }
+    })
+  }
+
+  return [
+    {
+      date: new Date().toISOString(),
+      text: { en: errorTitle },
+      error: {
+        category: 'SERVER_ERROR',
+        // eslint-disable-next-line @typescript-eslint/no-base-to-string
+        message: `${JSON.stringify(error.response.body)}`,
+      },
+    },
+  ]
+}
+
+export { ResponseError }

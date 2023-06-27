@@ -5,7 +5,11 @@ import { SettingsValidationSchema, type settings } from '../../../settings'
 import { FieldsValidationSchema } from './config/fields'
 import { fromZodError } from 'zod-validation-error'
 import { z, ZodError } from 'zod'
-import { SendgridClient } from '../../../client'
+import {
+  mapSendgridErrorsToActivityErrors,
+  ResponseError,
+  SendgridClient,
+} from '../../../client'
 
 export const sendEmailWithTemplate: Action<typeof fields, typeof settings> = {
   key: 'sendEmailWithTemplate',
@@ -71,6 +75,13 @@ export const sendEmailWithTemplate: Action<typeof fields, typeof settings> = {
               },
             },
           ],
+        })
+        return
+      } else if (err instanceof ResponseError) {
+        const events = mapSendgridErrorsToActivityErrors(err)
+
+        await onError({
+          events,
         })
         return
       }
