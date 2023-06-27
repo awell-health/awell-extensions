@@ -30,4 +30,4 @@ Allows for sending an email based on a template to a recipient. You can also ins
 
 Allows adding or updating contacts. The contact to update will be determined only by the email field and any fields omitted from the request will remain as they were. A contact's ID cannot be used to update the contact.
 
-Please note that custom fields need to have been already created if you wish to set their values for the contacts being upserted. To do this, please use the "Create Custom Field Definition" endpoint.
+Please note that custom fields need to have been already created if you wish to set their values for the contacts being upserted. To do this, please use the "Create Custom Field Definition" endpoint. They also can be created in **Marketing -> Custom Fields** section in Sendgrid.

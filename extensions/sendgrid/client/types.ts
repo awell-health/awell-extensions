@@ -1,7 +1,7 @@
 import { type MailService } from '@sendgrid/mail'
 import { type Response } from '@sendgrid/helpers/classes'
 
-type RequestReturnType<T = object> = Promise<[Response<T>, any]>
+type RequestReturnType<T = object> = Promise<[Response<T>, T]>
 
 export interface Contact {
   address_line_1?: string

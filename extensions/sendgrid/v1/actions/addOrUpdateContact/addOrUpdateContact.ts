@@ -17,11 +17,6 @@ export const addOrUpdateContact: Action<typeof fields, typeof settings> = {
   onActivityCreated: async (payload, onComplete, onError) => {
     try {
       const {
-        patient: { id: patientId },
-        activity: { id: activityId },
-      } = payload
-
-      const {
         fields: { email, listIds, customFields },
         settings: { apiKey },
       } = validate({
@@ -37,11 +32,7 @@ export const addOrUpdateContact: Action<typeof fields, typeof settings> = {
         contacts: [
           {
             email,
-            custom_fields: {
-              awellPatientId: patientId,
-              awellActivityId: activityId,
-              ...customFields,
-            },
+            custom_fields: customFields,
           },
         ],
         listIds,
