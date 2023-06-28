@@ -34,7 +34,7 @@ export class SendgridClient {
         }) as ReturnType<MarketingApi['contacts']['addOrUpdate']>)
       },
     } as const,
-  }
+  } as const
 }
 
 interface ResponseErrorDetailed extends Omit<ResponseError, 'response'> {

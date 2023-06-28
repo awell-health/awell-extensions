@@ -13,7 +13,7 @@ export const fields = {
     description:
       'A comma-separated string of list IDs the contact will be added to.',
     type: FieldType.STRING,
-    required: false,
+    required: true,
   },
   email: {
     id: 'email',

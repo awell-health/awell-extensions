@@ -14,14 +14,14 @@ export const settings = {
     key: 'fromName',
     label: 'From name',
     obfuscated: false,
-    required: true,
+    required: false,
     description: 'The name that will be used for the "From" header.',
   },
   fromEmail: {
     key: 'fromEmail',
     label: 'From email',
     obfuscated: false,
-    required: true,
+    required: false,
     description: 'The email address that will be used for the "From" header.',
   },
 } satisfies Record<string, Setting>

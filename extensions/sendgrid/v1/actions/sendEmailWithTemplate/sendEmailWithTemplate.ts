@@ -10,6 +10,7 @@ import {
   ResponseError,
   SendgridClient,
 } from '../../../client'
+import { isNil } from 'lodash'
 
 export const sendEmailWithTemplate: Action<typeof fields, typeof settings> = {
   key: 'sendEmailWithTemplate',
@@ -27,21 +28,60 @@ export const sendEmailWithTemplate: Action<typeof fields, typeof settings> = {
       } = payload
 
       const {
-        fields: { to, subject, templateId, dynamicTemplateData },
-        settings: { apiKey, fromName, fromEmail },
+        fields: {
+          to,
+          subject,
+          templateId,
+          dynamicTemplateData,
+          fromName,
+          fromEmail,
+        },
+        settings: {
+          apiKey,
+          fromName: defaultFromName,
+          fromEmail: defaultFromEmail,
+        },
       } = validate({
-        schema: z.object({
-          fields: FieldsValidationSchema,
-          settings: SettingsValidationSchema,
-        }),
+        schema: z
+          .object({
+            fields: FieldsValidationSchema,
+            settings: SettingsValidationSchema,
+          })
+          .superRefine((value, ctx) => {
+            // if both `fromName` values missing - throw error
+            if (
+              isNil(value.settings.fromName) &&
+              isNil(value.fields.fromName)
+            ) {
+              ctx.addIssue({
+                code: z.ZodIssueCode.custom,
+                fatal: true,
+                message:
+                  '"fromName" is missing in both settings and in the action field.',
+              })
+            }
+
+            // if both `fromEmail` values missing - throw error
+            if (
+              isNil(value.settings.fromEmail) &&
+              isNil(value.fields.fromEmail)
+            ) {
+              ctx.addIssue({
+                code: z.ZodIssueCode.custom,
+                fatal: true,
+                message:
+                  '"fromEmail" is missing in both settings and in the action field.',
+              })
+            }
+          }),
         payload,
       })
 
       const sendgridClient = new SendgridClient({ apiKey })
       await sendgridClient.mail.send({
         from: {
-          email: fromEmail,
-          name: fromName,
+          email: fromEmail ?? defaultFromEmail,
+          name: fromName ?? defaultFromName,
         },
         to,
         templateId,

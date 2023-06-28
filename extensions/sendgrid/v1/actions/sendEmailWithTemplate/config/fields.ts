@@ -37,6 +37,23 @@ export const fields = {
     type: FieldType.JSON,
     required: false,
   },
+  fromName: {
+    id: 'fromName',
+    label: 'From name',
+    description:
+      'The name that will be used for the "From" header. When left blank, the value specified in the extension settings will be used.',
+    type: FieldType.STRING,
+    required: false,
+  },
+  fromEmail: {
+    id: 'fromEmail',
+    label: 'fromEmail',
+    description:
+      'The email address that will be used for the "From" header. When left blank, the value specified in the extension settings will be used.',
+    type: FieldType.STRING,
+    stringType: StringType.EMAIL,
+    required: false,
+  },
 } satisfies Record<string, Field>
 
 type JSONValue =
@@ -78,4 +95,6 @@ export const FieldsValidationSchema = z.object({
         return z.NEVER
       }
     }),
+  fromName: z.string().optional(),
+  fromEmail: z.string().email().optional(),
 } satisfies Record<keyof typeof fields, ZodTypeAny>)
