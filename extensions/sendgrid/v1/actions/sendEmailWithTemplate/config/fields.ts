@@ -33,7 +33,7 @@ export const fields = {
     id: 'templateContent',
     label: 'Template content',
     description:
-      'An object (stringified) of template content to send. Dynamic template data is available using Handlebars syntax and this field is a collection of key/value pairs following the pattern "variable_name":"value to insert".',
+      'Specify a JSON blob containing the dynamic data of your template. Read the Sendgrid documentation to learn more about dynamic template data.',
     type: FieldType.JSON,
     required: false,
   },

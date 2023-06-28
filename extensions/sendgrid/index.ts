@@ -12,7 +12,7 @@ export const Sendgrid: Extension = {
   title: 'Sendgrid',
   icon_url: 'https://www.vectorlogo.zone/logos/sendgrid/sendgrid-icon.svg',
   description:
-    'From design to deliverability, raise the bar across all email you send with Marketing Campaigns.',
+    'SendGrid is a cloud-based email delivery platform that provides services for sending and managing email campaigns, transactional emails, and other types of messages.',
   category: Category.COMMUNICATION,
   author: {
     authorType: AuthorType.AWELL,

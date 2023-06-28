@@ -18,7 +18,7 @@ export const fields = {
   email: {
     id: 'email',
     label: 'Email',
-    description: "The contact's primary email. ",
+    description: "The contact's primary email.",
     type: FieldType.STRING,
     stringType: StringType.EMAIL,
     required: true,
@@ -27,8 +27,8 @@ export const fields = {
     id: 'customFields',
     label: 'Custom fields',
     description:
-      'Stringified JSON. An object of custom field IDs and the values you want to associate with those custom fields.',
-    type: FieldType.HTML,
+      'An object of custom field IDs and the values you want to associate with those custom fields.',
+    type: FieldType.JSON,
     required: false,
   },
 } satisfies Record<string, Field>
