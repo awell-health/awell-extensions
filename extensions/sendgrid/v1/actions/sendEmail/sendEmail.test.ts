@@ -57,4 +57,102 @@ describe('Send email', () => {
     expect(onComplete).toHaveBeenCalled()
     expect(onError).not.toHaveBeenCalled()
   })
+
+  test('Should use settings values when fields are not provided', async () => {
+    await sendEmail.onActivityCreated(
+      {
+        ...basePayload,
+        fields: {
+          ...basePayload.fields,
+          fromName: undefined,
+          fromEmail: undefined,
+        },
+        settings: {
+          ...basePayload.settings,
+          fromName: 'settings',
+          fromEmail: 'settings@settings.com',
+        },
+      },
+      onComplete,
+      onError
+    )
+    expect(SendgridClientMockImplementation.mail.send).toHaveBeenCalledWith(
+      expect.objectContaining({
+        from: {
+          name: 'settings',
+          email: 'settings@settings.com',
+        },
+      })
+    )
+    expect(onComplete).toHaveBeenCalled()
+    expect(onError).not.toHaveBeenCalled()
+  })
+
+  test.each([
+    { settings: { fromName: undefined, fromEmail: undefined } },
+    { settings: { fromName: 'settings', fromEmail: 'settings@settings.com' } },
+  ])(
+    '$#. Should use fields values when provided and override settings values',
+    async ({ settings }) => {
+      await sendEmail.onActivityCreated(
+        {
+          ...basePayload,
+          fields: {
+            ...basePayload.fields,
+            fromName: 'fields',
+            fromEmail: 'fields@fields.com',
+          },
+          settings: {
+            ...basePayload.settings,
+            ...settings,
+          },
+        },
+        onComplete,
+        onError
+      )
+      expect(SendgridClientMockImplementation.mail.send).toHaveBeenCalledWith(
+        expect.objectContaining({
+          from: {
+            name: 'fields',
+            email: 'fields@fields.com',
+          },
+        })
+      )
+      expect(onComplete).toHaveBeenCalled()
+      expect(onError).not.toHaveBeenCalled()
+    }
+  )
+
+  test('Should throw error when fields and settings are not provided', async () => {
+    await sendEmail.onActivityCreated(
+      {
+        ...basePayload,
+        fields: {
+          ...basePayload.fields,
+          fromName: undefined,
+          fromEmail: undefined,
+        },
+        settings: {
+          ...basePayload.settings,
+          fromName: undefined,
+          fromEmail: undefined,
+        },
+      },
+      onComplete,
+      onError
+    )
+    expect(SendgridClientMockImplementation.mail.send).not.toHaveBeenCalled()
+    expect(onComplete).not.toHaveBeenCalled()
+    expect(onError).toHaveBeenCalledWith({
+      events: [
+        expect.objectContaining({
+          error: {
+            category: 'WRONG_INPUT',
+            message:
+              'Validation error: "fromName" is missing in both settings and in the action field.; "fromEmail" is missing in both settings and in the action field.',
+          },
+        }),
+      ],
+    })
+  })
 })

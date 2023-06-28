@@ -28,6 +28,6 @@ export const settings = {
 
 export const SettingsValidationSchema = z.object({
   apiKey: z.string(),
-  fromName: z.string(),
-  fromEmail: z.string().email(),
+  fromName: z.string().optional(),
+  fromEmail: z.string().email().optional(),
 } satisfies Record<keyof typeof settings, ZodTypeAny>)

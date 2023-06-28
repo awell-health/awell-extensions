@@ -72,8 +72,12 @@ export const sendEmail: Action<typeof fields, typeof settings> = {
       const sendgridClient = new SendgridClient({ apiKey })
       await sendgridClient.mail.send({
         from: {
-          email: fromEmail ?? defaultFromEmail,
-          name: fromName ?? defaultFromName,
+          /**
+           * '' default needs to be provided for TypeScript
+           * in reality it will throw validation error above if it's not provided
+           * */
+          email: fromEmail ?? defaultFromEmail ?? '',
+          name: fromName ?? defaultFromName ?? '',
         },
         to,
         subject,
