@@ -39,9 +39,14 @@ export const fields = {
   },
 } satisfies Record<string, Field>
 
-interface TemplateContent {
-  [key: string]: string | number | boolean | TemplateContent
-}
+type JSONValue =
+  | string
+  | number
+  | boolean
+  | { [x: string]: JSONValue }
+  | JSONValue[]
+
+type TemplateData = Record<string, JSONValue>
 
 export const FieldsValidationSchema = z.object({
   to: z.string().email(),
@@ -49,7 +54,7 @@ export const FieldsValidationSchema = z.object({
   templateId: z.string(),
   dynamicTemplateData: z
     .optional(z.string())
-    .transform((str, ctx): TemplateContent => {
+    .transform((str, ctx): TemplateData => {
       if (isNil(str) || isEmpty(str)) return {}
 
       try {

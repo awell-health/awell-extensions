@@ -38,21 +38,19 @@ interface CustomFields {
 }
 
 export const FieldsValidationSchema = z.object({
-  listIds: z.optional(
-    z
-      .string()
-      // Make sure all white spaces are stripped
-      .transform((chars) => chars.replace(/\s/g, ''))
-      .transform((chars) => chars.split(','))
-      // Make sure there are no undefined or empty characteristics
-      .transform((charsArray) =>
-        charsArray.filter((chars) => {
-          if (isNil(chars) || isEmpty(chars)) return false
+  listIds: z
+    .string()
+    // Make sure all white spaces are stripped
+    .transform((chars) => chars.replace(/\s/g, ''))
+    .transform((chars) => chars.split(','))
+    // Make sure there are no undefined or empty characteristics
+    .transform((charsArray) =>
+      charsArray.filter((chars) => {
+        if (isNil(chars) || isEmpty(chars)) return false
 
-          return true
-        })
-      )
-  ),
+        return true
+      })
+    ),
   email: z.string().email(),
   customFields: z.optional(z.string()).transform((str, ctx): CustomFields => {
     if (isNil(str) || isEmpty(str)) return {}
