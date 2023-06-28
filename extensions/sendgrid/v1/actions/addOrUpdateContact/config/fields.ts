@@ -67,7 +67,7 @@ export const FieldsValidationSchema = z.object({
       if (typeof parsedJson !== 'object' || Array.isArray(parsedJson)) {
         ctx.addIssue({
           code: 'custom',
-          message: 'templateContent should be an object',
+          message: 'customFields should be an object',
         })
         return z.NEVER
       }

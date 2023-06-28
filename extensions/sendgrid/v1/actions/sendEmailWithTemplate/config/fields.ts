@@ -29,8 +29,8 @@ export const fields = {
     type: FieldType.STRING,
     required: true,
   },
-  templateContent: {
-    id: 'templateContent',
+  dynamicTemplateData: {
+    id: 'dynamicTemplateData',
     label: 'Template content',
     description:
       'Specify a JSON blob containing the dynamic data of your template. Read the Sendgrid documentation to learn more about dynamic template data.',
@@ -47,7 +47,7 @@ export const FieldsValidationSchema = z.object({
   to: z.string().email(),
   subject: z.string(),
   templateId: z.string(),
-  templateContent: z
+  dynamicTemplateData: z
     .optional(z.string())
     .transform((str, ctx): TemplateContent => {
       if (isNil(str) || isEmpty(str)) return {}
@@ -62,7 +62,7 @@ export const FieldsValidationSchema = z.object({
         if (typeof parsedJson !== 'object' || Array.isArray(parsedJson)) {
           ctx.addIssue({
             code: 'custom',
-            message: 'templateContent should be an object',
+            message: 'dynamicTemplateData should be an object',
           })
           return z.NEVER
         }

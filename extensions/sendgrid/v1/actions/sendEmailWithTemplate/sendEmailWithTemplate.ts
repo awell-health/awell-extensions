@@ -27,7 +27,7 @@ export const sendEmailWithTemplate: Action<typeof fields, typeof settings> = {
       } = payload
 
       const {
-        fields: { to, subject, templateId, templateContent },
+        fields: { to, subject, templateId, dynamicTemplateData },
         settings: { apiKey, fromName, fromEmail },
       } = validate({
         schema: z.object({
@@ -47,7 +47,7 @@ export const sendEmailWithTemplate: Action<typeof fields, typeof settings> = {
         templateId,
         subject,
         dynamicTemplateData: {
-          ...templateContent,
+          ...dynamicTemplateData,
           // in template subject must be a handlebars variable
           subject,
         },

@@ -30,7 +30,7 @@ describe('Send email with template', () => {
           to: 'recipient@test.com',
           subject: 'Test subject',
           templateId: 'template-1',
-          templateContent: JSON.stringify({ name: 'John Doe' }),
+          dynamicTemplateData: JSON.stringify({ name: 'John Doe' }),
         },
         settings: {
           apiKey: 'apiKey',
