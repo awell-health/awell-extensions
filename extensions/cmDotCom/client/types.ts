@@ -3,3 +3,42 @@ export interface MessageRequest {
   to: string
   message: string
 }
+
+export interface MessageResponse {
+  details: string
+  errorCode: number
+  messages: [
+    {
+      to: string
+      status: string
+      reference: string
+      parts: number
+      messageDetails: string
+      messageErrorCode: number
+    }
+  ]
+}
+
+export interface CmSDK {
+  messages_SendMessage: (arg: {
+    messages: {
+      authentication: { productToken: string }
+      msg: [
+        {
+          from: string
+          body: {
+            type?: string
+            content: string
+          }
+          reference?: string
+          to: Array<{
+            number: string
+          }>
+          allowedChannels?: string[]
+          minimumNumberOfMessageParts?: number
+          maximumNumberOfMessageParts?: number
+        }
+      ]
+    }
+  }) => Promise<MessageResponse>
+}
