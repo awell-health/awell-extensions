@@ -18,6 +18,9 @@ export const sendSms: Action<typeof fields, typeof settings> = {
   onActivityCreated: async (payload, onComplete, onError) => {
     try {
       const {
+        activity: { id: activityId },
+      } = payload
+      const {
         settings: { productToken, fromName: defaultFromName },
         fields: { recipient, message, fromName },
       } = validate({
@@ -45,10 +48,12 @@ export const sendSms: Action<typeof fields, typeof settings> = {
 
       const client = new CmClient({
         productToken,
+        activityId,
       })
 
       await client.sendSms({
-        from: fromName ?? defaultFromName,
+        // default only for TypeScript check, in reality error will be thrown if both empty
+        from: fromName ?? defaultFromName ?? '',
         to: recipient,
         message,
       })
@@ -63,7 +68,7 @@ export const sendSms: Action<typeof fields, typeof settings> = {
               date: new Date().toISOString(),
               text: { en: error.message },
               error: {
-                category: 'BAD_REQUEST',
+                category: 'WRONG_INPUT',
                 message: error.message,
               },
             },
