@@ -63,6 +63,7 @@
     "@dropbox/sign": "^1.1.3",
     "@mailchimp/mailchimp_transactional": "^1.0.50",
     "@metriport/api": "^3.1.5",
+    "api": "^6.0.0",
     "axios": "^1.3.4",
     "date-fns": "^2.29.3",
     "driver-license-validator": "2.0.2",
