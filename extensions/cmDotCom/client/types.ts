@@ -4,20 +4,23 @@ export interface MessageRequest {
   message: string
 }
 
-export interface MessageResponse {
-  details: string
-  errorCode: number
-  messages: [
-    {
+interface BaseResponse<T> {
+  data: T
+}
+
+export interface MessageResponse
+  extends BaseResponse<{
+    details: string
+    errorCode: number
+    messages: Array<{
       to: string
       status: string
       reference: string
       parts: number
       messageDetails: string
       messageErrorCode: number
-    }
-  ]
-}
+    }>
+  }> {}
 
 export interface CmSDK {
   messages_SendMessage: (arg: {

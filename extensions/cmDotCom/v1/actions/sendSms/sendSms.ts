@@ -6,7 +6,7 @@ import { Category, validate } from '@awell-health/extensions-core'
 import { SettingsValidationSchema } from '../../../settings'
 import { FieldsValidationSchema, fields } from './config'
 import { isNil } from 'lodash'
-import { CmClient } from '../../../client'
+import { CmClient, isSmsError, smsErrorToActivityEvent } from '../../../client'
 
 export const sendSms: Action<typeof fields, typeof settings> = {
   key: 'sendSms',
@@ -74,6 +74,9 @@ export const sendSms: Action<typeof fields, typeof settings> = {
             },
           ],
         })
+      } else if (isSmsError(err)) {
+        const events = smsErrorToActivityEvent(err)
+        await onError({ events })
       } else {
         const message = (err as Error).message
         await onError({
