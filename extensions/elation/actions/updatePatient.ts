@@ -2,6 +2,7 @@
 import { ZodError } from 'zod'
 import {
   FieldType,
+  NumericIdSchema,
   type Action,
   type DataPointDefinition,
   type Field,
@@ -12,25 +13,24 @@ import { makeAPIClient } from '../client'
 import { fromZodError } from 'zod-validation-error'
 import { AxiosError } from 'axios'
 import { patientSchema } from '../validation/patient.zod'
-import { numberId } from '../validation/generic.zod'
 
 const fields = {
-  patient_id: {
-    id: 'patient_id',
+  patientId: {
+    id: 'patientId',
     label: 'Patient ID',
     description: 'The patient ID (a number)',
-    type: FieldType.STRING,
+    type: FieldType.NUMERIC,
     required: true,
   },
-  first_name: {
-    id: 'first_name',
+  firstName: {
+    id: 'firstName',
     label: 'First Name',
     description: 'Maximum length of 70 characters',
     type: FieldType.STRING,
     required: true,
   },
-  last_name: {
-    id: 'last_name',
+  lastName: {
+    id: 'lastName',
     label: 'Last Name',
     description: 'Maximum length of 70 characters',
     type: FieldType.STRING,
@@ -51,41 +51,41 @@ const fields = {
     type: FieldType.STRING,
     required: true,
   },
-  primary_physician: {
-    id: 'primary_physician',
-    label: 'Primary Physician',
-    description: 'Primary Physician ID',
-    type: FieldType.STRING,
+  primaryPhysicianId: {
+    id: 'primaryPhysicianId',
+    label: 'Primary Physician ID',
+    description: '',
+    type: FieldType.NUMERIC,
     required: true,
   },
-  caregiver_practice: {
-    id: 'caregiver_practice',
-    label: 'Caregiver Practice',
-    description: 'Caregiver Practice ID',
-    type: FieldType.STRING,
+  caregiverPracticeId: {
+    id: 'caregiverPracticeId',
+    label: 'Caregiver Practice ID',
+    description: '',
+    type: FieldType.NUMERIC,
     required: true,
   },
-  middle_name: {
-    id: 'middle_name',
+  middleName: {
+    id: 'middleName',
     label: 'Middle Name',
     description: 'Maximum length of 50 characters',
     type: FieldType.STRING,
   },
-  actual_name: {
-    id: 'actual_name',
+  actualName: {
+    id: 'actualName',
     label: 'Actual Name',
     description: 'Maximum length of 150 characters',
     type: FieldType.STRING,
   },
-  gender_identity: {
-    id: 'gender_identity',
+  genderIdentity: {
+    id: 'genderIdentity',
     label: 'Gender identity',
     description:
       "Gender identity of a patient. Possible values are 'unknown', 'man', 'woman', 'transgender_man', 'transgender_woman', 'nonbinary', 'option_not_listed', 'prefer_not_to_say', 'two_spirit'",
     type: FieldType.STRING,
   },
-  legal_gender_marker: {
-    id: 'legal_gender_marker',
+  legalGenderMarker: {
+    id: 'legalGenderMarker',
     label: 'Legal gender marker',
     description:
       "Legal gender marker of a patient. Possible values are 'M', 'F', 'X', 'U'",
@@ -98,8 +98,8 @@ const fields = {
       "Pronouns by which a patient identifies self. Possible values are 'he_him_his', 'she_her_hers', 'they_them_theirs', 'not_listed'",
     type: FieldType.STRING,
   },
-  sexual_orientation: {
-    id: 'sexual_orientation',
+  sexualOrientation: {
+    id: 'sexualOrientation',
     label: 'Sexual orientation',
     description:
       "Possible values are 'unknown', 'straight', 'gay', 'bisexual', 'option_not_listed', 'prefer_not_to_say', 'lesbian', 'queer', 'asexual'",
@@ -125,8 +125,8 @@ const fields = {
       "The race of the person. Possible values are 'No race specified', 'American Indian or Alaska Native', 'Asian', 'Black or African American', 'Native Hawaiian or Other Pacific Islander', 'White', 'Declined to specify'.",
     type: FieldType.STRING,
   },
-  preferred_language: {
-    id: 'preferred_language',
+  preferredLanguage: {
+    id: 'preferredLanguage',
     label: 'Preferred language',
     description:
       "The language preferred by the patient. Full names e.g. 'English', 'Spanish' or 'French'.",
@@ -139,14 +139,14 @@ const fields = {
       'Additional notes about the patient. Maximum length of 500 characters.',
     type: FieldType.STRING,
   },
-  previous_first_name: {
-    id: 'previous_first_name',
+  previousFirstName: {
+    id: 'previousFirstName',
     label: 'Previous first name',
     description: 'The previous first name of the patient',
     type: FieldType.STRING,
   },
-  previous_last_name: {
-    id: 'previous_last_name',
+  previousLastName: {
+    id: 'previousLastName',
     label: 'Previous last name',
     description: 'The previous last name of the patient',
     type: FieldType.STRING,
@@ -169,13 +169,44 @@ export const updatePatient: Action<
   dataPoints,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
     try {
-      const { patient_id, ...patientFields } = payload.fields
-      const patient = patientSchema.parse(patientFields)
-      const patientId = numberId.parse(patient_id)
+      const {
+        patientId,
+        firstName,
+        lastName,
+        actualName,
+        caregiverPracticeId,
+        genderIdentity,
+        legalGenderMarker,
+        middleName,
+        preferredLanguage,
+        previousFirstName,
+        previousLastName,
+        primaryPhysicianId,
+        sexualOrientation,
+        ...fields
+      } = payload.fields
+
+      const patient = patientSchema.parse({
+        ...fields,
+        first_name: firstName,
+        last_name: lastName,
+        primary_physician: primaryPhysicianId,
+        caregiver_practice: caregiverPracticeId,
+        middle_name: middleName,
+        actual_name: actualName,
+        gender_identity: genderIdentity,
+        legal_gender_marker: legalGenderMarker,
+        sexual_orientation: sexualOrientation,
+        preferred_language: preferredLanguage,
+        previous_first_name: previousFirstName,
+        previous_last_name: previousLastName,
+      })
+
+      const id = NumericIdSchema.parse(patientId)
 
       // API Call should produce AuthError or something dif.
       const api = makeAPIClient(payload.settings)
-      await api.updatePatient(patientId, patient)
+      await api.updatePatient(id, patient)
       await onComplete()
     } catch (err) {
       if (err instanceof ZodError) {

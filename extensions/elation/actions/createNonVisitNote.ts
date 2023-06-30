@@ -5,124 +5,124 @@ import {
   type Action,
   type DataPointDefinition,
   type Field,
+  Category,
 } from '@awell-health/extensions-core'
-import { Category } from '@awell-health/extensions-core'
 import { type settings } from '../settings'
 import { makeAPIClient } from '../client'
 import { fromZodError } from 'zod-validation-error'
 import { AxiosError } from 'axios'
-import { appointmentSchema } from '../validation/appointment.zod'
+import { nonVisitNoteSchema } from '../validation/nonVisitNote.zod'
 
 const fields = {
-  scheduledDate: {
-    id: 'scheduledDate',
-    label: 'Scheduled date',
-    description: 'Datetime (ISO8601).',
+  text: {
+    id: 'text',
+    label: 'Text',
+    description: 'Text of a note',
     type: FieldType.STRING,
     required: true,
   },
-  reason: {
-    id: 'reason',
-    label: 'Reason',
-    description:
-      'Should not be free-text. The values are mapped to "appointment types" in the EMR. Maximum length of 50 characters.',
-    type: FieldType.STRING,
+  authorId: {
+    id: 'authorId',
+    label: 'Author',
+    description: 'Author of a note. Should be ID of a User.',
+    type: FieldType.NUMERIC,
     required: true,
   },
   patientId: {
     id: 'patientId',
-    label: 'Patient ID',
-    description: '',
+    label: 'Patient',
+    description: 'ID of a Patient',
     type: FieldType.NUMERIC,
     required: true,
   },
-  physicianId: {
-    id: 'physicianId',
-    label: 'Physician ID',
-    description: '',
-    type: FieldType.NUMERIC,
-    required: true,
+  category: {
+    id: 'category',
+    label: 'Category',
+    description:
+      'Category of a note. Defaults to "Problem". One from the list: "Problem", "Past", "Family", "Social", "Instr", "PE", "ROS", "Med", "Data", "Assessment", "Test", "Tx", "Narrative", "Followup", "Reason", "Plan", "Objective", "Hpi", "Allergies", "Habits", "Assessplan", "Consultant", "Attending", "Dateprocedure", "Surgical", "Orders", "Referenced", "Procedure".',
+    type: FieldType.STRING,
+    required: false,
   },
   practiceId: {
     id: 'practiceId',
-    label: 'Practice ID',
-    description: '',
+    label: 'Practice',
+    description: 'ID of a Practice',
     type: FieldType.NUMERIC,
+    required: false,
+  },
+  documentDate: {
+    id: 'documentDate',
+    label: 'Document Date',
+    description: 'Date in ISO 8601 format',
+    type: FieldType.DATE,
     required: true,
   },
-  duration: {
-    id: 'duration',
-    label: 'Duration',
-    description:
-      'Number (in minutes). Must be a multiple of 5 and between 1 to 1440.',
-    type: FieldType.NUMERIC,
+  chartDate: {
+    id: 'chartDate',
+    label: 'Chart Date',
+    description: 'Date in ISO 8601 format',
+    type: FieldType.DATE,
+    required: true,
   },
-  description: {
-    id: 'description',
-    label: 'Description',
-    description: 'Maximum length of 500 characters.',
+  tags: {
+    id: 'tags',
+    label: 'Tags',
+    description: 'Comma-separated list of tags IDs',
     type: FieldType.STRING,
-  },
-  serviceLocationId: {
-    id: 'serviceLocationId',
-    label: 'Service location ID',
-    description: '',
-    type: FieldType.NUMERIC,
-  },
-  telehealthDetails: {
-    id: 'telehealthDetails',
-    label: 'Telehealth details',
-    description: '',
-    type: FieldType.STRING,
+    required: false,
   },
 } satisfies Record<string, Field>
 
 const dataPoints = {
-  appointmentId: {
-    key: 'appointmentId',
+  nonVisitNoteId: {
+    key: 'nonVisitNoteId',
+    valueType: 'number',
+  },
+  nonVisitNoteBulletId: {
+    key: 'nonVisitNoteBulletId',
     valueType: 'number',
   },
 } satisfies Record<string, DataPointDefinition>
 
-export const createAppointment: Action<
+export const createNonVisitNote: Action<
   typeof fields,
   typeof settings,
   keyof typeof dataPoints
 > = {
-  key: 'createAppointment',
+  key: 'createNonVisitNote',
   category: Category.EHR_INTEGRATIONS,
-  title: 'Create Appointment',
-  description: "Create an appointment using Elation's scheduling API.",
+  title: 'Create Non-Visit Note',
+  description: "Create a Non-Visit Note using Elation's patient API.",
   fields,
   previewable: true,
   dataPoints,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
     try {
       const {
-        scheduledDate,
+        authorId,
+        chartDate,
+        documentDate,
+        text,
+        category,
         patientId,
-        physicianId,
         practiceId,
-        serviceLocationId,
-        telehealthDetails,
         ...fields
       } = payload.fields
-      const appointment = appointmentSchema.parse({
+      const note = nonVisitNoteSchema.parse({
         ...fields,
-        scheduled_date: scheduledDate,
         patient: patientId,
-        physician: physicianId,
         practice: practiceId,
-        service_location: serviceLocationId,
-        telehealth_details: telehealthDetails,
+        bullets: [{ text, author: authorId, category }],
+        document_date: documentDate,
+        chart_date: chartDate,
       })
 
-      // API Call should produce AuthError or something dif.
       const api = makeAPIClient(payload.settings)
-      const { id } = await api.createAppointment(appointment)
+      const { id, bullets } = await api.createNonVisitNote(note)
       await onComplete({
         data_points: {
-          appointmentId: String(id),
+          nonVisitNoteId: String(id),
+          nonVisitNoteBulletId: String(bullets[0].id),
         },
       })
     } catch (err) {
@@ -134,7 +134,7 @@ export const createAppointment: Action<
               date: new Date().toISOString(),
               text: { en: error.message },
               error: {
-                category: 'SERVER_ERROR',
+                category: 'WRONG_INPUT',
                 message: error.message,
               },
             },
@@ -149,7 +149,7 @@ export const createAppointment: Action<
                 en: `${err.status ?? '(no status code)'} Error: ${err.message}`,
               },
               error: {
-                category: 'BAD_REQUEST',
+                category: 'SERVER_ERROR',
                 message: `${err.status ?? '(no status code)'} Error: ${
                   err.message
                 }`,

@@ -19,10 +19,25 @@ describe('Simple create appointment action', () => {
   })
 
   test('Should return with correct data_points', async () => {
+    const {
+      patient,
+      physician,
+      practice,
+      scheduled_date,
+      service_location,
+      telehealth_details,
+      ...appointment
+    } = appointmentExample
     await createAppointment.onActivityCreated(
       {
         fields: {
-          ...appointmentExample,
+          ...appointment,
+          patientId: patient,
+          physicianId: physician,
+          practiceId: practice,
+          scheduledDate: scheduled_date,
+          serviceLocationId: service_location,
+          telehealthDetails: telehealth_details,
         },
         settings,
       } as any,
