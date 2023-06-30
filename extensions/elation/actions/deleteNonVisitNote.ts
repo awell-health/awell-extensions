@@ -1,12 +1,16 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { ZodError } from 'zod'
-import { FieldType, type Action, type Field } from '../../../lib/types'
-import { Category } from '../../../lib/types/marketplace'
+import {
+  FieldType,
+  type Action,
+  type Field,
+  Category,
+  NumericIdSchema,
+} from '@awell-health/extensions-core'
 import { type settings } from '../settings'
 import { makeAPIClient } from '../client'
 import { fromZodError } from 'zod-validation-error'
 import { AxiosError } from 'axios'
-import { NumericIdSchema } from '../../../lib/shared/validation'
 
 const fields = {
   nonVisitNoteId: {

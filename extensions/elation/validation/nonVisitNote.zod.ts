@@ -3,7 +3,7 @@ import {
   DateTimeSchema,
   NumericIdSchema,
   validateCommaSeparatedList,
-} from '../../../lib/shared/validation'
+} from '@awell-health/extensions-core'
 
 const nonVisitNoteTypeEnum = z.enum(['email', 'nonvisit', 'phone'])
 

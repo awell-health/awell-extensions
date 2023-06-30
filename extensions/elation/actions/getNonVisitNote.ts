@@ -5,13 +5,13 @@ import {
   type Action,
   type DataPointDefinition,
   type Field,
-} from '../../../lib/types'
-import { Category } from '../../../lib/types/marketplace'
+  Category,
+  NumericIdSchema,
+} from '@awell-health/extensions-core'
 import { type settings } from '../settings'
 import { makeAPIClient } from '../client'
 import { fromZodError } from 'zod-validation-error'
 import { AxiosError } from 'axios'
-import { NumericIdSchema } from '../../../lib/shared/validation'
 import { isNil } from 'lodash'
 
 const fields = {
