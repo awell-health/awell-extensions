@@ -1,21 +1,31 @@
-export interface Booking {
-    id: number;
-    userId: number;
-    description: string;
-    eventTypeId: number;
-    uid: string;
-    title: string;
-    startTime: string;
-    endTime: string;
-    attendees: User[];
-    user: User;
-    metadata: Record<string, unknown>;
-    status: string;
-}
+import { z } from 'zod'
 
-export interface User {
-    email: string;
-    name: string;
-    timeZone: string;
-    locale?: string;
-}
+// const UserSchema = z.object({
+//   email: z.string(),
+//   name: z.string(),
+//   timeZone: z.string(),
+//   locale: z.string().optional().nullable(),
+// })
+
+// export type User = z.infer<typeof UserSchema>
+
+export const BookingSchema = z.object({
+  eventTypeId: z.number(),
+  title: z.string(),
+  description: z.string(),
+  startTime: z.string(),
+  endTime: z.string(),
+  status: z.string(),
+  uid: z.string(),
+  //   id: z.number(),
+  //   userId: z.number(),
+  //   user: UserSchema,
+  //   attendees: z.array(UserSchema),
+  //   metadata: z.record(z.unknown()),
+})
+
+export const GetBookingResponseSchema = z.object({
+  booking: BookingSchema,
+})
+
+export type Booking = z.infer<typeof BookingSchema>

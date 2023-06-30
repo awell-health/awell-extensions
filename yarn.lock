@@ -71,7 +71,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@awell-health/awell-extensions@workspace:."
   dependencies:
-    "@awell-health/extensions-core": 0.1.6
+    "@awell-health/extensions-core": 0.1.7-beta31
     "@dropbox/sign": ^1.1.3
     "@graphql-codegen/cli": ^3.2.2
     "@graphql-codegen/typescript": ^3.0.2
@@ -123,15 +123,17 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@awell-health/extensions-core@npm:0.1.6":
-  version: 0.1.6
-  resolution: "@awell-health/extensions-core@npm:0.1.6"
+"@awell-health/extensions-core@npm:0.1.7-beta31":
+  version: 0.1.7-beta31
+  resolution: "@awell-health/extensions-core@npm:0.1.7-beta31"
   dependencies:
     axios: ^1.4.0
     date-fns: ^2.30.0
     libphonenumber-js: ^1.10.30
+    node-fetch: ^3.3.1
     zod: ^3.21.4
-  checksum: 6c89e9ffe85a9b4048218f9c28935a9aa1cf4e97a5030cc68fb4c4464751d024e2c43fdb4e776b8d3949e532d92f361eb09474c5c0e60e35302d9fc5a9f20c6e
+    zod-validation-error: ^1.3.1
+  checksum: bbe8eabaae7d45ce23f3c060017ba660a84d83e5d4552b9493ecb683d5dc755def29758b5fe638093429d183a981a67758f927ce8b26caa77f9f1a569e520ba2
   languageName: node
   linkType: hard
 
@@ -3989,6 +3991,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"data-uri-to-buffer@npm:^4.0.0":
+  version: 4.0.1
+  resolution: "data-uri-to-buffer@npm:4.0.1"
+  checksum: 0d0790b67ffec5302f204c2ccca4494f70b4e2d940fea3d36b09f0bb2b8539c2e86690429eb1f1dc4bcc9e4df0644193073e63d9ee48ac9fce79ec1506e4aa4c
+  languageName: node
+  linkType: hard
+
 "dataloader@npm:2.2.2, dataloader@npm:^2.2.2":
   version: 2.2.2
   resolution: "dataloader@npm:2.2.2"
@@ -4955,6 +4964,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"fetch-blob@npm:^3.1.2, fetch-blob@npm:^3.1.4":
+  version: 3.2.0
+  resolution: "fetch-blob@npm:3.2.0"
+  dependencies:
+    node-domexception: ^1.0.0
+    web-streams-polyfill: ^3.0.3
+  checksum: f19bc28a2a0b9626e69fd7cf3a05798706db7f6c7548da657cbf5026a570945f5eeaedff52007ea35c8bcd3d237c58a20bf1543bc568ab2422411d762dd3d5bf
+  languageName: node
+  linkType: hard
+
 "fetch-har@npm:^8.1.5":
   version: 8.1.5
   resolution: "fetch-har@npm:8.1.5"
@@ -5100,6 +5119,15 @@ __metadata:
     node-domexception: 1.0.0
     web-streams-polyfill: 4.0.0-beta.3
   checksum: d91d4f667cfed74827fc281594102c0dabddd03c9f8b426fc97123eedbf73f5060ee43205d89284d6854e2fc5827e030cd352ef68b93beda8decc2d72128c576
+  languageName: node
+  linkType: hard
+
+"formdata-polyfill@npm:^4.0.10":
+  version: 4.0.10
+  resolution: "formdata-polyfill@npm:4.0.10"
+  dependencies:
+    fetch-blob: ^3.1.2
+  checksum: 82a34df292afadd82b43d4a740ce387bc08541e0a534358425193017bf9fb3567875dc5f69564984b1da979979b70703aa73dee715a17b6c229752ae736dd9db
   languageName: node
   linkType: hard
 
@@ -7460,7 +7488,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"node-domexception@npm:1.0.0":
+"node-domexception@npm:1.0.0, node-domexception@npm:^1.0.0":
   version: 1.0.0
   resolution: "node-domexception@npm:1.0.0"
   checksum: ee1d37dd2a4eb26a8a92cd6b64dfc29caec72bff5e1ed9aba80c294f57a31ba4895a60fd48347cf17dd6e766da0ae87d75657dfd1f384ebfa60462c2283f5c7f
@@ -7501,6 +7529,17 @@ __metadata:
     encoding:
       optional: true
   checksum: 8d816ffd1ee22cab8301c7756ef04f3437f18dace86a1dae22cf81db8ef29c0bf6655f3215cb0cdb22b420b6fe141e64b26905e7f33f9377a7fa59135ea3e10b
+  languageName: node
+  linkType: hard
+
+"node-fetch@npm:^3.3.1":
+  version: 3.3.1
+  resolution: "node-fetch@npm:3.3.1"
+  dependencies:
+    data-uri-to-buffer: ^4.0.0
+    fetch-blob: ^3.1.4
+    formdata-polyfill: ^4.0.10
+  checksum: 62145fd3ba4770a76110bc31fdc0054ab2f5442b5ce96e9c4b39fc9e94a3d305560eec76e1165d9259eab866e02a8eecf9301062bb5dfc9f08a4d08b69d223dd
   languageName: node
   linkType: hard
 
@@ -9666,7 +9705,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"web-streams-polyfill@npm:^3.2.1":
+"web-streams-polyfill@npm:^3.0.3, web-streams-polyfill@npm:^3.2.1":
   version: 3.2.1
   resolution: "web-streams-polyfill@npm:3.2.1"
   checksum: b119c78574b6d65935e35098c2afdcd752b84268e18746606af149e3c424e15621b6f1ff0b42b2676dc012fc4f0d313f964b41a4b5031e525faa03997457da02
@@ -10004,6 +10043,15 @@ __metadata:
   peerDependencies:
     zod: ^3.18.0
   checksum: 0ad705b9eab062e06171b9f118fa2e36a8ccb9dda496bb5c65eefc0d665706e296587bf7fafb77b274e401f82029d403de689e5f58b9a5b627a254e4bd4bddac
+  languageName: node
+  linkType: hard
+
+"zod-validation-error@npm:^1.3.1":
+  version: 1.3.1
+  resolution: "zod-validation-error@npm:1.3.1"
+  peerDependencies:
+    zod: ^3.18.0
+  checksum: f27484377be368e41f29b122df6d4b9276e03774e1ceb26c8b77dd3dff0a216221ae8fd63643f75742236a4df80b27fc43b4c8efae80ae8c8fe38c4d12bbd104
   languageName: node
   linkType: hard
 

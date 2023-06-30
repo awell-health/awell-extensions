@@ -77,7 +77,7 @@ export const getBooking: Action<typeof fields, typeof settings> = {
     } else {
       try {
         const calComApi = new CalComApi(apiKey)
-        const { booking } = await calComApi.getBooking(bookingId)
+        const booking = await calComApi.getBooking(bookingId)
 
         await onComplete({
           data_points: {
@@ -92,14 +92,13 @@ export const getBooking: Action<typeof fields, typeof settings> = {
           },
         })
       } catch (error) {
+        const errorMessage = (error as Error).message
         await onError({
           events: [
             {
               date: new Date().toISOString(),
               text: {
-                en: `Error in calDotCom extension -> getBooking action: ${JSON.stringify(
-                  error
-                )}`,
+                en: `Get Booking failed: ${errorMessage}`,
               },
             },
           ],
