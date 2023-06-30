@@ -71,7 +71,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@awell-health/awell-extensions@workspace:."
   dependencies:
-    "@awell-health/extensions-core": 0.1.6
+    "@awell-health/extensions-core": 0.1.8
     "@dropbox/sign": ^1.1.3
     "@graphql-codegen/cli": ^3.2.2
     "@graphql-codegen/typescript": ^3.0.2
@@ -123,15 +123,17 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@awell-health/extensions-core@npm:0.1.6":
-  version: 0.1.6
-  resolution: "@awell-health/extensions-core@npm:0.1.6"
+"@awell-health/extensions-core@npm:0.1.8":
+  version: 0.1.8
+  resolution: "@awell-health/extensions-core@npm:0.1.8"
   dependencies:
     axios: ^1.4.0
     date-fns: ^2.30.0
     libphonenumber-js: ^1.10.30
+    node-fetch: 2
     zod: ^3.21.4
-  checksum: 6c89e9ffe85a9b4048218f9c28935a9aa1cf4e97a5030cc68fb4c4464751d024e2c43fdb4e776b8d3949e532d92f361eb09474c5c0e60e35302d9fc5a9f20c6e
+    zod-validation-error: ^1.3.1
+  checksum: 3c2a50daa6a8d87a36f1a849bbe6c694d3cb8b4cda6f50043c8beae05bcbc2d38d639ff63a2ae6d40ba567ae1163e35afa0482efed6ab08e86e64351d50bea4a
   languageName: node
   linkType: hard
 
@@ -10004,6 +10006,15 @@ __metadata:
   peerDependencies:
     zod: ^3.18.0
   checksum: 0ad705b9eab062e06171b9f118fa2e36a8ccb9dda496bb5c65eefc0d665706e296587bf7fafb77b274e401f82029d403de689e5f58b9a5b627a254e4bd4bddac
+  languageName: node
+  linkType: hard
+
+"zod-validation-error@npm:^1.3.1":
+  version: 1.3.1
+  resolution: "zod-validation-error@npm:1.3.1"
+  peerDependencies:
+    zod: ^3.18.0
+  checksum: f27484377be368e41f29b122df6d4b9276e03774e1ceb26c8b77dd3dff0a216221ae8fd63643f75742236a4df80b27fc43b4c8efae80ae8c8fe38c4d12bbd104
   languageName: node
   linkType: hard
 
