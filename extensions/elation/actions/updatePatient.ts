@@ -2,6 +2,7 @@
 import { ZodError } from 'zod'
 import {
   FieldType,
+  NumericIdSchema,
   type Action,
   type DataPointDefinition,
   type Field,
@@ -12,7 +13,6 @@ import { makeAPIClient } from '../client'
 import { fromZodError } from 'zod-validation-error'
 import { AxiosError } from 'axios'
 import { patientSchema } from '../validation/patient.zod'
-import { numberId } from '../validation/generic.zod'
 
 const fields = {
   patientId: {
@@ -202,7 +202,7 @@ export const updatePatient: Action<
         previous_last_name: previousLastName,
       })
 
-      const id = numberId.parse(patientId)
+      const id = NumericIdSchema.parse(patientId)
 
       // API Call should produce AuthError or something dif.
       const api = makeAPIClient(payload.settings)

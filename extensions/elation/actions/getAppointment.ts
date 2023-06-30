@@ -1,6 +1,7 @@
 import { ZodError } from 'zod'
 import {
   FieldType,
+  NumericIdSchema,
   type Action,
   type DataPointDefinition,
   type Field,
@@ -10,7 +11,6 @@ import { type settings } from '../settings'
 import { makeAPIClient } from '../client'
 import { fromZodError } from 'zod-validation-error'
 import { AxiosError } from 'axios'
-import { numberId } from '../validation/generic.zod'
 
 const fields = {
   appointmentId: {
@@ -75,7 +75,7 @@ export const getAppointment: Action<
   dataPoints,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
     try {
-      const appointmentId = numberId.parse(payload.fields.appointmentId)
+      const appointmentId = NumericIdSchema.parse(payload.fields.appointmentId)
 
       // API Call should produce AuthError or something dif.
       const api = makeAPIClient(payload.settings)
