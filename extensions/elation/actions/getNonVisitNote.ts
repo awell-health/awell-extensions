@@ -1,96 +1,94 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import { ZodError } from 'zod'
 import {
   FieldType,
-  NumericIdSchema,
   type Action,
   type DataPointDefinition,
   type Field,
+  Category,
+  NumericIdSchema,
 } from '@awell-health/extensions-core'
-import { Category } from '@awell-health/extensions-core'
 import { type settings } from '../settings'
 import { makeAPIClient } from '../client'
 import { fromZodError } from 'zod-validation-error'
 import { AxiosError } from 'axios'
+import { isNil } from 'lodash'
 
 const fields = {
-  appointmentId: {
-    id: 'appointmentId',
-    label: 'Appointment ID',
-    description: 'The appointment ID (a number)',
+  nonVisitNoteId: {
+    id: 'nonVisitNoteId',
+    label: 'Non-Visit Note ID',
+    description: 'ID of a note',
     type: FieldType.NUMERIC,
     required: true,
   },
 } satisfies Record<string, Field>
 
 const dataPoints = {
-  scheduledDate: {
-    key: 'scheduledDate',
-    valueType: 'date',
-  },
-  reason: {
-    key: 'reason',
+  text: {
+    key: 'text',
     valueType: 'string',
+  },
+  authorId: {
+    key: 'authorId',
+    valueType: 'number',
   },
   patientId: {
     key: 'patientId',
-    valueType: 'number',
-  },
-  physicianId: {
-    key: 'physicianId',
     valueType: 'number',
   },
   practiceId: {
     key: 'practiceId',
     valueType: 'number',
   },
-  duration: {
-    key: 'duration',
-    valueType: 'number',
+  documentDate: {
+    key: 'documentDate',
+    valueType: 'date',
   },
-  description: {
-    key: 'description',
-    valueType: 'string',
+  chartDate: {
+    key: 'chartDate',
+    valueType: 'date',
   },
-  serviceLocationId: {
-    key: 'serviceLocationId',
-    valueType: 'number',
-  },
-  telehealthDetails: {
-    key: 'telehealthDetails',
+  tags: {
+    key: 'tags',
     valueType: 'string',
   },
 } satisfies Record<string, DataPointDefinition>
 
-export const getAppointment: Action<
+export const getNonVisitNote: Action<
   typeof fields,
   typeof settings,
   keyof typeof dataPoints
 > = {
-  key: 'getAppointment',
+  key: 'getNonVisitNote',
   category: Category.EHR_INTEGRATIONS,
-  title: 'Get Appointment',
-  description: "Retrieve an appointment using Elation's scheduling API.",
+  title: 'Get Non-Visit Note',
+  description: "Get a Non-Visit Note using Elation's patient API.",
   fields,
   previewable: true,
   dataPoints,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
     try {
-      const appointmentId = NumericIdSchema.parse(payload.fields.appointmentId)
+      const { nonVisitNoteId } = payload.fields
+      const noteId = NumericIdSchema.parse(nonVisitNoteId)
 
-      // API Call should produce AuthError or something dif.
       const api = makeAPIClient(payload.settings)
-      const appointment = await api.getAppointment(appointmentId)
+      const { bullets, chart_date, document_date, patient, practice, tags } =
+        await api.getNonVisitNote(noteId)
+
       await onComplete({
         data_points: {
-          scheduledDate: appointment.scheduled_date,
-          reason: appointment.reason,
-          patientId: String(appointment.patient),
-          physicianId: String(appointment.physician),
-          practiceId: String(appointment.practice),
-          duration: String(appointment.duration),
-          description: appointment.description,
-          serviceLocationId: String(appointment.service_location?.id),
-          telehealthDetails: appointment.telehealth_details,
+          authorId:
+            bullets?.length !== 0 ? String(bullets[0].author) : undefined,
+          text: bullets?.length !== 0 ? bullets[0].text : undefined,
+          chartDate: chart_date,
+          documentDate: document_date,
+          patientId: String(patient),
+          practiceId: !isNil(practice) ? String(practice) : undefined,
+          tags:
+            tags?.length !== 0
+              ? tags?.map((tag) => tag.id).join(',')
+              : undefined,
         },
       })
     } catch (err) {
@@ -102,7 +100,7 @@ export const getAppointment: Action<
               date: new Date().toISOString(),
               text: { en: error.message },
               error: {
-                category: 'SERVER_ERROR',
+                category: 'WRONG_INPUT',
                 message: error.message,
               },
             },
@@ -117,7 +115,7 @@ export const getAppointment: Action<
                 en: `${err.status ?? '(no status code)'} Error: ${err.message}`,
               },
               error: {
-                category: 'BAD_REQUEST',
+                category: 'SERVER_ERROR',
                 message: `${err.status ?? '(no status code)'} Error: ${
                   err.message
                 }`,
