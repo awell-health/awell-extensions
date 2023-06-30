@@ -30,6 +30,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["@awell-health/extensions-core", "npm:0.1.8"],\
             ["@dropbox/sign", "npm:1.1.3"],\
+            ["@faker-js/faker", "npm:8.0.2"],\
             ["@graphql-codegen/cli", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:3.2.2"],\
             ["@graphql-codegen/typescript", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:3.0.2"],\
             ["@graphql-codegen/typescript-graphql-request", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:4.5.8"],\
@@ -166,6 +167,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@awell-health/awell-extensions", "workspace:."],\
             ["@awell-health/extensions-core", "npm:0.1.8"],\
             ["@dropbox/sign", "npm:1.1.3"],\
+            ["@faker-js/faker", "npm:8.0.2"],\
             ["@graphql-codegen/cli", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:3.2.2"],\
             ["@graphql-codegen/typescript", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:3.0.2"],\
             ["@graphql-codegen/typescript-graphql-request", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:4.5.8"],\
@@ -1925,6 +1927,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@exodus-schemasafe-npm-1.0.1-adce2305f9-b1dd4d0d0b.zip/node_modules/@exodus/schemasafe/",\
           "packageDependencies": [\
             ["@exodus/schemasafe", "npm:1.0.1"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["@faker-js/faker", [\
+        ["npm:8.0.2", {\
+          "packageLocation": "./.yarn/cache/@faker-js-faker-npm-8.0.2-093b9ec0b2-cf73daf9a5.zip/node_modules/@faker-js/faker/",\
+          "packageDependencies": [\
+            ["@faker-js/faker", "npm:8.0.2"]\
           ],\
           "linkType": "HARD"\
         }]\

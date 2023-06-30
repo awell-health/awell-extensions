@@ -1,5 +1,5 @@
 import { fetchTyped } from '@awell-health/extensions-core'
-import { GetBookingResponseSchema, type Booking } from './types'
+import { GetBookingResponseSchema, type Booking } from './schema'
 
 class CalComApi {
   private readonly apiKey: string

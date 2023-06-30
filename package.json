@@ -29,6 +29,7 @@
     "!**/__mocks__/**"
   ],
   "devDependencies": {
+    "@faker-js/faker": "^8.0.2",
     "@graphql-codegen/cli": "^3.2.2",
     "@graphql-codegen/typescript": "^3.0.2",
     "@graphql-codegen/typescript-graphql-request": "^4.5.8",
