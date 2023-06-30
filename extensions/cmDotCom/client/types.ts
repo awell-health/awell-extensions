@@ -2,6 +2,7 @@ export interface MessageRequest {
   from: string
   to: string
   message: string
+  reference?: string
 }
 
 interface BaseResponse<T> {

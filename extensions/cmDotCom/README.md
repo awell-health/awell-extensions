@@ -1,6 +1,8 @@
 # CM.com
 
-cm.com is a communications Platform for Messaging & Voice and is in that perspective very similar to our Twilio extension. Heilig-Hart Lier (Belgium hospital) uses cm.com as their notification provider.
+CM.com is a global communication and digital services provider based in the Netherlands. It offers a wide range of services and solutions in the areas of messaging, payments, voice, and customer experience.
+
+CM.com enables businesses to communicate with their customers through various channels such as SMS, email, push notifications, social media messaging, and more.
 
 ## Extension settings
 

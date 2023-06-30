@@ -4,17 +4,9 @@ import { type CmSDK, type MessageRequest } from './types'
 export class CmClient {
   private readonly _client: CmSDK
   private readonly _productToken: string
-  private readonly _activityId: string
 
-  constructor({
-    productToken,
-    activityId,
-  }: {
-    productToken: string
-    activityId: string
-  }) {
+  constructor({ productToken }: { productToken: string }) {
     this._productToken = productToken
-    this._activityId = activityId
     this._client = api('@messaging/v1.1#1f38u2plibh3cmv')
   }
 
@@ -22,6 +14,7 @@ export class CmClient {
     from,
     to,
     message,
+    reference,
   }: MessageRequest): ReturnType<CmSDK['messages_SendMessage']> => {
     return await this._client.messages_SendMessage({
       messages: {
@@ -33,7 +26,7 @@ export class CmClient {
               type: 'auto',
               content: message,
             },
-            reference: this._activityId,
+            reference,
             to: [
               {
                 number: to,

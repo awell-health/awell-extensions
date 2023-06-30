@@ -48,7 +48,6 @@ export const sendSms: Action<typeof fields, typeof settings> = {
 
       const client = new CmClient({
         productToken,
-        activityId,
       })
 
       await client.sendSms({
@@ -56,6 +55,7 @@ export const sendSms: Action<typeof fields, typeof settings> = {
         from: fromName ?? defaultFromName ?? '',
         to: recipient,
         message,
+        reference: activityId,
       })
 
       await onComplete()

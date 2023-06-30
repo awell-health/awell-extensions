@@ -9,12 +9,12 @@ import { FromNameValidationSchema } from '../../../validation'
 
 export const fields = {
   fromName: {
-    label: '"From" number',
+    label: 'From name',
     id: 'fromName',
     type: FieldType.STRING,
     required: false,
     description:
-      'This is the sender\'s name. The maximum length is 11 alphanumerical characters or 16 digits. When left blank, the "From name" from the extension settings will be used. If "fromName" is defined on the action level, then that takes precedence over the value specified in the extension settings.',
+      'This is the sender\'s name. The maximum length is 11 alphanumerical characters or 16 digits. When left blank, the "From name" from the extension settings will be used.',
   },
   recipient: {
     id: 'recipient',

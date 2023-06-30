@@ -22,6 +22,10 @@ export const settings = {
 } satisfies Record<string, Setting>
 
 export const SettingsValidationSchema = z.object({
-  productToken: z.string().nonempty({ message: 'Missing "Product Token"' }),
+  productToken: z
+    .string()
+    .nonempty({
+      message: 'Missing "product token in the extension settings."',
+    }),
   fromName: FromNameValidationSchema,
 } satisfies Record<keyof typeof settings, ZodTypeAny>)
