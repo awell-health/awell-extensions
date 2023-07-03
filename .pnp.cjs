@@ -38,6 +38,9 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@graphql-typed-document-node/core", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:3.1.2"],\
             ["@mailchimp/mailchimp_transactional", "npm:1.0.50"],\
             ["@metriport/api", "npm:3.1.5"],\
+            ["@sendgrid/client", "npm:7.7.0"],\
+            ["@sendgrid/helpers", "npm:7.7.0"],\
+            ["@sendgrid/mail", "npm:7.7.0"],\
             ["@types/jest", "npm:29.4.0"],\
             ["@types/lodash", "npm:4.14.191"],\
             ["@types/mailchimp__mailchimp_transactional", "npm:1.0.5"],\
@@ -174,6 +177,9 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@graphql-typed-document-node/core", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:3.1.2"],\
             ["@mailchimp/mailchimp_transactional", "npm:1.0.50"],\
             ["@metriport/api", "npm:3.1.5"],\
+            ["@sendgrid/client", "npm:7.7.0"],\
+            ["@sendgrid/helpers", "npm:7.7.0"],\
+            ["@sendgrid/mail", "npm:7.7.0"],\
             ["@types/jest", "npm:29.4.0"],\
             ["@types/lodash", "npm:4.14.191"],\
             ["@types/mailchimp__mailchimp_transactional", "npm:1.0.5"],\
@@ -3637,6 +3643,38 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@repeaterjs-repeater-npm-3.0.4-e0f5393b15-cca0db3e80.zip/node_modules/@repeaterjs/repeater/",\
           "packageDependencies": [\
             ["@repeaterjs/repeater", "npm:3.0.4"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["@sendgrid/client", [\
+        ["npm:7.7.0", {\
+          "packageLocation": "./.yarn/cache/@sendgrid-client-npm-7.7.0-5f79fe887b-81299ff65b.zip/node_modules/@sendgrid/client/",\
+          "packageDependencies": [\
+            ["@sendgrid/client", "npm:7.7.0"],\
+            ["@sendgrid/helpers", "npm:7.7.0"],\
+            ["axios", "npm:0.26.1"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["@sendgrid/helpers", [\
+        ["npm:7.7.0", {\
+          "packageLocation": "./.yarn/cache/@sendgrid-helpers-npm-7.7.0-6af68b3344-20387aae1b.zip/node_modules/@sendgrid/helpers/",\
+          "packageDependencies": [\
+            ["@sendgrid/helpers", "npm:7.7.0"],\
+            ["deepmerge", "npm:4.3.0"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["@sendgrid/mail", [\
+        ["npm:7.7.0", {\
+          "packageLocation": "./.yarn/cache/@sendgrid-mail-npm-7.7.0-347c053cdb-8bd446c367.zip/node_modules/@sendgrid/mail/",\
+          "packageDependencies": [\
+            ["@sendgrid/mail", "npm:7.7.0"],\
+            ["@sendgrid/client", "npm:7.7.0"],\
+            ["@sendgrid/helpers", "npm:7.7.0"]\
           ],\
           "linkType": "HARD"\
         }]\
