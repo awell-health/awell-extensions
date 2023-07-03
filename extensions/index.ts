@@ -14,7 +14,7 @@ import { MessageBird } from './messagebird'
 import { Metriport } from './metriport'
 import { Twilio } from './twilio'
 import { Wellinks } from './wellinks'
-import { Sendgrid } from './sendgrid'
+import { Sendgrid } from './sendgrid-extension'
 import { CmDotCom } from './cmDotCom'
 import * as json from './markdown.json'
 
