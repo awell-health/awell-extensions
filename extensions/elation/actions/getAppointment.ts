@@ -1,6 +1,7 @@
 import { ZodError } from 'zod'
 import {
   FieldType,
+  NumericIdSchema,
   type Action,
   type DataPointDefinition,
   type Field,
@@ -10,14 +11,13 @@ import { type settings } from '../settings'
 import { makeAPIClient } from '../client'
 import { fromZodError } from 'zod-validation-error'
 import { AxiosError } from 'axios'
-import { numberId } from '../validation/generic.zod'
 
 const fields = {
   appointmentId: {
     id: 'appointmentId',
     label: 'Appointment ID',
     description: 'The appointment ID (a number)',
-    type: FieldType.STRING,
+    type: FieldType.NUMERIC,
     required: true,
   },
 } satisfies Record<string, Field>
@@ -33,19 +33,19 @@ const dataPoints = {
   },
   patientId: {
     key: 'patientId',
-    valueType: 'string',
+    valueType: 'number',
   },
   physicianId: {
     key: 'physicianId',
-    valueType: 'string',
+    valueType: 'number',
   },
   practiceId: {
     key: 'practiceId',
-    valueType: 'string',
+    valueType: 'number',
   },
   duration: {
     key: 'duration',
-    valueType: 'string',
+    valueType: 'number',
   },
   description: {
     key: 'description',
@@ -53,7 +53,7 @@ const dataPoints = {
   },
   serviceLocationId: {
     key: 'serviceLocationId',
-    valueType: 'string',
+    valueType: 'number',
   },
   telehealthDetails: {
     key: 'telehealthDetails',
@@ -75,7 +75,7 @@ export const getAppointment: Action<
   dataPoints,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
     try {
-      const appointmentId = numberId.parse(payload.fields.appointmentId)
+      const appointmentId = NumericIdSchema.parse(payload.fields.appointmentId)
 
       // API Call should produce AuthError or something dif.
       const api = makeAPIClient(payload.settings)

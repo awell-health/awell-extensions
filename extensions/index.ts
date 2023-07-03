@@ -15,6 +15,7 @@ import { Metriport } from './metriport'
 import { Twilio } from './twilio'
 import { Wellinks } from './wellinks'
 import { Sendgrid } from './sendgrid'
+import { CmDotCom } from './cmDotCom'
 import * as json from './markdown.json'
 
 export type Markdown = Record<string, { readme: string; changelog: string }>
@@ -38,4 +39,5 @@ export const extensions = [
   Twilio,
   Wellinks,
   Sendgrid,
+  CmDotCom,
 ]

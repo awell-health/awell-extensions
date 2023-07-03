@@ -1,5 +1,5 @@
+import { DateOnlySchema, NumericIdSchema } from '@awell-health/extensions-core'
 import { z } from 'zod'
-import { numberId, stringDate } from './generic.zod'
 
 // Enums
 const genderIdentityEnum = z.enum([
@@ -153,14 +153,14 @@ export const insuranceSchema = z.object({
   insured_person_state: z.string().max(2).nullish(),
   insured_person_zip: z.string().max(9).nullish(),
   insured_person_id: z.string().max(50).nullish(),
-  insured_person_dob: stringDate.nullish(),
+  insured_person_dob: DateOnlySchema.nullish(),
   insured_person_gender: legalGenderMarkerEnum.nullish(),
   insured_person_ssn: z.string().max(9).nullish(),
   relationship_to_insured: z.string().max(20).nullish(),
 })
 
 export const patientStatusSchema = z.object({
-  deceased_date: stringDate.nullish(),
+  deceased_date: DateOnlySchema.nullish(),
   inactive_reason: inactiveReasonEnum.nullish(),
   notes: z.string().nullish(),
   status: patientStatusEnum,
@@ -200,9 +200,9 @@ export const patientSchema = z
     pronouns: pronounsEnum.nullish(),
     sex: sexEnum, // required for POST and PUT
     sexual_orientation: sexualOrientationEnum.nullish(),
-    primary_physician: numberId, // required for POST and PUT
-    caregiver_practice: numberId, // required for POST and PUT
-    dob: stringDate, // required for POST and PUT
+    primary_physician: NumericIdSchema, // required for POST and PUT
+    caregiver_practice: NumericIdSchema, // required for POST and PUT
+    dob: DateOnlySchema, // required for POST and PUT
     ssn: z.string().length(9).nullish(),
     race: raceEnum.nullish(),
     preferred_language: z.string().nullish(),
@@ -222,7 +222,7 @@ export const patientSchema = z
     primary_care_provider_npi: z.string().length(10).nullish(),
     previous_first_name: z.string().max(70).nullish(),
     previous_last_name: z.string().max(70).nullish(),
-    master_patient: numberId.nullish(), // ? type not in docs
+    master_patient: NumericIdSchema.nullish(), // ? type not in docs
     employer: employerSchema.strict().nullish(),
     metadata: z.object({}).passthrough().nullish(),
   })

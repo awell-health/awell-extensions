@@ -1,5 +1,7 @@
 import { type AppointmentInput } from '../types/appointment'
+import { type NonVisitNoteResponse } from '../types/nonVisitNote'
 import { type PatientInput } from '../types/patient'
+import { type PhysicianResponse } from '../types/physician'
 
 export const patientExample: PatientInput = {
   first_name: 'Test',
@@ -34,4 +36,39 @@ export const appointmentExample: AppointmentInput = {
   physician: 141127177601026,
   practice: 141127173275652,
   metadata: null,
+}
+
+export const physicianResponseExample: PhysicianResponse = {
+  id: 1,
+  is_active: true,
+  practice: 1,
+  user_id: 1,
+  credentials: undefined,
+  email: 'test@test.com',
+  first_name: 'First',
+  last_name: 'Last',
+  license: '1',
+  license_state: 'NY',
+  npi: '1234567890',
+  specialty: 'Cardiology',
+}
+
+export const nonVisitNoteResponseExample: NonVisitNoteResponse = {
+  id: 1,
+  type: 'nonvisit',
+  bullets: [
+    {
+      id: 1,
+      author: 1,
+      category: 'Problem',
+      text: 'Test',
+      updated_date: '2023-01-01T00:00:00Z',
+      version: 2,
+    },
+  ],
+  patient: 1,
+  practice: 1,
+  chart_date: '2023-01-01T00:00:00Z',
+  document_date: '2023-01-01T00:00:00Z',
+  tags: [],
 }
