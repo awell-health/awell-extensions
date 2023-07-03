@@ -14,6 +14,7 @@ import { MessageBird } from './messagebird'
 import { Metriport } from './metriport'
 import { Twilio } from './twilio'
 import { Wellinks } from './wellinks'
+import { Sendgrid } from './sendgrid'
 import { CmDotCom } from './cmDotCom'
 import * as json from './markdown.json'
 
@@ -37,5 +38,6 @@ export const extensions = [
   Metriport,
   Twilio,
   Wellinks,
+  Sendgrid,
   CmDotCom,
 ]
