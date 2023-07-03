@@ -8,7 +8,7 @@ import {
 import { settings } from './settings'
 
 export const Sendgrid: Extension = {
-  key: 'sendgrid',
+  key: 'sendgrid-extension',
   title: 'Sendgrid',
   icon_url: 'https://www.vectorlogo.zone/logos/sendgrid/sendgrid-icon.svg',
   description:
