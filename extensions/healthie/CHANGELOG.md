@@ -1,7 +1,9 @@
 # Healthie changelog
 
-## April 13, 2023
+## May 2023
 
-### Create task action
+- New webhooks added: `appliedTagCreated`, `appliedTagDeleted`, `appointmentDeleted`, `appointmentUpdated`, `formAnswerGroupCreated`, `formAnswerGroupDeleted`, `formAnswerGroupLocked`, `formAnswerGroupSigned`, `labOrderCreated`, `labOrderUpdated`, `messageCreated`, `messageDeleted`, `metricEntryCreated`, `metricEntryDeleted`, `metricEntryUpdated`, `patientUpdated`, `requestFormCompletionCreated`, `requestFormCompletionDeleted`, `requestFormCompletionUpdated`, `taskCreated`, `taskDeleted`, `taskUpdated`
 
-Now also adds support for reminders.
+## April 2023
+
+- Create task action: now also adds support for reminders.

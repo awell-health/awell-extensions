@@ -6,22 +6,22 @@ import {
 import { type HealthieWebhookPayload } from '../types'
 
 const dataPoints = {
-  patientId: {
-    key: 'patientId',
+  signedFormAnswerGroupId: {
+    key: 'signedFormAnswerGroupId',
     valueType: 'string',
   },
 } satisfies Record<string, DataPointDefinition>
 
-export const patientCreated: Webhook<
+export const formAnswerGroupSigned: Webhook<
   keyof typeof dataPoints,
   HealthieWebhookPayload
 > = {
-  key: 'patientCreated',
+  key: 'formAnswerGroupSigned',
   dataPoints,
   onWebhookReceived: async ({ payload, settings }, onSuccess, onError) => {
-    const { resource_id: patientId } = payload
+    const { resource_id: signedFormAnswerGroupId } = payload
 
-    if (isNil(patientId)) {
+    if (isNil(signedFormAnswerGroupId)) {
       await onError({
         // We should automatically send a 400 here, so no need to provide info
       })
@@ -29,10 +29,10 @@ export const patientCreated: Webhook<
 
     await onSuccess({
       data_points: {
-        patientId,
+        signedFormAnswerGroupId,
       },
     })
   },
 }
 
-export type PatientCreated = typeof patientCreated
+export type FormAnswerGroupSigned = typeof formAnswerGroupSigned
