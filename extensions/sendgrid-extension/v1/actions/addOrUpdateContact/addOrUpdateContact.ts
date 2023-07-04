@@ -21,7 +21,7 @@ export const addOrUpdateContact: Action<typeof fields, typeof settings> = {
   onActivityCreated: async (payload, onComplete, onError) => {
     try {
       const {
-        fields: { email, listIds, customFields },
+        fields: { email, firstName, lastName, listIds, customFields },
         settings: { apiKey },
       } = validate({
         schema: z.object({
@@ -36,6 +36,8 @@ export const addOrUpdateContact: Action<typeof fields, typeof settings> = {
         contacts: [
           {
             email,
+            first_name: firstName,
+            last_name: lastName,
             custom_fields: customFields,
           },
         ],
