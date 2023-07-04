@@ -1,9 +1,5 @@
 import { z, type ZodTypeAny } from 'zod'
-import {
-  type Field,
-  FieldType,
-  StringType,
-} from '@awell-health/extensions-core'
+import { type Field, FieldType } from '@awell-health/extensions-core'
 import { isEmpty, isNil } from 'lodash'
 
 export const fields = {
@@ -20,8 +16,21 @@ export const fields = {
     label: 'Email',
     description: "The contact's primary email.",
     type: FieldType.STRING,
-    stringType: StringType.EMAIL,
     required: true,
+  },
+  firstName: {
+    id: 'firstName',
+    label: 'First Name',
+    description: "The contact's first name.",
+    type: FieldType.STRING,
+    required: false,
+  },
+  lastName: {
+    id: 'lastName',
+    label: 'Last Name',
+    description: "The contact's last name.",
+    type: FieldType.STRING,
+    required: false,
   },
   customFields: {
     id: 'customFields',
@@ -52,6 +61,9 @@ export const FieldsValidationSchema = z.object({
       })
     ),
   email: z.string().email(),
+  // max 50 chars - API limit
+  firstName: z.string().max(50),
+  lastName: z.string().max(50),
   customFields: z.optional(z.string()).transform((str, ctx): CustomFields => {
     if (isNil(str) || isEmpty(str)) return {}
 

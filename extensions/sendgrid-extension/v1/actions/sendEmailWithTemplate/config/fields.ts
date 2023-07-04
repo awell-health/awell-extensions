@@ -1,10 +1,6 @@
 import { isNil, isEmpty } from 'lodash'
 import { z, type ZodTypeAny } from 'zod'
-import {
-  type Field,
-  FieldType,
-  StringType,
-} from '@awell-health/extensions-core'
+import { type Field, FieldType } from '@awell-health/extensions-core'
 
 export const fields = {
   fromName: {
@@ -17,11 +13,10 @@ export const fields = {
   },
   fromEmail: {
     id: 'fromEmail',
-    label: 'fromEmail',
+    label: 'From email',
     description:
       'The email address that will be used for the "From" header. When left blank, the value specified in the extension settings will be used.',
     type: FieldType.STRING,
-    stringType: StringType.EMAIL,
     required: false,
   },
   to: {
@@ -29,7 +24,6 @@ export const fields = {
     label: 'To',
     description: 'The email address of the recipient.',
     type: FieldType.STRING,
-    stringType: StringType.EMAIL,
     required: true,
   },
   templateId: {
