@@ -13,7 +13,7 @@ export const fields = {
   },
   fromEmail: {
     id: 'fromEmail',
-    label: 'fromEmail',
+    label: 'From email',
     description:
       'The email address that will be used for the "From" header. When left blank, the value specified in the extension settings will be used.',
     type: FieldType.STRING,
