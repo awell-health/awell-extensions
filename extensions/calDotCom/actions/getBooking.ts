@@ -1,11 +1,15 @@
 import {
   type DataPointDefinition,
-  FieldType,
   type Action,
   type Field,
+  FieldType,
+  Category,
+  validate,
 } from '@awell-health/extensions-core'
-import { Category } from '@awell-health/extensions-core'
+import { ZodError } from 'zod'
+import { fromZodError } from 'zod-validation-error'
 import CalComApi from '../calComApi'
+import { GetBookingPayloadSchema } from '../schema'
 import { type settings } from '../settings'
 
 const fields = {
@@ -61,50 +65,61 @@ export const getBooking: Action<typeof fields, typeof settings> = {
   dataPoints,
   previewable: false,
   onActivityCreated: async (payload, onComplete, onError) => {
-    const {
-      fields: { bookingId },
-      settings: { apiKey },
-    } = payload
-    if (apiKey === undefined || bookingId === undefined) {
-      await onError({
-        events: [
-          {
-            date: new Date().toISOString(),
-            text: { en: 'Missing apiKey or bookingId' },
-          },
-        ],
+    try {
+      const {
+        fields: { bookingId },
+        settings: { apiKey },
+      } = validate({
+        schema: GetBookingPayloadSchema,
+        payload,
       })
-    } else {
-      try {
-        const calComApi = new CalComApi(apiKey)
-        const { booking } = await calComApi.getBooking(bookingId)
+      const calComApi = new CalComApi(apiKey)
+      const booking = await calComApi.getBooking(bookingId)
 
-        await onComplete({
-          data_points: {
-            eventTypeId: `${booking.eventTypeId}`,
-            title: booking.title,
-            description: booking.description,
-            startTime: booking.startTime,
-            endTime: booking.endTime,
-            status: booking.status,
-            cancelUrl: `https://app.cal.com/booking/${booking.uid}?cancel=true`,
-            rescheduleUrl: `https://app.cal.com/reschedule/${booking.uid}`,
-          },
-        })
-      } catch (error) {
+      await onComplete({
+        data_points: {
+          eventTypeId: `${booking.eventTypeId}`,
+          title: booking.title,
+          description: booking.description,
+          startTime: booking.startTime,
+          endTime: booking.endTime,
+          status: booking.status,
+          cancelUrl: `https://app.cal.com/booking/${booking.uid}?cancel=true`,
+          rescheduleUrl: `https://app.cal.com/reschedule/${booking.uid}`,
+        },
+      })
+    } catch (error) {
+      if (error instanceof ZodError) {
+        const err = fromZodError(error)
         await onError({
           events: [
             {
               date: new Date().toISOString(),
-              text: {
-                en: `Error in calDotCom extension -> getBooking action: ${JSON.stringify(
-                  error
-                )}`,
+              text: { en: err.message },
+              error: {
+                category: 'BAD_REQUEST',
+                message: err.message,
               },
             },
           ],
         })
+        return
       }
+      const errorMessage = (error as Error).message
+      await onError({
+        events: [
+          {
+            date: new Date().toISOString(),
+            text: {
+              en: `Get Booking failed: ${errorMessage}`,
+            },
+            error: {
+              category: 'SERVER_ERROR',
+              message: `Get Booking failed: ${errorMessage}`,
+            },
+          },
+        ],
+      })
     }
   },
 }

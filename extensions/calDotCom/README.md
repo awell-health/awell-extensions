@@ -43,6 +43,8 @@ This action allows you to fetch the details of a booking based on the provided `
 4. Start time
 5. End time
 6. Status
+7. Cancel URL
+8. Reschedule URL
 
 ## Pricing
 
