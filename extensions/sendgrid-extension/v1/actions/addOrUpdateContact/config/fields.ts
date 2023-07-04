@@ -1,9 +1,5 @@
 import { z, type ZodTypeAny } from 'zod'
-import {
-  type Field,
-  FieldType,
-  StringType,
-} from '@awell-health/extensions-core'
+import { type Field, FieldType } from '@awell-health/extensions-core'
 import { isEmpty, isNil } from 'lodash'
 
 export const fields = {
@@ -20,7 +16,6 @@ export const fields = {
     label: 'Email',
     description: "The contact's primary email.",
     type: FieldType.STRING,
-    stringType: StringType.EMAIL,
     required: true,
   },
   customFields: {
