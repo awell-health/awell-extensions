@@ -21,6 +21,8 @@ describe('Add or update contact', () => {
     fields: {
       listIds: 'a1,b2',
       email: 'test@test.com',
+      firstName: 'John',
+      lastName: 'Doe',
       customFields: '{"name":"John Doe"}',
     },
     settings: {
@@ -44,6 +46,8 @@ describe('Add or update contact', () => {
       contacts: [
         {
           email: basePayload.fields.email,
+          first_name: 'John',
+          last_name: 'Doe',
           custom_fields: { name: 'John Doe' },
         },
       ],

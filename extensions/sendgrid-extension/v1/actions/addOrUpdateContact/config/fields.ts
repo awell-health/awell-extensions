@@ -18,6 +18,20 @@ export const fields = {
     type: FieldType.STRING,
     required: true,
   },
+  firstName: {
+    id: 'firstName',
+    label: 'First Name',
+    description: "The contact's first name.",
+    type: FieldType.STRING,
+    required: false,
+  },
+  lastName: {
+    id: 'lastName',
+    label: 'Last Name',
+    description: "The contact's last name.",
+    type: FieldType.STRING,
+    required: false,
+  },
   customFields: {
     id: 'customFields',
     label: 'Custom fields',
@@ -47,6 +61,9 @@ export const FieldsValidationSchema = z.object({
       })
     ),
   email: z.string().email(),
+  // max 50 chars - API limit
+  firstName: z.string().max(50),
+  lastName: z.string().max(50),
   customFields: z.optional(z.string()).transform((str, ctx): CustomFields => {
     if (isNil(str) || isEmpty(str)) return {}
 
