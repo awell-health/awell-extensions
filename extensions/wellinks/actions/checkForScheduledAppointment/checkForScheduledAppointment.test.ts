@@ -48,7 +48,9 @@ describe('the checkForScheduledAppointment action', () => {
                     apiUrl: 'test-url',
                     selectEventTypeQuestion: '2602707',
                     startSendingRemindersQuestions: '3860906',
-                    memberEventFormId: '281216'                }
+                    memberEventFormId: '281216',
+                    sendgridApiKey: 'sendgridApiKey',
+                    sendgridApiUrl: 'sendgridApiUrl'                }
             },
             onComplete,
             onError
@@ -110,7 +112,9 @@ describe('the checkForScheduledAppointment action', () => {
                     apiUrl: 'test-url',
                     selectEventTypeQuestion: '2602707',
                     startSendingRemindersQuestions: '3860906',
-                    memberEventFormId: '281216'                }
+                    memberEventFormId: '281216',
+                    sendgridApiKey: 'sendgridApiKey',
+                    sendgridApiUrl: 'sendgridApiUrl'                }
             },
             onComplete,
             onError
@@ -156,7 +160,9 @@ describe('the checkForScheduledAppointment action', () => {
                     apiUrl: 'test-url',
                     selectEventTypeQuestion: '2602707',
                     startSendingRemindersQuestions: '3860906',
-                    memberEventFormId: '281216'                }
+                    memberEventFormId: '281216',
+                    sendgridApiKey: 'sendgridApiKey',
+                    sendgridApiUrl: 'sendgridApiUrl'                }
             },
             onComplete,
             onError

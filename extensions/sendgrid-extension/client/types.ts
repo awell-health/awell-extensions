@@ -28,3 +28,10 @@ export interface MarketingApi {
     }) => RequestReturnType<{ job_id: string }>
   }
 }
+
+export interface GroupsApi {
+  suppressions: {
+    add: (group: string, emails: string[]) => RequestReturnType<{ recipient_emails: string[] }>
+    remove: (group: string, emails: string[]) => RequestReturnType<any> // null response
+  }
+}

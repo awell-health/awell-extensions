@@ -11,3 +11,8 @@ Added the checkForScheduledAppointment action.
 ## May 25th, 2023
 
 Added datapoints for actions
+
+
+## July 6th, 2023
+
+Added new action to unenroll user from Sendgrid.
