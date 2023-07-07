@@ -1,9 +1,23 @@
 import sendgridMail, { type MailService } from '@sendgrid/mail'
 import sendgridClient, { type Client } from '@sendgrid/client'
-import { ResponseError } from '@sendgrid/helpers/classes'
-import { type MailApi, type MarketingApi } from './types'
+import { ResponseError, type Response } from '@sendgrid/helpers/classes'
+import { type GroupsApi, type MailApi, type MarketingApi } from './types'
 import { type ActivityEvent } from '@awell-health/extensions-core'
 import { isNil } from 'lodash'
+
+/**
+ * We're using this validateStatus to help produce the expected result.
+ * Something undocumented in the sendgrid client:
+ * The response array [Response, any] in the callback is comprised of the response and the request body.
+ */
+const validateStatus = (validStatus: number) => (err?: ResponseError, response?: [Response, any]) => {
+  if (!isNil(err)) {
+    throw err
+  }
+  if (Number(response?.[0].statusCode) !== Number(validStatus)) {
+    throw Error(`Error: status response was ${response?.[0].statusCode ?? ""}, was not ${validStatus}`)
+  }
+}
 
 export class SendgridClient {
   private readonly _sendgridClient: Client
@@ -32,6 +46,31 @@ export class SendgridClient {
             list_ids: args.listIds,
           }),
         }) as ReturnType<MarketingApi['contacts']['addOrUpdate']>)
+      },
+    } as const,
+  } as const
+
+  readonly groups = {
+    suppressions: {
+      add: async (groupId: string, email: string) => {
+        return await (this._sendgridClient.request(
+          {
+            url: `/v3/asm/groups/${groupId}/suppressions`,
+            method: 'POST',
+            body: {
+              "recipient_emails": [
+                email
+              ]
+            }
+          },
+          validateStatus(201)
+        ) as ReturnType<GroupsApi['suppressions']['add']>)
+      },
+      remove: async (groupId: string, email: string) => {
+        return await (this._sendgridClient.request({
+          url: `/v3/asm/groups/${groupId}/suppressions/${email}`,
+          method: 'DELETE',
+        }) as ReturnType<GroupsApi['suppressions']['remove']>)
       },
     } as const,
   } as const

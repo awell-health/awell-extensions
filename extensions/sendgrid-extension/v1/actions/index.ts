@@ -1,3 +1,5 @@
 export { sendEmail } from './sendEmail'
 export { sendEmailWithTemplate } from './sendEmailWithTemplate'
 export { addOrUpdateContact } from './addOrUpdateContact'
+export { addSuppressions } from './addSuppressions'
+export { removeSuppressions } from './removeSuppressions'
