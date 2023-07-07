@@ -19,9 +19,9 @@ export const addSuppressions: Action<
 > = {
   key: 'addSuppressions',
   category: Category.SCHEDULING,
-  title: 'Add to Suppression List',
+  title: 'Add Email to Suppression Lists',
   description:
-    'Add suppression to user',
+    'Adds an email to one or more suppression lists.',
   fields,
   previewable: true,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {    

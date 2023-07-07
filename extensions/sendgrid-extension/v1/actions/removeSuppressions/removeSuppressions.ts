@@ -19,9 +19,9 @@ export const removeSuppressions: Action<
 > = {
   key: 'removeSuppressions',
   category: Category.SCHEDULING,
-  title: 'Remove from Suppression Lists',
+  title: 'Remove Email from Suppression Lists',
   description:
-    'Remove email from suppression lists',
+    'Remove an email address from one or more suppression lists.',
   fields,
   previewable: true,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {    

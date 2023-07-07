@@ -25,3 +25,7 @@ Allows for sending an email based on a template to a recipient. You can also ins
 Allows adding or updating contacts. The contact to update will be determined only by the email field and any fields omitted from the request will remain as they were. A contact's ID cannot be used to update the contact.
 
 Please note that custom fields need to have been already created if you wish to set their values for the contacts being upserted. To do this, please use the "Create Custom Field Definition" endpoint. They also can be created in **Marketing -> Custom Fields** section in Sendgrid.
+
+### Add and remove emails from suppression lists
+
+Suppression lists ([link on SendGrid's website](https://docs.sendgrid.com/api-reference/suppressions-suppressions/add-suppressions-to-a-suppression-group)) are unsubscribe groups. Use these actions to add an email address to any number of unsubscribe groups. You can apply a suppression add/remove to multiple groups by using comma-separated lists for the groups. Only a single email can be used. **This functionality is different from SendGrid's API, which allows multiple email addresses for a single group**.
