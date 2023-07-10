@@ -46,7 +46,6 @@ describe('Update patient', () => {
   test('Should call onError when email is not an actual email address the onComplete callback', async () => {
     await updatePatient.onActivityCreated(
       generateTestPayload({
-        patient: { id: 'test-patient' },
         fields: {
           patientCode: undefined,
           firstName: undefined,
@@ -88,7 +87,6 @@ describe('Update patient', () => {
   test('Should call onError when phone is not a possible phone number', async () => {
     await updatePatient.onActivityCreated(
       generateTestPayload({
-        patient: { id: 'test-patient' },
         fields: {
           patientCode: undefined,
           firstName: undefined,
