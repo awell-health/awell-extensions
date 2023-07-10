@@ -45,7 +45,9 @@ export class SendgridClient {
             contacts: args.contacts,
             list_ids: args.listIds,
           }),
-        }) as ReturnType<MarketingApi['contacts']['addOrUpdate']>)
+        },
+        validateStatus(202)
+        ) as ReturnType<MarketingApi['contacts']['addOrUpdate']>)
       },
     } as const,
   } as const
