@@ -1,3 +1,4 @@
+import { generateTestPayload } from '../../../../../src/tests'
 import { type QuerySearchPatientsByPatientCodeArgs } from '../../gql/graphql'
 import AwellSdk from '../../sdk/awellSdk'
 import { searchPatientsByPatientCode } from './searchPatientsByPatientCode'
@@ -38,14 +39,7 @@ describe('Search patients by patient code', () => {
 
   test('Should call the onComplete callback', async () => {
     await searchPatientsByPatientCode.onActivityCreated(
-      {
-        pathway: {
-          id: 'pathway-id',
-          definition_id: 'pathway-definition-id',
-        },
-        activity: {
-          id: 'activity-id',
-        },
+      generateTestPayload({
         patient: {
           id: 'patient-id-1',
           profile: {
@@ -59,7 +53,7 @@ describe('Search patients by patient code', () => {
           apiUrl: 'an-api-url',
           apiKey: 'an-api-key',
         },
-      },
+      }),
       onComplete,
       onError
     )

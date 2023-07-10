@@ -1,3 +1,4 @@
+import { generateTestPayload } from '../../../../../src/tests'
 import { updatePatient } from './updatePatient'
 
 jest.mock('../../sdk/awellSdk')
@@ -13,15 +14,7 @@ describe('Update patient', () => {
 
   test('Should call the onComplete callback', async () => {
     await updatePatient.onActivityCreated(
-      {
-        pathway: {
-          id: 'pathway-id',
-          definition_id: 'pathway-definition-id',
-        },
-        activity: {
-          id: 'activity-id',
-        },
-        patient: { id: 'test-patient' },
+      generateTestPayload({
         fields: {
           patientCode: 'patientCode',
           firstName: 'John',
@@ -42,7 +35,7 @@ describe('Update patient', () => {
           apiUrl: 'an-api-url',
           apiKey: 'an-api-key',
         },
-      },
+      }),
       onComplete,
       onError
     )
@@ -52,14 +45,7 @@ describe('Update patient', () => {
 
   test('Should call onError when email is not an actual email address the onComplete callback', async () => {
     await updatePatient.onActivityCreated(
-      {
-        pathway: {
-          id: 'pathway-id',
-          definition_id: 'pathway-definition-id',
-        },
-        activity: {
-          id: 'activity-id',
-        },
+      generateTestPayload({
         patient: { id: 'test-patient' },
         fields: {
           patientCode: undefined,
@@ -81,7 +67,7 @@ describe('Update patient', () => {
           apiUrl: 'an-api-url',
           apiKey: 'an-api-key',
         },
-      },
+      }),
       onComplete,
       onError
     )
@@ -101,14 +87,7 @@ describe('Update patient', () => {
 
   test('Should call onError when phone is not a possible phone number', async () => {
     await updatePatient.onActivityCreated(
-      {
-        pathway: {
-          id: 'pathway-id',
-          definition_id: 'pathway-definition-id',
-        },
-        activity: {
-          id: 'activity-id',
-        },
+      generateTestPayload({
         patient: { id: 'test-patient' },
         fields: {
           patientCode: undefined,
@@ -130,7 +109,7 @@ describe('Update patient', () => {
           apiUrl: 'an-api-url',
           apiKey: 'an-api-key',
         },
-      },
+      }),
       onComplete,
       onError
     )

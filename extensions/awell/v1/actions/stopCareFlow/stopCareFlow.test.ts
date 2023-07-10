@@ -1,3 +1,4 @@
+import { generateTestPayload } from '../../../../../src/tests'
 import { stopCareFlow } from './stopCareFlow'
 
 jest.mock('../../sdk/awellSdk')
@@ -13,15 +14,7 @@ describe('Stop care flow', () => {
 
   test('Should call the onComplete callback', async () => {
     await stopCareFlow.onActivityCreated(
-      {
-        pathway: {
-          id: 'pathway-id',
-          definition_id: 'pathway-definition-id',
-        },
-        activity: {
-          id: 'activity-id',
-        },
-        patient: { id: 'test-patient' },
+      generateTestPayload({
         fields: {
           reason: 'Just because I can',
         },
@@ -29,7 +22,7 @@ describe('Stop care flow', () => {
           apiUrl: 'an-api-url',
           apiKey: 'an-api-key',
         },
-      },
+      }),
       onComplete,
       onError
     )

@@ -1,4 +1,5 @@
 import { generatePatientSummary } from '..'
+import { generateTestPayload } from '../../../../../src/tests'
 
 jest.mock('../../../common/sdk/openAiSdk')
 
@@ -13,22 +14,7 @@ describe('Generate patient summary with Open AI', () => {
 
   test('Should call the onComplete callback', async () => {
     await generatePatientSummary.onActivityCreated(
-      {
-        pathway: {
-          id: 'pathway-id',
-          definition_id: 'pathway-definition-id',
-        },
-        activity: {
-          id: 'activity-id',
-        },
-        patient: {
-          id: 'test-patient',
-          profile: {
-            first_name: 'Nick',
-            last_name: 'Hellemans',
-            birth_date: '1993-11-30',
-          },
-        },
+      generateTestPayload({
         fields: {
           characteristics: '',
           language: 'English',
@@ -36,7 +22,7 @@ describe('Generate patient summary with Open AI', () => {
         settings: {
           openAiApiKey: 'an-api-key',
         },
-      },
+      }),
       onComplete,
       onError
     )
