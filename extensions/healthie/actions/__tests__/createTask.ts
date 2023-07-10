@@ -1,3 +1,4 @@
+import { generateTestPayload } from '../../../../src/tests'
 import { getSdk } from '../../gql/sdk'
 import { mockGetSdk, mockGetSdkReturn } from '../../gql/__mocks__/sdk'
 import { createTask } from '../createTask'
@@ -5,15 +6,7 @@ import { createTask } from '../createTask'
 jest.mock('../../gql/sdk')
 jest.mock('../../graphqlClient')
 
-const samplePayload = {
-  pathway: {
-    id: 'pathway-id',
-    definition_id: 'pathway-definition-id',
-  },
-  activity: {
-    id: 'activity-id',
-  },
-  patient: { id: 'test-patient' },
+const samplePayload = generateTestPayload({
   fields: {
     patientId: 'a-patient-id',
     assignToUserId: 'a-user-id',
@@ -29,7 +22,7 @@ const samplePayload = {
     apiKey: 'apiKey',
     apiUrl: 'test-url',
   },
-}
+})
 
 const sampleTask = {
   client_id: 'a-patient-id',
