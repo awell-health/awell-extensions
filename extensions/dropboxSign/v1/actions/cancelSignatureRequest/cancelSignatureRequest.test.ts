@@ -1,5 +1,6 @@
 import DropboxSignSdk from '../../../common/sdk/dropboxSignSdk'
 import { cancelSignatureRequest } from '..'
+import { generateTestPayload } from '../../../../../src/tests'
 
 jest.mock('../../../common/sdk/dropboxSignSdk')
 
@@ -32,15 +33,7 @@ describe('Cancel signature request action', () => {
 
   test('Should call the onComplete callback', async () => {
     await cancelSignatureRequest.onActivityCreated(
-      {
-        pathway: {
-          id: 'pathway-id',
-          definition_id: 'pathway-definition-id',
-        },
-        activity: {
-          id: 'activity-id',
-        },
-        patient: { id: 'test-patient' },
+      generateTestPayload({
         fields: {
           signatureRequestId: '123',
         },
@@ -49,7 +42,7 @@ describe('Cancel signature request action', () => {
           clientId: 'client-id',
           testMode: 'yes',
         },
-      },
+      }),
       onComplete,
       onError
     )

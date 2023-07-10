@@ -1,6 +1,7 @@
 import DropboxSignSdk from '../../../common/sdk/dropboxSignSdk'
 
 import { sendSignatureRequestWithTemplate } from '..'
+import { generateTestPayload } from '../../../../../src/tests'
 
 jest.mock('../../../common/sdk/dropboxSignSdk')
 
@@ -42,15 +43,7 @@ describe('Cancel signature request action', () => {
 
   test('Should call the onComplete callback', async () => {
     await sendSignatureRequestWithTemplate.onActivityCreated(
-      {
-        pathway: {
-          id: 'pathway-id',
-          definition_id: 'pathway-definition-id',
-        },
-        activity: {
-          id: 'activity-id',
-        },
-        patient: { id: 'test-patient' },
+      generateTestPayload({
         fields: {
           signerRole: 'Client',
           signerName: 'John Doe',
@@ -66,7 +59,7 @@ describe('Cancel signature request action', () => {
           clientId: 'client-id',
           testMode: 'yes',
         },
-      },
+      }),
       onComplete,
       jest.fn()
     )

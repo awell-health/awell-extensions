@@ -1,6 +1,7 @@
 import DropboxSignSdk from '../../../common/sdk/dropboxSignSdk'
 
 import { getSignatureRequest } from '..'
+import { generateTestPayload } from '../../../../../src/tests'
 
 jest.mock('../../../common/sdk/dropboxSignSdk')
 
@@ -39,15 +40,7 @@ describe('Get signature request action', () => {
 
   test('Should call the onComplete callback', async () => {
     await getSignatureRequest.onActivityCreated(
-      {
-        pathway: {
-          id: 'pathway-id',
-          definition_id: 'pathway-definition-id',
-        },
-        activity: {
-          id: 'activity-id',
-        },
-        patient: { id: 'test-patient' },
+      generateTestPayload({
         fields: {
           signatureRequestId: '123',
         },
@@ -56,7 +49,7 @@ describe('Get signature request action', () => {
           clientId: 'client-id',
           testMode: 'yes',
         },
-      },
+      }),
       onComplete,
       jest.fn()
     )

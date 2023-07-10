@@ -1,6 +1,7 @@
 import DropboxSignSdk from '../../../common/sdk/dropboxSignSdk'
 
 import { sendRequestReminder } from '..'
+import { generateTestPayload } from '../../../../../src/tests'
 
 jest.mock('../../../common/sdk/dropboxSignSdk')
 
@@ -39,15 +40,7 @@ describe('Send request reminder action', () => {
 
   test('Should call the onComplete callback', async () => {
     await sendRequestReminder.onActivityCreated(
-      {
-        pathway: {
-          id: 'pathway-id',
-          definition_id: 'pathway-definition-id',
-        },
-        activity: {
-          id: 'activity-id',
-        },
-        patient: { id: 'test-patient' },
+      generateTestPayload({
         fields: {
           signatureRequestId: '123',
           signerEmailAddress: 'hello@patient.com',
@@ -57,7 +50,7 @@ describe('Send request reminder action', () => {
           clientId: 'client-id',
           testMode: 'yes',
         },
-      },
+      }),
       onComplete,
       jest.fn()
     )
