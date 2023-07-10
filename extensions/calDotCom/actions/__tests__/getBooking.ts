@@ -1,6 +1,7 @@
 import { getBooking } from '../getBooking'
 import { faker } from '@faker-js/faker'
 import CalComApi from '../../calComApi'
+import { generateTestPayload } from '../../../../src/tests'
 
 describe('Cal.com GetBooking action', () => {
   const onComplete = jest.fn()
@@ -23,13 +24,13 @@ describe('Cal.com GetBooking action', () => {
   describe('with empty apiKey', () => {
     it('should call onError', async () => {
       await getBooking.onActivityCreated(
-        {
+        generateTestPayload({
           ...dummyPayloadPart,
           fields: {
             bookingId: faker.string.uuid(),
           },
           settings: { apiKey: '' },
-        },
+        }),
         onComplete,
         onError
       )
@@ -53,13 +54,13 @@ describe('Cal.com GetBooking action', () => {
   describe('with empty bookingId', () => {
     it('should call onError', async () => {
       await getBooking.onActivityCreated(
-        {
+        generateTestPayload({
           ...dummyPayloadPart,
           fields: {
             bookingId: '',
           },
           settings: { apiKey: faker.string.uuid() },
-        },
+        }),
         onComplete,
         onError
       )
@@ -117,13 +118,13 @@ describe('Cal.com GetBooking action', () => {
 
     it('should call onComplete with data points', async () => {
       await getBooking.onActivityCreated(
-        {
+        generateTestPayload({
           ...dummyPayloadPart,
           fields: {
             bookingId: faker.string.uuid(),
           },
           settings: { apiKey: faker.string.uuid() },
-        },
+        }),
         onComplete,
         onError
       )
@@ -159,13 +160,13 @@ describe('Cal.com GetBooking action', () => {
 
     it('should call onComplete with data points', async () => {
       await getBooking.onActivityCreated(
-        {
+        generateTestPayload({
           ...dummyPayloadPart,
           fields: {
             bookingId: faker.string.uuid(),
           },
           settings: { apiKey: faker.string.uuid() },
-        },
+        }),
         onComplete,
         onError
       )

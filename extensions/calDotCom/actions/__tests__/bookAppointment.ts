@@ -1,4 +1,5 @@
 import { bookAppointment } from '..'
+import { generateTestPayload } from '../../../../src/tests'
 
 describe('Simple book appointment action', () => {
   const onComplete = jest.fn()
@@ -9,22 +10,14 @@ describe('Simple book appointment action', () => {
 
   test('Should not call the onComplete callback', async () => {
     await bookAppointment.onActivityCreated(
-      {
-        pathway: {
-          id: 'pathway-id',
-          definition_id: 'pathway-definition-id',
-        },
-        activity: {
-          id: 'activity-id',
-        },
-        patient: { id: 'test-patient' },
+      generateTestPayload({
         fields: {
           calLink: 'awell/1h',
         },
         settings: {
           apiKey: 'abc123',
         },
-      },
+      }),
       onComplete,
       jest.fn()
     )
