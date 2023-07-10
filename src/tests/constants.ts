@@ -1,4 +1,5 @@
 import { type NewActivityPayload } from '@awell-health/extensions-core'
+import { merge } from 'lodash'
 
 export const testPayload: NewActivityPayload<any, any> = {
   pathway: {
@@ -11,30 +12,39 @@ export const testPayload: NewActivityPayload<any, any> = {
   },
   patient: {
     id: 'test-patient',
-    profile: {
-      first_name: 'Nick',
-      last_name: 'Hellemans',
-      birth_date: '1993-11-30',
-    },
   },
   fields: {},
   settings: {},
 }
 
+type DeepPartial<T> = T extends object
+  ? {
+      [P in keyof T]?: DeepPartial<T[P]>
+    }
+  : T
+
+type FieldsType = Record<string, string | number | boolean | undefined>
+type SettingsType = Record<string, string | undefined>
+type ReturnType<
+  Fields extends FieldsType,
+  Settings extends SettingsType
+> = Omit<NewActivityPayload, 'fields' | 'settings'> & {
+  fields: Fields
+  settings: Settings
+}
+
 export const generateTestPayload = <
-  Fields extends Record<string, string | number | boolean | undefined>,
-  Settings extends Record<string, string | undefined>
+  Fields extends FieldsType,
+  Settings extends SettingsType
 >({
   fields,
   settings,
-}: {
+  ...value
+}: DeepPartial<Omit<NewActivityPayload, 'fields' | 'settings'>> & {
   fields: Fields
   settings: Settings
-}): Omit<NewActivityPayload, 'fields' | 'settings'> & {
-  fields: Fields
-  settings: Settings
-} => ({
-  ...testPayload,
+}): ReturnType<Fields, Settings> => ({
+  ...merge(testPayload, value),
   fields,
   settings,
 })
