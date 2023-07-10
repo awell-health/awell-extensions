@@ -1,6 +1,6 @@
-import { getSdk } from "../../gql/sdk"
-import { mockGetSdk, mockGetSdkReturn } from "../../gql/__mocks__/sdk"
-import { sendChatMessage } from "../sendChatMessage"
+import { getSdk } from '../../gql/sdk'
+import { mockGetSdk, mockGetSdkReturn } from '../../gql/__mocks__/sdk'
+import { sendChatMessage } from '../sendChatMessage'
 
 jest.mock('../../gql/sdk')
 jest.mock('../../graphqlClient')
@@ -9,11 +9,11 @@ describe('sendChatMessage action', () => {
   const onComplete = jest.fn()
 
   beforeAll(() => {
-    (getSdk as jest.Mock).mockImplementation(mockGetSdk)
+    ;(getSdk as jest.Mock).mockImplementation(mockGetSdk)
   })
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    jest.clearAllMocks()
   })
 
   test("Should create a new message when it doesn't exist", async () => {
@@ -30,40 +30,45 @@ describe('sendChatMessage action', () => {
         fields: {
           healthie_patient_id: 'patient-1',
           message: 'hello',
-          provider_id: 'provider-1'
+          provider_id: 'provider-1',
         },
         settings: {
           apiKey: 'apiKey',
-          apiUrl: 'test-url'
+          apiUrl: 'test-url',
         },
       },
       onComplete,
       jest.fn()
     )
 
-    expect(mockGetSdkReturn.getConversationList).toHaveReturnedWith({ data: { conversationMemberships: [] } })
+    expect(mockGetSdkReturn.getConversationList).toHaveReturnedWith({
+      data: { conversationMemberships: [] },
+    })
     expect(mockGetSdkReturn.createConversation).toHaveBeenCalled()
     expect(mockGetSdkReturn.sendChatMessage).toHaveBeenCalled()
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
-        conversationId: 'conversation-1'
-      }
+        conversationId: 'conversation-1',
+      },
     })
   })
 
-  test("Should not create a new message when it exists", async () => {
-    (getSdk as jest.Mock).mockReturnValueOnce({
+  test('Should not create a new message when it exists', async () => {
+    ;(getSdk as jest.Mock).mockReturnValueOnce({
       ...mockGetSdkReturn,
-      getConversationList: mockGetSdkReturn.getConversationList.mockReturnValueOnce({
-        data: {
-          conversationMemberships: [{
-            convo: {
-              id: 'conversation-2',
-              owner: { id: 'provider-1' }
-            }
-          }] as any
-        }
-      })
+      getConversationList:
+        mockGetSdkReturn.getConversationList.mockReturnValueOnce({
+          data: {
+            conversationMemberships: [
+              {
+                convo: {
+                  id: 'conversation-2',
+                  owner: { id: 'provider-1' },
+                },
+              },
+            ] as any,
+          },
+        }),
     })
     await sendChatMessage.onActivityCreated(
       {
@@ -78,11 +83,11 @@ describe('sendChatMessage action', () => {
         fields: {
           healthie_patient_id: 'patient-1',
           message: 'hello',
-          provider_id: 'provider-1'
+          provider_id: 'provider-1',
         },
         settings: {
           apiKey: 'apiKey',
-          apiUrl: 'test-url'
+          apiUrl: 'test-url',
         },
       },
       onComplete,
@@ -93,8 +98,71 @@ describe('sendChatMessage action', () => {
     expect(mockGetSdkReturn.sendChatMessage).toHaveBeenCalled()
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
-        conversationId: 'conversation-2'
-      }
+        conversationId: 'conversation-2',
+      },
+    })
+  })
+
+  test.each([
+    {
+      input: {
+        message:
+          '<p class="slate-p">https://securestaging.gethealthie.com/appointments/embed_appt?dietitian_id=123&amp;provider_ids=[<span>123</span>]&amp;appt_type_ids=[19420]&amp;org_level=true</p>',
+      },
+      output: {
+        message:
+          '<html><head></head><body><p class="slate-p">https://securestaging.gethealthie.com/appointments/embed_appt?dietitian_id=123&amp;provider_ids=[123]&amp;appt_type_ids=[19420]&amp;org_level=true</p></body></html>',
+      },
+    },
+  ])('$#. Should correctly parse message', async ({ input, output }) => {
+    ;(getSdk as jest.Mock).mockReturnValueOnce({
+      ...mockGetSdkReturn,
+      getConversationList:
+        mockGetSdkReturn.getConversationList.mockReturnValueOnce({
+          data: {
+            conversationMemberships: [
+              {
+                convo: {
+                  id: 'conversation-2',
+                  owner: { id: 'provider-1' },
+                },
+              },
+            ] as any,
+          },
+        }),
+    })
+    await sendChatMessage.onActivityCreated(
+      {
+        pathway: {
+          id: 'pathway-id',
+          definition_id: 'pathway-definition-id',
+        },
+        activity: {
+          id: 'activity-id',
+        },
+        patient: { id: 'test-patient' },
+        fields: {
+          healthie_patient_id: 'patient-1',
+          message: input.message,
+          provider_id: 'provider-1',
+        },
+        settings: {
+          apiKey: 'apiKey',
+          apiUrl: 'test-url',
+        },
+      },
+      onComplete,
+      jest.fn()
+    )
+
+    expect(mockGetSdkReturn.createConversation).not.toHaveBeenCalled()
+    expect(mockGetSdkReturn.sendChatMessage).toHaveBeenCalledWith({
+      input: expect.objectContaining({ content: output.message }),
+    })
+    expect(onComplete).toHaveBeenCalledWith({
+      data_points: {
+        conversationId: 'conversation-2',
+      },
     })
   })
 })

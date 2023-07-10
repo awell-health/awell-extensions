@@ -1,4 +1,5 @@
 import { isNil } from 'lodash'
+import { load as cheerioLoad } from 'cheerio'
 import {
   type DataPointDefinition,
   FieldType,
@@ -90,13 +91,22 @@ export const sendChatMessage: Action<
           return data.createConversation?.conversation
         }
 
+        // Parse the HTML content using cheerio
+        const $ = cheerioLoad(message ?? '')
+        // Remove all <span> tags
+        $('span').replaceWith(function () {
+          return $(this).contents()
+        })
+        // Get the modified HTML content
+        const parsedMessage = $.html()
+
         const sendMessage = async (
           conversationId: string
         ): Promise<SendChatMessage> => {
           return await sdk.sendChatMessage({
             input: {
               conversation_id: conversationId,
-              content: message,
+              content: parsedMessage,
               /**
                * Send the message in name of the specified provider.
                * If empty or blank, it defaults to the authenticated user.
