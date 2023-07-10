@@ -26,6 +26,7 @@ export interface MarketingApi {
       listIds?: string[]
       contacts: Contact[]
     }) => RequestReturnType<{ job_id: string }>
+    importStatus: (jobId: string) => RequestReturnType<{ status: string }>
   }
 }
 

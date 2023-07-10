@@ -45,8 +45,16 @@ export class SendgridClient {
             contacts: args.contacts,
             list_ids: args.listIds,
           }),
-        }) as ReturnType<MarketingApi['contacts']['addOrUpdate']>)
+        },
+        validateStatus(200)
+        ) as ReturnType<MarketingApi['contacts']['addOrUpdate']>)
       },
+      importStatus: async (jobId) => {
+        return await (this._sendgridClient.request({
+          url: `/v3/marketing/contacts/imports/${jobId}`,
+          method: 'GET',
+        }) as ReturnType<MarketingApi['contacts']['importStatus']>)
+      }
     } as const,
   } as const
 
