@@ -1,3 +1,4 @@
+import { generateTestPayload } from '../../../../../src/tests'
 import { completeFlow } from './completeFlow'
 
 describe('Complete flow action', () => {
@@ -9,15 +10,7 @@ describe('Complete flow action', () => {
 
   test('Should not call the onComplete callback', async () => {
     await completeFlow.onActivityCreated(
-      {
-        pathway: {
-          id: 'pathway-id',
-          definition_id: 'pathway-definition-id',
-        },
-        activity: {
-          id: 'activity-id',
-        },
-        patient: { id: 'test-patient' },
+      generateTestPayload({
         fields: {
           clientLabel: 'client-label',
           flowLabel: 'flow-label',
@@ -27,7 +20,7 @@ describe('Complete flow action', () => {
           apiKey: 'abc123',
           environment: 'production',
         },
-      },
+      }),
       onComplete,
       jest.fn()
     )
