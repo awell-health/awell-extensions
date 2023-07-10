@@ -1,3 +1,4 @@
+import { generateTestPayload } from '../../../../src/tests'
 import { uploadFiles } from './uploadFiles'
 
 describe('Upload files action', () => {
@@ -11,15 +12,7 @@ describe('Upload files action', () => {
 
   test('Should not call the onComplete callback', async () => {
     await uploadFiles.onActivityCreated(
-      {
-        pathway: {
-          id: 'pathway-id',
-          definition_id: 'pathway-definition-id',
-        },
-        activity: {
-          id: 'activity-id',
-        },
-        patient: { id: 'test-patient' },
+      generateTestPayload({
         fields: {
           uploadPreset: undefined, // If not defined, it will use preset from the extension settings
           folder: undefined, // If not defined, it will use folder from the extension settings
@@ -30,7 +23,7 @@ describe('Upload files action', () => {
           uploadPreset: 'upload-preset',
           folder: 'variant-label',
         },
-      },
+      }),
       onComplete,
       jest.fn()
     )
