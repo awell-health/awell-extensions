@@ -4,6 +4,8 @@ import {
   sendEmail,
   sendEmailWithTemplate,
   addOrUpdateContact,
+  removeSuppressions,
+  addSuppressions,
 } from './v1/actions'
 import { settings } from './settings'
 
@@ -21,6 +23,8 @@ export const Sendgrid: Extension = {
     sendEmail,
     sendEmailWithTemplate,
     addOrUpdateContact,
+    removeSuppressions,
+    addSuppressions,
   },
   settings,
 }
