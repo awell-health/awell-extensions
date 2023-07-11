@@ -3,21 +3,14 @@ import {
   SendgridClientMockImplementation,
 } from '../../../__mocks__/client'
 import { addOrUpdateContact } from '..'
+import { generateTestPayload } from '../../../../../src/tests'
 
 jest.mock('../../../client', () => ({ SendgridClient }))
 
 describe('Add or update contact', () => {
   const onComplete = jest.fn()
   const onError = jest.fn()
-  const basePayload = {
-    pathway: {
-      id: 'pathway-id',
-      definition_id: 'pathway-definition-id',
-    },
-    activity: {
-      id: 'activity-id',
-    },
-    patient: { id: 'test-patient' },
+  const basePayload = generateTestPayload({
     fields: {
       listIds: 'a1,b2',
       email: 'test@test.com',
@@ -30,7 +23,7 @@ describe('Add or update contact', () => {
       fromName: 'fromName',
       fromEmail: 'from@test.com',
     },
-  }
+  })
 
   beforeEach(() => {
     jest.clearAllMocks()

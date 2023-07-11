@@ -1,4 +1,5 @@
 import { sendSms } from '..'
+import { generateTestPayload } from '../../../../../src/tests'
 
 jest.mock('../../../common/sdk/messagebirdSdk')
 
@@ -13,15 +14,7 @@ describe('Send SMS', () => {
 
   test('Should call the onComplete callback', async () => {
     await sendSms.onActivityCreated(
-      {
-        pathway: {
-          id: 'pathway-id',
-          definition_id: 'pathway-definition-id',
-        },
-        activity: {
-          id: 'activity-id',
-        },
-        patient: { id: 'test-patient' },
+      generateTestPayload({
         fields: {
           originator: 'TestMessage', // "TestMessage" can be used for test messages
           recipient: '+32476581696',
@@ -31,7 +24,7 @@ describe('Send SMS', () => {
           apiKey: 'an-api-key',
           reportUrl: undefined,
         },
-      },
+      }),
       onComplete,
       onError
     )

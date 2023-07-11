@@ -1,4 +1,5 @@
 import { sendWhatsAppMessage } from '..'
+import { generateTestPayload } from '../../../../../src/tests'
 
 jest.mock('../../../common/sdk/messagebirdSdk')
 
@@ -13,15 +14,7 @@ describe('Send WhatsApp message', () => {
 
   test('Should call the onComplete callback', async () => {
     await sendWhatsAppMessage.onActivityCreated(
-      {
-        pathway: {
-          id: 'pathway-id',
-          definition_id: 'pathway-definition-id',
-        },
-        activity: {
-          id: 'activity-id',
-        },
-        patient: { id: 'test-patient' },
+      generateTestPayload({
         fields: {
           from: 'WHATSAPP-CHANNEL-ID',
           to: '+32xxxxxxx',
@@ -31,7 +24,7 @@ describe('Send WhatsApp message', () => {
           apiKey: 'apiKey',
           reportUrl: 'https://developers.messagebird.com/',
         },
-      },
+      }),
       onComplete,
       onError
     )

@@ -1,4 +1,5 @@
 import { smsNotification } from '../'
+import { generateTestPayload } from '../../../../../src/tests'
 
 describe('Simple sms notification action', () => {
   const onComplete = jest.fn()
@@ -11,15 +12,7 @@ describe('Simple sms notification action', () => {
 
   test('Should call the onComplete callback', async () => {
     await smsNotification.onActivityCreated(
-      {
-        pathway: {
-          id: 'pathway-id',
-          definition_id: 'pathway-definition-id',
-        },
-        activity: {
-          id: 'activity-id',
-        },
-        patient: { id: 'test-patient' },
+      generateTestPayload({
         fields: {
           message: 'Message content',
           recipient: '+32494000000',
@@ -30,7 +23,7 @@ describe('Simple sms notification action', () => {
           fromNumber: '+19144542596',
           messagingServiceSid: undefined,
         },
-      },
+      }),
       onComplete,
       onError
     )
@@ -40,15 +33,7 @@ describe('Simple sms notification action', () => {
 
   test('Should call the onError callback', async () => {
     await smsNotification.onActivityCreated(
-      {
-        pathway: {
-          id: 'pathway-id',
-          definition_id: 'pathway-definition-id',
-        },
-        activity: {
-          id: 'activity-id',
-        },
-        patient: { id: 'test-patient' },
+      generateTestPayload({
         fields: {
           message: 'Message content',
           recipient: '',
@@ -59,7 +44,7 @@ describe('Simple sms notification action', () => {
           fromNumber: '+19144542596',
           messagingServiceSid: undefined,
         },
-      },
+      }),
       onComplete,
       onError
     )
