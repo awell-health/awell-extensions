@@ -1,4 +1,5 @@
 import { sendEmail } from '..'
+import { generateTestPayload } from '../../../../../src/tests'
 
 jest.mock('../../../common/sdk/mailgunSdk')
 
@@ -13,15 +14,7 @@ describe('Send email', () => {
 
   test('Should call the onComplete callback', async () => {
     await sendEmail.onActivityCreated(
-      {
-        pathway: {
-          id: 'pathway-id',
-          definition_id: 'pathway-definition-id',
-        },
-        activity: {
-          id: 'activity-id',
-        },
-        patient: { id: 'test-patient' },
+      generateTestPayload({
         fields: {
           to: 'email@hello.com',
           subject: 'A subject',
@@ -35,7 +28,7 @@ describe('Send email', () => {
           region: 'EU',
           testMode: 'yes',
         },
-      },
+      }),
       onComplete,
       onError
     )
@@ -46,15 +39,7 @@ describe('Send email', () => {
 
   test('Should call the onError callback when there is a validation error', async () => {
     await sendEmail.onActivityCreated(
-      {
-        pathway: {
-          id: 'pathway-id',
-          definition_id: 'pathway-definition-id',
-        },
-        activity: {
-          id: 'activity-id',
-        },
-        patient: { id: 'test-patient' },
+      generateTestPayload({
         fields: {
           to: 'email@hello.com',
           subject: 'A subject',
@@ -68,7 +53,7 @@ describe('Send email', () => {
           region: 'not-a-valid-region', // Should be "EU" or "US"
           testMode: 'yes',
         },
-      },
+      }),
       onComplete,
       onError
     )

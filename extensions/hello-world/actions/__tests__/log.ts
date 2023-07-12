@@ -1,23 +1,18 @@
 import { log } from '../'
+import { generateTestPayload } from '../../../../src/tests'
 
 describe('HelloWorld - log', () => {
   test('Should call onComplete', async () => {
     const onComplete = jest.fn()
     await log.onActivityCreated(
-      {
-        pathway: {
-          id: 'pathway-id',
-          definition_id: 'pathway-definition-id',
-        },
-        activity: { id: 'test-activity' },
-        patient: { id: 'test-patient' },
+      generateTestPayload({
         fields: {
           hello: 'Some text',
         },
         settings: {
           secret: 'secret-value',
         },
-      },
+      }),
       onComplete,
       jest.fn()
     )
@@ -26,20 +21,14 @@ describe('HelloWorld - log', () => {
   test('Should call onComplete if fields are undefined', async () => {
     const onComplete = jest.fn()
     await log.onActivityCreated(
-      {
-        pathway: {
-          id: 'pathway-id',
-          definition_id: 'pathway-definition-id',
-        },
-        activity: { id: 'test-activity' },
-        patient: { id: 'test-patient' },
+      generateTestPayload({
         fields: {
           hello: undefined,
         },
         settings: {
           secret: 'secret-value',
         },
-      },
+      }),
       onComplete,
       jest.fn()
     )
@@ -48,20 +37,14 @@ describe('HelloWorld - log', () => {
   test('Should call onComplete if settings are undefined', async () => {
     const onComplete = jest.fn()
     await log.onActivityCreated(
-      {
-        pathway: {
-          id: 'pathway-id',
-          definition_id: 'pathway-definition-id',
-        },
-        activity: { id: 'test-activity' },
-        patient: { id: 'test-patient' },
+      generateTestPayload({
         fields: {
           hello: 'Some text',
         },
         settings: {
           secret: undefined,
         },
-      },
+      }),
       onComplete,
       jest.fn()
     )

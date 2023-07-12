@@ -1,5 +1,6 @@
 import { sendSms } from './sendSms'
 import twilioSdk from '../../../common/sdk/twilio'
+import { generateTestPayload } from '../../../../../src/tests'
 
 describe('Send SMS (with from number) action', () => {
   const onComplete = jest.fn()
@@ -14,15 +15,7 @@ describe('Send SMS (with from number) action', () => {
 
   test('Should call the onComplete callback', async () => {
     await sendSms.onActivityCreated(
-      {
-        pathway: {
-          id: 'pathway-id',
-          definition_id: 'pathway-definition-id',
-        },
-        activity: {
-          id: 'activity-id',
-        },
-        patient: { id: 'test-patient' },
+      generateTestPayload({
         fields: {
           message: 'Message content',
           recipient: '+32494000000',
@@ -34,7 +27,7 @@ describe('Send SMS (with from number) action', () => {
           fromNumber: '+19144542596',
           messagingServiceSid: undefined,
         },
-      },
+      }),
       onComplete,
       onError
     )
@@ -44,15 +37,7 @@ describe('Send SMS (with from number) action', () => {
 
   test('Should call the onError callback when there is no recipient', async () => {
     await sendSms.onActivityCreated(
-      {
-        pathway: {
-          id: 'pathway-id',
-          definition_id: 'pathway-definition-id',
-        },
-        activity: {
-          id: 'activity-id',
-        },
-        patient: { id: 'test-patient' },
+      generateTestPayload({
         fields: {
           message: 'Message content',
           recipient: '',
@@ -64,7 +49,7 @@ describe('Send SMS (with from number) action', () => {
           fromNumber: '+19144542596',
           messagingServiceSid: undefined,
         },
-      },
+      }),
       onComplete,
       onError
     )
@@ -74,15 +59,7 @@ describe('Send SMS (with from number) action', () => {
 
   test('Should call the onError callback when there is no message', async () => {
     await sendSms.onActivityCreated(
-      {
-        pathway: {
-          id: 'pathway-id',
-          definition_id: 'pathway-definition-id',
-        },
-        activity: {
-          id: 'activity-id',
-        },
-        patient: { id: 'test-patient' },
+      generateTestPayload({
         fields: {
           message: '',
           recipient: '+19144542596',
@@ -94,7 +71,7 @@ describe('Send SMS (with from number) action', () => {
           fromNumber: '+19144542596',
           messagingServiceSid: undefined,
         },
-      },
+      }),
       onComplete,
       onError
     )
@@ -103,15 +80,7 @@ describe('Send SMS (with from number) action', () => {
   })
 
   describe("'From' number", () => {
-    const basePayload = {
-      pathway: {
-        id: 'pathway-id',
-        definition_id: 'pathway-definition-id',
-      },
-      activity: {
-        id: 'activity-id',
-      },
-      patient: { id: 'test-patient' },
+    const basePayload = generateTestPayload({
       fields: {
         message: 'Message content',
         recipient: '+32494000000',
@@ -123,7 +92,7 @@ describe('Send SMS (with from number) action', () => {
         fromNumber: '+19144542596',
         messagingServiceSid: undefined,
       },
-    }
+    })
 
     test('Should use one provided in action fields', async () => {
       await sendSms.onActivityCreated(basePayload, onComplete, onError)

@@ -1,3 +1,4 @@
+import { generateTestPayload } from '../../../../../src/tests'
 import { deletePatient } from './deletePatient'
 
 jest.mock('../../sdk/awellSdk')
@@ -13,21 +14,13 @@ describe('Update patient', () => {
 
   test('Should call the onComplete callback', async () => {
     await deletePatient.onActivityCreated(
-      {
-        pathway: {
-          id: 'pathway-id',
-          definition_id: 'pathway-definition-id',
-        },
-        activity: {
-          id: 'activity-id',
-        },
-        patient: { id: 'test-patient' },
+      generateTestPayload({
         fields: {},
         settings: {
           apiUrl: 'an-api-url',
           apiKey: 'an-api-key',
         },
-      },
+      }),
       onComplete,
       onError
     )
