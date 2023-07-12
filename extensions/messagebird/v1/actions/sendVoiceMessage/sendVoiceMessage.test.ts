@@ -1,4 +1,5 @@
 import { sendVoiceMessage } from '..'
+import { generateTestPayload } from '../../../../../src/tests'
 
 jest.mock('../../../common/sdk/messagebirdSdk')
 
@@ -13,15 +14,7 @@ describe('Send voice message', () => {
 
   test('Should call the onComplete callback', async () => {
     await sendVoiceMessage.onActivityCreated(
-      {
-        pathway: {
-          id: 'pathway-id',
-          definition_id: 'pathway-definition-id',
-        },
-        activity: {
-          id: 'activity-id',
-        },
-        patient: { id: 'test-patient' },
+      generateTestPayload({
         fields: {
           originator: 'MessageBird', // "MessageBird" can be used for test messages
           recipient: '+32476581696',
@@ -33,7 +26,7 @@ describe('Send voice message', () => {
           apiKey: 'an-api-key',
           reportUrl: undefined,
         },
-      },
+      }),
       onComplete,
       onError
     )

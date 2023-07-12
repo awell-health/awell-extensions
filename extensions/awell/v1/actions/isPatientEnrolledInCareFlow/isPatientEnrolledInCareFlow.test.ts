@@ -1,3 +1,4 @@
+import { generateTestPayload } from '../../../../../src/tests'
 import { PathwayStatus } from '../../gql/graphql'
 import AwellSdk from '../../sdk/awellSdk'
 import { isPatientEnrolledInCareFlow } from './isPatientEnrolledInCareFlow'
@@ -39,16 +40,10 @@ describe('Is patient already enrolled in care flow action', () => {
     )
 
     await isPatientEnrolledInCareFlow.onActivityCreated(
-      {
+      generateTestPayload({
         pathway: {
           id: 'pathway-instance-id-1',
           definition_id: 'pathway-definition-1',
-        },
-        activity: {
-          id: 'activity-id',
-        },
-        patient: {
-          id: 'a-patient-id',
         },
         fields: {
           pathwayStatus: '', // By default, only active care flows
@@ -58,7 +53,7 @@ describe('Is patient already enrolled in care flow action', () => {
           apiUrl: 'an-api-url',
           apiKey: 'an-api-key',
         },
-      },
+      }),
       onComplete,
       onError
     )
@@ -88,16 +83,10 @@ describe('Is patient already enrolled in care flow action', () => {
     )
 
     await isPatientEnrolledInCareFlow.onActivityCreated(
-      {
+      generateTestPayload({
         pathway: {
           id: 'pathway-instance-id-1',
           definition_id: 'pathway-definition-1',
-        },
-        activity: {
-          id: 'activity-id',
-        },
-        patient: {
-          id: 'a-patient-id',
         },
         fields: {
           pathwayStatus: undefined, // By default, only active care flows
@@ -107,7 +96,7 @@ describe('Is patient already enrolled in care flow action', () => {
           apiUrl: 'an-api-url',
           apiKey: 'an-api-key',
         },
-      },
+      }),
       onComplete,
       onError
     )
@@ -143,16 +132,10 @@ describe('Is patient already enrolled in care flow action', () => {
     )
 
     await isPatientEnrolledInCareFlow.onActivityCreated(
-      {
+      generateTestPayload({
         pathway: {
           id: 'pathway-instance-id-1',
           definition_id: 'pathway-definition-1',
-        },
-        activity: {
-          id: 'activity-id',
-        },
-        patient: {
-          id: 'a-patient-id',
         },
         fields: {
           pathwayStatus: `${PathwayStatus.Completed}`,
@@ -162,7 +145,7 @@ describe('Is patient already enrolled in care flow action', () => {
           apiUrl: 'an-api-url',
           apiKey: 'an-api-key',
         },
-      },
+      }),
       onComplete,
       onError
     )
@@ -198,16 +181,10 @@ describe('Is patient already enrolled in care flow action', () => {
     )
 
     await isPatientEnrolledInCareFlow.onActivityCreated(
-      {
+      generateTestPayload({
         pathway: {
           id: 'pathway-instance-id-1',
           definition_id: 'pathway-definition-1',
-        },
-        activity: {
-          id: 'activity-id',
-        },
-        patient: {
-          id: 'a-patient-id',
         },
         fields: {
           pathwayStatus: '',
@@ -217,7 +194,7 @@ describe('Is patient already enrolled in care flow action', () => {
           apiUrl: 'an-api-url',
           apiKey: 'an-api-key',
         },
-      },
+      }),
       onComplete,
       onError
     )
@@ -260,16 +237,10 @@ describe('Is patient already enrolled in care flow action', () => {
     )
 
     await isPatientEnrolledInCareFlow.onActivityCreated(
-      {
+      generateTestPayload({
         pathway: {
           id: 'pathway-instance-id-1',
           definition_id: 'pathway-definition-1',
-        },
-        activity: {
-          id: 'activity-id',
-        },
-        patient: {
-          id: 'a-patient-id',
         },
         fields: {
           pathwayStatus: `${PathwayStatus.Active}, ${PathwayStatus.Completed}`,
@@ -279,7 +250,7 @@ describe('Is patient already enrolled in care flow action', () => {
           apiUrl: 'an-api-url',
           apiKey: 'an-api-key',
         },
-      },
+      }),
       onComplete,
       onError
     )

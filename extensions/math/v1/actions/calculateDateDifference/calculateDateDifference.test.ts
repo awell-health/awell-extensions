@@ -1,3 +1,4 @@
+import { generateTestPayload } from '../../../../../src/tests'
 import { calculateDateDifference } from './calculateDateDifference'
 
 describe('Calculate date difference', () => {
@@ -11,22 +12,14 @@ describe('Calculate date difference', () => {
 
   test('Date difference in seconds', async () => {
     await calculateDateDifference.onActivityCreated(
-      {
-        pathway: {
-          id: 'pathway-id',
-          definition_id: 'pathway-definition-id',
-        },
-        activity: {
-          id: 'activity-id',
-        },
-        patient: { id: 'test-patient' },
+      generateTestPayload({
         fields: {
           dateLeft: '2023-04-08T10:00:00',
           dateRight: '2023-04-08T09:59:55',
           unit: 'seconds',
         },
         settings: {},
-      },
+      }),
       onComplete,
       onError
     )
@@ -41,22 +34,14 @@ describe('Calculate date difference', () => {
 
   test('Date difference in minutes', async () => {
     await calculateDateDifference.onActivityCreated(
-      {
-        pathway: {
-          id: 'pathway-id',
-          definition_id: 'pathway-definition-id',
-        },
-        activity: {
-          id: 'activity-id',
-        },
-        patient: { id: 'test-patient' },
+      generateTestPayload({
         fields: {
           dateLeft: '2023-04-08T10:00:00',
           dateRight: '2023-04-08T09:50:00',
           unit: 'minutes',
         },
         settings: {},
-      },
+      }),
       onComplete,
       onError
     )
@@ -71,22 +56,14 @@ describe('Calculate date difference', () => {
 
   test('Date difference in hours', async () => {
     await calculateDateDifference.onActivityCreated(
-      {
-        pathway: {
-          id: 'pathway-id',
-          definition_id: 'pathway-definition-id',
-        },
-        activity: {
-          id: 'activity-id',
-        },
-        patient: { id: 'test-patient' },
+      generateTestPayload({
         fields: {
           dateLeft: '2023-04-08T10:00:00',
           dateRight: '2023-04-08T09:00:00',
           unit: 'hours',
         },
         settings: {},
-      },
+      }),
       onComplete,
       onError
     )
@@ -101,22 +78,14 @@ describe('Calculate date difference', () => {
 
   test('Date difference in days', async () => {
     await calculateDateDifference.onActivityCreated(
-      {
-        pathway: {
-          id: 'pathway-id',
-          definition_id: 'pathway-definition-id',
-        },
-        activity: {
-          id: 'activity-id',
-        },
-        patient: { id: 'test-patient' },
+      generateTestPayload({
         fields: {
           dateLeft: '2023-04-18T10:00:00',
           dateRight: '2023-04-08T10:00:00',
           unit: 'days',
         },
         settings: {},
-      },
+      }),
       onComplete,
       onError
     )
@@ -131,22 +100,14 @@ describe('Calculate date difference', () => {
 
   test('Date difference in weeks', async () => {
     await calculateDateDifference.onActivityCreated(
-      {
-        pathway: {
-          id: 'pathway-id',
-          definition_id: 'pathway-definition-id',
-        },
-        activity: {
-          id: 'activity-id',
-        },
-        patient: { id: 'test-patient' },
+      generateTestPayload({
         fields: {
           dateLeft: '2014-07-20T00:00:00',
           dateRight: '2014-07-05T00:00:00',
           unit: 'weeks',
         },
         settings: {},
-      },
+      }),
       onComplete,
       onError
     )
@@ -161,22 +122,14 @@ describe('Calculate date difference', () => {
 
   test('Date difference in months', async () => {
     await calculateDateDifference.onActivityCreated(
-      {
-        pathway: {
-          id: 'pathway-id',
-          definition_id: 'pathway-definition-id',
-        },
-        activity: {
-          id: 'activity-id',
-        },
-        patient: { id: 'test-patient' },
+      generateTestPayload({
         fields: {
           dateLeft: '2023-09-01T00:00:00',
           dateRight: '2023-01-31T00:00:00',
           unit: 'months',
         },
         settings: {},
-      },
+      }),
       onComplete,
       onError
     )
@@ -191,22 +144,14 @@ describe('Calculate date difference', () => {
 
   test('Date difference in years', async () => {
     await calculateDateDifference.onActivityCreated(
-      {
-        pathway: {
-          id: 'pathway-id',
-          definition_id: 'pathway-definition-id',
-        },
-        activity: {
-          id: 'activity-id',
-        },
-        patient: { id: 'test-patient' },
+      generateTestPayload({
         fields: {
           dateLeft: '2025-02-11T00:00:00',
           dateRight: '2023-12-31T00:00:00',
           unit: 'years',
         },
         settings: {},
-      },
+      }),
       onComplete,
       onError
     )
@@ -221,22 +166,14 @@ describe('Calculate date difference', () => {
 
   test('Date difference in non-supported unit should throw an error', async () => {
     await calculateDateDifference.onActivityCreated(
-      {
-        pathway: {
-          id: 'pathway-id',
-          definition_id: 'pathway-definition-id',
-        },
-        activity: {
-          id: 'activity-id',
-        },
-        patient: { id: 'test-patient' },
+      generateTestPayload({
         fields: {
           dateLeft: '2025-02-11T00:00:00',
           dateRight: '2023-12-31T00:00:00',
           unit: 'apples',
         },
         settings: {},
-      },
+      }),
       onComplete,
       onError
     )

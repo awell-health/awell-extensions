@@ -1,3 +1,4 @@
+import { generateTestPayload } from '../../../../src/tests'
 import { getSdk } from '../../gql/sdk'
 import { mockGetSdk, mockGetSdkReturn } from '../../gql/__mocks__/sdk'
 import { createPatient } from '../createPatient'
@@ -19,15 +20,7 @@ describe('createPatient action', () => {
 
   test('Should create a new patient', async () => {
     await createPatient.onActivityCreated(
-      {
-        pathway: {
-          id: 'pathway-id',
-          definition_id: 'pathway-definition-id',
-        },
-        activity: {
-          id: 'activity-id',
-        },
-        patient: { id: 'test-patient' },
+      generateTestPayload({
         fields: {
           first_name: 'test',
           last_name: 'test',
@@ -42,7 +35,7 @@ describe('createPatient action', () => {
           apiKey: 'apiKey',
           apiUrl: 'test-url',
         },
-      },
+      }),
       onComplete,
       jest.fn()
     )

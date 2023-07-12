@@ -1,3 +1,4 @@
+import { generateTestPayload } from '../../../../src/tests'
 import { getSdk } from '../../gql/sdk'
 import { mockGetSdk, mockGetSdkReturn } from '../../gql/__mocks__/sdk'
 import { getAppointment } from '../getAppointment'
@@ -7,15 +8,7 @@ jest.mock('../../graphqlClient')
 
 describe('getAppointment action', () => {
   const onComplete = jest.fn()
-  const newActivityPayload = {
-    pathway: {
-      id: 'pathway-id',
-      definition_id: 'pathway-definition-id',
-    },
-    activity: {
-      id: 'activity-id',
-    },
-    patient: { id: 'test-patient' },
+  const newActivityPayload = generateTestPayload({
     fields: {
       appointmentId: 'appointment-1',
     },
@@ -23,7 +16,7 @@ describe('getAppointment action', () => {
       apiKey: 'apiKey',
       apiUrl: 'test-url',
     },
-  }
+  })
   const appointmentWithNoDate = {
     id: 'appointment-1',
     appointment_type: {

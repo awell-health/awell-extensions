@@ -1,3 +1,4 @@
+import { generateTestPayload } from '../../../../../src/tests'
 import DropboxSignSdk from '../../../common/sdk/dropboxSignSdk'
 
 import { createEmbeddedSignatureRequestWithTemplate } from './createEmbeddedSignatureRequestWithTemplate'
@@ -72,15 +73,7 @@ describe('Create embedded signature request with template', () => {
 
   test('Should call the onComplete callback', async () => {
     await createEmbeddedSignatureRequestWithTemplate.onActivityCreated(
-      {
-        pathway: {
-          id: 'pathway-id',
-          definition_id: 'pathway-definition-id',
-        },
-        activity: {
-          id: 'activity-id',
-        },
-        patient: { id: 'test-patient' },
+      generateTestPayload({
         fields: {
           signerRole: 'Client',
           signerName: 'John Doe',
@@ -95,7 +88,7 @@ describe('Create embedded signature request with template', () => {
           clientId: 'client-id',
           testMode: 'yes',
         },
-      },
+      }),
       onComplete,
       jest.fn()
     )

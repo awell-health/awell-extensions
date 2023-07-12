@@ -1,3 +1,4 @@
+import { generateTestPayload } from '../../../../src/tests'
 import { getSdk } from '../../gql/sdk'
 import { mockGetSdk, mockGetSdkReturn } from '../../gql/__mocks__/sdk'
 import { getPatient } from '../getPatient'
@@ -46,15 +47,7 @@ describe('getPatient action', () => {
         })
 
         await getPatient.onActivityCreated(
-          {
-            pathway: {
-              id: 'pathway-id',
-              definition_id: 'pathway-definition-id',
-            },
-            activity: {
-              id: 'activity-id',
-            },
-            patient: { id: 'test-patient' },
+          generateTestPayload({
             fields: {
               patientId: 'patient-1',
             },
@@ -62,7 +55,7 @@ describe('getPatient action', () => {
               apiKey: 'apiKey',
               apiUrl: 'test-url',
             },
-          },
+          }),
           onComplete,
           jest.fn()
         )
@@ -100,15 +93,7 @@ describe('getPatient action', () => {
         })
 
         await getPatient.onActivityCreated(
-          {
-            pathway: {
-              id: 'pathway-id',
-              definition_id: 'pathway-definition-id',
-            },
-            activity: {
-              id: 'activity-id',
-            },
-            patient: { id: 'test-patient' },
+          generateTestPayload({
             fields: {
               patientId: 'patient-1',
             },
@@ -116,7 +101,7 @@ describe('getPatient action', () => {
               apiKey: 'apiKey',
               apiUrl: 'test-url',
             },
-          },
+          }),
           onComplete,
           jest.fn()
         )
@@ -201,15 +186,7 @@ describe('getPatient action', () => {
         })
 
         await getPatient.onActivityCreated(
-          {
-            pathway: {
-              id: 'pathway-id',
-              definition_id: 'pathway-definition-id',
-            },
-            activity: {
-              id: 'activity-id',
-            },
-            patient: { id: 'test-patient' },
+          generateTestPayload({
             fields: {
               patientId: 'patient-1',
             },
@@ -217,7 +194,7 @@ describe('getPatient action', () => {
               apiKey: 'apiKey',
               apiUrl: 'test-url',
             },
-          },
+          }),
           onComplete,
           jest.fn()
         )
@@ -257,15 +234,7 @@ describe('getPatient action', () => {
         })
 
         await getPatient.onActivityCreated(
-          {
-            pathway: {
-              id: 'pathway-id',
-              definition_id: 'pathway-definition-id',
-            },
-            activity: {
-              id: 'activity-id',
-            },
-            patient: { id: 'test-patient' },
+          generateTestPayload({
             fields: {
               patientId: 'patient-1',
             },
@@ -273,7 +242,7 @@ describe('getPatient action', () => {
               apiKey: 'apiKey',
               apiUrl: 'test-url',
             },
-          },
+          }),
           onComplete,
           jest.fn()
         )

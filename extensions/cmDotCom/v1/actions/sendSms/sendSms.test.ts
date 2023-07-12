@@ -1,5 +1,6 @@
 import { CmClientMockImplementation } from '../../../client/__mocks__'
 import { sendSms } from '..'
+import { generateTestPayload } from '../../../../../src/tests'
 
 jest.mock('../../../client')
 
@@ -7,7 +8,7 @@ describe('Send SMS', () => {
   const onComplete = jest.fn()
   const onError = jest.fn()
 
-  const basePayload = {
+  const basePayload = generateTestPayload({
     pathway: {
       id: 'pathway-id',
       definition_id: 'pathway-definition-id',
@@ -25,7 +26,7 @@ describe('Send SMS', () => {
       productToken: 'productToken',
       fromName: 'fromName',
     },
-  }
+  })
 
   beforeEach(() => {
     jest.clearAllMocks()

@@ -3,6 +3,7 @@ import {
   SendgridClientMockImplementation,
 } from '../../../__mocks__/client'
 import { sendEmail } from '..'
+import { generateTestPayload } from '../../../../../src/tests'
 
 jest.mock('../../../client', () => ({ SendgridClient }))
 
@@ -10,15 +11,7 @@ describe('Send email', () => {
   const onComplete = jest.fn()
   const onError = jest.fn()
 
-  const basePayload = {
-    pathway: {
-      id: 'pathway-id',
-      definition_id: 'pathway-definition-id',
-    },
-    activity: {
-      id: 'activity-id',
-    },
-    patient: { id: 'test-patient' },
+  const basePayload = generateTestPayload({
     fields: {
       to: 'recipient@test.com',
       subject: 'Test subject',
@@ -31,7 +24,7 @@ describe('Send email', () => {
       fromName: 'fromName',
       fromEmail: 'from@test.com',
     },
-  }
+  })
 
   beforeEach(() => {
     jest.clearAllMocks()
