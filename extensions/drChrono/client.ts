@@ -96,6 +96,7 @@ export const makeAPIClient = (
 ): DrChronoAPIClient => {
   const { clientId, clientSecret } = settingsSchema.parse(payloadSettings)
 
+  // ! TODO: needs a proper OAuth client
   return new DrChronoAPIClient({
     authUrl: 'https://drchrono.com/o/',
     requestConfig: {
