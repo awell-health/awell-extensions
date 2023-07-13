@@ -3,7 +3,7 @@ const { makeAPIClient: makeAPIClientActual } = jest.requireActual('../client')
 
 export const mockClientReturn = {
   getPatient: jest.fn((params) => {
-    return { id: 1, ...patientExample, mobile_phone: 'undefined' }
+    return { id: 1, ...patientExample }
   }),
   createPatient: jest.fn((params) => {
     return { id: 1, ...patientExample }

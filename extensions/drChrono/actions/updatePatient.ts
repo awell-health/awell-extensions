@@ -12,7 +12,7 @@ import { type settings } from '../settings'
 import { makeAPIClient } from '../client'
 import { fromZodError } from 'zod-validation-error'
 import { AxiosError } from 'axios'
-import { patientSchema } from '../validation/patient.zod'
+import { patchPatientSchema } from '../validation/patient.zod'
 
 const fields = {
   patientId: {
@@ -51,6 +51,13 @@ const fields = {
     type: FieldType.STRING,
     required: false,
   },
+  email: {
+    id: 'email',
+    label: 'Email',
+    description: '',
+    type: FieldType.STRING,
+    required: false,
+  },
   dateOfBirth: {
     id: 'dateOfBirth',
     label: 'Date of Birth',
@@ -63,7 +70,7 @@ const fields = {
     label: 'Ethnicity',
     description:
       "The ethnicity of the patient. Possible values are 'blank', 'hispanic', 'not_hispanic', 'declined'.",
-    type: FieldType.NUMERIC,
+    type: FieldType.STRING,
     required: false,
   },
   race: {
@@ -118,7 +125,7 @@ export const updatePatient: Action<
         ...fields
       } = payload.fields
 
-      const patient = patientSchema.parse({
+      const patient = patchPatientSchema.parse({
         ...fields,
         first_name: firstName,
         last_name: lastName,

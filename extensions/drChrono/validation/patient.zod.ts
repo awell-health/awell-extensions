@@ -1,4 +1,8 @@
-import { DateOnlySchema, NumericIdSchema } from '@awell-health/extensions-core'
+import {
+  DateOnlySchema,
+  makeStringOptional,
+  NumericIdSchema,
+} from '@awell-health/extensions-core'
 import { z } from 'zod'
 
 // Enums
@@ -35,13 +39,18 @@ export const patientSchema = z
   .object({
     doctor: NumericIdSchema,
     gender: genderEnum,
-    chart_id: z.string().optional(),
-    date_of_birth: DateOnlySchema.optional(),
-    email: z.string().email(),
-    ethnicity: ethnicityEnum.optional(),
-    first_name: z.string(),
-    last_name: z.string(),
-    preferred_language: preferredLanguageEnum.optional(),
-    race: raceEnum.optional(),
+    chart_id: makeStringOptional(z.string()),
+    date_of_birth: makeStringOptional(DateOnlySchema),
+    email: makeStringOptional(z.string().email()),
+    ethnicity: makeStringOptional(ethnicityEnum),
+    first_name: makeStringOptional(z.string()),
+    last_name: makeStringOptional(z.string()),
+    preferred_language: makeStringOptional(preferredLanguageEnum),
+    race: makeStringOptional(raceEnum),
   })
   .strict()
+
+export const patchPatientSchema = patientSchema.extend({
+  doctor: makeStringOptional(NumericIdSchema),
+  gender: makeStringOptional(genderEnum),
+})

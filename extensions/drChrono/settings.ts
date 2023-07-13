@@ -1,13 +1,6 @@
 import { type Setting } from '@awell-health/extensions-core'
 
 export const settings = {
-  refreshToken: {
-    key: 'refreshToken',
-    label: 'Refresh token',
-    obfuscated: true,
-    description: 'The Refresh Token for OAuth2 Password authentication.',
-    required: true,
-  },
   clientId: {
     key: 'clientId',
     label: 'Client ID',

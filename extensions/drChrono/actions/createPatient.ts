@@ -43,6 +43,13 @@ const fields = {
     type: FieldType.STRING,
     required: false,
   },
+  email: {
+    id: 'email',
+    label: 'Email',
+    description: '',
+    type: FieldType.STRING,
+    required: false,
+  },
   dateOfBirth: {
     id: 'dateOfBirth',
     label: 'Date of Birth',
@@ -55,7 +62,7 @@ const fields = {
     label: 'Ethnicity',
     description:
       "The ethnicity of the patient. Possible values are 'blank', 'hispanic', 'not_hispanic', 'declined'.",
-    type: FieldType.NUMERIC,
+    type: FieldType.STRING,
     required: false,
   },
   race: {
