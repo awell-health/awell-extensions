@@ -35,14 +35,13 @@ export const patientSchema = z
   .object({
     doctor: NumericIdSchema,
     gender: genderEnum,
-    chart_id: NumericIdSchema.optional(),
-    date_of_Birth: DateOnlySchema.optional(),
+    chart_id: z.string().optional(),
+    date_of_birth: DateOnlySchema.optional(),
     email: z.string().email(),
     ethnicity: ethnicityEnum.optional(),
     first_name: z.string(),
     last_name: z.string(),
     preferred_language: preferredLanguageEnum.optional(),
     race: raceEnum.optional(),
-    since: DateOnlySchema.optional(),
   })
   .strict()
