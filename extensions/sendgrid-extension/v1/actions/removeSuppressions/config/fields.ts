@@ -2,7 +2,6 @@ import { z, type ZodTypeAny } from 'zod'
 import {
   type Field,
   FieldType,
-  StringType,
   NumericIdSchema,
   validateCommaSeparatedList
 } from '@awell-health/extensions-core'
@@ -14,7 +13,6 @@ export const fields = {
     description:
       'The email address you would like to remove from the suppression list',
     type: FieldType.STRING,
-    stringType: StringType.EMAIL,
     required: true,
   },
   groups: {
