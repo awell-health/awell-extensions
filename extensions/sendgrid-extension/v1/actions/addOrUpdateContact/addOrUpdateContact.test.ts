@@ -9,6 +9,11 @@ jest.mock('../../../client', () => ({ SendgridClient }))
 describe('Add or update contact', () => {
   const onComplete = jest.fn()
   const onError = jest.fn()
+  const successResponse = {
+    body: {
+      job_id: 'job_id',
+    },
+  }
   const basePayload = generateTestPayload({
     fields: {
       listIds: 'a1,b2',
@@ -29,8 +34,12 @@ describe('Add or update contact', () => {
   })
 
   test('Should call the onComplete callback when Sendgrid sends a response with a status code of 202', async () => {
-    SendgridClientMockImplementation.marketing.contacts.addOrUpdate.mockImplementationOnce(() => { return [successResponse, "job_id"]})
-    
+    SendgridClientMockImplementation.marketing.contacts.addOrUpdate.mockImplementationOnce(
+      () => {
+        return [successResponse, 'job_id']
+      }
+    )
+
     await addOrUpdateContact.onActivityCreated(basePayload, onComplete, onError)
 
     expect(
@@ -48,14 +57,18 @@ describe('Add or update contact', () => {
     })
     expect(onComplete).toHaveBeenNthCalledWith(1, {
       data_points: {
-        jobId: 'job_id'
-      }
+        jobId: 'job_id',
+      },
     })
     expect(onError).not.toHaveBeenCalled()
   })
 
   test('Should call the onError callback when the Sendgrid client throws an error', async () => {
-    SendgridClientMockImplementation.marketing.contacts.addOrUpdate.mockImplementationOnce(() => { throw new Error('An error occurred')})
+    SendgridClientMockImplementation.marketing.contacts.addOrUpdate.mockImplementationOnce(
+      () => {
+        throw new Error('An error occurred')
+      }
+    )
 
     await addOrUpdateContact.onActivityCreated(basePayload, onComplete, onError)
     expect(
@@ -76,12 +89,12 @@ describe('Add or update contact', () => {
     expect(onError).toHaveBeenNthCalledWith(1, {
       events: expect.arrayContaining([
         expect.objectContaining({
-            error: {
-                category: 'SERVER_ERROR',
-                message: 'An error occurred'
-            }
-        })
-      ])
+          error: {
+            category: 'SERVER_ERROR',
+            message: 'An error occurred',
+          },
+        }),
+      ]),
     })
   })
 })

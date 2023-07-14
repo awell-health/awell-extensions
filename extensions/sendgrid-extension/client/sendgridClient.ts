@@ -10,14 +10,20 @@ import { isNil } from 'lodash'
  * Something undocumented in the sendgrid client:
  * The response array [Response, any] in the callback is comprised of the response and the request body.
  */
-const validateStatus = (validStatus: number) => (err?: ResponseError, response?: [Response, any]) => {
-  if (!isNil(err)) {
-    throw err
+const validateStatus =
+  (validStatus: number) =>
+  (err?: ResponseError, response?: [Response, any]) => {
+    if (!isNil(err)) {
+      throw err
+    }
+    if (Number(response?.[0].statusCode) !== Number(validStatus)) {
+      throw Error(
+        `Error: status response was ${
+          response?.[0].statusCode ?? ''
+        }, was not ${validStatus}`
+      )
+    }
   }
-  if (Number(response?.[0].statusCode) !== Number(validStatus)) {
-    throw Error(`Error: status response was ${response?.[0].statusCode ?? ""}, was not ${validStatus}`)
-  }
-}
 
 export class SendgridClient {
   private readonly _sendgridClient: Client
@@ -38,15 +44,16 @@ export class SendgridClient {
   readonly marketing: MarketingApi = {
     contacts: {
       addOrUpdate: async (args) => {
-        return await (this._sendgridClient.request({
-          url: '/v3/marketing/contacts',
-          method: 'PUT',
-          body: JSON.stringify({
-            contacts: args.contacts,
-            list_ids: args.listIds,
-          }),
-        },
-        validateStatus(202)
+        return await (this._sendgridClient.request(
+          {
+            url: '/v3/marketing/contacts',
+            method: 'PUT',
+            body: JSON.stringify({
+              contacts: args.contacts,
+              list_ids: args.listIds,
+            }),
+          },
+          validateStatus(202)
         ) as ReturnType<MarketingApi['contacts']['addOrUpdate']>)
       },
     } as const,
@@ -60,10 +67,8 @@ export class SendgridClient {
             url: `/v3/asm/groups/${groupId}/suppressions`,
             method: 'POST',
             body: {
-              "recipient_emails": [
-                email
-              ]
-            }
+              recipient_emails: [email],
+            },
           },
           validateStatus(201)
         ) as ReturnType<GroupsApi['suppressions']['add']>)
