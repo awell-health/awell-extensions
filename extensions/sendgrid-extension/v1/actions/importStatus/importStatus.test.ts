@@ -19,22 +19,9 @@ describe('Import Status', () => {
   const onComplete = jest.fn()
   const onError = jest.fn()
   const basePayload = mockActionPayload<typeof importStatus['fields']>({
-    // pathway: {
-    //   id: 'pathway-id',
-    //   definition_id: 'pathway-definition-id',
-    // },
-    // activity: {
-    //   id: 'activity-id',
-    // },
-    // patient: { id: 'test-patinent' },
     fields: {
       jobId: 'jobId'
     },
-    // settings: {
-    //   apiKey: 'apiKey',
-    //   fromName: 'fromName',
-    //   fromEmail: 'fromemail'
-    // },
   })
 
   beforeEach(() => {
