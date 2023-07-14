@@ -24,7 +24,6 @@ export const createEmbeddedSignatureRequestWithTemplate: Action<
     try {
       const {
         patient: { id: patientId },
-        // @ts-expect-error Remove when `sessionId` will actually be added
         activity: { sessionId },
       } = payload
 
@@ -78,7 +77,7 @@ export const createEmbeddedSignatureRequestWithTemplate: Action<
         email: signerEmailAddress,
         userName: signerName,
         clientUserId: patientId,
-        returnUrl: `${baseAppUrl}?sessionId=${sessionId as string}`,
+        returnUrl: `${baseAppUrl}?sessionId=${sessionId}`,
       })
 
       const viewRequestResult = await envelopesApi.createRecipientView(

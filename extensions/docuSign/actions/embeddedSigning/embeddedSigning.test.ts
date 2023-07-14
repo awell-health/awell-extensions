@@ -1,3 +1,4 @@
+import { generateTestPayload } from '../../../../src/tests'
 import { embeddedSigning } from './embeddedSigning'
 
 describe('Complete flow action', () => {
@@ -9,15 +10,7 @@ describe('Complete flow action', () => {
 
   test('Should not call the onComplete callback', async () => {
     await embeddedSigning.onActivityCreated(
-      {
-        pathway: {
-          id: 'pathway-id',
-          definition_id: 'pathway-definition-id',
-        },
-        activity: {
-          id: 'activity-id',
-        },
-        patient: { id: 'test-patient' },
+      generateTestPayload({
         fields: {
           signUrl: 'https://demo.docusign.net',
         },
@@ -29,7 +22,7 @@ describe('Complete flow action', () => {
           baseApiUrl: 'https://demo.docusign.net',
           baseAppUrl: '',
         },
-      },
+      }),
       onComplete,
       jest.fn()
     )
