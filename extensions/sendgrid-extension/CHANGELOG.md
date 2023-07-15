@@ -4,6 +4,8 @@
 
 Added "Add Email to Suppression Lists" and "Remove Email from Suppression Lists" actions.
 
-## July 10th, 2023
+## July 15, 2023
 
 Updated "Add or Update Contact" acction to create a datapoint of the Job ID.
+
+Added "Check Import Status" action.
