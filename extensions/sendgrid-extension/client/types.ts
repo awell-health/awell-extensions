@@ -31,7 +31,10 @@ export interface MarketingApi {
 
 export interface GroupsApi {
   suppressions: {
-    add: (group: string, emails: string[]) => RequestReturnType<{ recipient_emails: string[] }>
+    add: (
+      group: string,
+      emails: string[]
+    ) => RequestReturnType<{ recipient_emails: string[] }>
     remove: (group: string, emails: string[]) => RequestReturnType<any> // null response
   }
 }

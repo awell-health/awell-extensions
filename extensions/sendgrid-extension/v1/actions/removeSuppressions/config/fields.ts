@@ -3,7 +3,7 @@ import {
   type Field,
   FieldType,
   NumericIdSchema,
-  validateCommaSeparatedList
+  validateCommaSeparatedList,
 } from '@awell-health/extensions-core'
 
 export const fields = {
@@ -18,8 +18,7 @@ export const fields = {
   groups: {
     id: 'groups',
     label: 'Groups',
-    description:
-      'A comma-separated list of group IDs (e.g. `12345, 12346`)',
+    description: 'A comma-separated list of group IDs (e.g. `12345, 12346`)',
     type: FieldType.STRING,
     required: true,
   },
