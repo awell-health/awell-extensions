@@ -18,3 +18,9 @@ Checks to see if the patient in Healthie has an appointment of a specific type s
 
 ## Check for Chat
 
+Checks that a Chat message (either to or from a patient and coach) has happened at least 24 hours after an appointment
+
+## Insert Member List Event
+
+Adds an Insert Member List Event to the Platform Database.
+
