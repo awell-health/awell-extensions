@@ -35,7 +35,7 @@ const fields = {
     required: true,
   },
   sendgridListId: {
-    id: 'sendgridListID',
+    id: 'sendgridListId',
     label: 'Sendgrid List ID',
     description: 'The ID of the Sendgrid list.',
     type: FieldType.STRING,
