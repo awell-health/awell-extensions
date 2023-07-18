@@ -2,6 +2,7 @@ import { generateTestPayload } from '../../../../src/tests'
 import { getSdk } from '../../gql/wellinksSdk'
 import { mockGetSdk, mockGetSdkReturn } from '../../gql/__mocks__/wellinksSdk'
 import { checkForChat } from './checkForChat'
+import { mockSettings } from '../../__mocks__/settings'
 
 jest.mock('../../gql/wellinksSdk')
 jest.mock('../../wellinksGraphqlClient')
@@ -36,15 +37,7 @@ describe('the checkForChat action', () => {
           coachId: 'coachId',
           appointmentTime: '2023-08-08',
         },
-        settings: {
-          apiKey: 'apiKey',
-          apiUrl: 'test-url',
-          selectEventTypeQuestion: '2602707',
-          startSendingRemindersQuestions: '3860906',
-          memberEventFormId: '281216',
-          sendgridApiKey: 'sendgridApiKey',
-          sendgridApiUrl: 'sendgridApiUrl',
-        },
+        settings: mockSettings,
       }),
       onComplete,
       onError
@@ -109,15 +102,7 @@ describe('the checkForChat action', () => {
           coachId: 'coachId',
           appointmentTime: '2023-05-28',
         },
-        settings: {
-          apiKey: 'apiKey',
-          apiUrl: 'test-url',
-          selectEventTypeQuestion: '2602707',
-          startSendingRemindersQuestions: '3860906',
-          memberEventFormId: '281216',
-          sendgridApiKey: 'sendgridApiKey',
-          sendgridApiUrl: 'sendgridApiUrl',
-        },
+        settings: mockSettings,
       }),
       onComplete,
       onError
@@ -176,15 +161,7 @@ describe('the checkForChat action', () => {
           coachId: 'coachId',
           appointmentTime: '2023-05-01',
         },
-        settings: {
-          apiKey: 'apiKey',
-          apiUrl: 'test-url',
-          selectEventTypeQuestion: '2602707',
-          startSendingRemindersQuestions: '3860906',
-          memberEventFormId: '281216',
-          sendgridApiKey: 'sendgridApiKey',
-          sendgridApiUrl: 'sendgridApiUrl',
-        },
+        settings: mockSettings,
       }),
       onComplete,
       onError

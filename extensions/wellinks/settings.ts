@@ -1,6 +1,20 @@
 import { type Setting } from '@awell-health/extensions-core'
 
 export const settings = {
+  platformApiUrl: {
+    key: 'platformApiUrl',
+    label: 'Platform Api Url',
+    obfuscated: false,
+    required: false,
+    description: 'The environment specific API URL for Platform',
+  },
+  platformApiKey: {
+    key: 'platformApiKey',
+    label: 'Platform Api Key',
+    obfuscated: true,
+    required: false,
+    description: 'The environment specific API Key for Platform',
+  },
   apiUrl: {
     key: 'apiUrl',
     label: 'Healthie API url',
