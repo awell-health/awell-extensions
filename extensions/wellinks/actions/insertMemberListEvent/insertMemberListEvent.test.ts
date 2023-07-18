@@ -3,6 +3,7 @@ import {
   WellinksClient,
   WellinksClientMockImplementation,
 } from '../../__mocks__/wellinksClient'
+import { mockSettings } from '../../__mocks__/settings'
 import { insertMemberListEvent } from './insertMemberListEvent'
 
 jest.mock('../../wellinksClient', () => ({ WellinksClient }))
@@ -25,17 +26,7 @@ describe('Insert Member List Event', () => {
         originatorName: 'originator-name',
         eventDate: '10-10-2020',
       },
-      settings: {
-        apiKey: 'apiKey',
-        apiUrl: 'test-url',
-        selectEventTypeQuestion: '2602707',
-        startSendingRemindersQuestions: '3860906',
-        memberEventFormId: '281216',
-        sendgridApiKey: 'sendgridApiKey',
-        sendgridApiUrl: 'sendgridApiUrl',
-        platformApiKey: 'platform-key',
-        platformApiUrl: 'platform-url',
-      },
+      settings: mockSettings,
     })
 
     WellinksClientMockImplementation.memberListEvent.insert.mockImplementationOnce(
@@ -68,17 +59,7 @@ describe('Insert Member List Event', () => {
         originatorName: 'originator-name',
         eventDate: '10-10-2020',
       },
-      settings: {
-        apiKey: 'apiKey',
-        apiUrl: 'test-url',
-        selectEventTypeQuestion: '2602707',
-        startSendingRemindersQuestions: '3860906',
-        memberEventFormId: '281216',
-        sendgridApiKey: 'sendgridApiKey',
-        sendgridApiUrl: 'sendgridApiUrl',
-        platformApiKey: 'platform-key',
-        platformApiUrl: 'platform-url',
-      },
+      settings: mockSettings,
     })
 
     WellinksClientMockImplementation.memberListEvent.insert.mockImplementationOnce(
@@ -111,17 +92,7 @@ describe('Insert Member List Event', () => {
         originatorName: 'originator-name',
         eventDate: '10-10-2020',
       },
-      settings: {
-        apiKey: 'apiKey',
-        apiUrl: 'test-url',
-        selectEventTypeQuestion: '2602707',
-        startSendingRemindersQuestions: '3860906',
-        memberEventFormId: '281216',
-        sendgridApiKey: 'sendgridApiKey',
-        sendgridApiUrl: 'sendgridApiUrl',
-        platformApiKey: 'platform-key',
-        platformApiUrl: 'platform-url',
-      },
+      settings: mockSettings,
     })
 
     await insertMemberListEvent.onActivityCreated(
@@ -134,7 +105,7 @@ describe('Insert Member List Event', () => {
         expect.objectContaining({
           error: {
             category: 'SERVER_ERROR',
-            message: 'Some or all of the arguments are missing.',
+            message: 'The memberId field is required',
           },
         }),
       ]),
@@ -152,17 +123,7 @@ describe('Insert Member List Event', () => {
         originatorName: 'originator-name',
         eventDate: '10-10-2020',
       },
-      settings: {
-        apiKey: 'apiKey',
-        apiUrl: 'test-url',
-        selectEventTypeQuestion: '2602707',
-        startSendingRemindersQuestions: '3860906',
-        memberEventFormId: '281216',
-        sendgridApiKey: 'sendgridApiKey',
-        sendgridApiUrl: 'sendgridApiUrl',
-        platformApiKey: 'platform-key',
-        platformApiUrl: 'platform-url',
-      },
+      settings: mockSettings,
     })
     WellinksClientMockImplementation.memberListEvent.insert.mockImplementationOnce(
       () => {

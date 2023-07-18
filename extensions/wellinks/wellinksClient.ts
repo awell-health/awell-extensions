@@ -9,14 +9,21 @@ export class WellinksClient {
   }
 
   readonly memberListEvent = {
-    insert: async (
-      eventName: string,
-      memberId: string,
-      sourceName: string,
-      sendgridListId: string,
-      originatorName: string,
+    insert: async ({
+      eventName,
+      memberId,
+      sourceName,
+      sendgridListId,
+      originatorName,
+      eventDate,
+    }: {
+      eventName: string
+      memberId: string
+      sourceName: string
+      sendgridListId: string
+      originatorName: string
       eventDate: string
-    ): Promise<number> => {
+    }): Promise<number> => {
       try {
         const response = await fetch(`${this._apiUrl}/memberListEvent/insert`, {
           method: 'POST',

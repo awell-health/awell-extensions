@@ -3,6 +3,7 @@ import {
   FieldType,
   type Action,
   type DataPointDefinition,
+  type OnErrorCallback,
 } from '@awell-health/extensions-core'
 import { Category } from '@awell-health/extensions-core'
 import { type settings } from '../../settings'
@@ -96,52 +97,51 @@ export const insertMemberListEvent: Action<
         settings.platformApiUrl,
         settings.platformApiKey
       )
-      if (!isNil(client)) {
-        if (
-          isNil(eventName) ||
-          isNil(memberId) ||
-          isNil(sourceName) ||
-          isNil(sendgridListId) ||
-          isNil(originatorName) ||
-          isNil(eventDate)
-        ) {
-          await onError({
-            events: [
-              {
-                date: new Date().toISOString(),
-                text: {
-                  en: 'Some or all of the arguments are missing.',
-                },
-                error: {
-                  category: 'SERVER_ERROR',
-                  message: 'Some or all of the arguments are missing.',
-                },
-              },
-            ],
-          })
-          return
-        }
-        const response = await client.memberListEvent.insert(
-          eventName,
-          memberId,
-          sourceName,
-          sendgridListId,
-          originatorName,
-          eventDate
-        )
-        if (response === 201) {
-          await onComplete({
-            data_points: {
-              insertSuccessful: 'true',
-            },
-          })
-        } else {
-          await onComplete({
-            data_points: {
-              insertSuccessful: 'false',
-            },
-          })
-        }
+
+      if (isNil(eventName)) {
+        await buildValidationError('eventName', onError)
+        return
+      }
+      if (isNil(memberId)) {
+        await buildValidationError('memberId', onError)
+        return
+      }
+      if (isNil(sourceName)) {
+        await buildValidationError('sourceName', onError)
+        return
+      }
+      if (isNil(sendgridListId)) {
+        await buildValidationError('sendgridListId', onError)
+        return
+      }
+      if (isNil(originatorName)) {
+        await buildValidationError('originatorName', onError)
+        return
+      }
+      if (isNil(eventDate)) {
+        await buildValidationError('eventDate', onError)
+        return
+      }
+      const response = await client.memberListEvent.insert({
+        eventName,
+        memberId,
+        sourceName,
+        sendgridListId,
+        originatorName,
+        eventDate,
+      })
+      if (response === 201) {
+        await onComplete({
+          data_points: {
+            insertSuccessful: 'true',
+          },
+        })
+      } else {
+        await onComplete({
+          data_points: {
+            insertSuccessful: 'false',
+          },
+        })
       }
     } catch {
       await onError({
@@ -161,4 +161,24 @@ export const insertMemberListEvent: Action<
       })
     }
   },
+}
+
+async function buildValidationError(
+  field: string,
+  onError: OnErrorCallback
+): Promise<void> {
+  await onError({
+    events: [
+      {
+        date: new Date().toISOString(),
+        text: {
+          en: `The ${field} field is required`,
+        },
+        error: {
+          category: 'SERVER_ERROR',
+          message: `The ${field} field is required`,
+        },
+      },
+    ],
+  })
 }
