@@ -2,6 +2,7 @@ import { generateTestPayload } from '../../../../src/tests'
 import { getSdk } from '../../gql/wellinksSdk'
 import { mockGetSdk, mockGetSdkReturn } from '../../gql/__mocks__/wellinksSdk'
 import { checkForScheduledAppointment } from './checkForScheduledAppointment'
+import { mockSettings } from '../../__mocks__/settings'
 
 jest.mock('../../gql/wellinksSdk')
 jest.mock('../../wellinksGraphqlClient')
@@ -43,15 +44,7 @@ describe('the checkForScheduledAppointment action', () => {
           patientId: 'patientIdTest',
           appointmentTypeId: 'appointmentTypeIdTest',
         },
-        settings: {
-          apiKey: 'apiKey',
-          apiUrl: 'test-url',
-          selectEventTypeQuestion: '2602707',
-          startSendingRemindersQuestions: '3860906',
-          memberEventFormId: '281216',
-          sendgridApiKey: 'sendgridApiKey',
-          sendgridApiUrl: 'sendgridApiUrl',
-        },
+        settings: mockSettings,
       }),
       onComplete,
       onError
@@ -99,15 +92,7 @@ describe('the checkForScheduledAppointment action', () => {
           patientId: 'patientIdTest',
           appointmentTypeId: 'appointmentTypeIdTest',
         },
-        settings: {
-          apiKey: 'apiKey',
-          apiUrl: 'test-url',
-          selectEventTypeQuestion: '2602707',
-          startSendingRemindersQuestions: '3860906',
-          memberEventFormId: '281216',
-          sendgridApiKey: 'sendgridApiKey',
-          sendgridApiUrl: 'sendgridApiUrl',
-        },
+        settings: mockSettings,
       }),
       onComplete,
       onError
@@ -138,15 +123,7 @@ describe('the checkForScheduledAppointment action', () => {
           patientId: 'patientIdTest',
           appointmentTypeId: 'appointmentTypeIdTest',
         },
-        settings: {
-          apiKey: 'apiKey',
-          apiUrl: 'test-url',
-          selectEventTypeQuestion: '2602707',
-          startSendingRemindersQuestions: '3860906',
-          memberEventFormId: '281216',
-          sendgridApiKey: 'sendgridApiKey',
-          sendgridApiUrl: 'sendgridApiUrl',
-        },
+        settings: mockSettings,
       }),
       onComplete,
       onError
