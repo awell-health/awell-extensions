@@ -11,7 +11,7 @@ describe('Send email with template', () => {
   const onComplete = jest.fn()
   const onError = jest.fn()
 
-  const basePayload = generateTestPayload({
+  const payload = {
     fields: {
       to: 'recipient@test.com',
       subject: 'Test subject',
@@ -25,7 +25,9 @@ describe('Send email with template', () => {
       fromName: 'fromName',
       fromEmail: 'from@test.com',
     },
-  })
+  }
+
+  const basePayload = generateTestPayload(payload)
 
   beforeEach(() => {
     jest.clearAllMocks()
@@ -155,5 +157,114 @@ describe('Send email with template', () => {
         }),
       ],
     })
+  })
+
+  test('Should use the subject action field value when no subject is defined in template data', async () => {
+    await sendEmailWithTemplate.onActivityCreated(
+      generateTestPayload({
+        fields: {
+          ...payload.fields,
+          subject: 'Subject 1',
+          dynamicTemplateData: JSON.stringify({}),
+        },
+        settings: payload.settings,
+      }),
+      onComplete,
+      onError
+    )
+
+    expect(SendgridClientMockImplementation.mail.send).toHaveBeenCalledWith({
+      from: {
+        email: basePayload.settings.fromEmail,
+        name: basePayload.settings.fromName,
+      },
+      to: basePayload.fields.to,
+      templateId: basePayload.fields.templateId,
+      subject: 'Subject 1',
+      dynamicTemplateData: {
+        subject: 'Subject 1',
+      },
+      customArgs: {
+        website: 'https://awell.health',
+        awellPatientId: basePayload.patient.id,
+        awellActivityId: basePayload.activity.id,
+      },
+    })
+    expect(onComplete).toHaveBeenCalled()
+    expect(onError).not.toHaveBeenCalled()
+  })
+
+  test('Should use the subject value defined in template data when no subject is defined for the action field', async () => {
+    await sendEmailWithTemplate.onActivityCreated(
+      generateTestPayload({
+        fields: {
+          ...payload.fields,
+          subject: '',
+          dynamicTemplateData: JSON.stringify({
+            subject: 'Subject 2',
+          }),
+        },
+        settings: payload.settings,
+      }),
+      onComplete,
+      onError
+    )
+
+    expect(SendgridClientMockImplementation.mail.send).toHaveBeenCalledWith({
+      from: {
+        email: basePayload.settings.fromEmail,
+        name: basePayload.settings.fromName,
+      },
+      to: basePayload.fields.to,
+      templateId: basePayload.fields.templateId,
+      subject: 'Subject 2',
+      dynamicTemplateData: {
+        subject: 'Subject 2',
+      },
+      customArgs: {
+        website: 'https://awell.health',
+        awellPatientId: basePayload.patient.id,
+        awellActivityId: basePayload.activity.id,
+      },
+    })
+    expect(onComplete).toHaveBeenCalled()
+    expect(onError).not.toHaveBeenCalled()
+  })
+
+  test('Should use the subject value defined in template data when both subjects are defined', async () => {
+    await sendEmailWithTemplate.onActivityCreated(
+      generateTestPayload({
+        fields: {
+          ...payload.fields,
+          subject: 'Subject 1',
+          dynamicTemplateData: JSON.stringify({
+            subject: 'Subject 2',
+          }),
+        },
+        settings: payload.settings,
+      }),
+      onComplete,
+      onError
+    )
+
+    expect(SendgridClientMockImplementation.mail.send).toHaveBeenCalledWith({
+      from: {
+        email: basePayload.settings.fromEmail,
+        name: basePayload.settings.fromName,
+      },
+      to: basePayload.fields.to,
+      templateId: basePayload.fields.templateId,
+      subject: 'Subject 2',
+      dynamicTemplateData: {
+        subject: 'Subject 2',
+      },
+      customArgs: {
+        website: 'https://awell.health',
+        awellPatientId: basePayload.patient.id,
+        awellActivityId: basePayload.activity.id,
+      },
+    })
+    expect(onComplete).toHaveBeenCalled()
+    expect(onError).not.toHaveBeenCalled()
   })
 })
