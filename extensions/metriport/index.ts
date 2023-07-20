@@ -10,7 +10,7 @@ export const Metriport: Extension = {
   description:
     'Metriport helps digital health companies access and manage health and medical data, through a single universal API.',
   icon_url:
-    'https://lh3.googleusercontent.com/drive-viewer/AFGJ81rW-bH9cdgjRoPbEqBRgsscyVkBhTBeydPrsZn6hhWmPP5amMBHUXZmUaGG4XZR2e1EPgZMni1s9iqFpeaj1tKdqGwe8w=w3456-h1936',
+    'https://res.cloudinary.com/da7x4rzl4/image/upload/v1689856160/Awell%20Extensions/metriport.png',
   category: Category.EHR_INTEGRATIONS,
   author: {
     authorType: AuthorType.EXTERNAL,
