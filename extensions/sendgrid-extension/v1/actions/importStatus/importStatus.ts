@@ -1,4 +1,7 @@
-import { type Action, type DataPointDefinition } from '@awell-health/extensions-core'
+import {
+  type Action,
+  type DataPointDefinition,
+} from '@awell-health/extensions-core'
 import { fields } from './config'
 import { Category, validate } from '@awell-health/extensions-core'
 import { type settings, SettingsValidationSchema } from '../../../settings'
@@ -14,38 +17,43 @@ import {
 const dataPoints = {
   importStatus: {
     key: 'importStatus',
-    valueType: 'string'
-  }
+    valueType: 'string',
+  },
 } satisfies Record<string, DataPointDefinition>
 
-export const importStatus: Action<typeof fields, typeof settings, keyof typeof dataPoints> = {
+export const importStatus: Action<
+  typeof fields,
+  typeof settings,
+  keyof typeof dataPoints
+> = {
   key: 'importStatus',
   title: 'Status of Import',
   description: 'Get the status of an Import job',
   category: Category.COMMUNICATION,
   fields,
   dataPoints,
-  previewable: false,
+  previewable: true,
   onActivityCreated: async (payload, onComplete, onError) => {
     try {
       const {
-        fields: { jobId},
-        settings: { apiKey }
+        fields: { jobId },
+        settings: { apiKey },
       } = validate({
         schema: z.object({
-          fields: FieldsValidationSchema, 
-          settings: SettingsValidationSchema
+          fields: FieldsValidationSchema,
+          settings: SettingsValidationSchema,
         }),
         payload,
       })
 
       const sendgridClient = new SendgridClient({ apiKey })
-      const sgImportStatus = await sendgridClient.marketing.contacts.importStatus(jobId)
-      
+      const sgImportStatus =
+        await sendgridClient.marketing.contacts.importStatus(jobId)
+
       await onComplete({
         data_points: {
-          importStatus: sgImportStatus[0].body.status
-        }
+          importStatus: sgImportStatus[0].body.status,
+        },
       })
     } catch (err) {
       if (err instanceof ZodError) {
