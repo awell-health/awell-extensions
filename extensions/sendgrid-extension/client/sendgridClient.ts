@@ -7,19 +7,22 @@ import { isNil } from 'lodash'
 
 /**
  * We're using this validateStatus to help produce the expected result.
+ * Unforunately, it's not documented well and the suggested action is to use .then() and .catch() instead.
+ *
  * Something undocumented in the sendgrid client:
  * The response array [Response, any] in the callback is comprised of the response and the request body.
+ * EDIT: ^^ incorrect. Still TBD, but removing validation for now.
  */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const validateStatus =
-  (validStatus: number) =>
-  (err?: ResponseError, response?: [Response, any]) => {
+  (validStatus: number) => (err?: ResponseError, response?: Response) => {
     if (!isNil(err)) {
       throw err
     }
-    if (Number(response?.[0].statusCode) !== Number(validStatus)) {
+    if (Number(response?.statusCode) !== Number(validStatus)) {
       throw Error(
         `Error: status response was ${
-          response?.[0].statusCode ?? ''
+          response?.statusCode ?? ''
         }, was not ${validStatus}`
       )
     }
@@ -44,26 +47,20 @@ export class SendgridClient {
   readonly marketing: MarketingApi = {
     contacts: {
       addOrUpdate: async (args) => {
-        return await (this._sendgridClient.request(
-          {
-            url: '/v3/marketing/contacts',
-            method: 'PUT',
-            body: JSON.stringify({
-              contacts: args.contacts,
-              list_ids: args.listIds,
-            }),
-          },
-          validateStatus(202)
-        ) as ReturnType<MarketingApi['contacts']['addOrUpdate']>)
+        return await (this._sendgridClient.request({
+          url: '/v3/marketing/contacts',
+          method: 'PUT',
+          body: JSON.stringify({
+            contacts: args.contacts,
+            list_ids: args.listIds,
+          }),
+        }) as ReturnType<MarketingApi['contacts']['addOrUpdate']>)
       },
       importStatus: async (jobId) => {
-        return await (this._sendgridClient.request(
-          {
-            url: `/v3/marketing/contacts/imports/${jobId}`,
-            method: 'GET',
-          },
-          validateStatus(200)
-        ) as ReturnType<MarketingApi['contacts']['importStatus']>)
+        return await (this._sendgridClient.request({
+          url: `/v3/marketing/contacts/imports/${jobId}`,
+          method: 'GET',
+        }) as ReturnType<MarketingApi['contacts']['importStatus']>)
       },
     } as const,
   } as const
@@ -71,16 +68,13 @@ export class SendgridClient {
   readonly groups = {
     suppressions: {
       add: async (groupId: string, email: string) => {
-        return await (this._sendgridClient.request(
-          {
-            url: `/v3/asm/groups/${groupId}/suppressions`,
-            method: 'POST',
-            body: {
-              recipient_emails: [email],
-            },
+        return await (this._sendgridClient.request({
+          url: `/v3/asm/groups/${groupId}/suppressions`,
+          method: 'POST',
+          body: {
+            recipient_emails: [email],
           },
-          validateStatus(201)
-        ) as ReturnType<GroupsApi['suppressions']['add']>)
+        }) as ReturnType<GroupsApi['suppressions']['add']>)
       },
       remove: async (groupId: string, email: string) => {
         return await (this._sendgridClient.request({
