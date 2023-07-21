@@ -18,7 +18,7 @@ export const sendEmail: Action<typeof fields, typeof settings> = {
   description: 'Send an email.',
   category: Category.COMMUNICATION,
   fields,
-  previewable: false,
+  previewable: true,
   onActivityCreated: async (payload, onComplete, onError) => {
     try {
       const {

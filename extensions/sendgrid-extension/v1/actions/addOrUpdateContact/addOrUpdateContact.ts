@@ -32,7 +32,7 @@ export const addOrUpdateContact: Action<
   category: Category.COMMUNICATION,
   fields,
   dataPoints,
-  previewable: false,
+  previewable: true,
   onActivityCreated: async (payload, onComplete, onError) => {
     try {
       const {
@@ -58,7 +58,6 @@ export const addOrUpdateContact: Action<
         ],
         listIds,
       })
-
       await onComplete({
         data_points: {
           jobId: sgResponse[0].body.job_id,
