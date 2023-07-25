@@ -6,7 +6,7 @@ export const TalkDesk: Extension = {
   key: 'talkDesk',
   title: 'TalkDesk',
   icon_url:
-    'https://prd-cdn-talkdesk.talkdesk.com/cdn-assets/latest/talkdesk/brand/main_brand/logo/talkdesk_logo_purple.svg',
+    'https://res.cloudinary.com/da7x4rzl4/image/upload/v1689344292/Awell%20Extensions/talkdesk_logo.jpg',
   description:
     'Talkdesk is a cloud-based customer experience and contact center software company.',
   category: Category.COMMUNICATION,
