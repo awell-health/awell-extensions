@@ -1,4 +1,5 @@
 import { type Setting } from '@awell-health/extensions-core'
+import { isNil } from 'lodash'
 import { z, type ZodTypeAny } from 'zod'
 
 export const settings = {
@@ -42,13 +43,13 @@ export const settings = {
     description:
       'Base API URL for API calls matching your environment on DocuSign. Defaults to: https://demo.docusign.net. Remember that this URL MUST match the one you registered for your app in DocuSign settings. Can be obtained from Account Base URI section of the Apps and Keys page or the "base_uri" property in the response of a call to the "/oauth/userinfo"',
   },
-  baseAppUrl: {
-    label: 'Base App URL',
-    key: 'baseAppUrl',
+  returnUrlTemplate: {
+    label: 'Return URL template',
+    key: 'returnUrlTemplate',
     obfuscated: false,
     required: false,
     description:
-      'Base App URL for your application. Set when you self host your application or use production environment. Defaults to: "https://goto.development.awell.health"',
+      'Return URL for your application to which DocuSign will redirect the user after signing the document. Set when you self host your application. You can use {sessionId}, {pathwayId}, {activityId} and {stakeholderId} variables to construct the URL, where variables will be replaced with actual values. Defaults to: "https://goto.development.awell.health/?sessionId={sessionId}".',
   },
 } satisfies Record<string, Setting>
 
@@ -57,8 +58,26 @@ export const SettingsValidationSchema = z.object({
   accountId: z.string(),
   userId: z.string(),
   rsaKey: z.string(),
-  baseApiUrl: z.string().url().default('https://demo.docusign.net'),
-  baseAppUrl: z.string().url().default('https://goto.development.awell.health'),
+  baseApiUrl: z
+    .union([z.string().url().optional(), z.literal('')])
+    .transform((value) => {
+      if (isNil(value) || value === '') {
+        // default value
+        return 'https://demo.docusign.net'
+      }
+
+      return value
+    }),
+  returnUrlTemplate: z
+    .union([z.string().url().optional(), z.literal('')])
+    .transform((value) => {
+      if (isNil(value) || value === '') {
+        // default value
+        return 'https://goto.development.awell.health/?sessionId={sessionId}'
+      }
+
+      return value
+    }),
 } satisfies Record<keyof typeof settings, ZodTypeAny>)
 
 export const validateSettings = (

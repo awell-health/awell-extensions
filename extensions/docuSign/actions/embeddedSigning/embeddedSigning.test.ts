@@ -20,7 +20,7 @@ describe('Complete flow action', () => {
           userId: 'xyz123',
           rsaKey: 'xyz123',
           baseApiUrl: 'https://demo.docusign.net',
-          baseAppUrl: '',
+          returnUrlTemplate: '',
         },
       }),
       onComplete,

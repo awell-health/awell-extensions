@@ -47,7 +47,7 @@ describe('Create embedded signature request with template', () => {
           userId: 'userId',
           rsaKey: 'rsaKey',
           baseApiUrl: undefined,
-          baseAppUrl: undefined,
+          returnUrlTemplate: undefined,
         },
       }),
       onComplete,

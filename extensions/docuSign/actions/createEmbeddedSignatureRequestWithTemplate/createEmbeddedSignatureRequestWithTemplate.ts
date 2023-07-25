@@ -7,6 +7,7 @@ import { validateSettings, type settings } from '../../settings'
 import { ZodError } from 'zod'
 import { createApiClient } from './config/createClient'
 import { instanceOfDocuSignError } from './config/types'
+import { replaceStringVariables } from './config/utils'
 
 export const createEmbeddedSignatureRequestWithTemplate: Action<
   typeof fields,
@@ -24,7 +25,8 @@ export const createEmbeddedSignatureRequestWithTemplate: Action<
     try {
       const {
         patient: { id: patientId },
-        activity: { sessionId },
+        pathway: { id: pathwayId },
+        activity: { id: activityId, sessionId },
       } = payload
 
       const {
@@ -38,7 +40,7 @@ export const createEmbeddedSignatureRequestWithTemplate: Action<
       const {
         accountId,
         baseApiUrl,
-        baseAppUrl,
+        returnUrlTemplate,
         integrationKey,
         rsaKey,
         userId,
@@ -77,7 +79,12 @@ export const createEmbeddedSignatureRequestWithTemplate: Action<
         email: signerEmailAddress,
         userName: signerName,
         clientUserId: patientId,
-        returnUrl: `${baseAppUrl}?sessionId=${sessionId}`,
+        returnUrl: replaceStringVariables(returnUrlTemplate, {
+          sessionId,
+          stakeholderId: patientId,
+          pathwayId,
+          activityId,
+        }),
       })
 
       const viewRequestResult = await envelopesApi.createRecipientView(
