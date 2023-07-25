@@ -18,6 +18,7 @@ In order to set up this extension, you will need to provide the following settin
 Also, before working with **DocuSign** you should receive consent of the user to impersonate them with the API calls (even for your own account). Check the details on how to do that [on DocuSign docs](https://developers.docusign.com/platform/auth/consent/obtaining-individual-consent/). It's a ONE TIME operation and is required for API calls to work for specific client-scope-uri combination. Required params explained below:
 
 - `YOUR_REQUESTED_SCOPES`: This extension uses JWT Grant, so in place of `YOUR_REQUESTED_SCOPES` you MUST put at least `signature%20impersonation`.
+  - sample consent URL: https://account-d.docusign.com/oauth/auth?response_type=code&scope=signature%20impersonation%20click.manage%20click.send&client_id=XYZ-123&redirect_uri=https://test.com
 
 ## Custom Actions
 
