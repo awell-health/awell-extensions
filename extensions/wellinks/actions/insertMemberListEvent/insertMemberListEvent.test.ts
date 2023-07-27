@@ -25,6 +25,7 @@ describe('Insert Member List Event', () => {
         sendgridListId: 'sendgrid-list-id',
         originatorName: 'originator-name',
         eventDate: '10-10-2020',
+        lockedById: 'locked-by-id',
       },
       settings: mockSettings,
     })
@@ -58,6 +59,7 @@ describe('Insert Member List Event', () => {
         sendgridListId: 'sendgrid-list-id',
         originatorName: 'originator-name',
         eventDate: '10-10-2020',
+        lockedById: 'locked-by-id',
       },
       settings: mockSettings,
     })
@@ -91,6 +93,7 @@ describe('Insert Member List Event', () => {
         sendgridListId: 'sendgrid-list-id',
         originatorName: 'originator-name',
         eventDate: '10-10-2020',
+        lockedById: 'locked-by-id',
       },
       settings: mockSettings,
     })
@@ -122,6 +125,7 @@ describe('Insert Member List Event', () => {
         sendgridListId: 'sendgrid-list-id',
         originatorName: 'originator-name',
         eventDate: '10-10-2020',
+        lockedById: 'locked-by-id',
       },
       settings: mockSettings,
     })
