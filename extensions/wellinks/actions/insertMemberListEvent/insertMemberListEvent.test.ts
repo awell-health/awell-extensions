@@ -84,7 +84,7 @@ describe('Insert Member List Event', () => {
     expect(onError).not.toBeCalled()
   })
 
-  test('should call onError if any of the arguments are undefined/empty', async () => {
+  test('should call onError if any of the required arguments are undefined/empty', async () => {
     const invalidPayload = generateTestPayload({
       fields: {
         eventName: 'event-name',
@@ -114,6 +114,37 @@ describe('Insert Member List Event', () => {
       ]),
     })
     expect(onComplete).not.toBeCalled()
+  })
+
+  test('should call onComplete even if the non-required arguments are undefined/empty', async () => {
+    const invalidPayload = generateTestPayload({
+      fields: {
+        eventName: 'event-name',
+        memberId: 'member-id',
+        sourceName: 'source-name',
+        sendgridListId: 'sendgrid-list-id',
+        originatorName: 'originator-name',
+        eventDate: '10-10-2020',
+        lockedById: undefined,
+      },
+      settings: mockSettings,
+    })
+    WellinksClientMockImplementation.memberListEvent.insert.mockImplementationOnce(
+      () => {
+        return 201
+      }
+    )
+    await insertMemberListEvent.onActivityCreated(
+      invalidPayload,
+      onComplete,
+      onError
+    )
+    expect(onComplete).toHaveBeenNthCalledWith(1, {
+      data_points: {
+        insertSuccessful: 'true',
+      },
+    })
+    expect(onError).not.toBeCalled()
   })
 
   test('should call onError if the WellinksClient throws an error', async () => {
