@@ -61,7 +61,7 @@ const fields = {
     description:
       'The ID of the coach that signed and locked the healthie form.',
     type: FieldType.STRING,
-    required: true,
+    required: false,
   },
 } satisfies Record<string, Field>
 
@@ -131,10 +131,7 @@ export const insertMemberListEvent: Action<
         await buildValidationError('eventDate', onError)
         return
       }
-      if (isNil(lockedById)) {
-        await buildValidationError('lockedById', onError)
-        return
-      }
+
       const response = await client.memberListEvent.insert({
         eventName,
         memberId,
