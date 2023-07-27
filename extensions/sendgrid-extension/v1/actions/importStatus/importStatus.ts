@@ -19,6 +19,10 @@ const dataPoints = {
     key: 'importStatus',
     valueType: 'string',
   },
+  finishedAt: {
+    key: 'finishedAt',
+    valueType: 'date',
+  },
 } satisfies Record<string, DataPointDefinition>
 
 export const importStatus: Action<
@@ -53,6 +57,7 @@ export const importStatus: Action<
       await onComplete({
         data_points: {
           importStatus: sgImportStatus[0].body.status,
+          finishedAt: sgImportStatus[0].body.finishedAt,
         },
       })
     } catch (err) {

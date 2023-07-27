@@ -52,7 +52,7 @@ const fields = {
     id: 'eventDate',
     label: 'Event Date',
     description: 'The Date/Time of the Member List Event',
-    type: FieldType.STRING,
+    type: FieldType.DATE,
     required: true,
   },
 } satisfies Record<string, Field>
