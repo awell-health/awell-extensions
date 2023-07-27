@@ -16,6 +16,7 @@ export class WellinksClient {
       sendgridListId,
       originatorName,
       eventDate,
+      lockedById,
     }: {
       eventName: string
       memberId: string
@@ -23,6 +24,7 @@ export class WellinksClient {
       sendgridListId: string
       originatorName: string
       eventDate: string
+      lockedById: string
     }): Promise<number> => {
       try {
         const response = await fetch(`${this._apiUrl}/memberListEvent/insert`, {
@@ -34,6 +36,7 @@ export class WellinksClient {
             list_event_originator_name: originatorName,
             wellinks_member_id: memberId,
             event_date: eventDate,
+            locked_by_id: lockedById,
           }),
           headers: {
             'x-api-key': this._apiKey,
