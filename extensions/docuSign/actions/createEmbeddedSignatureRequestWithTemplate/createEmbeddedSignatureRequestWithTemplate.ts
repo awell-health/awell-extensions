@@ -4,10 +4,23 @@ import { Category } from '@awell-health/extensions-core'
 import { fromZodError } from 'zod-validation-error'
 import { fields, dataPoints, validateActionFields } from './config'
 import { validateSettings, type settings } from '../../settings'
-import { ZodError } from 'zod'
+import z, { ZodError } from 'zod'
 import { createApiClient } from './config/createClient'
 import { instanceOfDocuSignError } from './config/types'
 import { replaceStringVariables } from './config/utils'
+
+const BasePayloadSchema = z.object({
+  patient: z.object({
+    id: z.string(),
+  }),
+  pathway: z.object({
+    id: z.string(),
+  }),
+  activity: z.object({
+    id: z.string(),
+    sessionId: z.string(),
+  }),
+})
 
 export const createEmbeddedSignatureRequestWithTemplate: Action<
   typeof fields,
@@ -27,7 +40,7 @@ export const createEmbeddedSignatureRequestWithTemplate: Action<
         patient: { id: patientId },
         pathway: { id: pathwayId },
         activity: { id: activityId, sessionId },
-      } = payload
+      } = BasePayloadSchema.parse(payload)
 
       const {
         signerRole,

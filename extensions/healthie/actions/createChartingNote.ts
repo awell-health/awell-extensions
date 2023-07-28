@@ -9,6 +9,13 @@ import { getSdk } from '../gql/sdk'
 import { initialiseClient } from '../graphqlClient'
 import { type settings } from '../settings'
 import { HealthieError, mapHealthieToActivityError } from '../errors'
+import z from 'zod'
+
+const FieldsSchema = z.object({
+  healthie_patient_id: z.string(),
+  form_id: z.string(),
+  note_content: z.string(),
+})
 
 const fields = {
   healthie_patient_id: {
@@ -45,7 +52,8 @@ export const createChartingNote: Action<typeof fields, typeof settings> = {
   previewable: true,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
     const { fields, settings } = payload
-    const { healthie_patient_id, form_id, note_content } = fields
+    const { healthie_patient_id, form_id, note_content } =
+      FieldsSchema.parse(fields)
     try {
       if (isNil(healthie_patient_id) || isNil(form_id) || isNil(note_content)) {
         await onError({

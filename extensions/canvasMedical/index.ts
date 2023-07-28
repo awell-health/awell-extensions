@@ -5,7 +5,7 @@ import { AuthorType, Category } from '@awell-health/extensions-core'
 import schemas from './schemas'
 
 export const CanvasMedical: Extension<typeof schemas> = {
-  key: 'canvas_medical',
+  key: 'canvasMedical',
   title: 'Canvas Medical (BETA)',
   description:
     'Canvas Medical is an EHR that is FHIR compliant. NOT FOR PRODUCTION USE',
