@@ -17,6 +17,29 @@ export interface Contact {
   custom_fields?: object
 }
 
+export enum ImportStatus {
+  PENDING = 'pending',
+  COMPLETED = 'completed',
+  ERRORED = 'errored',
+  FAILED = 'failed',
+}
+
+export interface ImportStatusResponse {
+  id: string
+  status: ImportStatus
+  finished_at?: string
+  job_type: string
+  started_at: string
+}
+
+// interface ResponseError {
+//   errors: any
+// }
+
+// export function isResponseError(resp: any): resp is ResponseError {
+//   return typeof resp === 'object' && 'errors' in resp
+// }
+
 export interface MailApi {
   send: MailService['send']
 }
@@ -26,9 +49,7 @@ export interface MarketingApi {
       listIds?: string[]
       contacts: Contact[]
     }) => RequestReturnType<{ job_id: string }>
-    importStatus: (
-      jobId: string
-    ) => RequestReturnType<{ status: string; finishedAt: string }>
+    importStatus: (jobId: string) => RequestReturnType<ImportStatusResponse>
   }
 }
 

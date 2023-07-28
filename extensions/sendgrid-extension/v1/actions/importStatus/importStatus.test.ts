@@ -13,8 +13,21 @@ describe('Import Status', () => {
     statusCode: 200,
     headers: {},
     body: {
-      status: 'done',
-      finishedAt: '10-10-2020',
+      status: 'completed',
+      finished_at: '10-10-2020',
+      started_at: '10-10-2020',
+      job_type: 'jobType',
+      id: 'id',
+    },
+  }
+  const pendingResponse: Response = {
+    statusCode: 200,
+    headers: {},
+    body: {
+      status: 'pending',
+      started_at: '10-10-2020',
+      job_type: 'jobType',
+      id: 'id',
     },
   }
   const onComplete = jest.fn()
@@ -43,8 +56,50 @@ describe('Import Status', () => {
 
     expect(onComplete).toHaveBeenNthCalledWith(1, {
       data_points: {
-        importStatus: 'done',
+        importStatus: 'completed',
         finishedAt: '10-10-2020',
+        startedAt: '10-10-2020',
+        jobType: 'jobType',
+        id: 'id',
+      },
+    })
+    expect(onError).not.toBeCalled()
+  })
+
+  test('Should use exponential backoff', async () => {
+    SendgridClientMockImplementation.marketing.contacts.importStatus
+      .mockImplementationOnce(() => {
+        return [pendingResponse, 'status']
+      })
+      .mockImplementationOnce(() => {
+        return [pendingResponse, 'status']
+      })
+      .mockImplementationOnce(() => {
+        return [successResponse, 'status']
+      })
+    await importStatus.onActivityCreated(
+      {
+        ...basePayload,
+        fields: {
+          jobId: 'jobId',
+          wait_for_finished: true,
+        },
+      },
+      onComplete,
+      onError
+    )
+
+    expect(
+      SendgridClientMockImplementation.marketing.contacts.importStatus
+    ).toHaveBeenCalledTimes(3)
+
+    expect(onComplete).toHaveBeenNthCalledWith(1, {
+      data_points: {
+        importStatus: 'completed',
+        finishedAt: '10-10-2020',
+        startedAt: '10-10-2020',
+        jobType: 'jobType',
+        id: 'id',
       },
     })
     expect(onError).not.toBeCalled()
