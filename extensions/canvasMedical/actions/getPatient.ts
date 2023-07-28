@@ -3,11 +3,12 @@ import {
   FieldType,
   type Action,
   type DataPointDefinition,
-  type Field,
+  type Fields,
 } from '@awell-health/extensions-core'
 import { Category } from '@awell-health/extensions-core'
 import { type settings } from '../settings'
 import { makeAPIClient } from '../client'
+import type schemas from '../schemas'
 import { fromZodError } from 'zod-validation-error'
 import { AxiosError } from 'axios'
 
@@ -16,27 +17,30 @@ const fields = {
     id: 'patientId',
     label: 'Patient ID',
     description: 'The patient ID',
-    type: FieldType.STRING,
+    type: FieldType.JSON,
+    jsonType: 'canvas_patient',
     required: true,
   },
-} satisfies Record<string, Field>
+} satisfies Fields<typeof schemas>
 
 const dataPoints = {
   patient_data: {
     key: 'patient_data',
     valueType: 'json',
+    jsonType: 'canvas_patient',
   },
-} satisfies Record<string, DataPointDefinition>
+} satisfies Record<string, DataPointDefinition<typeof schemas>>
 
 export const getPatient: Action<
   typeof fields,
   typeof settings,
-  keyof typeof dataPoints
+  keyof typeof dataPoints,
+  typeof schemas
 > = {
   key: 'getPatient',
   category: Category.EHR_INTEGRATIONS,
   title: 'Get Patient',
-  description: "Retrieve a patient profile using Elation's patient API.",
+  description: "Retrieve a patient profile using Canvas's patient API.",
   fields,
   previewable: true,
   dataPoints,

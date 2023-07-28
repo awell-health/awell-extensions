@@ -3,13 +3,14 @@ import {
   FieldType,
   type Action,
   type DataPointDefinition,
-  type Field,
+  type Fields,
 } from '@awell-health/extensions-core'
 import { Category } from '@awell-health/extensions-core'
 import { type settings } from '../settings'
 import { makeAPIClient } from '../client'
 import { fromZodError } from 'zod-validation-error'
 import { AxiosError } from 'axios'
+import type schemas from '../schemas'
 
 const fields = {
   appointmentId: {
@@ -19,19 +20,21 @@ const fields = {
     type: FieldType.STRING,
     required: true,
   },
-} satisfies Record<string, Field>
+} satisfies Fields<typeof schemas>
 
 const dataPoints = {
   appointment_data: {
     key: 'appointment_data',
     valueType: 'json',
+    jsonType: 'canvas_appointment',
   },
-} satisfies Record<string, DataPointDefinition>
+} satisfies Record<string, DataPointDefinition<typeof schemas>>
 
 export const getAppointment: Action<
   typeof fields,
   typeof settings,
-  keyof typeof dataPoints
+  keyof typeof dataPoints,
+  typeof schemas
 > = {
   key: 'getAppointment',
   category: Category.EHR_INTEGRATIONS,

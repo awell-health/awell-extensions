@@ -4,7 +4,7 @@ import {
   FieldType,
   type Action,
   type DataPointDefinition,
-  type Field,
+  type Fields,
 } from '@awell-health/extensions-core'
 import { Category } from '@awell-health/extensions-core'
 import { type settings } from '../settings'
@@ -12,6 +12,7 @@ import { makeAPIClient } from '../client'
 import { fromZodError } from 'zod-validation-error'
 import { AxiosError } from 'axios'
 import { taskSchema } from '../validation/dto/task.zod'
+import type schemas from '../schemas'
 
 const fields = {
   task_data: {
@@ -19,9 +20,10 @@ const fields = {
     label: 'Task data',
     description: 'Task data',
     type: FieldType.JSON,
+    jsonType: 'canvas_task',
     required: true,
   },
-} satisfies Record<string, Field>
+} satisfies Fields<typeof schemas>
 
 const dataPoints = {
   taskId: {
@@ -33,7 +35,8 @@ const dataPoints = {
 export const createTask: Action<
   typeof fields,
   typeof settings,
-  keyof typeof dataPoints
+  keyof typeof dataPoints,
+  typeof schemas
 > = {
   key: 'createTask',
   category: Category.EHR_INTEGRATIONS,

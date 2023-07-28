@@ -4,7 +4,7 @@ import {
   FieldType,
   type Action,
   type DataPointDefinition,
-  type Field,
+  type Fields,
 } from '@awell-health/extensions-core'
 import { Category } from '@awell-health/extensions-core'
 import { type settings } from '../settings'
@@ -12,6 +12,7 @@ import { makeAPIClient } from '../client'
 import { fromZodError } from 'zod-validation-error'
 import { AxiosError } from 'axios'
 import { patientWithIdSchema } from '../validation/dto/patient.zod'
+import type schemas from '../schemas'
 
 const fields = {
   patient_data: {
@@ -19,16 +20,23 @@ const fields = {
     label: 'Patient data',
     description: 'Patient data',
     type: FieldType.JSON,
+    jsonType: 'canvas_patient',
     required: true,
   },
-} satisfies Record<string, Field>
+} satisfies Fields<typeof schemas>
 
-const dataPoints = {} satisfies Record<string, DataPointDefinition>
+const dataPoints = {
+  patient_id: {
+    key: 'patient_id',
+    valueType: 'string',
+  },
+} satisfies Record<string, DataPointDefinition>
 
 export const updatePatient: Action<
   typeof fields,
   typeof settings,
-  keyof typeof dataPoints
+  keyof typeof dataPoints,
+  typeof schemas
 > = {
   key: 'updatePatient',
   category: Category.EHR_INTEGRATIONS,
@@ -40,11 +48,16 @@ export const updatePatient: Action<
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
     try {
       const patient = patientWithIdSchema.parse(payload.fields.patient_data)
-
       // API Call should produce AuthError or something dif.
       const api = makeAPIClient(payload.settings)
-      await api.updatePatient(patient)
-      await onComplete()
+
+      const resp = await api.updatePatient(patient)
+
+      await onComplete({
+        data_points: {
+          patient_id: String(resp.id),
+        },
+      })
     } catch (err) {
       if (err instanceof ZodError) {
         const error = fromZodError(err)

@@ -10,6 +10,7 @@ import { type settings } from '../settings'
 import { makeAPIClient } from '../client'
 import { fromZodError } from 'zod-validation-error'
 import { AxiosError } from 'axios'
+import type schemas from '../schemas'
 
 const fields = {
   taskId: {
@@ -25,13 +26,15 @@ const dataPoints = {
   task_data: {
     key: 'task_data',
     valueType: 'json',
+    jsonType: 'canvas_task',
   },
-} satisfies Record<string, DataPointDefinition>
+} satisfies Record<string, DataPointDefinition<typeof schemas>>
 
 export const getTask: Action<
   typeof fields,
   typeof settings,
-  keyof typeof dataPoints
+  keyof typeof dataPoints,
+  typeof schemas
 > = {
   key: 'getTask',
   category: Category.EHR_INTEGRATIONS,

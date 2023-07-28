@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { ZodError } from 'zod'
 import {
+  type Fields,
   FieldType,
   type Action,
   type DataPointDefinition,
-  type Field,
 } from '@awell-health/extensions-core'
 import { Category } from '@awell-health/extensions-core'
 import { type settings } from '../settings'
@@ -12,6 +12,7 @@ import { makeAPIClient } from '../client'
 import { fromZodError } from 'zod-validation-error'
 import { AxiosError } from 'axios'
 import { appointmentSchema } from '../validation/dto/appointment.zod'
+import type schemas from '../schemas'
 
 const fields = {
   appointment_data: {
@@ -19,9 +20,10 @@ const fields = {
     label: 'Appointment data',
     description: 'Appointment data',
     type: FieldType.JSON,
+    jsonType: 'canvas_appointment',
     required: true,
   },
-} satisfies Record<string, Field>
+} satisfies Fields<typeof schemas>
 
 const dataPoints = {
   appointmentId: {
@@ -33,7 +35,8 @@ const dataPoints = {
 export const createAppointment: Action<
   typeof fields,
   typeof settings,
-  keyof typeof dataPoints
+  keyof typeof dataPoints,
+  typeof schemas
 > = {
   key: 'createAppointment',
   category: Category.EHR_INTEGRATIONS,

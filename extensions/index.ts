@@ -1,6 +1,7 @@
 // import { AvaAi } from './avaAi'
 import { Awell } from './awell'
 import { CalDotCom } from './calDotCom'
+import { CanvasMedical } from './canvasMedical'
 import { Cloudinary } from './cloudinary'
 import { DropboxSign } from './dropboxSign'
 import { Elation } from './elation'
@@ -26,6 +27,7 @@ export const extensions = [
   // AvaAi, Best to disable this until we cleared out data privacy & HIPAA with OpenAI
   Awell,
   CalDotCom,
+  CanvasMedical,
   Cloudinary,
   DropboxSign,
   Elation,
