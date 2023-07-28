@@ -13,10 +13,29 @@ import {
   SendgridClient,
   mapSendgridErrorsToActivityErrors,
 } from '../../../client'
+import { ImportStatus, type ImportStatusResponse } from '../../../client/types'
+import { isNil } from 'lodash'
+// import { isResponseError } from '../../../client/types'
 
 const dataPoints = {
   importStatus: {
     key: 'importStatus',
+    valueType: 'string',
+  },
+  finishedAt: {
+    key: 'finishedAt',
+    valueType: 'date',
+  },
+  startedAt: {
+    key: 'startedAt',
+    valueType: 'date',
+  },
+  jobType: {
+    key: 'jobType',
+    valueType: 'string',
+  },
+  id: {
+    key: 'id',
     valueType: 'string',
   },
 } satisfies Record<string, DataPointDefinition>
@@ -36,7 +55,7 @@ export const importStatus: Action<
   onActivityCreated: async (payload, onComplete, onError) => {
     try {
       const {
-        fields: { jobId },
+        fields: { jobId, wait_for_finished },
         settings: { apiKey },
       } = validate({
         schema: z.object({
@@ -47,12 +66,35 @@ export const importStatus: Action<
       })
 
       const sendgridClient = new SendgridClient({ apiKey })
-      const sgImportStatus =
-        await sendgridClient.marketing.contacts.importStatus(jobId)
+
+      let resp: ImportStatusResponse
+      if (!isNil(wait_for_finished)) {
+        resp = (await sendgridClient.marketing.contacts.importStatus(jobId))[0]
+          .body
+
+        for (let i = 0; i < 9; i++) {
+          if (
+            [ImportStatus.COMPLETED, ImportStatus.FAILED].includes(resp.status)
+          ) {
+            break
+          }
+          await new Promise((resolve) => setTimeout(resolve, (1000 * 2) ^ i)) // exponential backoff
+          resp = (
+            await sendgridClient.marketing.contacts.importStatus(jobId)
+          )[0].body
+        }
+      } else {
+        resp = (await sendgridClient.marketing.contacts.importStatus(jobId))[0]
+          .body
+      }
 
       await onComplete({
         data_points: {
-          importStatus: sgImportStatus[0].body.status,
+          importStatus: resp.status,
+          finishedAt: resp.finished_at,
+          startedAt: resp.started_at,
+          jobType: resp.job_type,
+          id: resp.id,
         },
       })
     } catch (err) {
