@@ -1,5 +1,5 @@
 import { type Action } from '@awell-health/extensions-core'
-import { fields } from './config'
+import { dataPoints, fields } from './config'
 import { Category } from '@awell-health/extensions-core'
 import { type settings } from '../../../settings'
 import { validateActionFields } from './config/fields'
@@ -13,6 +13,7 @@ export const embeddedSigning: Action<typeof fields, typeof settings> = {
     'Let a stakeholder sign an embedded signature request with Awell Hosted Pages.',
   category: Category.DOCUMENT_MANAGEMENT,
   fields,
+  dataPoints,
   options: {
     stakeholders: {
       label: 'Stakeholder',
