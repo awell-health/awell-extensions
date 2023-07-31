@@ -31,7 +31,7 @@ const fields = {
 export const assignPatientToGroup: Action<typeof fields, typeof settings> = {
   key: 'assignPatientToGroup',
   category: Category.EHR_INTEGRATIONS,
-  title: 'Assign or remove a patient from a group in Healthie.',
+  title: 'Assign patient to group',
   description: 'Assign or remove a patient from a group in Healthie.',
   fields,
   previewable: true,
