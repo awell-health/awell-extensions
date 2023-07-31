@@ -13,7 +13,7 @@ import { HealthieError, mapHealthieToActivityError } from '../errors'
 const fields = {
   id: {
     id: 'id',
-    label: 'ID',
+    label: 'Patient ID',
     description: 'The id of the patient in Healthie.',
     type: FieldType.STRING,
     required: true,
