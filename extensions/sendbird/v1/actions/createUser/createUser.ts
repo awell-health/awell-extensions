@@ -1,0 +1,84 @@
+import { z, ZodError } from 'zod'
+import { fromZodError } from 'zod-validation-error'
+import { type Action } from '@awell-health/extensions-core'
+import { type settings } from '../../../settings'
+import { Category, validate } from '@awell-health/extensions-core'
+import { SettingsValidationSchema } from '../../../settings'
+import { FieldsValidationSchema, fields } from './config'
+import { SendBirdClient } from '../../client'
+import {
+  isSendbirdError,
+  sendbirdErrorToActivityEvent,
+} from '../../client/error'
+
+export const createUser: Action<typeof fields, typeof settings> = {
+  key: 'createUser',
+  title: 'Create user',
+  description: 'Creates user using Chat API.',
+  category: Category.COMMUNICATION,
+  fields,
+  previewable: false,
+  onActivityCreated: async (payload, onComplete, onError) => {
+    try {
+      const {
+        settings: { applicationId, chatApiToken },
+        fields: { userId, metadata, nickname, issueAccessToken },
+      } = validate({
+        schema: z.object({
+          settings: SettingsValidationSchema,
+          fields: FieldsValidationSchema,
+        }),
+        payload,
+      })
+
+      const client = new SendBirdClient({
+        applicationId,
+        chatApiToken,
+      })
+
+      await client.chatApi.createUser({
+        user_id: userId,
+        nickname,
+        metadata,
+        issue_access_token: issueAccessToken,
+        profile_url:
+          'https://res.cloudinary.com/da7x4rzl4/image/upload/v1690885637/Awell%20Extensions/awell-webclip.png',
+      })
+
+      await onComplete({ data_points: { userId: '' } })
+    } catch (err) {
+      if (err instanceof ZodError) {
+        const error = fromZodError(err)
+        await onError({
+          events: [
+            {
+              date: new Date().toISOString(),
+              text: { en: error.message },
+              error: {
+                category: 'WRONG_INPUT',
+                message: error.message,
+              },
+            },
+          ],
+        })
+      } else if (isSendbirdError(err)) {
+        const events = sendbirdErrorToActivityEvent(err)
+        await onError({ events })
+      } else {
+        const message = (err as Error).message
+        await onError({
+          events: [
+            {
+              date: new Date().toISOString(),
+              text: { en: message },
+              error: {
+                category: 'SERVER_ERROR',
+                message,
+              },
+            },
+          ],
+        })
+      }
+    }
+  },
+}
