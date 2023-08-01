@@ -47,7 +47,9 @@ describe('Create user', () => {
       profile_url:
         'https://res.cloudinary.com/da7x4rzl4/image/upload/v1690885637/Awell%20Extensions/awell-webclip.png',
     })
-    expect(onComplete).toHaveBeenCalled()
+    expect(onComplete).toHaveBeenCalledWith({
+      data_points: { userId: basePayload.fields.userId },
+    })
     expect(onError).not.toHaveBeenCalled()
   })
 })

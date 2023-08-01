@@ -1,3 +1,4 @@
+import axios, { type AxiosResponse } from 'axios'
 import { type CreateUserInput, type User } from '../types'
 import {
   type ISendbirdChatAPI,
@@ -9,7 +10,7 @@ class SendbirdBaseAPI implements ISendbirdBaseAPI {
   readonly _applicationId: string
   readonly _baseUrl: string
   readonly _token: string
-  private readonly _headers: HeadersInit
+  private readonly _headers: Record<string, string>
 
   constructor({
     applicationId,
@@ -32,12 +33,10 @@ class SendbirdBaseAPI implements ISendbirdBaseAPI {
   post = async <I extends undefined | object, R>(
     url: string,
     { body }: { body: I }
-  ): Promise<R> =>
-    (await fetch(`${this._baseUrl}/${url}`, {
-      body: body as BodyInit,
-      method: 'POST',
+  ): Promise<AxiosResponse<R>> =>
+    await axios.post<R>(`${this._baseUrl}/${url}`, body, {
       headers: this._headers,
-    })) as R
+    })
 }
 
 class SendbirdChatAPI implements ISendbirdChatAPI {
@@ -57,7 +56,7 @@ class SendbirdChatAPI implements ISendbirdChatAPI {
     })
   }
 
-  createUser = async (user: CreateUserInput): Promise<User> => {
+  createUser = async (user: CreateUserInput): Promise<AxiosResponse<User>> => {
     return await this._baseApi.post<CreateUserInput, User>('users', {
       body: user,
     })

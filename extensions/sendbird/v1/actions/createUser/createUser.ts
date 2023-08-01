@@ -36,7 +36,7 @@ export const createUser: Action<typeof fields, typeof settings> = {
         chatApiToken,
       })
 
-      await client.chatApi.createUser({
+      const res = await client.chatApi.createUser({
         user_id: userId,
         nickname,
         metadata,
@@ -45,7 +45,7 @@ export const createUser: Action<typeof fields, typeof settings> = {
           'https://res.cloudinary.com/da7x4rzl4/image/upload/v1690885637/Awell%20Extensions/awell-webclip.png',
       })
 
-      await onComplete({ data_points: { userId: '' } })
+      await onComplete({ data_points: { userId: res.data.user_id } })
     } catch (err) {
       if (err instanceof ZodError) {
         const error = fromZodError(err)

@@ -1,14 +1,24 @@
 import { type ActivityEvent } from '@awell-health/extensions-core'
+import { type AxiosError, isAxiosError } from 'axios'
 import { type ErrorResponse } from './types'
 
-export const isSendbirdError = (error: any): error is ErrorResponse => {
-  return 'error' in error && 'code' in error && 'message' in error
+export const isSendbirdError = (
+  error: any
+): error is AxiosError<ErrorResponse> => {
+  if (isAxiosError(error)) {
+    const errorData = error.response?.data
+    return 'error' in errorData && 'code' in errorData && 'message' in errorData
+  }
+
+  return false
 }
 
 export const sendbirdErrorToActivityEvent = (
-  error: ErrorResponse
+  error: AxiosError<ErrorResponse>
 ): ActivityEvent[] => {
-  const message = `(CODE: ${error.code}) ${error.message}`
+  const errorData = error.response?.data
+
+  const message = `(CODE: ${errorData?.code ?? ''}) ${errorData?.message ?? ''}`
 
   return [
     {

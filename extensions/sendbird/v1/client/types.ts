@@ -1,3 +1,4 @@
+import { type AxiosResponse } from 'axios'
 import { type CreateUserInput, type User } from '../types'
 
 export interface ErrorResponse {
@@ -19,11 +20,11 @@ export interface ISendbirdBaseAPI {
   post: <I extends undefined | object, R>(
     url: string,
     arg: { body: I }
-  ) => Promise<R>
+  ) => Promise<AxiosResponse<R>>
 }
 
 export interface ISendbirdChatAPI {
   readonly _baseApi: ISendbirdBaseAPI
 
-  createUser: (user: CreateUserInput) => Promise<User>
+  createUser: (user: CreateUserInput) => Promise<AxiosResponse<User>>
 }

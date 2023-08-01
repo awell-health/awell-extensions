@@ -1,5 +1,9 @@
 export const SendBirdClientMockImplementation = {
-  chatApi: { createUser: jest.fn() },
+  chatApi: {
+    createUser: jest.fn((arg) => ({
+      data: arg,
+    })),
+  },
 }
 
 const SendBirdClientMock = jest.fn(() => SendBirdClientMockImplementation)
