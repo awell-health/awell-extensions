@@ -52,8 +52,16 @@ const fields = {
     id: 'eventDate',
     label: 'Event Date',
     description: 'The Date/Time of the Member List Event',
-    type: FieldType.STRING,
+    type: FieldType.DATE,
     required: true,
+  },
+  lockedById: {
+    id: 'lockedById',
+    label: 'Locked By ID',
+    description:
+      'The ID of the coach that signed and locked the healthie form.',
+    type: FieldType.STRING,
+    required: false,
   },
 } satisfies Record<string, Field>
 
@@ -85,6 +93,7 @@ export const insertMemberListEvent: Action<
       sendgridListId,
       originatorName,
       eventDate,
+      lockedById,
     } = fields
 
     try {
@@ -122,6 +131,7 @@ export const insertMemberListEvent: Action<
         await buildValidationError('eventDate', onError)
         return
       }
+
       const response = await client.memberListEvent.insert({
         eventName,
         memberId,
@@ -129,6 +139,7 @@ export const insertMemberListEvent: Action<
         sendgridListId,
         originatorName,
         eventDate,
+        lockedById,
       })
       if (response === 201) {
         await onComplete({
