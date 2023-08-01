@@ -17,8 +17,7 @@ const fields = {
     id: 'patientId',
     label: 'Patient ID',
     description: 'The patient ID',
-    type: FieldType.JSON,
-    jsonType: 'canvas_patient',
+    type: FieldType.STRING,
     required: true,
   },
 } satisfies Fields<typeof schemas>
