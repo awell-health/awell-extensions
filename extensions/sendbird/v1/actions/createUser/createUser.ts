@@ -42,7 +42,8 @@ export const createUser: Action<typeof fields, typeof settings> = {
         metadata,
         issue_access_token: issueAccessToken,
         profile_url:
-          'https://res.cloudinary.com/da7x4rzl4/image/upload/v1690885637/Awell%20Extensions/awell-webclip.png',
+          // default for now
+          'https://sendbird.com/main/img/profiles/profile_05_512px.png',
       })
 
       await onComplete({ data_points: { userId: res.data.user_id } })
