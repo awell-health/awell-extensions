@@ -1,12 +1,7 @@
 import axios, { type AxiosResponse } from 'axios'
 import { type CreateUserInput, type User } from '../types'
-import {
-  type ISendbirdChatAPI,
-  type ISendbirdSDK,
-  type ISendbirdBaseAPI,
-} from './types'
 
-class SendbirdBaseAPI implements ISendbirdBaseAPI {
+class SendbirdBaseAPI {
   readonly _applicationId: string
   readonly _baseUrl: string
   readonly _token: string
@@ -39,8 +34,8 @@ class SendbirdBaseAPI implements ISendbirdBaseAPI {
     })
 }
 
-class SendbirdChatAPI implements ISendbirdChatAPI {
-  readonly _baseApi: ISendbirdBaseAPI
+class SendbirdChatAPI {
+  readonly _baseApi: SendbirdBaseAPI
 
   constructor({
     applicationId,
@@ -63,9 +58,9 @@ class SendbirdChatAPI implements ISendbirdChatAPI {
   }
 }
 
-export class SendBirdClient implements ISendbirdSDK {
+export class SendBirdClient {
   _applicationId: string
-  chatApi: ISendbirdChatAPI
+  chatApi: SendbirdChatAPI
 
   constructor({
     applicationId,
