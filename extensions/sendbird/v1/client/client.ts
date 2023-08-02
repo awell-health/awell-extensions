@@ -28,10 +28,41 @@ class SendbirdBaseAPI {
   post = async <I extends undefined | object, R>(
     url: string,
     { body }: { body: I }
-  ): Promise<AxiosResponse<R>> =>
-    await axios.post<R>(`${this._baseUrl}/${url}`, body, {
+  ): Promise<AxiosResponse<R>> => {
+    return await axios.post<R>(`${this._baseUrl}/${url}`, body, {
       headers: this._headers,
     })
+  }
+
+  put = async <I extends undefined | object, R>(
+    url: string,
+    { body }: { body: I }
+  ): Promise<AxiosResponse<R>> => {
+    return await axios.put<R>(`${this._baseUrl}/${url}`, body, {
+      headers: this._headers,
+    })
+  }
+
+  patch = async <I extends undefined | object, R>(
+    url: string,
+    { body }: { body: I }
+  ): Promise<AxiosResponse<R>> => {
+    return await axios.patch<R>(`${this._baseUrl}/${url}`, body, {
+      headers: this._headers,
+    })
+  }
+
+  get = async <R>(url: string): Promise<AxiosResponse<R>> => {
+    return await axios.get<R>(`${this._baseUrl}/${url}`, {
+      headers: this._headers,
+    })
+  }
+
+  delete = async <R>(url: string): Promise<AxiosResponse<R>> => {
+    return await axios.delete<R>(`${this._baseUrl}/${url}`, {
+      headers: this._headers,
+    })
+  }
 }
 
 class SendbirdChatAPI {
