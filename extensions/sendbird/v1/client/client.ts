@@ -16,17 +16,19 @@ class SendbirdBaseAPI {
     applicationId,
     baseUrl,
     token,
+    tokenHeaderKey,
   }: {
     applicationId: string
     baseUrl: string
     token: string
+    tokenHeaderKey: string
   }) {
     this._applicationId = applicationId
     this._baseUrl = baseUrl
     this._token = token
     this._headers = {
       'Content-Type': 'application/json; charset=utf8',
-      'Api-Token': this._token,
+      [tokenHeaderKey]: this._token,
     } as const
   }
 
@@ -84,6 +86,7 @@ class SendbirdChatAPI {
       applicationId,
       baseUrl: `https://api-${applicationId}.sendbird.com/v3`,
       token,
+      tokenHeaderKey: 'Api-Token',
     })
   }
 
@@ -144,18 +147,41 @@ class SendbirdChatAPI {
   }
 }
 
-export class SendBirdClient {
-  _applicationId: string
-  chatApi: SendbirdChatAPI
+class SendbirdDeskAPI {
+  readonly _baseApi: SendbirdBaseAPI
+
+  constructor({
+    applicationId,
+    token,
+  }: {
+    applicationId: string
+    token: string
+  }) {
+    this._baseApi = new SendbirdBaseAPI({
+      applicationId,
+      baseUrl: `https://desk-api-${applicationId}.sendbird.com/platform/v1`,
+      token,
+      tokenHeaderKey: 'SENDBIRDDESKAPITOKEN',
+    })
+  }
+}
+
+export class SendbirdClient {
+  private readonly _applicationId: string
+  readonly chatApi: SendbirdChatAPI
+  readonly deskApi: SendbirdDeskAPI
 
   constructor({
     applicationId,
     chatApiToken,
+    deskApiToken,
   }: {
     applicationId: string
     chatApiToken: string
+    deskApiToken: string
   }) {
     this._applicationId = applicationId
     this.chatApi = new SendbirdChatAPI({ applicationId, token: chatApiToken })
+    this.deskApi = new SendbirdDeskAPI({ applicationId, token: deskApiToken })
   }
 }
