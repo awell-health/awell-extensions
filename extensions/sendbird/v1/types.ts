@@ -16,3 +16,5 @@ export interface CreateUserInput
   extends Pick<User, 'user_id' | 'nickname' | 'profile_url' | 'metadata'> {
   issue_access_token?: boolean
 }
+
+export interface UpdateUserInput extends Omit<CreateUserInput, 'metadata'> {}

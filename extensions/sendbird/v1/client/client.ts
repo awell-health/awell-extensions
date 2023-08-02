@@ -1,5 +1,10 @@
 import axios, { type AxiosResponse } from 'axios'
-import { type CreateUserInput, type User } from '../types'
+import {
+  type UpdateUserInput,
+  type CreateUserInput,
+  type User,
+  type Metadata,
+} from '../types'
 
 class SendbirdBaseAPI {
   readonly _applicationId: string
@@ -86,6 +91,56 @@ class SendbirdChatAPI {
     return await this._baseApi.post<CreateUserInput, User>('users', {
       body: user,
     })
+  }
+
+  updateUser = async ({
+    user_id,
+    ...user
+  }: UpdateUserInput): Promise<AxiosResponse<User>> => {
+    return await this._baseApi.put<Omit<UpdateUserInput, 'user_id'>, User>(
+      `users/${encodeURIComponent(user_id)}`,
+      {
+        body: user,
+      }
+    )
+  }
+
+  getUser = async (userId: string): Promise<AxiosResponse<User>> => {
+    return await this._baseApi.get<User>(`users/${encodeURIComponent(userId)}`)
+  }
+
+  deleteUser = async (userId: string): Promise<AxiosResponse<never>> => {
+    return await this._baseApi.delete<never>(
+      `users/${encodeURIComponent(userId)}`
+    )
+  }
+
+  updateMetadata = async (
+    userId: string,
+    metadata: Metadata
+  ): Promise<AxiosResponse<Metadata>> => {
+    return await this._baseApi.put<
+      { metadata: Metadata; upsert?: boolean },
+      Metadata
+    >(`users/${encodeURIComponent(userId)}/metadata`, {
+      body: { metadata, upsert: true },
+    })
+  }
+
+  /**
+   * @description if `key` is empty -> removes all metadata
+   */
+  deleteMetadata = async (
+    userId: string,
+    key?: string
+  ): Promise<AxiosResponse<never>> => {
+    const deleteAllKeys = key === undefined || key === ''
+
+    return await this._baseApi.delete<never>(
+      `users/${encodeURIComponent(userId)}/metadata${
+        deleteAllKeys ? '' : `/${encodeURIComponent(key)}`
+      }`
+    )
   }
 }
 
