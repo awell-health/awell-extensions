@@ -22,7 +22,7 @@ class SendbirdBaseAPI {
     this._headers = {
       'Content-Type': 'application/json; charset=utf8',
       'Api-Token': this._token,
-    }
+    } as const
   }
 
   post = async <I extends undefined | object, R>(
