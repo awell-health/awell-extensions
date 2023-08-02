@@ -1,5 +1,6 @@
 import { type Extension } from '@awell-health/extensions-core'
 import { AuthorType, Category } from '@awell-health/extensions-core'
+import * as actions from './v1/actions'
 import { settings } from './settings'
 
 export const Sendbird: Extension = {
@@ -12,6 +13,6 @@ export const Sendbird: Extension = {
   author: {
     authorType: AuthorType.AWELL,
   },
-  actions: {},
+  actions,
   settings,
 }
