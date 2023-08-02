@@ -4,6 +4,11 @@ import {
   type CreateUserInput,
   type User,
   type Metadata,
+  type CreateCustomerInput,
+  type Customer,
+  type UpdateCustomerCustomFieldsInput,
+  type CreateTicketInput,
+  type Ticket,
 } from '../types'
 
 class SendbirdBaseAPI {
@@ -73,7 +78,7 @@ class SendbirdBaseAPI {
 }
 
 class SendbirdChatAPI {
-  readonly _baseApi: SendbirdBaseAPI
+  private readonly _baseApi: SendbirdBaseAPI
 
   constructor({
     applicationId,
@@ -148,7 +153,7 @@ class SendbirdChatAPI {
 }
 
 class SendbirdDeskAPI {
-  readonly _baseApi: SendbirdBaseAPI
+  private readonly _baseApi: SendbirdBaseAPI
 
   constructor({
     applicationId,
@@ -164,10 +169,46 @@ class SendbirdDeskAPI {
       tokenHeaderKey: 'SENDBIRDDESKAPITOKEN',
     })
   }
+
+  createCustomer = async (
+    customer: CreateCustomerInput
+  ): Promise<AxiosResponse<Customer>> => {
+    return await this._baseApi.post<CreateCustomerInput, Customer>(
+      'customers',
+      {
+        body: customer,
+      }
+    )
+  }
+
+  getCustomer = async (
+    customerId: number
+  ): Promise<AxiosResponse<Customer>> => {
+    return await this._baseApi.get<Customer>(`customers/${customerId}`)
+  }
+
+  updateCustomerCustomFields = async (
+    customerId: number,
+    { customFields }: Pick<UpdateCustomerCustomFieldsInput, 'customFields'>
+  ): Promise<AxiosResponse<Customer>> => {
+    return await this._baseApi.patch<
+      Pick<UpdateCustomerCustomFieldsInput, 'customFields'>,
+      Customer
+    >(`customers/${customerId}/custom_fields`, {
+      body: { customFields },
+    })
+  }
+
+  createTicket = async (
+    ticket: CreateTicketInput
+  ): Promise<AxiosResponse<Ticket>> => {
+    return await this._baseApi.post<CreateTicketInput, Ticket>('tickets', {
+      body: ticket,
+    })
+  }
 }
 
 export class SendbirdClient {
-  private readonly _applicationId: string
   readonly chatApi: SendbirdChatAPI
   readonly deskApi: SendbirdDeskAPI
 
@@ -180,7 +221,6 @@ export class SendbirdClient {
     chatApiToken: string
     deskApiToken: string
   }) {
-    this._applicationId = applicationId
     this.chatApi = new SendbirdChatAPI({ applicationId, token: chatApiToken })
     this.deskApi = new SendbirdDeskAPI({ applicationId, token: deskApiToken })
   }

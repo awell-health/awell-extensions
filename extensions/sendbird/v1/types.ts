@@ -18,3 +18,70 @@ export interface CreateUserInput
 }
 
 export interface UpdateUserInput extends Omit<CreateUserInput, 'metadata'> {}
+
+export interface CustomField {
+  id: number
+  key: string
+  value: string
+}
+
+export enum ChannelType {
+  SENDBIRD = 'SENDBIRD',
+  FACEBOOK_PAGE = 'FACEBOOK_PAGE',
+  TWITTER_USER = 'TWITTER_USER',
+  INSTAGRAM_USER = 'INSTAGRAM_USER',
+  WHATSAPP_USER = 'WHATSAPP_USER',
+}
+
+export interface Customer {
+  id: number
+  sendbirdId: string
+  channelType: ChannelType
+  project: number
+  displayName: string
+  customFields: CustomField[]
+  createdAt: string
+}
+
+export interface CreateCustomerInput {
+  sendbirdId: string
+}
+
+export interface UpdateCustomerCustomFieldsInput {
+  customerId: number
+  // ! JSON string
+  customFields: string
+}
+
+export enum TicketPriority {
+  LOW = 'LOW',
+  MEDIUM = 'MEDIUM',
+  HIGH = 'HIGH',
+  URGENT = 'URGENT',
+}
+
+export interface Group {
+  id: number
+  name: string
+  key: string
+  createdAt: string
+}
+
+export interface Ticket {
+  channelName: string
+  customer: Customer
+  group: Group
+  customFields: CustomField[]
+  priority: TicketPriority
+  createdAt: string
+  issuedAt: string
+  closedAt: string
+}
+
+export interface CreateTicketInput extends Pick<Ticket, 'channelName'> {
+  customerId: number
+  // ! JSON string
+  customFields?: string
+  groupKey?: string
+  priority?: TicketPriority
+}
