@@ -1,4 +1,4 @@
-import { type User } from '../../types'
+import { ChannelType, type Customer, type User } from '../../types'
 
 export const mockedDates = {
   timestamp: 1690848000,
@@ -19,4 +19,20 @@ export const mockedUserData: User = {
   metadata: {
     email: 'test@test.com',
   },
+}
+
+export const mockedCustomerData: Customer = {
+  id: 1,
+  displayName: 'Johnny',
+  sendbirdId: 'Johnny',
+  channelType: ChannelType.SENDBIRD,
+  project: 1,
+  createdAt: mockedDates.iso,
+  customFields: [
+    {
+      id: 1,
+      key: 'email',
+      value: 'test@test.com',
+    },
+  ],
 }

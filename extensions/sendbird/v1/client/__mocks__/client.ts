@@ -1,4 +1,4 @@
-import { mockedUserData } from './testData'
+import { mockedCustomerData, mockedUserData } from './testData'
 
 export const SendbirdClientMockImplementation = {
   chatApi: {
@@ -14,8 +14,30 @@ export const SendbirdClientMockImplementation = {
     deleteUser: jest.fn(() => ({
       data: undefined,
     })),
+    updateMetadata: jest.fn((arg) => ({
+      data: {
+        ...mockedUserData,
+        metadata: { ...mockedUserData.metadata, ...arg },
+      },
+    })),
+    deleteMetadata: jest.fn(() => ({
+      data: undefined,
+    })),
   },
-  deskApi: {},
+  deskApi: {
+    createCustomer: jest.fn((arg) => ({
+      data: arg,
+    })),
+    getCustomer: jest.fn((arg) => ({
+      data: mockedCustomerData,
+    })),
+    updateCustomerCustomFields: jest.fn((arg) => ({
+      data: arg,
+    })),
+    createTicket: jest.fn((arg) => ({
+      data: arg,
+    })),
+  },
 }
 
 const SendbirdClientMock = jest.fn(() => SendbirdClientMockImplementation)
