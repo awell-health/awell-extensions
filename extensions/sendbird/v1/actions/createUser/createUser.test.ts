@@ -1,4 +1,7 @@
-import { SendbirdClientMockImplementation } from '../../client/__mocks__'
+import {
+  mockedUserData,
+  SendbirdClientMockImplementation,
+} from '../../client/__mocks__'
 import { createUser } from '..'
 import { generateTestPayload } from '../../../../../src/tests'
 
@@ -18,10 +21,10 @@ describe('Create user', () => {
     },
     patient: { id: 'test-patient' },
     fields: {
-      userId: 'user-1',
-      nickname: 'johnny',
+      userId: mockedUserData.user_id,
+      nickname: mockedUserData.nickname,
       issueAccessToken: true,
-      metadata: '{"email":"test@test.com"}',
+      metadata: JSON.stringify(mockedUserData.metadata),
     },
     settings: {
       applicationId: 'applicationId',
@@ -44,8 +47,7 @@ describe('Create user', () => {
       nickname: basePayload.fields.nickname,
       issue_access_token: basePayload.fields.issueAccessToken,
       metadata: JSON.parse(basePayload.fields.metadata),
-      profile_url:
-        'https://sendbird.com/main/img/profiles/profile_05_512px.png',
+      profile_url: mockedUserData.profile_url,
     })
     expect(onComplete).toHaveBeenCalledWith({
       data_points: { userId: basePayload.fields.userId },
