@@ -30,7 +30,7 @@ export const fields = {
     id: 'metadata',
     label: 'Metadata',
     description:
-      'Specifies a JSON object to store up to five key-value items for additional user information such as a phone number, an email address, or a long description of the user. The key must not have a comma (,), and the value must be a string.',
+      'Specifies a JSON object to store up to five key-value items for additional user information such as a phone number, an email address, or a long description of the user. The key must not have a comma (,) and its length is limited to 128 characters. The value must be a string and its length is limited to 190 characters.',
     type: FieldType.JSON,
     required: false,
   },
