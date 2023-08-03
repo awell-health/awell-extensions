@@ -8,6 +8,9 @@ export const SendbirdClientMockImplementation = {
     getUser: jest.fn((arg) => ({
       data: mockedUserData,
     })),
+    updateUser: jest.fn((arg) => ({
+      data: arg,
+    })),
   },
   deskApi: {},
 }

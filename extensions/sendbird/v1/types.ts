@@ -17,7 +17,9 @@ export interface CreateUserInput
   issue_access_token?: boolean
 }
 
-export interface UpdateUserInput extends Omit<CreateUserInput, 'metadata'> {}
+export interface UpdateUserInput
+  extends Pick<User, 'user_id'>,
+    Partial<Omit<CreateUserInput, 'user_id' | 'metadata'>> {}
 
 export interface CustomField {
   id: number
