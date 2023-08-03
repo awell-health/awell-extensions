@@ -4,7 +4,7 @@ import { type Action } from '@awell-health/extensions-core'
 import { type settings } from '../../../settings'
 import { Category, validate } from '@awell-health/extensions-core'
 import { SettingsValidationSchema } from '../../../settings'
-import { FieldsValidationSchema, fields } from './config'
+import { FieldsValidationSchema, fields, dataPoints } from './config'
 import {
   SendbirdClient,
   isSendbirdError,
@@ -17,6 +17,7 @@ export const createUser: Action<typeof fields, typeof settings> = {
   description: 'Creates user using Chat API.',
   category: Category.COMMUNICATION,
   fields,
+  dataPoints,
   previewable: false,
   onActivityCreated: async (payload, onComplete, onError) => {
     try {
