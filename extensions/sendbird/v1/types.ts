@@ -19,7 +19,9 @@ export interface CreateUserInput
 
 export interface UpdateUserInput
   extends Pick<User, 'user_id'>,
-    Partial<Omit<CreateUserInput, 'user_id' | 'metadata'>> {}
+    Partial<Pick<User, 'nickname' | 'profile_url' | 'is_active'>> {
+  leave_all_when_deactivated?: boolean
+}
 
 export interface CustomField {
   id: number
