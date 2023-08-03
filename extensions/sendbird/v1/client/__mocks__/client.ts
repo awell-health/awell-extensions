@@ -1,11 +1,12 @@
-export const SendBirdClientMockImplementation = {
+export const SendbirdClientMockImplementation = {
   chatApi: {
     createUser: jest.fn((arg) => ({
       data: arg,
     })),
   },
+  deskApi: {},
 }
 
-const SendBirdClientMock = jest.fn(() => SendBirdClientMockImplementation)
+const SendbirdClientMock = jest.fn(() => SendbirdClientMockImplementation)
 
-export const SendBirdClient = SendBirdClientMock
+export const SendbirdClient = SendbirdClientMock

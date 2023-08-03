@@ -1,4 +1,4 @@
-import { SendBirdClientMockImplementation } from '../../client/__mocks__'
+import { SendbirdClientMockImplementation } from '../../client/__mocks__'
 import { createUser } from '..'
 import { generateTestPayload } from '../../../../../src/tests'
 
@@ -38,14 +38,14 @@ describe('Create user', () => {
     await createUser.onActivityCreated(basePayload, onComplete, onError)
 
     expect(
-      SendBirdClientMockImplementation.chatApi.createUser
+      SendbirdClientMockImplementation.chatApi.createUser
     ).toHaveBeenCalledWith({
       user_id: basePayload.fields.userId,
       nickname: basePayload.fields.nickname,
       issue_access_token: basePayload.fields.issueAccessToken,
       metadata: JSON.parse(basePayload.fields.metadata),
       profile_url:
-        'https://res.cloudinary.com/da7x4rzl4/image/upload/v1690885637/Awell%20Extensions/awell-webclip.png',
+        'https://sendbird.com/main/img/profiles/profile_05_512px.png',
     })
     expect(onComplete).toHaveBeenCalledWith({
       data_points: { userId: basePayload.fields.userId },
