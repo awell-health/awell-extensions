@@ -11,6 +11,9 @@ export const SendbirdClientMockImplementation = {
     updateUser: jest.fn((arg) => ({
       data: arg,
     })),
+    deleteUser: jest.fn(() => ({
+      data: undefined,
+    })),
   },
   deskApi: {},
 }
