@@ -48,7 +48,7 @@ export const createAppointment: Action<
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
     try {
       const appointment = appointmentSchema.parse(
-        payload.fields.appointment_data
+        JSON.parse(payload.fields.appointment_data as string)
       )
 
       // API Call should produce AuthError or something dif.

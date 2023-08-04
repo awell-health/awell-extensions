@@ -42,7 +42,8 @@ export const updateTask: Action<
   dataPoints,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
     try {
-      const task = taskWithIdSchema.parse(payload.fields.task_data)
+      const taskData = JSON.parse(payload.fields.task_data as string)
+      const task = taskWithIdSchema.parse(taskData)
 
       // API Call should produce AuthError or something dif.
       const api = makeAPIClient(payload.settings)

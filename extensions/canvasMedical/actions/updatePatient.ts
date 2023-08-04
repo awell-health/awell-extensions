@@ -47,7 +47,8 @@ export const updatePatient: Action<
   dataPoints,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
     try {
-      const patient = patientWithIdSchema.parse(payload.fields.patient_data)
+      const patientData = JSON.parse(payload.fields.patient_data as string)
+      const patient = patientWithIdSchema.parse(JSON.parse(patientData))
       // API Call should produce AuthError or something dif.
       const api = makeAPIClient(payload.settings)
 

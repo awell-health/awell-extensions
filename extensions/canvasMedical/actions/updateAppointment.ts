@@ -42,9 +42,10 @@ export const updateAppointment: Action<
   dataPoints,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
     try {
-      const appointment = appointmentWithIdSchema.parse(
-        payload.fields.appointment_data
+      const appointmentData = JSON.parse(
+        payload.fields.appointment_data as string
       )
+      const appointment = appointmentWithIdSchema.parse(appointmentData)
 
       // API Call should produce AuthError or something dif.
       const api = makeAPIClient(payload.settings)
