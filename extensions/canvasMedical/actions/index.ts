@@ -7,6 +7,7 @@ import { createAppointment } from './createAppointment'
 import { getTask } from './getTask'
 import { updateTask } from './updateTask'
 import { createTask } from './createTask'
+import { extractPatientInfo } from './extractPatientFields'
 
 export const actions = {
   getPatient,
@@ -18,4 +19,5 @@ export const actions = {
   getTask,
   updateTask,
   createTask,
+  extractPatientInfo,
 }
