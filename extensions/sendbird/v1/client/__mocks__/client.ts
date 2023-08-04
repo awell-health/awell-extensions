@@ -14,10 +14,10 @@ export const SendbirdClientMockImplementation = {
     deleteUser: jest.fn(() => ({
       data: undefined,
     })),
-    updateMetadata: jest.fn((arg) => ({
+    updateMetadata: jest.fn((_, metadata) => ({
       data: {
-        ...mockedUserData,
-        metadata: { ...mockedUserData.metadata, ...arg },
+        ...mockedUserData.metadata,
+        ...metadata,
       },
     })),
     deleteMetadata: jest.fn(() => ({
