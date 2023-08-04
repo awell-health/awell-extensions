@@ -26,7 +26,7 @@ export const SendbirdClientMockImplementation = {
   },
   deskApi: {
     createCustomer: jest.fn((arg) => ({
-      data: arg,
+      data: { ...mockedCustomerData, ...arg },
     })),
     getCustomer: jest.fn((arg) => ({
       data: mockedCustomerData,
