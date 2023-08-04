@@ -22,8 +22,8 @@ export const mockedUserData: User = {
 
 export const mockedCustomerData: Customer = {
   id: 1,
-  displayName: 'Johnny',
-  sendbirdId: 'Johnny',
+  displayName: mockedUserData.nickname,
+  sendbirdId: mockedUserData.user_id,
   channelType: ChannelType.SENDBIRD,
   project: 1,
   createdAt: mockedDates.iso,
