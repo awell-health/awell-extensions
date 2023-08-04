@@ -1,4 +1,7 @@
-import { type Setting, passwordSettings } from '@awell-health/extensions-core'
+import {
+  type Setting,
+  clientCredentialsSettings,
+} from '@awell-health/extensions-core'
 
 export const settings = {
   base_url: {
@@ -8,5 +11,5 @@ export const settings = {
     description: 'The base URL of Canvas Medical API.',
     required: true,
   },
-  ...passwordSettings,
+  ...clientCredentialsSettings,
 } satisfies Record<string, Setting>
