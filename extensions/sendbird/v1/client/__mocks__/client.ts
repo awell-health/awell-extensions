@@ -1,4 +1,8 @@
-import { mockedCustomerData, mockedUserData } from './testData'
+import {
+  mockedCustomerData,
+  mockedTicketData,
+  mockedUserData,
+} from './testData'
 
 export const SendbirdClientMockImplementation = {
   chatApi: {
@@ -35,7 +39,7 @@ export const SendbirdClientMockImplementation = {
       data: mockedCustomerData,
     })),
     createTicket: jest.fn((arg) => ({
-      data: arg,
+      data: mockedTicketData,
     })),
   },
 }

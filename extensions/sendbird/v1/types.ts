@@ -73,6 +73,7 @@ export interface Group {
 }
 
 export interface Ticket {
+  id: number
   channelName: string
   customer: Customer
   group: Group
@@ -85,8 +86,8 @@ export interface Ticket {
 
 export interface CreateTicketInput extends Pick<Ticket, 'channelName'> {
   customerId: number
+  groupKey?: string
   // ! JSON string
   customFields?: string
-  groupKey?: string
   priority?: TicketPriority
 }

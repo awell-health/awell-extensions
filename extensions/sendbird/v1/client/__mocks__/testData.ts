@@ -1,4 +1,11 @@
-import { ChannelType, type Customer, type User } from '../../types'
+import {
+  ChannelType,
+  type Ticket,
+  type Customer,
+  type User,
+  TicketPriority,
+  type Group,
+} from '../../types'
 
 // both dates are equal
 export const mockedDates = {
@@ -34,4 +41,23 @@ export const mockedCustomerData: Customer = {
       value: 'test@test.com',
     },
   ],
+}
+
+export const mockedGroupData: Group = {
+  id: 1,
+  createdAt: mockedDates.iso,
+  key: 'issue-1',
+  name: 'Issue team',
+}
+
+export const mockedTicketData: Ticket = {
+  id: 1,
+  channelName: 'Issue #1',
+  createdAt: mockedDates.iso,
+  closedAt: mockedDates.iso,
+  issuedAt: mockedDates.iso,
+  customer: mockedCustomerData,
+  customFields: mockedCustomerData.customFields,
+  priority: TicketPriority.URGENT,
+  group: mockedGroupData,
 }
