@@ -7,8 +7,8 @@ import { SettingsValidationSchema } from '../../../settings'
 import { FieldsValidationSchema, fields } from './config'
 import {
   SendbirdClient,
-  isSendbirdError,
-  sendbirdErrorToActivityEvent,
+  isSendbirdChatError,
+  sendbirdChatErrorToActivityEvent,
 } from '../../client'
 
 export const deleteUser: Action<typeof fields, typeof settings> = {
@@ -55,8 +55,8 @@ export const deleteUser: Action<typeof fields, typeof settings> = {
             },
           ],
         })
-      } else if (isSendbirdError(err)) {
-        const events = sendbirdErrorToActivityEvent(err)
+      } else if (isSendbirdChatError(err)) {
+        const events = sendbirdChatErrorToActivityEvent(err)
         await onError({ events })
       } else {
         const message = (err as Error).message

@@ -20,6 +20,7 @@ export interface CreateUserInput
 export interface UpdateUserInput
   extends Pick<User, 'user_id'>,
     Partial<Pick<User, 'nickname' | 'profile_url' | 'is_active'>> {
+  issue_access_token?: boolean
   leave_all_when_deactivated?: boolean
 }
 
