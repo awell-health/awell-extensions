@@ -7,8 +7,8 @@ import { SettingsValidationSchema } from '../../../settings'
 import { FieldsValidationSchema, fields, dataPoints } from './config'
 import {
   SendbirdClient,
-  isSendbirdChatError,
-  sendbirdChatErrorToActivityEvent,
+  isSendbirdDeskError,
+  sendbirdDeskErrorToActivityEvent,
 } from '../../client'
 
 export const createCustomer: Action<typeof fields, typeof settings> = {
@@ -58,8 +58,8 @@ export const createCustomer: Action<typeof fields, typeof settings> = {
             },
           ],
         })
-      } else if (isSendbirdChatError(err)) {
-        const events = sendbirdChatErrorToActivityEvent(err)
+      } else if (isSendbirdDeskError(err)) {
+        const events = sendbirdDeskErrorToActivityEvent(err)
         await onError({ events })
       } else {
         const message = (err as Error).message
