@@ -32,7 +32,7 @@ export const SendbirdClientMockImplementation = {
       data: mockedCustomerData,
     })),
     updateCustomerCustomFields: jest.fn((arg) => ({
-      data: arg,
+      data: mockedCustomerData,
     })),
     createTicket: jest.fn((arg) => ({
       data: arg,
