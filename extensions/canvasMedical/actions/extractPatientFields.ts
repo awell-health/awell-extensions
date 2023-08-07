@@ -65,10 +65,8 @@ export const extractPatientInfo: Action<
   dataPoints,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
     try {
-      console.log('fields')
-      console.dir(payload.fields, { depth: null })
       const patientData = JSON.parse(payload.fields.patient_data as string)
-      const patient = patientWithIdSchema.parse(JSON.parse(patientData))
+      const patient = patientWithIdSchema.parse(patientData)
 
       const { firstName, lastName } = patient.name.reduce(
         (acc, name) => {
