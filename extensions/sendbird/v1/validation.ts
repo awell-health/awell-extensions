@@ -22,6 +22,16 @@ export const JsonStringValidationSchema = z
         return z.NEVER
       }
 
+      const keys = Object.keys(parsedJson)
+
+      if (keys.some((key) => /(.*,.*)+/.test(key))) {
+        ctx.addIssue({
+          code: 'custom',
+          message: 'Each key of the JSON must not have a comma',
+        })
+        return z.NEVER
+      }
+
       return parsedJson
     } catch (e) {
       ctx.addIssue({ code: 'custom', message: 'Invalid JSON' })
