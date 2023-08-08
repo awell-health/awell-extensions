@@ -14,7 +14,7 @@ import {
 export const updateMetadata: Action<typeof fields, typeof settings> = {
   key: 'updateMetadata',
   title: 'Update metadata',
-  description: 'Updates metadata using Chat API.',
+  description: 'Updates user metadata using Chat API.',
   category: Category.COMMUNICATION,
   fields,
   previewable: false,

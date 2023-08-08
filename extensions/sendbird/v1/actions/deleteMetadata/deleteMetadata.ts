@@ -15,7 +15,7 @@ import { isEmpty } from 'lodash'
 export const deleteMetadata: Action<typeof fields, typeof settings> = {
   key: 'deleteMetadata',
   title: 'Delete metadata',
-  description: 'Deletes metadata using Chat API.',
+  description: 'Deletes user metadata using Chat API.',
   category: Category.COMMUNICATION,
   fields,
   previewable: false,
