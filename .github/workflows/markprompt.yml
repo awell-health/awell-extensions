@@ -24,6 +24,12 @@ jobs:
             cp "$file" "$(dirname "$file")/${parent}_extension.md"
           done
 
+      - name: Generate Marketplace File
+        run: |
+          extensions_list=$(find extensions -type d -mindepth 1 -maxdepth 1 -printf "- %f\n")
+          echo "# Awell Marketplace\n\nThe Awell Marketplace lists all available extensions that help you integrate all the apps you already use for CareOps in your care flows. Awell has an integration or extension with the following apps:" > extensions/marketplace.md
+          echo "$extensions_list" >> extensions/marketplace.md
+
       - name: Zip Docs
         run: zip data.zip $(find extensions -type f -name "*_extension.md")
 
@@ -38,3 +44,4 @@ jobs:
       - name: Clean Up Copied Files
         run: |
           find extensions -type f -name "*_extension.md" -exec sh -c 'parent=$(basename $(dirname {})); filename=$(basename {}); if [ "$filename" = "${parent}_extension.md" ]; then rm -f {}; fi' \;
+          rm extensions/marketplace.md
