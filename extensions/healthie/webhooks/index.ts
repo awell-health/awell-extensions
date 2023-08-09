@@ -81,5 +81,5 @@ export const webhooks = [
   taskUpdated,
   goalCreated,
   goalUpdated,
-  goalDeleted
+  goalDeleted,
 ]
