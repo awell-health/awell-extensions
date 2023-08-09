@@ -21,12 +21,13 @@ jobs:
         run: |
           find extensions -type f -name "README.md" -print0 | while IFS= read -r -d '' file; do
             parent=$(basename "$(dirname "$file")")
-            cp "$file" "$(dirname "$file")/${parent}_extension.md"
+            if [ "$parent" != "avaAi" ] && [ "$parent" != "hello-world" ] && [ "$parent" != "wellinks" ]; then
+              cp "$file" "$(dirname "$file")/${parent}_extension.md"
+            fi
           done
 
       - name: Generate Marketplace File
         run: |
-          extensions_list=$(find extensions -type d -mindepth 1 -maxdepth 1 -printf "- %f\n")
           echo '---' > extensions/marketplace.md
           echo 'title: Awell Marketplace' >> extensions/marketplace.md
           echo 'description: The Awell Marketplace lists all available extensions that help you integrate all the apps you already use for CareOps in your care flows.' >> extensions/marketplace.md
@@ -34,7 +35,12 @@ jobs:
           echo '# Awell Marketplace' >> extensions/marketplace.md
           echo '' >> extensions/marketplace.md
           echo 'The Awell Marketplace lists all available extensions that help you integrate all the apps you already use for CareOps in your care flows. Awell has an integration or extension with the following apps:' >> extensions/marketplace.md
-          echo "$extensions_list" >> extensions/marketplace.md
+
+          find extensions -type f -name "*_extension.md" -print0 | while IFS= read -r -d '' file; do
+            title=$(grep -m 1 '^title: ' "$file" | sed -e 's/title: //')
+            description=$(grep -m 1 '^description: ' "$file" | sed -e 's/description: //')
+            echo "- $title: $description" >> extensions/marketplace.md
+          done
 
       - name: Zip Docs
         run: zip data.zip $(find extensions -type f -name "*_extension.md") extensions/marketplace.md

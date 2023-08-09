@@ -1,3 +1,7 @@
+---
+title: Cal.com
+description: Cal.com is a modern and open source scheduling platform. With HIPAA, GDPR and SOC2 compliance, you can ensure that data is well-protected and that makes Cal.com a great fit for healthcare use cases.
+---
 # Cal.com
 
 [Cal.com](https://cal.com/) is a modern and **open source** scheduling platform. With HIPAA, GDPR and SOC2 compliance, you can ensure that data is well-protected and that makes Cal.com a great fit for healthcare use cases.
