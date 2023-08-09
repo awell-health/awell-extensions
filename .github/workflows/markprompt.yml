@@ -1,0 +1,40 @@
+name: Push docs to MarkPrompt
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  MARKPROMPT_TOKEN: ${{ secrets.MARKPROMPT_TOKEN }}
+
+jobs:
+  upload-docs:
+    name: Upload Docs to MarkPrompt
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Prepare Renamed Docs
+        run: |
+          find extensions -type f -name "README.md" -print0 | while IFS= read -r -d '' file; do
+            parent=$(basename "$(dirname "$file")")
+            cp "$file" "$(dirname "$file")/${parent}_extension.md"
+          done
+
+      - name: Zip Docs
+        run: zip data.zip $(find extensions -type f -name "*_extension.md")
+
+      - name: Upload docs to MarkPrompt
+        run: |
+          curl https://api.markprompt.com/v1/train \
+          -X POST \
+          -H "Authorization: Bearer ${{ env.MARKPROMPT_TOKEN }}" \
+          -H "Content-Type: application/zip" \
+          --data-binary @data.zip
+
+      - name: Clean Up Copied Files
+        run: |
+          find extensions -type f -name "*_extension.md" -exec sh -c 'parent=$(basename $(dirname {})); filename=$(basename {}); if [ "$filename" = "${parent}_extension.md" ]; then rm -f {}; fi' \;
