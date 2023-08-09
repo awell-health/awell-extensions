@@ -1,5 +1,5 @@
 ---
-title: Elation Sign
+title: Elation
 description: Elation is a cloud-based health record system designed for healthcare providers, clinics, and medical practices.
 ---
 # Elation
