@@ -1,3 +1,7 @@
+---
+title: DocuSign
+description: Make your business faster, simpler and more cost-efficient with electronic agreements. Agree with confidence, with intuitive signing experiences across virtually any device.
+---
 # DocuSign
 
 Make your business faster, simpler and more cost-efficient with electronic agreements. Agree with confidence, with intuitive signing experiences across virtually any device.

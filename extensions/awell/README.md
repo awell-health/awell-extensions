@@ -1,3 +1,7 @@
+---
+title: Awell Workflow
+description: Enrich your care flows with powerful Awell actions.
+---
 # Awell API extension
 
 ## Extension settings

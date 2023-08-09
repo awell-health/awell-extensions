@@ -1,3 +1,7 @@
+---
+title: Sendgrid
+description: SendGrid is a cloud-based email delivery platform that provides services for sending and managing email campaigns, transactional emails, and other types of messages.
+---
 # Sendgrid
 
 SendGrid is a cloud-based email delivery platform that provides services for sending and managing email campaigns, transactional emails, and other types of messages.

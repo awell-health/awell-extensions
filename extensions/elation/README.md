@@ -1,3 +1,7 @@
+---
+title: Elation Sign
+description: Elation is a cloud-based health record system designed for healthcare providers, clinics, and medical practices.
+---
 # Elation
 
 Elation is a cloud-based health record system designed for healthcare providers, clinics, and medical practices. It offers a range of features including patient scheduling, charting, e-prescribing, billing, and telemedicine. Overall, Elation is designed to streamline the workflow of medical practices, improve patient care, and increase efficiency.

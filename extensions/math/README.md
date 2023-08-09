@@ -1,3 +1,7 @@
+---
+title: Math
+description: This extension adds custom actions to your care flow for simple mathematical operations.
+---
 # Math
 
 This extension adds custom actions to your care flow for simple mathematical operations.
