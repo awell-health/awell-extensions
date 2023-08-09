@@ -27,7 +27,13 @@ jobs:
       - name: Generate Marketplace File
         run: |
           extensions_list=$(find extensions -type d -mindepth 1 -maxdepth 1 -printf "- %f\n")
-          echo "# Awell Marketplace\n\nThe Awell Marketplace lists all available extensions that help you integrate all the apps you already use for CareOps in your care flows. Awell has an integration or extension with the following apps:" > extensions/marketplace.md
+          echo '---' > extensions/marketplace.md
+          echo 'title: Awell Marketplace' >> extensions/marketplace.md
+          echo 'description: The Awell Marketplace lists all available extensions that help you integrate all the apps you already use for CareOps in your care flows.' >> extensions/marketplace.md
+          echo '---' >> extensions/marketplace.md
+          echo '# Awell Marketplace' >> extensions/marketplace.md
+          echo '' >> extensions/marketplace.md
+          echo 'The Awell Marketplace lists all available extensions that help you integrate all the apps you already use for CareOps in your care flows. Awell has an integration or extension with the following apps:' >> extensions/marketplace.md
           echo "$extensions_list" >> extensions/marketplace.md
 
       - name: Zip Docs
