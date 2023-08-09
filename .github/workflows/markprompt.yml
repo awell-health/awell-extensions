@@ -37,7 +37,7 @@ jobs:
           echo "$extensions_list" >> extensions/marketplace.md
 
       - name: Zip Docs
-        run: zip data.zip $(find extensions -type f -name "*_extension.md")
+        run: zip data.zip $(find extensions -type f -name "*_extension.md") extensions/marketplace.md
 
       - name: Upload docs to MarkPrompt
         run: |
