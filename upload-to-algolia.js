@@ -18,7 +18,7 @@ async function clearObjects() {
   
     try {
       const { objectIDs } = await index.deleteBy({
-        filters: "space:'Awell Extensions' AND space:awell-extensions",
+        filters: "source:awell-extensions-github-repo",
       });
       console.log('Objects deleted:', objectIDs);
     } catch (error) {
@@ -54,6 +54,7 @@ function generateAlgoliaData() {
       description: description,
       content: content,
       slug: `awell-extensions/marketplace/${extensionKey}`,
+      source: 'awell-extensions-github-repo'
     };
   }).filter((extension) => EXCLUDE_EXTENSIONS.includes(extension.objectID) === false);
 }
