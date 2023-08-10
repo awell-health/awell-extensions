@@ -1,5 +1,5 @@
 ---
-title: Cal.com
+title: Cloudinary
 description: Cloudinary is a cloud-based image and video management platform that provides a comprehensive set of tools for storing, managing, and delivering digital media assets. 
 ---
 # Cloudinary
