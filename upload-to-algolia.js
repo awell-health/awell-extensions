@@ -55,7 +55,7 @@ function generateAlgoliaData() {
       content: content,
       slug: `/awell-extensions/marketplace/${extensionKey}`,
     };
-  }).filter((extension) => EXCLUDE_EXTENSIONS.includes(extension.objectID) === false);));
+  }).filter((extension) => EXCLUDE_EXTENSIONS.includes(extension.objectID) === false);
 }
 
 // Upload data to Algolia
