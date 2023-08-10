@@ -18,7 +18,7 @@ async function clearObjects() {
   
     try {
       const { objectIDs } = await index.deleteBy({
-        filters: 'space:Awell Extensions AND space:awell-extensions',
+        filters: "space:'Awell Extensions' AND space:awell-extensions",
       });
       console.log('Objects deleted:', objectIDs);
     } catch (error) {
