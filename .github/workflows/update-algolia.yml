@@ -1,0 +1,28 @@
+name: Algolia Index Update
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  update_algolia_index:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Update Algolia Index
+        run: node generate-data.js
+        env:
+            ALGOLIA_APP_ID: ${{ secrets.ALGOLIA_APP_ID }}
+            ALGOLIA_ADMIN_KEY: ${{ secrets.ALGOLIA_ADMIN_KEY }}
