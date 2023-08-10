@@ -9,7 +9,7 @@ const ALGOLIA_APP_ID = process.env.ALGOLIA_APP_ID || '';
 const ALGOLIA_ADMIN_KEY = process.env.ALGOLIA_ADMIN_KEY || '';
 const INDEX_NAME = 'awell_developers';
 
-const EXCLUDE_EXTENSIONS = ['wellinks', 'hello-world'];
+const EXCLUDE_EXTENSIONS = ['wellinks', 'hello-world', 'avaAi'];
 
 // Function to clear objects in Algolia
 async function clearObjects() {
