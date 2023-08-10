@@ -9,7 +9,7 @@ const ALGOLIA_APP_ID = process.env.ALGOLIA_APP_ID || '';
 const ALGOLIA_ADMIN_KEY = process.env.ALGOLIA_ADMIN_KEY || '';
 const INDEX_NAME = 'awell_developers';
 
-const EXCLUDE_EXTENSIONS = ['awell-extensions', 'hello-world'];
+const EXCLUDE_EXTENSIONS = ['wellinks', 'hello-world'];
 
 // Function to clear objects in Algolia
 async function clearObjects() {
@@ -18,7 +18,7 @@ async function clearObjects() {
   
     try {
       const { objectIDs } = await index.deleteBy({
-        filters: encodeURIComponent('space:Awell Extensions'),
+        filters: 'space:Awell Extensions AND space:awell-extensions',
       });
       console.log('Objects deleted:', objectIDs);
     } catch (error) {
@@ -53,7 +53,7 @@ function generateAlgoliaData() {
       title: title,
       description: description,
       content: content,
-      slug: `/awell-extensions/marketplace/${extensionKey}`,
+      slug: `awell-extensions/marketplace/${extensionKey}`,
     };
   }).filter((extension) => EXCLUDE_EXTENSIONS.includes(extension.objectID) === false);
 }
