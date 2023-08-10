@@ -21,8 +21,11 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Install gray-matter and algoliasearch
+        run: npm install gray-matter algoliasearch glob
+
       - name: Update Algolia Index
-        run: node generate-data.js
+        run: node upload-to-algolia.js
         env:
             ALGOLIA_APP_ID: ${{ secrets.ALGOLIA_APP_ID }}
             ALGOLIA_ADMIN_KEY: ${{ secrets.ALGOLIA_ADMIN_KEY }}
