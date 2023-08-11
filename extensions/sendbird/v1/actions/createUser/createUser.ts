@@ -10,6 +10,7 @@ import {
   isSendbirdChatError,
   sendbirdChatErrorToActivityEvent,
 } from '../../client'
+import { DEFAULT_PROFILE_URL } from '../../constants'
 
 export const createUser: Action<typeof fields, typeof settings> = {
   key: 'createUser',
@@ -23,7 +24,7 @@ export const createUser: Action<typeof fields, typeof settings> = {
     try {
       const {
         settings: { applicationId, chatApiToken, deskApiToken },
-        fields: { userId, metadata, nickname, issueAccessToken },
+        fields: { userId, metadata, nickname, issueAccessToken, profileUrl },
       } = validate({
         schema: z.object({
           settings: SettingsValidationSchema,
@@ -43,9 +44,7 @@ export const createUser: Action<typeof fields, typeof settings> = {
         nickname,
         metadata,
         issue_access_token: issueAccessToken,
-        profile_url:
-          // default for now
-          'https://sendbird.com/main/img/profiles/profile_05_512px.png',
+        profile_url: profileUrl ?? DEFAULT_PROFILE_URL,
       })
 
       await onComplete({ data_points: { userId: res.data.user_id } })

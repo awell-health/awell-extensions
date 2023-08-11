@@ -25,6 +25,7 @@ describe('Create user', () => {
       nickname: mockedUserData.nickname,
       issueAccessToken: true,
       metadata: JSON.stringify(mockedUserData.metadata),
+      profileUrl: '',
     },
     settings: {
       applicationId: 'applicationId',

@@ -1,5 +1,10 @@
 import { z, type ZodTypeAny } from 'zod'
-import { type Field, FieldType } from '@awell-health/extensions-core'
+import {
+  type Field,
+  FieldType,
+  StringType,
+  makeStringOptional,
+} from '@awell-health/extensions-core'
 import { MetadataValidationSchema } from '../../../validation'
 
 export const fields = {
@@ -25,6 +30,14 @@ export const fields = {
     type: FieldType.BOOLEAN,
     required: false,
   },
+  profileUrl: {
+    id: 'profileUrl',
+    label: 'Profile URL',
+    description: "The URL of the user's profile image.",
+    type: FieldType.STRING,
+    stringType: StringType.URL,
+    required: false,
+  },
   metadata: {
     id: 'metadata',
     label: 'Metadata',
@@ -39,5 +52,6 @@ export const FieldsValidationSchema = z.object({
   userId: z.string().max(80).nonempty(),
   nickname: z.string().max(80).nonempty(),
   issueAccessToken: z.boolean().optional(),
+  profileUrl: makeStringOptional(z.string().url()),
   metadata: z.optional(MetadataValidationSchema),
 } satisfies Record<keyof typeof fields, ZodTypeAny>)
