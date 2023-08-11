@@ -8,7 +8,7 @@ export const fields = {
     type: FieldType.STRING,
     required: true,
     description:
-      'Specifies the Sendbird ID of a customer. Must be an ID that already exists in Sendbird Chat platform ("User ID" for example).',
+      'The Sendbird ID of a customer which must be an ID that already exists in Sendbird (eg: user id).',
   },
 } satisfies Record<string, Field>
 

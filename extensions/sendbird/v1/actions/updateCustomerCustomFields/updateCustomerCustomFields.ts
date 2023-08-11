@@ -17,7 +17,7 @@ export const updateCustomerCustomFields: Action<
 > = {
   key: 'updateCustomerCustomFields',
   title: "Update customer's custom fields",
-  description: "Updates customer's custom fields using Desk API.",
+  description: 'Updates custom fields of a customer using the Desk API.',
   category: Category.COMMUNICATION,
   fields,
   previewable: false,

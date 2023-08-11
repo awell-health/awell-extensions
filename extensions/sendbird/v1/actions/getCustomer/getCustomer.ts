@@ -15,7 +15,7 @@ import { isEmpty } from 'lodash'
 export const getCustomer: Action<typeof fields, typeof settings> = {
   key: 'getCustomer',
   title: 'Get customer',
-  description: 'Gets customer using Desk API.',
+  description: 'Retrieve information about a customer using the Desk API.',
   category: Category.COMMUNICATION,
   fields,
   dataPoints,

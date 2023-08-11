@@ -14,7 +14,7 @@ import {
 export const updateUser: Action<typeof fields, typeof settings> = {
   key: 'updateUser',
   title: 'Update user',
-  description: 'Updates user using Chat API.',
+  description: 'Updates a user using the Chat API.',
   category: Category.COMMUNICATION,
   fields,
   previewable: false,

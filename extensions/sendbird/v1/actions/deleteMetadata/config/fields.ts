@@ -7,7 +7,7 @@ export const fields = {
     id: 'userId',
     type: FieldType.STRING,
     required: true,
-    description: "A user's unique ID.",
+    description: "The user's unique ID in Sendbird.",
   },
   metadataKey: {
     label: 'Metadata key',
@@ -15,7 +15,7 @@ export const fields = {
     type: FieldType.STRING,
     required: false,
     description:
-      'Specifies the key of a metadata item. If not specified, all items of the metadata are deleted.',
+      'The key of the metadata item to delete. If not specified, all items of the metadata are deleted.',
   },
 } satisfies Record<string, Field>
 

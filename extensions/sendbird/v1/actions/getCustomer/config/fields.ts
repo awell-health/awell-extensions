@@ -7,7 +7,7 @@ export const fields = {
     id: 'customerId',
     type: FieldType.NUMERIC,
     required: true,
-    description: "A customer's unique ID.",
+    description: "The customer's unique ID in Sendbird.",
   },
 } satisfies Record<string, Field>
 

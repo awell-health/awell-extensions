@@ -8,13 +8,13 @@ export const fields = {
     id: 'userId',
     type: FieldType.STRING,
     required: true,
-    description: "A user's unique ID.",
+    description: "The user's unique ID in Sendbird.",
   },
   metadata: {
     id: 'metadata',
     label: 'Metadata',
     description:
-      'Specifies a JSON object to store up to five key-value items for additional user information such as a phone number, an email address, or a long description of the user. The key must not have a comma (,) and its length is limited to 128 characters. The value must be a string and its length is limited to 190 characters.',
+      'A JSON object that can store up to five key-value items for additional user information.',
     type: FieldType.JSON,
     required: true,
   },

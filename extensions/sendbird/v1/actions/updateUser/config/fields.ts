@@ -12,28 +12,27 @@ export const fields = {
     id: 'userId',
     type: FieldType.STRING,
     required: true,
-    description: "A user's unique ID.",
+    description: "The user's unique ID in Sendbird.",
   },
   nickname: {
     id: 'nickname',
     label: 'Nickname',
     type: FieldType.STRING,
-    description:
-      "Specifies the user's nickname. Maximum length is 80 characters.",
+    description: "The user's nickname. Maximum length is 80 characters.",
     required: false,
   },
   issueAccessToken: {
     id: 'issueAccessToken',
     label: 'Issue access token',
-    description: 'Determines whether to create an access token for the user.',
+    description:
+      'Determines whether to revoke the existing access token and create a new one for the user.',
     type: FieldType.BOOLEAN,
     required: false,
   },
   profileUrl: {
     id: 'profileUrl',
     label: 'Profile URL',
-    description:
-      'URL to an image that will be set as profile image of the user',
+    description: "The URL of the user's profile image.",
     type: FieldType.STRING,
     stringType: StringType.URL,
     required: false,

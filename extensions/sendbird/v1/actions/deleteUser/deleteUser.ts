@@ -14,7 +14,7 @@ import {
 export const deleteUser: Action<typeof fields, typeof settings> = {
   key: 'deleteUser',
   title: 'Delete user',
-  description: 'Deletes user using Chat API.',
+  description: 'Deletes a user using the Chat API.',
   category: Category.COMMUNICATION,
   fields,
   previewable: false,

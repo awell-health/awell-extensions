@@ -7,7 +7,7 @@ export const fields = {
     id: 'userId',
     type: FieldType.STRING,
     required: true,
-    description: "A user's unique ID.",
+    description: "The user's unique ID in Sendbird.",
   },
 } satisfies Record<string, Field>
 

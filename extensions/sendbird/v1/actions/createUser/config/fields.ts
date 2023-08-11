@@ -9,14 +9,13 @@ export const fields = {
     type: FieldType.STRING,
     required: true,
     description:
-      "Specifies a user's unique ID. Maximum length is 80 characters.",
+      "Specify a unique ID for the user, maximum length is 80 characters. Don't use personally identifiable information (PII) for the ID.",
   },
   nickname: {
     id: 'nickname',
     label: 'Nickname',
     type: FieldType.STRING,
-    description:
-      "Specifies the user's nickname. Maximum length is 80 characters.",
+    description: "The user's nickname. Maximum length is 80 characters.",
     required: true,
   },
   issueAccessToken: {

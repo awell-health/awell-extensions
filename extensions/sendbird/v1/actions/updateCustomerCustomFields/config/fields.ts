@@ -8,13 +8,13 @@ export const fields = {
     id: 'customerId',
     type: FieldType.NUMERIC,
     required: true,
-    description: "A customer's unique ID.",
+    description: "The customer's unique ID in Sendbird.",
   },
   customFields: {
     id: 'customFields',
     label: 'Custom fields',
     description:
-      "Specifies a JSON object to store up to twenty key-value items for additional customer information such as a phone number, an email address, or a long description of the customer. The specified keys must be registered as a custom field in Settings > Customer fields of your dashboard beforehand. The key must not have a comma (,) and its length is limited to 20 characters. The value's length is limited to 190 characters.",
+      'A JSON object that can store up to twenty key-value items for additional customer information. The specified keys must be registered as a custom field in Sendbird.',
     type: FieldType.JSON,
     required: true,
   },

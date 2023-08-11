@@ -14,7 +14,7 @@ import {
 export const createUser: Action<typeof fields, typeof settings> = {
   key: 'createUser',
   title: 'Create user',
-  description: 'Creates user using Chat API.',
+  description: 'Creates a user using the Chat API.',
   category: Category.COMMUNICATION,
   fields,
   dataPoints,

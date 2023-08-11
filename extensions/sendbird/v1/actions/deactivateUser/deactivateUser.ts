@@ -14,7 +14,7 @@ import {
 export const deactivateUser: Action<typeof fields, typeof settings> = {
   key: 'deactivateUser',
   title: 'Deactivate user',
-  description: 'Deactivate user using Chat API.',
+  description: 'Deactivates a user using the Chat API.',
   category: Category.COMMUNICATION,
   fields,
   previewable: false,

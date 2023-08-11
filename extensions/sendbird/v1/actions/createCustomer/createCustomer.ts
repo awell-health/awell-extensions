@@ -14,7 +14,7 @@ import {
 export const createCustomer: Action<typeof fields, typeof settings> = {
   key: 'createCustomer',
   title: 'Create customer',
-  description: 'Creates customer using Desk API.',
+  description: 'Creates a customer using the Desk API.',
   category: Category.COMMUNICATION,
   fields,
   dataPoints,

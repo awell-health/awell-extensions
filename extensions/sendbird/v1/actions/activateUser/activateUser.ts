@@ -14,7 +14,7 @@ import {
 export const activateUser: Action<typeof fields, typeof settings> = {
   key: 'activateUser',
   title: 'Activate user',
-  description: 'Activate user using Chat API.',
+  description: 'Activates a user using the Chat API.',
   category: Category.COMMUNICATION,
   fields,
   previewable: false,
