@@ -72,16 +72,16 @@ export const extractPatientInfo: Action<
         (acc, name) => {
           if (name.use === 'official') {
             acc.firstName = name.given.join(' ').trim()
-            acc.lastName = name.family
+            acc.lastName = name.family?.trim() ?? ''
           }
           return acc
         },
         { firstName: '', lastName: '' }
       )
       const phone =
-        patient.telecom.find((t) => t.system === 'phone' && t.use === 'mobile')
-          ?.value ?? patient.telecom.find((t) => t.system === 'phone')?.value
-      const email = patient.telecom.find((t) => t.system === 'email')?.value
+        patient.telecom?.find((t) => t.system === 'phone' && t.use === 'mobile')
+          ?.value ?? patient.telecom?.find((t) => t.system === 'phone')?.value
+      const email = patient.telecom?.find((t) => t.system === 'email')?.value
       const dob = patient.birthDate
 
       await onComplete({

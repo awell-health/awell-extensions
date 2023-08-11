@@ -1,12 +1,12 @@
-import { getPatient } from '../getPatient'
-import { patientResource } from '../../__mocks__/patient'
+import { createTask } from '../createTask'
+import { taskData, taskResource } from '../../__mocks__/task'
 import { generateTestPayload } from '../../../../src/tests'
 import { makeAPIClient } from '../../client'
 import { mockMakeAPIClient } from '../../__mocks__/canvasApiClient'
 
 jest.mock('../../client')
 
-describe('getPatient', () => {
+describe('createTask', () => {
   const onComplete = jest.fn()
   const onError = jest.fn()
   const payload = {
@@ -18,9 +18,10 @@ describe('getPatient', () => {
       audience: undefined,
     },
     fields: {
-      patientId: patientResource.id,
+      task_data: JSON.stringify(taskData),
     },
   }
+
   beforeAll(async () => {
     ;(makeAPIClient as jest.Mock).mockImplementation(mockMakeAPIClient)
   })
@@ -28,15 +29,15 @@ describe('getPatient', () => {
     jest.clearAllMocks()
   })
 
-  it('should return patient', async () => {
-    await getPatient.onActivityCreated(
+  it('should create task', async () => {
+    await createTask.onActivityCreated(
       generateTestPayload(payload),
       onComplete,
       onError
     )
     expect(onComplete).toHaveBeenCalledTimes(1)
     expect(onComplete).toHaveBeenCalledWith({
-      data_points: { patient_data: JSON.stringify(patientResource) },
+      data_points: { taskId: taskResource.id },
     })
   })
 })

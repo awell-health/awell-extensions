@@ -1,12 +1,10 @@
-import { getPatient } from '../getPatient'
+import { extractPatientInfo } from '../extractPatientFields'
 import { patientResource } from '../../__mocks__/patient'
 import { generateTestPayload } from '../../../../src/tests'
-import { makeAPIClient } from '../../client'
-import { mockMakeAPIClient } from '../../__mocks__/canvasApiClient'
 
 jest.mock('../../client')
 
-describe('getPatient', () => {
+describe('extractPatientFields', () => {
   const onComplete = jest.fn()
   const onError = jest.fn()
   const payload = {
@@ -18,25 +16,26 @@ describe('getPatient', () => {
       audience: undefined,
     },
     fields: {
-      patientId: patientResource.id,
+      patient_data: JSON.stringify(patientResource),
     },
   }
-  beforeAll(async () => {
-    ;(makeAPIClient as jest.Mock).mockImplementation(mockMakeAPIClient)
-  })
-  beforeEach(async () => {
-    jest.clearAllMocks()
-  })
 
-  it('should return patient', async () => {
-    await getPatient.onActivityCreated(
+  it('should extract patient data', async () => {
+    await extractPatientInfo.onActivityCreated(
       generateTestPayload(payload),
       onComplete,
       onError
     )
     expect(onComplete).toHaveBeenCalledTimes(1)
     expect(onComplete).toHaveBeenCalledWith({
-      data_points: { patient_data: JSON.stringify(patientResource) },
+      data_points: {
+        patient_id: patientResource.id,
+        dob: patientResource.birthDate,
+        email: patientResource.telecom?.[1].value,
+        first_name: patientResource.name?.[0].given.join(' '),
+        last_name: patientResource.name?.[0].family,
+        phone: patientResource.telecom?.[0].value,
+      },
     })
   })
 })

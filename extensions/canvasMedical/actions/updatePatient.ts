@@ -47,8 +47,9 @@ export const updatePatient: Action<
   dataPoints,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
     try {
-      const patientData = JSON.parse(payload.fields.patient_data as string)
-      const patient = patientWithIdSchema.parse(JSON.parse(patientData))
+      const patient = patientWithIdSchema.parse(
+        JSON.parse(payload.fields.patient_data as string)
+      )
       // API Call should produce AuthError or something dif.
       const api = makeAPIClient(payload.settings)
 
@@ -60,6 +61,7 @@ export const updatePatient: Action<
         },
       })
     } catch (err) {
+      console.log(err)
       if (err instanceof ZodError) {
         const error = fromZodError(err)
         await onError({

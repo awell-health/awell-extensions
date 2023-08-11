@@ -1,4 +1,4 @@
-import { getPatient } from '../getPatient'
+import { updatePatient } from '../updatePatient'
 import { patientResource } from '../../__mocks__/patient'
 import { generateTestPayload } from '../../../../src/tests'
 import { makeAPIClient } from '../../client'
@@ -6,7 +6,7 @@ import { mockMakeAPIClient } from '../../__mocks__/canvasApiClient'
 
 jest.mock('../../client')
 
-describe('getPatient', () => {
+describe('updatePatient', () => {
   const onComplete = jest.fn()
   const onError = jest.fn()
   const payload = {
@@ -18,7 +18,7 @@ describe('getPatient', () => {
       audience: undefined,
     },
     fields: {
-      patientId: patientResource.id,
+      patient_data: JSON.stringify(patientResource),
     },
   }
   beforeAll(async () => {
@@ -28,15 +28,15 @@ describe('getPatient', () => {
     jest.clearAllMocks()
   })
 
-  it('should return patient', async () => {
-    await getPatient.onActivityCreated(
+  it('should update patient', async () => {
+    await updatePatient.onActivityCreated(
       generateTestPayload(payload),
       onComplete,
       onError
     )
     expect(onComplete).toHaveBeenCalledTimes(1)
     expect(onComplete).toHaveBeenCalledWith({
-      data_points: { patient_data: JSON.stringify(patientResource) },
+      data_points: { patient_id: patientResource.id },
     })
   })
 })
