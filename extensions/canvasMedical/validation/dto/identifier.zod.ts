@@ -3,9 +3,9 @@ import { periodSchema } from './period.zod'
 import { codeSchema } from './coding.zod'
 
 export const identifierSchema = z.object({
-  system: z.string(),
-  value: z.string(),
-  use: z.enum(['usual', 'official', 'secondary', 'temp', 'old']),
+  system: z.string().optional(),
+  value: z.string().optional(),
+  use: z.enum(['usual', 'official', 'secondary', 'temp', 'old']).optional(),
   period: z.array(periodSchema).optional(),
   type: z
     .object({
