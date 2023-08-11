@@ -15,11 +15,11 @@ export const fields = {
     type: FieldType.BOOLEAN,
     required: false,
     description:
-      'Determines whether the user leaves all joined group channels upon deactivation.',
+      'Determines whether the user leaves all joined group channels upon deactivation. Defaults to true if not specified.',
   },
 } satisfies Record<string, Field>
 
 export const FieldsValidationSchema = z.object({
   userId: z.string().nonempty(),
-  leaveAllGroupChannelsUponDeactivation: z.boolean().optional(),
+  leaveAllGroupChannelsUponDeactivation: z.boolean().optional().default(true),
 } satisfies Record<keyof typeof fields, ZodTypeAny>)

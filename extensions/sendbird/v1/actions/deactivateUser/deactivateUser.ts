@@ -40,8 +40,7 @@ export const deactivateUser: Action<typeof fields, typeof settings> = {
       await client.chatApi.updateUser({
         user_id: userId,
         is_active: false,
-        leave_all_when_deactivated:
-          leaveAllGroupChannelsUponDeactivation ?? false,
+        leave_all_when_deactivated: leaveAllGroupChannelsUponDeactivation,
       })
 
       await onComplete()
