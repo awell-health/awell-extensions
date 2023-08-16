@@ -9,8 +9,6 @@ import {
 import { Category } from '@awell-health/extensions-core'
 import { validateSettings, type settings } from '../../../settings'
 import DropboxSignSdk from '../../../common/sdk/dropboxSignSdk'
-import { fromZodError } from 'zod-validation-error'
-import { ZodError } from 'zod'
 import { HttpError } from '@dropbox/sign'
 
 export const createEmbeddedSignatureRequestWithTemplate: Action<
@@ -112,24 +110,6 @@ export const createEmbeddedSignatureRequestWithTemplate: Action<
         },
       })
     } catch (err) {
-      console.log(err)
-      if (err instanceof ZodError) {
-        const error = fromZodError(err)
-        await onError({
-          events: [
-            {
-              date: new Date().toISOString(),
-              text: { en: error.name },
-              error: {
-                category: 'WRONG_INPUT',
-                message: `${error.message}`,
-              },
-            },
-          ],
-        })
-        return
-      }
-
       if (err instanceof HttpError) {
         const sdkErrorMessage = err.body?.error?.errorMsg
 
@@ -152,19 +132,8 @@ export const createEmbeddedSignatureRequestWithTemplate: Action<
         return
       }
 
-      const error = err as Error
-      await onError({
-        events: [
-          {
-            date: new Date().toISOString(),
-            text: { en: 'Something went wrong while orchestration the action' },
-            error: {
-              category: 'SERVER_ERROR',
-              message: error.message,
-            },
-          },
-        ],
-      })
+      // re-throw to be handled inside awell-extension-server
+      throw err
     }
   },
 }
