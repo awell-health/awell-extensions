@@ -11,6 +11,7 @@ Read about our contributing guidelines [here](https://developers.awellhealth.com
 **Reviews may take between 2-5 business days to complete.** Please review our [contributing guidelines](https://developers.awellhealth.com/awell-extensions/docs/getting-started/contributing-guidelines) for our internal guidelines around PR reviews.
 
 To help keep the PR process smooth, please try and remember to:
+
 - Make sure your `settings`, `fields`, and `datapoints` are well defined and documented, including the use of [zod validation](https://zod.dev/);
 - You have unittest coverage for your extension (see below for more details);
 - You have included/updated the `README.md` and `CHANGELOG.md` files with your changes;
@@ -25,6 +26,7 @@ We encourage you to fork the repo and build custom actions and webhooks to suppo
 ## Releasing Extensions
 
 When updates are made to the public extensions repository, the release process involves:
+
 - Packaging a new release by merging into the `main` branch (internal engineers can test locally by creating a `release/vX.X.X` branch)
 - Updating the `@awell-health/awell-extensions` dependency version in our private `awell-extension-server` repository
 - Publishing a release of our private repository
@@ -35,12 +37,13 @@ This process is currently manual, and we ask you to please be patient with our P
 ### Testing extension actions
 
 Extension actions can be tested in three ways. You can:
+
 1. Create unit tests (recommended);
 2. Use Cloud Pub/sub emulator ([instructions](https://developers.awellhealth.com/awell-extensions/docs/custom-actions/test-your-custom-actions)); or
 3. Test deployed extensions in Awell Studio
 
 Testing extensions in design is a great way to test your extension actions because it allows you to interact with real world components. If you want to test your extension in Awell Studio, be sure to set `previewable: true` in the extension action's settings.
-Finally, if your extension action requires some sort of asynchronous completion by the user (e.g. cal.com's extension allows a user to book an appointment in Awell Hosted Pages), then you *will not* be able to set `previewable: true` and the extension is not testable in this way.
+Finally, if your extension action requires some sort of asynchronous completion by the user (e.g. cal.com's extension allows a user to book an appointment in Awell Hosted Pages), then you _will not_ be able to set `previewable: true` and the extension is not testable in this way.
 
 ### Actions and webhooks
 
@@ -63,5 +66,13 @@ Datapoints are decided at ![BUILD] time and can be used by the designers as inpu
 Fields and datapoints provide you, the builders and designers, a powerful mechanism to take in variable data at one point in a care flow and use it in another place. The possibilities are endless!
 
 ### Extending OAuth
+
 For those who require OAuth2.0 in your flows, there is a base client available in `@awell-health/extensions-core`. By extending that base client, you can include more complex authentication flows in your custom actions. Please see `./extensions/elation/client.ts` for an example of how you can create DataWrappers, API Clients, and the necessary datawrapper constructor that must be passed to the API client to create your flows.
 Currently supported are Resource Owner Password Grant and Client Credentials Grant.
+
+### Error handling
+
+1. Base `AwellError` class is located inside `@awell-health/extensions-core` repository.
+2. You can add new common/generic handlers there if you want to extend it. That class is used by extensions server, so you do not have to handle them in actions. Only extension/action specific errors should be handled inside actions.
+3. If you handle action specific errors in an action, please remember about re-throwing unhandled errors, so that generic handler inside `@awell-health/extensions-core` can catch it. Without re-throw, the error wouldn't be caught anywhere.
+4. If there aren't any extension/action specific extensions, then you don't have to use try/catch block
