@@ -7,8 +7,7 @@ import {
 import { type settings, SettingsValidationSchema } from '../../../settings'
 import { isEmpty, isNil } from 'lodash'
 import { FieldsValidationSchema, fields } from './config'
-import { z, ZodError } from 'zod'
-import { fromZodError } from 'zod-validation-error'
+import { z } from 'zod'
 import { ResponseError } from '@sendgrid/helpers/classes'
 
 export const removeSuppressions: Action<typeof fields, typeof settings> = {
@@ -55,39 +54,15 @@ export const removeSuppressions: Action<typeof fields, typeof settings> = {
         })
       }
     } catch (err) {
-      if (err instanceof ZodError) {
-        const error = fromZodError(err)
-        await onError({
-          events: [
-            {
-              date: new Date().toISOString(),
-              text: { en: error.name },
-              error: {
-                category: 'WRONG_INPUT',
-                message: `${error.message}`,
-              },
-            },
-          ],
-        })
-        return
-      } else if (err instanceof ResponseError) {
+      if (err instanceof ResponseError) {
         const events = mapSendgridErrorsToActivityErrors(err)
         await onError({ events })
-        return
+      } else {
+        /**
+         * re-throw to be handled inside awell-extension-server
+         */
+        throw err
       }
-      const error = err as Error
-      await onError({
-        events: [
-          {
-            date: new Date().toISOString(),
-            text: { en: 'There was an error in processing the suppression' },
-            error: {
-              category: 'SERVER_ERROR',
-              message: error.message,
-            },
-          },
-        ],
-      })
     }
   },
 }
