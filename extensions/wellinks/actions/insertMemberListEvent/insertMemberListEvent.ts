@@ -96,79 +96,61 @@ export const insertMemberListEvent: Action<
       lockedById,
     } = fields
 
-    try {
-      if (isNil(settings.platformApiUrl) || isNil(settings.platformApiKey)) {
-        throw new Error(
-          'The Platform API URL and/or API Key is not set in the settings'
-        )
-      }
-      const client = new WellinksClient(
-        settings.platformApiUrl,
-        settings.platformApiKey
+    if (isNil(settings.platformApiUrl) || isNil(settings.platformApiKey)) {
+      throw new Error(
+        'The Platform API URL and/or API Key is not set in the settings'
       )
+    }
+    const client = new WellinksClient(
+      settings.platformApiUrl,
+      settings.platformApiKey
+    )
 
-      if (isNil(eventName)) {
-        await buildValidationError('eventName', onError)
-        return
-      }
-      if (isNil(memberId)) {
-        await buildValidationError('memberId', onError)
-        return
-      }
-      if (isNil(sourceName)) {
-        await buildValidationError('sourceName', onError)
-        return
-      }
-      if (isNil(sendgridListId)) {
-        await buildValidationError('sendgridListId', onError)
-        return
-      }
-      if (isNil(originatorName)) {
-        await buildValidationError('originatorName', onError)
-        return
-      }
-      if (isNil(eventDate)) {
-        await buildValidationError('eventDate', onError)
-        return
-      }
+    if (isNil(eventName)) {
+      await buildValidationError('eventName', onError)
+      return
+    }
+    if (isNil(memberId)) {
+      await buildValidationError('memberId', onError)
+      return
+    }
+    if (isNil(sourceName)) {
+      await buildValidationError('sourceName', onError)
+      return
+    }
+    if (isNil(sendgridListId)) {
+      await buildValidationError('sendgridListId', onError)
+      return
+    }
+    if (isNil(originatorName)) {
+      await buildValidationError('originatorName', onError)
+      return
+    }
+    if (isNil(eventDate)) {
+      await buildValidationError('eventDate', onError)
+      return
+    }
 
-      const response = await client.memberListEvent.insert({
-        eventName,
-        memberId,
-        sourceName,
-        sendgridListId,
-        originatorName,
-        eventDate,
-        lockedById,
+    const response = await client.memberListEvent.insert({
+      eventName,
+      memberId,
+      sourceName,
+      sendgridListId,
+      originatorName,
+      eventDate,
+      lockedById,
+    })
+    if (response === 201) {
+      await onComplete({
+        data_points: {
+          insertSuccessful: 'true',
+        },
       })
-      if (response === 201) {
-        await onComplete({
-          data_points: {
-            insertSuccessful: 'true',
-          },
-        })
-      } else {
-        await onComplete({
-          data_points: {
-            insertSuccessful: 'false',
-          },
-        })
-      }
-    } catch {
-      await onError({
-        events: [
-          {
-            date: new Date().toISOString(),
-            text: {
-              en: 'an error occurred while trying to insert a MemberListEvent',
-            },
-            error: {
-              category: 'SERVER_ERROR',
-              message:
-                'an error occurred while trying to insert a MemberListEvent',
-            },
-          },
-        ],
+    } else {
+      await onComplete({
+        data_points: {
+          insertSuccessful: 'false',
+        },
       })
     }
   },

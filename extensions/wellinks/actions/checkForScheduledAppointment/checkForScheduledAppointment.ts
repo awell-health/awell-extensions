@@ -51,45 +51,28 @@ export const checkForScheduledAppointment: Action<
     const { fields, settings } = payload
     const { patientId, appointmentTypeId } = fields
 
-    try {
-      const client = initialiseClient(settings)
+    const client = initialiseClient(settings)
 
-      if (!isNil(client)) {
-        const sdk = getSdk(client)
-        const { data } = await sdk.getScheduledAppointments({
-          user_id: patientId,
-          appointment_type_id: appointmentTypeId,
-          status: '',
-        })
+    if (!isNil(client)) {
+      const sdk = getSdk(client)
+      const { data } = await sdk.getScheduledAppointments({
+        user_id: patientId,
+        appointment_type_id: appointmentTypeId,
+        status: '',
+      })
 
-        if (!isNil(data.appointments)) {
-          if (data.appointments.length > 0) {
-            await onComplete({
-              data_points: {
-                appointmentScheduled: 'true',
-              },
-            })
-          } else {
-            await onComplete({
-              data_points: {
-                appointmentScheduled: 'false',
-              },
-            })
-          }
+      if (!isNil(data.appointments)) {
+        if (data.appointments.length > 0) {
+          await onComplete({
+            data_points: {
+              appointmentScheduled: 'true',
+            },
+          })
         } else {
-          await onError({
-            events: [
-              {
-                date: new Date().toISOString(),
-                text: {
-                  en: 'There was an error in getting Appointments from Healthie',
-                },
-                error: {
-                  category: 'SERVER_ERROR',
-                  message: 'Appointments returned null',
-                },
-              },
-            ],
+          await onComplete({
+            data_points: {
+              appointmentScheduled: 'false',
+            },
           })
         }
       } else {
@@ -98,26 +81,27 @@ export const checkForScheduledAppointment: Action<
             {
               date: new Date().toISOString(),
               text: {
-                en: 'There was in error in setting up the GraphQL Client',
+                en: 'There was an error in getting Appointments from Healthie',
               },
               error: {
                 category: 'SERVER_ERROR',
-                message: 'Error initializing GraphQL Client',
+                message: 'Appointments returned null',
               },
             },
           ],
         })
       }
-    } catch (err) {
-      const error = err as Error
+    } else {
       await onError({
         events: [
           {
             date: new Date().toISOString(),
-            text: { en: 'There was in error processing the Charting Items' },
+            text: {
+              en: 'There was in error in setting up the GraphQL Client',
+            },
             error: {
               category: 'SERVER_ERROR',
-              message: error.message,
+              message: 'Error initializing GraphQL Client',
             },
           },
         ],
