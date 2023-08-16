@@ -88,19 +88,10 @@ export const assignPatientToGroup: Action<typeof fields, typeof settings> = {
           events: errors,
         })
       } else {
-        const error = err as Error
-        await onError({
-          events: [
-            {
-              date: new Date().toISOString(),
-              text: { en: 'Healthie API reported an error' },
-              error: {
-                category: 'SERVER_ERROR',
-                message: error.message,
-              },
-            },
-          ],
-        })
+        /**
+         * re-throw to be handled inside awell-extension-server
+         */
+        throw err
       }
     }
   },
