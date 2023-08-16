@@ -1,5 +1,4 @@
-import { z, ZodError } from 'zod'
-import { fromZodError } from 'zod-validation-error'
+import { z } from 'zod'
 import { type Action } from '@awell-health/extensions-core'
 import { type settings } from '../../../settings'
 import { Category, validate } from '@awell-health/extensions-core'
@@ -44,37 +43,14 @@ export const activateUser: Action<typeof fields, typeof settings> = {
 
       await onComplete()
     } catch (err) {
-      if (err instanceof ZodError) {
-        const error = fromZodError(err)
-        await onError({
-          events: [
-            {
-              date: new Date().toISOString(),
-              text: { en: error.message },
-              error: {
-                category: 'WRONG_INPUT',
-                message: error.message,
-              },
-            },
-          ],
-        })
-      } else if (isSendbirdChatError(err)) {
+      if (isSendbirdChatError(err)) {
         const events = sendbirdChatErrorToActivityEvent(err)
         await onError({ events })
       } else {
-        const message = (err as Error).message
-        await onError({
-          events: [
-            {
-              date: new Date().toISOString(),
-              text: { en: message },
-              error: {
-                category: 'SERVER_ERROR',
-                message,
-              },
-            },
-          ],
-        })
+        /**
+         * re-throw to be handled inside awell-extension-server
+         */
+        throw err
       }
     }
   },
