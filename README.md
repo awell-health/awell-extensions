@@ -72,7 +72,7 @@ Currently supported are Resource Owner Password Grant and Client Credentials Gra
 
 ### Error handling
 
-1. Base `AwellError` class is located inside `@awell-health/extensions-core` repository.
+1. Base `AwellError` class is located inside `@awell-health/extensions-core` repository. It handles `ZodError`, `AxiosError` and default handler when no error matches.
 2. You can add new common/generic handlers there if you want to extend it. That class is used by extensions server, so you do not have to handle them in actions. Only extension/action specific errors should be handled inside actions.
 3. If you handle action specific errors in an action, please remember about re-throwing unhandled errors, so that generic handler inside `@awell-health/extensions-core` can catch it. Without re-throw, the error wouldn't be caught anywhere.
-4. If there aren't any extension/action specific extensions, then you don't have to use try/catch block
+4. If there aren't any extension/action specific extensions, then you don't have to use try/catch block, it will be handled inside `@awell-health/extensions-core`.
