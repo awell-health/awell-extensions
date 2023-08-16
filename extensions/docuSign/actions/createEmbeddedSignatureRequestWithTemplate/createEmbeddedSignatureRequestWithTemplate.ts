@@ -1,10 +1,8 @@
 import { type Action } from '@awell-health/extensions-core'
 import DocuSignSdk from 'docusign-esign'
 import { Category } from '@awell-health/extensions-core'
-import { fromZodError } from 'zod-validation-error'
 import { fields, dataPoints, validateActionFields } from './config'
 import { validateSettings, type settings } from '../../settings'
-import { ZodError } from 'zod'
 import { createApiClient } from './config/createClient'
 import { instanceOfDocuSignError } from './config/types'
 import { replaceStringVariables } from './config/utils'
@@ -102,23 +100,6 @@ export const createEmbeddedSignatureRequestWithTemplate: Action<
         },
       })
     } catch (err) {
-      if (err instanceof ZodError) {
-        const error = fromZodError(err)
-        await onError({
-          events: [
-            {
-              date: new Date().toISOString(),
-              text: { en: error.name },
-              error: {
-                category: 'WRONG_INPUT',
-                message: `${error.message}`,
-              },
-            },
-          ],
-        })
-        return
-      }
-
       if (instanceOfDocuSignError(err)) {
         await onError({
           events: [
@@ -137,19 +118,8 @@ export const createEmbeddedSignatureRequestWithTemplate: Action<
         return
       }
 
-      const error = err as Error
-      await onError({
-        events: [
-          {
-            date: new Date().toISOString(),
-            text: { en: 'Something went wrong while orchestration the action' },
-            error: {
-              category: 'SERVER_ERROR',
-              message: error.message,
-            },
-          },
-        ],
-      })
+      // re-throw to be handled inside awell-extension-server
+      throw err
     }
   },
 }
