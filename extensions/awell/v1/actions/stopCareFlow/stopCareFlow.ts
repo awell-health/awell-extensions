@@ -17,33 +17,26 @@ export const stopCareFlow: Action<typeof fields, typeof settings> = {
   fields,
   previewable: false, // We don't have pathways in Preview, only cases.
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
-    try {
-      const {
-        settings: { apiUrl, apiKey },
-        fields: { reason },
-        pathway: { id: pathwayId },
-      } = validate({
-        schema: z.object({
-          fields: FieldsValidationSchema,
-          settings: SettingsValidationSchema,
-          pathway: PathwayValidationSchema,
-        }),
-        payload,
-      })
+    const {
+      settings: { apiUrl, apiKey },
+      fields: { reason },
+      pathway: { id: pathwayId },
+    } = validate({
+      schema: z.object({
+        fields: FieldsValidationSchema,
+        settings: SettingsValidationSchema,
+        pathway: PathwayValidationSchema,
+      }),
+      payload,
+    })
 
-      const sdk = new AwellSdk({ apiUrl, apiKey })
+    const sdk = new AwellSdk({ apiUrl, apiKey })
 
-      await sdk.stopCareFlow({
-        pathway_id: pathwayId,
-        reason,
-      })
+    await sdk.stopCareFlow({
+      pathway_id: pathwayId,
+      reason,
+    })
 
-      await onComplete()
-    } catch (err) {
-      /**
-       * re-throw to be handled inside awell-extension-server
-       */
-      throw err
-    }
+    await onComplete()
   },
 }

@@ -20,38 +20,31 @@ export const startCareFlow: Action<typeof fields, typeof settings> = {
   dataPoints,
   previewable: false, // We don't have pathways in Preview, only cases.
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
-    try {
-      const {
-        settings: { apiUrl, apiKey },
-        fields: { pathwayDefinitionId, baselineInfo },
-        patient: { id: patientId },
-      } = validate({
-        schema: z.object({
-          fields: FieldsValidationSchema,
-          settings: SettingsValidationSchema,
-          patient: PatientValidationSchema,
-        }),
-        payload,
-      })
+    const {
+      settings: { apiUrl, apiKey },
+      fields: { pathwayDefinitionId, baselineInfo },
+      patient: { id: patientId },
+    } = validate({
+      schema: z.object({
+        fields: FieldsValidationSchema,
+        settings: SettingsValidationSchema,
+        patient: PatientValidationSchema,
+      }),
+      payload,
+    })
 
-      const sdk = new AwellSdk({ apiUrl, apiKey })
+    const sdk = new AwellSdk({ apiUrl, apiKey })
 
-      const careFlowId = await sdk.startCareFlow({
-        patient_id: patientId,
-        pathway_definition_id: pathwayDefinitionId,
-        data_points: baselineInfo,
-      })
+    const careFlowId = await sdk.startCareFlow({
+      patient_id: patientId,
+      pathway_definition_id: pathwayDefinitionId,
+      data_points: baselineInfo,
+    })
 
-      await onComplete({
-        data_points: {
-          careFlowId,
-        },
-      })
-    } catch (err) {
-      /**
-       * re-throw to be handled inside awell-extension-server
-       */
-      throw err
-    }
+    await onComplete({
+      data_points: {
+        careFlowId,
+      },
+    })
   },
 }

@@ -94,39 +94,32 @@ export const createAppointment: Action<
   previewable: true,
   dataPoints,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
-    try {
-      const {
-        scheduledDate,
-        patientId,
-        physicianId,
-        practiceId,
-        serviceLocationId,
-        telehealthDetails,
-        ...fields
-      } = payload.fields
-      const appointment = appointmentSchema.parse({
-        ...fields,
-        scheduled_date: scheduledDate,
-        patient: patientId,
-        physician: physicianId,
-        practice: practiceId,
-        service_location: serviceLocationId,
-        telehealth_details: telehealthDetails,
-      })
+    const {
+      scheduledDate,
+      patientId,
+      physicianId,
+      practiceId,
+      serviceLocationId,
+      telehealthDetails,
+      ...fields
+    } = payload.fields
+    const appointment = appointmentSchema.parse({
+      ...fields,
+      scheduled_date: scheduledDate,
+      patient: patientId,
+      physician: physicianId,
+      practice: practiceId,
+      service_location: serviceLocationId,
+      telehealth_details: telehealthDetails,
+    })
 
-      // API Call should produce AuthError or something dif.
-      const api = makeAPIClient(payload.settings)
-      const { id } = await api.createAppointment(appointment)
-      await onComplete({
-        data_points: {
-          appointmentId: String(id),
-        },
-      })
-    } catch (err) {
-      /**
-       * re-throw to be handled inside awell-extension-server
-       */
-      throw err
-    }
+    // API Call should produce AuthError or something dif.
+    const api = makeAPIClient(payload.settings)
+    const { id } = await api.createAppointment(appointment)
+    await onComplete({
+      data_points: {
+        appointmentId: String(id),
+      },
+    })
   },
 }

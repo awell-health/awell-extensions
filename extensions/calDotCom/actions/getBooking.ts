@@ -63,34 +63,27 @@ export const getBooking: Action<typeof fields, typeof settings> = {
   dataPoints,
   previewable: false,
   onActivityCreated: async (payload, onComplete, onError) => {
-    try {
-      const {
-        fields: { bookingId },
-        settings: { apiKey },
-      } = validate({
-        schema: GetBookingPayloadSchema,
-        payload,
-      })
-      const calComApi = new CalComApi(apiKey)
-      const booking = await calComApi.getBooking(bookingId)
+    const {
+      fields: { bookingId },
+      settings: { apiKey },
+    } = validate({
+      schema: GetBookingPayloadSchema,
+      payload,
+    })
+    const calComApi = new CalComApi(apiKey)
+    const booking = await calComApi.getBooking(bookingId)
 
-      await onComplete({
-        data_points: {
-          eventTypeId: `${booking.eventTypeId}`,
-          title: booking.title,
-          description: booking.description,
-          startTime: booking.startTime,
-          endTime: booking.endTime,
-          status: booking.status,
-          cancelUrl: `https://app.cal.com/booking/${booking.uid}?cancel=true`,
-          rescheduleUrl: `https://app.cal.com/reschedule/${booking.uid}`,
-        },
-      })
-    } catch (error) {
-      /**
-       * re-throw to be handled inside awell-extension-server
-       */
-      throw error
-    }
+    await onComplete({
+      data_points: {
+        eventTypeId: `${booking.eventTypeId}`,
+        title: booking.title,
+        description: booking.description,
+        startTime: booking.startTime,
+        endTime: booking.endTime,
+        status: booking.status,
+        cancelUrl: `https://app.cal.com/booking/${booking.uid}?cancel=true`,
+        rescheduleUrl: `https://app.cal.com/reschedule/${booking.uid}`,
+      },
+    })
   },
 }

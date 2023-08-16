@@ -94,39 +94,32 @@ export const createNonVisitNote: Action<
   previewable: true,
   dataPoints,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
-    try {
-      const {
-        authorId,
-        chartDate,
-        documentDate,
-        text,
-        category,
-        patientId,
-        practiceId,
-        ...fields
-      } = payload.fields
-      const note = nonVisitNoteSchema.parse({
-        ...fields,
-        patient: patientId,
-        practice: practiceId,
-        bullets: [{ text, author: authorId, category }],
-        document_date: documentDate,
-        chart_date: chartDate,
-      })
+    const {
+      authorId,
+      chartDate,
+      documentDate,
+      text,
+      category,
+      patientId,
+      practiceId,
+      ...fields
+    } = payload.fields
+    const note = nonVisitNoteSchema.parse({
+      ...fields,
+      patient: patientId,
+      practice: practiceId,
+      bullets: [{ text, author: authorId, category }],
+      document_date: documentDate,
+      chart_date: chartDate,
+    })
 
-      const api = makeAPIClient(payload.settings)
-      const { id, bullets } = await api.createNonVisitNote(note)
-      await onComplete({
-        data_points: {
-          nonVisitNoteId: String(id),
-          nonVisitNoteBulletId: String(bullets[0].id),
-        },
-      })
-    } catch (err) {
-      /**
-       * re-throw to be handled inside awell-extension-server
-       */
-      throw err
-    }
+    const api = makeAPIClient(payload.settings)
+    const { id, bullets } = await api.createNonVisitNote(note)
+    await onComplete({
+      data_points: {
+        nonVisitNoteId: String(id),
+        nonVisitNoteBulletId: String(bullets[0].id),
+      },
+    })
   },
 }

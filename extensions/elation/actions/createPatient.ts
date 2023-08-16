@@ -162,52 +162,45 @@ export const createPatient: Action<
   previewable: true,
   dataPoints,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
-    try {
-      const {
-        firstName,
-        lastName,
-        actualName,
-        caregiverPracticeId,
-        genderIdentity,
-        legalGenderMarker,
-        middleName,
-        preferredLanguage,
-        previousFirstName,
-        previousLastName,
-        primaryPhysicianId,
-        sexualOrientation,
-        ...fields
-      } = payload.fields
+    const {
+      firstName,
+      lastName,
+      actualName,
+      caregiverPracticeId,
+      genderIdentity,
+      legalGenderMarker,
+      middleName,
+      preferredLanguage,
+      previousFirstName,
+      previousLastName,
+      primaryPhysicianId,
+      sexualOrientation,
+      ...fields
+    } = payload.fields
 
-      const patient = patientSchema.parse({
-        ...fields,
-        first_name: firstName,
-        last_name: lastName,
-        primary_physician: primaryPhysicianId,
-        caregiver_practice: caregiverPracticeId,
-        middle_name: middleName,
-        actual_name: actualName,
-        gender_identity: genderIdentity,
-        legal_gender_marker: legalGenderMarker,
-        sexual_orientation: sexualOrientation,
-        preferred_language: preferredLanguage,
-        previous_first_name: previousFirstName,
-        previous_last_name: previousLastName,
-      })
+    const patient = patientSchema.parse({
+      ...fields,
+      first_name: firstName,
+      last_name: lastName,
+      primary_physician: primaryPhysicianId,
+      caregiver_practice: caregiverPracticeId,
+      middle_name: middleName,
+      actual_name: actualName,
+      gender_identity: genderIdentity,
+      legal_gender_marker: legalGenderMarker,
+      sexual_orientation: sexualOrientation,
+      preferred_language: preferredLanguage,
+      previous_first_name: previousFirstName,
+      previous_last_name: previousLastName,
+    })
 
-      // API Call should produce AuthError or something dif.
-      const api = makeAPIClient(payload.settings)
-      const { id } = await api.createPatient(patient)
-      await onComplete({
-        data_points: {
-          patientId: String(id),
-        },
-      })
-    } catch (err) {
-      /**
-       * re-throw to be handled inside awell-extension-server
-       */
-      throw err
-    }
+    // API Call should produce AuthError or something dif.
+    const api = makeAPIClient(payload.settings)
+    const { id } = await api.createPatient(patient)
+    await onComplete({
+      data_points: {
+        patientId: String(id),
+      },
+    })
   },
 }

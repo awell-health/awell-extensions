@@ -65,34 +65,24 @@ export const getNonVisitNote: Action<
   previewable: true,
   dataPoints,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
-    try {
-      const { nonVisitNoteId } = payload.fields
-      const noteId = NumericIdSchema.parse(nonVisitNoteId)
+    const { nonVisitNoteId } = payload.fields
+    const noteId = NumericIdSchema.parse(nonVisitNoteId)
 
-      const api = makeAPIClient(payload.settings)
-      const { bullets, chart_date, document_date, patient, practice, tags } =
-        await api.getNonVisitNote(noteId)
+    const api = makeAPIClient(payload.settings)
+    const { bullets, chart_date, document_date, patient, practice, tags } =
+      await api.getNonVisitNote(noteId)
 
-      await onComplete({
-        data_points: {
-          authorId:
-            bullets?.length !== 0 ? String(bullets[0].author) : undefined,
-          text: bullets?.length !== 0 ? bullets[0].text : undefined,
-          chartDate: chart_date,
-          documentDate: document_date,
-          patientId: String(patient),
-          practiceId: !isNil(practice) ? String(practice) : undefined,
-          tags:
-            tags?.length !== 0
-              ? tags?.map((tag) => tag.id).join(',')
-              : undefined,
-        },
-      })
-    } catch (err) {
-      /**
-       * re-throw to be handled inside awell-extension-server
-       */
-      throw err
-    }
+    await onComplete({
+      data_points: {
+        authorId: bullets?.length !== 0 ? String(bullets[0].author) : undefined,
+        text: bullets?.length !== 0 ? bullets[0].text : undefined,
+        chartDate: chart_date,
+        documentDate: document_date,
+        patientId: String(patient),
+        practiceId: !isNil(practice) ? String(practice) : undefined,
+        tags:
+          tags?.length !== 0 ? tags?.map((tag) => tag.id).join(',') : undefined,
+      },
+    })
   },
 }

@@ -115,43 +115,36 @@ export const getPatient: Action<
   previewable: true,
   dataPoints,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
-    try {
-      const patientId = NumericIdSchema.parse(payload.fields.patientId)
+    const patientId = NumericIdSchema.parse(payload.fields.patientId)
 
-      // API Call should produce AuthError or something dif.
-      const api = makeAPIClient(payload.settings)
-      const patientInfo = await api.getPatient(patientId)
-      await onComplete({
-        data_points: {
-          firstName: patientInfo.first_name,
-          lastName: patientInfo.last_name,
-          dob: patientInfo.dob,
-          sex: patientInfo.sex,
-          primaryPhysicianId: String(patientInfo.primary_physician),
-          caregiverPracticeId: String(patientInfo.caregiver_practice),
-          mobilePhone: String(
-            patientInfo.phones?.find((p) => p.phone_type === 'Mobile')?.phone
-          ),
-          middleName: patientInfo.middle_name,
-          actualName: patientInfo.actual_name,
-          genderIdentity: patientInfo.gender_identity,
-          legalGenderMarker: patientInfo.legal_gender_marker,
-          pronouns: patientInfo.pronouns,
-          sexualOrientation: patientInfo.sexual_orientation,
-          ssn: patientInfo.ssn,
-          ethnicity: patientInfo.ethnicity,
-          race: patientInfo.race,
-          preferredLanguage: patientInfo.preferred_language,
-          notes: patientInfo.notes,
-          previousFirstName: patientInfo.previous_first_name,
-          previousLastName: patientInfo.previous_last_name,
-        },
-      })
-    } catch (err) {
-      /**
-       * re-throw to be handled inside awell-extension-server
-       */
-      throw err
-    }
+    // API Call should produce AuthError or something dif.
+    const api = makeAPIClient(payload.settings)
+    const patientInfo = await api.getPatient(patientId)
+    await onComplete({
+      data_points: {
+        firstName: patientInfo.first_name,
+        lastName: patientInfo.last_name,
+        dob: patientInfo.dob,
+        sex: patientInfo.sex,
+        primaryPhysicianId: String(patientInfo.primary_physician),
+        caregiverPracticeId: String(patientInfo.caregiver_practice),
+        mobilePhone: String(
+          patientInfo.phones?.find((p) => p.phone_type === 'Mobile')?.phone
+        ),
+        middleName: patientInfo.middle_name,
+        actualName: patientInfo.actual_name,
+        genderIdentity: patientInfo.gender_identity,
+        legalGenderMarker: patientInfo.legal_gender_marker,
+        pronouns: patientInfo.pronouns,
+        sexualOrientation: patientInfo.sexual_orientation,
+        ssn: patientInfo.ssn,
+        ethnicity: patientInfo.ethnicity,
+        race: patientInfo.race,
+        preferredLanguage: patientInfo.preferred_language,
+        notes: patientInfo.notes,
+        previousFirstName: patientInfo.previous_first_name,
+        previousLastName: patientInfo.previous_last_name,
+      },
+    })
   },
 }

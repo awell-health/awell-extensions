@@ -27,19 +27,12 @@ export const deleteNonVisitNote: Action<typeof fields, typeof settings> = {
   fields,
   previewable: true,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
-    try {
-      const { nonVisitNoteId } = payload.fields
-      const noteId = NumericIdSchema.parse(nonVisitNoteId)
+    const { nonVisitNoteId } = payload.fields
+    const noteId = NumericIdSchema.parse(nonVisitNoteId)
 
-      const api = makeAPIClient(payload.settings)
-      await api.deleteNonVisitNote(noteId)
+    const api = makeAPIClient(payload.settings)
+    await api.deleteNonVisitNote(noteId)
 
-      await onComplete()
-    } catch (err) {
-      /**
-       * re-throw to be handled inside awell-extension-server
-       */
-      throw err
-    }
+    await onComplete()
   },
 }

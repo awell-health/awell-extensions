@@ -98,40 +98,33 @@ export const updateNonVisitNote: Action<typeof fields, typeof settings> = {
   fields,
   previewable: true,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
-    try {
-      const {
-        nonVisitNoteId,
-        nonVisitNoteBulletId,
-        authorId,
-        chartDate,
-        documentDate,
-        text,
-        category,
-        patientId,
-        practiceId,
-        ...fields
-      } = payload.fields
-      const noteId = NumericIdSchema.parse(nonVisitNoteId)
-      // partial - all fields are optional
-      const note = nonVisitNoteSchema.partial().parse({
-        ...fields,
-        patient: patientId,
-        practice: practiceId,
-        bullets: isNil(nonVisitNoteBulletId)
-          ? undefined
-          : [{ id: nonVisitNoteBulletId, text, author: authorId, category }],
-        document_date: documentDate,
-        chart_date: chartDate,
-      })
+    const {
+      nonVisitNoteId,
+      nonVisitNoteBulletId,
+      authorId,
+      chartDate,
+      documentDate,
+      text,
+      category,
+      patientId,
+      practiceId,
+      ...fields
+    } = payload.fields
+    const noteId = NumericIdSchema.parse(nonVisitNoteId)
+    // partial - all fields are optional
+    const note = nonVisitNoteSchema.partial().parse({
+      ...fields,
+      patient: patientId,
+      practice: practiceId,
+      bullets: isNil(nonVisitNoteBulletId)
+        ? undefined
+        : [{ id: nonVisitNoteBulletId, text, author: authorId, category }],
+      document_date: documentDate,
+      chart_date: chartDate,
+    })
 
-      const api = makeAPIClient(payload.settings)
-      await api.updateNonVisitNote(noteId, note)
-      await onComplete()
-    } catch (err) {
-      /**
-       * re-throw to be handled inside awell-extension-server
-       */
-      throw err
-    }
+    const api = makeAPIClient(payload.settings)
+    await api.updateNonVisitNote(noteId, note)
+    await onComplete()
   },
 }

@@ -80,54 +80,47 @@ export const findPhysician: Action<
   previewable: true,
   dataPoints,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
-    try {
-      const { firstName, lastName, npi } = payload.fields
+    const { firstName, lastName, npi } = payload.fields
 
-      const api = makeAPIClient(payload.settings)
-      const physiciansList = await api.findPhysicians({
-        params: {
-          first_name: firstName,
-          last_name: lastName,
-          npi,
-        },
-      })
+    const api = makeAPIClient(payload.settings)
+    const physiciansList = await api.findPhysicians({
+      params: {
+        first_name: firstName,
+        last_name: lastName,
+        npi,
+      },
+    })
 
-      if (physiciansList.count !== 1) {
-        await onError({
-          events: [
-            {
-              date: new Date().toISOString(),
-              text: {
-                en: `Find Physicians returned ${physiciansList.count} results, but the number of results must equal exactly 1.`,
-              },
-              error: {
-                category: 'WRONG_DATA',
-                message: `Find Physicians returned ${physiciansList.count} results, but the number of results must equal exactly 1.`,
-              },
+    if (physiciansList.count !== 1) {
+      await onError({
+        events: [
+          {
+            date: new Date().toISOString(),
+            text: {
+              en: `Find Physicians returned ${physiciansList.count} results, but the number of results must equal exactly 1.`,
             },
-          ],
-        })
-        return
-      }
-
-      const physician = physiciansList.results[0]
-      await onComplete({
-        data_points: {
-          physicianId: String(physician.id),
-          physicianFirstName: physician.first_name,
-          physicianLastName: physician.last_name,
-          physicianCredentials: physician.credentials,
-          physicianEmail: physician.email,
-          physicianNPI: physician.npi,
-          physicianUserId: String(physician.user_id),
-          caregiverPracticeId: String(physician.practice),
-        },
+            error: {
+              category: 'WRONG_DATA',
+              message: `Find Physicians returned ${physiciansList.count} results, but the number of results must equal exactly 1.`,
+            },
+          },
+        ],
       })
-    } catch (err) {
-      /**
-       * re-throw to be handled inside awell-extension-server
-       */
-      throw err
+      return
     }
+
+    const physician = physiciansList.results[0]
+    await onComplete({
+      data_points: {
+        physicianId: String(physician.id),
+        physicianFirstName: physician.first_name,
+        physicianLastName: physician.last_name,
+        physicianCredentials: physician.credentials,
+        physicianEmail: physician.email,
+        physicianNPI: physician.npi,
+        physicianUserId: String(physician.user_id),
+        caregiverPracticeId: String(physician.practice),
+      },
+    })
   },
 }

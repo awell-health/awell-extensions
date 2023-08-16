@@ -20,13 +20,6 @@ export const embeddedSigning: Action<typeof fields, typeof settings> = {
   },
   previewable: false, // We don't have Awell Hosted Pages in Preview so cannot be previewed.
   onActivityCreated: async (payload, onComplete, onError) => {
-    try {
-      validateActionFields(payload.fields)
-    } catch (err) {
-      /**
-       * re-throw to be handled inside awell-extension-server
-       */
-      throw err
-    }
+    validateActionFields(payload.fields)
   },
 }
