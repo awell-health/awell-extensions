@@ -2,7 +2,6 @@ import { type Action } from '@awell-health/extensions-core'
 import { Category } from '@awell-health/extensions-core'
 import { type settings } from '../../settings'
 import { createMetriportApi } from '../../client'
-import { handleErrorMessage } from '../../shared/errorHandler'
 import { stringId } from '../../validation/generic.zod'
 import { deleteFields } from './fields'
 
@@ -14,16 +13,12 @@ export const deletePatient: Action<typeof deleteFields, typeof settings> = {
   fields: deleteFields,
   previewable: true,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
-    try {
-      const patientId = stringId.parse(payload.fields.patientId)
-      const facilityId = stringId.parse(payload.fields.facilityId)
+    const patientId = stringId.parse(payload.fields.patientId)
+    const facilityId = stringId.parse(payload.fields.facilityId)
 
-      const api = createMetriportApi(payload.settings)
-      await api.deletePatient(patientId, facilityId)
+    const api = createMetriportApi(payload.settings)
+    await api.deletePatient(patientId, facilityId)
 
-      await onComplete()
-    } catch (err) {
-      await handleErrorMessage(err, onError)
-    }
+    await onComplete()
   },
 }

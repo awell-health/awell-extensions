@@ -2,7 +2,6 @@ import { type Action } from '@awell-health/extensions-core'
 import { Category } from '@awell-health/extensions-core'
 import { type settings } from '../../settings'
 import { createMetriportApi } from '../../client'
-import { handleErrorMessage } from '../../shared/errorHandler'
 import { updateFields } from './fields'
 import { stringId } from '../../validation/generic.zod'
 import { patientUpdateSchema } from './validation'
@@ -16,23 +15,16 @@ export const updatePatient: Action<typeof updateFields, typeof settings> = {
   fields: updateFields,
   previewable: true,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
-    try {
-      const patient = patientUpdateSchema.parse(payload.fields)
+    const patient = patientUpdateSchema.parse(payload.fields)
 
-      const facilityId = stringId.parse(payload.fields.facilityId)
+    const facilityId = stringId.parse(payload.fields.facilityId)
 
-      const metriportPatient = convertToMetriportPatient(patient)
+    const metriportPatient = convertToMetriportPatient(patient)
 
-      const api = createMetriportApi(payload.settings)
+    const api = createMetriportApi(payload.settings)
 
-      await api.updatePatient(
-        { id: patient.id, ...metriportPatient },
-        facilityId
-      )
+    await api.updatePatient({ id: patient.id, ...metriportPatient }, facilityId)
 
-      await onComplete()
-    } catch (err) {
-      await handleErrorMessage(err, onError)
-    }
+    await onComplete()
   },
 }

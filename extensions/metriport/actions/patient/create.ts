@@ -7,7 +7,6 @@ import { type Action } from '@awell-health/extensions-core'
 import { Category } from '@awell-health/extensions-core'
 import { type settings } from '../../settings'
 import { createMetriportApi } from '../../client'
-import { handleErrorMessage } from '../../shared/errorHandler'
 import { createFields } from './fields'
 import { stringId } from '../../validation/generic.zod'
 import { type PatientCreate, patientCreateSchema } from './validation'
@@ -27,25 +26,21 @@ export const createPatient: Action<
   previewable: true,
   dataPoints: patientIdDataPoint,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
-    try {
-      const patient = patientCreateSchema.parse(payload.fields)
+    const patient = patientCreateSchema.parse(payload.fields)
 
-      const facilityId = stringId.parse(payload.fields.facilityId)
+    const facilityId = stringId.parse(payload.fields.facilityId)
 
-      const patientMetriport = convertToMetriportPatient(patient)
+    const patientMetriport = convertToMetriportPatient(patient)
 
-      const api = createMetriportApi(payload.settings)
+    const api = createMetriportApi(payload.settings)
 
-      const { id } = await api.createPatient(patientMetriport, facilityId)
+    const { id } = await api.createPatient(patientMetriport, facilityId)
 
-      await onComplete({
-        data_points: {
-          patientId: String(id),
-        },
-      })
-    } catch (err) {
-      await handleErrorMessage(err, onError)
-    }
+    await onComplete({
+      data_points: {
+        patientId: String(id),
+      },
+    })
   },
 }
 
