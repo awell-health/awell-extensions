@@ -18,47 +18,54 @@ export const searchPatientsByPatientCode: Action<
   dataPoints,
   previewable: false, // We don't have patients in Preview, only cases.
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
-    const {
-      settings: { apiUrl, apiKey },
-      patient: {
-        id: patientId,
-        profile: { patient_code },
-      },
-    } = validate({
-      schema: z.object({
-        settings: SettingsValidationSchema,
-        patient: PatientValidationSchema,
-      }),
-      payload,
-    })
+    try {
+      const {
+        settings: { apiUrl, apiKey },
+        patient: {
+          id: patientId,
+          profile: { patient_code },
+        },
+      } = validate({
+        schema: z.object({
+          settings: SettingsValidationSchema,
+          patient: PatientValidationSchema,
+        }),
+        payload,
+      })
 
-    const sdk = new AwellSdk({ apiUrl, apiKey })
+      const sdk = new AwellSdk({ apiUrl, apiKey })
 
-    const results = await sdk.searchPatientsByPatientCode({
-      patient_code,
-    })
+      const results = await sdk.searchPatientsByPatientCode({
+        patient_code,
+      })
 
-    /**
-     * When searching for other patients with the same patient code,
-     * we need to exclude the current patient from the search results.
-     * Otherwise the result would always be true.
-     */
-    const resultsWithoutCurrentPatient = results.filter(
-      (res) => res.id !== patientId
-    )
+      /**
+       * When searching for other patients with the same patient code,
+       * we need to exclude the current patient from the search results.
+       * Otherwise the result would always be true.
+       */
+      const resultsWithoutCurrentPatient = results.filter(
+        (res) => res.id !== patientId
+      )
 
-    const numberOfPatientsFound = resultsWithoutCurrentPatient.length
-    const patientAlreadyExists = numberOfPatientsFound > 0
-    const awellPatientIds = resultsWithoutCurrentPatient
-      .map((result) => result.id)
-      .join(',')
+      const numberOfPatientsFound = resultsWithoutCurrentPatient.length
+      const patientAlreadyExists = numberOfPatientsFound > 0
+      const awellPatientIds = resultsWithoutCurrentPatient
+        .map((result) => result.id)
+        .join(',')
 
-    await onComplete({
-      data_points: {
-        patientAlreadyExists: String(patientAlreadyExists),
-        numberOfPatientsFound: String(numberOfPatientsFound),
-        awellPatientIds,
-      },
-    })
+      await onComplete({
+        data_points: {
+          patientAlreadyExists: String(patientAlreadyExists),
+          numberOfPatientsFound: String(numberOfPatientsFound),
+          awellPatientIds,
+        },
+      })
+    } catch (err) {
+      /**
+       * re-throw to be handled inside awell-extension-server
+       */
+      throw err
+    }
   },
 }

@@ -37,7 +37,6 @@ export const deleteNonVisitNote: Action<typeof fields, typeof settings> = {
       await onComplete()
     } catch (err) {
       /**
-       * put action/extension specific errors there
        * re-throw to be handled inside awell-extension-server
        */
       throw err

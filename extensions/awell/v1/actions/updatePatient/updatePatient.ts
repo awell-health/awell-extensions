@@ -17,58 +17,65 @@ export const updatePatient: Action<typeof fields, typeof settings> = {
   fields,
   previewable: false,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
-    const {
-      settings: { apiUrl, apiKey },
-      fields: {
-        patientCode,
-        firstName,
-        lastName,
-        birthDate,
-        email,
-        phone,
-        mobilePhone,
-        street,
-        state,
-        country,
-        city,
-        zip,
-        preferredLanguage,
-        sex,
-      },
-      patient: { id: patientId },
-    } = validate({
-      schema: z.object({
-        fields: FieldsValidationSchema,
-        settings: SettingsValidationSchema,
-        patient: PatientValidationSchema,
-      }),
-      payload,
-    })
-
-    const sdk = new AwellSdk({ apiUrl, apiKey })
-
-    await sdk.updatePatient({
-      patient_id: patientId,
-      profile: {
-        patient_code: patientCode,
-        first_name: firstName,
-        last_name: lastName,
-        birth_date: birthDate,
-        email,
-        phone,
-        mobile_phone: mobilePhone,
-        address: {
+    try {
+      const {
+        settings: { apiUrl, apiKey },
+        fields: {
+          patientCode,
+          firstName,
+          lastName,
+          birthDate,
+          email,
+          phone,
+          mobilePhone,
           street,
           state,
           country,
           city,
           zip,
+          preferredLanguage,
+          sex,
         },
-        preferred_language: preferredLanguage,
-        sex,
-      },
-    })
+        patient: { id: patientId },
+      } = validate({
+        schema: z.object({
+          fields: FieldsValidationSchema,
+          settings: SettingsValidationSchema,
+          patient: PatientValidationSchema,
+        }),
+        payload,
+      })
 
-    await onComplete()
+      const sdk = new AwellSdk({ apiUrl, apiKey })
+
+      await sdk.updatePatient({
+        patient_id: patientId,
+        profile: {
+          patient_code: patientCode,
+          first_name: firstName,
+          last_name: lastName,
+          birth_date: birthDate,
+          email,
+          phone,
+          mobile_phone: mobilePhone,
+          address: {
+            street,
+            state,
+            country,
+            city,
+            zip,
+          },
+          preferred_language: preferredLanguage,
+          sex,
+        },
+      })
+
+      await onComplete()
+    } catch (err) {
+      /**
+       * re-throw to be handled inside awell-extension-server
+       */
+      throw err
+    }
   },
 }

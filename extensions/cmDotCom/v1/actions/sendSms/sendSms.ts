@@ -63,7 +63,9 @@ export const sendSms: Action<typeof fields, typeof settings> = {
         const events = smsErrorToActivityEvent(err)
         await onError({ events })
       } else {
-        // re-throw to be handled inside awell-extension-server
+        /**
+         * re-throw to be handled inside awell-extension-server
+         */
         throw err
       }
     }

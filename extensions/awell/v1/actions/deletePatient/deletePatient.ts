@@ -13,23 +13,30 @@ export const deletePatient: Action<typeof fields, typeof settings> = {
   fields,
   previewable: false,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
-    const {
-      settings: { apiUrl, apiKey },
-      patient: { id: patientId },
-    } = validate({
-      schema: z.object({
-        settings: SettingsValidationSchema,
-        patient: PatientValidationSchema,
-      }),
-      payload,
-    })
+    try {
+      const {
+        settings: { apiUrl, apiKey },
+        patient: { id: patientId },
+      } = validate({
+        schema: z.object({
+          settings: SettingsValidationSchema,
+          patient: PatientValidationSchema,
+        }),
+        payload,
+      })
 
-    const sdk = new AwellSdk({ apiUrl, apiKey })
+      const sdk = new AwellSdk({ apiUrl, apiKey })
 
-    await sdk.deletePatient({
-      patient_id: patientId,
-    })
+      await sdk.deletePatient({
+        patient_id: patientId,
+      })
 
-    await onComplete()
+      await onComplete()
+    } catch (err) {
+      /**
+       * re-throw to be handled inside awell-extension-server
+       */
+      throw err
+    }
   },
 }

@@ -20,16 +20,23 @@ export const uploadFiles: Action<typeof fields, typeof settings> = {
   },
   previewable: false, // We don't have Awell Hosted Pages in Preview so cannot be previewed.
   onActivityCreated: async (payload, onComplete, onError) => {
-    validate({
-      schema: z.object({
-        settings: SettingsValidationSchema,
-        fields: FieldsValidationSchema,
-      }),
-      payload,
-    })
+    try {
+      validate({
+        schema: z.object({
+          settings: SettingsValidationSchema,
+          fields: FieldsValidationSchema,
+        }),
+        payload,
+      })
 
-    /**
-     * Completion happens in Awell Hosted Pages
-     */
+      /**
+       * Completion happens in Awell Hosted Pages
+       */
+    } catch (err) {
+      /**
+       * re-throw to be handled inside awell-extension-server
+       */
+      throw err
+    }
   },
 }

@@ -125,7 +125,6 @@ export const findPhysician: Action<
       })
     } catch (err) {
       /**
-       * put action/extension specific errors there
        * re-throw to be handled inside awell-extension-server
        */
       throw err

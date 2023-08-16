@@ -54,7 +54,9 @@ export const sendRequestReminder: Action<typeof fields, typeof settings> = {
         return
       }
 
-      // re-throw to be handled inside awell-extension-server
+      /**
+       * re-throw to be handled inside awell-extension-server
+       */
       throw err
     }
   },
