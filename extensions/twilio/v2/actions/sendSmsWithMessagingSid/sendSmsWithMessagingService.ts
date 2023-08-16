@@ -1,5 +1,4 @@
-import { z, ZodError } from 'zod'
-import { fromZodError } from 'zod-validation-error'
+import { z } from 'zod'
 import twilioSdk from '../../../common/sdk/twilio'
 import { type Action } from '@awell-health/extensions-core'
 import { type settings } from '../../../settings'
@@ -20,79 +19,47 @@ export const sendSmsWithMessagingService: Action<
   fields,
   previewable: false,
   onActivityCreated: async (payload, onComplete, onError) => {
-    try {
-      const {
-        settings: {
-          accountSid,
-          authToken,
-          messagingServiceSid: defaultMessagingServiceSid,
-        },
-        fields: { recipient, message, messagingServiceSid },
-      } = validate({
-        schema: z
-          .object({
-            settings: SettingsValidationSchema,
-            fields: FieldsValidationSchema,
-          })
-          .superRefine((value, ctx) => {
-            // if both `from` values missing - throw error
-            if (
-              isNil(value.settings.messagingServiceSid) &&
-              isNil(value.fields.messagingServiceSid)
-            ) {
-              ctx.addIssue({
-                code: z.ZodIssueCode.custom,
-                fatal: true,
-                message:
-                  '"Messaging Service SID" is missing in both settings and in the action field.',
-              })
-            }
-          }),
-        payload,
-      })
-
-      const client = twilioSdk(accountSid, authToken, {
-        region: 'IE1',
+    const {
+      settings: {
         accountSid,
-      })
-
-      await client.messages.create({
-        body: message,
-        messagingServiceSid: messagingServiceSid ?? defaultMessagingServiceSid,
-        to: recipient,
-      })
-
-      await onComplete()
-    } catch (err) {
-      if (err instanceof ZodError) {
-        const error = fromZodError(err)
-        await onError({
-          events: [
-            {
-              date: new Date().toISOString(),
-              text: { en: error.message },
-              error: {
-                category: 'BAD_REQUEST',
-                message: error.message,
-              },
-            },
-          ],
+        authToken,
+        messagingServiceSid: defaultMessagingServiceSid,
+      },
+      fields: { recipient, message, messagingServiceSid },
+    } = validate({
+      schema: z
+        .object({
+          settings: SettingsValidationSchema,
+          fields: FieldsValidationSchema,
         })
-      } else {
-        const message = (err as Error).message
-        await onError({
-          events: [
-            {
-              date: new Date().toISOString(),
-              text: { en: message },
-              error: {
-                category: 'SERVER_ERROR',
-                message,
-              },
-            },
-          ],
-        })
-      }
-    }
+        .superRefine((value, ctx) => {
+          // if both `from` values missing - throw error
+          if (
+            isNil(value.settings.messagingServiceSid) &&
+            isNil(value.fields.messagingServiceSid)
+          ) {
+            ctx.addIssue({
+              code: z.ZodIssueCode.custom,
+              fatal: true,
+              message:
+                '"Messaging Service SID" is missing in both settings and in the action field.',
+            })
+          }
+        }),
+      payload,
+    })
+
+    const client = twilioSdk(accountSid, authToken, {
+      region: 'IE1',
+      accountSid,
+    })
+
+    await client.messages.create({
+      body: message,
+      messagingServiceSid: messagingServiceSid ?? defaultMessagingServiceSid,
+      to: recipient,
+    })
+
+    await onComplete()
   },
 }
