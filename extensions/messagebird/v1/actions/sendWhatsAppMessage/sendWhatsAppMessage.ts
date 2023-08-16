@@ -18,86 +18,70 @@ export const sendWhatsAppMessage: Action<typeof fields, typeof settings> = {
       settings: { apiKey, reportUrl },
     } = payload
 
-    try {
-      const allRequiredFieldsHaveValues = [from, to, content].every(
-        (field) => !isEmpty(field)
-      )
+    const allRequiredFieldsHaveValues = [from, to, content].every(
+      (field) => !isEmpty(field)
+    )
 
-      if (!allRequiredFieldsHaveValues) {
-        await onError({
-          events: [
-            {
-              date: new Date().toISOString(),
-              text: { en: 'Fields are missing' },
-              error: {
-                category: 'MISSING_FIELDS',
-                message: '`from`, `to`, or `content` is missing',
-              },
-            },
-          ],
-        })
-        return
-      }
-
-      if (isNil(apiKey)) {
-        await onError({
-          events: [
-            {
-              date: new Date().toISOString(),
-              text: { en: 'Missing an API key' },
-              error: {
-                category: 'MISSING_SETTINGS',
-                message: 'Missing an API key',
-              },
-            },
-          ],
-        })
-        return
-      }
-
-      messagebirdSdk(apiKey).conversations.send(
-        {
-          to: String(to),
-          from: String(from),
-          type: 'text',
-          content: {
-            text: String(content),
-          },
-          reportUrl: String(reportUrl),
-        },
-        function (error, response) {
-          if (error != null) {
-            void onError({
-              events: [
-                {
-                  date: new Date().toISOString(),
-                  text: { en: 'Exception when calling the MessageBird API' },
-                  error: {
-                    category: 'SERVER_ERROR',
-                    message: error.message,
-                  },
-                },
-              ],
-            })
-          } else {
-            void onComplete()
-          }
-        }
-      )
-    } catch (err) {
-      const error = err as Error
+    if (!allRequiredFieldsHaveValues) {
       await onError({
         events: [
           {
             date: new Date().toISOString(),
-            text: { en: 'Something went wrong while orchestration the action' },
+            text: { en: 'Fields are missing' },
             error: {
-              category: 'SERVER_ERROR',
-              message: error.message,
+              category: 'MISSING_FIELDS',
+              message: '`from`, `to`, or `content` is missing',
             },
           },
         ],
       })
+      return
     }
+
+    if (isNil(apiKey)) {
+      await onError({
+        events: [
+          {
+            date: new Date().toISOString(),
+            text: { en: 'Missing an API key' },
+            error: {
+              category: 'MISSING_SETTINGS',
+              message: 'Missing an API key',
+            },
+          },
+        ],
+      })
+      return
+    }
+
+    messagebirdSdk(apiKey).conversations.send(
+      {
+        to: String(to),
+        from: String(from),
+        type: 'text',
+        content: {
+          text: String(content),
+        },
+        reportUrl: String(reportUrl),
+      },
+      function (error, response) {
+        if (error != null) {
+          void onError({
+            events: [
+              {
+                date: new Date().toISOString(),
+                text: { en: 'Exception when calling the MessageBird API' },
+                error: {
+                  category: 'SERVER_ERROR',
+                  message: error.message,
+                },
+              },
+            ],
+          })
+        } else {
+          void onComplete()
+        }
+      }
+    )
   },
 }
