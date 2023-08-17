@@ -11,7 +11,7 @@ import { type settings } from '../settings'
 import { makeAPIClient } from '../client'
 import { fromZodError } from 'zod-validation-error'
 import { AxiosError } from 'axios'
-import { patientSchema } from '../validation/dto/patient.zod'
+// import { patientSchema } from '../validation/dto/patient.zod'
 import type schemas from '../schemas'
 
 const fields = {
@@ -47,16 +47,17 @@ export const createPatient: Action<
   dataPoints,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
     try {
-      const patient = patientSchema.parse(
-        JSON.parse(payload.fields.patient_data as string)
-      )
+      // const patient = patientSchema.parse(
+      //   JSON.parse(payload.fields.patient_data as string)
+      // )
 
+      const patient = JSON.parse(payload.fields.patient_data as string)
       // API Call should produce AuthError or something dif.
       const api = makeAPIClient(payload.settings)
-      const { id } = await api.createPatient(patient)
+      const patientId = await api.createPatient(patient)
       await onComplete({
         data_points: {
-          patientId: String(id),
+          patientId,
         },
       })
     } catch (err) {

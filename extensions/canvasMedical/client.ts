@@ -5,6 +5,7 @@ import {
   type OAuthGrantClientCredentialsRequest,
   OAuthClientCredentials,
 } from '@awell-health/extensions-core'
+import { isNil } from 'lodash'
 import { type settings } from './settings'
 import { settingsSchema } from './validation/settings.zod'
 import type { Patient } from './validation/dto/patient.zod'
@@ -30,6 +31,7 @@ type AppointmentResponse = Appointment & Id
 type TaskResponse = Task & Id
 
 export class CanvasDataWrapper extends DataWrapper {
+
   public async createPatient(data: Patient): Promise<Id> {
     const response = await this.RequestRaw({
       method: 'POST',
@@ -40,8 +42,13 @@ export class CanvasDataWrapper extends DataWrapper {
     const locationHeader = response.headers.location
     if (isNil(locationHeader)) throw new Error('Location header not found.')
 
-    const id = locationHeader.match(/\/([^/]+)\/_history/)?.[1]
-    if (isNil(id)) throw new Error('ID not found in location header.')
+    const regex = /.*\/Patient\/(.*?)\/.*/i
+    const match = locationHeader.match(regex)
+    if (isNil(match)) {
+      throw new Error('Error while trying to get created patient ID')
+    }
+    const [, id] = match
+    if (isNil(id)) throw new Error('ID not found in CanvasMedical response.')
 
     return { id }
   }
