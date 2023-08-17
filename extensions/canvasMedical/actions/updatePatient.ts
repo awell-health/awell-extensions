@@ -26,8 +26,8 @@ const fields = {
 } satisfies Fields<typeof schemas>
 
 const dataPoints = {
-  patient_id: {
-    key: 'patient_id',
+  patientId: {
+    key: 'patientId',
     valueType: 'string',
   },
 } satisfies Record<string, DataPointDefinition>
@@ -52,12 +52,11 @@ export const updatePatient: Action<
       )
       // API Call should produce AuthError or something dif.
       const api = makeAPIClient(payload.settings)
-
-      const resp = await api.updatePatient(patient)
+      const { id } = await api.updatePatient(patient)
 
       await onComplete({
         data_points: {
-          patient_id: String(resp.id),
+          patientId: String(id),
         },
       })
     } catch (err) {

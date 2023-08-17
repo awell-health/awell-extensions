@@ -24,12 +24,16 @@ const fields = {
 } satisfies Fields<typeof schemas>
 
 const dataPoints = {
-  first_name: {
-    key: 'first_name',
+  patientId: {
+    key: 'patientId',
     valueType: 'string',
   },
-  last_name: {
-    key: 'last_name',
+  firstName: {
+    key: 'firstName',
+    valueType: 'string',
+  },
+  lastName: {
+    key: 'lastName',
     valueType: 'string',
   },
   phone: {
@@ -42,10 +46,6 @@ const dataPoints = {
   },
   dob: {
     key: 'dob',
-    valueType: 'string',
-  },
-  patient_id: {
-    key: 'id',
     valueType: 'string',
   },
 } satisfies Record<string, DataPointDefinition>
@@ -86,9 +86,9 @@ export const extractPatientInfo: Action<
 
       await onComplete({
         data_points: {
-          patient_id: patient.id,
-          first_name: firstName,
-          last_name: lastName,
+          patientId: patient.id,
+          firstName,
+          lastName,
           phone,
           email,
           dob,

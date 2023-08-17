@@ -56,6 +56,7 @@ export const getTask: Action<
         },
       })
     } catch (err) {
+      console.log(err)
       if (err instanceof ZodError) {
         const error = fromZodError(err)
         await onError({

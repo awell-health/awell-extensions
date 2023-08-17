@@ -25,7 +25,12 @@ const fields = {
   },
 } satisfies Fields<typeof schemas>
 
-const dataPoints = {} satisfies Record<string, DataPointDefinition>
+const dataPoints = {
+  appointmentId: {
+    key: 'appointmentId',
+    valueType: 'string',
+  },
+} satisfies Record<string, DataPointDefinition>
 
 export const updateAppointment: Action<
   typeof fields,
@@ -49,8 +54,13 @@ export const updateAppointment: Action<
 
       // API Call should produce AuthError or something dif.
       const api = makeAPIClient(payload.settings)
-      await api.updateAppointment(appointment)
-      await onComplete()
+      const { id } = await api.updateAppointment(appointment)
+
+      await onComplete({
+        data_points: {
+          appointmentId: String(id),
+        },
+      })
     } catch (err) {
       if (err instanceof ZodError) {
         const error = fromZodError(err)
