@@ -51,10 +51,12 @@ export const patientSchema = z.object({
   deceased: z.boolean().optional(),
   deceasedBoolean: z.boolean().optional(),
   photo: z.array(
-    z.object({
-      data: base64Binary.optional(),
-      url: z.string().optional(),
-    })
+    z
+      .object({
+        data: base64Binary.optional(),
+        url: z.string().optional(),
+      })
+      .optional()
   ),
 })
 
