@@ -26,6 +26,8 @@ export class CanvasDataWrapper extends DataWrapper {
       url: `/Patient`,
       data,
     })
+    console.log('req')
+    console.dir(req, { depth: null })
     const res = await req
     console.log('res')
     console.dir(res, { depth: null })
