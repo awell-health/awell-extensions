@@ -1,5 +1,5 @@
 import { updatePatient } from '../updatePatient'
-import { patientResource } from '../../__mocks__/patient'
+import { samplePatientId, samplePatientResource } from '../../__mocks__/patient'
 import { generateTestPayload } from '../../../../src/tests'
 import { makeAPIClient } from '../../client'
 import { mockMakeAPIClient } from '../../__mocks__/canvasApiClient'
@@ -18,7 +18,7 @@ describe('updatePatient', () => {
       audience: undefined,
     },
     fields: {
-      patient_data: JSON.stringify(patientResource),
+      patient_data: JSON.stringify(samplePatientResource),
     },
   }
   beforeAll(async () => {
@@ -36,7 +36,7 @@ describe('updatePatient', () => {
     )
     expect(onComplete).toHaveBeenCalledTimes(1)
     expect(onComplete).toHaveBeenCalledWith({
-      data_points: { patient_id: patientResource.id },
+      data_points: { patientId: samplePatientId.id },
     })
   })
 })

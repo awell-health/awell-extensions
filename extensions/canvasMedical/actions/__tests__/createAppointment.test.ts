@@ -1,7 +1,7 @@
 import { createAppointment } from '../createAppointment'
 import {
-  appointmentData,
-  appointmentResource,
+  sampleAppointmentData,
+  sampleAppointmentId,
 } from '../../__mocks__/appointment'
 import { generateTestPayload } from '../../../../src/tests'
 import { makeAPIClient } from '../../client'
@@ -21,7 +21,7 @@ describe('createAppointment', () => {
       audience: undefined,
     },
     fields: {
-      appointment_data: JSON.stringify(appointmentData),
+      appointment_data: JSON.stringify(sampleAppointmentData),
     },
   }
 
@@ -40,7 +40,7 @@ describe('createAppointment', () => {
     )
     expect(onComplete).toHaveBeenCalledTimes(1)
     expect(onComplete).toHaveBeenCalledWith({
-      data_points: { appointmentId: appointmentResource.id },
+      data_points: { appointmentId: sampleAppointmentId.id },
     })
   })
 })

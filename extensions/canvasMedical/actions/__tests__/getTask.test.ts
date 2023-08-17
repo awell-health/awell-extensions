@@ -1,5 +1,5 @@
 import { getTask } from '../getTask'
-import { taskResource } from '../../__mocks__/task'
+import { sampleTaskId, sampleTaskResource } from '../../__mocks__/task'
 import { generateTestPayload } from '../../../../src/tests'
 import { makeAPIClient } from '../../client'
 import { mockMakeAPIClient } from '../../__mocks__/canvasApiClient'
@@ -18,7 +18,7 @@ describe('getTask', () => {
       audience: undefined,
     },
     fields: {
-      taskId: taskResource.id,
+      taskId: sampleTaskId.id,
     },
   }
   beforeAll(async () => {
@@ -36,7 +36,9 @@ describe('getTask', () => {
     )
     expect(onComplete).toHaveBeenCalledTimes(1)
     expect(onComplete).toHaveBeenCalledWith({
-      data_points: { task_data: JSON.stringify(taskResource) },
+      data_points: {
+        task_data: JSON.stringify(sampleTaskResource),
+      },
     })
   })
 })

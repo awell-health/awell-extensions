@@ -1,6 +1,10 @@
 import type { PatientWithId, Patient } from '../validation/dto/patient.zod'
 
-export const patientData: Patient = {
+export const samplePatientId: { id: string } = {
+  id: '31365726-b823-4353-8c91-5d4f59d67ed3',
+}
+
+export const samplePatientData: Patient = {
   resourceType: 'Patient',
   extension: [
     {
@@ -197,7 +201,7 @@ export const patientData: Patient = {
   active: true,
 }
 
-export const patientResource: PatientWithId = {
-  id: '31365726-b823-4353-8c91-5d4f59d67ed3',
-  ...patientData,
+export const samplePatientResource: PatientWithId = {
+  ...samplePatientId,
+  ...samplePatientData,
 }

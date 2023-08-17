@@ -1,5 +1,5 @@
 import { extractPatientInfo } from '../extractPatientFields'
-import { patientResource } from '../../__mocks__/patient'
+import { samplePatientResource } from '../../__mocks__/patient'
 import { generateTestPayload } from '../../../../src/tests'
 
 jest.mock('../../client')
@@ -16,7 +16,7 @@ describe('extractPatientFields', () => {
       audience: undefined,
     },
     fields: {
-      patient_data: JSON.stringify(patientResource),
+      patient_data: JSON.stringify(samplePatientResource),
     },
   }
 
@@ -29,12 +29,12 @@ describe('extractPatientFields', () => {
     expect(onComplete).toHaveBeenCalledTimes(1)
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
-        patient_id: patientResource.id,
-        dob: patientResource.birthDate,
-        email: patientResource.telecom?.[1].value,
-        first_name: patientResource.name?.[0].given.join(' '),
-        last_name: patientResource.name?.[0].family,
-        phone: patientResource.telecom?.[0].value,
+        patientId: samplePatientResource.id,
+        firstName: samplePatientResource.name?.[0].given.join(' '),
+        lastName: samplePatientResource.name?.[0].family,
+        dob: samplePatientResource.birthDate,
+        email: samplePatientResource.telecom?.[1].value,
+        phone: samplePatientResource.telecom?.[0].value,
       },
     })
   })

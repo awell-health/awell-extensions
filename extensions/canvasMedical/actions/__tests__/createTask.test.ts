@@ -1,5 +1,5 @@
 import { createTask } from '../createTask'
-import { taskData, taskResource } from '../../__mocks__/task'
+import { sampleTaskData, sampleTaskId } from '../../__mocks__/task'
 import { generateTestPayload } from '../../../../src/tests'
 import { makeAPIClient } from '../../client'
 import { mockMakeAPIClient } from '../../__mocks__/canvasApiClient'
@@ -18,7 +18,7 @@ describe('createTask', () => {
       audience: undefined,
     },
     fields: {
-      task_data: JSON.stringify(taskData),
+      task_data: JSON.stringify(sampleTaskData),
     },
   }
 
@@ -37,7 +37,7 @@ describe('createTask', () => {
     )
     expect(onComplete).toHaveBeenCalledTimes(1)
     expect(onComplete).toHaveBeenCalledWith({
-      data_points: { taskId: taskResource.id },
+      data_points: { taskId: sampleTaskId.id },
     })
   })
 })

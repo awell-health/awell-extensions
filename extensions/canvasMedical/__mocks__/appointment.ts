@@ -3,7 +3,11 @@ import type {
   Appointment,
 } from '../validation/dto/appointment.zod'
 
-export const appointmentData: Appointment = {
+export const sampleAppointmentId: { id: string } = {
+  id: '31365726-b823-4353-8c91-5d4f59d67ed3',
+}
+
+export const sampleAppointmentData: Appointment = {
   resourceType: 'Appointment',
   reasonCode: [
     {
@@ -67,7 +71,7 @@ export const appointmentData: Appointment = {
   ],
 }
 
-export const appointmentResource: AppointmentWithId = {
-  id: '31365726-b823-4353-8c91-5d4f59d67ed3',
-  ...appointmentData,
+export const sampleAppointmentResource: AppointmentWithId = {
+  ...sampleAppointmentId,
+  ...sampleAppointmentData,
 }

@@ -1,5 +1,8 @@
 import { updateAppointment } from '../updateAppointment'
-import { appointmentResource } from '../../__mocks__/appointment'
+import {
+  sampleAppointmentId,
+  sampleAppointmentResource,
+} from '../../__mocks__/appointment'
 import { generateTestPayload } from '../../../../src/tests'
 import { makeAPIClient } from '../../client'
 import { mockMakeAPIClient } from '../../__mocks__/canvasApiClient'
@@ -18,7 +21,7 @@ describe('updateAppointment', () => {
       audience: undefined,
     },
     fields: {
-      appointment_data: JSON.stringify(appointmentResource),
+      appointment_data: JSON.stringify(sampleAppointmentResource),
     },
   }
   beforeAll(async () => {
@@ -35,5 +38,8 @@ describe('updateAppointment', () => {
       onError
     )
     expect(onComplete).toHaveBeenCalledTimes(1)
+    expect(onComplete).toHaveBeenCalledWith({
+      data_points: { appointmentId: sampleAppointmentId.id },
+    })
   })
 })
