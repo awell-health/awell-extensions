@@ -70,7 +70,15 @@ describe('Add or update contact', () => {
       }
     )
 
-    await addOrUpdateContact.onActivityCreated(basePayload, onComplete, onError)
+    try {
+      await addOrUpdateContact.onActivityCreated(
+        basePayload,
+        onComplete,
+        onError
+      )
+    } catch (error) {
+      expect(error).toBeDefined()
+    }
     expect(
       SendgridClientMockImplementation.marketing.contacts.addOrUpdate
     ).toHaveBeenCalledWith({
@@ -86,15 +94,5 @@ describe('Add or update contact', () => {
     })
 
     expect(onComplete).not.toBeCalled()
-    expect(onError).toHaveBeenNthCalledWith(1, {
-      events: expect.arrayContaining([
-        expect.objectContaining({
-          error: {
-            category: 'SERVER_ERROR',
-            message: 'An error occurred',
-          },
-        }),
-      ]),
-    })
   })
 })

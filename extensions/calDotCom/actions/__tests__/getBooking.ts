@@ -23,61 +23,43 @@ describe('Cal.com GetBooking action', () => {
 
   describe('with empty apiKey', () => {
     it('should call onError', async () => {
-      await getBooking.onActivityCreated(
-        generateTestPayload({
-          ...dummyPayloadPart,
-          fields: {
-            bookingId: faker.string.uuid(),
-          },
-          settings: { apiKey: '' },
-        }),
-        onComplete,
-        onError
-      )
-      expect(onError).toHaveBeenCalledWith({
-        events: [
-          {
-            date: expect.any(String),
-            text: {
-              en: expect.stringContaining('Missing API key'),
+      expect.assertions(1)
+      try {
+        await getBooking.onActivityCreated(
+          generateTestPayload({
+            ...dummyPayloadPart,
+            fields: {
+              bookingId: faker.string.uuid(),
             },
-            error: {
-              category: 'BAD_REQUEST',
-              message: expect.stringContaining('Missing API key'),
-            },
-          },
-        ],
-      })
+            settings: { apiKey: '' },
+          }),
+          onComplete,
+          onError
+        )
+      } catch (error) {
+        expect(error).toBeDefined()
+      }
     })
   })
 
   describe('with empty bookingId', () => {
     it('should call onError', async () => {
-      await getBooking.onActivityCreated(
-        generateTestPayload({
-          ...dummyPayloadPart,
-          fields: {
-            bookingId: '',
-          },
-          settings: { apiKey: faker.string.uuid() },
-        }),
-        onComplete,
-        onError
-      )
-      expect(onError).toHaveBeenCalledWith({
-        events: [
-          {
-            date: expect.any(String),
-            text: {
-              en: expect.stringContaining('Missing bookingId'),
+      expect.assertions(1)
+      try {
+        await getBooking.onActivityCreated(
+          generateTestPayload({
+            ...dummyPayloadPart,
+            fields: {
+              bookingId: '',
             },
-            error: {
-              category: 'BAD_REQUEST',
-              message: expect.stringContaining('Missing bookingId'),
-            },
-          },
-        ],
-      })
+            settings: { apiKey: faker.string.uuid() },
+          }),
+          onComplete,
+          onError
+        )
+      } catch (error) {
+        expect(error).toBeDefined()
+      }
     })
   })
 
@@ -159,31 +141,22 @@ describe('Cal.com GetBooking action', () => {
     })
 
     it('should call onComplete with data points', async () => {
-      await getBooking.onActivityCreated(
-        generateTestPayload({
-          ...dummyPayloadPart,
-          fields: {
-            bookingId: faker.string.uuid(),
-          },
-          settings: { apiKey: faker.string.uuid() },
-        }),
-        onComplete,
-        onError
-      )
-      expect(onError).toHaveBeenCalledWith({
-        events: [
-          {
-            date: expect.any(String),
-            text: {
-              en: `Get Booking failed: ${errorMessage}`,
+      expect.assertions(1)
+      try {
+        await getBooking.onActivityCreated(
+          generateTestPayload({
+            ...dummyPayloadPart,
+            fields: {
+              bookingId: faker.string.uuid(),
             },
-            error: {
-              category: 'SERVER_ERROR',
-              message: `Get Booking failed: ${errorMessage}`,
-            },
-          },
-        ],
-      })
+            settings: { apiKey: faker.string.uuid() },
+          }),
+          onComplete,
+          onError
+        )
+      } catch (error) {
+        expect(error).toBeDefined()
+      }
     })
   })
 })

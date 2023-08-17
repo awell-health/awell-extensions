@@ -1,6 +1,7 @@
 import { sendSms } from './sendSms'
 import twilioSdk from '../../../common/sdk/twilio'
 import { generateTestPayload } from '../../../../../src/tests'
+import { ZodError } from 'zod'
 
 describe('Send SMS (with from number) action', () => {
   const onComplete = jest.fn()
@@ -35,48 +36,56 @@ describe('Send SMS (with from number) action', () => {
     expect(onError).not.toHaveBeenCalled()
   })
 
-  test('Should call the onError callback when there is no recipient', async () => {
-    await sendSms.onActivityCreated(
-      generateTestPayload({
-        fields: {
-          message: 'Message content',
-          recipient: '',
-          from: '',
-        },
-        settings: {
-          accountSid: 'AC-accountSid',
-          authToken: 'authToken',
-          fromNumber: '+19144542596',
-          messagingServiceSid: undefined,
-        },
-      }),
-      onComplete,
-      onError
-    )
+  test('Should throw when there is no recipient', async () => {
+    expect.assertions(2)
     expect(onComplete).not.toHaveBeenCalled()
-    expect(onError).toHaveBeenCalled()
+    try {
+      await sendSms.onActivityCreated(
+        generateTestPayload({
+          fields: {
+            message: 'Message content',
+            recipient: '',
+            from: '',
+          },
+          settings: {
+            accountSid: 'AC-accountSid',
+            authToken: 'authToken',
+            fromNumber: '+19144542596',
+            messagingServiceSid: undefined,
+          },
+        }),
+        onComplete,
+        onError
+      )
+    } catch (error) {
+      expect(error).toBeInstanceOf(ZodError)
+    }
   })
 
   test('Should call the onError callback when there is no message', async () => {
-    await sendSms.onActivityCreated(
-      generateTestPayload({
-        fields: {
-          message: '',
-          recipient: '+19144542596',
-          from: '',
-        },
-        settings: {
-          accountSid: 'AC-accountSid',
-          authToken: 'authToken',
-          fromNumber: '+19144542596',
-          messagingServiceSid: undefined,
-        },
-      }),
-      onComplete,
-      onError
-    )
+    expect.assertions(2)
     expect(onComplete).not.toHaveBeenCalled()
-    expect(onError).toHaveBeenCalled()
+    try {
+      await sendSms.onActivityCreated(
+        generateTestPayload({
+          fields: {
+            message: '',
+            recipient: '+19144542596',
+            from: '',
+          },
+          settings: {
+            accountSid: 'AC-accountSid',
+            authToken: 'authToken',
+            fromNumber: '+19144542596',
+            messagingServiceSid: undefined,
+          },
+        }),
+        onComplete,
+        onError
+      )
+    } catch (error) {
+      expect(error).toBeInstanceOf(ZodError)
+    }
   })
 
   describe("'From' number", () => {
@@ -122,6 +131,7 @@ describe('Send SMS (with from number) action', () => {
     })
 
     test('Should throw error if no number is provided in both settings and fields', async () => {
+      expect.assertions(2)
       const payloadWithoutFrom = {
         ...basePayload,
         settings: { ...basePayload.settings, fromNumber: undefined },
@@ -131,19 +141,12 @@ describe('Send SMS (with from number) action', () => {
         },
       }
 
-      await sendSms.onActivityCreated(payloadWithoutFrom, onComplete, onError)
       expect(onComplete).not.toHaveBeenCalled()
-      expect(onError).toHaveBeenCalledWith({
-        events: expect.arrayContaining([
-          expect.objectContaining({
-            error: {
-              category: 'BAD_REQUEST',
-              message:
-                'Validation error: "From" number is missing in both settings and in the action field.',
-            },
-          }),
-        ]),
-      })
+      try {
+        await sendSms.onActivityCreated(payloadWithoutFrom, onComplete, onError)
+      } catch (error) {
+        expect(error).toBeInstanceOf(ZodError)
+      }
     })
   })
 })

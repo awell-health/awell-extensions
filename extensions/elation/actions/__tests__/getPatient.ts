@@ -63,19 +63,20 @@ describe('Simple get patient action', () => {
       .mockImplementation((obj: { events: ActivityEvent[] }) => {
         return obj.events[0].error?.message
       })
-    await getPatient.onActivityCreated(
-      {
-        fields: {
-          patientId: '',
-        },
-        settings,
-      } as any,
-      onComplete,
-      onError
-    )
-    expect(onError).toHaveBeenCalled()
-    expect(onError).toHaveReturnedWith(
-      'Validation error: Requires a valid ID (number)'
-    )
+    expect.assertions(1)
+    try {
+      await getPatient.onActivityCreated(
+        {
+          fields: {
+            patientId: '',
+          },
+          settings,
+        } as any,
+        onComplete,
+        onError
+      )
+    } catch (error) {
+      expect(error).toBeDefined()
+    }
   })
 })

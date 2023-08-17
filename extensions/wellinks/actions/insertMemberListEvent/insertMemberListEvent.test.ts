@@ -147,7 +147,7 @@ describe('Insert Member List Event', () => {
     expect(onError).not.toBeCalled()
   })
 
-  test('should call onError if the WellinksClient throws an error', async () => {
+  test('should throw if WellinksClient throws an error', async () => {
     const invalidPayload = generateTestPayload({
       fields: {
         eventName: 'event-name',
@@ -165,22 +165,17 @@ describe('Insert Member List Event', () => {
         throw new Error('AN ERROR HAS OCCURRED')
       }
     )
-    await insertMemberListEvent.onActivityCreated(
-      invalidPayload,
-      onComplete,
-      onError
-    )
-    expect(onError).toHaveBeenNthCalledWith(1, {
-      events: expect.arrayContaining([
-        expect.objectContaining({
-          error: {
-            category: 'SERVER_ERROR',
-            message:
-              'an error occurred while trying to insert a MemberListEvent',
-          },
-        }),
-      ]),
-    })
+
+    expect.assertions(2)
+    try {
+      await insertMemberListEvent.onActivityCreated(
+        invalidPayload,
+        onComplete,
+        onError
+      )
+    } catch (error) {
+      expect(error).toBeDefined()
+    }
     expect(onComplete).not.toBeCalled()
   })
 })

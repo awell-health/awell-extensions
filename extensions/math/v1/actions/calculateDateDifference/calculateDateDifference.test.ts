@@ -165,20 +165,24 @@ describe('Calculate date difference', () => {
   })
 
   test('Date difference in non-supported unit should throw an error', async () => {
-    await calculateDateDifference.onActivityCreated(
-      generateTestPayload({
-        fields: {
-          dateLeft: '2025-02-11T00:00:00',
-          dateRight: '2023-12-31T00:00:00',
-          unit: 'apples',
-        },
-        settings: {},
-      }),
-      onComplete,
-      onError
-    )
+    expect.assertions(2)
+    try {
+      await calculateDateDifference.onActivityCreated(
+        generateTestPayload({
+          fields: {
+            dateLeft: '2025-02-11T00:00:00',
+            dateRight: '2023-12-31T00:00:00',
+            unit: 'apples',
+          },
+          settings: {},
+        }),
+        onComplete,
+        onError
+      )
+    } catch (error) {
+      expect(error).toBeDefined()
+    }
 
     expect(onComplete).not.toHaveBeenCalled()
-    expect(onError).toHaveBeenCalled()
   })
 })

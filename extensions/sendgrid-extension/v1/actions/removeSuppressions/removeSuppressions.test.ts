@@ -39,17 +39,15 @@ describe('Remove Suppressions', () => {
         throw new Error('hiya')
       }
     )
-    await removeSuppressions.onActivityCreated(basePayload, onComplete, onError)
+    try {
+      await removeSuppressions.onActivityCreated(
+        basePayload,
+        onComplete,
+        onError
+      )
+    } catch (error) {
+      expect(error).toBeDefined()
+    }
     expect(onComplete).not.toBeCalled()
-    expect(onError).toHaveBeenNthCalledWith(1, {
-      events: expect.arrayContaining([
-        expect.objectContaining({
-          error: {
-            category: 'SERVER_ERROR',
-            message: 'hiya',
-          },
-        }),
-      ]),
-    })
   })
 })

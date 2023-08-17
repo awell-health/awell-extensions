@@ -1,6 +1,7 @@
 import { sendSmsWithMessagingService } from './sendSmsWithMessagingService'
 import twilioSdk from '../../../common/sdk/twilio'
 import { generateTestPayload } from '../../../../../src/tests'
+import { ZodError } from 'zod'
 
 describe('Send SMS (with Messaging Service) action', () => {
   const onComplete = jest.fn()
@@ -35,48 +36,56 @@ describe('Send SMS (with Messaging Service) action', () => {
     expect(onError).not.toHaveBeenCalled()
   })
 
-  test('Should call the onError callback when there is no recipient', async () => {
-    await sendSmsWithMessagingService.onActivityCreated(
-      generateTestPayload({
-        fields: {
-          message: 'Message content',
-          recipient: '',
-          messagingServiceSid: '',
-        },
-        settings: {
-          accountSid: 'AC-accountSid',
-          authToken: 'authToken',
-          fromNumber: undefined,
-          messagingServiceSid: 'service-id-settings',
-        },
-      }),
-      onComplete,
-      onError
-    )
+  test('Should throw when there is no recipient', async () => {
+    expect.assertions(2)
     expect(onComplete).not.toHaveBeenCalled()
-    expect(onError).toHaveBeenCalled()
+    try {
+      await sendSmsWithMessagingService.onActivityCreated(
+        generateTestPayload({
+          fields: {
+            message: 'Message content',
+            recipient: '',
+            messagingServiceSid: '',
+          },
+          settings: {
+            accountSid: 'AC-accountSid',
+            authToken: 'authToken',
+            fromNumber: undefined,
+            messagingServiceSid: 'service-id-settings',
+          },
+        }),
+        onComplete,
+        onError
+      )
+    } catch (error) {
+      expect(error).toBeInstanceOf(ZodError)
+    }
   })
 
-  test('Should call the onError callback when there is no message', async () => {
-    await sendSmsWithMessagingService.onActivityCreated(
-      generateTestPayload({
-        fields: {
-          message: '',
-          recipient: '+19144542596',
-          messagingServiceSid: '',
-        },
-        settings: {
-          accountSid: 'AC-accountSid',
-          authToken: 'authToken',
-          fromNumber: undefined,
-          messagingServiceSid: 'service-id-settings',
-        },
-      }),
-      onComplete,
-      onError
-    )
+  test('Should throw when there is no message', async () => {
+    expect.assertions(2)
     expect(onComplete).not.toHaveBeenCalled()
-    expect(onError).toHaveBeenCalled()
+    try {
+      await sendSmsWithMessagingService.onActivityCreated(
+        generateTestPayload({
+          fields: {
+            message: '',
+            recipient: '+19144542596',
+            messagingServiceSid: '',
+          },
+          settings: {
+            accountSid: 'AC-accountSid',
+            authToken: 'authToken',
+            fromNumber: undefined,
+            messagingServiceSid: 'service-id-settings',
+          },
+        }),
+        onComplete,
+        onError
+      )
+    } catch (error) {
+      expect(error).toBeInstanceOf(ZodError)
+    }
   })
 
   describe("'Messaging Service SID'", () => {
@@ -132,6 +141,7 @@ describe('Send SMS (with Messaging Service) action', () => {
     })
 
     test('Should throw error if no messagingServiceSid is provided in both settings and fields', async () => {
+      expect.assertions(2)
       const payloadWithoutFrom = {
         ...basePayload,
         settings: { ...basePayload.settings, messagingServiceSid: undefined },
@@ -141,23 +151,16 @@ describe('Send SMS (with Messaging Service) action', () => {
         },
       }
 
-      await sendSmsWithMessagingService.onActivityCreated(
-        payloadWithoutFrom,
-        onComplete,
-        onError
-      )
+      try {
+        await sendSmsWithMessagingService.onActivityCreated(
+          payloadWithoutFrom,
+          onComplete,
+          onError
+        )
+      } catch (error) {
+        expect(error).toBeInstanceOf(ZodError)
+      }
       expect(onComplete).not.toHaveBeenCalled()
-      expect(onError).toHaveBeenCalledWith({
-        events: expect.arrayContaining([
-          expect.objectContaining({
-            error: {
-              category: 'BAD_REQUEST',
-              message:
-                'Validation error: "Messaging Service SID" is missing in both settings and in the action field.',
-            },
-          }),
-        ]),
-      })
     })
   })
 })

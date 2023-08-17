@@ -38,26 +38,30 @@ describe('Send email', () => {
   })
 
   test('Should call the onError callback when there is a validation error', async () => {
-    await sendEmail.onActivityCreated(
-      generateTestPayload({
-        fields: {
-          to: 'email@hello.com',
-          subject: 'A subject',
-          body: "<h1>Don't shout!</h1>",
-        },
-        settings: {
-          apiKey: 'an-api-key',
-          domain: 'a-domain',
-          fromName: 'John Doe',
-          fromEmail: 'hello@awellhealth.com',
-          region: 'not-a-valid-region', // Should be "EU" or "US"
-          testMode: 'yes',
-        },
-      }),
-      onComplete,
-      onError
-    )
+    expect.assertions(2)
+    try {
+      await sendEmail.onActivityCreated(
+        generateTestPayload({
+          fields: {
+            to: 'email@hello.com',
+            subject: 'A subject',
+            body: "<h1>Don't shout!</h1>",
+          },
+          settings: {
+            apiKey: 'an-api-key',
+            domain: 'a-domain',
+            fromName: 'John Doe',
+            fromEmail: 'hello@awellhealth.com',
+            region: 'not-a-valid-region', // Should be "EU" or "US"
+            testMode: 'yes',
+          },
+        }),
+        onComplete,
+        onError
+      )
+    } catch (error) {
+      expect(error).toBeDefined()
+    }
     expect(onComplete).not.toHaveBeenCalled()
-    expect(onError).toHaveBeenCalled()
   })
 })

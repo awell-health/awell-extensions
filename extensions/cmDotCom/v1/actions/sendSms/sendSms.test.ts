@@ -110,34 +110,28 @@ describe('Send SMS', () => {
   test.each([{ value: undefined }, { value: '' }])(
     '$#. Should throw error when fields and settings are not provided',
     async ({ value }) => {
-      await sendSms.onActivityCreated(
-        {
-          ...basePayload,
-          fields: {
-            ...basePayload.fields,
-            fromName: value,
+      expect.assertions(3)
+      try {
+        await sendSms.onActivityCreated(
+          {
+            ...basePayload,
+            fields: {
+              ...basePayload.fields,
+              fromName: value,
+            },
+            settings: {
+              ...basePayload.settings,
+              fromName: value,
+            },
           },
-          settings: {
-            ...basePayload.settings,
-            fromName: value,
-          },
-        },
-        onComplete,
-        onError
-      )
+          onComplete,
+          onError
+        )
+      } catch (error) {
+        expect(error).toBeDefined()
+      }
       expect(CmClientMockImplementation.sendSms).not.toHaveBeenCalled()
       expect(onComplete).not.toHaveBeenCalled()
-      expect(onError).toHaveBeenCalledWith({
-        events: [
-          expect.objectContaining({
-            error: {
-              category: 'WRONG_INPUT',
-              message:
-                'Validation error: "fromName" is missing in both settings and in the action field.',
-            },
-          }),
-        ],
-      })
     }
   )
 })

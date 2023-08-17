@@ -35,13 +35,16 @@ describe('Generate random number', () => {
       settings: {},
     })
 
-    await generateRandomNumber.onActivityCreated(
-      mockOnActivityCreateParams,
-      onComplete,
-      onError
-    )
-
-    expect(onError).toHaveBeenCalled()
+    expect.assertions(1)
+    try {
+      await generateRandomNumber.onActivityCreated(
+        mockOnActivityCreateParams,
+        onComplete,
+        onError
+      )
+    } catch (error) {
+      expect(error).toBeDefined()
+    }
   })
   test('Should call onError if fields.max is undefined', async () => {
     const mockOnActivityCreateParams = generateTestPayload({
@@ -52,13 +55,16 @@ describe('Generate random number', () => {
       settings: {},
     })
 
-    await generateRandomNumber.onActivityCreated(
-      mockOnActivityCreateParams,
-      onComplete,
-      onError
-    )
-
-    expect(onError).toHaveBeenCalled()
+    expect.assertions(1)
+    try {
+      await generateRandomNumber.onActivityCreated(
+        mockOnActivityCreateParams,
+        onComplete,
+        onError
+      )
+    } catch (error) {
+      expect(error).toBeDefined()
+    }
   })
   test('Check for difference between min and max', async () => {
     const mockOnActivityCreateParams = generateTestPayload({

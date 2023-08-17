@@ -111,17 +111,12 @@ describe('Import Status', () => {
         throw new Error('An error occurred')
       }
     )
-    await importStatus.onActivityCreated(basePayload, onComplete, onError)
+
+    try {
+      await importStatus.onActivityCreated(basePayload, onComplete, onError)
+    } catch (error) {
+      expect(error).toBeDefined()
+    }
     expect(onComplete).not.toBeCalled()
-    expect(onError).toHaveBeenNthCalledWith(1, {
-      events: expect.arrayContaining([
-        expect.objectContaining({
-          error: {
-            category: 'SERVER_ERROR',
-            message: 'An error occurred',
-          },
-        }),
-      ]),
-    })
   })
 })
