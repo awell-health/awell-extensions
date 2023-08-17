@@ -54,10 +54,10 @@ export const createPatient: Action<
       const patient = JSON.parse(payload.fields.patient_data as string)
       // API Call should produce AuthError or something dif.
       const api = makeAPIClient(payload.settings)
-      const patientId = await api.createPatient(patient)
+      const { id } = await api.createPatient(patient)
       await onComplete({
         data_points: {
-          patientId,
+          patientId: id,
         },
       })
     } catch (err) {

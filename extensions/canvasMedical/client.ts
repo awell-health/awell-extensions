@@ -11,7 +11,6 @@ import { settingsSchema } from './validation/settings.zod'
 import type { Patient } from './validation/dto/patient.zod'
 import type { Appointment } from './validation/dto/appointment.zod'
 import type { Task } from './validation/dto/task.zod'
-import { isNil } from 'lodash'
 
 interface Id {
   id: string
@@ -31,7 +30,6 @@ type AppointmentResponse = Appointment & Id
 type TaskResponse = Task & Id
 
 export class CanvasDataWrapper extends DataWrapper {
-
   public async createPatient(data: Patient): Promise<Id> {
     const response = await this.RequestRaw({
       method: 'POST',

@@ -76,15 +76,7 @@ export const patientSchema = z.object({
   contact: z.array(contactSchema).optional(),
   address: z.array(addressSchema).optional(),
   deceased: z.boolean().optional(),
-  deceasedBoolean: z.boolean().optional(),
-  photo: z.array(
-    z
-      .object({
-        data: base64Binary.optional(),
-        url: z.string().optional(),
-      })
-      .optional()
-  ).optional(),
+  photo: z.array(photoSchema).optional(),
 })
 
 export const patientWithIdSchema = patientSchema.extend({
