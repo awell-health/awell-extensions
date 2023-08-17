@@ -5,6 +5,7 @@ import {
   type OAuthGrantClientCredentialsRequest,
   OAuthClientCredentials,
 } from '@awell-health/extensions-core'
+import {isNil} from 'lodash'
 import { type settings } from './settings'
 import { settingsSchema } from './validation/settings.zod'
 import type { Patient } from './validation/dto/patient.zod'
@@ -20,18 +21,20 @@ type AppointmentResponse = Appointment & WithId
 type TaskResponse = Task & WithId
 
 export class CanvasDataWrapper extends DataWrapper {
-  public async createPatient(data: Patient): Promise<PatientResponse> {
-    const req = this.Request<PatientResponse>({
+  public async createPatient(data: Patient): Promise<string> {
+    const res = await this._client.request({
       method: 'POST',
-      url: `/Patient`,
+      url: '/Patient',
       data,
     })
-    console.log('req')
-    console.dir(req, { depth: null })
-    const res = await req
-    console.log('res')
-    console.dir(res, { depth: null })
-    return res
+    const regex = /.*\/Patient\/(.*?)\/.*/i
+    const { location } = res.headers
+    const match = location.match(regex)
+    if (isNil(match)) {
+      throw new Error('Error while trying to get created patient id')
+    }
+    const [, id] = match
+    return id
   }
 
   public async updatePatient(data: Patient & WithId): Promise<PatientResponse> {
@@ -162,7 +165,7 @@ export class CanvasAPIClient extends APIClient<CanvasDataWrapper> {
     return await this.FetchData(async (dw) => await dw.getPatient(id))
   }
 
-  public async createPatient(obj: Patient): Promise<PatientResponse> {
+  public async createPatient(obj: Patient): Promise<string> {
     return await this.FetchData(async (dw) => await dw.createPatient(obj))
   }
 
