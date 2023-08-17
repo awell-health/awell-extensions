@@ -37,6 +37,8 @@ export class CanvasDataWrapper extends DataWrapper {
       data,
     })
 
+    console.log('response')
+    console.dir(response, { depth: null })
     const locationHeader = response.headers.location
     if (isNil(locationHeader)) throw new Error('Location header not found.')
 
