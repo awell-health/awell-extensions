@@ -55,12 +55,15 @@ export const createPatient: Action<
       // API Call should produce AuthError or something dif.
       const api = makeAPIClient(payload.settings)
       const { id } = await api.createPatient(patient)
+      console.log('id', id)
       await onComplete({
         data_points: {
           patientId: String(id),
         },
       })
     } catch (err) {
+      const message = (err as Error).message
+      console.log('Error', message)
       if (err instanceof ZodError) {
         const error = fromZodError(err)
         await onError({
