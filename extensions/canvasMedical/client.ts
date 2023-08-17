@@ -5,7 +5,7 @@ import {
   type OAuthGrantClientCredentialsRequest,
   OAuthClientCredentials,
 } from '@awell-health/extensions-core'
-import {isNil} from 'lodash'
+import { isNil } from 'lodash'
 import { type settings } from './settings'
 import { settingsSchema } from './validation/settings.zod'
 import type { Patient } from './validation/dto/patient.zod'
@@ -22,11 +22,9 @@ type TaskResponse = Task & WithId
 
 export class CanvasDataWrapper extends DataWrapper {
   public async createPatient(data: Patient): Promise<string> {
-    const res = await this._client.request({
-      method: 'POST',
-      url: '/Patient',
-      data,
-    })
+    const res = await this._client.post('/Patient', data)
+    console.dir(res, { depth: null, colors: true })
+
     const regex = /.*\/Patient\/(.*?)\/.*/i
     const { location } = res.headers
     const match = location.match(regex)
