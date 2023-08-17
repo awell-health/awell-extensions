@@ -22,8 +22,10 @@ type TaskResponse = Task & WithId
 
 export class CanvasDataWrapper extends DataWrapper {
   public async createPatient(data: Patient): Promise<string> {
+    console.log('data', data)
     const res = await this._client.post('/Patient', data)
-    console.dir(res, { depth: null, colors: true })
+    console.log('Response headers', )
+    console.dir(res.headers, { depth: null, colors: true })
 
     const regex = /.*\/Patient\/(.*?)\/.*/i
     const { location } = res.headers
