@@ -49,7 +49,7 @@ export const getAppointment: Action<
 
       // API Call should produce AuthError or something dif.
       const api = makeAPIClient(payload.settings)
-      const appointment = await api.getTask(appointmentId)
+      const appointment = await api.getAppointment(appointmentId)
       await onComplete({
         data_points: {
           appointment_data: JSON.stringify(appointment),

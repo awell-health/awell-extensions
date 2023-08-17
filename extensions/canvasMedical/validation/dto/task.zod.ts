@@ -1,9 +1,17 @@
 import { z } from 'zod'
 import { createReferenceSchema } from './reference.zod'
-import { periodSchema } from './period.zod'
+
+const extensionSchema = z.object({
+  url: z.string(),
+  valueReference: z.object({
+    reference: z.string().optional(),
+    display: z.string().optional(),
+  }),
+})
 
 export const taskSchema = z.object({
   resourceType: z.literal('Task'),
+  extension: z.array(extensionSchema).optional(),
   status: z.enum([
     'draft',
     'requested',
@@ -21,24 +29,44 @@ export const taskSchema = z.object({
   requester: z.object({
     reference: createReferenceSchema('Practitioner'),
   }),
+  description: z.string().optional(),
   for: z.object({
     reference: createReferenceSchema('Patient'),
   }),
-  description: z.string(),
-  owner: z.object({
-    reference: createReferenceSchema('Practitioner'),
-  }),
-  authoredOn: z.date(),
-  restriction: z.object({
-    period: periodSchema,
-  }),
-  note: z.array(
-    z.object({
-      text: z.string(),
-      time: z.date(),
-      authorReference: createReferenceSchema('Practitioner'),
+  owner: z
+    .object({
+      reference: createReferenceSchema('Practitioner'),
     })
-  ),
+    .optional(),
+  authoredOn: z.string().datetime().optional(),
+  restriction: z
+    .object({
+      period: z.object({
+        end: z.string().datetime(),
+      }),
+    })
+    .optional(),
+  note: z
+    .array(
+      z.object({
+        text: z.string(),
+        time: z.string().datetime(),
+        authorReference: z.object({
+          reference: createReferenceSchema('Practitioner'),
+        }),
+      })
+    )
+    .optional(),
+  input: z
+    .array(
+      z.object({
+        type: z.object({
+          text: z.string(),
+        }),
+        valueString: z.string(),
+      })
+    )
+    .optional(),
 })
 
 export const taskWithIdSchema = taskSchema.extend({
@@ -46,3 +74,4 @@ export const taskWithIdSchema = taskSchema.extend({
 })
 
 export type Task = z.infer<typeof taskSchema>
+export type TaskWithId = z.infer<typeof taskWithIdSchema>

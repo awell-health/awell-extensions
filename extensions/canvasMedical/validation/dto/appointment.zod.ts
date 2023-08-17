@@ -1,37 +1,51 @@
 import { z } from 'zod'
 import { createReferenceSchema } from './reference.zod'
-import { instant } from './primitive'
 
-const pratictionerParticipant = z.object({
+const reasonCodeSchema = z.object({
+  coding: z.array(
+    z.object({
+      system: z.literal('INTERNAL'),
+      code: z.string(),
+      display: z.string(),
+    })
+  ),
+  text: z.string(),
+})
+
+const participantSchema = z.object({
   actor: z.object({
-    reference: createReferenceSchema('Practitioner'),
+    reference: z.union([
+      createReferenceSchema('Practitioner'),
+      createReferenceSchema('Patient'),
+    ]),
   }),
   status: z.literal('accepted'),
 })
 
-const patientParticipant = z.object({
-  actor: z.object({
-    reference: createReferenceSchema('Patient'),
+const containedSchema = z.object({
+  resourceType: z.literal('Endpoint'),
+  id: z.string(),
+  status: z.string(),
+  connectionType: z.object({
+    code: z.string(),
   }),
-  status: z.literal('accepted'),
+  payloadType: z.array(
+    z.object({
+      coding: z.array(
+        z.object({
+          code: z.string(),
+        })
+      ),
+    })
+  ),
+  address: z.string(),
 })
 
 export const appointmentSchema = z.object({
   resourceType: z.literal('Appointment'),
-  reasonCode: z.array(
-    z.object({
-      coding: z.object({
-        system: z.literal('INTERNAL'),
-        code: z.string(),
-        display: z.string(),
-      }),
-      text: z.string(),
-    })
-  ),
-  participant: z.union([
-    z.tuple([pratictionerParticipant]),
-    z.tuple([pratictionerParticipant, patientParticipant]),
-  ]),
+  reasonCode: z.array(reasonCodeSchema).optional(),
+  description: z.string().optional(),
+  participant: z.array(participantSchema).optional(),
   appointmentType: z.object({
     coding: z.array(
       z.object({
@@ -47,8 +61,8 @@ export const appointmentSchema = z.object({
       })
     ),
   }),
-  start: instant,
-  end: instant,
+  start: z.string().datetime(),
+  end: z.string().datetime(),
   supportingInformation: z.array(
     z.union([
       z.object({
@@ -60,14 +74,8 @@ export const appointmentSchema = z.object({
       }),
     ])
   ),
-  contained: z.array(
-    z.object({
-      resourceType: z.literal('Endpoint'),
-      id: z.literal('appointment-meeting-endpoint'),
-      url: z.string(),
-    })
-  ),
-  status: z.literal('proposed'),
+  contained: z.array(containedSchema).optional(),
+  status: z.literal('proposed').optional(),
 })
 
 export const appointmentWithIdSchema = appointmentSchema.extend({
@@ -75,3 +83,4 @@ export const appointmentWithIdSchema = appointmentSchema.extend({
 })
 
 export type Appointment = z.infer<typeof appointmentSchema>
+export type AppointmentWithId = z.infer<typeof appointmentWithIdSchema>

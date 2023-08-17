@@ -1,7 +1,17 @@
-import mockPatient from './patient'
+import { samplePatientId, samplePatientResource } from './patient'
+import { sampleTaskId, sampleTaskResource } from './task'
+import { sampleAppointmentId, sampleAppointmentResource } from './appointment'
 
 export const mockMakeAPIClient = (): any => {
   return {
-    getPatient: jest.fn(async () => mockPatient),
+    createPatient: jest.fn(async () => samplePatientId),
+    updatePatient: jest.fn(async () => samplePatientId),
+    getPatient: jest.fn(async () => samplePatientResource),
+    createTask: jest.fn(async () => sampleTaskId),
+    getTask: jest.fn(async () => sampleTaskResource),
+    updateTask: jest.fn(async () => sampleTaskId),
+    createAppointment: jest.fn(async () => sampleAppointmentId),
+    updateAppointment: jest.fn(async () => sampleAppointmentId),
+    getAppointment: jest.fn(async () => sampleAppointmentResource),
   }
 }

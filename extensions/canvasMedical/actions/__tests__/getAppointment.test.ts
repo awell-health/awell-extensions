@@ -1,12 +1,15 @@
-import { getPatient } from '../getPatient'
-import { samplePatientResource, samplePatientId } from '../../__mocks__/patient'
+import { getAppointment } from '../getAppointment'
+import {
+  sampleAppointmentId,
+  sampleAppointmentResource,
+} from '../../__mocks__/appointment'
 import { generateTestPayload } from '../../../../src/tests'
 import { makeAPIClient } from '../../client'
 import { mockMakeAPIClient } from '../../__mocks__/canvasApiClient'
 
 jest.mock('../../client')
 
-describe('getPatient', () => {
+describe('getAppointment', () => {
   const onComplete = jest.fn()
   const onError = jest.fn()
   const payload = {
@@ -18,27 +21,27 @@ describe('getPatient', () => {
       audience: undefined,
     },
     fields: {
-      patientId: samplePatientId.id,
+      appointmentId: sampleAppointmentId.id,
     },
   }
-
   beforeAll(async () => {
     ;(makeAPIClient as jest.Mock).mockImplementation(mockMakeAPIClient)
   })
-
   beforeEach(async () => {
     jest.clearAllMocks()
   })
 
-  it('should return patient', async () => {
-    await getPatient.onActivityCreated(
+  it('should return appointment', async () => {
+    await getAppointment.onActivityCreated(
       generateTestPayload(payload),
       onComplete,
       onError
     )
     expect(onComplete).toHaveBeenCalledTimes(1)
     expect(onComplete).toHaveBeenCalledWith({
-      data_points: { patient_data: JSON.stringify(samplePatientResource) },
+      data_points: {
+        appointment_data: JSON.stringify(sampleAppointmentResource),
+      },
     })
   })
 })

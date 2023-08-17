@@ -11,40 +11,62 @@ import { settingsSchema } from './validation/settings.zod'
 import type { Patient } from './validation/dto/patient.zod'
 import type { Appointment } from './validation/dto/appointment.zod'
 import type { Task } from './validation/dto/task.zod'
+import { isNil } from 'lodash'
 
-interface WithId {
+interface Id {
   id: string
 }
 
-type PatientResponse = Patient & WithId
-type AppointmentResponse = Appointment & WithId
-type TaskResponse = Task & WithId
+interface SerchObject<T> {
+  resourceType: string
+  type: string
+  total: number
+  entry: Array<{
+    resource: T
+  }>
+}
+
+type PatientResponse = Patient & Id
+type AppointmentResponse = Appointment & Id
+type TaskResponse = Task & Id
 
 export class CanvasDataWrapper extends DataWrapper {
-  public async createPatient(data: Patient): Promise<string> {
-    console.log('data', data)
-    const res = await this._client.post('/Patient', data)
-    console.log('Response headers', )
-    console.dir(res.headers, { depth: null, colors: true })
+
+  public async createPatient(data: Patient): Promise<Id> {
+    const response = await this.RequestRaw({
+      method: 'POST',
+      url: `/Patient`,
+      data,
+    })
+
+    const locationHeader = response.headers.location
+    if (isNil(locationHeader)) throw new Error('Location header not found.')
 
     const regex = /.*\/Patient\/(.*?)\/.*/i
-    const { location } = res.headers
-    const match = location.match(regex)
+    const match = locationHeader.match(regex)
     if (isNil(match)) {
-      throw new Error('Error while trying to get created patient id')
+      throw new Error('Error while trying to get created patient ID')
     }
     const [, id] = match
-    return id
+    if (isNil(id)) throw new Error('ID not found in CanvasMedical response.')
+
+    return { id }
   }
 
-  public async updatePatient(data: Patient & WithId): Promise<PatientResponse> {
-    const req = this.Request<PatientResponse>({
+  public async updatePatient(data: Patient & Id): Promise<Id> {
+    const response = await this.RequestRaw({
       method: 'PUT',
       url: `/Patient/${data.id}`,
       data,
     })
-    const res = await req
-    return res
+
+    const locationHeader = response.headers.location
+    if (isNil(locationHeader)) throw new Error('Location header not found.')
+
+    const id = locationHeader.match(/\/([^/]+)\/_history/)?.[1]
+    if (isNil(id)) throw new Error('ID not found in location header.')
+
+    return { id }
   }
 
   public async getPatient(id: string): Promise<PatientResponse> {
@@ -56,28 +78,36 @@ export class CanvasDataWrapper extends DataWrapper {
     return res
   }
 
-  public async createAppointment(
-    data: Appointment
-  ): Promise<AppointmentResponse> {
-    const req = this.Request<AppointmentResponse>({
+  public async createAppointment(data: Appointment): Promise<Id> {
+    const response = await this.RequestRaw({
       method: 'POST',
       url: `/Appointment`,
       data,
     })
-    const res = await req
-    return res
+
+    const locationHeader = response.headers.location
+    if (isNil(locationHeader)) throw new Error('Location header not found.')
+
+    const id = locationHeader.match(/\/([^/]+)\/_history/)?.[1]
+    if (isNil(id)) throw new Error('ID not found in location header.')
+
+    return { id }
   }
 
-  public async updateAppointment(
-    data: Appointment & WithId
-  ): Promise<AppointmentResponse> {
-    const req = this.Request<AppointmentResponse>({
+  public async updateAppointment(data: Appointment & Id): Promise<Id> {
+    const response = await this.RequestRaw({
       method: 'PUT',
       url: `/Appointment/${data.id}`,
       data,
     })
-    const res = await req
-    return res
+
+    const locationHeader = response.headers.location
+    if (isNil(locationHeader)) throw new Error('Location header not found.')
+
+    const id = locationHeader.match(/\/([^/]+)\/_history/)?.[1]
+    if (isNil(id)) throw new Error('ID not found in location header.')
+
+    return { id }
   }
 
   public async getAppointment(id: string): Promise<AppointmentResponse> {
@@ -89,33 +119,45 @@ export class CanvasDataWrapper extends DataWrapper {
     return res
   }
 
-  public async createTask(data: Task): Promise<TaskResponse> {
-    const req = this.Request<TaskResponse>({
+  public async createTask(data: Task): Promise<Id> {
+    const response = await this.RequestRaw({
       method: 'POST',
       url: `/Task`,
       data,
     })
-    const res = await req
-    return res
+
+    const locationHeader = response.headers.location
+    if (isNil(locationHeader)) throw new Error('Location header not found.')
+
+    const id = locationHeader.match(/\/([^/]+)\/_history/)?.[1]
+    if (isNil(id)) throw new Error('ID not found in location header.')
+
+    return { id }
   }
 
-  public async updateTask(data: Task & WithId): Promise<TaskResponse> {
-    const req = this.Request<TaskResponse>({
+  public async updateTask(data: Task & Id): Promise<Id> {
+    const response = await this.RequestRaw({
       method: 'PUT',
       url: `/Task/${data.id}`,
       data,
     })
-    const res = await req
-    return res
+
+    const locationHeader = response.headers.location
+    if (isNil(locationHeader)) throw new Error('Location header not found.')
+
+    const id = locationHeader.match(/\/([^/]+)\/_history/)?.[1]
+    if (isNil(id)) throw new Error('ID not found in location header.')
+
+    return { id }
   }
 
   public async getTask(id: string): Promise<TaskResponse> {
-    const req = this.Request<TaskResponse>({
+    const response = await this.Request<SerchObject<TaskResponse>>({
       method: 'GET',
-      url: `/Task/${id}`,
+      url: `/Task?_id=${id}`,
     })
-    const res = await req
-    return res
+    if (response.total === 0) throw new Error('Task not found')
+    return response.entry[0].resource
   }
 }
 
@@ -149,15 +191,11 @@ export class CanvasAPIClient extends APIClient<CanvasDataWrapper> {
     return await this.FetchData(async (dw) => await dw.getAppointment(id))
   }
 
-  public async createAppointment(
-    obj: Appointment
-  ): Promise<AppointmentResponse> {
+  public async createAppointment(obj: Appointment): Promise<Id> {
     return await this.FetchData(async (dw) => await dw.createAppointment(obj))
   }
 
-  public async updateAppointment(
-    obj: Appointment & WithId
-  ): Promise<AppointmentResponse> {
+  public async updateAppointment(obj: Appointment & Id): Promise<Id> {
     return await this.FetchData(async (dw) => await dw.updateAppointment(obj))
   }
 
@@ -165,11 +203,11 @@ export class CanvasAPIClient extends APIClient<CanvasDataWrapper> {
     return await this.FetchData(async (dw) => await dw.getPatient(id))
   }
 
-  public async createPatient(obj: Patient): Promise<string> {
+  public async createPatient(obj: Patient): Promise<Id> {
     return await this.FetchData(async (dw) => await dw.createPatient(obj))
   }
 
-  public async updatePatient(obj: Patient & WithId): Promise<PatientResponse> {
+  public async updatePatient(obj: Patient & Id): Promise<Id> {
     return await this.FetchData(async (dw) => await dw.updatePatient(obj))
   }
 
@@ -177,11 +215,11 @@ export class CanvasAPIClient extends APIClient<CanvasDataWrapper> {
     return await this.FetchData(async (dw) => await dw.getTask(id))
   }
 
-  public async createTask(obj: Task): Promise<TaskResponse> {
+  public async createTask(obj: Task): Promise<Id> {
     return await this.FetchData(async (dw) => await dw.createTask(obj))
   }
 
-  public async updateTask(obj: Task & WithId): Promise<TaskResponse> {
+  public async updateTask(obj: Task & Id): Promise<Id> {
     return await this.FetchData(async (dw) => await dw.updateTask(obj))
   }
 }

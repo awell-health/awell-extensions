@@ -24,12 +24,16 @@ const fields = {
 } satisfies Fields<typeof schemas>
 
 const dataPoints = {
-  first_name: {
-    key: 'first_name',
+  patientId: {
+    key: 'patientId',
     valueType: 'string',
   },
-  last_name: {
-    key: 'last_name',
+  firstName: {
+    key: 'firstName',
+    valueType: 'string',
+  },
+  lastName: {
+    key: 'lastName',
     valueType: 'string',
   },
   phone: {
@@ -42,10 +46,6 @@ const dataPoints = {
   },
   dob: {
     key: 'dob',
-    valueType: 'string',
-  },
-  patient_id: {
-    key: 'id',
     valueType: 'string',
   },
 } satisfies Record<string, DataPointDefinition>
@@ -72,23 +72,23 @@ export const extractPatientInfo: Action<
         (acc, name) => {
           if (name.use === 'official') {
             acc.firstName = name.given.join(' ').trim()
-            acc.lastName = name.family
+            acc.lastName = name.family?.trim() ?? ''
           }
           return acc
         },
         { firstName: '', lastName: '' }
       )
       const phone =
-        patient.telecom.find((t) => t.system === 'phone' && t.use === 'mobile')
-          ?.value ?? patient.telecom.find((t) => t.system === 'phone')?.value
-      const email = patient.telecom.find((t) => t.system === 'email')?.value
+        patient.telecom?.find((t) => t.system === 'phone' && t.use === 'mobile')
+          ?.value ?? patient.telecom?.find((t) => t.system === 'phone')?.value
+      const email = patient.telecom?.find((t) => t.system === 'email')?.value
       const dob = patient.birthDate
 
       await onComplete({
         data_points: {
-          patient_id: patient.id,
-          first_name: firstName,
-          last_name: lastName,
+          patientId: patient.id,
+          firstName,
+          lastName,
           phone,
           email,
           dob,
