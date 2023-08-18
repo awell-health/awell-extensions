@@ -2,6 +2,7 @@ import { sendSmsWithMessagingService } from './sendSmsWithMessagingService'
 import twilioSdk from '../../../common/sdk/twilio'
 import { generateTestPayload } from '../../../../../src/tests'
 import { ZodError } from 'zod'
+import { fromZodError } from 'zod-validation-error'
 
 describe('Send SMS (with Messaging Service) action', () => {
   const onComplete = jest.fn()
@@ -58,7 +59,10 @@ describe('Send SMS (with Messaging Service) action', () => {
         onError
       )
     } catch (error) {
-      expect(error).toBeInstanceOf(ZodError)
+      const zodError = fromZodError(error as any)
+      expect(zodError.message).toBe(
+        'Validation error: Phone number is invalid (NOT_A_NUMBER) at "fields.recipient"'
+      )
     }
   })
 

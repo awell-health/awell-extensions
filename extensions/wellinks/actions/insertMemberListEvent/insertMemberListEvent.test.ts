@@ -174,7 +174,7 @@ describe('Insert Member List Event', () => {
         onError
       )
     } catch (error) {
-      expect(error).toBeDefined()
+      expect((error as any).message).toBe('AN ERROR HAS OCCURRED')
     }
     expect(onComplete).not.toBeCalled()
   })

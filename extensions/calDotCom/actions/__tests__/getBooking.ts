@@ -2,6 +2,7 @@ import { getBooking } from '../getBooking'
 import { faker } from '@faker-js/faker'
 import CalComApi from '../../calComApi'
 import { generateTestPayload } from '../../../../src/tests'
+import { fromZodError } from 'zod-validation-error'
 
 describe('Cal.com GetBooking action', () => {
   const onComplete = jest.fn()
@@ -37,7 +38,10 @@ describe('Cal.com GetBooking action', () => {
           onError
         )
       } catch (error) {
-        expect(error).toBeDefined()
+        const zodError = fromZodError(error as any)
+        expect(zodError.message).toBe(
+          'Validation error: Missing API key at "settings.apiKey"'
+        )
       }
     })
   })
@@ -58,7 +62,10 @@ describe('Cal.com GetBooking action', () => {
           onError
         )
       } catch (error) {
-        expect(error).toBeDefined()
+        const zodError = fromZodError(error as any)
+        expect(zodError.message).toBe(
+          'Validation error: Missing bookingId at "fields.bookingId"'
+        )
       }
     })
   })
@@ -155,7 +162,7 @@ describe('Cal.com GetBooking action', () => {
           onError
         )
       } catch (error) {
-        expect(error).toBeDefined()
+        expect((error as any)?.message).toBe(errorMessage)
       }
     })
   })

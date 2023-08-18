@@ -2,6 +2,7 @@ import { sendSms } from './sendSms'
 import twilioSdk from '../../../common/sdk/twilio'
 import { generateTestPayload } from '../../../../../src/tests'
 import { ZodError } from 'zod'
+import { fromZodError } from 'zod-validation-error'
 
 describe('Send SMS (with from number) action', () => {
   const onComplete = jest.fn()
@@ -145,7 +146,10 @@ describe('Send SMS (with from number) action', () => {
       try {
         await sendSms.onActivityCreated(payloadWithoutFrom, onComplete, onError)
       } catch (error) {
-        expect(error).toBeInstanceOf(ZodError)
+        const zodError = fromZodError(error as any)
+        expect(zodError.message).toBe(
+          'Validation error: "From" number is missing in both settings and in the action field.'
+        )
       }
     })
   })

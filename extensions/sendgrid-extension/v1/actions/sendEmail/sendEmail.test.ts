@@ -2,10 +2,14 @@ import {
   SendgridClient,
   SendgridClientMockImplementation,
 } from '../../../__mocks__/client'
-import { sendEmail } from '..'
+import { sendEmail } from '../sendEmail'
 import { generateTestPayload } from '../../../../../src/tests'
+import { fromZodError } from 'zod-validation-error'
 
-jest.mock('../../../client', () => ({ SendgridClient }))
+jest.mock('../../../client', () => ({
+  ...jest.requireActual('../../../client'),
+  SendgridClient,
+}))
 
 describe('Send email', () => {
   const onComplete = jest.fn()
@@ -136,7 +140,10 @@ describe('Send email', () => {
         onError
       )
     } catch (error) {
-      expect(error).toBeDefined()
+      const zodError = fromZodError(error as any)
+      expect(zodError.message).toBe(
+        'Validation error: "fromName" is missing in both settings and in the action field.; "fromEmail" is missing in both settings and in the action field.'
+      )
     }
     expect(SendgridClientMockImplementation.mail.send).not.toHaveBeenCalled()
     expect(onComplete).not.toHaveBeenCalled()

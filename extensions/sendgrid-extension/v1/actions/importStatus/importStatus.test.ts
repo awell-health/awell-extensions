@@ -115,7 +115,7 @@ describe('Import Status', () => {
     try {
       await importStatus.onActivityCreated(basePayload, onComplete, onError)
     } catch (error) {
-      expect(error).toBeDefined()
+      expect((error as any).message).toBe('An error occurred')
     }
     expect(onComplete).not.toBeCalled()
   })

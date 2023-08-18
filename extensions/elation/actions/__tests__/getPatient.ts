@@ -1,6 +1,7 @@
 import { getPatient } from '../getPatient'
 import { type ActivityEvent } from '@awell-health/extensions-core'
 import { patientExample } from '../../__mocks__/constants'
+import { fromZodError } from 'zod-validation-error'
 
 jest.mock('../../client')
 
@@ -76,7 +77,10 @@ describe('Simple get patient action', () => {
         onError
       )
     } catch (error) {
-      expect(error).toBeDefined()
+      const zodError = fromZodError(error as any)
+      expect(zodError.message).toBe(
+        'Validation error: Requires a valid ID (number)'
+      )
     }
   })
 })

@@ -1,3 +1,4 @@
+import { fromZodError } from 'zod-validation-error'
 import { generateTestPayload } from '../../../../../src/tests'
 import { updatePatient } from './updatePatient'
 
@@ -73,7 +74,10 @@ describe('Update patient', () => {
         onError
       )
     } catch (error) {
-      expect(error).toBeDefined()
+      const zodError = fromZodError(error as any)
+      expect(zodError.message).toBe(
+        'Validation error: Value passed is not an email address at "fields.email"'
+      )
     }
     expect(onComplete).not.toHaveBeenCalled()
   })
@@ -108,7 +112,10 @@ describe('Update patient', () => {
         onError
       )
     } catch (error) {
-      expect(error).toBeDefined()
+      const zodError = fromZodError(error as any)
+      expect(zodError.message).toBe(
+        'Validation error: Phone number is invalid (NOT_A_NUMBER) at "fields.phone"'
+      )
     }
     expect(onComplete).not.toHaveBeenCalled()
   })
