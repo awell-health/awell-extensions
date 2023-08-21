@@ -6,6 +6,7 @@ import {
   type DataPointDefinition,
   type Field,
   Category,
+  StringType,
 } from '@awell-health/extensions-core'
 import { type settings } from '../settings'
 import { makeAPIClient } from '../client'
@@ -19,6 +20,7 @@ const fields = {
     label: 'Text',
     description: 'Text of a note',
     type: FieldType.STRING,
+    stringType: StringType.TEXT,
     required: true,
   },
   authorId: {
