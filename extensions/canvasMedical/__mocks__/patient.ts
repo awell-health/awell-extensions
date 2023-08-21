@@ -201,6 +201,110 @@ export const samplePatientData: Patient = {
   active: true,
 }
 
+export const minimalPatientDataSample = {
+  resourceType: 'Patient',
+  extension: [
+    {
+      url: 'http://hl7.org/fhir/us/core/StructureDefinition/us-core-birthsex',
+      valueCode: 'M',
+    },
+  ],
+  active: true,
+  name: [
+    {
+      use: 'official',
+      family: 'Awell',
+      given: ['Postman', 'Test'],
+    },
+  ],
+  birthDate: '1969-11-13',
+}
+
+export const minimalPatientResourceSample = {
+  resourceType: 'Patient',
+  id: 'fb5bffffae2c44e49a8d8b409a5c5846',
+  meta: {
+    versionId: '1',
+    lastUpdated: '2023-08-18T10:41:10.809+00:00',
+  },
+  text: {
+    status: 'generated',
+    div: '<div xmlns="http://www.w3.org/1999/xhtml"><div class="hapiHeaderText">Postman <b>Awell</b></div><table class="hapiPropertyTable"><tbody><tr><td>Identifier</td><td>248365312</td></tr><tr><td>Date of birth</td><td><span>1969-11-13</span></td></tr></tbody></table></div>',
+  },
+  extension: [
+    {
+      url: 'http://hl7.org/fhir/us/core/StructureDefinition/us-core-birthsex',
+      valueCode: 'M',
+    },
+    {
+      url: 'http://hl7.org/fhir/us/core/StructureDefinition/us-core-ethnicity',
+      extension: [
+        {
+          url: 'text',
+          valueString: 'UNK',
+        },
+      ],
+    },
+    {
+      url: 'http://hl7.org/fhir/us/core/StructureDefinition/us-core-race',
+      extension: [
+        {
+          url: 'text',
+          valueString: 'UNK',
+        },
+      ],
+    },
+  ],
+  identifier: [
+    {
+      use: 'usual',
+      type: {
+        coding: [
+          {
+            system: 'http://terminology.hl7.org/CodeSystem/v2-0203',
+            code: 'MR',
+          },
+        ],
+      },
+      system: 'http://canvasmedical.com',
+      value: '248365312',
+      assigner: {
+        display: 'Canvas Medical',
+      },
+    },
+  ],
+  active: true,
+  name: [
+    {
+      use: 'official',
+      family: 'Awell',
+      given: ['Postman', 'Test'],
+    },
+  ],
+  gender: 'male',
+  birthDate: '1969-11-13',
+  deceasedBoolean: false,
+  photo: [
+    {
+      url: 'https://d3hn0m4rbsz438.cloudfront.net/avatar1.png',
+    },
+  ],
+  communication: [
+    {
+      language: {
+        coding: [
+          {
+            system: 'http://hl7.org/fhir/ValueSet/all-languages',
+            code: 'en',
+            display: 'English',
+          },
+        ],
+        text: 'English',
+      },
+    },
+  ],
+}
+
 export const samplePatientResource: PatientWithId = {
   ...samplePatientId,
   ...samplePatientData,

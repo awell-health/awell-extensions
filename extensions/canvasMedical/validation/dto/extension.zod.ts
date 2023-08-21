@@ -14,6 +14,7 @@ export const ethnicityExtension = z.object({
         code: z.string(),
         system: z.string(),
       }),
+      valueString: z.string().optional(),
     })
   ),
 })
@@ -27,6 +28,7 @@ export const raceExtension = z.object({
         system: z.string(),
         code: z.string(),
       }),
+      valueString: z.string().optional(),
     })
   ),
 })
@@ -55,6 +57,17 @@ export const referredPharmacyExtension = z.object({
         value: z.string(),
         system: z.string(),
       }),
+      valueString: z.string().optional(),
+    })
+  ),
+})
+
+export const basicExtension = z.object({
+  url: z.string(),
+  extension: z.array(
+    z.object({
+      url: z.string(),
+      valueString: z.string(),
     })
   ),
 })
@@ -67,4 +80,5 @@ export const extensionSchema = z.union([
   clinicalNoteExtension,
   administrativeNoteExtension,
   referredPharmacyExtension,
+  basicExtension,
 ])

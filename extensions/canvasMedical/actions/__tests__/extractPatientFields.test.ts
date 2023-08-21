@@ -1,32 +1,62 @@
 import { extractPatientInfo } from '../extractPatientFields'
-import { samplePatientResource } from '../../__mocks__/patient'
+import {
+  samplePatientResource,
+  minimalPatientResourceSample,
+} from '../../__mocks__/patient'
 import { generateTestPayload } from '../../../../src/tests'
-
-jest.mock('../../client')
 
 describe('extractPatientFields', () => {
   const onComplete = jest.fn()
   const onError = jest.fn()
-  const payload = {
-    settings: {
-      client_id: '123',
-      client_secret: '123',
-      base_url: 'https://example.com',
-      auth_url: 'https://example.com/auth/token',
-      audience: undefined,
-    },
-    fields: {
-      patient_data: JSON.stringify(samplePatientResource),
-    },
+
+  const settings = {
+    client_id: '123',
+    client_secret: '123',
+    base_url: 'https://example.com',
+    auth_url: 'https://example.com/auth/token',
+    audience: undefined,
   }
 
-  it('should extract patient data', async () => {
+  beforeEach(async () => {
+    jest.clearAllMocks()
+  })
+
+  it('should extract minimal patient data', async () => {
     await extractPatientInfo.onActivityCreated(
-      generateTestPayload(payload),
+      generateTestPayload({
+        settings,
+        fields: {
+          patient_data: JSON.stringify(minimalPatientResourceSample),
+        },
+      }),
       onComplete,
       onError
     )
     expect(onComplete).toHaveBeenCalledTimes(1)
+    expect(onError).toHaveBeenCalledTimes(0)
+    expect(onComplete).toHaveBeenCalledWith({
+      data_points: {
+        patientId: minimalPatientResourceSample.id,
+        firstName: minimalPatientResourceSample.name?.[0].given.join(' '),
+        lastName: minimalPatientResourceSample.name?.[0].family,
+        dob: minimalPatientResourceSample.birthDate,
+      },
+    })
+  })
+
+  it('should extract patient data', async () => {
+    await extractPatientInfo.onActivityCreated(
+      generateTestPayload({
+        settings,
+        fields: {
+          patient_data: JSON.stringify(samplePatientResource),
+        },
+      }),
+      onComplete,
+      onError
+    )
+    expect(onComplete).toHaveBeenCalledTimes(1)
+    expect(onError).toHaveBeenCalledTimes(0)
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
         patientId: samplePatientResource.id,
@@ -37,5 +67,20 @@ describe('extractPatientFields', () => {
         phone: samplePatientResource.telecom?.[0].value,
       },
     })
+  })
+
+  it('should not parse an empty JSON', async () => {
+    await extractPatientInfo.onActivityCreated(
+      generateTestPayload({
+        settings,
+        fields: {
+          patient_data: JSON.stringify({}),
+        },
+      }),
+      onComplete,
+      onError
+    )
+    expect(onError).toHaveBeenCalledTimes(1)
+    expect(onComplete).toHaveBeenCalledTimes(0)
   })
 })

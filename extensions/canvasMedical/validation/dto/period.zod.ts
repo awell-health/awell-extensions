@@ -3,5 +3,5 @@ import { dateTime } from './primitive'
 
 export const periodSchema = z.object({
   start: dateTime,
-  end: dateTime,
+  end: dateTime.optional(),
 })

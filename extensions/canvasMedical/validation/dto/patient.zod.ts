@@ -57,7 +57,8 @@ const contactSchema = z.object({
 })
 
 const photoSchema = z.object({
-  data: z.string(),
+  data: z.string().optional(),
+  url: z.string().url().optional(),
 })
 
 export const patientSchema = z.object({
