@@ -43,7 +43,7 @@ const fields = {
     id: 'datetime',
     label: 'Appointment date and time',
     description: 'The date and time of the appointment in ISO8601 format.',
-    type: FieldType.STRING,
+    type: FieldType.DATE,
     required: true,
   },
 } satisfies Record<string, Field>
