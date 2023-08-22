@@ -10,6 +10,7 @@ import {
   isSendbirdDeskError,
   sendbirdDeskErrorToActivityEvent,
 } from '../../client'
+import { isEmpty, isNil } from 'lodash'
 
 export const createTicket: Action<typeof fields, typeof settings> = {
   key: 'createTicket',
@@ -29,7 +30,7 @@ export const createTicket: Action<typeof fields, typeof settings> = {
           groupKey,
           priority,
           customFields,
-          channelUrls,
+          relatedChannelUrls,
         },
       } = validate({
         schema: z.object({
@@ -51,10 +52,34 @@ export const createTicket: Action<typeof fields, typeof settings> = {
         groupKey,
         priority,
         customFields,
-        relatedChannelUrls: channelUrls,
+        relatedChannelUrls,
       })
 
-      await onComplete({ data_points: { ticketId: String(res.data.id) } })
+      const {
+        data: { id, channelUrl, relatedChannels },
+      } = res
+
+      /**
+       * Array data point types not supported yet so storing as a comma-separated string
+       */
+      const relatedChannelUrlsArray =
+        isEmpty(relatedChannels) || isNil(relatedChannels)
+          ? undefined
+          : (JSON.parse(relatedChannels) as Array<{
+              name: string
+              channel_url: string
+            }>)
+      const relatedChannelUrlsDataPoint =
+        relatedChannelUrlsArray?.map((value) => value.channel_url).join(',') ??
+        undefined
+
+      await onComplete({
+        data_points: {
+          ticketId: String(id),
+          channelUrl,
+          relatedChannelUrls: relatedChannelUrlsDataPoint,
+        },
+      })
     } catch (err) {
       if (err instanceof ZodError) {
         const error = fromZodError(err)

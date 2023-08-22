@@ -9,4 +9,12 @@ export const dataPoints = {
     */
     valueType: 'number',
   },
+  channelUrl: {
+    key: 'channelUrl',
+    valueType: 'string',
+  },
+  relatedChannelUrls: {
+    key: 'relatedChannelUrls',
+    valueType: 'string',
+  },
 } satisfies Record<string, DataPointDefinition>
