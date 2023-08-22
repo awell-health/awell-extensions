@@ -1,4 +1,5 @@
 import {
+  mockedChannelNames,
   mockedTicketData,
   SendbirdClientMockImplementation,
 } from '../../client/__mocks__'
@@ -23,6 +24,7 @@ describe('Create ticket', () => {
     fields: {
       customerId: mockedTicketData.customer.id,
       channelName: mockedTicketData.channelName,
+      relatedChannelUrls: `${mockedChannelNames.channel1},${mockedChannelNames.channel2}`,
       groupKey: mockedTicketData.group.key,
       priority: mockedTicketData.priority,
       customFields: JSON.stringify({
@@ -49,6 +51,7 @@ describe('Create ticket', () => {
     ).toHaveBeenCalledWith({
       customerId: mockedTicketData.customer.id,
       channelName: mockedTicketData.channelName,
+      relatedChannelUrls: `${mockedChannelNames.channel1},${mockedChannelNames.channel2}`,
       groupKey: mockedTicketData.group.key,
       priority: mockedTicketData.priority,
       customFields: JSON.stringify({
@@ -57,7 +60,11 @@ describe('Create ticket', () => {
       }),
     })
     expect(onComplete).toHaveBeenCalledWith({
-      data_points: { ticketId: String(mockedTicketData.id) },
+      data_points: {
+        ticketId: String(mockedTicketData.id),
+        channelUrl: mockedTicketData.channelUrl,
+        relatedChannelUrls: `${mockedChannelNames.channel1},${mockedChannelNames.channel2}`,
+      },
     })
     expect(onError).not.toHaveBeenCalled()
   })
