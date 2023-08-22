@@ -23,7 +23,14 @@ export const createTicket: Action<typeof fields, typeof settings> = {
     try {
       const {
         settings: { applicationId, chatApiToken, deskApiToken },
-        fields: { customerId, channelName, groupKey, priority, customFields },
+        fields: {
+          customerId,
+          channelName,
+          groupKey,
+          priority,
+          customFields,
+          channelUrls,
+        },
       } = validate({
         schema: z.object({
           settings: SettingsValidationSchema,
@@ -44,6 +51,7 @@ export const createTicket: Action<typeof fields, typeof settings> = {
         groupKey,
         priority,
         customFields,
+        relatedChannelUrls: channelUrls,
       })
 
       await onComplete({ data_points: { ticketId: String(res.data.id) } })

@@ -3,6 +3,7 @@ import {
   type Field,
   FieldType,
   makeStringOptional,
+  validateCommaSeparatedList,
 } from '@awell-health/extensions-core'
 import { CustomFieldsValidationSchema } from '../../../validation'
 import { TicketPriority } from '../../../types'
@@ -22,6 +23,14 @@ export const fields = {
     required: true,
     description:
       'Specifies the title of a ticket, which will be the group channel name in Sendbird Chat platform as well. Maximum length is 100 characters.',
+  },
+  channelUrls: {
+    label: 'Channel URLs',
+    id: 'channelUrls',
+    type: FieldType.STRING,
+    required: false,
+    description:
+      'Specifies a comma-separated string of one or more group channel URLs for reference, where the corresponding customer belongs. This property can have up to 3 group channel URLs.',
   },
   groupKey: {
     label: 'Group key',
@@ -57,6 +66,12 @@ const priorityEnum = z.enum<
 export const FieldsValidationSchema = z.object({
   customerId: z.coerce.number(),
   channelName: z.string().max(100).nonempty(),
+  channelUrls: makeStringOptional(
+    validateCommaSeparatedList(
+      (value) => z.string().safeParse(value).success,
+      false
+    )
+  ),
   groupKey: makeStringOptional(z.string().regex(/^[a-z0-9\-_]*$/)),
   priority: makeStringOptional(priorityEnum),
   customFields: makeStringOptional(CustomFieldsValidationSchema),

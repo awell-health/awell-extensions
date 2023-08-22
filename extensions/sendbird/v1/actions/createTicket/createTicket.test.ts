@@ -23,6 +23,7 @@ describe('Create ticket', () => {
     fields: {
       customerId: mockedTicketData.customer.id,
       channelName: mockedTicketData.channelName,
+      channelUrls: mockedTicketData.relatedChannels,
       groupKey: mockedTicketData.group.key,
       priority: mockedTicketData.priority,
       customFields: JSON.stringify({
@@ -49,6 +50,7 @@ describe('Create ticket', () => {
     ).toHaveBeenCalledWith({
       customerId: mockedTicketData.customer.id,
       channelName: mockedTicketData.channelName,
+      relatedChannelUrls: mockedTicketData.relatedChannels,
       groupKey: mockedTicketData.group.key,
       priority: mockedTicketData.priority,
       customFields: JSON.stringify({

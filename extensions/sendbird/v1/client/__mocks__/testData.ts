@@ -53,6 +53,8 @@ export const mockedGroupData: Group = {
 export const mockedTicketData: Ticket = {
   id: 1,
   channelName: 'Issue #1',
+  channelUrl: 'sendbird_group_channel_1_1',
+  relatedChannels: 'sendbird_group_channel_1_1',
   createdAt: mockedDates.iso,
   closedAt: mockedDates.iso,
   issuedAt: mockedDates.iso,

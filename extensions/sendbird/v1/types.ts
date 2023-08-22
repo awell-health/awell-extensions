@@ -82,6 +82,8 @@ export interface Ticket {
   createdAt: string
   issuedAt: string
   closedAt: string
+  channelUrl: string
+  relatedChannels?: string
 }
 
 export interface CreateTicketInput extends Pick<Ticket, 'channelName'> {
@@ -90,4 +92,5 @@ export interface CreateTicketInput extends Pick<Ticket, 'channelName'> {
   // ! JSON string
   customFields?: string
   priority?: TicketPriority
+  relatedChannelUrls?: string
 }
