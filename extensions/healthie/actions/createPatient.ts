@@ -38,7 +38,7 @@ const fields = {
     id: 'skipped_email',
     label: 'Skipped email.',
     description:
-      'When set to "false", an `email` is not required to create the patient.',
+      'When disabled, an email is not required to create the patient.',
     type: FieldType.BOOLEAN,
   },
   email: {
@@ -46,7 +46,6 @@ const fields = {
     label: 'Email',
     description: 'The email address of the patient.',
     type: FieldType.STRING,
-    stringType: StringType.EMAIL,
     required: true, // required until conditional field validation is implemented (based on `skipped_email`)
   },
   phone_number: {
