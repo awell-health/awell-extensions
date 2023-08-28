@@ -11,6 +11,7 @@ import { settingsSchema } from './validation/settings.zod'
 import type { Patient } from './validation/dto/patient.zod'
 import type { Appointment } from './validation/dto/appointment.zod'
 import type { Task } from './validation/dto/task.zod'
+import type { CreatingQuestionnaireResponses } from './validation/dto/questionnaireResponses.zod'
 
 interface Id {
   id: string
@@ -157,6 +158,24 @@ export class CanvasDataWrapper extends DataWrapper {
     if (response.total === 0) throw new Error('Task not found')
     return response.entry[0].resource
   }
+
+  public async createQuestionnaireResponses(
+    data: CreatingQuestionnaireResponses
+  ): Promise<Id> {
+    const response = await this.RequestRaw({
+      method: 'POST',
+      url: `/QuestionnaireResponse`,
+      data,
+    })
+
+    const locationHeader = response.headers.location
+    if (isNil(locationHeader)) throw new Error('Location header not found.')
+
+    const id = locationHeader.match(/\/([^/]+)\/_history/)?.[1]
+    if (isNil(id)) throw new Error('ID not found in location header.')
+
+    return { id }
+  }
 }
 
 interface CanvasAPIClientConstrutorProps {
@@ -219,6 +238,14 @@ export class CanvasAPIClient extends APIClient<CanvasDataWrapper> {
 
   public async updateTask(obj: Task & Id): Promise<Id> {
     return await this.FetchData(async (dw) => await dw.updateTask(obj))
+  }
+
+  public async createQuestionnaireResponses(
+    obj: CreatingQuestionnaireResponses
+  ): Promise<Id> {
+    return await this.FetchData(
+      async (dw) => await dw.createQuestionnaireResponses(obj)
+    )
   }
 }
 
