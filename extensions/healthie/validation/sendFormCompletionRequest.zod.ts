@@ -2,15 +2,15 @@ import { DateOnlySchema } from '@awell-health/extensions-core'
 import { z } from 'zod'
 
 const periodEnum = z.enum(['AM', 'PM'])
-const frequencyEnum = z.enum(['daily', 'weekly', 'monthly'])
+const frequencyEnum = z.enum(['Daily', 'Weekly', 'Monthly'])
 const weekdayEnum = z.enum([
-  'monday',
-  'tuesday',
-  'wednesday',
-  'thursday',
-  'friday',
-  'saturday',
-  'sunday',
+  'Monday',
+  'Tuesday',
+  'Wednesday',
+  'Thursday',
+  'Friday',
+  'Saturday',
+  'Sunday',
 ])
 
 const recurringSchema = z.discriminatedUnion('frequency', [
@@ -19,7 +19,7 @@ const recurringSchema = z.discriminatedUnion('frequency', [
    * then "period", "hour" and "minute" are required
    */
   z.object({
-    frequency: z.literal(frequencyEnum.enum.daily),
+    frequency: z.literal(frequencyEnum.enum.Daily),
     hour: z.coerce.number().min(1).max(12),
     minute: z.coerce.number().min(0).max(59),
     period: periodEnum,
@@ -29,7 +29,7 @@ const recurringSchema = z.discriminatedUnion('frequency', [
    * then "weekday" is required
    */
   z.object({
-    frequency: z.literal(frequencyEnum.enum.weekly),
+    frequency: z.literal(frequencyEnum.enum.Weekly),
     weekday: weekdayEnum,
   }),
   /**
@@ -37,7 +37,7 @@ const recurringSchema = z.discriminatedUnion('frequency', [
    * then "monthday" is required
    */
   z.object({
-    frequency: z.literal(frequencyEnum.enum.monthly),
+    frequency: z.literal(frequencyEnum.enum.Monthly),
     monthday: z.string(),
   }),
 ])
