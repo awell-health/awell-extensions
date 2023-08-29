@@ -12,10 +12,35 @@ import { z } from 'zod'
 //   'sunday',
 // ])
 
-export const FieldsSchema = z.object({
-  healthie_patient_id: z.string().nonempty(),
-  form_id: z.string().nonempty(),
-})
+export const FieldsSchema = z
+  .object({
+    healthie_patient_id: z.string().nonempty(),
+    form_id: z.string().nonempty(),
+    is_recurring: z.boolean().optional(),
+    frequency: z.string().optional(),
+    period: z.string().optional(),
+    minute: z.coerce.number().optional(),
+    hour: z.coerce.number().optional(),
+    weekday: z.string().optional(),
+    monthday: z.string().optional(),
+    recurrence_ends: z.boolean().optional(),
+    ends_on: z.string().optional(),
+  })
+  .transform(
+    ({
+      healthie_patient_id,
+      form_id,
+      is_recurring,
+      frequency,
+      monthday,
+      weekday,
+      hour,
+      minute,
+      period,
+      recurrence_ends,
+      ends_on,
+    }) => ({ healthie_patient_id, form_id })
+  )
 //   .discriminatedUnion('reminderIntervalType', [
 //     /**
 //      * If `isReminderEnabled` is false or undefined,
