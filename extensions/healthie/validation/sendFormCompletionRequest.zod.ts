@@ -1,16 +1,46 @@
+import { DateOnlySchema } from '@awell-health/extensions-core'
 import { z } from 'zod'
 
-// const periodEnum = z.enum(['am', 'pm'])
-// const frequencyEnum = z.enum(['daily', 'weekly', 'monthly'])
-// const weekdayEnum = z.enum([
-//   'monday',
-//   'tuesday',
-//   'wednesday',
-//   'thursday',
-//   'friday',
-//   'saturday',
-//   'sunday',
-// ])
+const periodEnum = z.enum(['AM', 'PM'])
+const frequencyEnum = z.enum(['daily', 'weekly', 'monthly'])
+const weekdayEnum = z.enum([
+  'monday',
+  'tuesday',
+  'wednesday',
+  'thursday',
+  'friday',
+  'saturday',
+  'sunday',
+])
+
+const recurringSchema = z.discriminatedUnion('frequency', [
+  /**
+   * If `frequency` is "daily"
+   * then "period", "hour" and "minute" are required
+   */
+  z.object({
+    frequency: z.literal(frequencyEnum.enum.daily),
+    hour: z.coerce.number().min(1).max(12),
+    minute: z.coerce.number().min(0).max(59),
+    period: periodEnum,
+  }),
+  /**
+   * If `frequency` is "weekly"
+   * then "weekday" is required
+   */
+  z.object({
+    frequency: z.literal(frequencyEnum.enum.weekly),
+    weekday: weekdayEnum,
+  }),
+  /**
+   * If `frequency` is "monthly"
+   * then "monthday" is required
+   */
+  z.object({
+    frequency: z.literal(frequencyEnum.enum.monthly),
+    monthday: z.string(),
+  }),
+])
 
 export const FieldsSchema = z
   .object({
@@ -26,125 +56,40 @@ export const FieldsSchema = z
     recurrence_ends: z.boolean().optional(),
     ends_on: z.string().optional(),
   })
-  .transform(
-    ({
-      healthie_patient_id,
-      form_id,
-      is_recurring,
-      frequency,
-      monthday,
-      weekday,
-      hour,
-      minute,
-      period,
-      recurrence_ends,
-      ends_on,
-    }) => ({ healthie_patient_id, form_id })
-  )
-//   .discriminatedUnion('reminderIntervalType', [
-//     /**
-//      * If `isReminderEnabled` is false or undefined,
-//      * then all other reminder properties are obsolete.
-//      */
-//     z.object({
-//       reminderIntervalType: z.literal(undefined),
-//       reminderIntervalValue: z.literal(undefined),
-//       reminderIntervalValueOnce: z.literal(undefined),
-//       isReminderEnabled: z.union([z.literal(false), z.literal(undefined)]),
-//       reminderTime: z.literal(undefined),
-//     }),
-//     /**
-//      * If `isReminderEnabled` is true,
-//      * and `reminderIntervalType` is 'daily'
-//      * then `reminderIntervalValue` and `reminderIntervalValueOnce` is obsolete
-//      */
-//     z.object({
-//       reminderIntervalType: z.literal(intervalTypeEnum.enum.daily),
-//       reminderIntervalValue: z.literal(undefined),
-//       reminderIntervalValueOnce: z.literal(undefined),
-//       isReminderEnabled: z.literal(true),
-//       reminderTime: z.coerce.number(),
-//     }),
-//     /**
-//      * If `isReminderEnabled` is true,
-//      * and `reminderIntervalType` is 'weekly'
-//      * then `reminderIntervalValue` should be a comma-separated string of days of the week
-//      * and `reminderIntervalValueOnce` is obsolete
-//      */
-//     z.object({
-//       reminderIntervalType: z.literal(intervalTypeEnum.enum.weekly),
-//       reminderIntervalValue: z
-//         .string()
-//         .trim()
-//         .toLowerCase()
-//         .refine(
-//           (value) => {
-//             const currentValues = value.split(',').map((el) => el.trim())
-//             const possibleValues = intervalValueWeeklyEnum.options as string[]
+  .superRefine(
+    (
+      {
+        healthie_patient_id,
+        form_id,
+        is_recurring,
+        frequency,
+        monthday,
+        weekday,
+        hour,
+        minute,
+        period,
+        recurrence_ends,
+        ends_on,
+      },
+      ctx
+    ) => {
+      // if is recurring, then check
+      if (is_recurring === true) {
+        recurringSchema.parse({
+          frequency,
+          hour,
+          minute,
+          period,
+          weekday,
+          monthday,
+        })
 
-//             return currentValues.every((el) => possibleValues.includes(el))
-//           },
-//           {
-//             message: `Should be comma-separated list of days: ${intervalValueWeeklyEnum.options.join(
-//               ', '
-//             )}`,
-//           }
-//         ),
-//       reminderIntervalValueOnce: z.literal(undefined),
-//       isReminderEnabled: z.literal(true),
-//       reminderTime: z.coerce.number(),
-//     }),
-//     /**
-//      * If `isReminderEnabled` is true,
-//      * and `reminderIntervalType` is 'once'
-//      * then `reminderIntervalValueOnce` should be an ISO8601 date
-//      * and `reminderIntervalValue` is obsolete (left for compatibility purposes)
-//      */
-//     z.object({
-//       reminderIntervalType: z.literal(intervalTypeEnum.enum.once),
-//       // ! preserve for compatibility reasons (use as a fallback)
-//       reminderIntervalValue: DateOnlySchema.optional(),
-//       reminderIntervalValueOnce: DateOnlySchema.optional(),
-//       isReminderEnabled: z.literal(true),
-//       reminderTime: z.coerce.number(),
-//     }),
-//   ])
-//   .superRefine((value, context) => {
-//     // if type is `once` and both values are not set
-//     if (
-//       value.reminderIntervalType === intervalTypeEnum.enum.once &&
-//       isNil(value.reminderIntervalValue) &&
-//       isNil(value.reminderIntervalValueOnce)
-//     ) {
-//       context.addIssue({
-//         code: z.ZodIssueCode.invalid_date,
-//         fatal: true,
-//         path: ['reminderIntervalValueOnce'],
-//         message: 'Value is not a valid ISO8601 date',
-//       })
-//     }
-//   })
-//   .transform(
-//     ({
-//       isReminderEnabled,
-//       reminderIntervalType,
-//       reminderIntervalValue,
-//       reminderIntervalValueOnce,
-//       reminderTime,
-//     }) => ({
-//       reminder:
-//         isNil(isReminderEnabled) || !isReminderEnabled
-//           ? undefined
-//           : {
-//               is_enabled: true,
-//               interval_type: reminderIntervalType,
-//               interval_value:
-//                 // ! `reminderIntervalValue` left for compatibility
-//                 reminderIntervalValueOnce ?? reminderIntervalValue,
-//               reminder_time: reminderTime,
-//             },
-//     })
-//   )
+        if (recurrence_ends === true) {
+          DateOnlySchema.parse(ends_on)
+        }
+      }
+    }
+  )
 
 // export const createTaskSchema = z
 //   .object({
