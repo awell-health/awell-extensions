@@ -1,4 +1,3 @@
-import { isNil } from 'lodash'
 import { HealthieError, mapHealthieToActivityError } from '../errors'
 import {
   FieldType,
@@ -9,6 +8,7 @@ import { Category } from '@awell-health/extensions-core'
 import { getSdk } from '../gql/sdk'
 import { initialiseClient } from '../graphqlClient'
 import { type settings } from '../settings'
+import { FieldsSchema } from '../validation/sendFormCompletionRequest.zod'
 
 const fields = {
   healthie_patient_id: {
@@ -38,23 +38,8 @@ export const sendFormCompletionRequest: Action<typeof fields, typeof settings> =
     previewable: true,
     onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
       const { fields, settings } = payload
-      const { healthie_patient_id, form_id } = fields
       try {
-        if (isNil(healthie_patient_id) || isNil(form_id)) {
-          await onError({
-            events: [
-              {
-                date: new Date().toISOString(),
-                text: { en: 'Fields are missing' },
-                error: {
-                  category: 'MISSING_FIELDS',
-                  message: '`healthie_patient_id` or `form_id` is missing',
-                },
-              },
-            ],
-          })
-          return
-        }
+        const { healthie_patient_id, form_id } = FieldsSchema.parse(fields)
 
         const client = initialiseClient(settings)
         if (client !== undefined) {
