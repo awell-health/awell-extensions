@@ -23,6 +23,15 @@ describe('sendFormCompletionRequest action', () => {
         fields: {
           form_id: 'form-template-1',
           healthie_patient_id: 'patient-1',
+          is_recurring: undefined,
+          frequency: undefined,
+          monthday: undefined,
+          weekday: undefined,
+          hour: undefined,
+          minute: undefined,
+          period: undefined,
+          recurrence_ends: undefined,
+          ends_on: undefined,
         },
         settings: {
           apiKey: 'apiKey',
