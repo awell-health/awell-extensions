@@ -16,6 +16,25 @@ export const creatingQuestionnaireResponsesSchema = z.object({
   item: z.array(z.any()),
 })
 
+export const questionnaireResponseSchema =
+  creatingQuestionnaireResponsesSchema.extend({
+    meta: z.object({
+      versionId: z.string(),
+      lastUpdated: z.string(),
+    }),
+    status: z.string(),
+  })
+
+export const questionnaireResponseWithIdSchema =
+  questionnaireResponseSchema.extend({
+    id: z.string(),
+  })
+
 export type CreatingQuestionnaireResponses = z.infer<
   typeof creatingQuestionnaireResponsesSchema
+>
+
+export type QuestionnaireResponse = z.infer<typeof questionnaireResponseSchema>
+export type QuestionnaireResponseWithId = z.infer<
+  typeof questionnaireResponseWithIdSchema
 >

@@ -11,7 +11,10 @@ import { settingsSchema } from './validation/settings.zod'
 import type { Patient } from './validation/dto/patient.zod'
 import type { Appointment } from './validation/dto/appointment.zod'
 import type { Task } from './validation/dto/task.zod'
-import type { CreatingQuestionnaireResponses } from './validation/dto/questionnaireResponses.zod'
+import type {
+  CreatingQuestionnaireResponses,
+  QuestionnaireResponse,
+} from './validation/dto/questionnaireResponses.zod'
 
 interface Id {
   id: string
@@ -176,6 +179,15 @@ export class CanvasDataWrapper extends DataWrapper {
 
     return { id }
   }
+
+  public async getQuestionnaireResponse(
+    id: string
+  ): Promise<QuestionnaireResponse> {
+    return await this.Request<QuestionnaireResponse>({
+      method: 'GET',
+      url: `/QuestionnaireResponse/${id}`,
+    })
+  }
 }
 
 interface CanvasAPIClientConstrutorProps {
@@ -245,6 +257,14 @@ export class CanvasAPIClient extends APIClient<CanvasDataWrapper> {
   ): Promise<Id> {
     return await this.FetchData(
       async (dw) => await dw.createQuestionnaireResponses(obj)
+    )
+  }
+
+  public async getQuestionnaireResponse(
+    id: string
+  ): Promise<QuestionnaireResponse> {
+    return await this.FetchData(
+      async (dw) => await dw.getQuestionnaireResponse(id)
     )
   }
 }
