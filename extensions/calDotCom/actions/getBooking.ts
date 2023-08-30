@@ -90,7 +90,7 @@ export const getBooking: Action<typeof fields, typeof settings> = {
           status: booking.status,
           cancelUrl: `https://app.cal.com/booking/${booking.uid}?cancel=true`,
           rescheduleUrl: `https://app.cal.com/reschedule/${booking.uid}`,
-          videoCallUrl: booking.metadata.videoCallUrl ?? '',
+          videoCallUrl: booking.metadata.videoCallUrl,
         },
       })
     } catch (error) {
