@@ -144,6 +144,7 @@ describe('Cal.com GetBooking action', () => {
           status,
           cancelUrl: `https://app.cal.com/booking/${uid}?cancel=true`,
           rescheduleUrl: `https://app.cal.com/reschedule/${uid}`,
+          videoCallUrl: metadata.videoCallUrl,
         },
       })
     })
