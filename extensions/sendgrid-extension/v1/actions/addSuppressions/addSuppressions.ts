@@ -13,7 +13,7 @@ import { ResponseError } from '@sendgrid/helpers/classes'
 
 export const addSuppressions: Action<typeof fields, typeof settings> = {
   key: 'addSuppressions',
-  category: Category.SCHEDULING,
+  category: Category.COMMUNICATION,
   title: 'Add Email to Suppression Lists',
   description: 'Adds an email to one or more suppression lists.',
   fields,
