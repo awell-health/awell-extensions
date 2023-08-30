@@ -12,18 +12,15 @@ export const GetBookingPayloadSchema = z.object({
   fields: GetBookingFieldsSchema,
   settings: SettingsSchema,
 })
-//
 
-// Leaving this and part of booking schema commented out, just in case we want to use it
-// it is a part of api response but we don't use it right now
-// const UserSchema = z.object({
-//   email: z.string(),
-//   name: z.string(),
-//   timeZone: z.string(),
-//   locale: z.string().optional().nullable(),
-// })
+const UserSchema = z.object({
+  email: z.string(),
+  name: z.string(),
+  timeZone: z.string(),
+  locale: z.string().optional().nullable(),
+})
 
-// export type User = z.infer<typeof UserSchema>
+export type User = z.infer<typeof UserSchema>
 
 export const BookingSchema = z.object({
   eventTypeId: z.number(),
@@ -35,8 +32,8 @@ export const BookingSchema = z.object({
   uid: z.string(),
   //   id: z.number(),
   //   userId: z.number(),
-  //   user: UserSchema,
-  //   attendees: z.array(UserSchema),
+  user: UserSchema,
+  attendees: z.array(UserSchema),
   metadata: z.object({ videoCallUrl: z.string().optional() }),
 })
 

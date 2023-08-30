@@ -54,6 +54,14 @@ const dataPoints = {
     key: 'rescheduleUrl',
     valueType: 'string',
   },
+  firstAttendeeEmail: {
+    key: 'firstAttendeeEmail',
+    valueType: 'string',
+  },
+  userEmail: {
+    key: 'userEmail',
+    valueType: 'string',
+  },
   videoCallUrl: {
     key: 'videoCallUrl',
     valueType: 'string',
@@ -91,6 +99,8 @@ export const getBooking: Action<typeof fields, typeof settings> = {
           cancelUrl: `https://app.cal.com/booking/${booking.uid}?cancel=true`,
           rescheduleUrl: `https://app.cal.com/reschedule/${booking.uid}`,
           videoCallUrl: booking.metadata.videoCallUrl,
+          firstAttendeeEmail: booking.attendees[0].email,
+          userEmail: booking.user.email,
         },
       })
     } catch (error) {
