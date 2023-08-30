@@ -54,6 +54,14 @@ const dataPoints = {
     key: 'rescheduleUrl',
     valueType: 'string',
   },
+  firstAttendeeEmail: {
+    key: 'firstAttendeeEmail',
+    valueType: 'string',
+  },
+  userEmail: {
+    key: 'userEmail',
+    valueType: 'string',
+  },
 } satisfies Record<string, DataPointDefinition>
 
 export const getBooking: Action<typeof fields, typeof settings> = {
@@ -86,6 +94,8 @@ export const getBooking: Action<typeof fields, typeof settings> = {
           status: booking.status,
           cancelUrl: `https://app.cal.com/booking/${booking.uid}?cancel=true`,
           rescheduleUrl: `https://app.cal.com/reschedule/${booking.uid}`,
+          firstAttendeeEmail: booking.attendees[0].email,
+          userEmail: booking.user.email,
         },
       })
     } catch (error) {
