@@ -99,7 +99,7 @@ export const FieldsSchema = z
     minute: makeStringOptional(z.coerce.string()),
     hour: makeStringOptional(z.coerce.string()),
     weekday: makeStringOptional(z.string().transform(capitalize)),
-    monthday: makeStringOptional(z.string()),
+    monthday: makeStringOptional(z.string().toLowerCase()),
     recurrence_ends: z.boolean().optional(),
     ends_on: makeStringOptional(z.string()),
   })
