@@ -1,4 +1,8 @@
-import { DateOnlySchema } from '@awell-health/extensions-core'
+import {
+  DateOnlySchema,
+  makeStringOptional,
+} from '@awell-health/extensions-core'
+import { startCase } from 'lodash'
 import { z } from 'zod'
 
 const periodEnum = z.enum(['AM', 'PM'])
@@ -20,8 +24,8 @@ const recurringSchema = z.discriminatedUnion('frequency', [
    */
   z.object({
     frequency: z.literal(frequencyEnum.enum.Daily),
-    hour: z.coerce.number().min(1).max(12),
-    minute: z.coerce.number().min(0).max(59),
+    hour: z.coerce.number().min(1).max(12).transform(String),
+    minute: z.coerce.number().min(0).max(59).transform(String),
     period: periodEnum,
   }),
   /**
@@ -38,7 +42,7 @@ const recurringSchema = z.discriminatedUnion('frequency', [
    */
   z.object({
     frequency: z.literal(frequencyEnum.enum.Monthly),
-    monthday: z.string(),
+    monthday: z.string().nonempty(),
   }),
 ])
 
@@ -47,14 +51,14 @@ export const FieldsSchema = z
     healthie_patient_id: z.string().nonempty(),
     form_id: z.string().nonempty(),
     is_recurring: z.boolean().optional(),
-    frequency: z.string().optional(),
-    period: z.string().optional(),
-    minute: z.coerce.number().optional(),
-    hour: z.coerce.number().optional(),
-    weekday: z.string().optional(),
-    monthday: z.string().optional(),
+    frequency: z.string().transform(startCase).optional(),
+    period: makeStringOptional(z.string().toUpperCase()),
+    minute: makeStringOptional(z.coerce.string()),
+    hour: makeStringOptional(z.coerce.string()),
+    weekday: makeStringOptional(z.string().transform(startCase)),
+    monthday: makeStringOptional(z.string()),
     recurrence_ends: z.boolean().optional(),
-    ends_on: z.string().optional(),
+    ends_on: makeStringOptional(z.string()),
   })
   .superRefine(
     (
@@ -90,12 +94,3 @@ export const FieldsSchema = z
       }
     }
   )
-
-// export const createTaskSchema = z
-//   .object({
-//     patientId: z.string().nonempty().optional(),
-//     assignToUserId: z.string().nonempty().optional(),
-//     content: z.string().nonempty(),
-//     dueDate: DateOnlySchema.optional(),
-//   })
-//   .and(reminderSchema)

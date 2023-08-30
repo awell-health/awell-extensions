@@ -105,7 +105,19 @@ export const sendFormCompletionRequest: Action<typeof fields, typeof settings> =
     onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
       const { fields, settings } = payload
       try {
-        const { healthie_patient_id, form_id } = FieldsSchema.parse(fields)
+        const {
+          healthie_patient_id,
+          form_id,
+          is_recurring,
+          frequency,
+          monthday,
+          weekday,
+          hour,
+          minute,
+          period,
+          recurrence_ends,
+          ends_on,
+        } = FieldsSchema.parse(fields)
 
         const client = initialiseClient(settings)
         if (client !== undefined) {
@@ -121,6 +133,15 @@ export const sendFormCompletionRequest: Action<typeof fields, typeof settings> =
                */
               recipient_ids: healthie_patient_id,
               form: form_id,
+              is_recurring,
+              frequency,
+              monthday,
+              weekday,
+              hour,
+              minute,
+              period,
+              recurrence_ends,
+              ends_on,
             },
           })
 
