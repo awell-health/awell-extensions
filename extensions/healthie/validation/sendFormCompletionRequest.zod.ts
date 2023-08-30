@@ -16,6 +16,40 @@ const weekdayEnum = z.enum([
   'Saturday',
   'Sunday',
 ])
+// healthie doesn't validate correct form and can lead to errors - validation on our side
+const monthdayEnum = z.enum([
+  '1st',
+  '2nd',
+  '3rd',
+  '4th',
+  '5th',
+  '6th',
+  '7th',
+  '8th',
+  '9th',
+  '10th',
+  '11th',
+  '12th',
+  '13th',
+  '14th',
+  '15th',
+  '16th',
+  '17th',
+  '18th',
+  '19th',
+  '20th',
+  '21st',
+  '22nd',
+  '23rd',
+  '24th',
+  '25th',
+  '26th',
+  '27th',
+  '28th',
+  '29th',
+  '30th',
+  '31st',
+])
 
 const dailySchema = z.object({
   hour: z.coerce.number().min(1).max(12).transform(String),
@@ -50,7 +84,7 @@ const recurringSchema = z.discriminatedUnion('frequency', [
   z
     .object({
       frequency: z.literal(frequencyEnum.enum.Monthly),
-      monthday: z.string().nonempty(),
+      monthday: monthdayEnum,
     })
     .merge(dailySchema),
 ])
