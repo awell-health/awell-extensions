@@ -2,6 +2,7 @@ import { getBooking } from '../getBooking'
 import { faker } from '@faker-js/faker'
 import CalComApi from '../../calComApi'
 import { generateTestPayload } from '../../../../src/tests'
+import { type Booking } from '../../schema'
 
 describe('Cal.com GetBooking action', () => {
   const onComplete = jest.fn()
@@ -90,6 +91,7 @@ describe('Cal.com GetBooking action', () => {
     let endTime: string
     let status: string
     let uid: string
+    let metadata: Booking['metadata']
 
     beforeEach(() => {
       eventTypeId = faker.number.int()
@@ -99,6 +101,9 @@ describe('Cal.com GetBooking action', () => {
       endTime = faker.date.anytime().toISOString()
       status = faker.string.sample()
       uid = faker.string.uuid()
+      metadata = {
+        videoCallUrl: faker.internet.url(),
+      }
       mockCalComApi = jest
         .spyOn(CalComApi.prototype, 'getBooking')
         .mockResolvedValue({
@@ -109,6 +114,7 @@ describe('Cal.com GetBooking action', () => {
           endTime,
           status,
           uid,
+          metadata,
         })
     })
 
