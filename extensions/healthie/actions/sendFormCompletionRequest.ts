@@ -133,7 +133,7 @@ export const sendFormCompletionRequest: Action<typeof fields, typeof settings> =
                */
               recipient_ids: healthie_patient_id,
               form: form_id,
-              is_recurring,
+              is_recurring: is_recurring ?? false,
               frequency,
               monthday,
               weekday,
