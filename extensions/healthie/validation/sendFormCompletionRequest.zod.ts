@@ -51,42 +51,33 @@ const monthdayEnum = z.enum([
   '31st',
 ])
 
-const dailySchema = z.object({
-  hour: z.coerce.number().min(1).max(12).transform(String),
-  minute: z.coerce.number().min(0).max(59).transform(String),
-  period: periodEnum,
-})
-
 const recurringSchema = z.discriminatedUnion('frequency', [
   /**
    * If `frequency` is "daily"
    * then "period", "hour" and "minute" are required
    */
-  z
-    .object({
-      frequency: z.literal(frequencyEnum.enum.Daily),
-    })
-    .merge(dailySchema),
+  z.object({
+    frequency: z.literal(frequencyEnum.enum.Daily),
+    hour: z.coerce.number().min(1).max(12).transform(String),
+    minute: z.coerce.number().min(0).max(59).transform(String),
+    period: periodEnum,
+  }),
   /**
    * If `frequency` is "weekly"
    * then "weekday" is required
    */
-  z
-    .object({
-      frequency: z.literal(frequencyEnum.enum.Weekly),
-      weekday: weekdayEnum,
-    })
-    .merge(dailySchema),
+  z.object({
+    frequency: z.literal(frequencyEnum.enum.Weekly),
+    weekday: weekdayEnum,
+  }),
   /**
    * If `frequency` is "monthly"
    * then "monthday" is required
    */
-  z
-    .object({
-      frequency: z.literal(frequencyEnum.enum.Monthly),
-      monthday: monthdayEnum,
-    })
-    .merge(dailySchema),
+  z.object({
+    frequency: z.literal(frequencyEnum.enum.Monthly),
+    monthday: monthdayEnum,
+  }),
 ])
 
 export const FieldsSchema = z
