@@ -62,6 +62,47 @@ describe('sendFormCompletionRequest action', () => {
     expect(onComplete).toHaveBeenCalled()
   })
 
+  test.each([
+    { endsOnInput: '1990-01-01', endsOnExpected: '1990-01-01' },
+    { endsOnInput: '2011-10-05T14:48:00.000Z', endsOnExpected: '2011-10-05' },
+    { endsOnInput: '06 August 2015 14:48 UTC', endsOnExpected: '2015-08-06' },
+  ])(
+    '$#. Should set "recurrence_ends" to "true" and "ends_on" to $endsOnExpected when provided with $endsOnInput"',
+    async ({ endsOnInput, endsOnExpected }) => {
+      await sendFormCompletionRequest.onActivityCreated(
+        {
+          ...samplePayload,
+          fields: {
+            ...samplePayload.fields,
+            is_recurring: true,
+            frequency: 'Daily',
+            hour: 1,
+            minute: 1,
+            period: 'PM',
+            ends_on: endsOnInput,
+          },
+        },
+        onComplete,
+        onError
+      )
+      expect(mockGetSdkReturn.createFormCompletionRequest).toHaveBeenCalledWith(
+        {
+          input: {
+            ...sampleFormCompletion,
+            is_recurring: true,
+            frequency: 'Daily',
+            hour: '1',
+            minute: '1',
+            period: 'PM',
+            recurrence_ends: true,
+            ends_on: endsOnExpected,
+          },
+        }
+      )
+      expect(onComplete).toHaveBeenCalled()
+    }
+  )
+
   describe('Frequency validation', () => {
     describe('No recurring', () => {
       test.each([false, undefined])(
