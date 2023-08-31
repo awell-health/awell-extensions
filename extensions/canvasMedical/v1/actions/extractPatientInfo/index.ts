@@ -1,0 +1,1 @@
+export { extractPatientInfo } from './extractPatientInfo'

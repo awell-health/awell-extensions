@@ -1,10 +1,9 @@
-import { actions } from './actions'
 import { type Extension } from '@awell-health/extensions-core'
-import { settings } from './settings'
 import { AuthorType, Category } from '@awell-health/extensions-core'
-import schemas from './schemas'
+import * as actions from './v1/actions'
+import { settings } from './settings'
 
-export const CanvasMedical: Extension<typeof schemas> = {
+export const CanvasMedical: Extension = {
   key: 'canvasMedical',
   title: 'Canvas Medical (BETA)',
   description:
@@ -17,5 +16,4 @@ export const CanvasMedical: Extension<typeof schemas> = {
   },
   settings,
   actions,
-  schemas,
 }
