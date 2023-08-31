@@ -1,6 +1,6 @@
 import { z } from 'zod'
 
-const SettingsSchema = z.object({
+export const SettingsSchema = z.object({
   apiKey: z.string().nonempty('Missing API key'),
 })
 
@@ -30,7 +30,7 @@ export const BookingSchema = z.object({
   endTime: z.string(),
   status: z.string(),
   uid: z.string(),
-  //   id: z.number(),
+  id: z.coerce.number(),
   //   userId: z.number(),
   user: UserSchema,
   attendees: z.array(UserSchema),
