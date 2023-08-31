@@ -9,6 +9,7 @@ import { getSdk } from '../gql/sdk'
 import { initialiseClient } from '../graphqlClient'
 import { type settings } from '../settings'
 import { FieldsSchema } from '../validation/sendFormCompletionRequest.zod'
+import { isNil } from 'lodash'
 
 const fields = {
   healthie_patient_id: {
@@ -78,13 +79,6 @@ const fields = {
     type: FieldType.STRING,
     required: false,
   },
-  recurrence_ends: {
-    id: 'recurrence_ends',
-    label: 'Recurrence ends',
-    description: 'Set to true if the recurrence should have an end date.',
-    type: FieldType.BOOLEAN,
-    required: false,
-  },
   ends_on: {
     id: 'ends_on',
     label: 'Ends on',
@@ -115,7 +109,6 @@ export const sendFormCompletionRequest: Action<typeof fields, typeof settings> =
           hour,
           minute,
           period,
-          recurrence_ends,
           ends_on,
         } = FieldsSchema.parse(fields)
 
@@ -140,7 +133,7 @@ export const sendFormCompletionRequest: Action<typeof fields, typeof settings> =
               hour,
               minute,
               period,
-              recurrence_ends,
+              recurrence_ends: !isNil(ends_on),
               ends_on,
             },
           })

@@ -16,7 +16,7 @@ const sampleFormCompletion = {
   hour: undefined,
   minute: undefined,
   period: undefined,
-  recurrence_ends: undefined,
+  recurrence_ends: false,
   ends_on: undefined,
 }
 
@@ -31,7 +31,6 @@ const samplePayload = generateTestPayload({
     hour: undefined,
     minute: undefined,
     period: undefined,
-    recurrence_ends: undefined,
     ends_on: undefined,
   },
   settings: {

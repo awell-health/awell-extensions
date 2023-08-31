@@ -1,5 +1,5 @@
 import {
-  DateOnlySchema,
+  DateOnlyOptionalSchema,
   makeStringOptional,
 } from '@awell-health/extensions-core'
 import { capitalize } from 'lodash'
@@ -100,8 +100,7 @@ export const FieldsSchema = z
     hour: makeStringOptional(z.coerce.string()),
     weekday: makeStringOptional(z.string().transform(capitalize)),
     monthday: makeStringOptional(z.string().toLowerCase()),
-    recurrence_ends: z.boolean().optional(),
-    ends_on: makeStringOptional(z.string()),
+    ends_on: DateOnlyOptionalSchema,
   })
   .superRefine(
     (
@@ -115,7 +114,6 @@ export const FieldsSchema = z
         hour,
         minute,
         period,
-        recurrence_ends,
         ends_on,
       },
       ctx
@@ -130,10 +128,6 @@ export const FieldsSchema = z
           weekday,
           monthday,
         })
-
-        if (recurrence_ends === true) {
-          DateOnlySchema.parse(ends_on)
-        }
       }
     }
   )
