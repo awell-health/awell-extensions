@@ -1,0 +1,1 @@
+export { updateMetadata } from './updateMetadata'

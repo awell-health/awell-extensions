@@ -1,3 +1,7 @@
+---
+title: Wellinks
+description: The purpose of this extension is to keep application logic out of the Pathways and Tracks. Some actions require interactions with the Healthie API, hence the need for the API URL and Key in the settings.
+---
 # Wellinks Extension
 
 The purpose of this extension is to keep application logic out of the Pathways and Tracks. Some actions require interactions with the Healthie API, hence the need for the API URL and Key in the settings.

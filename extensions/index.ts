@@ -18,6 +18,7 @@ import { Wellinks } from './wellinks'
 import { Sendgrid } from './sendgrid-extension'
 import { CmDotCom } from './cmDotCom'
 import { DocuSign } from './docuSign'
+import { Sendbird } from './sendbird'
 import * as json from './markdown.json'
 
 export type Markdown = Record<string, { readme: string; changelog: string }>
@@ -44,4 +45,5 @@ export const extensions = [
   Sendgrid,
   CmDotCom,
   DocuSign,
+  Sendbird,
 ]

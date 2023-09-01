@@ -1,0 +1,1 @@
+export { deactivateUser } from './deactivateUser'

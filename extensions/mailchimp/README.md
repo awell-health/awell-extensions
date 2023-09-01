@@ -1,3 +1,7 @@
+---
+title: Mailchimp
+description: Mailchimp is an all-in-one marketing platform that helps businesses of all sizes to design, send, and manage email campaigns, automate marketing tasks, and build customer relationships. 
+---
 # Mailchimp
 
 Mailchimp is an all-in-one marketing platform that helps businesses of all sizes to design, send, and manage email campaigns, automate marketing tasks, and build customer relationships. 

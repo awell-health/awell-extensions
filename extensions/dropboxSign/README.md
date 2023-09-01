@@ -1,3 +1,7 @@
+---
+title: Dropbox Sign
+description: Dropbox Sign (formerly HelloSign) is the easiest way to send, receive and manage legally binding electronic signatures.
+---
 # Dropbox Sign
 
 Dropbox Sign (formerly HelloSign) is the easiest way to send, receive and manage legally binding electronic signatures.

@@ -1,6 +1,11 @@
+---
+title: Cal.com
+description: Cal.com is a modern and open source scheduling platform. With HIPAA, GDPR and SOC2 compliance, you can ensure that data is well-protected and that makes Cal.com a great fit for healthcare use cases.
+---
 # Cal.com
 
 [Cal.com](https://cal.com/) is a modern and **open source** scheduling platform. With HIPAA, GDPR and SOC2 compliance, you can ensure that data is well-protected and that makes Cal.com a great fit for healthcare use cases.
+
 ## Cal.com x Awell
 
 This extension allows you to let a stakeholder (eg: a patient) book an appointment as part of a care flow and to retrieve the booking details of an appointment.
@@ -23,7 +28,7 @@ You can add this action to your care flow to enable a stakeholder (eg: a patient
 Below you can find an overview of all Awell Apps and whether they support rendering of the booking widget.
 
 | App                           | Supported |
-|-------------------------------|-----------|
+| ----------------------------- | --------- |
 | Awell Hosted Pages            | Yes       |
 | Your app (custom integration) | Yes       |
 | Awell Care                    | No        |
@@ -79,3 +84,13 @@ However, the patient reschedules the booking to Jan 10, 2023. When querying Cal.
     "date": "Jan 1, 2023"
 }
 ```
+
+## Webhooks
+
+Webhooks offer a great way to automate the flow with Awell when invitees schedule, cancel, or reschedule events, or when the meeting ends.
+
+**Important notes:**
+
+1. An Awell webhook endpoint can only listen to one event type. So make sure that when you create a webhook in Cal.com, the subscriber URL and the event trigger match the Awell webhook endpoint. This also means there can only be one event type per subscriber URL.
+2. Using a secret to verify the authenticity of the received payload is not yet supported.
+3. Custom payload templates are not supported, please use the default ones.

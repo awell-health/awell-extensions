@@ -23,3 +23,5 @@ dist/*
 
 # Jetbrains ide
 .idea
+
+.env

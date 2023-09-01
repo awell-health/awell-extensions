@@ -2,6 +2,7 @@ import { getBooking } from '../getBooking'
 import { faker } from '@faker-js/faker'
 import CalComApi from '../../calComApi'
 import { generateTestPayload } from '../../../../src/tests'
+import type { User, Booking } from '../../schema'
 
 describe('Cal.com GetBooking action', () => {
   const onComplete = jest.fn()
@@ -90,6 +91,9 @@ describe('Cal.com GetBooking action', () => {
     let endTime: string
     let status: string
     let uid: string
+    let metadata: Booking['metadata']
+    let user: User
+    let attendees: User[]
 
     beforeEach(() => {
       eventTypeId = faker.number.int()
@@ -99,6 +103,23 @@ describe('Cal.com GetBooking action', () => {
       endTime = faker.date.anytime().toISOString()
       status = faker.string.sample()
       uid = faker.string.uuid()
+      metadata = {
+        videoCallUrl: faker.internet.url(),
+      }
+      user = {
+        email: faker.internet.email(),
+        name: faker.word.sample(),
+        timeZone: faker.word.sample(),
+        locale: faker.word.sample(),
+      }
+      attendees = [
+        {
+          email: faker.internet.email(),
+          name: faker.word.sample(),
+          timeZone: faker.word.sample(),
+        },
+      ]
+
       mockCalComApi = jest
         .spyOn(CalComApi.prototype, 'getBooking')
         .mockResolvedValue({
@@ -109,6 +130,9 @@ describe('Cal.com GetBooking action', () => {
           endTime,
           status,
           uid,
+          metadata,
+          user,
+          attendees,
         })
     })
 
@@ -138,6 +162,9 @@ describe('Cal.com GetBooking action', () => {
           status,
           cancelUrl: `https://app.cal.com/booking/${uid}?cancel=true`,
           rescheduleUrl: `https://app.cal.com/reschedule/${uid}`,
+          videoCallUrl: metadata.videoCallUrl,
+          firstAttendeeEmail: attendees[0].email,
+          userEmail: user.email,
         },
       })
     })

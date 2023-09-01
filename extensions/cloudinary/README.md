@@ -1,3 +1,7 @@
+---
+title: Cloudinary
+description: Cloudinary is a cloud-based image and video management platform that provides a comprehensive set of tools for storing, managing, and delivering digital media assets. 
+---
 # Cloudinary
 
 Cloudinary is a cloud-based image and video management platform that provides a comprehensive set of tools for storing, managing, and delivering digital media assets. It enables users to upload, manipulate, optimize, and deliver media files to any device or website quickly and easily.
