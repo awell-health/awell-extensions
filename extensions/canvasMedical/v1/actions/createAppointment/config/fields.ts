@@ -6,7 +6,7 @@ export const fields = {
     id: 'appointmentData',
     label: 'Appointment data',
     description: 'Appointment data',
-    type: FieldType.STRING,
+    type: FieldType.JSON,
     required: true,
   },
 } satisfies Record<string, Field>

@@ -37,7 +37,7 @@ export const fields = {
     id: 'item',
     label: 'Item',
     description: 'List of answers to questions in the questionnaire',
-    type: FieldType.STRING,
+    type: FieldType.JSON,
     required: true,
   },
 } satisfies Record<string, Field>
