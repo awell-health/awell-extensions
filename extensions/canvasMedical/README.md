@@ -11,7 +11,11 @@ Canvas Medical provides appointment management, patient data creation and update
 
 ## Extension settings
 
-In order to set up this extension, you will need:
+For the extension to function correctly, you must include the following elements in your settings:
+
+`client_id` and `client_secret`: These values are generated on the Canvas Medical platform.
+`base_url`: This determines the base URL for your FHIR endpoint.
+`auth_url`: This determines the base URL for your authorization endpoint.
 
 ### Create appointment
 
