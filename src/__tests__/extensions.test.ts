@@ -23,20 +23,20 @@ describe('Extensions', () => {
   describe('all extension actions have fields labeled correctly', () => {
     extensions.forEach(
       // "Check $key extension's actions use fields whose id match the key",
-      (e: unknown) => {
-        const ext = e as { key: string; actions: any }
-        Object.entries(ext.actions).forEach(([actionKey, action]): void => {
-          const a = action as Action<Fields, Settings, string>
-          if (Object.values(a.fields).length === 0) {
-            return
-          }
-          test.each(Object.entries(a.fields))(
-            `Checking fields in  ${ext.key}.${actionKey}, field id $id does not match`,
-            (fieldKey, field) => {
-              expect((field as { id: string }).id).toBe(fieldKey)
+      (ext) => {
+        Object.entries(ext.actions).forEach(
+          ([actionKey, action]: [string, Action<Fields, Settings>]) => {
+            if (Object.values(action.fields).length === 0) {
+              return
             }
-          )
-        })
+            test.each(Object.entries(action.fields))(
+              `Checking fields in  ${ext.key}.${actionKey}, field id $id does not match`,
+              (fieldKey, field) => {
+                expect(field.id).toBe(fieldKey)
+              }
+            )
+          }
+        )
       }
     )
   })
