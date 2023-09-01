@@ -7,7 +7,7 @@ export const CanvasMedical: Extension = {
   key: 'canvasMedical',
   title: 'Canvas Medical (BETA)',
   description:
-    'Canvas Medical is an EHR that is FHIR compliant. NOT FOR PRODUCTION USE',
+    "Canvas Medical allows the collection and manage data through a digital device that contains all of the patient's medical history",
   icon_url:
     'https://assets-global.website-files.com/614e28d74fd62995e2f1948a/614e28d74fd6291bbef195a6_256.png',
   category: Category.EHR_INTEGRATIONS,
