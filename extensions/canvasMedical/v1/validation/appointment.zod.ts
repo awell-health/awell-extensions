@@ -50,6 +50,7 @@ export const appointmentSchema = z.object({
     coding: z.array(
       z.object({
         system: z.literal('http://snomed.info/sct'),
+        // Note: https://docs.canvasmedical.com/reference/appointment-create#appointmenttype,
         code: z.string(),
         display: z.string(),
       })

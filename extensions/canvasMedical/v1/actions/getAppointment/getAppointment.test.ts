@@ -12,7 +12,7 @@ jest.mock('../../client', () => ({
   makeAPIClient: mockedMakeAPIClient,
 }))
 
-describe('createAppointment', () => {
+describe('getAppointment', () => {
   const onComplete = jest.fn()
   const onError = jest.fn()
   const payload = {
