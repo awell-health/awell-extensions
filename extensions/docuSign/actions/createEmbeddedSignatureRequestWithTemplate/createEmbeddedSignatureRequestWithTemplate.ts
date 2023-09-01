@@ -80,7 +80,7 @@ export const createEmbeddedSignatureRequestWithTemplate: Action<
         userName: signerName,
         clientUserId: patientId,
         returnUrl: replaceStringVariables(returnUrlTemplate, {
-          sessionId: sessionId as string,
+          sessionId: sessionId ?? '',
           stakeholderId: patientId,
           pathwayId,
           activityId,
