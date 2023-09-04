@@ -5,8 +5,8 @@ export const sampleBooking = {
   eventTypeId: 2323232,
   uid: 'stoSJtnh83PEL4rZmqdHe2',
   title: 'Debugging between Syed Ali Shahbaz and Hello Hello',
-  startTime: '2023-05-24T13:00:00.000Z',
-  endTime: '2023-05-24T13:30:00.000Z',
+  startTime: '2023-05-24T13:00:00Z',
+  endTime: '2023-05-24T13:30:00Z',
   metadata: {},
   status: 'CANCELLED',
   responses: {

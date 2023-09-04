@@ -1,8 +1,8 @@
 import { deleteBooking } from './deleteBooking'
 import { generateTestPayload } from '../../../../src/tests'
-import { sampleBooking } from '../../__mocks__/calComApi'
+import { mockReturnValue, sampleBooking } from '../../__mocks__/calComApi'
 
-jest.mock('../../calComApi')
+jest.mock('../../calComApi', () => jest.fn(() => mockReturnValue))
 
 describe('Delete booking', () => {
   const onComplete = jest.fn()
@@ -29,6 +29,9 @@ describe('Delete booking', () => {
   test('Should call the onComplete callback', async () => {
     await deleteBooking.onActivityCreated(basePayload, onComplete, onError)
 
+    expect(mockReturnValue.deleteBooking).toHaveBeenCalledWith(
+      String(sampleBooking.id)
+    )
     expect(onComplete).toHaveBeenCalledWith()
   })
 })
