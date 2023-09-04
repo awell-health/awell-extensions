@@ -1,5 +1,6 @@
 import { z } from 'zod'
 import { createReferenceSchema } from './reference.zod'
+import { DateTimeSchema } from '@awell-health/extensions-core'
 
 const extensionSchema = z.object({
   url: z.string(),
@@ -38,11 +39,11 @@ export const taskSchema = z.object({
       reference: createReferenceSchema('Practitioner'),
     })
     .optional(),
-  authoredOn: z.string().datetime().optional(),
+  authoredOn: DateTimeSchema.optional(),
   restriction: z
     .object({
       period: z.object({
-        end: z.string(),
+        end: DateTimeSchema,
       }),
     })
     .optional(),
@@ -50,7 +51,7 @@ export const taskSchema = z.object({
     .array(
       z.object({
         text: z.string(),
-        time: z.string().datetime(),
+        time: DateTimeSchema,
         authorReference: z.object({
           reference: createReferenceSchema('Practitioner'),
         }),

@@ -1,7 +1,7 @@
+import { DateTimeSchema } from '@awell-health/extensions-core'
 import { z } from 'zod'
-import { dateTime } from './dateTime.zod'
 
 export const periodSchema = z.object({
-  start: dateTime,
-  end: dateTime.optional(),
+  start: DateTimeSchema,
+  end: DateTimeSchema.optional(),
 })
