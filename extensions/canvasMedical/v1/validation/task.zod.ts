@@ -42,7 +42,7 @@ export const taskSchema = z.object({
   restriction: z
     .object({
       period: z.object({
-        end: z.string().datetime(),
+        end: z.string(),
       }),
     })
     .optional(),
