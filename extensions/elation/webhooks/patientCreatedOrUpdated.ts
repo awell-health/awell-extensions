@@ -18,7 +18,13 @@ export const patientCreatedOrUpdated: Webhook<
   key: 'patientCreatedOrUpdated',
   dataPoints,
   onWebhookReceived: async ({ payload, settings }, onSuccess, onError) => {
-    const { data, resource } = payload
+    const { data, resource, action } = payload
+
+    // skip non 'saved' actions for that webhook
+    if (action !== 'saved') {
+      return
+    }
+
     if (resource !== 'patients') {
       await onError({
         response: {
