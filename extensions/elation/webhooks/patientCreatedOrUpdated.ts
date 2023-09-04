@@ -11,14 +11,20 @@ const dataPoints = {
   },
 } satisfies Record<string, DataPointDefinition>
 
-export const onCreatePatient: Webhook<
+export const patientCreatedOrUpdated: Webhook<
   keyof typeof dataPoints,
   SubscriptionEvent
 > = {
-  key: 'onCreatePatient',
+  key: 'patientCreatedOrUpdated',
   dataPoints,
   onWebhookReceived: async ({ payload, settings }, onSuccess, onError) => {
-    const { data, resource } = payload
+    const { data, resource, action } = payload
+
+    // skip non 'saved' actions for that webhook
+    if (action !== 'saved') {
+      return
+    }
+
     if (resource !== 'patients') {
       await onError({
         response: {
@@ -34,4 +40,4 @@ export const onCreatePatient: Webhook<
   },
 }
 
-export type OnCreatePatient = typeof onCreatePatient
+export type OnCreatePatient = typeof patientCreatedOrUpdated
