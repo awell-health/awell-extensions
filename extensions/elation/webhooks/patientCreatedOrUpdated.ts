@@ -11,11 +11,11 @@ const dataPoints = {
   },
 } satisfies Record<string, DataPointDefinition>
 
-export const onCreatePatient: Webhook<
+export const patientCreatedOrUpdated: Webhook<
   keyof typeof dataPoints,
   SubscriptionEvent
 > = {
-  key: 'onCreatePatient',
+  key: 'patientCreatedOrUpdated',
   dataPoints,
   onWebhookReceived: async ({ payload, settings }, onSuccess, onError) => {
     const { data, resource } = payload
@@ -34,4 +34,4 @@ export const onCreatePatient: Webhook<
   },
 }
 
-export type OnCreatePatient = typeof onCreatePatient
+export type OnCreatePatient = typeof patientCreatedOrUpdated
