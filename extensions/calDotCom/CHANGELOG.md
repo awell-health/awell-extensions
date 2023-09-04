@@ -1,5 +1,9 @@
 # Cal.com changelog
 
+## September 4, 2023
+
+- add updateBooking and deleteBooking actions
+
 ## July 4, 2023
 
 - Get booking action: add validation that bookingId and apiKey are not empty

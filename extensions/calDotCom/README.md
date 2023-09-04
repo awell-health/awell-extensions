@@ -2,6 +2,7 @@
 title: Cal.com
 description: Cal.com is a modern and open source scheduling platform. With HIPAA, GDPR and SOC2 compliance, you can ensure that data is well-protected and that makes Cal.com a great fit for healthcare use cases.
 ---
+
 # Cal.com
 
 [Cal.com](https://cal.com/) is a modern and **open source** scheduling platform. With HIPAA, GDPR and SOC2 compliance, you can ensure that data is well-protected and that makes Cal.com a great fit for healthcare use cases.
@@ -50,6 +51,20 @@ This action allows you to fetch the details of a booking based on the provided `
 6. Status
 7. Cancel URL
 8. Reschedule URL
+
+### Update booking
+
+Updates a booking and saves new `bookingId` and `bookingUid` as Data Points. Values possible to update:
+
+- Title - Title of Booking event
+- Description - Description of the meeting
+- Status - Status of the meeting to be set. Possible values: "ACCEPTED", "PENDING", "CANCELLED", "REJECTED".
+- Start - Start time of the Event in ISO 8601 format, e.g. 2023-05-24T13:00:00.000Z
+- End - End time of the Event in ISO 8601 format, e.g. 2023-05-24T13:00:00.000Z
+
+### Delete Boooking
+
+Deletes a Booking with a given ID.
 
 ## Pricing
 
