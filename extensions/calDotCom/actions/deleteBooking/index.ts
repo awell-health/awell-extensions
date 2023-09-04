@@ -1,0 +1,1 @@
+export { deleteBooking } from './deleteBooking'
