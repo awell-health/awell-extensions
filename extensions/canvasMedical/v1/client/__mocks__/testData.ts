@@ -18,50 +18,11 @@ export const mockedSettings = {
 }
 
 export const mockedAppointmentId: string =
-  '31365726-b823-4353-8c91-5d4f59d67ed3'
+  'fec8936b-d38b-43e1-bcf2-62351c0b4f27'
 
 export const mockedAppointmentData: Appointment = {
   resourceType: 'Appointment',
-  reasonCode: [
-    {
-      coding: [{ system: 'INTERNAL', code: '9903', display: 'Urgent Visit' }],
-      text: 'Weekly check-in',
-    },
-  ],
-  participant: [
-    {
-      actor: {
-        reference: 'Practitioner/dbf184ad28a1408bbed184fc8fd2b029',
-      },
-      status: 'accepted',
-    },
-    {
-      actor: {
-        reference: 'Patient/5350cd20de8a470aa570a852859ac87e',
-      },
-      status: 'accepted',
-    },
-  ],
-  appointmentType: {
-    coding: [
-      {
-        system: 'http://snomed.info/sct',
-        code: '448337001',
-        display: 'Telemedicine consultation with patient (procedure)',
-      },
-    ],
-  },
-  start: '2022-03-20T13:30:00.000Z',
-  end: '2022-03-20T14:00:00.000Z',
-  supportingInformation: [
-    {
-      reference: 'Location/1',
-    },
-    {
-      reference: '#appointment-meeting-endpoint',
-      type: 'Endpoint',
-    },
-  ],
+  status: 'proposed',
   contained: [
     {
       resourceType: 'Endpoint',
@@ -82,6 +43,41 @@ export const mockedAppointmentData: Appointment = {
       address: 'https://url-for-video-chat.example.com?meetingi=abc123',
     },
   ],
+  appointmentType: {
+    coding: [
+      {
+        system: 'http://snomed.info/sct',
+        code: '448337001',
+        display: 'Telemedicine consultation with patient (procedure)',
+      },
+    ],
+  },
+  description: 'Weekly check-in.',
+  supportingInformation: [
+    {
+      reference: 'Location/1',
+    },
+    {
+      reference: '#appointment-meeting-endpoint',
+      type: 'Endpoint',
+    },
+  ],
+  start: '2021-03-29T13:30:00.000Z',
+  end: '2021-03-29T14:00:00.000Z',
+  participant: [
+    {
+      actor: {
+        reference: 'Practitioner/e766816672f34a5b866771c773e38f3c',
+      },
+      status: 'accepted',
+    },
+    {
+      actor: {
+        reference: 'Patient/01e226b6ad324595a4b7030d003db06f',
+      },
+      status: 'accepted',
+    },
+  ],
 }
 
 export const mockedAppointmentResource: AppointmentWithId = {
@@ -89,7 +85,7 @@ export const mockedAppointmentResource: AppointmentWithId = {
   ...mockedAppointmentData,
 }
 
-export const mockedTaskId: string = '31365726-b823-4353-8c91-5d4f59d67ed3'
+export const mockedTaskId: string = '6bda0beb-95ba-41fd-9bd1-57091b88f163'
 
 export const mockedTaskData: Task = {
   resourceType: 'Task',
@@ -97,33 +93,35 @@ export const mockedTaskData: Task = {
     {
       url: 'http://schemas.canvasmedical.com/fhir/extensions/task-group',
       valueReference: {
-        reference: 'Group/3640cd20de8a470aa570a852859ac87e',
+        reference: 'Group/',
+        display: 'All Responsibilities',
       },
     },
   ],
   status: 'requested',
   requester: {
-    reference: 'Practitioner/5eede137ecfe4124b8b773040e33be14',
+    reference: 'Practitioner/e766816672f34a5b866771c773e38f3c',
   },
-
-  description: 'Test title for task from Postman FHIR request',
+  description: 'Ask patient for new insurance information.',
   for: {
-    reference: 'Patient/afd8c6149a6842cfa6017090b4ae330f',
+    reference: 'Patient/01e226b6ad324595a4b7030d003db06f',
   },
-  owner: { reference: 'Practitioner/e766816672f34a5b866771c773e38f3c' },
-  authoredOn: '2020-01-01T00:00:00Z',
+  owner: {
+    reference: 'Practitioner/e766816672f34a5b866771c773e38f3c',
+  },
+  authoredOn: '2022-03-20T14:00:00.000Z',
   restriction: {
     period: {
-      end: '2020-01-01T00:00:00Z',
+      end: '2022-08-01T04:00:00+00:00',
     },
   },
   note: [
     {
+      text: 'Please be sure to scan them in at their next visit.',
+      time: '2022-03-20T14:00:00.000Z',
       authorReference: {
         reference: 'Practitioner/e766816672f34a5b866771c773e38f3c',
       },
-      time: '2020-01-01T00:00:00Z',
-      text: 'Let us create a new comment with more fields!',
     },
   ],
   input: [
@@ -137,7 +135,7 @@ export const mockedTaskData: Task = {
 }
 
 export const mockedTaskResource: TaskWithId = {
-  id: mockedAppointmentId,
+  id: mockedTaskId,
   ...mockedTaskData,
 }
 

@@ -94,7 +94,7 @@ const createPayload = (
           }
         : undefined,
     item,
-    authored,
+    authored: authored ?? new Date().toISOString(),
     author:
       authorId !== undefined
         ? {

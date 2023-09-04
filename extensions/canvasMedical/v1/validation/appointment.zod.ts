@@ -1,3 +1,4 @@
+import { DateTimeSchema } from '@awell-health/extensions-core'
 import { z } from 'zod'
 import { createReferenceSchema } from './reference.zod'
 
@@ -56,8 +57,8 @@ export const appointmentSchema = z.object({
       })
     ),
   }),
-  start: z.string().datetime(),
-  end: z.string().datetime(),
+  start: DateTimeSchema,
+  end: DateTimeSchema,
   supportingInformation: z.array(
     z.union([
       z.object({
