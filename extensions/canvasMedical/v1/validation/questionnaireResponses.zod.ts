@@ -1,3 +1,4 @@
+import { DateTimeSchema } from '@awell-health/extensions-core'
 import { z } from 'zod'
 import { createReferenceSchema } from './reference.zod'
 
@@ -7,7 +8,7 @@ export const creatingQuestionnaireResponsesSchema = z.object({
   subject: z.object({
     reference: createReferenceSchema('Patient'),
   }),
-  authored: z.string().optional(),
+  authored: DateTimeSchema.optional(),
   author: z
     .object({
       reference: createReferenceSchema('Practitioner'),
