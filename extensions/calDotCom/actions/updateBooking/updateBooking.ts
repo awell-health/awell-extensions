@@ -19,7 +19,7 @@ export const updateBooking: Action<typeof fields, typeof settings> = {
     try {
       const {
         settings: { apiKey },
-        fields: { bookingId },
+        fields: { bookingId, title, description, status, start, end },
       } = validate({
         schema: z.object({
           settings: SettingsSchema,
@@ -29,7 +29,13 @@ export const updateBooking: Action<typeof fields, typeof settings> = {
       })
 
       const calComApi = new CalComApi(apiKey)
-      const booking = await calComApi.getBooking(bookingId)
+      const booking = await calComApi.updateBooking(bookingId, {
+        title,
+        description,
+        status,
+        start,
+        end,
+      })
 
       await onComplete({
         data_points: {

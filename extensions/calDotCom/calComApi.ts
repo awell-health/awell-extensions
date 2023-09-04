@@ -1,4 +1,5 @@
 import { fetchTyped } from '@awell-health/extensions-core'
+import fetch from 'node-fetch'
 import { GetBookingResponseSchema, type Booking } from './schema'
 
 class CalComApi {
@@ -30,12 +31,17 @@ class CalComApi {
     }
   ): Promise<Booking> {
     const url = this.constructUrl(`/bookings/${id}`)
-    const response = await fetchTyped(url, GetBookingResponseSchema, {
+    const response = await fetch(url, {
       method: 'PATCH',
-      body: JSON.stringify({ value }),
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(value),
     })
+    const result = await response.json()
 
-    return response.booking
+    return result.booking
   }
 
   async deleteBooking(id: string): Promise<void> {
