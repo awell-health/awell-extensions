@@ -24,6 +24,7 @@ describe('createChartingNote action', () => {
           form_id: 'form-template-1',
           healthie_patient_id: 'patient-1',
           note_content: 'Test content',
+          marked_locked: true,
         },
         settings: {
           apiKey: 'apiKey',

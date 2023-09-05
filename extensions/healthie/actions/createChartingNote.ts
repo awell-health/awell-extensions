@@ -34,6 +34,13 @@ const fields = {
     type: FieldType.HTML,
     required: true,
   },
+  marked_locked: {
+    id: 'marked_locked',
+    label: 'Mark as locked?',
+    description: 'This field allows you to mark the content as locked.',
+    type: FieldType.BOOLEAN,
+    required: false,
+  },
 } satisfies Record<string, Field>
 
 export const createChartingNote: Action<typeof fields, typeof settings> = {
@@ -45,7 +52,7 @@ export const createChartingNote: Action<typeof fields, typeof settings> = {
   previewable: true,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
     const { fields, settings } = payload
-    const { healthie_patient_id, form_id, note_content } = fields
+    const { healthie_patient_id, form_id, note_content, marked_locked } = fields
     try {
       if (isNil(healthie_patient_id) || isNil(form_id) || isNil(note_content)) {
         await onError({
@@ -139,6 +146,7 @@ export const createChartingNote: Action<typeof fields, typeof settings> = {
                 answer: note_content,
               },
             ],
+            marked_locked: marked_locked ?? false,
           },
         })
 
