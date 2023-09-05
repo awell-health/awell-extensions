@@ -1,29 +1,7 @@
-import {
-  type DataPointDefinition,
-  FieldType,
-  type Action,
-  type Field,
-} from '@awell-health/extensions-core'
+import { type Action } from '@awell-health/extensions-core'
 import { Category } from '@awell-health/extensions-core'
-import { type settings } from '../settings'
-
-const fields = {
-  calLink: {
-    id: 'calLink',
-    label: 'Cal Link',
-    description:
-      'The Cal Link that you want to embed e.g. "john". Just give the username. No need to give the full URL https://cal.com/john.',
-    type: FieldType.STRING,
-    required: true,
-  },
-} satisfies Record<string, Field>
-
-const dataPoints = {
-  bookingId: {
-    key: 'bookingId',
-    valueType: 'string',
-  },
-} satisfies Record<string, DataPointDefinition>
+import { type settings } from '../../settings'
+import { dataPoints, fields } from './config'
 
 export const bookAppointment: Action<typeof fields, typeof settings> = {
   key: 'bookAppointment',
