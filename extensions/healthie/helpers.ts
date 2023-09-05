@@ -1,4 +1,4 @@
-export const mapHealthieGenderToSexIso = (
+export const mapHealthieGenderToIsoSex = (
   healthieGender: string | undefined | null
 ): 0 | 1 | 2 => {
   const lowercaseGender = healthieGender?.toLowerCase()
