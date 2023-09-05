@@ -23,11 +23,9 @@ export const createUser: Action<typeof fields, typeof settings> = {
   previewable: false,
   onActivityCreated: async (payload, onComplete, onError) => {
     try {
-      payload.fields.nickname = parseNickname(payload)
-
       const {
         settings: { applicationId, chatApiToken, deskApiToken },
-        fields: { userId, metadata, nickname, issueAccessToken, profileUrl },
+        fields: { userId, metadata, issueAccessToken, profileUrl },
       } = validate({
         schema: z.object({
           settings: SettingsValidationSchema,
@@ -44,7 +42,7 @@ export const createUser: Action<typeof fields, typeof settings> = {
 
       const res = await client.chatApi.createUser({
         user_id: userId,
-        nickname,
+        nickname: parseNickname(payload),
         metadata,
         issue_access_token: issueAccessToken,
         profile_url: profileUrl ?? DEFAULT_PROFILE_URL,
