@@ -1,73 +1,10 @@
-import {
-  type DataPointDefinition,
-  type Action,
-  type Field,
-  FieldType,
-  Category,
-  validate,
-} from '@awell-health/extensions-core'
-import { ZodError } from 'zod'
+import { type Action, Category, validate } from '@awell-health/extensions-core'
+import { z, ZodError } from 'zod'
 import { fromZodError } from 'zod-validation-error'
-import CalComApi from '../calComApi'
-import { GetBookingPayloadSchema } from '../schema'
-import { type settings } from '../settings'
-
-const fields = {
-  bookingId: {
-    id: 'bookingId',
-    label: 'Booking ID',
-    type: FieldType.STRING,
-    required: true,
-  },
-} satisfies Record<string, Field>
-
-const dataPoints = {
-  eventTypeId: {
-    key: 'eventTypeId',
-    valueType: 'string',
-  },
-  title: {
-    key: 'title',
-    valueType: 'string',
-  },
-  description: {
-    key: 'description',
-    valueType: 'string',
-  },
-  startTime: {
-    key: 'startTime',
-    valueType: 'date',
-  },
-  endTime: {
-    key: 'endTime',
-    valueType: 'date',
-  },
-  status: {
-    key: 'status',
-    valueType: 'string',
-  },
-  cancelUrl: {
-    key: 'cancelUrl',
-    valueType: 'string',
-  },
-  rescheduleUrl: {
-    key: 'rescheduleUrl',
-    valueType: 'string',
-  },
-  firstAttendeeEmail: {
-    key: 'firstAttendeeEmail',
-    valueType: 'string',
-  },
-  userEmail: {
-    key: 'userEmail',
-    valueType: 'string',
-  },
-  // Note: This data point can indeed have a null value in response to a 200, as opposed to other data points that will hold a definite value. If the user intends to utilize this value, they can verify if it's empty and/or opt to use a fallback value in a dynamic variable.
-  videoCallUrl: {
-    key: 'videoCallUrl',
-    valueType: 'string',
-  },
-} satisfies Record<string, DataPointDefinition>
+import CalComApi from '../../calComApi'
+import { SettingsSchema } from '../../schema'
+import { type settings } from '../../settings'
+import { dataPoints, fields, FieldsValidationSchema } from './config'
 
 export const getBooking: Action<typeof fields, typeof settings> = {
   key: 'getBooking',
@@ -83,7 +20,10 @@ export const getBooking: Action<typeof fields, typeof settings> = {
         fields: { bookingId },
         settings: { apiKey },
       } = validate({
-        schema: GetBookingPayloadSchema,
+        schema: z.object({
+          settings: SettingsSchema,
+          fields: FieldsValidationSchema,
+        }),
         payload,
       })
       const calComApi = new CalComApi(apiKey)

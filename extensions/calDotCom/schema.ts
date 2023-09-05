@@ -4,15 +4,6 @@ export const SettingsSchema = z.object({
   apiKey: z.string().nonempty('Missing API key'),
 })
 
-const GetBookingFieldsSchema = z.object({
-  bookingId: z.string().nonempty('Missing bookingId'),
-})
-
-export const GetBookingPayloadSchema = z.object({
-  fields: GetBookingFieldsSchema,
-  settings: SettingsSchema,
-})
-
 const UserSchema = z.object({
   email: z.string(),
   name: z.string(),

@@ -1,4 +1,4 @@
-import { getBooking } from '../getBooking'
+import { getBooking } from './getBooking'
 import { faker } from '@faker-js/faker'
 import CalComApi from '../../calComApi'
 import { generateTestPayload } from '../../../../src/tests'
