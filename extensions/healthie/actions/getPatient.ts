@@ -8,6 +8,7 @@ import { Category } from '@awell-health/extensions-core'
 import { HealthieError, mapHealthieToActivityError } from '../errors'
 import { getSdk } from '../gql/sdk'
 import { initialiseClient } from '../graphqlClient'
+import { mapHealthieGenderToSexIso } from '../helpers'
 import { type settings } from '../settings'
 import { validateGetPatient } from '../validation/getPatient.zod'
 
@@ -37,6 +38,10 @@ const dataPoints = {
   gender: {
     key: 'gender',
     valueType: 'string',
+  },
+  sexIso: {
+    key: 'sexIso',
+    valueType: 'number',
   },
   email: {
     key: 'email',
@@ -89,6 +94,7 @@ export const getPatient: Action<
             dob,
             email: data.user?.email,
             gender: data.user?.gender,
+            sexIso: String(mapHealthieGenderToSexIso(data.user?.gender)),
             phoneNumber,
             groupName: data.user?.user_group?.name,
             primaryProviderId: data.user?.dietitian_id,
