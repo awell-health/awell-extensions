@@ -10,7 +10,7 @@ import { type settings } from '../../settings'
 export const updateBooking: Action<typeof fields, typeof settings> = {
   key: 'updateBooking',
   title: 'Update booking',
-  description: 'Updates Booking and save new id in Data Points',
+  description: 'Updates Booking',
   category: Category.SCHEDULING,
   fields,
   dataPoints,
