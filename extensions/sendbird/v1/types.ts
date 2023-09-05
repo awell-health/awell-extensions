@@ -94,3 +94,8 @@ export interface CreateTicketInput extends Pick<Ticket, 'channelName'> {
   priority?: TicketPriority
   relatedChannelUrls?: string
 }
+
+export interface UpdateTickerInput {
+  priority: TicketPriority
+  relatedChannelUrls: string
+}

@@ -9,6 +9,7 @@ import {
   type UpdateCustomerCustomFieldsInput,
   type CreateTicketInput,
   type Ticket,
+  type UpdateTicketInput,
 } from '../types'
 
 class SendbirdBaseAPI {
@@ -205,6 +206,18 @@ class SendbirdDeskAPI {
     return await this._baseApi.post<CreateTicketInput, Ticket>('tickets', {
       body: ticket,
     })
+  }
+
+  updateTicket = async (
+    ticketId: number,
+    ticket: UpdateTicketInput
+  ): Promise<AxiosResponse<any>> => {
+    return await this._baseApi.patch<UpdateTicketInput, any>(
+      `tickets/${ticketId}`,
+      {
+        body: ticket,
+      }
+    )
   }
 }
 
