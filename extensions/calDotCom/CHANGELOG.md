@@ -3,6 +3,7 @@
 ## September 4, 2023
 
 - add updateBooking and deleteBooking actions
+- update and refactor structure of getBooking and bookAppointment actions
 
 ## July 4, 2023
 
