@@ -1,7 +1,10 @@
-import { type Action } from '@awell-health/extensions-core'
+import { validate, type Action } from '@awell-health/extensions-core'
 import { Category } from '@awell-health/extensions-core'
+import { z, ZodError } from 'zod'
+import { fromZodError } from 'zod-validation-error'
+import { SettingsSchema } from '../../schema'
 import { type settings } from '../../settings'
-import { dataPoints, fields } from './config'
+import { dataPoints, fields, FieldsValidationSchema } from './config'
 
 export const bookAppointment: Action<typeof fields, typeof settings> = {
   key: 'bookAppointment',
@@ -18,18 +21,30 @@ export const bookAppointment: Action<typeof fields, typeof settings> = {
   },
   previewable: false, // We don't have Awell Hosted Pages in Preview so cannot be previewed.
   onActivityCreated: async (payload, onComplete, onError) => {
-    const {
-      fields: { calLink },
-    } = payload
-    if (calLink === undefined) {
-      await onError({
-        events: [
-          {
-            date: new Date().toISOString(),
-            text: { en: 'Missing required fields (e.g. calLink)' },
-          },
-        ],
+    try {
+      validate({
+        schema: z.object({
+          settings: SettingsSchema,
+          fields: FieldsValidationSchema,
+        }),
+        payload,
       })
+    } catch (err) {
+      if (err instanceof ZodError) {
+        const error = fromZodError(err)
+        await onError({
+          events: [
+            {
+              date: new Date().toISOString(),
+              text: { en: error.message },
+              error: {
+                category: 'BAD_REQUEST',
+                message: error.message,
+              },
+            },
+          ],
+        })
+      }
     }
   },
 }
