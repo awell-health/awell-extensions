@@ -19,7 +19,10 @@ describe('Create user', () => {
     activity: {
       id: 'activity-id',
     },
-    patient: { id: 'test-patient' },
+    patient: {
+      id: 'test-patient',
+      profile: { first_name: 'first-name', last_name: 'last-name' },
+    },
     fields: {
       userId: mockedUserData.user_id,
       nickname: mockedUserData.nickname,
@@ -54,5 +57,39 @@ describe('Create user', () => {
       data_points: { userId: basePayload.fields.userId },
     })
     expect(onError).not.toHaveBeenCalled()
+  })
+
+  test('Should call the onComplete callback with nickname as first and last name', async () => {
+    basePayload.fields.nickname = ''
+    await createUser.onActivityCreated(basePayload, onComplete, onError)
+
+    expect(
+      SendbirdClientMockImplementation.chatApi.createUser
+    ).toHaveBeenCalledWith({
+      user_id: basePayload.fields.userId,
+      nickname: `${basePayload.patient.profile?.first_name as string} ${
+        basePayload.patient.profile?.last_name as string
+      }`,
+      issue_access_token: basePayload.fields.issueAccessToken,
+      metadata: JSON.parse(basePayload.fields.metadata),
+      profile_url: mockedUserData.profile_url,
+    })
+    expect(onComplete).toHaveBeenCalledWith({
+      data_points: { userId: basePayload.fields.userId },
+    })
+    expect(onError).not.toHaveBeenCalled()
+  })
+
+  test('Should call the onError when nickname and first and last name in patient are blank', async () => {
+    basePayload.fields.nickname = ''
+    basePayload.patient = {
+      ...basePayload.patient,
+      profile: { first_name: undefined, last_name: undefined },
+    }
+
+    await createUser.onActivityCreated(basePayload, onComplete, onError)
+
+    expect(onComplete).not.toHaveBeenCalled()
+    expect(onError).toBeCalledTimes(1)
   })
 })

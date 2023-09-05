@@ -20,8 +20,9 @@ export const fields = {
     id: 'nickname',
     label: 'Nickname',
     type: FieldType.STRING,
-    description: "The user's nickname. Maximum length is 80 characters.",
-    required: true,
+    description:
+      "The user's nickname. Maximum length is 80 characters. If left empty, we will use the patient's first and last name.",
+    required: false,
   },
   issueAccessToken: {
     id: 'issueAccessToken',

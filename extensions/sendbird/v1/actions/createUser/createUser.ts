@@ -11,6 +11,7 @@ import {
   sendbirdChatErrorToActivityEvent,
 } from '../../client'
 import { DEFAULT_PROFILE_URL } from '../../constants'
+import { isEmpty } from 'lodash'
 
 export const createUser: Action<typeof fields, typeof settings> = {
   key: 'createUser',
@@ -22,6 +23,8 @@ export const createUser: Action<typeof fields, typeof settings> = {
   previewable: false,
   onActivityCreated: async (payload, onComplete, onError) => {
     try {
+      payload.fields.nickname = parseNickname(payload)
+
       const {
         settings: { applicationId, chatApiToken, deskApiToken },
         fields: { userId, metadata, nickname, issueAccessToken, profileUrl },
@@ -83,4 +86,20 @@ export const createUser: Action<typeof fields, typeof settings> = {
       }
     }
   },
+}
+
+const parseNickname = (payload: any): string => {
+  const nickname: string = payload.fields.nickname
+  if (!isEmpty(nickname)) return nickname
+
+  const firstName = payload.patient.profile?.first_name
+  const lastName = payload.patient.profile?.last_name
+
+  if (isEmpty(nickname) && isEmpty(firstName) && isEmpty(lastName)) {
+    throw new Error(
+      'Nickname is not specified, and both first name and last name are unknown.'
+    )
+  }
+
+  return `${firstName as string} ${lastName as string}`
 }

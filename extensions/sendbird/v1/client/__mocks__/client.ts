@@ -47,3 +47,5 @@ export const SendbirdClientMockImplementation = {
 const SendbirdClientMock = jest.fn(() => SendbirdClientMockImplementation)
 
 export const SendbirdClient = SendbirdClientMock
+
+export const isSendbirdChatError = jest.fn()
