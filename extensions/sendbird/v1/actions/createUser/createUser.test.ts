@@ -92,4 +92,30 @@ describe('Create user', () => {
     expect(onComplete).not.toHaveBeenCalled()
     expect(onError).toBeCalledTimes(1)
   })
+
+  test('Should call the onError when firstName is available but lastName and nickname is missing', async () => {
+    basePayload.fields.nickname = ''
+    basePayload.patient = {
+      ...basePayload.patient,
+      profile: { first_name: 'test', last_name: undefined },
+    }
+
+    await createUser.onActivityCreated(basePayload, onComplete, onError)
+
+    expect(onComplete).not.toHaveBeenCalled()
+    expect(onError).toBeCalledTimes(1)
+  })
+
+  test('Should call the onError when lastName is available but firstName and nickname is missing', async () => {
+    basePayload.fields.nickname = ''
+    basePayload.patient = {
+      ...basePayload.patient,
+      profile: { first_name: undefined, last_name: 'test' },
+    }
+
+    await createUser.onActivityCreated(basePayload, onComplete, onError)
+
+    expect(onComplete).not.toHaveBeenCalled()
+    expect(onError).toBeCalledTimes(1)
+  })
 })
