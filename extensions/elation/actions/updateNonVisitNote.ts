@@ -6,7 +6,6 @@ import {
   type Field,
   Category,
   NumericIdSchema,
-  StringType,
 } from '@awell-health/extensions-core'
 import { type settings } from '../settings'
 import { makeAPIClient } from '../client'
@@ -38,8 +37,7 @@ const fields = {
     id: 'text',
     label: 'Text',
     description: 'Text of a note. Required when "Bullet ID" is provided.',
-    type: FieldType.STRING,
-    stringType: StringType.TEXT,
+    type: FieldType.TEXT,
     required: false,
   },
   authorId: {
