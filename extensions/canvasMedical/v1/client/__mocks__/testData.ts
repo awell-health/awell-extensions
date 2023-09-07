@@ -504,3 +504,105 @@ export const mockedQuestionnaireResponseResource: QuestionnaireResponseWithId =
     id: mockedQuestionnaireResponseId,
     ...mockedQuestionnaireResponseData,
   }
+
+export const mockedCreateClaimData: any = {
+  status: 'active',
+  type: {
+    coding: [
+      {
+        system: 'http://hl7.org/fhir/ValueSet/claim-type',
+        code: 'professional',
+      },
+    ],
+  },
+  patientId: '01e226b6ad324595a4b7030d003db06f',
+  created: '2020-08-16',
+  provider: {
+    reference: 'Practitioner/e766816672f34a5b866771c773e38f3c',
+    type: 'http://canvasmedical.com',
+  },
+  priority: {
+    coding: [
+      {
+        code: 'normal',
+        system: 'http://hl7.org/fhir/ValueSet/process-priority',
+      },
+    ],
+  },
+  supportingInfo: [
+    {
+      sequence: 1,
+      category: {
+        coding: [
+          {
+            code: 'patientreasonforvisit',
+            system: 'http://hl7.org/fhir/ValueSet/claim-informationcategory',
+            display: 'Patient Reason for Visit',
+          },
+        ],
+      },
+      valueString: 'This is only...a test',
+    },
+  ],
+  diagnosis: [
+    {
+      sequence: 1,
+      diagnosisCodeableConcept: {
+        coding: [
+          {
+            code: 'F41.1',
+            system: 'http://hl7.org/fhir/ValueSet/icd-10',
+            display: 'Generalized anxiety',
+          },
+        ],
+        text: 'stuff',
+      },
+    },
+  ],
+  insurance: [
+    {
+      sequence: 1,
+      focal: true,
+      coverage: {
+        reference: 'Coverage/d7cd54dc-feba-4ea4-9d80-f5e7819e08a0',
+      },
+    },
+  ],
+  item: [
+    {
+      sequence: 1,
+      diagnosisSequence: [1],
+      productOrService: {
+        coding: [
+          {
+            system:
+              'http://hl7.org/fhir/us/core/ValueSet/us-core-procedure-code',
+            code: 'exam',
+            display: 'Office visit',
+          },
+        ],
+      },
+      modifier: [
+        {
+          coding: [
+            {
+              system:
+                'http://hl7.org/fhir/us/carin-bb/ValueSet/AMACPTCMSHCPCSModifiers',
+              code: '21',
+            },
+          ],
+        },
+      ],
+      servicedDate: '2014-08-19',
+      quantity: 1,
+      unitPrice: {
+        value: 75.0,
+      },
+      net: {
+        value: 75.0,
+      },
+    },
+  ],
+}
+
+export const mockedClaimId: string = 'b9fccf85-a68c-4747-a1a5-3f6bfc941fcf'
