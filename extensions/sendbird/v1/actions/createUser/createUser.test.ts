@@ -80,7 +80,7 @@ describe('Create user', () => {
     expect(onError).not.toHaveBeenCalled()
   })
 
-  test('Should call the onError when nickname and first and last name in patient are blank', async () => {
+  test('Should call the onError when nickname and first and last name in patient are missing', async () => {
     basePayload.fields.nickname = ''
     basePayload.patient = {
       ...basePayload.patient,
@@ -93,7 +93,7 @@ describe('Create user', () => {
     expect(onError).toBeCalledTimes(1)
   })
 
-  test('Should call the onError when firstName is available but lastName and nickname is missing', async () => {
+  test('Should call the onComplete callback when firstName is available but lastName and nickname is missing', async () => {
     basePayload.fields.nickname = ''
     basePayload.patient = {
       ...basePayload.patient,
@@ -102,11 +102,13 @@ describe('Create user', () => {
 
     await createUser.onActivityCreated(basePayload, onComplete, onError)
 
-    expect(onComplete).not.toHaveBeenCalled()
-    expect(onError).toBeCalledTimes(1)
+    expect(onComplete).toHaveBeenCalledWith({
+      data_points: { userId: basePayload.fields.userId },
+    })
+    expect(onError).not.toHaveBeenCalled()
   })
 
-  test('Should call the onError when lastName is available but firstName and nickname is missing', async () => {
+  test('Should call the onComplete callback when lastName is available but firstName and nickname is missing', async () => {
     basePayload.fields.nickname = ''
     basePayload.patient = {
       ...basePayload.patient,
@@ -115,7 +117,9 @@ describe('Create user', () => {
 
     await createUser.onActivityCreated(basePayload, onComplete, onError)
 
-    expect(onComplete).not.toHaveBeenCalled()
-    expect(onError).toBeCalledTimes(1)
+    expect(onComplete).toHaveBeenCalledWith({
+      data_points: { userId: basePayload.fields.userId },
+    })
+    expect(onError).not.toHaveBeenCalled()
   })
 })

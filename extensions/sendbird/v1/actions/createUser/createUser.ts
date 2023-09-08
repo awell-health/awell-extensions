@@ -90,14 +90,13 @@ const parseNickname = (payload: any): string => {
   const nickname: string = payload.fields.nickname
   if (!isEmpty(nickname)) return nickname
 
-  const firstName = payload.patient.profile?.first_name
-  const lastName = payload.patient.profile?.last_name
+  const firstName = payload.patient.profile?.first_name ?? ''
+  const lastName = payload.patient.profile?.last_name ?? ''
 
-  if (isEmpty(nickname) && (isEmpty(firstName) || isEmpty(lastName))) {
+  if (isEmpty(firstName) && isEmpty(lastName))
     throw new Error(
       'Nickname is not specified, and either the first name or last name is unknown'
     )
-  }
 
-  return `${firstName as string} ${lastName as string}`
+  return `${firstName as string} ${lastName as string}`.trim()
 }
