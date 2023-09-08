@@ -28,5 +28,6 @@ export const mockedMakeAPIClient = (): any => {
       async () => mockedQuestionnaireResponseResource
     ),
     createCoverage: jest.fn(async () => mockedCoverageId),
+    updateCoverage: jest.fn(async () => mockedCoverageId),
   }
 }

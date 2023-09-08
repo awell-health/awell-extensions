@@ -16,7 +16,7 @@ import {
   type CreatingQuestionnaireResponses,
   type QuestionnaireResponse,
 } from '../validation'
-import { type Coverage } from '../validation/coverage.zod'
+import { type CoverageWithId, type Coverage } from '../validation/coverage.zod'
 import type {
   AppointmentWithIdResponse,
   CanvasAPIClientConstrutorProps,
@@ -143,6 +143,16 @@ export class CanvasDataWrapper extends DataWrapper {
 
     return extractIdFromLocationHeader(response)
   }
+
+  public async updateCoverage(data: CoverageWithId): Promise<Id> {
+    const response = await this.RequestRaw({
+      method: 'PUT',
+      url: `/Coverage/${data.id}`,
+      data,
+    })
+
+    return extractIdFromLocationHeader(response)
+  }
 }
 
 export class CanvasAPIClient extends APIClient<CanvasDataWrapper> {
@@ -219,6 +229,10 @@ export class CanvasAPIClient extends APIClient<CanvasDataWrapper> {
 
   public async createCoverage(obj: Coverage): Promise<Id> {
     return await this.FetchData(async (dw) => await dw.createCoverage(obj))
+  }
+
+  public async updateCoverage(obj: CoverageWithId): Promise<Id> {
+    return await this.FetchData(async (dw) => await dw.updateCoverage(obj))
   }
 }
 

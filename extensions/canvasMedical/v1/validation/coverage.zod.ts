@@ -23,4 +23,9 @@ export const coverageSchema = z.object({
   class: z.array(z.record(z.string(), z.any())).optional(),
 })
 
+export const coverageWithIdSchema = coverageSchema.extend({
+  id: z.string(),
+})
+
 export type Coverage = z.infer<typeof coverageSchema>
+export type CoverageWithId = z.infer<typeof coverageWithIdSchema>

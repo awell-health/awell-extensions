@@ -588,4 +588,9 @@ export const mockedCreateCoverageData: any = {
   ],
 }
 
-export const mockedCoverageId: string = 'fec8936b-d38b-43e1-bcf2-62351c0b4f27'
+export const mockedCoverageId: string = 'e05e79ee-f408-41aa-a069-4d1734b0b25e'
+
+export const mockedUpdateCoverageData: any = {
+  id: mockedCoverageId,
+  ...mockedCreateCoverageData,
+}
