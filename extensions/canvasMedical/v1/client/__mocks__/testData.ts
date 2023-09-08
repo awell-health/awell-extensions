@@ -504,3 +504,88 @@ export const mockedQuestionnaireResponseResource: QuestionnaireResponseWithId =
     id: mockedQuestionnaireResponseId,
     ...mockedQuestionnaireResponseData,
   }
+
+export const mockedCreateCoverageData: any = {
+  order: 1,
+  status: 'active',
+  type: {
+    coding: [
+      {
+        system: 'http://hl7.org/fhir/ValueSet/coverage-type',
+        code: 'MILITARY',
+        display: 'military health program',
+      },
+    ],
+    text: 'Military',
+  },
+  subscriber: 'Patient/01e226b6ad324595a4b7030d003db06f',
+  subscriberId: '1234',
+  beneficiary: 'Patient/01e226b6ad324595a4b7030d003db06f',
+  relationship: {
+    coding: [
+      {
+        system: 'http://hl7.org/fhir/ValueSet/subscriber-relationship',
+        code: 'self',
+      },
+    ],
+  },
+  periodStart: '2021-06-27',
+  periodEnd: '2022-06-27',
+  payor: [
+    {
+      identifier: {
+        system: 'https://www.claim.md/services/era/',
+        value: 'AMM03',
+      },
+      display: 'Independence Blue Cross Blue Shield',
+    },
+  ],
+  classObj: [
+    {
+      type: {
+        coding: [
+          {
+            system: 'http://hl7.org/fhir/ValueSet/coverage-class',
+            code: 'group',
+          },
+        ],
+      },
+      value: 'Captains Only',
+    },
+    {
+      type: {
+        coding: [
+          {
+            system: 'http://hl7.org/fhir/ValueSet/coverage-class',
+            code: 'subgroup',
+          },
+        ],
+      },
+      value: 'Subgroup 2',
+    },
+    {
+      type: {
+        coding: [
+          {
+            system: 'http://hl7.org/fhir/ValueSet/coverage-class',
+            code: 'plan',
+          },
+        ],
+      },
+      value: 'Starfleet HMO',
+    },
+    {
+      type: {
+        coding: [
+          {
+            system: 'http://hl7.org/fhir/ValueSet/coverage-class',
+            code: 'subplan',
+          },
+        ],
+      },
+      value: 'Stars Subplan',
+    },
+  ],
+}
+
+export const mockedCoverageId: string = 'fec8936b-d38b-43e1-bcf2-62351c0b4f27'

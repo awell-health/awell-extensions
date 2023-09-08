@@ -7,6 +7,7 @@ import {
   mockedPatientResource,
   mockedCreateQuestionnaireResponsesResource,
   mockedQuestionnaireResponseResource,
+  mockedCoverageId,
 } from './testData'
 
 export const mockedMakeAPIClient = (): any => {
@@ -26,5 +27,6 @@ export const mockedMakeAPIClient = (): any => {
     getQuestionnaireResponse: jest.fn(
       async () => mockedQuestionnaireResponseResource
     ),
+    createCoverage: jest.fn(async () => mockedCoverageId),
   }
 }
