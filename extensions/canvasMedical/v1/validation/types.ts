@@ -1,1 +1,1 @@
-export type Metadata = Record<string, any>
+export type Metadata = Record<string, any> | Array<Record<string, any>>

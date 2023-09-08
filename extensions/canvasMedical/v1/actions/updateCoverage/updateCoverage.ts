@@ -74,6 +74,7 @@ export const updateCoverage: Action<typeof fields, typeof settings> = {
         },
       })
     } catch (error) {
+      console.log(error)
       let parsedError
 
       if (isZodError(error)) {

@@ -508,7 +508,7 @@ export const mockedQuestionnaireResponseResource: QuestionnaireResponseWithId =
 export const mockedCreateCoverageData: any = {
   order: 1,
   status: 'active',
-  type: {
+  type: JSON.stringify({
     coding: [
       {
         system: 'http://hl7.org/fhir/ValueSet/coverage-type',
@@ -517,21 +517,21 @@ export const mockedCreateCoverageData: any = {
       },
     ],
     text: 'Military',
-  },
+  }),
   subscriber: 'Patient/01e226b6ad324595a4b7030d003db06f',
   subscriberId: '1234',
   beneficiary: 'Patient/01e226b6ad324595a4b7030d003db06f',
-  relationship: {
+  relationship: JSON.stringify({
     coding: [
       {
         system: 'http://hl7.org/fhir/ValueSet/subscriber-relationship',
         code: 'self',
       },
     ],
-  },
+  }),
   periodStart: '2021-06-27',
   periodEnd: '2022-06-27',
-  payor: [
+  payor: JSON.stringify([
     {
       identifier: {
         system: 'https://www.claim.md/services/era/',
@@ -539,8 +539,8 @@ export const mockedCreateCoverageData: any = {
       },
       display: 'Independence Blue Cross Blue Shield',
     },
-  ],
-  classObj: [
+  ]),
+  classObj: JSON.stringify([
     {
       type: {
         coding: [
@@ -585,7 +585,7 @@ export const mockedCreateCoverageData: any = {
       },
       value: 'Stars Subplan',
     },
-  ],
+  ]),
 }
 
 export const mockedCoverageId: string = 'e05e79ee-f408-41aa-a069-4d1734b0b25e'

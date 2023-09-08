@@ -1,10 +1,9 @@
 import { isEmpty, isNil } from 'lodash'
 import { z } from 'zod'
-import { type Metadata } from './types'
 
 export const StringTransformToJson = z
   .string()
-  .transform((str, ctx): Metadata => {
+  .transform((str, ctx): Record<string, any> => {
     if (isNil(str) || isEmpty(str)) return {}
     try {
       return JSON.parse(str)
@@ -15,12 +14,22 @@ export const StringTransformToJson = z
   })
 
 export const JsonSchema = StringTransformToJson.transform(
-  (jsonObject, ctx): Metadata => {
+  (jsonObject, ctx): Record<string, any> => {
     if (isNil(jsonObject) || isEmpty(jsonObject)) {
       ctx.addIssue({
         code: 'custom',
         message: 'The object should not be empty',
       })
+      return z.NEVER
+    }
+    return jsonObject
+  }
+)
+
+export const JsonArraySchema = StringTransformToJson.transform(
+  (jsonObject, ctx): Array<Record<string, any>> => {
+    if (!Array.isArray(jsonObject)) {
+      ctx.addIssue({ code: 'custom', message: 'Invalid JSON' })
       return z.NEVER
     }
     return jsonObject
