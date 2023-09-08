@@ -95,7 +95,7 @@ const parseNickname = (payload: any): string => {
 
   if (isEmpty(firstName) && isEmpty(lastName))
     throw new Error(
-      'Nickname is not specified, and either the first name or last name is unknown'
+      'The required nickname has not been specified, and neither the first name nor last name of the patient has been set in their profile'
     )
 
   return `${firstName as string} ${lastName as string}`.trim()
