@@ -11,6 +11,7 @@ import {
   sendbirdChatErrorToActivityEvent,
 } from '../../client'
 import { DEFAULT_PROFILE_URL } from '../../constants'
+import { isEmpty } from 'lodash'
 
 export const createUser: Action<typeof fields, typeof settings> = {
   key: 'createUser',
@@ -24,7 +25,7 @@ export const createUser: Action<typeof fields, typeof settings> = {
     try {
       const {
         settings: { applicationId, chatApiToken, deskApiToken },
-        fields: { userId, metadata, nickname, issueAccessToken, profileUrl },
+        fields: { userId, metadata, issueAccessToken, profileUrl },
       } = validate({
         schema: z.object({
           settings: SettingsValidationSchema,
@@ -41,7 +42,7 @@ export const createUser: Action<typeof fields, typeof settings> = {
 
       const res = await client.chatApi.createUser({
         user_id: userId,
-        nickname,
+        nickname: parseNickname(payload),
         metadata,
         issue_access_token: issueAccessToken,
         profile_url: profileUrl ?? DEFAULT_PROFILE_URL,
@@ -83,4 +84,19 @@ export const createUser: Action<typeof fields, typeof settings> = {
       }
     }
   },
+}
+
+const parseNickname = (payload: any): string => {
+  const nickname: string = payload.fields.nickname
+  if (!isEmpty(nickname)) return nickname
+
+  const firstName = payload.patient.profile?.first_name ?? ''
+  const lastName = payload.patient.profile?.last_name ?? ''
+
+  if (isEmpty(firstName) && isEmpty(lastName))
+    throw new Error(
+      'The required nickname has not been specified, and neither the first name nor last name of the patient has been set in their profile'
+    )
+
+  return `${firstName as string} ${lastName as string}`.trim()
 }
