@@ -4,6 +4,7 @@ import {
   type Field,
 } from '@awell-health/extensions-core'
 import { z, type ZodTypeAny } from 'zod'
+import { JsonSchema } from '../../../validation'
 
 export const fields = {
   order: {
@@ -90,13 +91,13 @@ export const fields = {
 export const fieldsValidationSchema = z.object({
   order: z.number().min(1).max(5),
   status: z.string(),
-  type: z.record(z.string(), z.any()).optional(),
+  type: JsonSchema.optional(),
   subscriber: z.string(),
   subscriberId: z.string().optional(),
   beneficiary: z.string(),
-  relationship: z.record(z.string(), z.any()),
+  relationship: JsonSchema,
   periodStart: DateOnlySchema,
   periodEnd: DateOnlySchema.optional(),
-  payor: z.array(z.record(z.string(), z.any())),
-  classObj: z.array(z.record(z.string(), z.any())).optional(),
+  payor: JsonSchema,
+  classObj: JsonSchema.optional(),
 } satisfies Record<keyof typeof fields, ZodTypeAny>)
