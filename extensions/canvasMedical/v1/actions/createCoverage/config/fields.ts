@@ -89,7 +89,7 @@ export const fields = {
 } satisfies Record<string, Field>
 
 export const fieldsValidationSchema = z.object({
-  order: z.number().min(1).max(5),
+  order: z.coerce.number().min(1).max(5),
   status: z.string(),
   type: JsonSchema.optional(),
   subscriber: z.string(),

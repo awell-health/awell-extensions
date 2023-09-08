@@ -97,7 +97,7 @@ export const fields = {
 
 export const fieldsValidationSchema = z.object({
   id: z.string(),
-  order: z.number().min(1).max(5),
+  order: z.coerce.number().min(1).max(5),
   status: z.string(),
   type: JsonSchema.optional(),
   subscriber: z.string(),
