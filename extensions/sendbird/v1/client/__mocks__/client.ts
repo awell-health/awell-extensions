@@ -41,6 +41,7 @@ export const SendbirdClientMockImplementation = {
     createTicket: jest.fn((arg) => ({
       data: mockedTicketData,
     })),
+    updateTicket: jest.fn(() => {}),
   },
 }
 
