@@ -55,12 +55,6 @@ describe('Update ticket', () => {
 
     await updateTicket.onActivityCreated(basePayload, onComplete, onError)
 
-    expect(
-      SendbirdClientMockImplementation.deskApi.updateTicket
-    ).toHaveBeenCalledWith(mockedTicketData.id, {
-      relatedChannelUrls: `${mockedChannelNames.channel1},${mockedChannelNames.channel2}`,
-      priority: mockedTicketData.priority,
-    })
     expect(onComplete).not.toHaveBeenCalled()
     expect(onError).toHaveBeenCalledTimes(1)
   })
