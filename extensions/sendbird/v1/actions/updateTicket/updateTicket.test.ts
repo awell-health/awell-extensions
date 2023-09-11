@@ -49,4 +49,19 @@ describe('Update ticket', () => {
     expect(onComplete).toHaveBeenCalledTimes(1)
     expect(onError).not.toHaveBeenCalled()
   })
+
+  test('Should call the onError callback when it receives invalid ticket ID', async () => {
+    basePayload.fields.ticketId = NaN
+
+    await updateTicket.onActivityCreated(basePayload, onComplete, onError)
+
+    expect(
+      SendbirdClientMockImplementation.deskApi.updateTicket
+    ).toHaveBeenCalledWith(mockedTicketData.id, {
+      relatedChannelUrls: `${mockedChannelNames.channel1},${mockedChannelNames.channel2}`,
+      priority: mockedTicketData.priority,
+    })
+    expect(onComplete).not.toHaveBeenCalled()
+    expect(onError).toHaveBeenCalledTimes(1)
+  })
 })
