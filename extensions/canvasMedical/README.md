@@ -52,3 +52,19 @@ Efficiently update existing patient information within the system using the Canv
 ### Update task
 
 Efficiently update existing task information within the system using the Canvas API. This action allows you to modify data by submitting `taskData` in JSON format. Upon successful execution, the action returns the `taskId`, which serves as the key within the Canvas API object.
+
+### Create claim
+
+Create claim using the Canvas API. This action requires several parameters:
+
+- `status`: Status compliant with Canvas Medical.
+- `type`: Type compliant with Canvas Medical.
+- `patientId`: Reference to the Canvas Patient using the patient id.
+- `created`: The field indicating when this claim resource was created
+- `provider`: The field related to determining personnel resources for services in the statement
+- `supportingInfo`: Supporting info compliant with Canvas Medical.
+- `diagnosis`: The field represents the list will create the Assessments in Canvas for this claim.
+- `insurance`: The field represents the list of elements that defines what coverages are to be used when adjudicating the claim.
+- `item`: The field represents the list of service charges to be used in the claim.
+
+Upon successful execution, the data points returns `claimId`, which serves as the key within the Canvas API object.
