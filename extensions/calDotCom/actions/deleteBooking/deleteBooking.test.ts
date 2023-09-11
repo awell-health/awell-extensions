@@ -11,11 +11,8 @@ describe('Delete booking', () => {
   const basePayload = generateTestPayload({
     fields: {
       bookingId: String(sampleBooking.id),
-      title: undefined,
-      description: undefined,
-      status: undefined,
-      start: undefined,
-      end: undefined,
+      allRemainingBookings: undefined,
+      reason: undefined,
     },
     settings: {
       apiKey: 'abc123',
@@ -30,7 +27,8 @@ describe('Delete booking', () => {
     await deleteBooking.onActivityCreated(basePayload, onComplete, onError)
 
     expect(mockReturnValue.deleteBooking).toHaveBeenCalledWith(
-      String(sampleBooking.id)
+      String(sampleBooking.id),
+      { allRemainingBookings: undefined, cancellationReason: undefined }
     )
     expect(onComplete).toHaveBeenCalledWith()
   })

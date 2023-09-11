@@ -1,4 +1,5 @@
 import { fetchTyped } from '@awell-health/extensions-core'
+import { isNil, omitBy } from 'lodash'
 import fetch from 'node-fetch'
 import { GetBookingResponseSchema, type Booking } from './schema'
 
@@ -10,8 +11,17 @@ class CalComApi {
     this.apiKey = apiKey
   }
 
-  private constructUrl(url: string): string {
-    return `${this.baseUrl}${url}?apiKey=${this.apiKey}`
+  private constructUrl(
+    url: string,
+    params?: Record<string, string | number | boolean>
+  ): string {
+    const nonEmptyParams = omitBy(params, isNil)
+    const queryParams = new URLSearchParams({
+      apiKey: this.apiKey,
+      ...nonEmptyParams,
+    })
+
+    return `${this.baseUrl}${url}?${queryParams.toString()}`
   }
 
   async getBooking(id: string): Promise<Booking> {
@@ -44,8 +54,11 @@ class CalComApi {
     return result.booking
   }
 
-  async deleteBooking(id: string): Promise<void> {
-    const url = this.constructUrl(`/bookings/${id}/cancel`)
+  async deleteBooking(
+    id: string,
+    value: { allRemainingBookings?: boolean; cancellationReason?: string }
+  ): Promise<void> {
+    const url = this.constructUrl(`/bookings/${id}/cancel`, value)
     await fetch(url, {
       method: 'DELETE',
     })

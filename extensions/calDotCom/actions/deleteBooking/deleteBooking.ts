@@ -18,7 +18,7 @@ export const deleteBooking: Action<typeof fields, typeof settings> = {
     try {
       const {
         settings: { apiKey },
-        fields: { bookingId },
+        fields: { bookingId, allRemainingBookings, reason },
       } = validate({
         schema: z.object({
           settings: SettingsSchema,
@@ -28,7 +28,10 @@ export const deleteBooking: Action<typeof fields, typeof settings> = {
       })
 
       const calComApi = new CalComApi(apiKey)
-      await calComApi.deleteBooking(bookingId)
+      await calComApi.deleteBooking(bookingId, {
+        allRemainingBookings,
+        cancellationReason: reason,
+      })
 
       await onComplete()
     } catch (err) {
