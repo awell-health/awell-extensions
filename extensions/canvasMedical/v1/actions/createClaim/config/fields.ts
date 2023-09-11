@@ -27,7 +27,7 @@ export const fields = {
   patientId: {
     id: 'patientId',
     label: 'Patient ID',
-    description: `A patient's unique ID.`,
+    description: `The patient's unique resource ID (e.g. 865058f6654149bd921264d91519af9e)`,
     type: FieldType.STRING,
     required: true,
   },
