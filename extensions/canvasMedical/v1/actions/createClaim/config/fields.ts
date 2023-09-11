@@ -4,6 +4,7 @@ import {
   type Field,
 } from '@awell-health/extensions-core'
 import { z, type ZodTypeAny } from 'zod'
+import { JsonArraySchema, JsonSchema } from '../../../validation'
 
 export const fields = {
   status: {
@@ -81,12 +82,12 @@ export const fields = {
 
 export const fieldsValidationSchema = z.object({
   status: z.string(),
-  type: z.record(z.string(), z.any()),
+  type: JsonSchema,
   patientId: z.string(),
   created: DateOnlySchema,
-  provider: z.record(z.string(), z.any()),
-  supportingInfo: z.array(z.any()).optional(),
-  diagnosis: z.array(z.any()),
-  insurance: z.array(z.any()),
-  item: z.array(z.any()),
+  provider: JsonSchema,
+  supportingInfo: JsonArraySchema.optional(),
+  diagnosis: JsonArraySchema,
+  insurance: JsonArraySchema,
+  item: JsonArraySchema,
 } satisfies Record<keyof typeof fields, ZodTypeAny>)

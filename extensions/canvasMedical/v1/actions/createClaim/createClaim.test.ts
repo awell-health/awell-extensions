@@ -20,7 +20,7 @@ describe('createClaim', () => {
     fields: mockedCreateClaimData,
   }
 
-  it('should create questionnaire responses', async () => {
+  it('should create claim', async () => {
     await createClaim.onActivityCreated(
       generateTestPayload(payload),
       onComplete,

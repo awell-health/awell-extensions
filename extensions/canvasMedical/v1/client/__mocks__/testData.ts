@@ -507,29 +507,29 @@ export const mockedQuestionnaireResponseResource: QuestionnaireResponseWithId =
 
 export const mockedCreateClaimData: any = {
   status: 'active',
-  type: {
+  type: JSON.stringify({
     coding: [
       {
         system: 'http://hl7.org/fhir/ValueSet/claim-type',
         code: 'professional',
       },
     ],
-  },
+  }),
   patientId: '01e226b6ad324595a4b7030d003db06f',
   created: '2020-08-16',
-  provider: {
+  provider: JSON.stringify({
     reference: 'Practitioner/e766816672f34a5b866771c773e38f3c',
     type: 'http://canvasmedical.com',
-  },
-  priority: {
+  }),
+  priority: JSON.stringify({
     coding: [
       {
         code: 'normal',
         system: 'http://hl7.org/fhir/ValueSet/process-priority',
       },
     ],
-  },
-  supportingInfo: [
+  }),
+  supportingInfo: JSON.stringify([
     {
       sequence: 1,
       category: {
@@ -543,8 +543,8 @@ export const mockedCreateClaimData: any = {
       },
       valueString: 'This is only...a test',
     },
-  ],
-  diagnosis: [
+  ]),
+  diagnosis: JSON.stringify([
     {
       sequence: 1,
       diagnosisCodeableConcept: {
@@ -558,8 +558,8 @@ export const mockedCreateClaimData: any = {
         text: 'stuff',
       },
     },
-  ],
-  insurance: [
+  ]),
+  insurance: JSON.stringify([
     {
       sequence: 1,
       focal: true,
@@ -567,8 +567,8 @@ export const mockedCreateClaimData: any = {
         reference: 'Coverage/d7cd54dc-feba-4ea4-9d80-f5e7819e08a0',
       },
     },
-  ],
-  item: [
+  ]),
+  item: JSON.stringify([
     {
       sequence: 1,
       diagnosisSequence: [1],
@@ -602,7 +602,7 @@ export const mockedCreateClaimData: any = {
         value: 75.0,
       },
     },
-  ],
+  ]),
 }
 
 export const mockedClaimId: string = 'b9fccf85-a68c-4747-a1a5-3f6bfc941fcf'
