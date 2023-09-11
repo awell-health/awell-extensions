@@ -6,6 +6,7 @@ import {
 import { z, type ZodTypeAny } from 'zod'
 import { JsonArraySchema, JsonSchema } from '../../../validation'
 
+// Note: https://docs.canvasmedical.com/reference/claim-create
 export const fields = {
   status: {
     id: 'status',
