@@ -16,6 +16,7 @@ import {
   type CreatingQuestionnaireResponses,
   type QuestionnaireResponse,
 } from '../validation'
+import { type CoverageWithId, type Coverage } from '../validation/coverage.zod'
 import { type Claim } from '../validation/claim'
 import type {
   AppointmentWithIdResponse,
@@ -134,6 +135,26 @@ export class CanvasDataWrapper extends DataWrapper {
     })
   }
 
+  public async createCoverage(data: Coverage): Promise<Id> {
+    const response = await this.RequestRaw({
+      method: 'POST',
+      url: `/Coverage`,
+      data,
+    })
+
+    return extractIdFromLocationHeader(response)
+  }
+
+  public async updateCoverage(data: CoverageWithId): Promise<Id> {
+    const response = await this.RequestRaw({
+      method: 'PUT',
+      url: `/Coverage/${data.id}`,
+      data,
+    })
+
+    return extractIdFromLocationHeader(response)
+  }
+      
   public async createClaim(data: Claim): Promise<Id> {
     const response = await this.RequestRaw({
       method: 'POST',
@@ -217,6 +238,14 @@ export class CanvasAPIClient extends APIClient<CanvasDataWrapper> {
     )
   }
 
+  public async createCoverage(obj: Coverage): Promise<Id> {
+    return await this.FetchData(async (dw) => await dw.createCoverage(obj))
+  }
+
+  public async updateCoverage(obj: CoverageWithId): Promise<Id> {
+    return await this.FetchData(async (dw) => await dw.updateCoverage(obj))
+  }
+  
   public async createClaim(obj: Claim): Promise<Id> {
     return await this.FetchData(async (dw) => await dw.createClaim(obj))
   }

@@ -33,11 +33,11 @@ Efficiently create tasks associated with a specific patient using the Canvas API
 
 Create questionnaire responses using the Canvas API to effortlessly record answers within an existing questionnaire. This action requires several parameters:
 
-- `questionnaireId`: Reference to the Canvas Questionnaire using the questionnaire id.
-- `subjectId`: Reference to the Canvas Patient using the patient id.
-- `authored`: Timestamp when the Questionnaire response was filled out (If omitted, the current timestamp at data ingestion will be used).
-- `authorId`: Reference to the patient or practitioner filling out the questionnaire. If omitted, it defaults to Canvas Bot.
-- `item`: List of answers to questions in the questionnaire.
+- `Questionnaire ID`: Reference to the Canvas Questionnaire using the questionnaire id.
+- `Subject ID`: Reference to the Canvas Patient using the patient id.
+- `Authored`: Timestamp when the Questionnaire response was filled out (If omitted, the current timestamp at data ingestion will be used).
+- `Author ID`: Reference to the patient or practitioner filling out the questionnaire. If omitted, it defaults to Canvas Bot.
+- `Item`: List of answers to questions in the questionnaire.
 
 Upon successful execution, the data points returns `questionnaireResponseId`, which serves as the key within the Canvas API object.
 
@@ -52,6 +52,39 @@ Efficiently update existing patient information within the system using the Canv
 ### Update task
 
 Efficiently update existing task information within the system using the Canvas API. This action allows you to modify data by submitting `taskData` in JSON format. Upon successful execution, the action returns the `taskId`, which serves as the key within the Canvas API object.
+
+### Create coverage
+
+Efficiently create a coverage using the Canvas API. This action requires several parameters:
+
+- `Order`: Specifies the order in which insurance coverages should be utilized when processing claims.
+- `Status`: Refers to the statuses represented within the Canvas Medical system.
+- `Type`: Pertains to the Insurance Coverage Code Category, such as medical or accident, using values from http://hl7.org/fhir/ValueSet/coverage-type.
+- `Subscriber`: Refers to the Canvas Patient using the patient ID, serving as the resource for the coverage's subscriber.
+- `Subscriber ID`: Refers to the Canvas Patient using the patient ID.
+- `Beneficiary`: Specifies the intended patient for the coverage.
+- `Relationship`: Relates to the beneficiary's relationship to the subscriber, as defined in the http://hl7.org/fhir/ValueSet/.
+- `Period start`: Indicates when the coverage became active for the patient.
+- `Period end`: Indicates when the coverage ceased to be active for the patient.
+- `Payor`: Relates to the entity responsible for payment.
+- `Class`: Utilized to define the plan, subplan, group, and subgroup.
+
+### Update coverage
+
+Efficiently update existin coverage using the Canvas API. This action requires several parameters:
+
+- `Id`: Reference to the Canvas Coverage using the coverage id.
+- `Order`: Specifies the order in which insurance coverages should be utilized when processing claims.
+- `Status`: Refers to the statuses represented within the Canvas Medical system.
+- `Type`: Pertains to the Insurance Coverage Code Category, such as medical or accident, using values from http://hl7.org/fhir/ValueSet/coverage-type.
+- `Subscriber`: Refers to the Canvas Patient using the patient ID, serving as the resource for the coverage's subscriber.
+- `Subscriber ID`: Refers to the Canvas Patient using the patient ID.
+- `Beneficiary`: Specifies the intended patient for the coverage.
+- `Relationship`: Relates to the beneficiary's relationship to the subscriber, as defined in the http://hl7.org/fhir/ValueSet/.
+- `Period start`: Indicates when the coverage became active for the patient.
+- `Period end`: Indicates when the coverage ceased to be active for the patient.
+- `Payor`: Relates to the entity responsible for payment.
+- `Class`: Utilized to define the plan, subplan, group, and subgroup.
 
 ### Create claim
 
@@ -68,3 +101,4 @@ Create claim using the Canvas API. This action requires several parameters:
 - `item`: The field represents the list of service charges to be used in the claim.
 
 Upon successful execution, the data points returns `claimId`, which serves as the key within the Canvas API object.
+
