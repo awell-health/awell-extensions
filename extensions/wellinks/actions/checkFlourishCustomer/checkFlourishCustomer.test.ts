@@ -5,7 +5,10 @@ import {
 } from '../../__mocks__/wellinksFlourishClient'
 import { mockSettings } from '../../__mocks__/settings'
 import { checkFlourishCustomer } from './checkFlourishCustomer'
+<<<<<<< HEAD
 import { ZodError } from 'zod'
+=======
+>>>>>>> fcb7efc (feat(wellinks-extension): Adds a new action to check if a Flourish Customer exists)
 
 jest.mock('../../wellinksFlourishClient', () => ({ WellinksFlourishClient }))
 
@@ -80,6 +83,7 @@ describe('Check Flourish Customer', () => {
         return true
       }
     )
+<<<<<<< HEAD
     await expect(
       checkFlourishCustomer.onActivityCreated(validPayload, onComplete, onError)
     ).rejects.toThrow(ZodError)
@@ -109,5 +113,24 @@ describe('Check Flourish Customer', () => {
     ).rejects.toThrow(ZodError)
 
     expect(onComplete).not.toBeCalled()
+=======
+    await checkFlourishCustomer.onActivityCreated(
+      validPayload,
+      onComplete,
+      onError
+    )
+
+    expect(onComplete).not.toBeCalled()
+    expect(onError).toHaveBeenNthCalledWith(1, {
+      events: expect.arrayContaining([
+        expect.objectContaining({
+          error: {
+            category: 'SERVER_ERROR',
+            message: 'The identifier field is required',
+          },
+        }),
+      ]),
+    })
+>>>>>>> fcb7efc (feat(wellinks-extension): Adds a new action to check if a Flourish Customer exists)
   })
 })

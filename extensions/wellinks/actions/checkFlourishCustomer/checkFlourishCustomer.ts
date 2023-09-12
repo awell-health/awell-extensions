@@ -1,4 +1,5 @@
 import {
+<<<<<<< HEAD
   type Action,
   type DataPointDefinition,
   Category,
@@ -12,6 +13,28 @@ import {
   fields,
 } from './config'
 import { z } from 'zod'
+=======
+  type Field,
+  FieldType,
+  type Action,
+  type DataPointDefinition,
+  type OnErrorCallback,
+  Category,
+} from '@awell-health/extensions-core'
+import { type settings } from '../../settings'
+import { WellinksFlourishClient } from '../../wellinksFlourishClient'
+import { isNil } from 'lodash'
+
+const fields = {
+  identifier: {
+    id: 'identifier',
+    label: 'Identifier',
+    description: 'The identifier of the user to check Flourish for.',
+    type: FieldType.STRING,
+    required: true,
+  },
+} satisfies Record<string, Field>
+>>>>>>> fcb7efc (feat(wellinks-extension): Adds a new action to check if a Flourish Customer exists)
 
 const dataPoints = {
   userExists: {
@@ -33,6 +56,7 @@ export const checkFlourishCustomer: Action<
   dataPoints,
   previewable: true,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
+<<<<<<< HEAD
     // try {
     const {
       fields: { identifier },
@@ -59,3 +83,73 @@ export const checkFlourishCustomer: Action<
     })
   },
 }
+=======
+    const { fields, settings } = payload
+    const { identifier } = fields
+    try {
+      if (
+        isNil(settings.flourishApiUrl) ||
+        isNil(settings.flourishApiKey) ||
+        isNil(settings.flourishClientExtId)
+      ) {
+        throw new Error(
+          'The Flourish API URL and/or API Key is not set in the settings'
+        )
+      }
+      const client = new WellinksFlourishClient(
+        settings.flourishApiUrl,
+        settings.flourishApiKey,
+        settings.flourishClientExtId
+      )
+
+      if (isNil(identifier)) {
+        await buildValidationError('identifier', onError)
+        return
+      }
+
+      const result = await client.user.exists(identifier)
+      await onComplete({
+        data_points: {
+          userExists: result.toString(),
+        },
+      })
+    } catch {
+      await onError({
+        events: [
+          {
+            date: new Date().toISOString(),
+            text: {
+              en: 'an error occurred while checking for a Flourish customer',
+            },
+            error: {
+              category: 'SERVER_ERROR',
+              message:
+                'an error occurred while checking for a Flourish customer',
+            },
+          },
+        ],
+      })
+    }
+  },
+}
+
+async function buildValidationError(
+  field: string,
+  onError: OnErrorCallback
+): Promise<void> {
+  await onError({
+    events: [
+      {
+        date: new Date().toISOString(),
+        text: {
+          en: `The ${field} field is required`,
+        },
+        error: {
+          category: 'SERVER_ERROR',
+          message: `The ${field} field is required`,
+        },
+      },
+    ],
+  })
+}
+>>>>>>> fcb7efc (feat(wellinks-extension): Adds a new action to check if a Flourish Customer exists)
