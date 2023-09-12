@@ -4,28 +4,25 @@ import { type Action } from '@awell-health/extensions-core'
 import { type settings } from '../../../settings'
 import { Category, validate } from '@awell-health/extensions-core'
 import { SettingsValidationSchema } from '../../../settings'
-import { FieldsValidationSchema, fields, dataPoints } from './config'
+import { FieldsValidationSchema, fields } from './config'
 import {
   SendbirdClient,
-  isSendbirdChatError,
-  sendbirdChatErrorToActivityEvent,
+  isSendbirdDeskError,
+  sendbirdDeskErrorToActivityEvent,
 } from '../../client'
-import { DEFAULT_PROFILE_URL } from '../../constants'
-import { isEmpty } from 'lodash'
 
-export const createUser: Action<typeof fields, typeof settings> = {
-  key: 'createUser',
-  title: 'Create user',
-  description: 'Creates a user using the Chat API.',
+export const updateTicket: Action<typeof fields, typeof settings> = {
+  key: 'updateTicket',
+  title: 'Update ticket',
+  description: 'Update a ticket using the Desk API.',
   category: Category.COMMUNICATION,
   fields,
-  dataPoints,
   previewable: false,
   onActivityCreated: async (payload, onComplete, onError) => {
     try {
       const {
         settings: { applicationId, chatApiToken, deskApiToken },
-        fields: { userId, metadata, issueAccessToken, profileUrl },
+        fields: { ticketId, priority, relatedChannelUrls },
       } = validate({
         schema: z.object({
           settings: SettingsValidationSchema,
@@ -40,15 +37,12 @@ export const createUser: Action<typeof fields, typeof settings> = {
         deskApiToken,
       })
 
-      const res = await client.chatApi.createUser({
-        user_id: userId,
-        nickname: parseNickname(payload),
-        metadata,
-        issue_access_token: issueAccessToken,
-        profile_url: profileUrl ?? DEFAULT_PROFILE_URL,
+      await client.deskApi.updateTicket(ticketId, {
+        priority,
+        relatedChannelUrls,
       })
 
-      await onComplete({ data_points: { userId: res.data.user_id } })
+      await onComplete()
     } catch (err) {
       if (err instanceof ZodError) {
         const error = fromZodError(err)
@@ -64,8 +58,8 @@ export const createUser: Action<typeof fields, typeof settings> = {
             },
           ],
         })
-      } else if (isSendbirdChatError(err)) {
-        const events = sendbirdChatErrorToActivityEvent(err)
+      } else if (isSendbirdDeskError(err)) {
+        const events = sendbirdDeskErrorToActivityEvent(err)
         await onError({ events })
       } else {
         const message = (err as Error).message
@@ -84,19 +78,4 @@ export const createUser: Action<typeof fields, typeof settings> = {
       }
     }
   },
-}
-
-const parseNickname = (payload: any): string => {
-  const nickname: string = payload.fields.nickname
-  if (!isEmpty(nickname)) return nickname
-
-  const firstName = payload.patient.profile?.first_name ?? ''
-  const lastName = payload.patient.profile?.last_name ?? ''
-
-  if (isEmpty(firstName) && isEmpty(lastName))
-    throw new Error(
-      'The required nickname has not been specified, and neither the first name nor last name of the patient has been set in their profile'
-    )
-
-  return `${firstName as string} ${lastName as string}`.trim()
 }

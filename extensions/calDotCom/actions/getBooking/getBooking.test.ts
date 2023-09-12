@@ -1,4 +1,4 @@
-import { getBooking } from '../getBooking'
+import { getBooking } from './getBooking'
 import { faker } from '@faker-js/faker'
 import CalComApi from '../../calComApi'
 import { generateTestPayload } from '../../../../src/tests'
@@ -90,6 +90,7 @@ describe('Cal.com GetBooking action', () => {
     let startTime: string
     let endTime: string
     let status: string
+    let id: number
     let uid: string
     let metadata: Booking['metadata']
     let user: User
@@ -102,6 +103,7 @@ describe('Cal.com GetBooking action', () => {
       startTime = faker.date.anytime().toISOString()
       endTime = faker.date.anytime().toISOString()
       status = faker.string.sample()
+      id = faker.number.int()
       uid = faker.string.uuid()
       metadata = {
         videoCallUrl: faker.internet.url(),
@@ -129,6 +131,7 @@ describe('Cal.com GetBooking action', () => {
           startTime,
           endTime,
           status,
+          id,
           uid,
           metadata,
           user,

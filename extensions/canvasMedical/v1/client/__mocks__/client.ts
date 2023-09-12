@@ -8,6 +8,7 @@ import {
   mockedCreateQuestionnaireResponsesResource,
   mockedQuestionnaireResponseResource,
   mockedCoverageId,
+  mockedClaimId,
 } from './testData'
 
 export const mockedMakeAPIClient = (): any => {
@@ -29,5 +30,6 @@ export const mockedMakeAPIClient = (): any => {
     ),
     createCoverage: jest.fn(async () => mockedCoverageId),
     updateCoverage: jest.fn(async () => mockedCoverageId),
+    createClaim: jest.fn(async () => mockedClaimId),
   }
 }

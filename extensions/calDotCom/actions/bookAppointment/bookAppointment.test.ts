@@ -1,4 +1,4 @@
-import { bookAppointment } from '..'
+import { bookAppointment } from './bookAppointment'
 import { generateTestPayload } from '../../../../src/tests'
 
 describe('Simple book appointment action', () => {
