@@ -66,4 +66,25 @@ export const settings = {
     required: true,
     description: 'Your Sendgrid API key.',
   },
+  flourishApiUrl: {
+    key: 'flourishApiUrl',
+    label: 'Flourish API url',
+    obfuscated: false,
+    required: false,
+    description: 'The environment specific Flourish API url.',
+  },
+  flourishApiKey: {
+    key: 'flourishApiKey',
+    label: 'Flourish API key',
+    obfuscated: true,
+    required: false,
+    description: 'Your Flourish API key.',
+  },
+  flourishClientExtId: {
+    key: 'flourishClientExtId',
+    label: 'Flourish Client Ext ID',
+    obfuscated: false,
+    required: false,
+    description: 'Your Flourish Client Ext ID.',
+  },
 } satisfies Record<string, Setting>

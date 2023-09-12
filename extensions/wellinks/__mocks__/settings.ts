@@ -8,4 +8,7 @@ export const mockSettings = {
   sendgridApiUrl: 'sendgridApiUrl',
   platformApiKey: 'platform-key',
   platformApiUrl: 'platform-url',
+  flourishApiUrl: 'flourish-url',
+  flourishApiKey: 'flourish-key',
+  flourishClientExtId: 'flourish-client-ext-id',
 }
