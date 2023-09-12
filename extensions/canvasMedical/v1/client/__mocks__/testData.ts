@@ -540,7 +540,7 @@ export const mockedCreateCoverageData: any = {
       display: 'Independence Blue Cross Blue Shield',
     },
   ]),
-  classObj: JSON.stringify([
+  classCoverage: JSON.stringify([
     {
       type: {
         coding: [
@@ -594,7 +594,6 @@ export const mockedUpdateCoverageData: any = {
   id: mockedCoverageId,
   ...mockedCreateCoverageData,
 }
-
 
 export const mockedCreateClaimData: any = {
   status: 'active',
