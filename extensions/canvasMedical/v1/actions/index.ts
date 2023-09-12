@@ -6,6 +6,8 @@ export { createPatient } from './createPatient'
 export { updatePatient } from './updatePatient'
 export { createQuestionnaireResponses } from './createQuestionnaireResponses'
 export { createClaim } from './createClaim'
+export { createCoverage } from './createCoverage'
+export { updateCoverage } from './updateCoverage'
 // Note: should also NOT be exported, since that is only used with the JSON type data points, which we don't support yet
 // export { getAppointment } from './getAppointment'
 // export { getTask } from './getTask'
