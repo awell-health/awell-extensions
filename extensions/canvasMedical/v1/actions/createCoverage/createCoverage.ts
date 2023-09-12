@@ -35,7 +35,7 @@ export const createCoverage: Action<typeof fields, typeof settings> = {
           periodStart,
           periodEnd,
           payor,
-          classObj,
+          classCoverage,
         },
       } = validate({
         schema: z.object({
@@ -63,7 +63,7 @@ export const createCoverage: Action<typeof fields, typeof settings> = {
           end: periodEnd,
         },
         payor,
-        class: classObj,
+        class: classCoverage,
       })
 
       await onComplete({
