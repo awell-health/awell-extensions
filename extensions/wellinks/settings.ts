@@ -52,20 +52,6 @@ export const settings = {
     required: false,
     description: 'The form ID of the Healthie Member Event Form',
   },
-  sendgridApiUrl: {
-    key: 'sendgridApiUrl',
-    label: 'Sendgrid API url',
-    obfuscated: false,
-    required: true,
-    description: 'The environment specific Sendgrid API url.',
-  },
-  sendgridApiKey: {
-    key: 'sendgridApiKey',
-    label: 'Sendgrid API key',
-    obfuscated: true,
-    required: true,
-    description: 'Your Sendgrid API key.',
-  },
   flourishApiUrl: {
     key: 'flourishApiUrl',
     label: 'Flourish API url',
