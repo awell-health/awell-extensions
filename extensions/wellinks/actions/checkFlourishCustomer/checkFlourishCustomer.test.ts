@@ -97,4 +97,41 @@ describe('Check Flourish Customer', () => {
       ]),
     })
   })
+
+  test('should call onError when the Flourish Settings are not set', async () => {
+    const validPayload = generateTestPayload({
+      fields: {
+        identifier: 'identifier',
+      },
+      settings: {
+        ...mockSettings,
+        flourishApiKey: undefined,
+        flourishApiUrl: undefined,
+        flourishClientExtId: undefined,
+      },
+    })
+    WellinksFlourishClientMockImplementation.user.exists.mockImplementationOnce(
+      () => {
+        return true
+      }
+    )
+    await checkFlourishCustomer.onActivityCreated(
+      validPayload,
+      onComplete,
+      onError
+    )
+
+    expect(onComplete).not.toBeCalled()
+    expect(onError).toHaveBeenNthCalledWith(1, {
+      events: expect.arrayContaining([
+        expect.objectContaining({
+          error: {
+            category: 'SERVER_ERROR',
+            message:
+              'Validation error: Required at "settings.flourishApiKey"; Required at "settings.flourishApiUrl"; Required at "settings.flourishClientExtId"',
+          },
+        }),
+      ]),
+    })
+  })
 })
