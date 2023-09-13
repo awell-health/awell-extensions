@@ -126,7 +126,7 @@ describe('Check Flourish Customer', () => {
         expect.objectContaining({
           error: {
             category: 'SERVER_ERROR',
-            message: 'The identifier field is required',
+            message: 'Validation error: Required at "fields.identifier"',
           },
         }),
       ]),

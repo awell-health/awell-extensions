@@ -1,40 +1,19 @@
 import {
-<<<<<<< HEAD
   type Action,
   type DataPointDefinition,
+  type OnErrorCallback,
   Category,
   validate,
 } from '@awell-health/extensions-core'
 import { type settings } from '../../settings'
 import { WellinksFlourishClient } from '../../wellinksFlourishClient'
+import { fromZodError, type ValidationError } from 'zod-validation-error'
 import {
   FieldsValidationSchema,
   SettingsValidationSchema,
   fields,
 } from './config'
-import { z } from 'zod'
-=======
-  type Field,
-  FieldType,
-  type Action,
-  type DataPointDefinition,
-  type OnErrorCallback,
-  Category,
-} from '@awell-health/extensions-core'
-import { type settings } from '../../settings'
-import { WellinksFlourishClient } from '../../wellinksFlourishClient'
-import { isNil } from 'lodash'
-
-const fields = {
-  identifier: {
-    id: 'identifier',
-    label: 'Identifier',
-    description: 'The identifier of the user to check Flourish for.',
-    type: FieldType.STRING,
-    required: true,
-  },
-} satisfies Record<string, Field>
->>>>>>> fcb7efc (feat(wellinks-extension): Adds a new action to check if a Flourish Customer exists)
+import { z, ZodError } from 'zod'
 
 const dataPoints = {
   userExists: {
@@ -56,56 +35,23 @@ export const checkFlourishCustomer: Action<
   dataPoints,
   previewable: true,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
-<<<<<<< HEAD
-    // try {
-    const {
-      fields: { identifier },
-      settings: { flourishApiKey, flourishApiUrl, flourishClientExtId },
-    } = validate({
-      schema: z.object({
-        fields: FieldsValidationSchema,
-        settings: SettingsValidationSchema,
-      }),
-      payload,
-    })
-
-    const client = new WellinksFlourishClient(
-      flourishApiUrl,
-      flourishApiKey,
-      flourishClientExtId
-    )
-
-    const result = await client.user.exists(identifier)
-    await onComplete({
-      data_points: {
-        userExists: result.toString(),
-      },
-    })
-  },
-}
-=======
-    const { fields, settings } = payload
-    const { identifier } = fields
     try {
-      if (
-        isNil(settings.flourishApiUrl) ||
-        isNil(settings.flourishApiKey) ||
-        isNil(settings.flourishClientExtId)
-      ) {
-        throw new Error(
-          'The Flourish API URL and/or API Key is not set in the settings'
-        )
-      }
-      const client = new WellinksFlourishClient(
-        settings.flourishApiUrl,
-        settings.flourishApiKey,
-        settings.flourishClientExtId
-      )
+      const {
+        fields: { identifier },
+        settings: { flourishApiKey, flourishApiUrl, flourishClientExtId },
+      } = validate({
+        schema: z.object({
+          fields: FieldsValidationSchema,
+          settings: SettingsValidationSchema,
+        }),
+        payload,
+      })
 
-      if (isNil(identifier)) {
-        await buildValidationError('identifier', onError)
-        return
-      }
+      const client = new WellinksFlourishClient(
+        flourishApiUrl,
+        flourishApiKey,
+        flourishClientExtId
+      )
 
       const result = await client.user.exists(identifier)
       await onComplete({
@@ -113,28 +59,33 @@ export const checkFlourishCustomer: Action<
           userExists: result.toString(),
         },
       })
-    } catch {
-      await onError({
-        events: [
-          {
-            date: new Date().toISOString(),
-            text: {
-              en: 'an error occurred while checking for a Flourish customer',
+    } catch (err) {
+      if (err instanceof ZodError) {
+        const error = fromZodError(err)
+        await buildValidationError(error, onError)
+      } else {
+        await onError({
+          events: [
+            {
+              date: new Date().toISOString(),
+              text: {
+                en: 'an error occurred while checking for a Flourish customer',
+              },
+              error: {
+                category: 'SERVER_ERROR',
+                message:
+                  'an error occurred while checking for a Flourish customer',
+              },
             },
-            error: {
-              category: 'SERVER_ERROR',
-              message:
-                'an error occurred while checking for a Flourish customer',
-            },
-          },
-        ],
-      })
+          ],
+        })
+      }
     }
   },
 }
 
 async function buildValidationError(
-  field: string,
+  zodError: ValidationError,
   onError: OnErrorCallback
 ): Promise<void> {
   await onError({
@@ -142,14 +93,13 @@ async function buildValidationError(
       {
         date: new Date().toISOString(),
         text: {
-          en: `The ${field} field is required`,
+          en: zodError.name,
         },
         error: {
           category: 'SERVER_ERROR',
-          message: `The ${field} field is required`,
+          message: `${zodError.message}`,
         },
       },
     ],
   })
 }
->>>>>>> fcb7efc (feat(wellinks-extension): Adds a new action to check if a Flourish Customer exists)
