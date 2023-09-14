@@ -27,15 +27,14 @@ export const fields = {
   patientId: {
     id: 'patientId',
     label: 'Patient ID',
-    description: `The patient's unique resource ID (e.g. 865058f6654149bd921264d91519af9e)`,
+    description: `The patient's unique resource ID (e.g. 865058f6654149bd921264d91519af9e).`,
     type: FieldType.STRING,
     required: true,
   },
   created: {
     id: 'created',
     label: 'Created',
-    description:
-      'The field indicating when this claim resource was created, accepting a date in the YYYY-MM-DD format.',
+    description: 'The field indicating when this claim resource was created.',
     type: FieldType.DATE,
     required: true,
   },
