@@ -36,7 +36,7 @@ export const fields = {
     label: 'Created',
     description:
       'The field indicating when this claim resource was created, accepting a date in the YYYY-MM-DD format.',
-    type: FieldType.DATE,
+    type: FieldType.STRING,
     required: true,
   },
   provider: {
