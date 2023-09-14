@@ -5,10 +5,7 @@ import {
 } from '../../__mocks__/wellinksFlourishClient'
 import { mockSettings } from '../../__mocks__/settings'
 import { checkFlourishCustomer } from './checkFlourishCustomer'
-<<<<<<< HEAD
 import { ZodError } from 'zod'
-=======
->>>>>>> fcb7efc (feat(wellinks-extension): Adds a new action to check if a Flourish Customer exists)
 
 jest.mock('../../wellinksFlourishClient', () => ({ WellinksFlourishClient }))
 
@@ -83,37 +80,6 @@ describe('Check Flourish Customer', () => {
         return true
       }
     )
-<<<<<<< HEAD
-    await expect(
-      checkFlourishCustomer.onActivityCreated(validPayload, onComplete, onError)
-    ).rejects.toThrow(ZodError)
-
-    expect(onComplete).not.toBeCalled()
-  })
-
-  test('should call onError when the Flourish Settings are not set', async () => {
-    const validPayload = generateTestPayload({
-      fields: {
-        identifier: 'identifier',
-      },
-      settings: {
-        ...mockSettings,
-        flourishApiKey: undefined,
-        flourishApiUrl: undefined,
-        flourishClientExtId: undefined,
-      },
-    })
-    WellinksFlourishClientMockImplementation.user.exists.mockImplementationOnce(
-      () => {
-        return true
-      }
-    )
-    await expect(
-      checkFlourishCustomer.onActivityCreated(validPayload, onComplete, onError)
-    ).rejects.toThrow(ZodError)
-
-    expect(onComplete).not.toBeCalled()
-=======
     await checkFlourishCustomer.onActivityCreated(
       validPayload,
       onComplete,
@@ -131,7 +97,6 @@ describe('Check Flourish Customer', () => {
         }),
       ]),
     })
->>>>>>> fcb7efc (feat(wellinks-extension): Adds a new action to check if a Flourish Customer exists)
   })
 
   test('should call onError when the Flourish Settings are not set', async () => {
@@ -151,23 +116,10 @@ describe('Check Flourish Customer', () => {
         return true
       }
     )
-    await checkFlourishCustomer.onActivityCreated(
-      validPayload,
-      onComplete,
-      onError
-    )
+    await expect(
+      checkFlourishCustomer.onActivityCreated(validPayload, onComplete, onError)
+    ).rejects.toThrow(ZodError)
 
     expect(onComplete).not.toBeCalled()
-    expect(onError).toHaveBeenNthCalledWith(1, {
-      events: expect.arrayContaining([
-        expect.objectContaining({
-          error: {
-            category: 'SERVER_ERROR',
-            message:
-              'Validation error: Required at "settings.flourishApiKey"; Required at "settings.flourishApiUrl"; Required at "settings.flourishClientExtId"',
-          },
-        }),
-      ]),
-    })
   })
 })
