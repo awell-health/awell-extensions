@@ -130,23 +130,10 @@ describe('Check Flourish Customer', () => {
         return true
       }
     )
-    await checkFlourishCustomer.onActivityCreated(
-      validPayload,
-      onComplete,
-      onError
-    )
+    await expect(
+      checkFlourishCustomer.onActivityCreated(validPayload, onComplete, onError)
+    ).rejects.toThrow(ZodError)
 
     expect(onComplete).not.toBeCalled()
-    expect(onError).toHaveBeenNthCalledWith(1, {
-      events: expect.arrayContaining([
-        expect.objectContaining({
-          error: {
-            category: 'SERVER_ERROR',
-            message:
-              'Validation error: Required at "settings.flourishApiKey"; Required at "settings.flourishApiUrl"; Required at "settings.flourishClientExtId"',
-          },
-        }),
-      ]),
-    })
   })
 })

@@ -1,7 +1,6 @@
 import {
   type Action,
   type DataPointDefinition,
-  type OnErrorCallback,
   Category,
   validate,
 } from '@awell-health/extensions-core'
