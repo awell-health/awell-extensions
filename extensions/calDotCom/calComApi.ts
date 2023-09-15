@@ -32,7 +32,6 @@ class CalComApi {
 
   async createBooking(value: {
     eventTypeId: number
-    user: string
     start: string
     end?: string
     responses: {
