@@ -59,8 +59,31 @@ Updates a booking and saves new `bookingId` and `bookingUid` as Data Points. Val
 - Title - Title of Booking event
 - Description - Description of the meeting
 - Status - Status of the meeting to be set. Possible values: "ACCEPTED", "PENDING", "CANCELLED", "REJECTED".
-- Start - Start time of the Event in ISO 8601 format, e.g. 2023-05-24T13:00:00.000Z
-- End - End time of the Event in ISO 8601 format, e.g. 2023-05-24T13:00:00.000Z
+- Start - Start time of the Event in ISO 8601 format, e.g. 2023-05-24T13:00:00.000Z. Please note that start/end time must be within user's availability hours.
+- End - End time of the Event in ISO 8601 format, e.g. 2023-05-24T13:00:00.000Z. Please note that start/end time must be within user's availability hours.
+
+### Create booking
+
+Creates a booking and saves new `bookingId` as Data Points. Available fields:
+
+- Event Type ID - ID of the event type to book
+- Responses - Object containing email, name, location
+  - ```json
+        "responses": {
+            "name": "John Doe",
+            "email": "john.doe@example.com",
+            "location": "Calcom HQ"
+        },
+    ```
+- Metadata - Any metadata associated with the booking
+- Timezone - Timezone of the Attendee
+- Language - Language of the Attendee
+- Recurring Event ID - Recurring Event ID if the event is recurring
+- Title - Title of Booking event
+- Description - Description of the meeting
+- Status - Status of the meeting to be set. Possible values: "ACCEPTED", "PENDING", "CANCELLED", "REJECTED".
+- Start - Start time of the Event in ISO 8601 format, e.g. 2023-05-24T13:00:00.000Z. Please note that start/end time must be within user's availability hours.
+- End - End time of the Event in ISO 8601 format, e.g. 2023-05-24T13:00:00.000Z. Please note that start/end time must be within user's availability hours.
 
 ### Delete Boooking
 
