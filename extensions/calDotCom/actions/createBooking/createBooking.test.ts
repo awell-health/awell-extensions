@@ -10,12 +10,17 @@ describe('Create booking', () => {
 
   const basePayload = generateTestPayload({
     fields: {
-      bookingId: String(sampleBooking.id),
-      title: sampleBooking.title,
-      description: undefined,
-      status: sampleBooking.status,
+      eventTypeId: sampleBooking.eventTypeId,
       start: sampleBooking.startTime,
       end: sampleBooking.endTime,
+      responses: JSON.stringify(sampleBooking.responses),
+      metadata: undefined,
+      timeZone: sampleBooking.timeZone,
+      language: sampleBooking.language,
+      title: sampleBooking.title,
+      recurringEventId: undefined,
+      description: undefined,
+      status: sampleBooking.status,
     },
     settings: {
       apiKey: 'abc123',
@@ -29,20 +34,22 @@ describe('Create booking', () => {
   test('Should call the onComplete callback', async () => {
     await createBooking.onActivityCreated(basePayload, onComplete, onError)
 
-    expect(mockReturnValue.updateBooking).toHaveBeenCalledWith(
-      String(sampleBooking.id),
-      {
-        title: sampleBooking.title,
-        description: undefined,
-        status: sampleBooking.status,
-        start: sampleBooking.startTime,
-        end: sampleBooking.endTime,
-      }
-    )
+    expect(mockReturnValue.createBooking).toHaveBeenCalledWith({
+      eventTypeId: sampleBooking.eventTypeId,
+      start: sampleBooking.startTime,
+      end: sampleBooking.endTime,
+      responses: sampleBooking.responses,
+      metadata: undefined,
+      timeZone: sampleBooking.timeZone,
+      language: sampleBooking.language,
+      title: sampleBooking.title,
+      recurringEventId: undefined,
+      description: undefined,
+      status: sampleBooking.status,
+    })
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
         bookingId: String(sampleBooking.id),
-        bookingUid: sampleBooking.uid,
       },
     })
   })

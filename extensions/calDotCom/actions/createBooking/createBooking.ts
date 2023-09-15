@@ -58,7 +58,6 @@ export const createBooking: Action<typeof fields, typeof settings> = {
       await onComplete({
         data_points: {
           bookingId: String(booking.id),
-          bookingUid: booking.uid,
         },
       })
     } catch (err) {

@@ -8,7 +8,9 @@ export const sampleBooking = {
   startTime: '2023-05-24T13:00:00Z',
   endTime: '2023-05-24T13:30:00Z',
   metadata: {},
-  status: 'CANCELLED',
+  status: 'ACCEPTED',
+  timeZone: 'Europe/London',
+  language: 'en',
   responses: {
     email: 'john.doe@example.com',
     name: 'John Doe',
@@ -20,6 +22,9 @@ export const sampleBooking = {
 }
 
 export const mockReturnValue = {
+  createBooking: jest.fn((params) => {
+    return sampleBooking
+  }),
   getBooking: jest.fn((params) => {
     return sampleBooking
   }),
