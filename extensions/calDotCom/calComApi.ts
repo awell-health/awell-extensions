@@ -65,7 +65,7 @@ class CalComApi {
       )
     }
 
-    return result.booking
+    return result
   }
 
   async updateBooking(
