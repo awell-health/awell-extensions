@@ -24,7 +24,7 @@ export const fields = {
     type: FieldType.STRING,
     required: true,
     description:
-      'Start time of the Event in ISO 8601 format, e.g. 2023-05-24T13:00:00.000Z',
+      "Start time of the Event in ISO 8601 format, e.g. 2023-05-24T13:00:00.000Z. Please note that start/end time must be within user's availability hours.",
   },
   end: {
     label: 'End',
@@ -33,7 +33,7 @@ export const fields = {
     type: FieldType.STRING,
     required: false,
     description:
-      'End time of the Event in ISO 8601 format, e.g. 2023-05-24T13:00:00.000Z',
+      "End time of the Event in ISO 8601 format, e.g. 2023-05-24T13:00:00.000Z. Please note that start/end time must be within user's availability hours.",
   },
   responses: {
     label: 'Responses',
