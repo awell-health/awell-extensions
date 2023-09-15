@@ -1,5 +1,9 @@
 # Cal.com changelog
 
+## September 15, 2023
+
+- add createBooking action
+
 ## September 4, 2023
 
 - add updateBooking and deleteBooking actions
