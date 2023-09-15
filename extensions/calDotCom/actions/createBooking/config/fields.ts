@@ -17,6 +17,13 @@ export const fields = {
     required: true,
     description: 'ID of the event type to book',
   },
+  user: {
+    label: 'User',
+    id: 'user',
+    type: FieldType.STRING,
+    required: true,
+    description: 'Username in Cal.com, e.g. john-doe-e27xkb',
+  },
   start: {
     label: 'Start',
     id: 'start',
@@ -143,6 +150,7 @@ const statusEnum = z.enum(['ACCEPTED', 'PENDING', 'CANCELLED', 'REJECTED'])
 
 export const FieldsValidationSchema = z.object({
   eventTypeId: NumericIdSchema,
+  user: z.string(),
   start: DateTimeSchema,
   end: DateTimeOptionalSchema,
   responses: JsonStringValidationSchema,

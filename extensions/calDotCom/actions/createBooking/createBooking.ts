@@ -21,6 +21,7 @@ export const createBooking: Action<typeof fields, typeof settings> = {
         settings: { apiKey },
         fields: {
           eventTypeId,
+          user,
           start,
           end,
           responses,
@@ -43,10 +44,11 @@ export const createBooking: Action<typeof fields, typeof settings> = {
       const calComApi = new CalComApi(apiKey)
       const booking = await calComApi.createBooking({
         eventTypeId,
+        user,
         start,
         end,
         responses,
-        metadata,
+        metadata: metadata ?? {},
         timeZone,
         language,
         title,

@@ -32,6 +32,7 @@ class CalComApi {
 
   async createBooking(value: {
     eventTypeId: number
+    user: string
     start: string
     end?: string
     responses: {
@@ -48,7 +49,8 @@ class CalComApi {
     status?: string
     description?: string
   }): Promise<Booking> {
-    const response = await fetch('/bookings', {
+    const url = this.constructUrl(`/bookings`)
+    const response = await fetch(url, {
       method: 'POST',
       headers: {
         Accept: 'application/json',
@@ -57,6 +59,12 @@ class CalComApi {
       body: JSON.stringify(value),
     })
     const result = await response.json()
+
+    if (response.status >= 400) {
+      throw new Error(
+        result?.message ?? 'Unknown error in Cal.com API has occurred'
+      )
+    }
 
     return result.booking
   }

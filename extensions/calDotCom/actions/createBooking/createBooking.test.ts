@@ -11,6 +11,7 @@ describe('Create booking', () => {
   const basePayload = generateTestPayload({
     fields: {
       eventTypeId: sampleBooking.eventTypeId,
+      user: sampleBooking.user,
       start: sampleBooking.startTime,
       end: sampleBooking.endTime,
       responses: JSON.stringify(sampleBooking.responses),
@@ -36,10 +37,11 @@ describe('Create booking', () => {
 
     expect(mockReturnValue.createBooking).toHaveBeenCalledWith({
       eventTypeId: sampleBooking.eventTypeId,
+      user: sampleBooking.user,
       start: sampleBooking.startTime,
       end: sampleBooking.endTime,
       responses: sampleBooking.responses,
-      metadata: undefined,
+      metadata: {},
       timeZone: sampleBooking.timeZone,
       language: sampleBooking.language,
       title: sampleBooking.title,
