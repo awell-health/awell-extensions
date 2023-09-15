@@ -33,7 +33,6 @@ export const checkFlourishCustomer: Action<
   dataPoints,
   previewable: true,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
-    // try {
     const {
       fields: { identifier },
       settings: { flourishApiKey, flourishApiUrl, flourishClientExtId },
