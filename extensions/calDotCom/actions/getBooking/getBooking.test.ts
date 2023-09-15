@@ -167,6 +167,8 @@ describe('Cal.com GetBooking action', () => {
           rescheduleUrl: `https://app.cal.com/reschedule/${uid}`,
           videoCallUrl: metadata.videoCallUrl,
           firstAttendeeEmail: attendees[0].email,
+          firstAttendeeTimezone: attendees[0].timeZone,
+          firstAttendeeName: attendees[0].name,
           userEmail: user.email,
         },
       })

@@ -41,6 +41,8 @@ export const getBooking: Action<typeof fields, typeof settings> = {
           rescheduleUrl: `https://app.cal.com/reschedule/${booking.uid}`,
           videoCallUrl: booking.metadata.videoCallUrl ?? '',
           firstAttendeeEmail: booking.attendees[0].email,
+          firstAttendeeTimezone: booking.attendees[0].timeZone,
+          firstAttendeeName: booking.attendees[0].name,
           userEmail: booking.user.email,
         },
       })
