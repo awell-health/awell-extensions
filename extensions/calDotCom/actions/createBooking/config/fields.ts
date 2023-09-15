@@ -94,33 +94,18 @@ export const fields = {
   },
 } satisfies Record<string, Field>
 
-export const JsonStringValidationSchema = z.string().transform(
-  (
-    str,
-    ctx
-  ): {
-    name: string
-    email: string
-    metadata: object
-    location: string
-  } => {
+export const JsonStringValidationSchema = z
+  .string()
+  .transform((str, ctx): object => {
     if (isNil(str) || isEmpty(str)) {
-      ctx.addIssue({
-        code: 'custom',
-        message: 'The value should represent a correct object',
-      })
-      return z.NEVER
+      return {}
     }
 
     try {
       const parsedJson = JSON.parse(str)
 
       if (isEmpty(parsedJson)) {
-        ctx.addIssue({
-          code: 'custom',
-          message: 'The value should represent a correct object',
-        })
-        return z.NEVER
+        return {}
       }
 
       if (typeof parsedJson !== 'object' || Array.isArray(parsedJson)) {
@@ -136,6 +121,32 @@ export const JsonStringValidationSchema = z.string().transform(
       ctx.addIssue({ code: 'custom', message: 'Invalid JSON' })
       return z.NEVER
     }
+  })
+
+export const ResponsesValidationSchema = JsonStringValidationSchema.transform(
+  (
+    value,
+    ctx
+  ): {
+    name: string
+    email: string
+    metadata: object
+    location: string
+  } => {
+    if (isEmpty(value)) {
+      ctx.addIssue({
+        code: 'custom',
+        message: 'The value should represent a correct object',
+      })
+      return z.NEVER
+    }
+
+    return value as {
+      name: string
+      email: string
+      metadata: object
+      location: string
+    }
   }
 )
 
@@ -145,7 +156,7 @@ export const FieldsValidationSchema = z.object({
   eventTypeId: NumericIdSchema,
   start: DateTimeSchema,
   end: DateTimeOptionalSchema,
-  responses: JsonStringValidationSchema,
+  responses: ResponsesValidationSchema,
   metadata: makeStringOptional(JsonStringValidationSchema),
   timeZone: z.string(),
   language: z.string(),

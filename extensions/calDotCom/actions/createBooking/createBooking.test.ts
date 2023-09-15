@@ -14,7 +14,7 @@ describe('Create booking', () => {
       start: sampleBooking.startTime,
       end: sampleBooking.endTime,
       responses: JSON.stringify(sampleBooking.responses),
-      metadata: undefined,
+      metadata: JSON.stringify({}),
       timeZone: sampleBooking.timeZone,
       language: sampleBooking.language,
       title: sampleBooking.title,
