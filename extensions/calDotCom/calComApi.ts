@@ -30,6 +30,37 @@ class CalComApi {
     return response.booking
   }
 
+  async createBooking(value: {
+    eventTypeId: number
+    start: string
+    end?: string
+    responses: {
+      name: string
+      email: string
+      metadata: object
+      location: string
+    }
+    metadata?: object
+    timeZone: string
+    language: string
+    title?: string
+    recurringEventId?: number
+    status?: string
+    description?: string
+  }): Promise<Booking> {
+    const response = await fetch('/bookings', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(value),
+    })
+    const result = await response.json()
+
+    return result.booking
+  }
+
   async updateBooking(
     id: string,
     value: {

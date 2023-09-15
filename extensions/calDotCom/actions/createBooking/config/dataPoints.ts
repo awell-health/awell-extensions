@@ -5,8 +5,4 @@ export const dataPoints = {
     key: 'bookingId',
     valueType: 'string',
   },
-  bookingUid: {
-    key: 'bookingUid',
-    valueType: 'string',
-  },
 } satisfies Record<string, DataPointDefinition>

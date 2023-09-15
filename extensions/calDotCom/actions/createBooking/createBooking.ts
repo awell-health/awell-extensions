@@ -19,7 +19,19 @@ export const createBooking: Action<typeof fields, typeof settings> = {
     try {
       const {
         settings: { apiKey },
-        fields: { bookingId, title, description, status, start, end },
+        fields: {
+          eventTypeId,
+          start,
+          end,
+          responses,
+          metadata,
+          timeZone,
+          language,
+          title,
+          recurringEventId,
+          description,
+          status,
+        },
       } = validate({
         schema: z.object({
           settings: SettingsSchema,
@@ -29,12 +41,18 @@ export const createBooking: Action<typeof fields, typeof settings> = {
       })
 
       const calComApi = new CalComApi(apiKey)
-      const booking = await calComApi.updateBooking(bookingId, {
-        title,
-        description,
-        status,
+      const booking = await calComApi.createBooking({
+        eventTypeId,
         start,
         end,
+        responses,
+        metadata,
+        timeZone,
+        language,
+        title,
+        recurringEventId,
+        description,
+        status,
       })
 
       await onComplete({
