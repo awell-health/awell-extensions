@@ -5,6 +5,7 @@ import {
   getBooking,
   updateBooking,
   deleteBooking,
+  createBooking,
 } from './actions'
 import { settings } from './settings'
 import { webhooks } from './webhooks'
@@ -23,6 +24,7 @@ export const CalDotCom: Extension = {
     getBooking,
     updateBooking,
     deleteBooking,
+    createBooking,
   },
   webhooks,
   settings,
