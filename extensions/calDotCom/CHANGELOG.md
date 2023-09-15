@@ -3,6 +3,7 @@
 ## September 15, 2023
 
 - add createBooking action
+- add first attendee name and timezone to getBooking data points
 
 ## September 4, 2023
 
