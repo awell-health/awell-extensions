@@ -51,6 +51,11 @@ This action allows you to fetch the details of a booking based on the provided `
 6. Status
 7. Cancel URL
 8. Reschedule URL
+9. Video call URL (if available)
+10. First Attendee's name
+12. First Attendee's timezone
+12. First Attendee's email
+13. Organizer's email
 
 ### Update booking
 

@@ -37,6 +37,14 @@ export const dataPoints = {
     key: 'firstAttendeeEmail',
     valueType: 'string',
   },
+  firstAttendeeTimezone: {
+    key: 'firstAttendeeTimezone',
+    valueType: 'string',
+  },
+  firstAttendeeName: {
+    key: 'firstAttendeeName',
+    valueType: 'string',
+  },
   userEmail: {
     key: 'userEmail',
     valueType: 'string',
