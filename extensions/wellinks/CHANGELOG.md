@@ -20,3 +20,7 @@ Added new action to unenroll user from Sendgrid.
 ## July 16th, 2023
 
 Added a new action to insert a Member Event List to the Platform DB. This requires setting the platform API URL and API Key values for the extension.
+
+## September 12th, 2023
+
+Adds a new action to check Flourish for a customer with a matching ThirdPartyIdentifier.

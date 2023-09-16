@@ -52,18 +52,25 @@ export const settings = {
     required: false,
     description: 'The form ID of the Healthie Member Event Form',
   },
-  sendgridApiUrl: {
-    key: 'sendgridApiUrl',
-    label: 'Sendgrid API url',
+  flourishApiUrl: {
+    key: 'flourishApiUrl',
+    label: 'Flourish API url',
     obfuscated: false,
-    required: true,
-    description: 'The environment specific Sendgrid API url.',
+    required: false,
+    description: 'The environment specific Flourish API url.',
   },
-  sendgridApiKey: {
-    key: 'sendgridApiKey',
-    label: 'Sendgrid API key',
+  flourishApiKey: {
+    key: 'flourishApiKey',
+    label: 'Flourish API key',
     obfuscated: true,
-    required: true,
-    description: 'Your Sendgrid API key.',
+    required: false,
+    description: 'Your Flourish API key.',
+  },
+  flourishClientExtId: {
+    key: 'flourishClientExtId',
+    label: 'Flourish Client Ext ID',
+    obfuscated: false,
+    required: false,
+    description: 'Your Flourish Client Ext ID.',
   },
 } satisfies Record<string, Setting>
