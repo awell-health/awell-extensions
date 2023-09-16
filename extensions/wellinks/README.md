@@ -28,3 +28,6 @@ Checks that a Chat message (either to or from a patient and coach) has happened 
 
 Adds an Insert Member List Event to the Platform Database.
 
+## Check for Flourish Customer
+
+Queries Flourish to see if there is a record that has a matching ThirdPartyIdentifier. Returns True/False.
