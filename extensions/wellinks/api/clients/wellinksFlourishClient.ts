@@ -1,7 +1,7 @@
 import fetch from 'node-fetch'
 import * as xml2js from 'xml2js'
 import { isNil } from 'lodash'
-import { type FlourishSubmitPamSurveyResponse } from './types'
+import { type FlourishSubmitPamSurveyResponse } from '../../config/types'
 export class WellinksFlourishClient {
   private readonly _apiUrl: string
   private readonly _apiKey: string

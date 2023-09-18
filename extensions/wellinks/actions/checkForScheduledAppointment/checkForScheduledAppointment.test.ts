@@ -2,10 +2,10 @@ import { generateTestPayload } from '../../../../src/tests'
 import { getSdk } from '../../gql/wellinksSdk'
 import { mockGetSdk, mockGetSdkReturn } from '../../gql/__mocks__/wellinksSdk'
 import { checkForScheduledAppointment } from './checkForScheduledAppointment'
-import { mockSettings } from '../../__mocks__/settings'
+import { mockSettings } from '../../__mocks__/config/settings'
 
 jest.mock('../../gql/wellinksSdk')
-jest.mock('../../wellinksGraphqlClient')
+jest.mock('../../api/clients/wellinksGraphqlClient')
 
 describe('the checkForScheduledAppointment action', () => {
   const onComplete = jest.fn()

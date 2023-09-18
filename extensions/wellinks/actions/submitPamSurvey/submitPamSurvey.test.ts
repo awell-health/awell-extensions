@@ -2,13 +2,15 @@ import { generateTestPayload } from '../../../../src/tests'
 import {
   WellinksFlourishClientMockImplementation,
   WellinksFlourishClient,
-} from '../../__mocks__/wellinksFlourishClient'
+} from '../../api/clients/__mocks__/wellinksFlourishClient'
 
-import { mockSettings } from '../../__mocks__/settings'
+import { mockSettings } from '../../__mocks__/config/settings'
 import { submitPamSurvey } from './submitPamSurvey'
 import { ZodError } from 'zod'
 
-jest.mock('../../wellinksFlourishClient', () => ({ WellinksFlourishClient }))
+jest.mock('../../api/clients/wellinksFlourishClient', () => ({
+  WellinksFlourishClient,
+}))
 
 describe('Submit PAM Survey', () => {
   const onComplete = jest.fn()

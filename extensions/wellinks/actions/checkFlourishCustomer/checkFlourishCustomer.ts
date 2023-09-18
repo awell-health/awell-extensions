@@ -4,8 +4,8 @@ import {
   Category,
   validate,
 } from '@awell-health/extensions-core'
-import { type settings } from '../../settings'
-import { WellinksFlourishClient } from '../../wellinksFlourishClient'
+import { type settings } from '../../config/settings'
+import { WellinksFlourishClient } from '../../api/clients/wellinksFlourishClient'
 import {
   FieldsValidationSchema,
   SettingsValidationSchema,

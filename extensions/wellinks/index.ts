@@ -1,6 +1,6 @@
 import { actions } from './actions'
 import { type Extension } from '@awell-health/extensions-core'
-import { settings } from './settings'
+import { settings } from './config/settings'
 import { AuthorType, Category } from '@awell-health/extensions-core'
 
 export const Wellinks: Extension = {

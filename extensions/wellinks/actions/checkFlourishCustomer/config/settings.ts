@@ -1,5 +1,5 @@
 import { z, type ZodTypeAny } from 'zod'
-import { type settings } from '../../../settings'
+import { type settings } from '../../../config/settings'
 export const SettingsValidationSchema = z.object({
   platformApiKey: z.string().optional(),
   platformApiUrl: z.string().optional(),

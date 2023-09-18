@@ -1,4 +1,4 @@
-import { WellinksFlourishClient } from '../../wellinksFlourishClient'
+import { WellinksFlourishClient } from '../clients/wellinksFlourishClient'
 import fetch from 'node-fetch'
 jest.mock('node-fetch')
 
