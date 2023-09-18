@@ -22,22 +22,30 @@ export class WellinksFlourishClient {
             identifier,
             this._clientextid,
             this._apiKey
-          ), // call to func,
+          ),
           headers: {
             contentType: 'text/xml',
             accept: 'application/xml',
           },
         })
-        xml2js.parseString(response.body, (err, result) => {
-          if (!isNil(err)) {
-            throw err
-          } else {
-            return result.statusMessage[0] === 'Success'
-          }
+
+        const xml = await response.text()
+
+        return await new Promise((resolve, reject) => {
+          xml2js.parseString(xml, (err, result) => {
+            if (!isNil(err)) {
+              reject(err)
+            } else {
+              resolve(
+                result.UserExistsResponseData.StatusMessage[0] ===
+                  'User with external identifier exists.'
+              )
+            }
+          })
         })
-        return false
-      } catch {
-        return false
+      } catch (err) {
+        const error = err as Error
+        throw Error(`Node Fetch failed: ${error.message}`)
       }
     },
   }
@@ -93,14 +101,21 @@ export class WellinksFlourishClient {
             accept: 'application/xml',
           },
         })
-        xml2js.parseString(
-          response.body,
 
-          (err, result) => {
+        const xml = await response.text()
+
+        return await new Promise((resolve, reject) => {
+          xml2js.parseString(xml, (err, result) => {
             if (!isNil(err)) {
-              throw err
+              reject(err)
             } else {
-              return {
+              if (
+                result.UserSurveyResponseData.StatusCode[0] !==
+                'Success_SurveySubmit'
+              ) {
+                reject(new Error('Survey was not correctly submitted'))
+              }
+              resolve({
                 success:
                   result.UserSurveyResponseData.StatusMessage[0] ===
                   'Submit User Survey success.',
@@ -112,21 +127,13 @@ export class WellinksFlourishClient {
                   +result.UserSurveyResponseData.SurveyResult[0].ResponseData[0].Type.find(
                     (type: any) => type.$.id === 'PAMScore'
                   ).$.value,
-              }
+              })
             }
-          }
-        )
-        return {
-          success: false,
-          pamLevel: -1,
-          pamScore: -1,
-        }
-      } catch {
-        return {
-          success: false,
-          pamLevel: -1,
-          pamScore: -1,
-        }
+          })
+        })
+      } catch (err) {
+        const error = err as Error
+        throw new Error(`Node Fetch failed: ${error.message}`)
       }
     },
   }
