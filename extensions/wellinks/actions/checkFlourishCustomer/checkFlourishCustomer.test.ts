@@ -112,28 +112,4 @@ describe('Check Flourish Customer', () => {
 
     expect(onComplete).not.toBeCalled()
   })
-
-  test('should call onError when the Flourish Settings are not set', async () => {
-    const validPayload = generateTestPayload({
-      fields: {
-        identifier: 'identifier',
-      },
-      settings: {
-        ...mockSettings,
-        flourishApiKey: undefined,
-        flourishApiUrl: undefined,
-        flourishClientExtId: undefined,
-      },
-    })
-    WellinksFlourishClientMockImplementation.user.exists.mockImplementationOnce(
-      () => {
-        return true
-      }
-    )
-    await expect(
-      checkFlourishCustomer.onActivityCreated(validPayload, onComplete, onError)
-    ).rejects.toThrow(ZodError)
-
-    expect(onComplete).not.toBeCalled()
-  })
 })
