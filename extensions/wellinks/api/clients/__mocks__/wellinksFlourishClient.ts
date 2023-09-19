@@ -1,5 +1,6 @@
 export const WellinksFlourishClientMockImplementation = {
   user: {
+    create: jest.fn(),
     exists: jest.fn(),
   },
   survey: {
