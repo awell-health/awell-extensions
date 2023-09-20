@@ -52,7 +52,7 @@ describe('Submit PAM Survey', () => {
     const validPayload = generateTestPayload({
       fields: {
         language: 'en',
-        adminDate: new Date().toDateString(),
+        adminDate: '2023-09-18',
         thirdPartyIdentifier: 'identifier',
         gender: 'male',
         age: 25,
@@ -97,7 +97,7 @@ describe('Submit PAM Survey', () => {
     const validPayload = generateTestPayload({
       fields: {
         language: 'en',
-        adminDate: new Date().toDateString(),
+        adminDate: '2023-09-18',
         thirdPartyIdentifier: 'identifier',
         gender: 'male',
         age: 25,

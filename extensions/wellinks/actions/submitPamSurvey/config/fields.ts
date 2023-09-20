@@ -133,7 +133,13 @@ export const fields = {
 
 export const FieldsValidationSchema = z.object({
   language: z.string(),
-  adminDate: z.string(),
+  adminDate: z
+    .string({
+      errorMap: () => ({
+        message: 'Admin date is required and must be of format YYYY-MM-DD',
+      }),
+    })
+    .regex(/^\d{4}-\d{2}-\d{2}$/),
   thirdPartyIdentifier: z.string(),
   gender: z.string(),
   age: z.number(),

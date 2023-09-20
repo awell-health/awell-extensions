@@ -39,6 +39,7 @@ describe('WellinksFlourishClient', () => {
         })
       )
       const result = await wellinksFlourishClient.user.exists('identifier')
+
       expect(result).toBe(true)
     })
     test('should return false when the StatusMessage is negative.', async () => {
@@ -106,7 +107,7 @@ describe('WellinksFlourishClient', () => {
       )
       const result = await wellinksFlourishClient.survey.submit(
         'en',
-        Date().toString(),
+        '2023-09-18',
         'thirdpartyIdentifier',
         'male',
         22,
@@ -137,7 +138,7 @@ describe('WellinksFlourishClient', () => {
       await expect(
         wellinksFlourishClient.survey.submit(
           'en',
-          Date().toString(),
+          '2023-09-18',
           'thirdpartyIdentifier',
           'male',
           22,
@@ -184,7 +185,7 @@ describe('WellinksFlourishClient', () => {
       await expect(
         wellinksFlourishClient.survey.submit(
           'en',
-          Date().toString(),
+          '2023-09-18',
           'thirdpartyIdentifier',
           'male',
           22,
