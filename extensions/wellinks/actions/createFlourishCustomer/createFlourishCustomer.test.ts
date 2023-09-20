@@ -43,7 +43,7 @@ describe('Create Flourish User', () => {
       fields: {
         firstName: 'firstName',
         lastName: 'lastName',
-        dateOfBirth: new Date().toDateString(),
+        dateOfBirth: '2023-09-18',
         subgroupId: '1234',
         thirdPartyIdentifier: '1234',
       },

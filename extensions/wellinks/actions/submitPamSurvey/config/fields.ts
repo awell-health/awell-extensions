@@ -12,7 +12,7 @@ export const fields = {
   adminDate: {
     id: 'adminDate',
     label: 'Administration Date',
-    description: 'The date the survey was completed.',
+    description: 'The date the survey was completed in YYYY-MM-DD format.',
     type: FieldType.DATE,
     required: true,
   },

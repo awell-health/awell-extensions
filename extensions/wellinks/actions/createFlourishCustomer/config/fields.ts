@@ -19,8 +19,9 @@ export const fields = {
   dateOfBirth: {
     id: 'dateOfBirth',
     label: 'Date of Birth',
-    description: 'The date of birth of the user to create in Flourish.',
-    type: FieldType.STRING,
+    description:
+      'The date of birth of the user to create in Flourish in YYYY-MM-DD format.',
+    type: FieldType.DATE,
     required: true,
   },
   subgroupId: {
@@ -43,7 +44,13 @@ export const fields = {
 export const FieldsValidationSchema = z.object({
   firstName: z.string(),
   lastName: z.string(),
-  dateOfBirth: z.string(),
+  dateOfBirth: z
+    .string({
+      errorMap: () => ({
+        message: 'Admin date is required and must be of format YYYY-MM-DD',
+      }),
+    })
+    .regex(/^\d{4}-\d{2}-\d{2}$/),
   subgroupId: z.string(),
   thirdPartyIdentifier: z.string(),
 } satisfies Record<keyof typeof fields, ZodTypeAny>)
