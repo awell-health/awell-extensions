@@ -39,6 +39,7 @@ describe('WellinksFlourishClient', () => {
         })
       )
       const result = await wellinksFlourishClient.user.exists('identifier')
+
       expect(result).toBe(true)
     })
     test('should return false when the StatusMessage is negative.', async () => {
