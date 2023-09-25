@@ -2,12 +2,14 @@ import { generateTestPayload } from '../../../../src/tests'
 import {
   WellinksFlourishClientMockImplementation,
   WellinksFlourishClient,
-} from '../../__mocks__/wellinksFlourishClient'
-import { mockSettings } from '../../__mocks__/settings'
+} from '../../api/clients/__mocks__/wellinksFlourishClient'
+import { mockSettings } from '../../__mocks__/config/settings'
 import { checkFlourishCustomer } from './checkFlourishCustomer'
 import { ZodError } from 'zod'
 
-jest.mock('../../wellinksFlourishClient', () => ({ WellinksFlourishClient }))
+jest.mock('../../api/clients/wellinksFlourishClient', () => ({
+  WellinksFlourishClient,
+}))
 
 describe('Check Flourish Customer', () => {
   const onComplete = jest.fn()

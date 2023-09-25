@@ -2,11 +2,11 @@ import { generateTestPayload } from '../../../../src/tests'
 import {
   WellinksClient,
   WellinksClientMockImplementation,
-} from '../../__mocks__/wellinksClient'
-import { mockSettings } from '../../__mocks__/settings'
+} from '../../api/clients/__mocks__/wellinksClient'
+import { mockSettings } from '../../__mocks__/config/settings'
 import { insertMemberListEvent } from './insertMemberListEvent'
 
-jest.mock('../../wellinksClient', () => ({ WellinksClient }))
+jest.mock('../../api/clients/wellinksClient', () => ({ WellinksClient }))
 
 describe('Insert Member List Event', () => {
   const onComplete = jest.fn()

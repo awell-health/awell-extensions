@@ -31,3 +31,7 @@ Adds an Insert Member List Event to the Platform Database.
 ## Check for Flourish Customer
 
 Queries Flourish to see if there is a record that has a matching ThirdPartyIdentifier. Returns True/False.
+
+## Submit a PAM Survey
+
+Submits a PAM 13 Survey (completed in the Careflow) to Flourish and returns the PAM Score and Levl.

@@ -6,8 +6,8 @@ import {
 } from '@awell-health/extensions-core'
 import { Category } from '@awell-health/extensions-core'
 import { type GetChartingItemsQuery, getSdk } from '../../gql/wellinksSdk'
-import { initialiseClient } from '../../wellinksGraphqlClient'
-import { type settings } from '../../settings'
+import { initialiseClient } from '../../api/clients/wellinksGraphqlClient'
+import { type settings } from '../../config/settings'
 import { isNil } from 'lodash'
 
 const fields = {
@@ -39,7 +39,8 @@ export const checkForOverride: Action<
   key: 'checkForOverride',
   category: Category.SCHEDULING,
   title: 'Check if a patient has an active Override for Scheduling Reminders',
-  description: 'Check if a patient has an active Override form in Healthie for Scheduling Reminders.',
+  description:
+    'Check if a patient has an active Override form in Healthie for Scheduling Reminders.',
   fields,
   dataPoints,
   previewable: true,
@@ -125,33 +126,49 @@ export const checkForOverride: Action<
   },
 }
 
-function parseListOfForms(data: GetChartingItemsQuery["chartingItems"], eventTypeQuestionId: string, startDateQuestionId: string): {active: boolean, date: Date | null} {
-    if(isNil(data)) {
-        return {
-            active: false,
-            date: null
-        }
-    } else {
-        const overrideForms = data.filter(
-            (value) => value?.form_answer_group?.form_answers.find((value) => value.custom_module_id === eventTypeQuestionId)?.answer === "Override Scheduling Reminder Automations"
-        )
-
-        
-        overrideForms.sort((a,b) => (new Date(b?.created_at ?? '').getTime() - new Date(a?.created_at ?? '').getTime()))
-        const latestOverrideForm = overrideForms[0]
-        const overrideEndDate = latestOverrideForm?.form_answer_group?.form_answers.find((value) => value.custom_module_id === startDateQuestionId)?.answer
-        const now = new Date()
-
-        if (!isNil(overrideEndDate)) {
-            return {
-                active: overrideEndDate !== null && overrideEndDate !== undefined && new Date(overrideEndDate) > now,
-                date: new Date(overrideEndDate) 
-            }
-        } else {
-            return {
-                active: false,
-                date: null
-            }
-        }
+function parseListOfForms(
+  data: GetChartingItemsQuery['chartingItems'],
+  eventTypeQuestionId: string,
+  startDateQuestionId: string
+): { active: boolean; date: Date | null } {
+  if (isNil(data)) {
+    return {
+      active: false,
+      date: null,
     }
+  } else {
+    const overrideForms = data.filter(
+      (value) =>
+        value?.form_answer_group?.form_answers.find(
+          (value) => value.custom_module_id === eventTypeQuestionId
+        )?.answer === 'Override Scheduling Reminder Automations'
+    )
+
+    overrideForms.sort(
+      (a, b) =>
+        new Date(b?.created_at ?? '').getTime() -
+        new Date(a?.created_at ?? '').getTime()
+    )
+    const latestOverrideForm = overrideForms[0]
+    const overrideEndDate =
+      latestOverrideForm?.form_answer_group?.form_answers.find(
+        (value) => value.custom_module_id === startDateQuestionId
+      )?.answer
+    const now = new Date()
+
+    if (!isNil(overrideEndDate)) {
+      return {
+        active:
+          overrideEndDate !== null &&
+          overrideEndDate !== undefined &&
+          new Date(overrideEndDate) > now,
+        date: new Date(overrideEndDate),
+      }
+    } else {
+      return {
+        active: false,
+        date: null,
+      }
+    }
+  }
 }

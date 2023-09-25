@@ -1,5 +1,5 @@
 import { GraphQLClient } from 'graphql-request'
-import { type settings } from './settings'
+import { type settings } from '../../config/settings'
 
 export const initialiseClient = (
   s: Record<keyof typeof settings, string | undefined>
