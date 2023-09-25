@@ -14,6 +14,48 @@ export class WellinksFlourishClient {
   }
 
   readonly user = {
+    create: async (
+      firstName: string,
+      lastName: string,
+      dateOfBirth: string,
+      subgroupId: string,
+      thirdPartyIdentifier: string
+    ): Promise<boolean> => {
+      try {
+        const response = await fetch(`${this._apiUrl}/enrolluser`, {
+          method: 'POST',
+          body: buildCreateUserRequest(
+            this._clientextid,
+            this._apiKey,
+            firstName,
+            lastName,
+            dateOfBirth,
+            subgroupId,
+            thirdPartyIdentifier
+          ),
+          headers: {
+            contentType: 'text/xml',
+            accept: 'application/xml',
+          },
+        })
+        const xml = await response.text()
+
+        return await new Promise((resolve, reject) => {
+          xml2js.parseString(xml, (err, result) => {
+            if (!isNil(err)) {
+              reject(err)
+            } else {
+              resolve(
+                result.RegisterResponseData.StatusCode[0] === 'Success_Register'
+              )
+            }
+          })
+        })
+      } catch (err) {
+        const error = err as Error
+        throw Error(`Node Fetch failed: ${error.message}`)
+      }
+    },
     exists: async (identifier: string): Promise<boolean> => {
       try {
         const response = await fetch(`${this._apiUrl}/checkifuserexists`, {
@@ -154,6 +196,32 @@ function buildCheckIfUserExistsRequest(
       </user>
   </request>
   `
+}
+
+function buildCreateUserRequest(
+  clientextid: string,
+  apiKey: string,
+  firstName: string,
+  lastName: string,
+  dateOfBirth: string,
+  subgroupId: string,
+  thirdPartyIdentifier: string
+): string {
+  const date = new Date(dateOfBirth)
+  return `
+  <?xml version="1.0" encoding="utf-8" ?>
+<request>
+    <user>
+        <clientextid>${clientextid}</clientextid> <!--- required -->
+        <clientpasskey>${apiKey}</clientpasskey> <!--- required -->
+        <subgroupextid>${subgroupId}</subgroupextid > <!--- required -->
+        <thirdpartyidentifier>${thirdPartyIdentifier}</thirdpartyidentifier> <!--- required -->
+        <firstname>${firstName}</firstname>
+        <lastname>${lastName}</lastname>
+        <dob day=${date.getDate()} month=${date.getMonth()} year=${date.getFullYear()}/>
+    </user>
+</request>
+    `
 }
 
 function buildSubmitPamSurveyRequest(
