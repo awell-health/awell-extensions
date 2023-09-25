@@ -43,7 +43,7 @@ describe('Create Flourish User', () => {
       fields: {
         firstName: 'firstName',
         lastName: 'lastName',
-        dateOfBirth: '2023-09-18',
+        dateOfBirth: '2020-01-01T00:00:00Z',
         subgroupId: '1234',
         thirdPartyIdentifier: '1234',
       },

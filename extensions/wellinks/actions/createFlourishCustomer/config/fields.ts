@@ -50,7 +50,7 @@ export const FieldsValidationSchema = z.object({
         message: 'Admin date is required and must be of format YYYY-MM-DD',
       }),
     })
-    .regex(/^\d{4}-\d{2}-\d{2}$/),
+    .datetime(),
   subgroupId: z.string(),
   thirdPartyIdentifier: z.string(),
 } satisfies Record<keyof typeof fields, ZodTypeAny>)
