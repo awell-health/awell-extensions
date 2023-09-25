@@ -12,7 +12,7 @@ export const fields = {
   adminDate: {
     id: 'adminDate',
     label: 'Administration Date',
-    description: 'The date the survey was completed.',
+    description: 'The date the survey was completed in YYYY-MM-DD format.',
     type: FieldType.DATE,
     required: true,
   },
@@ -139,7 +139,7 @@ export const FieldsValidationSchema = z.object({
         message: 'Admin date is required and must be of format YYYY-MM-DD',
       }),
     })
-    .regex(/^\d{4}-\d{2}-\d{2}$/),
+    .datetime(),
   thirdPartyIdentifier: z.string(),
   gender: z.string(),
   age: z.number(),

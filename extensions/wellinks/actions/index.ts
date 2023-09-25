@@ -5,6 +5,7 @@ import { checkForCheckInOverride } from './checkForCheckInOverride/checkForCheck
 import { insertMemberListEvent } from './insertMemberListEvent/insertMemberListEvent'
 import { checkFlourishCustomer } from './checkFlourishCustomer/checkFlourishCustomer'
 import { submitPamSurvey } from './submitPamSurvey/submitPamSurvey'
+import { createFlourishCustomer } from './createFlourishCustomer/createFlourishCustomer'
 export const actions = {
   checkForOverride,
   checkForScheduledAppointment,
@@ -12,5 +13,6 @@ export const actions = {
   checkForCheckInOverride,
   insertMemberListEvent,
   checkFlourishCustomer,
-  submitPamSurvey
+  submitPamSurvey,
+  createFlourishCustomer,
 }

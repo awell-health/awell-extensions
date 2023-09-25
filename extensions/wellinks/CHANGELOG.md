@@ -27,4 +27,8 @@ Adds a new action to check Flourish for a customer with a matching ThirdPartyIde
 
 ## September 18th, 2023
 
-Adds a new action to submit a PAM13 survey to Flourish
+Adds a new action to submit a PAM13 survey to Flourish, returning a PAM Score, level, and whether or not the submission was a success.
+
+## September 19th, 2023
+
+Adds a new action to create a customer in Flourish, returning true or false based on whether or not the creation was a success.
