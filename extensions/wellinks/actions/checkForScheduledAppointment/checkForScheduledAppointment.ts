@@ -6,8 +6,8 @@ import {
 } from '@awell-health/extensions-core'
 import { Category } from '@awell-health/extensions-core'
 import { getSdk } from '../../gql/wellinksSdk'
-import { initialiseClient } from '../../wellinksGraphqlClient'
-import { type settings } from '../../settings'
+import { initialiseClient } from '../../api/clients/wellinksGraphqlClient'
+import { type settings } from '../../config/settings'
 import { isNil } from 'lodash'
 
 const fields = {

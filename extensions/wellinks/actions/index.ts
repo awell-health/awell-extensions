@@ -4,6 +4,7 @@ import { checkForChat } from './checkForChat/checkForChat'
 import { checkForCheckInOverride } from './checkForCheckInOverride/checkForCheckInOverride'
 import { insertMemberListEvent } from './insertMemberListEvent/insertMemberListEvent'
 import { checkFlourishCustomer } from './checkFlourishCustomer/checkFlourishCustomer'
+import { submitPamSurvey } from './submitPamSurvey/submitPamSurvey'
 export const actions = {
   checkForOverride,
   checkForScheduledAppointment,
@@ -11,4 +12,5 @@ export const actions = {
   checkForCheckInOverride,
   insertMemberListEvent,
   checkFlourishCustomer,
+  submitPamSurvey
 }

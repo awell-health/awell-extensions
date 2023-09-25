@@ -4,8 +4,8 @@ import {
   Category,
   validate,
 } from '@awell-health/extensions-core'
-import { type settings } from '../../settings'
-import { WellinksFlourishClient } from '../../wellinksFlourishClient'
+import { type settings } from '../../config/settings'
+import { WellinksFlourishClient } from '../../api/clients/wellinksFlourishClient'
 import {
   FieldsValidationSchema,
   SettingsValidationSchema,
@@ -33,7 +33,6 @@ export const checkFlourishCustomer: Action<
   dataPoints,
   previewable: true,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
-    // try {
     const {
       fields: { identifier },
       settings: { flourishApiKey, flourishApiUrl, flourishClientExtId },

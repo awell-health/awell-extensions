@@ -24,3 +24,7 @@ Added a new action to insert a Member Event List to the Platform DB. This requir
 ## September 12th, 2023
 
 Adds a new action to check Flourish for a customer with a matching ThirdPartyIdentifier.
+
+## September 18th, 2023
+
+Adds a new action to submit a PAM13 survey to Flourish

@@ -6,8 +6,8 @@ import {
   type OnErrorCallback,
 } from '@awell-health/extensions-core'
 import { Category } from '@awell-health/extensions-core'
-import { type settings } from '../../settings'
-import { WellinksClient } from '../../wellinksClient'
+import { type settings } from '../../config/settings'
+import { WellinksClient } from '../../api/clients/wellinksClient'
 import { isNil } from 'lodash'
 
 const fields = {
