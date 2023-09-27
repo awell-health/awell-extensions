@@ -77,7 +77,10 @@ export const patientAdmitted: Webhook<
       const api = makeAPIClient(settings)
       const resource = await api.getResource(resourceId)
 
-      if (resource.status === 'in-progress' && !isNil(resource.period.start)) {
+      if (
+        resource.status === EncounterStatus.InProgress &&
+        !isNil(resource.period.start)
+      ) {
         await onSuccess({
           data_points: {
             resourceId,

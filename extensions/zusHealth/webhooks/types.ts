@@ -11,6 +11,7 @@ export interface AdtEventWebhookPayload {
 export enum EncounterStatus {
   Admitted = 'admitted',
   Discharged = 'discharged',
+  InProgress = 'in-progress',
 }
 
 export const HL7EventType = {

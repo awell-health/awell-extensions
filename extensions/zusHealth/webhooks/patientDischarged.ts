@@ -81,7 +81,10 @@ export const patientDischarged: Webhook<
       const api = makeAPIClient(settings)
       const resource = await api.getResource(resourceId)
 
-      if (resource.status === 'discharged' && !isNil(resource.period.end)) {
+      if (
+        resource.status === EncounterStatus.Discharged &&
+        !isNil(resource.period.end)
+      ) {
         await onSuccess({
           data_points: {
             resourceId,
