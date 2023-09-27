@@ -5,14 +5,14 @@ export const settings = {
     key: 'base_url',
     label: 'Base URL',
     obfuscated: false,
-    description: 'The base URL of ZUS Health API.',
+    description: 'The base URL of Zus Health API.',
     required: true,
   },
   auth_url: {
     key: 'auth_url',
     label: 'Auth URL',
     obfuscated: false,
-    description: '',
+    description: 'The base URL of authorization API',
     required: true,
   },
   client_id: {

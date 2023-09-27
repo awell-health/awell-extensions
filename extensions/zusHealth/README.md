@@ -5,7 +5,7 @@ description: Zus is the only shared health data platform designed to accelerate 
 
 # Zus Health
 
-[ZUS Health](https://zushealth.com/) is the only shared health data platform designed to accelerate healthcare data interoperability by providing easy-to-use patient data at the point of care via API, embedded components, and direct EHR integrations.
+[Zus Health](https://zushealth.com/) is the only shared health data platform designed to accelerate healthcare data interoperability by providing easy-to-use patient data at the point of care via API, embedded components, and direct EHR integrations.
 
 ## Zus Health x Awell
 
@@ -15,7 +15,7 @@ This extension allows you to fetch resource via webhooks
 
 For the extension to function correctly, you must include the following elements in your settings:
 
-`client_id` and `client_secret`: These values are generated on the ZUS Health platform.
+`client_id` and `client_secret`: These values are generated on the Zus Health platform.
 `base_url`: This determines the base URL for your FHIR endpoint, for example, https://api.sandbox.zusapi.com/fhir.
 `auth_url`: This determines the base URL for your authorization endpoint, for example, https://zus-sandbox.us.auth0.com/oauth/token.
 `audience`: This determines the API hostname, for example, https://api.sandbox.zusapi.com.

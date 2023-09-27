@@ -3,7 +3,7 @@ import {
   type DataPointDefinition,
   type Webhook,
 } from '@awell-health/extensions-core'
-import { type PatientAdmittedWebhookPayload } from './types'
+import { type AdtEventWebhookPayload } from './types'
 import { makeAPIClient } from '../client'
 import { startsWithEncounter } from '../validation'
 import {
@@ -40,7 +40,7 @@ const dataPoints = {
 
 export const patientAdmitted: Webhook<
   keyof typeof dataPoints,
-  PatientAdmittedWebhookPayload
+  AdtEventWebhookPayload
 > = {
   key: 'patientAdmitted',
   dataPoints,
@@ -61,8 +61,8 @@ export const patientAdmitted: Webhook<
         await onSuccess({
           data_points: {
             resourceId,
-            UPID: resource.subject?.reference,
-            userId: resource.participant?.type?.individual?.reference,
+            UPID: payload.resource.UPID,
+            userId: payload.ownerId,
             eventType: 'admit',
             encounterStatus: 'in-progress',
           },

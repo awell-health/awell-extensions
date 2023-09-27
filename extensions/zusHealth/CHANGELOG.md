@@ -1,1 +1,1 @@
-# ZUS Health changelog
+# Zus Health changelog

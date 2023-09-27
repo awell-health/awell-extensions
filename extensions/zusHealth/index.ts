@@ -5,7 +5,7 @@ import { webhooks } from './webhooks'
 
 export const ZusHealth: Extension = {
   key: 'zusHealth',
-  title: 'ZUS Health',
+  title: 'Zus Health',
   icon_url:
     'https://zushealth.com/wp-content/themes/zus/assets/static/img/zus-logo.svg',
   description:
