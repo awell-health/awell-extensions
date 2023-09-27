@@ -24,7 +24,7 @@ const dataPoints = {
     key: 'UPID',
     valueType: 'string',
   },
-  userId: {
+  ownerId: {
     key: 'userId',
     valueType: 'string',
   },
@@ -62,7 +62,7 @@ export const patientAdmitted: Webhook<
           data_points: {
             resourceId,
             UPID: payload.resource.UPID,
-            userId: payload.ownerId,
+            ownerId: payload.ownerId,
             eventType: 'admit',
             encounterStatus: 'in-progress',
           },
