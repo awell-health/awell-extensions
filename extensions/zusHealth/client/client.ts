@@ -9,10 +9,10 @@ import { type settings } from '../settings'
 import { settingsSchema } from '../validation'
 
 export class ZusHealthDataWrapper extends DataWrapper {
-  public async getResource(resourceWithId: string): Promise<any> {
+  public async getResource(resourceId: string): Promise<any> {
     const response = await this.RequestRaw({
       method: 'GET',
-      url: `/${resourceWithId}`,
+      url: `/${resourceId}`,
     })
 
     return response
@@ -39,9 +39,9 @@ export class ZusHealthAPIClient extends APIClient<ZusHealthDataWrapper> {
     })
   }
 
-  public async getResource(resourceWithId: string): Promise<any> {
+  public async getResource(resourceId: string): Promise<any> {
     const response = await this.FetchData(
-      async (dw) => await dw.getResource(resourceWithId)
+      async (dw) => await dw.getResource(resourceId)
     )
     return response.data
   }

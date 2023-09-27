@@ -1,13 +1,13 @@
 ---
-title: ZUS Health
+title: Zus Health
 description: Zus is the only shared health data platform designed to accelerate healthcare data interoperability by providing easy-to-use patient data at the point of care via API, embedded components, and direct EHR integrations.
 ---
 
-# ZUS Health
+# Zus Health
 
 [ZUS Health](https://zushealth.com/) is the only shared health data platform designed to accelerate healthcare data interoperability by providing easy-to-use patient data at the point of care via API, embedded components, and direct EHR integrations.
 
-## ZUS Health x Awell
+## Zus Health x Awell
 
 This extension allows you to fetch resource via webhooks
 
@@ -22,4 +22,4 @@ For the extension to function correctly, you must include the following elements
 
 ## Webhooks
 
-Webhooks offer a great way to automate the flow with Awell when you want to fetch a resource.
+Webhooks offer a great way to listen to updates to resources in Zus and trigger Awell care flows. These updates include ADT feed events for your patient population, and the relevant Encounter data can then be incorporated in the new flow.
