@@ -3,7 +3,11 @@ import {
   type DataPointDefinition,
   type Webhook,
 } from '@awell-health/extensions-core'
-import { type AdtEventWebhookPayload } from './types'
+import {
+  EncounterStatus,
+  type AdtEventWebhookPayload,
+  HL7EventType,
+} from './types'
 import { makeAPIClient } from '../client'
 import { startsWithEncounter } from '../validation'
 import {
@@ -36,6 +40,26 @@ const dataPoints = {
     key: 'encounterStatus',
     valueType: 'string',
   },
+  encounterStart: {
+    key: 'encounterStart',
+    valueType: 'date',
+  },
+  encounterEnd: {
+    key: 'encounterEnd',
+    valueType: 'date',
+  },
+  HL7EventType: {
+    key: 'HL7EventType',
+    valueType: 'string',
+  },
+  HL7EventTypeDescription: {
+    key: 'HL7EventTypeDescription',
+    valueType: 'string',
+  },
+  HL7EventTypeFull: {
+    key: 'HL7EventTypeFull',
+    valueType: 'string',
+  },
 } satisfies Record<string, DataPointDefinition>
 
 export const patientDischarged: Webhook<
@@ -63,8 +87,13 @@ export const patientDischarged: Webhook<
             resourceId,
             UPID: payload.resource.UPID,
             ownerId: payload.ownerId,
-            eventType: 'discharged',
-            encounterStatus: 'discharged',
+            eventType: EncounterStatus.Discharged,
+            encounterStatus: resource.status,
+            encounterStart: resource.period.start,
+            encounterEnd: resource.period.end,
+            HL7EventType: HL7EventType.A03.code,
+            HL7EventTypeFull: HL7EventType.A03.fullCode,
+            HL7EventTypeDescription: HL7EventType.A03.description,
           },
         })
       }
