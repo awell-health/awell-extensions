@@ -1,0 +1,1 @@
+export { getLastEmail } from './getLastEmail'

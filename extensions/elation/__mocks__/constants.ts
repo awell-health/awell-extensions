@@ -23,6 +23,17 @@ export const patientExample: PatientInput = {
   notes: 'This is test Notes',
   previous_first_name: '',
   previous_last_name: '',
+  emails: [
+    {
+      email: 'john@doe.com',
+    },
+  ],
+  phones: [
+    {
+      phone: '(213) 373 42 53',
+      phone_type: 'Mobile',
+    },
+  ],
 }
 
 export const appointmentExample: AppointmentInput = {

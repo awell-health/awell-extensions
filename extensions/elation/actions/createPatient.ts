@@ -16,37 +16,36 @@ import { patientSchema } from '../validation/patient.zod'
 const fields = {
   firstName: {
     id: 'firstName',
-    label: 'First Name',
-    description: 'Maximum length of 70 characters',
+    label: 'First name',
+    description: '',
     type: FieldType.STRING,
     required: true,
   },
   lastName: {
     id: 'lastName',
-    label: 'Last Name',
-    description: 'Maximum length of 70 characters',
+    label: 'Last name',
+    description: '',
     type: FieldType.STRING,
     required: true,
   },
   dob: {
     id: 'dob',
     label: 'Date of Birth',
-    description: 'Date of Birth (YYYY-MM-DD)',
-    type: FieldType.STRING,
+    description: 'YYYY-MM-DD',
+    type: FieldType.DATE,
     required: true,
   },
   sex: {
     id: 'sex',
     label: 'Sex',
-    description:
-      "Sex of a patient. Possible values are 'Male', 'Female', 'Other', 'Unknown'",
+    description: "Possible values are 'Male', 'Female', 'Other', 'Unknown'",
     type: FieldType.STRING,
     required: true,
   },
   primaryPhysicianId: {
     id: 'primaryPhysicianId',
     label: 'Primary Physician ID',
-    description: '',
+    description: 'The ID of the primary physician associated to the patient',
     type: FieldType.NUMERIC,
     required: true,
   },
@@ -60,27 +59,26 @@ const fields = {
   middleName: {
     id: 'middleName',
     label: 'Middle Name',
-    description: 'Maximum length of 50 characters',
+    description: '',
     type: FieldType.STRING,
   },
   actualName: {
     id: 'actualName',
     label: 'Actual Name',
-    description: 'Maximum length of 150 characters',
+    description: '',
     type: FieldType.STRING,
   },
   genderIdentity: {
     id: 'genderIdentity',
     label: 'Gender identity',
     description:
-      "Gender identity of a patient. Possible values are 'unknown', 'man', 'woman', 'transgender_man', 'transgender_woman', 'nonbinary', 'option_not_listed', 'prefer_not_to_say', 'two_spirit'",
+      "Possible values are 'unknown', 'man', 'woman', 'transgender_man', 'transgender_woman', 'nonbinary', 'option_not_listed', 'prefer_not_to_say', 'two_spirit'",
     type: FieldType.STRING,
   },
   legalGenderMarker: {
     id: 'legalGenderMarker',
     label: 'Legal gender marker',
-    description:
-      "Legal gender marker of a patient. Possible values are 'M', 'F', 'X', 'U'",
+    description: "Possible values are 'M', 'F', 'X', 'U'",
     type: FieldType.STRING,
   },
   pronouns: {
@@ -100,35 +98,33 @@ const fields = {
   ssn: {
     id: 'ssn',
     label: 'SSN',
-    description: 'Social Security number. A number with 9 digits',
+    description: 'The Social Security number of the patient',
     type: FieldType.STRING,
   },
   ethnicity: {
     id: 'ethnicity',
     label: 'Ethnicity',
     description:
-      "The ethnicity of the person. Possible values are 'No ethnicity specified', 'Hispanic or Latino', 'Not Hispanic or Latino', 'Declined to specify'.",
+      "Possible values are 'No ethnicity specified', 'Hispanic or Latino', 'Not Hispanic or Latino', 'Declined to specify'.",
     type: FieldType.STRING,
   },
   race: {
     id: 'race',
     label: 'Race',
     description:
-      "The race of the person. Possible values are 'No race specified', 'American Indian or Alaska Native', 'Asian', 'Black or African American', 'Native Hawaiian or Other Pacific Islander', 'White', 'Declined to specify'.",
+      "Possible values are 'No race specified', 'American Indian or Alaska Native', 'Asian', 'Black or African American', 'Native Hawaiian or Other Pacific Islander', 'White', 'Declined to specify'.",
     type: FieldType.STRING,
   },
   preferredLanguage: {
     id: 'preferredLanguage',
     label: 'Preferred language',
-    description:
-      "The language preferred by the patient. Full names e.g. 'English', 'Spanish' or 'French'.",
+    description: "Full names e.g. 'English', 'Spanish' or 'French'.",
     type: FieldType.STRING,
   },
   notes: {
     id: 'notes',
     label: 'Notes',
-    description:
-      'Additional notes about the patient. Maximum length of 500 characters.',
+    description: 'Additional notes about the patient',
     type: FieldType.STRING,
   },
   previousFirstName: {

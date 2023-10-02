@@ -23,7 +23,7 @@ describe('Simple get patient action', () => {
     await getPatient.onActivityCreated(
       {
         fields: {
-          patientId: '1',
+          patientId: 1,
         },
         settings,
       } as any,
@@ -39,7 +39,8 @@ describe('Simple get patient action', () => {
         sex: patientExample.sex,
         primaryPhysicianId: String(patientExample.primary_physician),
         caregiverPracticeId: String(patientExample.caregiver_practice),
-        mobilePhone: 'undefined',
+        mobilePhone: '+12133734253',
+        email: 'john@doe.com',
         middleName: patientExample.middle_name,
         actualName: patientExample.actual_name,
         genderIdentity: patientExample.gender_identity,

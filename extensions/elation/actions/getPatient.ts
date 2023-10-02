@@ -11,12 +11,14 @@ import { type settings } from '../settings'
 import { makeAPIClient } from '../client'
 import { fromZodError } from 'zod-validation-error'
 import { AxiosError } from 'axios'
+import { elationMobilePhoneToE164 } from '../utils/elationMobilePhoneToE164'
+import { getLastEmail } from '../utils/getLastEmail'
 
 const fields = {
   patientId: {
     id: 'patientId',
     label: 'Patient ID',
-    description: 'The patient ID (a number)',
+    description: 'The Elation patient ID',
     type: FieldType.NUMERIC,
     required: true,
   },
@@ -33,7 +35,7 @@ const dataPoints = {
   },
   dob: {
     key: 'dob',
-    valueType: 'string',
+    valueType: 'date',
   },
   sex: {
     key: 'sex',
@@ -49,6 +51,10 @@ const dataPoints = {
   },
   mobilePhone: {
     key: 'mobilePhone',
+    valueType: 'telephone',
+  },
+  email: {
+    key: 'email',
     valueType: 'string',
   },
   middleName: {
@@ -132,9 +138,10 @@ export const getPatient: Action<
           sex: patientInfo.sex,
           primaryPhysicianId: String(patientInfo.primary_physician),
           caregiverPracticeId: String(patientInfo.caregiver_practice),
-          mobilePhone: String(
+          mobilePhone: elationMobilePhoneToE164(
             patientInfo.phones?.find((p) => p.phone_type === 'Mobile')?.phone
           ),
+          email: getLastEmail(patientInfo.emails),
           middleName: patientInfo.middle_name,
           actualName: patientInfo.actual_name,
           genderIdentity: patientInfo.gender_identity,

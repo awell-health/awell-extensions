@@ -11,7 +11,11 @@ import {
   type AppointmentResponse,
 } from './types/appointment'
 import { type ElationCollection } from './types/generic'
-import { type PatientInput, type PatientResponse } from './types/patient'
+import {
+  type PatientInput,
+  type PatientResponse,
+  type UpdatePatientInput,
+} from './types/patient'
 import {
   type Subscription,
   type SubscriptionRequest,
@@ -69,10 +73,10 @@ export class ElationDataWrapper extends DataWrapper {
 
   public async updatePatient(
     id: number,
-    obj: Partial<PatientInput>
+    obj: Partial<UpdatePatientInput>
   ): Promise<PatientResponse> {
     const req = this.Request<PatientResponse>({
-      method: 'PUT',
+      method: 'PATCH',
       url: `/patients/${id}`,
       data: obj,
     })
@@ -107,6 +111,15 @@ export class ElationDataWrapper extends DataWrapper {
       url: `/app/subscriptions/${id}/`,
     })
     await req
+  }
+
+  public async getPhysician(id: number): Promise<PhysicianResponse> {
+    const req = this.Request<PhysicianResponse>({
+      method: 'GET',
+      url: `/physicians/${id}`,
+    })
+    const res = await req
+    return res
   }
 
   public async findPhysicians({
@@ -211,7 +224,7 @@ export class ElationAPIClient extends APIClient<ElationDataWrapper> {
 
   public async updatePatient(
     id: number,
-    obj: Partial<PatientInput>
+    obj: Partial<UpdatePatientInput>
   ): Promise<PatientResponse> {
     return await this.FetchData(async (dw) => await dw.updatePatient(id, obj))
   }
@@ -230,6 +243,10 @@ export class ElationAPIClient extends APIClient<ElationDataWrapper> {
     await this.FetchData(async (dw) => {
       await dw.deleteSubscription(id)
     })
+  }
+
+  public async getPhysician(id: number): Promise<PhysicianResponse> {
+    return await this.FetchData(async (dw) => await dw.getPhysician(id))
   }
 
   public async findPhysicians({
