@@ -42,13 +42,6 @@ describe('Simple find physician action', () => {
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
         physicianId: String(physicianResponseExample.id),
-        physicianFirstName: physicianResponseExample.first_name,
-        physicianLastName: physicianResponseExample.last_name,
-        physicianCredentials: physicianResponseExample.credentials,
-        physicianEmail: physicianResponseExample.email,
-        physicianNPI: physicianResponseExample.npi,
-        physicianUserId: String(physicianResponseExample.user_id),
-        caregiverPracticeId: String(physicianResponseExample.practice),
       },
     })
   })

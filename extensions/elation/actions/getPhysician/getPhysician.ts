@@ -1,43 +1,41 @@
-/* eslint-disable @typescript-eslint/naming-convention */
 import { ZodError } from 'zod'
-import {
-  FieldType,
-  type Action,
-  type Field,
-  Category,
-  NumericIdSchema,
-} from '@awell-health/extensions-core'
-import { type settings } from '../settings'
-import { makeAPIClient } from '../client'
+import { type Action, Category } from '@awell-health/extensions-core'
+import { type settings } from '../../settings'
+import { makeAPIClient } from '../../client'
 import { fromZodError } from 'zod-validation-error'
 import { AxiosError } from 'axios'
+import { FieldsValidationSchema, fields, dataPoints } from './config'
 
-const fields = {
-  nonVisitNoteId: {
-    id: 'nonVisitNoteId',
-    label: 'Non-Visit Note ID',
-    description: 'ID of the note to delete',
-    type: FieldType.NUMERIC,
-    required: true,
-  },
-} satisfies Record<string, Field>
-
-export const deleteNonVisitNote: Action<typeof fields, typeof settings> = {
-  key: 'deleteNonVisitNote',
+export const getPhysician: Action<
+  typeof fields,
+  typeof settings,
+  keyof typeof dataPoints
+> = {
+  key: 'findPhysician',
   category: Category.EHR_INTEGRATIONS,
-  title: 'Delete Non-Visit Note',
-  description: "Delete a Non-Visit Note using Elation's patient API.",
+  title: 'Find Physician',
+  description: "Retrieve a physician using Elation's patient API.",
   fields,
   previewable: true,
+  dataPoints,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
     try {
-      const { nonVisitNoteId } = payload.fields
-      const noteId = NumericIdSchema.parse(nonVisitNoteId)
+      const validatedFields = FieldsValidationSchema.parse(payload.fields)
 
       const api = makeAPIClient(payload.settings)
-      await api.deleteNonVisitNote(noteId)
+      const physician = await api.getPhysician(validatedFields.physicianId)
 
-      await onComplete()
+      await onComplete({
+        data_points: {
+          firstName: physician.first_name,
+          lastName: physician.last_name,
+          credentials: physician.credentials,
+          email: physician.email,
+          NPI: physician.npi,
+          userId: String(physician.user_id),
+          caregiverPracticeId: String(physician.practice),
+        },
+      })
     } catch (err) {
       if (err instanceof ZodError) {
         const error = fromZodError(err)

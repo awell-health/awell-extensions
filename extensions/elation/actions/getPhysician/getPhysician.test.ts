@@ -1,11 +1,11 @@
-import { createNonVisitNote } from '../createNonVisitNote'
-import { nonVisitNoteResponseExample } from '../../__mocks__/constants'
+import { getPhysician } from '.'
+import { physicianResponseExample } from '../../__mocks__/constants'
 import { makeAPIClientMockFunc } from '../../__mocks__/client'
 import { makeAPIClient } from '../../client'
 
 jest.mock('../../client')
 
-describe('Create non-visit note action', () => {
+describe('Elation - Get physician', () => {
   const onComplete = jest.fn()
   const onError = jest.fn()
   const settings = {
@@ -26,15 +26,11 @@ describe('Create non-visit note action', () => {
     jest.clearAllMocks()
   })
 
-  test('Should return with correct data_points', async () => {
-    await createNonVisitNote.onActivityCreated(
+  test('Should return the correct physician', async () => {
+    await getPhysician.onActivityCreated(
       {
         fields: {
-          patientId: nonVisitNoteResponseExample.patient,
-          authorId: nonVisitNoteResponseExample.bullets[0].author,
-          category: undefined,
-          tags: undefined,
-          text: nonVisitNoteResponseExample.bullets[0].text,
+          physicianId: 1,
         },
         settings,
       } as any,
@@ -43,8 +39,13 @@ describe('Create non-visit note action', () => {
     )
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
-        nonVisitNoteId: String(nonVisitNoteResponseExample.id),
-        nonVisitNoteBulletId: String(nonVisitNoteResponseExample.bullets[0].id),
+        firstName: physicianResponseExample.first_name,
+        lastName: physicianResponseExample.last_name,
+        credentials: physicianResponseExample.credentials,
+        email: physicianResponseExample.email,
+        NPI: physicianResponseExample.npi,
+        userId: String(physicianResponseExample.user_id),
+        caregiverPracticeId: String(physicianResponseExample.practice),
       },
     })
   })

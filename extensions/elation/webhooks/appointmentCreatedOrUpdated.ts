@@ -5,17 +5,17 @@ import {
 import { type SubscriptionEvent } from '../types/subscription'
 
 const dataPoints = {
-  patientId: {
-    key: 'patientId',
+  appointmentId: {
+    key: 'appointmentId',
     valueType: 'number',
   },
 } satisfies Record<string, DataPointDefinition>
 
-export const patientCreatedOrUpdated: Webhook<
+export const appointmentCreatedOrUpdated: Webhook<
   keyof typeof dataPoints,
   SubscriptionEvent
 > = {
-  key: 'patientCreatedOrUpdated',
+  key: 'appointmentCreatedOrUpdated',
   dataPoints,
   onWebhookReceived: async ({ payload, settings }, onSuccess, onError) => {
     const { data, resource, action } = payload
@@ -25,19 +25,19 @@ export const patientCreatedOrUpdated: Webhook<
       return
     }
 
-    if (resource !== 'patients') {
+    if (resource !== 'appointments') {
       await onError({
         response: {
           statusCode: 400,
-          message: 'resource must be patients',
+          message: 'resource must be apppointments',
         },
       })
     } else {
       await onSuccess({
-        data_points: { patientId: String(data.id) },
+        data_points: { appointmentId: String(data.id) },
       })
     }
   },
 }
 
-export type OnCreatePatient = typeof patientCreatedOrUpdated
+export type OnCreateOrUpdateAppointment = typeof appointmentCreatedOrUpdated

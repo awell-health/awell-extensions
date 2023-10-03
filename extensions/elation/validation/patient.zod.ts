@@ -227,3 +227,42 @@ export const patientSchema = z
     metadata: z.object({}).passthrough().nullish(),
   })
   .strict()
+
+export const updatePatientSchema = z
+  .object({
+    first_name: z.string().max(70).nullish(),
+    middle_name: z.string().max(50).nullish(),
+    last_name: z.string().max(70).nullish(),
+    actual_name: z.string().max(150).nullish(),
+    gender_identity: genderIdentityEnum.nullish(),
+    legal_gender_marker: legalGenderMarkerEnum.nullish(),
+    pronouns: pronounsEnum.nullish(),
+    sex: sexEnum.nullish(),
+    sexual_orientation: sexualOrientationEnum.nullish(),
+    primary_physician: NumericIdSchema.nullish(),
+    caregiver_practice: NumericIdSchema.nullish(),
+    dob: DateOnlySchema.nullish(),
+    ssn: z.string().length(9).nullish(),
+    race: raceEnum.nullish(),
+    preferred_language: z.string().nullish(),
+    ethnicity: ethnicityEnum.nullish(),
+    notes: z.string().max(500).nullish(),
+    vip: z.boolean().nullish(),
+    address: addressSchema.strict().nullish(),
+    phones: z.array(phoneSchema.strict()).max(2).nullish(),
+    emails: z.array(emailSchema.strict()).nullish(),
+    guarantor: guarantorSchema.strict().nullish(),
+    insurances: z.array(insuranceSchema.strict()).nullish(),
+    deleted_insurances: z.array(insuranceSchema.strict()).nullish(),
+    tags: z.array(z.string().max(100)).max(10).nullish(),
+    patient_status: patientStatusSchema.strict().nullish(),
+    preference: preferenceSchema.strict().nullish(),
+    emergency_contact: emergencyContactSchema.strict().nullish(),
+    primary_care_provider_npi: z.string().length(10).nullish(),
+    previous_first_name: z.string().max(70).nullish(),
+    previous_last_name: z.string().max(70).nullish(),
+    master_patient: NumericIdSchema.nullish(), // ? type not in docs
+    employer: employerSchema.strict().nullish(),
+    metadata: z.object({}).passthrough().nullish(),
+  })
+  .strict()
