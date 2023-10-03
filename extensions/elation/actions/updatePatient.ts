@@ -40,7 +40,7 @@ const fields = {
     id: 'dob',
     label: 'Date of Birth',
     description: 'YYYY-MM-DD',
-    type: FieldType.STRING,
+    type: FieldType.DATE,
     required: false,
   },
   sex: {
@@ -53,7 +53,7 @@ const fields = {
   primaryPhysicianId: {
     id: 'primaryPhysicianId',
     label: 'Primary Physician ID',
-    description: 'he ID of the primary physician associated to the patient',
+    description: 'The ID of the primary physician associated to the patient',
     type: FieldType.NUMERIC,
     required: false,
   },

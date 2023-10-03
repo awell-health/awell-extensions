@@ -2,6 +2,7 @@
 import { ZodError } from 'zod'
 import {
   FieldType,
+  StringType,
   type Action,
   type DataPointDefinition,
   type Field,
@@ -12,6 +13,7 @@ import { makeAPIClient } from '../client'
 import { fromZodError } from 'zod-validation-error'
 import { AxiosError } from 'axios'
 import { patientSchema } from '../validation/patient.zod'
+import { isEmpty, isNil } from 'lodash'
 
 const fields = {
   firstName: {
@@ -55,6 +57,21 @@ const fields = {
     description: '',
     type: FieldType.NUMERIC,
     required: true,
+  },
+  email: {
+    id: 'email',
+    label: 'Email',
+    description: '',
+    type: FieldType.STRING,
+    required: false,
+  },
+  mobilePhone: {
+    id: 'mobilePhone',
+    label: 'Mobile phone',
+    description: 'The number will be stored in US national format in Elation',
+    type: FieldType.STRING,
+    stringType: StringType.PHONE,
+    required: false,
   },
   middleName: {
     id: 'middleName',
@@ -175,11 +192,24 @@ export const createPatient: Action<
         previousLastName,
         primaryPhysicianId,
         sexualOrientation,
-        ...fields
+        dob,
+        sex,
+        email,
+        mobilePhone,
+        pronouns,
+        ssn,
+        ethnicity,
+        race,
+        notes,
       } = payload.fields
 
+      const patientEmail = isNil(email) || isEmpty(email) ? null : [{ email }]
+      const patientMobilePhone =
+        isNil(mobilePhone) || isEmpty(mobilePhone)
+          ? null
+          : [{ phone: mobilePhone, phone_type: 'Mobile' }]
+
       const patient = patientSchema.parse({
-        ...fields,
         first_name: firstName,
         last_name: lastName,
         primary_physician: primaryPhysicianId,
@@ -192,6 +222,15 @@ export const createPatient: Action<
         preferred_language: preferredLanguage,
         previous_first_name: previousFirstName,
         previous_last_name: previousLastName,
+        emails: patientEmail,
+        phones: patientMobilePhone,
+        dob,
+        sex,
+        pronouns,
+        ssn,
+        ethnicity,
+        race,
+        notes,
       })
 
       // API Call should produce AuthError or something dif.
@@ -203,6 +242,7 @@ export const createPatient: Action<
         },
       })
     } catch (err) {
+      console.log(err)
       if (err instanceof ZodError) {
         const error = fromZodError(err)
         await onError({

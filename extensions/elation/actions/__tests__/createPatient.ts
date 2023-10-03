@@ -24,6 +24,8 @@ describe('Simple create patient action', () => {
           firstName: 'Test',
           middleName: 'P',
           lastName: 'Action',
+          email: 'john@doe.com',
+          mobilePhone: '+12133734253',
           actualName: 'local test action',
           genderIdentity: 'man',
           legalGenderMarker: 'M',
