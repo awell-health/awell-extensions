@@ -16,7 +16,7 @@ const fields = {
   nonVisitNoteId: {
     id: 'nonVisitNoteId',
     label: 'Non-Visit Note ID',
-    description: 'ID of a note',
+    description: 'ID of the note to delete',
     type: FieldType.NUMERIC,
     required: true,
   },

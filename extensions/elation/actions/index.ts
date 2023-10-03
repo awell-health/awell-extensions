@@ -5,7 +5,7 @@ import { createAppointment } from './createAppointment'
 import { getAppointment } from './getAppointment'
 import { findPhysician } from './findPhysician'
 import { createNonVisitNote } from './createNonVisitNote'
-import { updateNonVisitNote } from './updateNonVisitNote'
+// import { updateNonVisitNote } from './updateNonVisitNote'
 import { getNonVisitNote } from './getNonVisitNote'
 import { deleteNonVisitNote } from './deleteNonVisitNote'
 import { getPhysician } from './getPhysician'
@@ -19,7 +19,7 @@ export const actions = {
   getPhysician,
   findPhysician,
   createNonVisitNote,
-  updateNonVisitNote,
+  // updateNonVisitNote, // Disable for now, don't immediately see a use case for this action.
   getNonVisitNote,
   deleteNonVisitNote,
 }

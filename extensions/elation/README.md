@@ -14,7 +14,7 @@ The integration of webhooks with Elation presents unique challenges and consider
 
 - **Non-Discriminative Triggers**: Elation does not differentiate between the creation or update of a resource. Both actions will set off webhook with action `saved`, which might not provide enough discriminative information for some use cases.
 - **Programmatic Setup**: Elation webhooks can only be configured programmatically, as there's no dedicated user interface in Elation to set up webhooks. View [this demo video](https://youtu.be/v8u6E8MEI8E) for a step-by-step guide on how to set up your webhooks in Elation.
-- **Limitation on user-triggered actions**: Elation has a concept called "Preventing echo". This means that that any action carried out by the user affiliated with the API credentials that created the subscription doesn't trigger a webhook. You can read more about this behaviour [here](https://docs.elationhealth.com/reference/webhooks). A feasible workaround to the above limitation is creating a dedicated user not meant for human interactions but serves the sole purpose of facilitating M2M communication.
+- **Limitation on user-triggered actions**: Elation has a concept called "Preventing echo". This means that that any action carried out by the user affiliated with the API credentials that created the subscription doesn't trigger a webhook. You can read more about this behaviour [here](https://docs.elationhealth.com/reference/webhooks). If you are not receiving any webhooks from Elation after setting up your subscription, then this is the reason. A feasible workaround to the above limitation is creating a dedicated user not meant for human interactions but serves the sole purpose of facilitating M2M communication.
 
 If you need help setting up your webhooks in Elation, reach out! We are happy to help you.
 
@@ -37,7 +37,7 @@ The following actions are supported with Elation today:
 
 ### Create Patient
 
-This action creates a patient in Elation. We currently do not support nested objects, so the entire patient object supported by elation's API is not yet exposed**. Please reach out to us if you're looking to add a particular field or set of fields.
+This action creates a patient in Elation.
 
 **When creating a patient, you will have to specifiy the primary physician and caregiver practice ID:**
 - Primary physician ID: you can retrieve this ID by using the [Find Physicians](https://docs.elationhealth.com/reference/find-physicians) API call, or by using the `Find Physician` action
@@ -45,7 +45,7 @@ This action creates a patient in Elation. We currently do not support nested obj
 
 ### Get Patient
 
-Using a patient identifier, retrieve patient object from Elation.
+Using a patient identifier, retrieve a patient object from Elation.
 
 ### Update Patient
 
@@ -67,15 +67,15 @@ You can also include a duration (default to 15 minutes, or whatever has been set
 
 ### Get Appointment
 
-Get an appointment using an appointment ID
+Retrieve appointment details using an appointment ID.
 
 ### Create Non-Visit Note
 
 The non-visit note is a special kind of note that, as the name suggests, is not associated with a visit. These notes, in their simplest form, provide a chronological account of information about the patient.
 
-### Update Non-Visit Note
-
-Updates the non-visit note identified by an ID. Only ID is required by default, however editing any of `text`, `author` or `category` requires `Bullet ID` and both `text` and `author` to be provided.
+**Additional documentation for some of the action fields:**
+1. Category: The default category is "Problem" but you can choose any of "Past", "Family", "Social", "Instr", "PE", "ROS", "Med", "Data", "Assessment", "Test", "Tx", "Narrative", "Followup", "Reason", "Plan", "Objective", "Hpi", "Allergies", "Habits", "Assessplan", "Consultant", "Attending", "Dateprocedure", "Surgical", "Orders", "Referenced", "Procedure".
+2. Chart and document date automatically get set to the current date, i.e. the date when the action is orchestrated.
 
 ### Delete Non-Visit Note
 
@@ -83,19 +83,14 @@ Deletes the non-visit note identified by an ID.
 
 ### Get Non-Visit Note
 
-Gets the non-visit note identified by an ID. Fields are saved as data points:
-- `authorId`
-- `text`
-- `chartDate`
-- `documentDate`
-- `patientId`
-- `practiceId`
-- `tags` (comma-separated list)
+Retrieve the details of a non-visit note identified by an ID.
 ### Get physician
 
-Using a physician identifier, retrieve physician object from Elation.
+Using a physician identifier, retrieve a physician object from Elation.
 
 ### Find physicians
 
-Search a physician based on a set of parameters. Note that this action can only support finding one physician so if your search criteria match multiple physicians the action will throw an error.
+Search a physician based on a set of parameters. The ID of the physician matching the search parameters will be returned. To retrieve the details of the physician, you can use the the "Get physician" action.
+
+Note that this action can only support finding one physician so if your search criteria match multiple physicians the action will throw an error.
 

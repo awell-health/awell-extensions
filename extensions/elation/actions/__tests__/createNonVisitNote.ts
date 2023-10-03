@@ -30,14 +30,11 @@ describe('Create non-visit note action', () => {
     await createNonVisitNote.onActivityCreated(
       {
         fields: {
-          authorId: nonVisitNoteResponseExample.bullets[0].author,
-          text: nonVisitNoteResponseExample.bullets[0].text,
-          category: undefined,
-          chartDate: nonVisitNoteResponseExample.chart_date,
-          documentDate: nonVisitNoteResponseExample.document_date,
           patientId: nonVisitNoteResponseExample.patient,
-          practiceId: undefined,
+          authorId: nonVisitNoteResponseExample.bullets[0].author,
+          category: undefined,
           tags: undefined,
+          text: nonVisitNoteResponseExample.bullets[0].text,
         },
         settings,
       } as any,
