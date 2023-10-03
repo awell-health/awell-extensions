@@ -16,7 +16,8 @@ const fields = {
   appointmentId: {
     id: 'appointmentId',
     label: 'Appointment ID',
-    description: 'The appointment ID (a number)',
+    description:
+      'Provide the ID of the appointment you want to fetch the details of',
     type: FieldType.NUMERIC,
     required: true,
   },

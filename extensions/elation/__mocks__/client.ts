@@ -11,7 +11,7 @@ const { makeAPIClient: makeAPIClientActual } = jest.requireActual('../client')
 
 export const mockClientReturn = {
   getPatient: jest.fn((params) => {
-    return { id: 1, ...patientExample, mobile_phone: 'undefined' }
+    return { id: 1, ...patientExample }
   }),
   createPatient: jest.fn((params) => {
     return { id: 1, ...patientExample }
@@ -36,6 +36,9 @@ export const mockClientReturn = {
         id: appointmentExample.service_location,
       },
     }
+  }),
+  getPhysician: jest.fn((params) => {
+    return physicianResponseExample
   }),
   findPhysicians: jest.fn((): ElationCollection<PhysicianResponse> => {
     return {

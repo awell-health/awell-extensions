@@ -117,13 +117,6 @@ export const findPhysician: Action<
       await onComplete({
         data_points: {
           physicianId: String(physician.id),
-          physicianFirstName: physician.first_name,
-          physicianLastName: physician.last_name,
-          physicianCredentials: physician.credentials,
-          physicianEmail: physician.email,
-          physicianNPI: physician.npi,
-          physicianUserId: String(physician.user_id),
-          caregiverPracticeId: String(physician.practice),
         },
       })
     } catch (err) {
