@@ -14,7 +14,7 @@ export const getLastEmail = (emails?: Email[]): string | undefined => {
   /**
    * According to Elation's documentation there is only only 1 email with empty deleted_date
    */
-  if (availableEmails.length === 0) {
+  if (availableEmails.length === 1) {
     return availableEmails[0].email
   }
 

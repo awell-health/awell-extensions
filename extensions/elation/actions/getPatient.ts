@@ -130,6 +130,7 @@ export const getPatient: Action<
       // API Call should produce AuthError or something dif.
       const api = makeAPIClient(payload.settings)
       const patientInfo = await api.getPatient(patientId)
+      console.log(patientInfo.emails)
       await onComplete({
         data_points: {
           firstName: patientInfo.first_name,

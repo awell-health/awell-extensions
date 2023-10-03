@@ -45,7 +45,9 @@ This action creates a patient in Elation.
 
 ### Get Patient
 
-Using a patient identifier, retrieve a patient object from Elation.
+Using a patient identifier, retrieve a patient object from Elation. 
+
+Note that when retrieve the mobile phone number, we are tranforming the number to an international format. We apply a heuristic and assume all mobile numbers in Elation are in US national format so we prepend the number with the +1 country code. Having the number in international format unlocks more powerful functionality like sending text messages with 3rd party services like Twilio and MessageBird.
 
 ### Update Patient
 
@@ -67,7 +69,7 @@ You can also include a duration (default to 15 minutes, or whatever has been set
 
 ### Get Appointment
 
-Retrieve appointment details using an appointment ID.
+Retrieve appointment details using an appointment ID. 
 
 ### Create Non-Visit Note
 
