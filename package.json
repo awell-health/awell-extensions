@@ -75,6 +75,7 @@
     "docusign-esign": "^6.3.0",
     "driver-license-validator": "2.0.2",
     "form-data": "^4.0.0",
+    "googleapis": "^126.0.1",
     "graphql": "^16.6.0",
     "graphql-request": "5.1.0",
     "graphql-tag": "^2.12.6",
