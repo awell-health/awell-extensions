@@ -11,9 +11,9 @@ export const getPhysician: Action<
   typeof settings,
   keyof typeof dataPoints
 > = {
-  key: 'findPhysician',
+  key: 'getPhysician',
   category: Category.EHR_INTEGRATIONS,
-  title: 'Find Physician',
+  title: 'Get Physician',
   description: "Retrieve a physician using Elation's patient API.",
   fields,
   previewable: true,
