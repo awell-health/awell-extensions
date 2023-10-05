@@ -1,0 +1,1 @@
+export { parseNumberToText } from './parseNumberToText'
