@@ -1,27 +1,27 @@
 import { type DataPointDefinition } from '@awell-health/extensions-core'
 
 export const dataPoints = {
-  firstName: {
+  physicianFirstName: {
     key: 'physicianFirstName',
     valueType: 'string',
   },
-  lastName: {
+  physicianLastName: {
     key: 'physicianLastName',
     valueType: 'string',
   },
-  credentials: {
+  physicianCredentials: {
     key: 'physicianCredentials',
     valueType: 'string',
   },
-  email: {
+  physicianEmail: {
     key: 'physicianEmail',
     valueType: 'string',
   },
-  NPI: {
+  physicianNPI: {
     key: 'physicianNPI',
     valueType: 'string',
   },
-  userId: {
+  physicianUserId: {
     key: 'physicianUserId',
     valueType: 'number',
   },

@@ -39,12 +39,12 @@ describe('Elation - Get physician', () => {
     )
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
-        firstName: physicianResponseExample.first_name,
-        lastName: physicianResponseExample.last_name,
-        credentials: physicianResponseExample.credentials,
-        email: physicianResponseExample.email,
-        NPI: physicianResponseExample.npi,
-        userId: String(physicianResponseExample.user_id),
+        physicianFirstName: physicianResponseExample.first_name,
+        physicianLastName: physicianResponseExample.last_name,
+        physicianCredentials: physicianResponseExample.credentials,
+        physicianEmail: physicianResponseExample.email,
+        physicianNPI: physicianResponseExample.npi,
+        physicianUserId: String(physicianResponseExample.user_id),
         caregiverPracticeId: String(physicianResponseExample.practice),
       },
     })
