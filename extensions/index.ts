@@ -20,6 +20,7 @@ import { CmDotCom } from './cmDotCom'
 import { DocuSign } from './docuSign'
 import { Sendbird } from './sendbird'
 import { ZusHealth } from './zusHealth'
+import { Transform } from './transform'
 
 import * as json from './markdown.json'
 
@@ -42,6 +43,7 @@ export const extensions = [
   MathExtension,
   MessageBird,
   Metriport,
+  Transform,
   Twilio,
   Wellinks,
   Sendgrid,
