@@ -27,12 +27,12 @@ export const getPhysician: Action<
 
       await onComplete({
         data_points: {
-          firstName: physician.first_name,
-          lastName: physician.last_name,
-          credentials: physician.credentials,
-          email: physician.email,
-          NPI: physician.npi,
-          userId: String(physician.user_id),
+          physicianFirstName: physician.first_name,
+          physicianLastName: physician.last_name,
+          physicianCredentials: physician.credentials,
+          physicianEmail: physician.email,
+          physicianNPI: physician.npi,
+          physicianUserId: String(physician.user_id),
           caregiverPracticeId: String(physician.practice),
         },
       })
