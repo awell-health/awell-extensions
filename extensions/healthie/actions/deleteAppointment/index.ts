@@ -1,0 +1,1 @@
+export { deleteAppointment } from './deleteAppointment'

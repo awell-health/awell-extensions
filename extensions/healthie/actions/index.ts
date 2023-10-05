@@ -1,11 +1,8 @@
 import { createAppointment } from './createAppointment'
-import { createTask } from './createTask'
+import { createTask } from './createTask/createTask'
 import { getAppointment } from './getAppointment'
-import { getPatient } from './getPatient'
 import { sendChatMessage } from './sendChatMessage'
 import { createPatient } from './createPatient'
-import { updatePatient } from './updatePatient'
-import { applyTagToPatient } from './applyTagToPatient'
 import { removeTagFromPatient } from './removeTagFromPatient'
 import { createChartingNote } from './createChartingNote'
 import { sendFormCompletionRequest } from './sendFormCompletionRequest'
@@ -17,6 +14,9 @@ import { cancelAppointment } from './cancelAppointment'
 import { deleteTask } from './deleteTask'
 import { completeTask } from './completeTask'
 import { assignPatientToGroup } from './assignPatientToGroup'
+import { updatePatient } from './updatePatient'
+import { getPatient } from './getPatient'
+import { applyTagToPatient } from './applyTagToPatient'
 
 export const actions = {
   createAppointment,
