@@ -17,6 +17,7 @@ import { cancelAppointment } from './cancelAppointment'
 import { deleteTask } from './deleteTask'
 import { completeTask } from './completeTask'
 import { assignPatientToGroup } from './assignPatientToGroup'
+import { createMetricEntry } from './createMetricEntry'
 
 export const actions = {
   createAppointment,
@@ -47,4 +48,5 @@ export const actions = {
   deleteTask,
   completeTask,
   assignPatientToGroup,
+  createMetricEntry,
 }

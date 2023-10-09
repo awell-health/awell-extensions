@@ -183,6 +183,11 @@ export const mockGetSdkReturn = {
       },
     }
   }),
+  createEntry: jest.fn((args) => {
+    return {
+      data: {},
+    }
+  }),
 }
 
 export const mockGetSdk = (params: any): any => {

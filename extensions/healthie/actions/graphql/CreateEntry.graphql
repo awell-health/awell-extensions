@@ -1,0 +1,25 @@
+mutation createEntry(
+  $metric_stat: String # e.g "182"
+  $category: String # e.g "Weight"
+  $type: String # "MetricEntry"
+  $user_id: String # e.g "61"
+  $created_at: String # e.g "2021-09-23 15:27:01 -0400"
+) {
+  createEntry(
+    input: {
+      category: $category
+      type: $type
+      metric_stat: $metric_stat
+      user_id: $user_id
+      created_at: $created_at
+    }
+  ) {
+    entry {
+      id
+    }
+    messages {
+      field
+      message
+    }
+  }
+}
