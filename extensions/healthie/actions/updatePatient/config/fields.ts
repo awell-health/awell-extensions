@@ -41,7 +41,7 @@ export const fields = {
     label: 'Email',
     description: 'The email address of the patient.',
     type: FieldType.STRING,
-    stringType: StringType.EMAIL,
+    // stringType: StringType.EMAIL,
   },
   dob: {
     id: 'dob',
