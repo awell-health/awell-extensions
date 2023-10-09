@@ -1,39 +1,46 @@
-import { isNil } from 'lodash'
 import { HealthieError, mapHealthieToActivityError } from '../errors'
 import {
   FieldType,
+  validate,
   type Action,
   type Field,
 } from '@awell-health/extensions-core'
 import { Category } from '@awell-health/extensions-core'
 import { getSdk } from '../gql/sdk'
 import { initialiseClient } from '../graphqlClient'
-import { type settings } from '../settings'
+import { settingsValidationSchema, type settings } from '../settings'
+import { z, ZodError, type ZodTypeAny } from 'zod'
+import { fromZodError } from 'zod-validation-error'
 
 const fields = {
   userId: {
     id: 'userId',
     label: 'User ID',
-    description: 'The ID of the patient that this entry should be attached to.',
+    description: 'The ID of the patient that this entry should be attached to',
     type: FieldType.STRING,
     required: true,
   },
   category: {
     id: 'category',
     label: 'Category',
-    description: 'Specifies what kind of metric we are storing.',
+    description: 'Specifies what kind of metric we are storing',
     type: FieldType.STRING,
     required: true,
   },
   metricStat: {
     id: 'metricStat',
     label: 'Metric stat',
-    description:
-      'This is the actual data value for the metric. e.g if a patient weights 182 lbs, you would pass in 182 with a category of Weight',
+    description: 'The actual data value for the metric',
     type: FieldType.STRING,
     required: true,
   },
 } satisfies Record<string, Field>
+
+export const fieldsValidationSchema = z.object({
+  userId: z.string().nonempty(),
+  category: z.string().nonempty(),
+  metricStat: z.string().nonempty(),
+} satisfies Record<keyof typeof fields, ZodTypeAny>)
 
 export const createMetricEntry: Action<typeof fields, typeof settings> = {
   key: 'createMetricEntry',
@@ -43,24 +50,18 @@ export const createMetricEntry: Action<typeof fields, typeof settings> = {
   fields,
   previewable: true,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
-    const { fields, settings } = payload
-    const { userId, category, metricStat } = fields
     try {
-      if (isNil(userId) || isNil(category) || isNil(metricStat)) {
-        await onError({
-          events: [
-            {
-              date: new Date().toISOString(),
-              text: { en: 'Fields are missing' },
-              error: {
-                category: 'MISSING_FIELDS',
-                message: '`userId`, `category` or `metricStat` is missing',
-              },
-            },
-          ],
-        })
-        return
-      }
+      const {
+        settings,
+        fields: { userId, category, metricStat },
+      } = validate({
+        schema: z.object({
+          settings: settingsValidationSchema,
+          fields: fieldsValidationSchema,
+        }),
+        payload,
+      })
+
       const client = initialiseClient(settings)
       if (client != null) {
         const sdk = getSdk(client)
@@ -71,22 +72,23 @@ export const createMetricEntry: Action<typeof fields, typeof settings> = {
           category,
         })
         await onComplete({})
-      } else {
+      }
+    } catch (err) {
+      if (err instanceof ZodError) {
+        const error = fromZodError(err)
         await onError({
           events: [
             {
               date: new Date().toISOString(),
-              text: { en: 'API client requires an API url and API key' },
+              text: { en: error.message },
               error: {
-                category: 'MISSING_SETTINGS',
-                message: 'Missing api url or api key',
+                category: 'WRONG_INPUT',
+                message: error.message,
               },
             },
           ],
         })
-      }
-    } catch (err) {
-      if (err instanceof HealthieError) {
+      } else if (err instanceof HealthieError) {
         const errors = mapHealthieToActivityError(err.errors)
         await onError({
           events: errors,
