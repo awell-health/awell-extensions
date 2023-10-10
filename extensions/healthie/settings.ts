@@ -20,7 +20,7 @@ export const settings = {
 
 export const settingsValidationSchema = z.object({
   apiUrl: z.string().nonempty({
-    message: 'Missing "Api URL in the extension settings."',
+    message: 'Missing "API URL in the extension settings."',
   }),
   apiKey: z.string().nonempty({
     message: 'Missing "API key in the extension settings."',
