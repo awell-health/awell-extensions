@@ -12,6 +12,6 @@
 
 - Create task action: now also adds support for reminders.
 
-## October 10 2023
+## October 2023
 
 - Create metric entry action.
