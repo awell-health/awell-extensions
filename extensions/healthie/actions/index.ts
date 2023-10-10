@@ -17,6 +17,7 @@ import { assignPatientToGroup } from './assignPatientToGroup'
 import { updatePatient } from './updatePatient'
 import { getPatient } from './getPatient'
 import { applyTagToPatient } from './applyTagToPatient'
+import { createMetricEntry } from './createMetricEntry'
 
 export const actions = {
   createAppointment,
@@ -47,4 +48,5 @@ export const actions = {
   deleteTask,
   completeTask,
   assignPatientToGroup,
+  createMetricEntry,
 }
