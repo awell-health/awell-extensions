@@ -23,9 +23,3 @@ export const fields = {
     required: true,
   },
 } satisfies Record<string, Field>
-
-export const fieldsValidationSchema = z.object({
-  userId: z.string().nonempty(),
-  category: z.string().nonempty(),
-  metricStat: z.string().nonempty(),
-} satisfies Record<keyof typeof fields, ZodTypeAny>)
