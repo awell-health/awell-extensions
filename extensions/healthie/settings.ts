@@ -23,6 +23,6 @@ export const settingsValidationSchema = z.object({
     message: 'Missing "Api URL in the extension settings."',
   }),
   apiKey: z.string().nonempty({
-    message: 'Missing "Api key in the extension settings."',
+    message: 'Missing "API key in the extension settings."',
   }),
 } satisfies Record<keyof typeof settings, ZodTypeAny>)
