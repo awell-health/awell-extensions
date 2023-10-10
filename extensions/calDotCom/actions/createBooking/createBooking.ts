@@ -10,7 +10,7 @@ import { type settings } from '../../settings'
 export const createBooking: Action<typeof fields, typeof settings> = {
   key: 'createBooking',
   title: 'Create booking',
-  description: 'Creates Booking',
+  description: 'Creates a new booking via the Cal.com API',
   category: Category.SCHEDULING,
   fields,
   dataPoints,
