@@ -1,6 +1,6 @@
 ---
 title: Iterable
-description: Iterable is a marketing automation platform.
+description: Iterable is an email marketing automation platform that allows creating, sending, and tracking personalized email campaigns.
 ---
 
 # Iterable
@@ -11,9 +11,7 @@ Iterable offers features such as email marketing, segmentation, A/B testing, wor
 
 ## Extension settings
 
-In order to set up this extension, you will need:
-
-1. An **Api Key** - Api Key used for request authorization
+In order to set up this extension, you will need an API key to authenticate with the Iterable API.
 
 ## Custom Actions
 

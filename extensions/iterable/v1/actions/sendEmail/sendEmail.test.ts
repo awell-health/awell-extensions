@@ -16,7 +16,6 @@ describe('Send email', () => {
       campaignId: mockedSendEmailData.campaignId,
       recipientEmail: mockedSendEmailData.recipientEmail,
       recipientUserId: mockedSendEmailData.recipientUserId,
-      sendAt: mockedSendEmailData.sendAt,
       allowRepeatMarketingSends: mockedSendEmailData.allowRepeatMarketingSends,
       dataFields: JSON.stringify(mockedSendEmailData.dataFields),
       metadata: JSON.stringify(mockedSendEmailData.metadata),

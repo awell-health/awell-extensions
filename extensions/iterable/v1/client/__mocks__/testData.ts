@@ -9,7 +9,7 @@ export const mockedSendEmailData: SendEmailRequest = {
   recipientEmail: 'test@example.com',
   recipientUserId: undefined,
   dataFields: {},
-  sendAt: mockedDates.iso,
+  sendAt: undefined,
   allowRepeatMarketingSends: true,
   metadata: {},
 }
