@@ -1,0 +1,1 @@
+export { createJournalEntry } from './createJournalEntry'

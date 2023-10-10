@@ -1,0 +1,1 @@
+export { removeTagFromPatient } from './removeTagFromPatient'
