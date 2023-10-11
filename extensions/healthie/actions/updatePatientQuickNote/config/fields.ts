@@ -11,7 +11,7 @@ export const fields = {
   quickNote: {
     id: 'quickNote',
     label: 'Quick note',
-    description: 'Quick note',
+    description: '',
     type: FieldType.HTML,
   },
   overwrite: {
