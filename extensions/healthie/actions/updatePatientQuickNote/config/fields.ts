@@ -16,7 +16,7 @@ export const fields = {
   },
   overwrite: {
     id: 'overwrite',
-    label: 'Overwrite',
+    label: 'Overwrite quick note?',
     description: 'Should it be overwritten?',
     type: FieldType.BOOLEAN,
   },
