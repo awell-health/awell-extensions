@@ -32,3 +32,7 @@ Adds a new action to submit a PAM13 survey to Flourish, returning a PAM Score, l
 ## September 19th, 2023
 
 Adds a new action to create a customer in Flourish, returning true or false based on whether or not the creation was a success.
+
+## October 12th, 2023
+
+Updates InsertMemberListEvent action to have clearer error messages.

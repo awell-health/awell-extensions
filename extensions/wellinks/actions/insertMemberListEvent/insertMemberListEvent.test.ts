@@ -5,7 +5,7 @@ import {
 } from '../../api/clients/__mocks__/wellinksClient'
 import { mockSettings } from '../../__mocks__/config/settings'
 import { insertMemberListEvent } from './insertMemberListEvent'
-
+import { ZodError } from 'zod'
 jest.mock('../../api/clients/wellinksClient', () => ({ WellinksClient }))
 
 describe('Insert Member List Event', () => {
@@ -98,21 +98,14 @@ describe('Insert Member List Event', () => {
       settings: mockSettings,
     })
 
-    await insertMemberListEvent.onActivityCreated(
-      invalidPayload,
-      onComplete,
-      onError
-    )
-    expect(onError).toHaveBeenNthCalledWith(1, {
-      events: expect.arrayContaining([
-        expect.objectContaining({
-          error: {
-            category: 'SERVER_ERROR',
-            message: 'The memberId field is required',
-          },
-        }),
-      ]),
-    })
+    await expect(
+      insertMemberListEvent.onActivityCreated(
+        invalidPayload,
+        onComplete,
+        onError
+      )
+    ).rejects.toThrow(ZodError)
+
     expect(onComplete).not.toBeCalled()
   })
 
@@ -175,8 +168,7 @@ describe('Insert Member List Event', () => {
         expect.objectContaining({
           error: {
             category: 'SERVER_ERROR',
-            message:
-              'an error occurred while trying to insert a MemberListEvent',
+            message: 'Message: AN ERROR HAS OCCURRED',
           },
         }),
       ]),

@@ -1,70 +1,17 @@
 import {
-  type Field,
-  FieldType,
   type Action,
   type DataPointDefinition,
-  type OnErrorCallback,
+  Category,
+  validate,
 } from '@awell-health/extensions-core'
-import { Category } from '@awell-health/extensions-core'
 import { type settings } from '../../config/settings'
 import { WellinksClient } from '../../api/clients/wellinksClient'
-import { isNil } from 'lodash'
-
-const fields = {
-  eventName: {
-    id: 'eventName',
-    label: 'Event Name',
-    description:
-      'The member list event name (Marked Ineligble, Enrolled, Unenrolled, etc)',
-    type: FieldType.STRING,
-    required: true,
-  },
-  memberId: {
-    id: 'memberId',
-    label: 'Member ID',
-    description: 'The Wellinks ID of the patient.',
-    type: FieldType.STRING,
-    required: true,
-  },
-  sourceName: {
-    id: 'sourceName',
-    label: 'Source',
-    description:
-      'The source of the Member List Event (Sendgrid, Member Medical History CCA, Member Event Form, etc)',
-    type: FieldType.STRING,
-    required: true,
-  },
-  sendgridListId: {
-    id: 'sendgridListId',
-    label: 'Sendgrid List ID',
-    description: 'The ID of the Sendgrid list.',
-    type: FieldType.STRING,
-    required: true,
-  },
-  originatorName: {
-    id: 'originatorName',
-    label: 'Originator',
-    description: 'The originator of the event (Memeber, Coach, etc)',
-    type: FieldType.STRING,
-    required: true,
-  },
-  eventDate: {
-    id: 'eventDate',
-    label: 'Event Date',
-    description: 'The Date/Time of the Member List Event',
-    type: FieldType.DATE,
-    required: true,
-  },
-  lockedById: {
-    id: 'lockedById',
-    label: 'Locked By ID',
-    description:
-      'The ID of the coach that signed and locked the healthie form.',
-    type: FieldType.STRING,
-    required: false,
-  },
-} satisfies Record<string, Field>
-
+import {
+  fields,
+  FieldsValidationSchema,
+  InsertMemberListEventSettingsSchema,
+} from './config'
+import { z } from 'zod'
 const dataPoints = {
   insertSuccessful: {
     key: 'insertSuccessful',
@@ -85,52 +32,27 @@ export const insertMemberListEvent: Action<
   dataPoints,
   previewable: true,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
-    const { fields, settings } = payload
     const {
-      eventName,
-      memberId,
-      sourceName,
-      sendgridListId,
-      originatorName,
-      eventDate,
-      lockedById,
-    } = fields
+      fields: {
+        eventName,
+        memberId,
+        sourceName,
+        sendgridListId,
+        originatorName,
+        eventDate,
+        lockedById,
+      },
+      settings: { platformApiUrl, platformApiKey },
+    } = validate({
+      schema: z.object({
+        fields: FieldsValidationSchema,
+        settings: InsertMemberListEventSettingsSchema,
+      }),
+      payload,
+    })
 
     try {
-      if (isNil(settings.platformApiUrl) || isNil(settings.platformApiKey)) {
-        throw new Error(
-          'The Platform API URL and/or API Key is not set in the settings'
-        )
-      }
-      const client = new WellinksClient(
-        settings.platformApiUrl,
-        settings.platformApiKey
-      )
-
-      if (isNil(eventName)) {
-        await buildValidationError('eventName', onError)
-        return
-      }
-      if (isNil(memberId)) {
-        await buildValidationError('memberId', onError)
-        return
-      }
-      if (isNil(sourceName)) {
-        await buildValidationError('sourceName', onError)
-        return
-      }
-      if (isNil(sendgridListId)) {
-        await buildValidationError('sendgridListId', onError)
-        return
-      }
-      if (isNil(originatorName)) {
-        await buildValidationError('originatorName', onError)
-        return
-      }
-      if (isNil(eventDate)) {
-        await buildValidationError('eventDate', onError)
-        return
-      }
+      const client = new WellinksClient(platformApiUrl, platformApiKey)
 
       const response = await client.memberListEvent.insert({
         eventName,
@@ -154,7 +76,8 @@ export const insertMemberListEvent: Action<
           },
         })
       }
-    } catch {
+    } catch (err) {
+      const error = err as Error
       await onError({
         events: [
           {
@@ -164,32 +87,11 @@ export const insertMemberListEvent: Action<
             },
             error: {
               category: 'SERVER_ERROR',
-              message:
-                'an error occurred while trying to insert a MemberListEvent',
+              message: `Message: ${error.message}`,
             },
           },
         ],
       })
     }
   },
-}
-
-async function buildValidationError(
-  field: string,
-  onError: OnErrorCallback
-): Promise<void> {
-  await onError({
-    events: [
-      {
-        date: new Date().toISOString(),
-        text: {
-          en: `The ${field} field is required`,
-        },
-        error: {
-          category: 'SERVER_ERROR',
-          message: `The ${field} field is required`,
-        },
-      },
-    ],
-  })
 }
