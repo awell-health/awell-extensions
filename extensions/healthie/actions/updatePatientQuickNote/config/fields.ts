@@ -1,4 +1,5 @@
 import { type Field, FieldType } from '@awell-health/extensions-core'
+import { z } from 'zod'
 
 export const fields = {
   patientId: {
@@ -21,3 +22,9 @@ export const fields = {
     type: FieldType.BOOLEAN,
   },
 } satisfies Record<string, Field>
+
+export const fieldsValidationSchema = z.object({
+  patientId: z.string().nonempty(),
+  quickNote: z.string().nonempty(),
+  overwrite: z.boolean(),
+})

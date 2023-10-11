@@ -4,10 +4,9 @@ import { getSdk } from '../../gql/sdk'
 import { initialiseClient } from '../../graphqlClient'
 import { settingsValidationSchema, type settings } from '../../settings'
 import { HealthieError, mapHealthieToActivityError } from '../../errors'
-import { fieldsValidationSchema } from '../../validation/updatePatientQuickNote.zod'
 import { z, ZodError } from 'zod'
 import { fromZodError } from 'zod-validation-error'
-import { fields } from './config'
+import { fields, fieldsValidationSchema } from './config'
 
 export const updatePatientQuickNote: Action<typeof fields, typeof settings> = {
   key: 'updatePatientQuickNote',
@@ -33,13 +32,17 @@ export const updatePatientQuickNote: Action<typeof fields, typeof settings> = {
       if (client != null) {
         const sdk = getSdk(client)
         if (overwrite) {
-          await sdk.updateClient({ id: patientId, quick_notes: quickNote })
+          await sdk.updatePatient({
+            input: { id: patientId, quick_notes: quickNote },
+          })
         } else {
           const { data } = await sdk.getUser({ id: patientId })
           const currentNotes = data?.user?.quick_notes ?? ''
-          await sdk.updateClient({
-            id: patientId,
-            quick_notes: currentNotes.concat(quickNote),
+          await sdk.updatePatient({
+            input: {
+              id: patientId,
+              quick_notes: currentNotes.concat(quickNote),
+            },
           })
         }
 
