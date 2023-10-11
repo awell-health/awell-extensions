@@ -10,7 +10,7 @@ export const fields = {
   },
   quickNote: {
     id: 'quickNote',
-    label: 'The quick note',
+    label: 'Quick note',
     description: 'Quick note',
     type: FieldType.HTML,
   },
