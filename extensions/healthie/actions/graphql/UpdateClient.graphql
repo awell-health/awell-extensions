@@ -1,0 +1,12 @@
+mutation updateClient($id: ID, $quick_notes: String) {
+  updateClient(input: { id: $id, quick_notes: $quick_notes }) {
+    user {
+      id
+      quick_notes
+    }
+    messages {
+      field
+      message
+    }
+  }
+}

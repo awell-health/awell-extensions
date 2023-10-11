@@ -36,6 +36,7 @@ export const mockGetSdkReturn = {
           phone_number: '+1 (555) 555-1234',
           user_group: { name: 'group' },
           dietitian_id: 'dietitian_id',
+          quick_notes: '<p>quick notest</p>',
         },
       },
     }
@@ -181,6 +182,11 @@ export const mockGetSdkReturn = {
           id: 'appointment-1',
         },
       },
+    }
+  }),
+  updateClient: jest.fn((args) => {
+    return {
+      data: {},
     }
   }),
 }

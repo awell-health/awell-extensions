@@ -1,5 +1,9 @@
 # Healthie changelog
 
+## October 2023
+
+-- Add action for the patient called `update patient quick notes`
+
 ## September 5, 2023
 
 - add Healthie gender to Sex in iso format mapper in `getPatient`
