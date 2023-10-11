@@ -3,7 +3,7 @@ import { type Field, FieldType } from '@awell-health/extensions-core'
 export const fields = {
   patientId: {
     id: 'patientId',
-    label: 'patientId',
+    label: 'Patient ID',
     description: 'The id of the patient in Healthie',
     type: FieldType.STRING,
     required: true,
