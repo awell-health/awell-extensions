@@ -1,5 +1,5 @@
 import { type Setting } from '@awell-health/extensions-core'
-
+import { z, type ZodTypeAny } from 'zod'
 export const settings = {
   platformApiUrl: {
     key: 'platformApiUrl',
@@ -74,3 +74,16 @@ export const settings = {
     description: 'Your Flourish Client Ext ID.',
   },
 } satisfies Record<string, Setting>
+
+export const SettingsValidationSchema = z.object({
+  platformApiUrl: z.string().optional(),
+  platformApiKey: z.string().optional(),
+  apiUrl: z.string().optional(),
+  apiKey: z.string().optional(),
+  selectEventTypeQuestion: z.string().optional(),
+  startSendingRemindersQuestions: z.string().optional(),
+  memberEventFormId: z.string().optional(),
+  flourishApiUrl: z.string().optional(),
+  flourishApiKey: z.string().optional(),
+  flourishClientExtId: z.string().optional(),
+} satisfies Record<keyof typeof settings, ZodTypeAny>)
