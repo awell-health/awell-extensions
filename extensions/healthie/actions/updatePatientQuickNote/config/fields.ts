@@ -17,7 +17,7 @@ export const fields = {
   overwrite: {
     id: 'overwrite',
     label: 'Overwrite quick note?',
-    description: 'Should it be overwritten?',
+    description: 'If true, the quick note will be replaced with the new content. If false, the content will be appended to the current content in the quick note.',
     type: FieldType.BOOLEAN,
   },
 } satisfies Record<string, Field>
