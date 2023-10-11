@@ -16,6 +16,6 @@
     "examples/**/*.ts"
   ],
   "exclude": [
-    "**/scripts/*.ts"
+    "**/scripts/*.ts",
   ]
 }
