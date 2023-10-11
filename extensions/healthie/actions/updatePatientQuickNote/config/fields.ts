@@ -4,7 +4,7 @@ export const fields = {
   patientId: {
     id: 'patientId',
     label: 'Patient ID',
-    description: 'The id of the patient in Healthie',
+    description: 'The ID of the patient in Healthie to update the quick note for',
     type: FieldType.STRING,
     required: true,
   },
