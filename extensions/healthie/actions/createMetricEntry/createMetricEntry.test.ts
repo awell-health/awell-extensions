@@ -24,7 +24,7 @@ describe('createMetricEntry action', () => {
         fields: {
           userId: '60',
           category: 'Weight',
-          metricStat: '182',
+          metricStat: 182,
         },
         settings: {
           apiKey: 'apiKey',

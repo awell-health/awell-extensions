@@ -19,7 +19,7 @@ export const fields = {
     id: 'metricStat',
     label: 'Metric stat',
     description: 'The actual data value for the metric',
-    type: FieldType.STRING,
+    type: FieldType.NUMERIC,
     required: true,
   },
 } satisfies Record<string, Field>

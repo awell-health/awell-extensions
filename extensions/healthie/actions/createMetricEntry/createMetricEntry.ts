@@ -33,7 +33,7 @@ export const createMetricEntry: Action<typeof fields, typeof settings> = {
       if (client != null) {
         const sdk = getSdk(client)
         await sdk.createEntry({
-          metric_stat: metricStat,
+          metric_stat: String(metricStat),
           user_id: userId,
           type: 'MetricEntry',
           category,
