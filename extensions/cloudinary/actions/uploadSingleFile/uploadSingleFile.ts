@@ -1,10 +1,9 @@
 import { type Action } from '@awell-health/extensions-core'
 import { Category, validate } from '@awell-health/extensions-core'
 import { SettingsValidationSchema, type settings } from '../../settings'
-import { fields } from './config'
+import { fields, FieldsValidationSchema, dataPoints } from './config'
 import { fromZodError } from 'zod-validation-error'
 import { z, ZodError } from 'zod'
-import { FieldsValidationSchema } from './config/fields'
 
 export const uploadSingleFile: Action<typeof fields, typeof settings> = {
   key: 'uploadSingleFile',
@@ -18,6 +17,7 @@ export const uploadSingleFile: Action<typeof fields, typeof settings> = {
       mode: 'single',
     },
   },
+  dataPoints,
   previewable: false, // We don't have Awell Hosted Pages in Preview so cannot be previewed.
   onActivityCreated: async (payload, onComplete, onError) => {
     try {
