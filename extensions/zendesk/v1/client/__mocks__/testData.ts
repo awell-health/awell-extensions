@@ -1,4 +1,5 @@
-import { type Task, ResourceType } from '../../types'
+import { type Task } from '../../types'
+import { ResourceType } from '../types'
 
 export const mockedDates = {
   iso: '2023-08-01T00:00:00Z',

@@ -7,7 +7,7 @@ import {
   NumericIdSchema,
   makeStringOptional,
 } from '@awell-health/extensions-core'
-import { ResourceType } from '../../../types'
+import { ResourceType } from '../../../client/types'
 
 export const fields = {
   content: {

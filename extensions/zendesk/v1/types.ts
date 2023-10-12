@@ -4,7 +4,7 @@ export interface Task {
   id: number
   creator_id: number
   owner_id: number
-  resource_type?: ResourceType.CONTACT | ResourceType.DEAL | ResourceType.LEAD
+  resource_type?: ResourceType
   resource_id?: number
   completed: boolean
   completed_at?: string
