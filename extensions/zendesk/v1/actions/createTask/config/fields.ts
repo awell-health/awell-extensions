@@ -70,12 +70,12 @@ export const fields = {
 const resourceTypeEnum = z.enum<
   ResourceType,
   [ResourceType, ...ResourceType[]]
->(Object.values(ResourceType) as [ResourceType, ...ResourceType[]])
+>([ResourceType.CONTACT, ResourceType.DEAL, ResourceType.LEAD])
 
 export const FieldsValidationSchema = z.object({
   content: z.string().nonempty(),
   dueDate: DateTimeOptionalSchema,
-  ownerId: NumericIdSchema,
+  ownerId: makeStringOptional(NumericIdSchema),
   resourceType: makeStringOptional(resourceTypeEnum),
   resourceId: makeStringOptional(NumericIdSchema),
   completed: z.boolean().optional(),
