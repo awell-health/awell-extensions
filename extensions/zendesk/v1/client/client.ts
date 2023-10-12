@@ -9,20 +9,18 @@ class ZendeskBaseAPI {
   constructor({
     baseUrl,
     apiToken,
-    email,
-    subdomain,
+    tokenHeaderKey,
   }: {
     baseUrl: string
     apiToken: string
-    email: string
-    subdomain: string
+    tokenHeaderKey: string
   }) {
-    this._baseUrl = `https://${subdomain}.zendesk.com/${baseUrl}`
-    this._token = Buffer.from(`${email}/token:${apiToken}`).toString('base64')
+    this._baseUrl = baseUrl
+    this._token = apiToken
     this._headers = {
       'Content-Type': 'application/json; charset=utf8',
       Accept: ' application/json',
-      Authorization: `Basic ${this._token}`,
+      [tokenHeaderKey]: this._token,
     } as const
   }
 
@@ -66,30 +64,21 @@ class ZendeskBaseAPI {
   }
 }
 
-class ZendeskTasksAPI {
+class ZendeskSalesAPI {
   private readonly _baseApi: ZendeskBaseAPI
 
-  constructor({
-    apiToken,
-    email,
-    subdomain,
-  }: {
-    apiToken: string
-    email: string
-    subdomain: string
-  }) {
+  constructor({ apiToken }: { apiToken: string }) {
     this._baseApi = new ZendeskBaseAPI({
-      subdomain,
-      baseUrl: `v2/tasks`,
-      apiToken,
-      email,
+      baseUrl: `https://api.getbase.com`,
+      apiToken: `Bearer ${apiToken}`,
+      tokenHeaderKey: 'Authorization',
     })
   }
 
   createTask = async (
     task: TaskInput
   ): Promise<AxiosResponse<{ task: Task }>> => {
-    return await this._baseApi.post<TaskInput, { task: Task }>('', {
+    return await this._baseApi.post<TaskInput, { task: Task }>('v2/tasks', {
       body: task,
     })
   }
@@ -98,24 +87,19 @@ class ZendeskTasksAPI {
     id: number,
     task: TaskInput
   ): Promise<AxiosResponse<{ task: Task }>> => {
-    return await this._baseApi.put<TaskInput, { task: Task }>(`${id}`, {
-      body: task,
-    })
+    return await this._baseApi.put<TaskInput, { task: Task }>(
+      `v2/tasks/${id}`,
+      {
+        body: task,
+      }
+    )
   }
 }
 
 export class ZendeskClient {
-  readonly tasksApi: ZendeskTasksAPI
+  readonly salesApi: ZendeskSalesAPI
 
-  constructor({
-    apiToken,
-    email,
-    subdomain,
-  }: {
-    apiToken: string
-    email: string
-    subdomain: string
-  }) {
-    this.tasksApi = new ZendeskTasksAPI({ apiToken, email, subdomain })
+  constructor({ salesApiToken }: { salesApiToken: string }) {
+    this.salesApi = new ZendeskSalesAPI({ apiToken: salesApiToken })
   }
 }

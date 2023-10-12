@@ -21,7 +21,7 @@ export const createTask: Action<typeof fields, typeof settings> = {
   onActivityCreated: async (payload, onComplete, onError) => {
     try {
       const {
-        settings: { apiToken, email, subdomain },
+        settings: { salesApiToken },
         fields: {
           content,
           dueDate,
@@ -40,12 +40,10 @@ export const createTask: Action<typeof fields, typeof settings> = {
       })
 
       const client = new ZendeskClient({
-        apiToken,
-        email,
-        subdomain,
+        salesApiToken,
       })
 
-      const res = await client.tasksApi.createTask({
+      const res = await client.salesApi.createTask({
         content,
         due_date: dueDate,
         owner_id: ownerId,

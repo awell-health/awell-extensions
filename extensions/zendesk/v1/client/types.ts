@@ -1,5 +1,5 @@
 export interface ErrorResponse {
-  details: {
+  details?: {
     value: Array<{
       type: string
       description: string

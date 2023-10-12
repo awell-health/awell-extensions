@@ -11,9 +11,7 @@ Zendesk is a customer service and support platform that provides a suite of tool
 
 In order to set up this extension, you will need:
 
-1. An **Email** - email address connected with your account in Zendesk
-2. An **API token** - visit Admin Center and go to **Apps and integrations > APIs > Zendesk API** to enable and create API token
-3. A **Subdomain** - Subdomain is a unique identifier of your Zendesk account. If you didn't enable the host-mapping feature in Zendesk, your subdomain is in the account's URL: e.g. `https://yoursubdomain.zendesk.com`
+2. An **Sales API token** - visit Zendesk Sales CRM dashboard and go to **Settings > Integration > OAuth** to enable and create API token
 
 ## Custom Actions
 

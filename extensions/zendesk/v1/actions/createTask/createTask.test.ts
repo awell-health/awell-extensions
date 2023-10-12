@@ -22,9 +22,7 @@ describe('Create task', () => {
       remindAt: mockedTaskData.remind_at,
     },
     settings: {
-      apiToken: 'apiToken',
-      email: 'email@example.com',
-      subdomain: 'subdomain',
+      salesApiToken: 'salesApiToken',
     },
   })
 
@@ -36,7 +34,7 @@ describe('Create task', () => {
     await createTask.onActivityCreated(basePayload, onComplete, onError)
 
     expect(
-      ZendeskClientMockImplementation.tasksApi.createTask
+      ZendeskClientMockImplementation.salesApi.createTask
     ).toHaveBeenCalledWith({
       content: mockedTaskData.content,
       due_date: mockedTaskData.due_date,

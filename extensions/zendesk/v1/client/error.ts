@@ -33,9 +33,10 @@ export const zendeskErrorToActivityEvent = (
   }
 
   const title = `${errorData.error}: ${errorData.description}`
-  const message = errorData.details?.value
-    ?.map((value) => `${value.type}: ${value.description}`)
-    .join('. ')
+  const message =
+    errorData.details?.value
+      ?.map((value) => `${value.type}: ${value.description}`)
+      .join('. ') ?? title
 
   return [
     {
