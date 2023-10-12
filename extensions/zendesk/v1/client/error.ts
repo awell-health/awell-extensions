@@ -2,19 +2,27 @@ import { type ActivityEvent } from '@awell-health/extensions-core'
 import { type AxiosError, isAxiosError } from 'axios'
 import { isNil } from 'lodash'
 import { z } from 'zod'
-import { type ErrorResponse } from './types'
+import { type SalesApiErrorResponse } from './types'
 
 const errorSchema = z.object({
-  error: z.string(),
-  description: z.string(),
-  details: z.object({
-    value: z.array(z.object({ type: z.string(), description: z.string() })),
-  }),
+  errors: z.array(
+    z.object({
+      error: z.object({
+        resource: z.string(),
+        field: z.string(),
+        code: z.string(),
+        message: z.string(),
+        details: z.string(),
+      }),
+      meta: z.object({}),
+    })
+  ),
+  meta: z.object({}),
 })
 
 export const isZendeskError = (
   error: any
-): error is AxiosError<ErrorResponse> => {
+): error is AxiosError<SalesApiErrorResponse> => {
   if (isAxiosError(error)) {
     const parseResult = errorSchema.safeParse(error)
     return parseResult.success
@@ -24,28 +32,22 @@ export const isZendeskError = (
 }
 
 export const zendeskErrorToActivityEvent = (
-  error: AxiosError<ErrorResponse>
+  error: AxiosError<SalesApiErrorResponse>
 ): ActivityEvent[] => {
   const errorData = error.response?.data
 
-  if (isNil(errorData)) {
+  if (isNil(errorData) || errorData.errors?.length === 0) {
     return []
   }
 
-  const title = `${errorData.error}: ${errorData.description}`
-  const message =
-    errorData.details?.value
-      ?.map((value) => `${value.type}: ${value.description}`)
-      .join('. ') ?? title
-
-  return [
-    {
+  return errorData.errors.map((error) => {
+    return {
       date: new Date().toISOString(),
-      text: { en: title },
+      text: { en: error.error.message },
       error: {
         category: 'SERVER_ERROR',
-        message,
+        message: error.error.details,
       },
-    },
-  ]
+    }
+  })
 }

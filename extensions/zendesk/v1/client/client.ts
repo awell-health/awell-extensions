@@ -1,5 +1,6 @@
 import axios, { type AxiosResponse } from 'axios'
 import { type Task, type TaskInput } from '../types'
+import { ResourceType, type SalesApiBody } from './types'
 
 class ZendeskBaseAPI {
   readonly _baseUrl: string
@@ -77,22 +78,35 @@ class ZendeskSalesAPI {
 
   createTask = async (
     task: TaskInput
-  ): Promise<AxiosResponse<{ task: Task }>> => {
-    return await this._baseApi.post<TaskInput, { task: Task }>('v2/tasks', {
-      body: task,
+  ): Promise<AxiosResponse<SalesApiBody<Task, ResourceType.TASK>>> => {
+    return await this._baseApi.post<
+      SalesApiBody<TaskInput, ResourceType.TASK>,
+      SalesApiBody<Task, ResourceType.TASK>
+    >('v2/tasks', {
+      body: {
+        data: task,
+        meta: {
+          type: ResourceType.TASK,
+        },
+      },
     })
   }
 
   updateTask = async (
     id: number,
-    task: TaskInput
-  ): Promise<AxiosResponse<{ task: Task }>> => {
-    return await this._baseApi.put<TaskInput, { task: Task }>(
-      `v2/tasks/${id}`,
-      {
-        body: task,
-      }
-    )
+    task: Partial<TaskInput>
+  ): Promise<AxiosResponse<SalesApiBody<Task, ResourceType.TASK>>> => {
+    return await this._baseApi.put<
+      SalesApiBody<Partial<TaskInput>, ResourceType.TASK>,
+      SalesApiBody<Task, ResourceType.TASK>
+    >(`v2/tasks/${id}`, {
+      body: {
+        data: task,
+        meta: {
+          type: ResourceType.TASK,
+        },
+      },
+    })
   }
 }
 

@@ -3,10 +3,10 @@ import { mockedTaskData } from './testData'
 export const ZendeskClientMockImplementation = {
   salesApi: {
     createTask: jest.fn((arg) => ({
-      data: { task: { ...mockedTaskData, ...arg } },
+      data: { data: { ...mockedTaskData, ...arg }, meta: { type: 'task' } },
     })),
     updateTask: jest.fn((arg) => ({
-      data: { task: { ...mockedTaskData, ...arg } },
+      data: { data: { ...mockedTaskData, ...arg }, meta: { type: 'task' } },
     })),
   },
 }

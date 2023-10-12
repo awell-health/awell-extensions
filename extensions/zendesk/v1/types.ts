@@ -1,8 +1,4 @@
-export enum ResourceType {
-  LEAD = 'lead',
-  CONTACT = 'contact',
-  DEAL = 'deal',
-}
+import { type ResourceType } from './client/types'
 
 export interface Task {
   id: number

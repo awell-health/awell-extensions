@@ -53,7 +53,7 @@ export const createTask: Action<typeof fields, typeof settings> = {
         remind_at: remindAt,
       })
 
-      await onComplete({ data_points: { taskId: String(res.data.task.id) } })
+      await onComplete({ data_points: { taskId: String(res.data.data.id) } })
     } catch (err) {
       if (isZendeskError(err)) {
         const events = zendeskErrorToActivityEvent(err)
