@@ -42,3 +42,15 @@ export interface SendEmailRequest {
   allowRepeatMarketingSends?: boolean
   metadata?: Record<string, unknown>
 }
+
+export interface TrackEventRequest {
+  eventName: string
+  email?: string
+  userId?: string
+  id?: string
+  dataFields?: Record<string, unknown>
+  createdAt?: number
+  campaignId?: number
+  templateId?: number
+  createNewFields?: boolean
+}
