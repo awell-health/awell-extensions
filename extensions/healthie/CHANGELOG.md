@@ -2,7 +2,8 @@
 
 ## October 2023
 
-- Create metric entry action.
+- Add "Update patient quick notes" action
+- Add "Create metric entry" action.
 
 ## September 5, 2023
 
