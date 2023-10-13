@@ -11,7 +11,7 @@ export const fields = {
     id: 'taskId',
     type: FieldType.NUMERIC,
     required: true,
-    description: '',
+    description: 'The ID of the task to complete in Zendesk',
   },
 } satisfies Record<string, Field>
 

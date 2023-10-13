@@ -13,7 +13,7 @@ import {
 export const createTask: Action<typeof fields, typeof settings> = {
   key: 'createTask',
   title: 'Create task',
-  description: 'Creates a new task',
+  description: 'Creates a new task in Zendesk',
   category: Category.CUSTOMER_SUPPORT,
   fields,
   dataPoints,

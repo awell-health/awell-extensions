@@ -13,7 +13,7 @@ import {
 export const completeTask: Action<typeof fields, typeof settings> = {
   key: 'completeTask',
   title: 'Complete a task',
-  description: 'Sets task completed status to true',
+  description: 'Completes a task in Zendesk',
   category: Category.CUSTOMER_SUPPORT,
   fields,
   previewable: false,

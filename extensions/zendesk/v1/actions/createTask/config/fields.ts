@@ -24,7 +24,7 @@ export const fields = {
     // Time will be auto-set to 00:00:00 as FieldType.DATE provides only date
     type: FieldType.DATE,
     required: false,
-    description: "Date of task's due date in UTC (ISO8601 format).",
+    description: '',
   },
   ownerId: {
     label: 'Owner ID',
@@ -32,7 +32,7 @@ export const fields = {
     type: FieldType.NUMERIC,
     required: false,
     description:
-      'Unique identifier of the user the task is assigned to. Defaults to the unique identifier of the user who created the task.',
+      'Unique identifier of the user the task is assigned to, defaults to the user who created the task',
   },
   resourceType: {
     label: 'Resource type',
@@ -63,7 +63,7 @@ export const fields = {
     type: FieldType.DATE,
     required: false,
     description:
-      'Date that we should send you a reminder about the task in UTC (ISO8601 format).',
+      'The date at which Zendesk should send you a reminder about the task.',
   },
 } satisfies Record<string, Field>
 

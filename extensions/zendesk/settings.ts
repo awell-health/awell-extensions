@@ -8,7 +8,7 @@ export const settings = {
     obfuscated: true,
     required: true,
     description:
-      'Visit Zendesk Sales CRM dashboard and go to Settings > Integration > OAuth to enable and create API token',
+      'Visit Zendesk Sales CRM dashboard and go to Settings > Integration > OAuth to enable and create an API token',
   },
 } satisfies Record<string, Setting>
 
