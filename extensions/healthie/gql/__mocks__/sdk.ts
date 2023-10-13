@@ -184,9 +184,15 @@ export const mockGetSdkReturn = {
       },
     }
   }),
-  updateClient: jest.fn((args) => {
+  createEntry: jest.fn((args) => {
     return {
-      data: {},
+      data: {
+        createTask: {
+          task: {
+            id: 'task-1',
+          },
+        },
+      },
     }
   }),
 }
