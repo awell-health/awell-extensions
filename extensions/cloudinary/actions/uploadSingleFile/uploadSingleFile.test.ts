@@ -1,7 +1,7 @@
 import { generateTestPayload } from '../../../../src/tests'
-import { uploadFiles } from './uploadFiles'
+import { uploadSingleFile } from './uploadSingleFile'
 
-describe('Cloudinary - Upload files', () => {
+describe('Cloudinary - Upload single file', () => {
   const onComplete = jest.fn()
   const onError = jest.fn()
 
@@ -11,7 +11,7 @@ describe('Cloudinary - Upload files', () => {
   })
 
   test('Should not call the onComplete callback', async () => {
-    await uploadFiles.onActivityCreated(
+    await uploadSingleFile.onActivityCreated(
       generateTestPayload({
         fields: {
           uploadPreset: undefined, // If not defined, it will use preset from the extension settings
