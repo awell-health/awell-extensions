@@ -1,0 +1,7 @@
+query entries($category: String, $type: String) {
+  entries(category: $category, type: $type) {
+    id
+    metric_stat
+    created_at
+  }
+}
