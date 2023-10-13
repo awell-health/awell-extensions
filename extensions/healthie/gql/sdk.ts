@@ -24920,6 +24920,14 @@ export type GetUserQueryVariables = Exact<{
 
 export type GetUserQuery = { __typename?: 'Query', user?: { __typename?: 'User', id: string, first_name?: string | null, last_name?: string | null, dob?: string | null, gender?: string | null, email?: string | null, phone_number?: string | null, next_appt_date?: string | null, dietitian_id?: string | null, quick_notes?: string | null, user_group?: { __typename?: 'UserGroup', id: string, name?: string | null } | null, providers?: Array<{ __typename?: 'User', id: string, active: boolean, first_name?: string | null, last_name?: string | null, email?: string | null }> | null } | null };
 
+export type EntriesQueryVariables = Exact<{
+  category?: InputMaybe<Scalars['String']>;
+  type?: InputMaybe<Scalars['String']>;
+}>;
+
+
+export type EntriesQuery = { __typename?: 'Query', entries?: Array<{ __typename?: 'Entry', id: string, metric_stat?: number | null, created_at: string }> | null };
+
 export type RemoveTagFromUserMutationVariables = Exact<{
   id?: InputMaybe<Scalars['ID']>;
   taggable_user_id?: InputMaybe<Scalars['ID']>;
@@ -25233,6 +25241,15 @@ export const GetUserDocument = gql`
   }
 }
     `;
+export const EntriesDocument = gql`
+    query entries($category: String, $type: String) {
+  entries(category: $category, type: $type) {
+    id
+    metric_stat
+    created_at
+  }
+}
+    `;
 export const RemoveTagFromUserDocument = gql`
     mutation removeTagFromUser($id: ID, $taggable_user_id: ID) {
   removeAppliedTag(input: {id: $id, taggable_user_id: $taggable_user_id}) {
@@ -25341,6 +25358,7 @@ const GetAppointmentDocumentString = print(GetAppointmentDocument);
 const GetConversationListDocumentString = print(GetConversationListDocument);
 const GetFormTemplateDocumentString = print(GetFormTemplateDocument);
 const GetUserDocumentString = print(GetUserDocument);
+const EntriesDocumentString = print(EntriesDocument);
 const RemoveTagFromUserDocumentString = print(RemoveTagFromUserDocument);
 const SendChatMessageDocumentString = print(SendChatMessageDocument);
 const UpdateAppointmentDocumentString = print(UpdateAppointmentDocument);
@@ -25396,6 +25414,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     getUser(variables?: GetUserQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: GetUserQuery; extensions?: any; headers: Dom.Headers; status: number; }> {
         return withWrapper((wrappedRequestHeaders) => client.rawRequest<GetUserQuery>(GetUserDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getUser', 'query');
+    },
+    entries(variables?: EntriesQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: EntriesQuery; extensions?: any; headers: Dom.Headers; status: number; }> {
+        return withWrapper((wrappedRequestHeaders) => client.rawRequest<EntriesQuery>(EntriesDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'entries', 'query');
     },
     removeTagFromUser(variables?: RemoveTagFromUserMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: RemoveTagFromUserMutation; extensions?: any; headers: Dom.Headers; status: number; }> {
         return withWrapper((wrappedRequestHeaders) => client.rawRequest<RemoveTagFromUserMutation>(RemoveTagFromUserDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'removeTagFromUser', 'mutation');

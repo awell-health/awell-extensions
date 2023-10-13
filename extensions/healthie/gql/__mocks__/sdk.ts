@@ -184,6 +184,24 @@ export const mockGetSdkReturn = {
       },
     }
   }),
+  entries: jest.fn((args) => {
+    return {
+      data: {
+        entries: [
+          {
+            id: '714884',
+            metric_stat: 190.0,
+            created_at: '2023-10-06 12:08:34 +0200',
+          },
+          {
+            id: '714883',
+            metric_stat: 182.0,
+            created_at: '2023-10-06 12:08:32 +0200',
+          },
+        ],
+      },
+    }
+  }),
   createEntry: jest.fn((args) => {
     return {
       data: {
