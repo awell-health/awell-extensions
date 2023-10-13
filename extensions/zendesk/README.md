@@ -9,7 +9,7 @@ Zendesk is a customer service and support platform that provides a suite of tool
 
 ## Extension settings
 
-In order to set up this extension, you will need a **sales API token**. You can visit Zendesk Sales CRM dashboard and go to **Settings > Integration > OAuth** to enable and create an API token.
+In order to set up this extension, you will to authenticate with the Sell API and need an API token. You can visit Zendesk Sales CRM dashboard and go to **Settings > Integration > OAuth** to enable and create an API token. Read more about how to get an access token for the Sell API [here](https://developer.zendesk.com/documentation/sales-crm/first-call/).
 
 ## Custom Actions
 
