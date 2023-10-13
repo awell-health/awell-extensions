@@ -15,4 +15,4 @@ const ZendeskClientMock = jest.fn(() => ZendeskClientMockImplementation)
 
 export const ZendeskClient = ZendeskClientMock
 
-export const isZendeskError = jest.fn()
+export const isSalesApiError = jest.fn()

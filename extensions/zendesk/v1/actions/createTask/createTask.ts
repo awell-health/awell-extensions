@@ -6,8 +6,8 @@ import { SettingsValidationSchema } from '../../../settings'
 import { FieldsValidationSchema, fields, dataPoints } from './config'
 import {
   ZendeskClient,
-  isZendeskError,
-  zendeskErrorToActivityEvent,
+  isSalesApiError,
+  salesApiErrorToActivityEvent,
 } from '../../client'
 
 export const createTask: Action<typeof fields, typeof settings> = {
@@ -55,8 +55,8 @@ export const createTask: Action<typeof fields, typeof settings> = {
 
       await onComplete({ data_points: { taskId: String(res.data.data.id) } })
     } catch (err) {
-      if (isZendeskError(err)) {
-        const events = zendeskErrorToActivityEvent(err)
+      if (isSalesApiError(err)) {
+        const events = salesApiErrorToActivityEvent(err)
         await onError({ events })
       } else {
         // re-throw to be handled in extensions server

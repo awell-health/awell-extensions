@@ -4,7 +4,7 @@ import { isNil } from 'lodash'
 import { z } from 'zod'
 import { type SalesApiErrorResponse } from './types'
 
-const errorSchema = z.object({
+const salesApiErrorSchema = z.object({
   errors: z.array(
     z.object({
       error: z.object({
@@ -20,18 +20,18 @@ const errorSchema = z.object({
   meta: z.object({}),
 })
 
-export const isZendeskError = (
+export const isSalesApiError = (
   error: any
 ): error is AxiosError<SalesApiErrorResponse> => {
   if (isAxiosError(error)) {
-    const parseResult = errorSchema.safeParse(error.response?.data)
+    const parseResult = salesApiErrorSchema.safeParse(error.response?.data)
     return parseResult.success
   }
 
   return false
 }
 
-export const zendeskErrorToActivityEvent = (
+export const salesApiErrorToActivityEvent = (
   error: AxiosError<SalesApiErrorResponse>
 ): ActivityEvent[] => {
   const errorData = error.response?.data
