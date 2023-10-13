@@ -6,7 +6,7 @@ import { settingsValidationSchema, type settings } from '../../settings'
 import { HealthieError, mapHealthieToActivityError } from '../../errors'
 import { z, ZodError } from 'zod'
 import { fromZodError } from 'zod-validation-error'
-import { fields, fieldsValidationSchema } from './config'
+import { fields, FieldsValidationSchema } from './config'
 
 export const updatePatientQuickNote: Action<typeof fields, typeof settings> = {
   key: 'updatePatientQuickNote',
@@ -23,7 +23,7 @@ export const updatePatientQuickNote: Action<typeof fields, typeof settings> = {
       } = validate({
         schema: z.object({
           settings: settingsValidationSchema,
-          fields: fieldsValidationSchema,
+          fields: FieldsValidationSchema,
         }),
         payload,
       })
