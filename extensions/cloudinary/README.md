@@ -8,19 +8,18 @@ Cloudinary is a cloud-based image and video management platform that provides a 
 
 The platform offers features such as image and video transformation, automatic image optimization, and responsive image delivery. Cloudinary also provides tools for organizing media assets, including tags, folders, and metadata.
 
+## Set up
+
+To set up this extension and allow image upload you will need to:
+
+1. Have a Cloudinary account and know your cloud name
+2. Created an upload preset that allows for **unsigned uploads**
+
 ## Custom Actions
 
+### Upload single file
+
+Allows a user to upload a single file using Awell Hosted Pages (all file types allowed). The URL of the uploaded file is returned as a data point.
 ### Upload files
 
-This action allows a given stakeholder to upload one or many files (all file types allowed). Additionally, you can specify in what folder you would like to upload the assets.
-
-**Prerequisites:**
-
-1. You have a Cloudinary account
-2. You have created an upload preset that allows for unsigned uploads
-
-**Limitations:**
-
-- You cannot manage or browse uploaded file(s) in Awell. You can only do that in Cloudinary. To make searching files as easy as possible, you can assign tags to uploaded files and each uploaded file automatically has metadata attached (pathway id and activity id)
-- Only support for unsigned uploads
-- As a user, you cannot delete files you already uploaded
+This action allows a given stakeholder to upload one or many files using Awell Hosted Pages (all file types allowed). This action currently doesn't return the URLs of the uploaded files. If you need this functionality, please use the "Upload single file" action for now.

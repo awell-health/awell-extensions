@@ -20,3 +20,9 @@ In order to set up this extension, you will need an API key to authenticate with
 Send an email to a specific email address.
 
 **Important:** Provide a `recipientEmail` or a `recipientUserId` (but not both), depending on how your [project identifies users](https://support.iterable.com/hc/articles/204780579#identifying-users).
+
+### Track Event
+
+Track an event in Iterable.
+
+**Important:** Provide an `email` or a `userId` (but not both), depending on how your [project identifies users](https://support.iterable.com/hc/articles/204780579#identifying-users).

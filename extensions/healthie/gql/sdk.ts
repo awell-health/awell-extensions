@@ -24813,6 +24813,17 @@ export type CreateConversationMutationVariables = Exact<{
 
 export type CreateConversationMutation = { __typename?: 'Mutation', createConversation?: { __typename?: 'createConversationPayload', conversation?: { __typename?: 'Conversation', id: string } | null, messages?: Array<{ __typename?: 'FieldError', field?: string | null, message: string } | null> | null } | null };
 
+export type CreateEntryMutationVariables = Exact<{
+  metric_stat?: InputMaybe<Scalars['String']>;
+  category?: InputMaybe<Scalars['String']>;
+  type?: InputMaybe<Scalars['String']>;
+  user_id?: InputMaybe<Scalars['String']>;
+  created_at?: InputMaybe<Scalars['String']>;
+}>;
+
+
+export type CreateEntryMutation = { __typename?: 'Mutation', createEntry?: { __typename?: 'createEntryPayload', entry?: { __typename?: 'Entry', id: string } | null, messages?: Array<{ __typename?: 'FieldError', field?: string | null, message: string } | null> | null } | null };
+
 export type CreateFormAnswerGroupMutationVariables = Exact<{
   input: CreateFormAnswerGroupInput;
 }>;
@@ -24907,7 +24918,7 @@ export type GetUserQueryVariables = Exact<{
 }>;
 
 
-export type GetUserQuery = { __typename?: 'Query', user?: { __typename?: 'User', id: string, first_name?: string | null, last_name?: string | null, dob?: string | null, gender?: string | null, email?: string | null, phone_number?: string | null, next_appt_date?: string | null, dietitian_id?: string | null, user_group?: { __typename?: 'UserGroup', id: string, name?: string | null } | null, providers?: Array<{ __typename?: 'User', id: string, active: boolean, first_name?: string | null, last_name?: string | null, email?: string | null }> | null } | null };
+export type GetUserQuery = { __typename?: 'Query', user?: { __typename?: 'User', id: string, first_name?: string | null, last_name?: string | null, dob?: string | null, gender?: string | null, email?: string | null, phone_number?: string | null, next_appt_date?: string | null, dietitian_id?: string | null, quick_notes?: string | null, user_group?: { __typename?: 'UserGroup', id: string, name?: string | null } | null, providers?: Array<{ __typename?: 'User', id: string, active: boolean, first_name?: string | null, last_name?: string | null, email?: string | null }> | null } | null };
 
 export type EntriesQueryVariables = Exact<{
   category?: InputMaybe<Scalars['String']>;
@@ -24951,7 +24962,7 @@ export type UpdatePatientMutationVariables = Exact<{
 }>;
 
 
-export type UpdatePatientMutation = { __typename?: 'Mutation', updateClient?: { __typename?: 'updateClientPayload', user?: { __typename?: 'User', id: string, first_name?: string | null, last_name?: string | null, legal_name?: string | null, email?: string | null } | null, messages?: Array<{ __typename?: 'FieldError', field?: string | null, message: string } | null> | null } | null };
+export type UpdatePatientMutation = { __typename?: 'Mutation', updateClient?: { __typename?: 'updateClientPayload', user?: { __typename?: 'User', id: string, first_name?: string | null, last_name?: string | null, legal_name?: string | null, email?: string | null, quick_notes?: string | null } | null, messages?: Array<{ __typename?: 'FieldError', field?: string | null, message: string } | null> | null } | null };
 
 export type UpdateTaskMutationVariables = Exact<{
   input: UpdateTaskInput;
@@ -24996,6 +25007,21 @@ export const CreateConversationDocument = gql`
     input: {simple_added_users: $simple_added_users, owner_id: $owner_id, name: $name}
   ) {
     conversation {
+      id
+    }
+    messages {
+      field
+      message
+    }
+  }
+}
+    `;
+export const CreateEntryDocument = gql`
+    mutation createEntry($metric_stat: String, $category: String, $type: String, $user_id: String, $created_at: String) {
+  createEntry(
+    input: {category: $category, type: $type, metric_stat: $metric_stat, user_id: $user_id, created_at: $created_at}
+  ) {
+    entry {
       id
     }
     messages {
@@ -25211,6 +25237,7 @@ export const GetUserDocument = gql`
       last_name
       email
     }
+    quick_notes
   }
 }
     `;
@@ -25288,6 +25315,7 @@ export const UpdatePatientDocument = gql`
       last_name
       legal_name
       email
+      quick_notes
     }
     messages {
       field
@@ -25317,6 +25345,7 @@ const defaultWrapper: SdkFunctionWrapper = (action, _operationName, _operationTy
 const ApplyTagsToUserDocumentString = print(ApplyTagsToUserDocument);
 const CreateAppointmentDocumentString = print(CreateAppointmentDocument);
 const CreateConversationDocumentString = print(CreateConversationDocument);
+const CreateEntryDocumentString = print(CreateEntryDocument);
 const CreateFormAnswerGroupDocumentString = print(CreateFormAnswerGroupDocument);
 const CreateFormCompletionRequestDocumentString = print(CreateFormCompletionRequestDocument);
 const CreateJournalEntryDocumentString = print(CreateJournalEntryDocument);
@@ -25346,6 +25375,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     createConversation(variables?: CreateConversationMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: CreateConversationMutation; extensions?: any; headers: Dom.Headers; status: number; }> {
         return withWrapper((wrappedRequestHeaders) => client.rawRequest<CreateConversationMutation>(CreateConversationDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'createConversation', 'mutation');
+    },
+    createEntry(variables?: CreateEntryMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: CreateEntryMutation; extensions?: any; headers: Dom.Headers; status: number; }> {
+        return withWrapper((wrappedRequestHeaders) => client.rawRequest<CreateEntryMutation>(CreateEntryDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'createEntry', 'mutation');
     },
     createFormAnswerGroup(variables: CreateFormAnswerGroupMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: CreateFormAnswerGroupMutation; extensions?: any; headers: Dom.Headers; status: number; }> {
         return withWrapper((wrappedRequestHeaders) => client.rawRequest<CreateFormAnswerGroupMutation>(CreateFormAnswerGroupDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'createFormAnswerGroup', 'mutation');

@@ -13,3 +13,10 @@ export const mockedSendEmailData: SendEmailRequest = {
   allowRepeatMarketingSends: true,
   metadata: {},
 }
+
+export const mockTrackEventActionFields = {
+  eventName: 'Some name',
+  email: mockedSendEmailData.recipientEmail,
+  userId: mockedSendEmailData.recipientUserId,
+  dataFields: { dateField1: 'hello', dateField2: 'world' },
+}

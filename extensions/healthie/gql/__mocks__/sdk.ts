@@ -184,11 +184,6 @@ export const mockGetSdkReturn = {
       },
     }
   }),
-  updateClient: jest.fn((args) => {
-    return {
-      data: {},
-    }
-  }),
   entries: jest.fn((args) => {
     return {
       data: {
@@ -204,6 +199,17 @@ export const mockGetSdkReturn = {
             created_at: '2023-10-06 12:08:32 +0200',
           },
         ],
+      },
+    }
+  }),
+  createEntry: jest.fn((args) => {
+    return {
+      data: {
+        createTask: {
+          task: {
+            id: 'task-1',
+          },
+        },
       },
     }
   }),

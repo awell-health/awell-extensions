@@ -1,5 +1,9 @@
 import axios, { type AxiosResponse } from 'axios'
-import { type ApiResponse, type SendEmailRequest } from './types'
+import {
+  type TrackEventRequest,
+  type ApiResponse,
+  type SendEmailRequest,
+} from './types'
 
 class IterableBaseAPI {
   readonly _baseUrl: string
@@ -74,10 +78,31 @@ class IterableEmailAPI {
   }
 }
 
+class IterableEventsAPI {
+  private readonly _baseApi: IterableBaseAPI
+
+  constructor({ apiKey }: { apiKey: string }) {
+    this._baseApi = new IterableBaseAPI({
+      baseUrl: `https://api.iterable.com/api/events`,
+      apiKey,
+    })
+  }
+
+  trackEvent = async (
+    body: TrackEventRequest
+  ): Promise<AxiosResponse<ApiResponse>> => {
+    return await this._baseApi.post<TrackEventRequest, ApiResponse>('track', {
+      body,
+    })
+  }
+}
+
 export class IterableClient {
   readonly emailApi: IterableEmailAPI
+  readonly eventsApi: IterableEventsAPI
 
   constructor({ apiKey }: { apiKey: string }) {
     this.emailApi = new IterableEmailAPI({ apiKey })
+    this.eventsApi = new IterableEventsAPI({ apiKey })
   }
 }

@@ -82,3 +82,6 @@ Cancels an appointment with a given `id`.
 ## Get metric entry
 
 Retrieve the most recent metric entry from a given `category`.
+## Create metric entry
+
+Create a metric entry for a patient in Healthie.

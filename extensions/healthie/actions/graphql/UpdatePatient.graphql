@@ -6,6 +6,7 @@ mutation updatePatient($input: updateClientInput!) {
       last_name
       legal_name
       email
+      quick_notes
     }
     messages {
       field
