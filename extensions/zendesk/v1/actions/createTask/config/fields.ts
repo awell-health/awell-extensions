@@ -24,7 +24,7 @@ export const fields = {
     // Time will be auto-set to 00:00:00 as FieldType.DATE provides only date
     type: FieldType.DATE,
     required: false,
-    description: "Date and time of task's due date in UTC (ISO8601 format).",
+    description: "Date of task's due date in UTC (ISO8601 format).",
   },
   ownerId: {
     label: 'Owner ID',
@@ -63,7 +63,7 @@ export const fields = {
     type: FieldType.DATE,
     required: false,
     description:
-      'Date and time that we should send you a reminder about the task in UTC (ISO8601 format).',
+      'Date that we should send you a reminder about the task in UTC (ISO8601 format).',
   },
 } satisfies Record<string, Field>
 
