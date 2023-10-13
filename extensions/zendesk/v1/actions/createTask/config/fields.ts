@@ -21,8 +21,8 @@ export const fields = {
   dueDate: {
     label: 'Due date',
     id: 'dueDate',
-    // STRING because FieldType.DATE doesn't allow setting time
-    type: FieldType.STRING,
+    // Time will be auto-set to 00:00:00 as FieldType.DATE provides only date
+    type: FieldType.DATE,
     required: false,
     description: "Date and time of task's due date in UTC (ISO8601 format).",
   },
@@ -59,8 +59,8 @@ export const fields = {
   remindAt: {
     label: 'Remind at',
     id: 'remindAt',
-    // STRING because FieldType.DATE doesn't allow setting time
-    type: FieldType.STRING,
+    // Time will be auto-set to 00:00:00 as FieldType.DATE provides only date
+    type: FieldType.DATE,
     required: false,
     description:
       'Date and time that we should send you a reminder about the task in UTC (ISO8601 format).',

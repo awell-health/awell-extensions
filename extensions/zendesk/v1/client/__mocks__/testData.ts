@@ -2,7 +2,8 @@ import { type Task } from '../../types'
 import { ResourceType } from '../types'
 
 export const mockedDates = {
-  iso: '2023-08-01T00:00:00Z',
+  isoDatetime: '2023-08-01T00:00:00Z',
+  isoDate: '2023-08-01',
 }
 
 export const mockedTaskData: Task = {
@@ -12,11 +13,11 @@ export const mockedTaskData: Task = {
   resource_type: ResourceType.LEAD,
   resource_id: 1,
   completed: true,
-  completed_at: mockedDates.iso,
-  due_date: mockedDates.iso,
+  completed_at: mockedDates.isoDatetime,
+  due_date: mockedDates.isoDatetime,
   overdue: false,
-  remind_at: mockedDates.iso,
+  remind_at: mockedDates.isoDatetime,
   content: 'Contact Tom',
-  created_at: mockedDates.iso,
-  updated_at: mockedDates.iso,
+  created_at: mockedDates.isoDatetime,
+  updated_at: mockedDates.isoDatetime,
 }

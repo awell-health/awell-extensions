@@ -1,4 +1,5 @@
 import {
+  mockedDates,
   mockedTaskData,
   ZendeskClientMockImplementation,
 } from '../../client/__mocks__'
@@ -14,12 +15,12 @@ describe('Create task', () => {
   const basePayload = generateTestPayload({
     fields: {
       content: mockedTaskData.content,
-      dueDate: mockedTaskData.due_date,
+      dueDate: mockedDates.isoDate,
       ownerId: mockedTaskData.owner_id,
       resourceType: mockedTaskData.resource_type,
       resourceId: mockedTaskData.resource_id,
       completed: mockedTaskData.completed,
-      remindAt: mockedTaskData.remind_at,
+      remindAt: mockedDates.isoDate,
     },
     settings: {
       salesApiToken: 'salesApiToken',
