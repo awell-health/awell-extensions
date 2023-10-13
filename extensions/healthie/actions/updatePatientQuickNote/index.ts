@@ -1,0 +1,1 @@
+export { updatePatientQuickNote } from './updatePatientQuickNote'

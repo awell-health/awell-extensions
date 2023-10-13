@@ -20,5 +20,6 @@ query getUser($id: ID) {
       last_name
       email
     }
+    quick_notes
   }
 }

@@ -10345,7 +10345,7 @@ export type Query = {
   appliedTags?: Maybe<Array<AppliedTag>>;
   /** fetch an appointment by id, group appointments are (considered public) */
   appointment?: Maybe<Appointment>;
-  /** Return protential booking issues for an appointment, date, time, repeats, attendees, and provider. */
+  /** Return potential booking issues for an appointment, date, time, repeats, attendees, and provider. */
   appointmentBookingWarnings?: Maybe<Array<AppointmentBookingWarning>>;
   /** returns metadata about appointments for provider dashboard */
   appointmentFrequencyData?: Maybe<Array<AppointmentDataType>>;
@@ -10411,7 +10411,7 @@ export type Query = {
   campaignsCount?: Maybe<Scalars['Int']>;
   /** Check if the user has access to the package buy limit feature */
   canCapOfferingPurchases?: Maybe<Scalars['Boolean']>;
-  /** fetch the current users candidhealth  connection */
+  /** fetch the current users candidhealth connection */
   candidHealthConnection?: Maybe<CandidHealthConnection>;
   /** Fetch paginated stripe customer accounts with associated errors or soon to expire credit cards */
   cardIssues?: Maybe<Array<StripeCustomerDetail>>;
@@ -11036,6 +11036,7 @@ export type QueryAppointmentBookingWarningsArgs = {
   date?: InputMaybe<Scalars['String']>;
   is_repeating?: InputMaybe<Scalars['Boolean']>;
   provider_id?: InputMaybe<Scalars['ID']>;
+  recurring_appt_id?: InputMaybe<Scalars['String']>;
   repeat_interval?: InputMaybe<Scalars['String']>;
   repeat_times?: InputMaybe<Scalars['String']>;
   time?: InputMaybe<Scalars['String']>;
@@ -24917,7 +24918,7 @@ export type GetUserQueryVariables = Exact<{
 }>;
 
 
-export type GetUserQuery = { __typename?: 'Query', user?: { __typename?: 'User', id: string, first_name?: string | null, last_name?: string | null, dob?: string | null, gender?: string | null, email?: string | null, phone_number?: string | null, next_appt_date?: string | null, dietitian_id?: string | null, user_group?: { __typename?: 'UserGroup', id: string, name?: string | null } | null, providers?: Array<{ __typename?: 'User', id: string, active: boolean, first_name?: string | null, last_name?: string | null, email?: string | null }> | null } | null };
+export type GetUserQuery = { __typename?: 'Query', user?: { __typename?: 'User', id: string, first_name?: string | null, last_name?: string | null, dob?: string | null, gender?: string | null, email?: string | null, phone_number?: string | null, next_appt_date?: string | null, dietitian_id?: string | null, quick_notes?: string | null, user_group?: { __typename?: 'UserGroup', id: string, name?: string | null } | null, providers?: Array<{ __typename?: 'User', id: string, active: boolean, first_name?: string | null, last_name?: string | null, email?: string | null }> | null } | null };
 
 export type RemoveTagFromUserMutationVariables = Exact<{
   id?: InputMaybe<Scalars['ID']>;
@@ -24953,7 +24954,7 @@ export type UpdatePatientMutationVariables = Exact<{
 }>;
 
 
-export type UpdatePatientMutation = { __typename?: 'Mutation', updateClient?: { __typename?: 'updateClientPayload', user?: { __typename?: 'User', id: string, first_name?: string | null, last_name?: string | null, legal_name?: string | null, email?: string | null } | null, messages?: Array<{ __typename?: 'FieldError', field?: string | null, message: string } | null> | null } | null };
+export type UpdatePatientMutation = { __typename?: 'Mutation', updateClient?: { __typename?: 'updateClientPayload', user?: { __typename?: 'User', id: string, first_name?: string | null, last_name?: string | null, legal_name?: string | null, email?: string | null, quick_notes?: string | null } | null, messages?: Array<{ __typename?: 'FieldError', field?: string | null, message: string } | null> | null } | null };
 
 export type UpdateTaskMutationVariables = Exact<{
   input: UpdateTaskInput;
@@ -25228,6 +25229,7 @@ export const GetUserDocument = gql`
       last_name
       email
     }
+    quick_notes
   }
 }
     `;
@@ -25296,6 +25298,7 @@ export const UpdatePatientDocument = gql`
       last_name
       legal_name
       email
+      quick_notes
     }
     messages {
       field
