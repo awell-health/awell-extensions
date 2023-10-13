@@ -4,19 +4,21 @@ import { validate, type Action } from '@awell-health/extensions-core'
 import { Category } from '@awell-health/extensions-core'
 import { type settings, settingsValidationSchema } from '../../settings'
 import { HealthieError, mapHealthieToActivityError } from '../../errors'
-import { dataPoints, fields, fieldsValidationSchema } from './config'
+import { dataPoints, fields, FieldsValidationSchema } from './config'
 import { initialiseClient } from '../../graphqlClient'
 import { getSdk } from '../../gql/sdk'
+import { isEmpty } from 'lodash'
 
-export const getMostRecentMetricEntry: Action<
+export const getMetricEntry: Action<
   typeof fields,
   typeof settings,
   keyof typeof dataPoints
 > = {
-  key: 'getMostRecentMetricEntry',
+  key: 'getMetricEntry',
   category: Category.EHR_INTEGRATIONS,
-  title: 'Get most recent metric entry',
-  description: 'Get most recent metric entry in Healthie.',
+  title: 'Get metric entry',
+  description:
+    'Get most recent metric entry of a given category from Healthie.',
   fields,
   dataPoints,
   previewable: true,
@@ -28,7 +30,7 @@ export const getMostRecentMetricEntry: Action<
       } = validate({
         schema: z.object({
           settings: settingsValidationSchema,
-          fields: fieldsValidationSchema,
+          fields: FieldsValidationSchema,
         }),
         payload,
       })
@@ -37,12 +39,23 @@ export const getMostRecentMetricEntry: Action<
       if (client != null) {
         const sdk = getSdk(client)
         const { data } = await sdk.entries({ type: 'MetricEntry', category })
+
+        const mostRecentMetricObject =
+          data.entries === undefined || data.entries?.length === 0
+            ? undefined
+            : data.entries?.[0]
+
         await onComplete({
           data_points: {
-            lastMetricValue:
-              data.entries === undefined || data.entries?.length === 0
-                ? undefined
-                : JSON.stringify(data.entries?.[0]),
+            metricId: mostRecentMetricObject?.id,
+            metricValue: isEmpty(mostRecentMetricObject)
+              ? undefined
+              : String(mostRecentMetricObject?.metric_stat),
+            createdAt: isEmpty(mostRecentMetricObject)
+              ? undefined
+              : new Date(
+                  mostRecentMetricObject?.created_at ?? ''
+                ).toISOString(),
           },
         })
       }

@@ -1,12 +1,12 @@
 import { generateTestPayload } from '../../../../src/tests'
 import { getSdk } from '../../gql/sdk'
 import { mockGetSdk } from '../../gql/__mocks__/sdk'
-import { getMostRecentMetricEntry } from '../getMostRecentMetricEntry'
+import { getMetricEntry } from '.'
 
 jest.mock('../../gql/sdk')
 jest.mock('../../graphqlClient')
 
-describe('createMetricEntry action', () => {
+describe('Healthie - Get metric entry', () => {
   const onComplete = jest.fn()
   const onError = jest.fn()
 
@@ -19,7 +19,7 @@ describe('createMetricEntry action', () => {
   })
 
   test('Should get most recent metric entry', async () => {
-    await getMostRecentMetricEntry.onActivityCreated(
+    await getMetricEntry.onActivityCreated(
       generateTestPayload({
         fields: {
           category: 'Weight',
@@ -32,7 +32,14 @@ describe('createMetricEntry action', () => {
       onComplete,
       onError
     )
-    expect(onComplete).toBeCalledTimes(1)
+
+    expect(onComplete).toBeCalledWith({
+      data_points: {
+        metricId: '714884',
+        metricValue: '190',
+        createdAt: '2023-10-06T10:08:34.000Z',
+      },
+    })
     expect(onError).toBeCalledTimes(0)
   })
 })

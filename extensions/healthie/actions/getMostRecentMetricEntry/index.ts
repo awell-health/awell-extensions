@@ -1,1 +1,0 @@
-export { getMostRecentMetricEntry } from './getMostRecentMetricEntry'

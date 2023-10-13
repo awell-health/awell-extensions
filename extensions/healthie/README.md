@@ -79,6 +79,6 @@ Deletes an appointment with a given `id`.
 
 Cancels an appointment with a given `id`.
 
-## Get most recent metric entry
+## Get metric entry
 
-Get most recent metric entry with a given `category`
+Retrieve the most recent metric entry from a given `category`.
