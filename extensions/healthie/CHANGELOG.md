@@ -1,5 +1,9 @@
 # Healthie changelog
 
+## October 2023
+
+- Create metric entry action.
+
 ## September 5, 2023
 
 - add Healthie gender to Sex in iso format mapper in `getPatient`
