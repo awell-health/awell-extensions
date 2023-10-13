@@ -19,7 +19,6 @@ import { Sendgrid } from './sendgrid-extension'
 import { CmDotCom } from './cmDotCom'
 import { DocuSign } from './docuSign'
 import { Sendbird } from './sendbird'
-import { ZusHealth } from './zusHealth'
 import { Transform } from './transform'
 
 import * as json from './markdown.json'
@@ -50,5 +49,6 @@ export const extensions = [
   CmDotCom,
   DocuSign,
   Sendbird,
-  ZusHealth,
+  // ZusHealth is not ready for public use yet
+  // ZusHealth,
 ]
