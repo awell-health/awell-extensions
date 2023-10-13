@@ -21,6 +21,7 @@ import { DocuSign } from './docuSign'
 import { Sendbird } from './sendbird'
 import { Transform } from './transform'
 import { Iterable } from './iterable'
+import { Zendesk } from './zendesk'
 
 import * as json from './markdown.json'
 
@@ -53,4 +54,5 @@ export const extensions = [
   // ZusHealth is not ready for public use yet
   // ZusHealth,
   Iterable,
+  Zendesk,
 ]
