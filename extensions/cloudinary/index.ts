@@ -1,6 +1,6 @@
 import { type Extension } from '@awell-health/extensions-core'
 import { AuthorType, Category } from '@awell-health/extensions-core'
-import { uploadFiles } from './actions'
+import { uploadFiles, uploadSingleFile } from './actions'
 import { settings } from './settings'
 
 export const Cloudinary: Extension = {
@@ -16,6 +16,7 @@ export const Cloudinary: Extension = {
   },
   actions: {
     uploadFiles,
+    uploadSingleFile,
   },
   settings,
 }

@@ -1,0 +1,1 @@
+export { deleteTask } from './deleteTask'
