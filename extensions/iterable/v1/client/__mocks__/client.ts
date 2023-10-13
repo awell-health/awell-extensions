@@ -4,6 +4,11 @@ export const IterableClientMockImplementation = {
       data: arg,
     })),
   },
+  eventsApi: {
+    trackEvent: jest.fn((arg) => ({
+      data: arg,
+    })),
+  },
 }
 
 const IterableClientMock = jest.fn(() => IterableClientMockImplementation)

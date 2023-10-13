@@ -7,7 +7,7 @@ import { generateTestPayload } from '../../../../../src/tests'
 
 jest.mock('../../client')
 
-describe('Send email', () => {
+describe('Iterable - Send email', () => {
   const onComplete = jest.fn()
   const onError = jest.fn()
 
