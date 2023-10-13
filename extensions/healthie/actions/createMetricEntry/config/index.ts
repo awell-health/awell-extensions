@@ -1,1 +1,1 @@
-export { fields } from './fields'
+export { fields, FieldsValidationSchema } from './fields'
