@@ -1,15 +1,20 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import express from 'express'
 import bodyParser from 'body-parser'
-import type Types from '@awell-health/extensions-core'
+import {
+  type NewActivityPayload,
+  type OnCompleteCallback,
+  type OnErrorCallback,
+  AwellError,
+} from '@awell-health/extensions-core'
 import { extensions } from '../extensions'
 
 const app = express()
 const port = 3000
 
 type QueueInput = (
-  | Parameters<Types.OnCompleteCallback>[0]
-  | Parameters<Types.OnErrorCallback>[0]
+  | Parameters<OnCompleteCallback>[0]
+  | Parameters<OnErrorCallback>[0]
 ) & { response: 'success' | 'failure' }
 
 const queue: QueueInput[] = []
@@ -43,10 +48,30 @@ app.post('/:extension/:action', async (req, res) => {
       .send(`Action ${actionKey} not found in extension ${extensionKey}`)
     return
   }
-  const payload = req.body as Types.NewActivityPayload
+  const payload = req.body as NewActivityPayload
   const onCompleteCb = createOnCompleteCallback(payload)
   const onErrorCb = createOnErrorCallback(payload)
-  await action.onActivityCreated(payload, onCompleteCb, onErrorCb)
+  await action
+    .onActivityCreated(payload, onCompleteCb, onErrorCb)
+    .catch((err) => {
+      const error = new AwellError({
+        error: err,
+        action: actionKey,
+        extension: extensionKey,
+      })
+      void onErrorCb({
+        events: [
+          {
+            text: { en: error.title },
+            date: error.date.toISOString(),
+            error: {
+              category: error.category,
+              message: error.message,
+            },
+          },
+        ],
+      })
+    })
   const result = queue.shift()
   res.send(result)
 })
@@ -56,16 +81,16 @@ app.listen(port, () => {
 })
 
 const createOnCompleteCallback = (
-  payload: Types.NewActivityPayload
-): Types.OnCompleteCallback => {
+  payload: NewActivityPayload
+): OnCompleteCallback => {
   return async (params = {}) => {
     queue.push({ ...params, response: 'success' })
     console.log({ ...params, response: 'success' })
   }
 }
 const createOnErrorCallback = (
-  payload: Types.NewActivityPayload
-): Types.OnErrorCallback => {
+  payload: NewActivityPayload
+): OnErrorCallback => {
   return async (params = {}) => {
     queue.push({ ...params, response: 'failure' })
     console.error({ ...params, response: 'failure' })
