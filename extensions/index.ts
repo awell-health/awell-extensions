@@ -22,6 +22,7 @@ import { Sendbird } from './sendbird'
 import { Transform } from './transform'
 import { Iterable } from './iterable'
 import { Zendesk } from './zendesk'
+import { Infobip } from './infobip'
 
 import * as json from './markdown.json'
 
@@ -55,4 +56,5 @@ export const extensions = [
   // ZusHealth,
   Iterable,
   Zendesk,
+  Infobip,
 ]
