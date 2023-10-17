@@ -7,7 +7,7 @@ export const settings = {
     key: 'baseUrl',
     obfuscated: false,
     required: true,
-    description: 'Your unique API base URL.',
+    description: 'Your unique API base URL',
   },
   apiKey: {
     label: 'API key',
@@ -15,28 +15,22 @@ export const settings = {
     obfuscated: true,
     required: true,
     description:
-      'Go to Dashboard > Developer tools > API keys to create a key.',
+      'Provide an API key that allows the extension to make API calls to the Infobip API',
   },
   fromPhoneNumber: {
     label: 'From phone number',
     key: 'fromPhoneNumber',
     obfuscated: false,
     required: false,
-    description: 'Phone number from which you want to send text messages.',
+    description: 'The phone number you wish to use for sending text messages',
   },
   fromEmail: {
     label: 'From email',
     key: 'fromEmail',
     obfuscated: false,
     required: false,
-    description: 'Email from which you want to send email messages.',
-  },
-  replyTo: {
-    label: 'Reply to',
-    key: 'replyTo',
-    obfuscated: false,
-    required: false,
-    description: 'Email address to which recipients of the email can reply.',
+    description:
+      'The email address you wish to use for sending text messages. When you are using Broadcast templates, the from email defined in the template will be used.',
   },
 } satisfies Record<string, Setting>
 
@@ -49,5 +43,4 @@ export const SettingsValidationSchema = z.object({
   }),
   fromPhoneNumber: makeStringOptional(z.string()),
   fromEmail: makeStringOptional(z.string().email()),
-  replyTo: makeStringOptional(z.string().email()),
 } satisfies Record<keyof typeof settings, ZodTypeAny>)

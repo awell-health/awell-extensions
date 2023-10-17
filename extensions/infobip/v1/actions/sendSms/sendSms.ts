@@ -2,7 +2,7 @@ import { z } from 'zod'
 import { type Action, Category, validate } from '@awell-health/extensions-core'
 import { type settings, SettingsValidationSchema } from '../../../settings'
 import { FieldsValidationSchema, fields } from './config'
-import { isNil } from 'lodash'
+import { isEmpty } from 'lodash'
 import { infobipErrorToActivityEvent, isInfobipError } from '../../client/error'
 import { InfobipClient } from '../../client'
 
@@ -26,8 +26,8 @@ export const sendSms: Action<typeof fields, typeof settings> = {
           })
           .superRefine((value, ctx) => {
             if (
-              isNil(value.fields.from) &&
-              isNil(value.settings.fromPhoneNumber)
+              isEmpty(value.fields.from) &&
+              isEmpty(value.settings.fromPhoneNumber)
             ) {
               ctx.addIssue({
                 code: z.ZodIssueCode.custom,

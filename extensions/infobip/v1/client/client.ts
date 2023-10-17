@@ -1,5 +1,6 @@
 import axios, { type AxiosResponse } from 'axios'
 import { type EmailInput, type BaseResponse, type SmsInput } from '../types'
+import FormData from 'form-data'
 
 class InfobipBaseAPI {
   readonly _baseUrl: string
@@ -18,18 +19,17 @@ class InfobipBaseAPI {
     this._baseUrl = baseUrl
     this._token = apiToken
     this._headers = {
-      'Content-Type': 'application/json; charset=utf8',
-      Accept: ' application/json',
       [tokenHeaderKey]: this._token,
     } as const
   }
 
-  post = async <I extends undefined | object, R>(
+  post = async <I extends undefined | object | FormData, R>(
     url: string,
-    { body }: { body: I }
+    { body }: { body: I },
+    headers?: Record<string, string>
   ): Promise<AxiosResponse<R>> => {
     return await axios.post<R>(`${this._baseUrl}/${url}`, body, {
-      headers: this._headers,
+      headers: { ...this._headers, ...headers },
     })
   }
 
@@ -80,6 +80,10 @@ class InfobipSmsAPI {
       'sms/2/text/advanced',
       {
         body: message,
+      },
+      {
+        'Content-Type': 'application/json; charset=utf8',
+        Accept: ' application/json',
       }
     )
   }
@@ -97,9 +101,25 @@ class InfobipEmailAPI {
   }
 
   send = async (message: EmailInput): Promise<AxiosResponse<BaseResponse>> => {
-    return await this._baseApi.post<EmailInput, BaseResponse>('email/3/send', {
-      body: message,
-    })
+    const formData = new FormData()
+
+    for (const key in message) {
+      if (Object.hasOwnProperty.call(message, key)) {
+        // @ts-expect-error this is okay
+        const value = message[key]
+        if (value !== undefined && value !== '') {
+          formData.append(key, value.toString())
+        }
+      }
+    }
+
+    return await this._baseApi.post<FormData, BaseResponse>(
+      'email/3/send',
+      {
+        body: formData,
+      },
+      { 'Content-Type': 'multipart/form-data' }
+    )
   }
 }
 

@@ -21,3 +21,12 @@ export const mockedEmailData: EmailInput = {
   html: 'Hello!',
   subject: 'Welcome',
 }
+
+export const mockedEmailWithTemplateData: EmailInput = {
+  to: ['from@example.com'],
+  templateId: 12345,
+  subject: undefined,
+  defaultPlaceholders: JSON.stringify({
+    variable: 'success',
+  }),
+}

@@ -6,6 +6,7 @@ export interface EmailInput {
   subject?: string
   html?: string
   replyTo?: string
+  defaultPlaceholders?: string
 }
 
 export interface SmsInput {

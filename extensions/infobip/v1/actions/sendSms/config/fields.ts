@@ -7,22 +7,6 @@ import {
 } from '@awell-health/extensions-core'
 
 export const fields = {
-  to: {
-    label: 'To',
-    id: 'to',
-    type: FieldType.STRING,
-    stringType: StringType.PHONE,
-    required: true,
-    description: 'Phone number to which you want to send text messages to.',
-  },
-  text: {
-    label: 'Text',
-    id: 'text',
-    type: FieldType.STRING,
-    stringType: StringType.TEXT,
-    required: true,
-    description: 'Content of the text message.',
-  },
   from: {
     label: 'From',
     id: 'from',
@@ -30,7 +14,24 @@ export const fields = {
     stringType: StringType.PHONE,
     required: false,
     description:
-      'Phone number from which you want to send text messages. Defaults to value provided in settings.',
+      'The phone number you wish to use for sending the text message. Defaults to value provided in settings.',
+  },
+  to: {
+    label: 'To',
+    id: 'to',
+    type: FieldType.STRING,
+    stringType: StringType.PHONE,
+    required: true,
+    description:
+      'The phone number to which you intend to send the text message',
+  },
+  text: {
+    label: 'Text',
+    id: 'text',
+    type: FieldType.STRING,
+    stringType: StringType.TEXT,
+    required: true,
+    description: 'The content of the text message',
   },
 } satisfies Record<string, Field>
 
