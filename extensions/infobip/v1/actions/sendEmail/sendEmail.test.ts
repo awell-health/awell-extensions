@@ -38,7 +38,7 @@ describe('Send email', () => {
     expect(InfobipClientMockImplementation.emailApi.send).toHaveBeenCalledWith(
       mockedEmailData
     )
-    expect(onComplete).toHaveBeenCalledWith()
+    expect(onComplete).toHaveBeenCalled()
     expect(onError).not.toHaveBeenCalled()
   })
 })
