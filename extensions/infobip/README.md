@@ -9,7 +9,7 @@ Infobip is a global cloud communications platform that provides a wide range of 
 
 ## Extension settings
 
-In order to set up this extension, you will minimaly need to provide:
+In order to set up this extension, you will minimally need to provide:
 
 1. Your unique API [base URL](https://www.infobip.com/docs/essentials/base-url)
 2. An [API key](https://www.infobip.com/docs/essentials/api-authentication)
