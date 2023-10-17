@@ -34,7 +34,7 @@ export class WellinksClient {
             list_event_name: eventName,
             list_event_source_name: sourceName,
             list_event_originator_name: originatorName,
-            wellinks_member_id: memberId,
+            wellinks_id: memberId,
             event_date: eventDate,
             locked_by_id: lockedById,
           }),
