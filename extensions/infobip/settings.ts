@@ -15,7 +15,7 @@ export const settings = {
     obfuscated: true,
     required: true,
     description:
-      'Provide an API key that allows the extension to make API calls to the Infobip API',
+      'Your Infobip API key',
   },
   fromPhoneNumber: {
     label: 'From phone number',
