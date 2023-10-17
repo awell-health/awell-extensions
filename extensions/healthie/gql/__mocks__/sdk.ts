@@ -213,6 +213,39 @@ export const mockGetSdkReturn = {
       },
     }
   }),
+  appointments: jest.fn((args) => {
+    return {
+      data: {
+        appointmentsCount: 1,
+        appointments: [
+          {
+            id: '265851',
+            date: '2023-10-18 11:00:00 +0200',
+            contact_type: 'Healthie Video Call',
+            length: 60,
+            location: 'Healthie Video Call',
+            provider: {
+              id: '303275',
+              full_name: 'Michał Grzelak',
+            },
+            appointment_type: {
+              name: 'Initial Consultation',
+              id: '54454',
+            },
+            attendees: [
+              {
+                id: '357883',
+                full_name: 'Test Awell',
+                first_name: 'Test',
+                avatar_url: 'original/missing.png',
+                phone_number: null,
+              },
+            ],
+          },
+        ],
+      },
+    }
+  }),
 }
 
 export const mockGetSdk = (params: any): any => {

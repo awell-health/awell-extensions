@@ -24920,6 +24920,17 @@ export type GetUserQueryVariables = Exact<{
 
 export type GetUserQuery = { __typename?: 'Query', user?: { __typename?: 'User', id: string, first_name?: string | null, last_name?: string | null, dob?: string | null, gender?: string | null, email?: string | null, phone_number?: string | null, next_appt_date?: string | null, dietitian_id?: string | null, quick_notes?: string | null, user_group?: { __typename?: 'UserGroup', id: string, name?: string | null } | null, providers?: Array<{ __typename?: 'User', id: string, active: boolean, first_name?: string | null, last_name?: string | null, email?: string | null }> | null } | null };
 
+export type AppointmentsQueryVariables = Exact<{
+  user_id?: InputMaybe<Scalars['ID']>;
+  filter_by_appointment_type_id?: InputMaybe<Scalars['ID']>;
+  filter?: InputMaybe<Scalars['String']>;
+  startDate?: InputMaybe<Scalars['String']>;
+  endDate?: InputMaybe<Scalars['String']>;
+}>;
+
+
+export type AppointmentsQuery = { __typename?: 'Query', appointmentsCount?: number | null, appointments?: Array<{ __typename?: 'Appointment', id: string, date?: string | null, contact_type?: string | null, length?: number | null, location?: string | null, provider?: { __typename?: 'User', id: string, full_name?: string | null } | null, appointment_type?: { __typename?: 'AppointmentType', name?: string | null, id: string } | null, attendees: Array<{ __typename?: 'User', id: string, full_name?: string | null, first_name?: string | null, avatar_url?: string | null, phone_number?: string | null }> }> | null };
+
 export type EntriesQueryVariables = Exact<{
   category?: InputMaybe<Scalars['String']>;
   type?: InputMaybe<Scalars['String']>;
@@ -25241,6 +25252,45 @@ export const GetUserDocument = gql`
   }
 }
     `;
+export const AppointmentsDocument = gql`
+    query appointments($user_id: ID, $filter_by_appointment_type_id: ID, $filter: String, $startDate: String, $endDate: String) {
+  appointmentsCount(
+    user_id: $user_id
+    filter: $filter
+    filter_by_appointment_type_id: $filter_by_appointment_type_id
+    startDate: $startDate
+    endDate: $endDate
+  )
+  appointments(
+    user_id: $user_id
+    filter: $filter
+    filter_by_appointment_type_id: $filter_by_appointment_type_id
+    startDate: $startDate
+    endDate: $endDate
+  ) {
+    id
+    date
+    contact_type
+    length
+    location
+    provider {
+      id
+      full_name
+    }
+    appointment_type {
+      name
+      id
+    }
+    attendees {
+      id
+      full_name
+      first_name
+      avatar_url
+      phone_number
+    }
+  }
+}
+    `;
 export const EntriesDocument = gql`
     query entries($category: String, $type: String) {
   entries(category: $category, type: $type) {
@@ -25358,6 +25408,7 @@ const GetAppointmentDocumentString = print(GetAppointmentDocument);
 const GetConversationListDocumentString = print(GetConversationListDocument);
 const GetFormTemplateDocumentString = print(GetFormTemplateDocument);
 const GetUserDocumentString = print(GetUserDocument);
+const AppointmentsDocumentString = print(AppointmentsDocument);
 const EntriesDocumentString = print(EntriesDocument);
 const RemoveTagFromUserDocumentString = print(RemoveTagFromUserDocument);
 const SendChatMessageDocumentString = print(SendChatMessageDocument);
@@ -25414,6 +25465,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     getUser(variables?: GetUserQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: GetUserQuery; extensions?: any; headers: Dom.Headers; status: number; }> {
         return withWrapper((wrappedRequestHeaders) => client.rawRequest<GetUserQuery>(GetUserDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getUser', 'query');
+    },
+    appointments(variables?: AppointmentsQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: AppointmentsQuery; extensions?: any; headers: Dom.Headers; status: number; }> {
+        return withWrapper((wrappedRequestHeaders) => client.rawRequest<AppointmentsQuery>(AppointmentsDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'appointments', 'query');
     },
     entries(variables?: EntriesQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: EntriesQuery; extensions?: any; headers: Dom.Headers; status: number; }> {
         return withWrapper((wrappedRequestHeaders) => client.rawRequest<EntriesQuery>(EntriesDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'entries', 'query');

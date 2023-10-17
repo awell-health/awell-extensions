@@ -82,6 +82,7 @@
     "lodash": "^4.17.21",
     "mailgun.js": "^8.2.1",
     "messagebird": "^4.0.1",
+    "moment-timezone": "^0.5.43",
     "node-fetch": "2",
     "openai": "^3.2.1",
     "showdown": "^2.1.0",

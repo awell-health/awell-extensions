@@ -1,0 +1,45 @@
+query appointments(
+  $user_id: ID
+  $filter_by_appointment_type_id: ID
+  $filter: String
+  $startDate: String
+  $endDate: String
+) {
+  appointmentsCount(
+    user_id: $user_id
+    filter: $filter
+    filter_by_appointment_type_id: $filter_by_appointment_type_id
+    startDate: $startDate
+    endDate: $endDate
+  )
+  appointments(
+    user_id: $user_id
+    filter: $filter
+    filter_by_appointment_type_id: $filter_by_appointment_type_id
+    startDate: $startDate
+    endDate: $endDate
+  ) {
+    id
+    date
+    contact_type
+    length
+    location
+    provider {
+      id
+      full_name
+    }
+
+    appointment_type {
+      name
+      id
+    }
+
+    attendees {
+      id
+      full_name
+      first_name
+      avatar_url
+      phone_number
+    }
+  }
+}
