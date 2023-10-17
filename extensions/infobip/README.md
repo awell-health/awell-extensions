@@ -19,4 +19,6 @@ Sends SMS using Infobip
 
 ### Send email
 
+Sends email using Infobip
+
 ### Send email with template

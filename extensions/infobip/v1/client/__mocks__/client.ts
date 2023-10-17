@@ -1,4 +1,4 @@
-import { mockedPhoneNumber } from './testData'
+import { mockedEmailData, mockedPhoneNumber } from './testData'
 
 export const InfobipClientMockImplementation = {
   smsApi: {
@@ -9,6 +9,19 @@ export const InfobipClientMockImplementation = {
           {
             messageId: '123',
             to: mockedPhoneNumber.to,
+          },
+        ],
+      },
+    })),
+  },
+  emailApi: {
+    send: jest.fn((arg) => ({
+      data: {
+        bulkId: 'xyz',
+        messages: [
+          {
+            messageId: '123',
+            to: mockedEmailData.to,
           },
         ],
       },

@@ -1,5 +1,5 @@
 import axios, { type AxiosResponse } from 'axios'
-import { type BaseResponse, type SmsInput } from '../types'
+import { type EmailInput, type BaseResponse, type SmsInput } from '../types'
 
 class InfobipBaseAPI {
   readonly _baseUrl: string
@@ -85,10 +85,30 @@ class InfobipSmsAPI {
   }
 }
 
+class InfobipEmailAPI {
+  private readonly _baseApi: InfobipBaseAPI
+
+  constructor({ baseUrl, apiToken }: { baseUrl: string; apiToken: string }) {
+    this._baseApi = new InfobipBaseAPI({
+      baseUrl,
+      apiToken: `App ${apiToken}`,
+      tokenHeaderKey: 'Authorization',
+    })
+  }
+
+  send = async (message: EmailInput): Promise<AxiosResponse<BaseResponse>> => {
+    return await this._baseApi.post<EmailInput, BaseResponse>('email/3/send', {
+      body: message,
+    })
+  }
+}
+
 export class InfobipClient {
   readonly smsApi: InfobipSmsAPI
+  readonly emailApi: InfobipEmailAPI
 
   constructor({ baseUrl, apiToken }: { baseUrl: string; apiToken: string }) {
     this.smsApi = new InfobipSmsAPI({ baseUrl, apiToken })
+    this.emailApi = new InfobipEmailAPI({ baseUrl, apiToken })
   }
 }
