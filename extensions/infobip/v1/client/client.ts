@@ -83,7 +83,7 @@ class InfobipSmsAPI {
       },
       {
         'Content-Type': 'application/json; charset=utf8',
-        Accept: ' application/json',
+        Accept: 'application/json',
       }
     )
   }
