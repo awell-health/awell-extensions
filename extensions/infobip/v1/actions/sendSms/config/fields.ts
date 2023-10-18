@@ -28,8 +28,7 @@ export const fields = {
   text: {
     id: 'text',
     label: 'Content',
-    type: FieldType.STRING,
-    stringType: StringType.TEXT,
+    type: FieldType.TEXT,
     required: true,
     description: 'The content of the message being sent',
   },
