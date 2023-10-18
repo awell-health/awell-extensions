@@ -21,9 +21,8 @@ describe('Send SMS', () => {
     settings: {
       baseUrl: 'https://example.api.com',
       apiKey: 'apiKey',
-      fromPhoneNumber: undefined,
-      fromEmail: undefined,
-      replyTo: undefined,
+      fromPhoneNumber: '+19033428784',
+      fromEmail: 'john@doe.com',
     },
   })
 

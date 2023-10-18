@@ -17,14 +17,12 @@ describe('Send email', () => {
       to: mockedEmailData.to[0],
       subject: mockedEmailData.subject,
       content: mockedEmailData.html,
-      replyTo: mockedEmailData.replyTo,
     },
     settings: {
       baseUrl: 'https://example.api.com',
       apiKey: 'apiKey',
-      fromPhoneNumber: undefined,
-      fromEmail: undefined,
-      replyTo: undefined,
+      fromPhoneNumber: '+19033428784',
+      fromEmail: 'john@doe.com',
     },
   })
 

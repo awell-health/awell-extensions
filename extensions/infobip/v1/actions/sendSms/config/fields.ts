@@ -26,12 +26,12 @@ export const fields = {
       'The phone number to which you intend to send the text message',
   },
   text: {
-    label: 'Text',
     id: 'text',
+    label: 'Content',
     type: FieldType.STRING,
     stringType: StringType.TEXT,
     required: true,
-    description: 'The content of the text message',
+    description: 'The content of the message being sent',
   },
 } satisfies Record<string, Field>
 

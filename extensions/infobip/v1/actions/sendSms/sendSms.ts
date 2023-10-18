@@ -46,7 +46,6 @@ export const sendSms: Action<typeof fields, typeof settings> = {
         messages: [
           {
             destinations: [{ to }],
-            // validation above
             from: from ?? fromPhoneNumber ?? '',
             text,
           },
