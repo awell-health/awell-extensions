@@ -1992,7 +1992,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@dropbox/sign", "npm:1.1.3"],\
             ["axios", "npm:0.24.0"],\
             ["bluebird", "npm:3.7.2"],\
-            ["crypto-js", "npm:4.1.1"],\
+            ["crypto-js", "npm:4.2.0"],\
             ["form-data", "npm:4.0.0"],\
             ["qs", "npm:6.11.1"]\
           ],\
@@ -6087,10 +6087,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["crypto-js", [\
-        ["npm:4.1.1", {\
-          "packageLocation": "./.yarn/cache/crypto-js-npm-4.1.1-38a3b8c19d-b3747c12ee.zip/node_modules/crypto-js/",\
+        ["npm:4.2.0", {\
+          "packageLocation": "./.yarn/cache/crypto-js-npm-4.2.0-d6f7744e63-f051666dbc.zip/node_modules/crypto-js/",\
           "packageDependencies": [\
-            ["crypto-js", "npm:4.1.1"]\
+            ["crypto-js", "npm:4.2.0"]\
           ],\
           "linkType": "HARD"\
         }]\
