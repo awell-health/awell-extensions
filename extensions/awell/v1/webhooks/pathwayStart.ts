@@ -10,13 +10,13 @@ const dataPoints = {
   },
 } satisfies Record<string, DataPointDefinition>
 
-export type StartPathwayPayload = Record<string, unknown>
+export type PathwayStartPayload = Record<string, unknown>
 
-export const startPathway: Webhook<
+export const pathwayStart: Webhook<
   keyof typeof dataPoints,
-  StartPathwayPayload
+  PathwayStartPayload
 > = {
-  key: 'startPathway',
+  key: 'pathwayStart',
   description:
     'Start a pathway via webhook. No data points are expected nor required.',
   dataPoints,
@@ -29,4 +29,4 @@ export const startPathway: Webhook<
   },
 }
 
-export type StartPathwayWebhook = typeof startPathway
+export type PathwayStartWebhook = typeof pathwayStart
