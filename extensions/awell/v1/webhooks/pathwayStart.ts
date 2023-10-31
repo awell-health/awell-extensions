@@ -3,12 +3,7 @@ import {
   type Webhook,
 } from '@awell-health/extensions-core'
 
-const dataPoints = {
-  receivedDate: {
-    key: 'receivedDate',
-    valueType: 'date',
-  },
-} satisfies Record<string, DataPointDefinition>
+const dataPoints = {} satisfies Record<string, DataPointDefinition>
 
 export type PathwayStartPayload = Record<string, unknown>
 
@@ -22,9 +17,7 @@ export const pathwayStart: Webhook<
   dataPoints,
   onWebhookReceived: async ({ payload }, onSuccess) => {
     await onSuccess({
-      data_points: {
-        receivedDate: new Date().toISOString(),
-      },
+      data_points: {},
     })
   },
 }
