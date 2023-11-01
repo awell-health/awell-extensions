@@ -40,15 +40,50 @@ export const sendChatMessage: Action<
         })
         return
       }
+      if (provider_id === undefined) {
+        await onError({
+          events: [
+            {
+              date: new Date().toISOString(),
+              text: { en: 'Fields are missing' },
+              error: {
+                category: 'MISSING_FIELDS',
+                message: '`provider_id` is missing',
+              },
+            },
+          ],
+        })
+        return
+      }
 
       const client = initialiseClient(settings)
       if (client !== undefined) {
         const sdk = getSdk(client)
 
+        // The logic is as follows:
+        // 1. Get all conversations for the patient (by patient id)
+        // 2. Find the conversation that has the specified provider / current user as a member
+        // 3. If no conversation exists, create a new one including the patient and owned by the specified provider / current user
+        // 4. Send the (cleaned up) message to the conversation
+
+        // Questions:
+        // 1. What if the patient has multiple conversations with the same provider?
+        // 2. What of the dietitian id? -> This is interchangeable with provider_id (they are the same)
+
         const createConversation = async (): Promise<Conversation> => {
           const { data } = await sdk.createConversation({
-            owner_id: provider_id,
+            /**
+             * Send the message in name of the specified provider.
+             * If empty or blank, it defaults to the current user.
+             * https://docs.gethealthie.com/docs/#createconversation-mutation
+             */
             simple_added_users: `user-${healthie_patient_id}`,
+            owner_id: provider_id,
+            // These are deprecated fields to account for how Healthie conversation lookup logic works for when
+            // a patient is (re)assigned a provider and Healthie automatically creates a new conversation between them
+            // @ts-expect-error these deprecated fields are not in the schema but are still supported
+            dietitian_id: provider_id,
+            patient_id: healthie_patient_id,
           })
 
           return data.createConversation?.conversation
@@ -93,6 +128,13 @@ export const sendChatMessage: Action<
           })
         }
 
+        /**
+         * First checks if the conversation exists, if not, creates it.
+         * To check for existing conversation, it looks for an active, individual conversation
+         * that the patient and provider are both members of. If provider_id is not specified,
+         * it defaults to the current user.
+         * @returns The conversation object
+         */
         const getConversation = async (): Promise<Conversation> => {
           const { data } = await sdk.getConversationList({
             client_id: healthie_patient_id,
