@@ -67,8 +67,9 @@ export const sendChatMessage: Action<
         // 4. Send the (cleaned up) message to the conversation
 
         // Questions:
-        // 1. What if the patient has multiple conversations with the same provider?
-        // 2. What of the dietitian id? -> This is interchangeable with provider_id (they are the same)
+        // 1. What if the patient has multiple conversations with the same provider? -> We find the first conversation
+        // that matches the required conversation participants, so this is not deterministic
+        // 2. What is the dietitian id? -> This is provider_id, they are the same; dietitian_id is the old name
 
         const createConversation = async (): Promise<Conversation> => {
           const { data } = await sdk.createConversation({
