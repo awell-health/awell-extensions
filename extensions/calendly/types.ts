@@ -15,5 +15,6 @@ export interface CalendlyWebhookPayload {
     name: string
     status: 'active' | 'canceled'
     timezone: string
+    rescheduled: boolean
   }
 }

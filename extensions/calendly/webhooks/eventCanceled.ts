@@ -52,8 +52,13 @@ export const eventCanceled: Webhook<
         scheduled_event,
         status,
         timezone,
+        rescheduled,
       },
     } = payload
+
+    if (rescheduled) {
+      return
+    }
 
     // https://api.calendly.com/scheduled_events/GBGBDCAADAEDCRZ2 => GBGBDCAADAEDCRZ2
     const scheduledEventId = scheduled_event.uri.split('/').pop()
