@@ -10,6 +10,10 @@ const dataPoints = {
     key: 'eventId',
     valueType: 'string',
   },
+  eventTypeId: {
+    key: 'eventTypeId',
+    valueType: 'string',
+  },
   inviteeEmail: {
     key: 'inviteeEmail',
     valueType: 'string',
@@ -34,6 +38,30 @@ const dataPoints = {
     key: 'inviteeTimezone',
     valueType: 'string',
   },
+  hostEmail: {
+    key: 'hostEmail',
+    valueType: 'string',
+  },
+  startTime: {
+    key: 'startTime',
+    valueType: 'string',
+  },
+  endTime: {
+    key: 'endTime',
+    valueType: 'string',
+  },
+  cancelUrl: {
+    key: 'cancelUrl',
+    valueType: 'string',
+  },
+  rescheduleUrl: {
+    key: 'rescheduleUrl',
+    valueType: 'string',
+  },
+  videoCallUrl: {
+    key: 'videoCallUrl',
+    valueType: 'string',
+  },
 } satisfies Record<string, DataPointDefinition>
 
 export const eventRescheduled: Webhook<
@@ -52,6 +80,8 @@ export const eventRescheduled: Webhook<
         scheduled_event,
         status,
         timezone,
+        cancel_url,
+        reschedule_url,
         rescheduled,
       },
     } = payload
@@ -60,16 +90,38 @@ export const eventRescheduled: Webhook<
       // https://api.calendly.com/scheduled_events/GBGBDCAADAEDCRZ2 => GBGBDCAADAEDCRZ2
       const scheduledEventId = scheduled_event.uri.split('/').pop()
 
-      if (!isNil(scheduledEventId)) {
+      const scheduledEventTypeId = scheduled_event.event_type.split('/').pop()
+
+      const hostEmail =
+        scheduled_event.event_memberships.length > 0
+          ? scheduled_event.event_memberships[0].user_email
+          : ''
+      const videoCallUrl =
+        scheduled_event.location.type === 'zoom'
+          ? scheduled_event.location.join_url
+          : ''
+
+      if (
+        !isNil(scheduledEventId) &&
+        !isNil(scheduledEventTypeId) &&
+        rescheduled
+      ) {
         await onSuccess({
           data_points: {
             eventId: scheduledEventId,
+            eventTypeId: scheduledEventTypeId,
             inviteeEmail: email,
             inviteeFirstName: first_name,
             inviteeLastName: last_name,
             inviteeName: name,
             inviteeStatus: status,
             inviteeTimezone: timezone,
+            startTime: scheduled_event.start_time,
+            endTime: scheduled_event.end_time,
+            cancelUrl: cancel_url,
+            rescheduleUrl: reschedule_url,
+            hostEmail,
+            videoCallUrl,
           },
         })
       }
