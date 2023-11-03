@@ -1,5 +1,3 @@
-import { ZodError } from 'zod'
-import { fromZodError } from 'zod-validation-error'
 import { type Action } from '@awell-health/extensions-core'
 import { Category } from '@awell-health/extensions-core'
 import { getSdk } from '../../gql/sdk'
@@ -44,18 +42,7 @@ export const createTask: Action<
           },
         })
       } else {
-        await onError({
-          events: [
-            {
-              date: new Date().toISOString(),
-              text: { en: 'API client requires an API url and API key' },
-              error: {
-                category: 'MISSING_SETTINGS',
-                message: 'Missing api url or api key',
-              },
-            },
-          ],
-        })
+        throw new Error('API Client is missing settings (api url or api key)')
       }
     } catch (err) {
       if (err instanceof HealthieError) {
@@ -63,34 +50,8 @@ export const createTask: Action<
         await onError({
           events: errors,
         })
-      } else if (err instanceof ZodError) {
-        const error = fromZodError(err)
-        await onError({
-          events: [
-            {
-              date: new Date().toISOString(),
-              text: { en: error.message },
-              error: {
-                category: 'WRONG_INPUT',
-                message: error.message,
-              },
-            },
-          ],
-        })
       } else {
-        const error = err as Error
-        await onError({
-          events: [
-            {
-              date: new Date().toISOString(),
-              text: { en: 'Healthie API reported an error' },
-              error: {
-                category: 'SERVER_ERROR',
-                message: error.message,
-              },
-            },
-          ],
-        })
+        throw err
       }
     }
   },
