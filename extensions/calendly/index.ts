@@ -8,10 +8,12 @@ export const Calendly: Extension = {
   title: 'Calendly',
   icon_url:
     'https://ww2.freelogovectors.net/wp-content/uploads/2023/05/calendly_logo-freelogovectors.net_.png',
-  description: 'Enable scheduling in your care flows with Calendly.',
+  description:
+    '** In beta ** Enable scheduling in your care flows with Calendly.',
   category: Category.SCHEDULING,
   author: {
-    authorType: AuthorType.AWELL,
+    authorType: AuthorType.EXTERNAL,
+    authorName: 'Rajeev Gade',
   },
   actions: {},
   webhooks,
