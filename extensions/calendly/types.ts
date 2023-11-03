@@ -7,7 +7,15 @@ export interface CalendlyWebhookPayload {
   created_at: string
   payload: {
     scheduled_event: {
-      uri: string
+      start_time: string,
+      end_time: string,
+      uri: string,
+      event_type: string,
+      event_memberships: Array<{
+        user: string,
+        user_email: string
+      }>,
+      location: any
     }
     email: string
     first_name: string
@@ -15,6 +23,8 @@ export interface CalendlyWebhookPayload {
     name: string
     status: 'active' | 'canceled'
     timezone: string
-    rescheduled: boolean
+    rescheduled: boolean,
+    cancel_url: string,
+    reschedule_url: string
   }
 }
