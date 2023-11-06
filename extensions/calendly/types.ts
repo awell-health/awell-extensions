@@ -18,7 +18,6 @@ export interface CalendlyWebhookPayload {
       }>,
       location: any,
       name: string
-      location: any
     }
     email: string
     first_name: string
