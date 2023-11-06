@@ -62,6 +62,14 @@ const dataPoints = {
     key: 'videoCallUrl',
     valueType: 'string',
   },
+  eventName: {
+    key: 'eventName',
+    valueType: 'string',
+  },
+  inviteePhoneNumber: {
+    key: 'inviteePhoneNumber',
+    valueType: 'string',
+  }
 } satisfies Record<string, DataPointDefinition>
 
 export const eventRescheduled: Webhook<
@@ -96,10 +104,6 @@ export const eventRescheduled: Webhook<
         scheduled_event.event_memberships.length > 0
           ? scheduled_event.event_memberships[0].user_email
           : ''
-      const videoCallUrl =
-        scheduled_event.location.type === 'zoom'
-          ? scheduled_event.location.join_url
-          : ''
 
       if (
         !isNil(scheduledEventId) &&
@@ -121,7 +125,9 @@ export const eventRescheduled: Webhook<
             cancelUrl: cancel_url,
             rescheduleUrl: reschedule_url,
             hostEmail,
-            videoCallUrl,
+            videoCallUrl: scheduled_event.location.join_url ?? "",
+            inviteePhoneNumber: scheduled_event.text_reminder_number ?? "",
+            eventName: scheduled_event.name
           },
         })
       }

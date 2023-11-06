@@ -7,6 +7,7 @@ export interface CalendlyWebhookPayload {
   created_at: string
   payload: {
     scheduled_event: {
+      text_reminder_number: string,
       start_time: string,
       end_time: string,
       uri: string,
@@ -15,7 +16,8 @@ export interface CalendlyWebhookPayload {
         user: string,
         user_email: string
       }>,
-      location: any
+      location: any,
+      name: string
     }
     email: string
     first_name: string
