@@ -123,8 +123,8 @@ export const eventCreated: Webhook<
           cancelUrl: cancel_url,
           rescheduleUrl: reschedule_url,
           hostEmail,
-          videoCallUrl: scheduled_event.location?.join_url,
-          inviteePhoneNumber: scheduled_event.text_reminder_number,
+          videoCallUrl: scheduled_event.location.join_url ?? "",
+          inviteePhoneNumber: scheduled_event.text_reminder_number ?? "",
           eventName: scheduled_event.name
         },
       })
