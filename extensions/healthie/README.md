@@ -84,4 +84,4 @@ Cancels an appointment with a given `id`.
 Retrieve the most recent metric entry from a given `category`.
 ## Create metric entry
 
-Create a metric entry for a patient in Healthie.
+Create a metric entry for a patient in Healthie. The category of the metric is the literal name of the metric in Healthie. So if you have a metric in Healthie called "Weight", you should use "Weight" as the category.
