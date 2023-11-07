@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-floating-promises */
 import { generateTestPayload } from '../../../../src/tests'
 import { getSdk } from '../../gql/sdk'
 import { mockGetSdk, mockGetSdkReturn } from '../../gql/__mocks__/sdk'
@@ -78,7 +79,7 @@ describe('createTask action', () => {
       )
 
       test('Should call onError when isReminderEnabled is undefined and any of the rest fields is not undefined', async () => {
-        await createTask.onActivityCreated(
+        const failedPromise = createTask.onActivityCreated(
           {
             ...samplePayload,
             fields: {
@@ -90,7 +91,7 @@ describe('createTask action', () => {
           onError
         )
 
-        expect(onError).toHaveBeenCalled()
+        expect(failedPromise).rejects.toThrow()
       })
     })
 
@@ -130,22 +131,22 @@ describe('createTask action', () => {
       })
 
       test('Should call onError when reminderIntervalValue is not undefined', async () => {
-        await createTask.onActivityCreated(
-          {
-            ...samplePayload,
-            fields: {
-              ...samplePayload.fields,
-              reminderIntervalType: 'daily',
-              isReminderEnabled: true,
-              reminderIntervalValue: '',
-              reminderTime: 1,
-            },
+        const payload = {
+          ...samplePayload,
+          fields: {
+            ...samplePayload.fields,
+            reminderIntervalType: 'daily',
+            isReminderEnabled: true,
+            reminderIntervalValue: '',
+            reminderTime: 1,
           },
+        }
+        const failedPromise = createTask.onActivityCreated(
+          payload,
           onComplete,
           onError
         )
-
-        expect(onError).toHaveBeenCalled()
+        expect(failedPromise).rejects.toThrow()
       })
     })
 
@@ -192,7 +193,7 @@ describe('createTask action', () => {
       })
 
       test('Should call onError when reminderIntervalValue is not known day of week', async () => {
-        await createTask.onActivityCreated(
+        const failedPromise = createTask.onActivityCreated(
           {
             ...samplePayload,
             fields: {
@@ -207,7 +208,7 @@ describe('createTask action', () => {
           onError
         )
 
-        expect(onError).toHaveBeenCalled()
+        expect(failedPromise).rejects.toThrow()
       })
     })
 
@@ -241,7 +242,7 @@ describe('createTask action', () => {
       })
 
       test('Should call onError when reminderIntervalValue is incorrect date', async () => {
-        await createTask.onActivityCreated(
+        const failedPromise = createTask.onActivityCreated(
           {
             ...samplePayload,
             fields: {
@@ -256,7 +257,7 @@ describe('createTask action', () => {
           onError
         )
 
-        expect(onError).toHaveBeenCalled()
+        expect(failedPromise).rejects.toThrow()
       })
     })
 
@@ -290,7 +291,7 @@ describe('createTask action', () => {
       })
 
       test('Should call onError when reminderIntervalValueOnce is incorrect date', async () => {
-        await createTask.onActivityCreated(
+        const failedPromise = createTask.onActivityCreated(
           {
             ...samplePayload,
             fields: {
@@ -305,7 +306,7 @@ describe('createTask action', () => {
           onError
         )
 
-        expect(onError).toHaveBeenCalled()
+        expect(failedPromise).rejects.toThrow()
       })
     })
   })
