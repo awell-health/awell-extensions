@@ -51,69 +51,82 @@ export const updateCustomerCustomFields: Action<
       })
 
       // check that all fields were updated
-      const providedFields = Object.keys(customFields)
-      const receivedFields = receivedCustomFields.map(({ key }) => key)
-      const missingFields = providedFields.filter(
-        (field) => !receivedFields.includes(field)
-      )
-      if (missingFields.length > 0) {
-        await onError({
-          events: [
-            {
-              date: new Date().toISOString(),
-              text: {
-                en: `Some custom fields do not appear to have been set correctly`,
+      try {
+        const customFieldsObject = JSON.parse(customFields)
+        const providedFields = Object.keys(customFieldsObject)
+        const receivedFields = receivedCustomFields.map(({ key }) => key)
+        const missingFields = receivedFields.filter(
+          (field) => !providedFields.includes(field)
+        )
+        if (missingFields.length > 0) {
+          await onError({
+            events: [
+              {
+                date: new Date().toISOString(),
+                text: {
+                  en: `Some custom fields do not appear to have been set correctly`,
+                },
+                error: {
+                  category: 'WRONG_DATA',
+                  message: `The following fields were not updated: ${missingFields.join(
+                    ', '
+                  )}`,
+                },
               },
-              error: {
-                category: 'SERVER_ERROR',
-                message: `The following fields were not updated: ${missingFields.join(
-                  ', '
-                )}`,
-              },
-            },
-          ],
-        })
-        return
+            ],
+          })
+          return
+        }
+      } catch (e) {
+        // if we can't parse the JSON, we can't check if all fields were updated
+        // so we just skip this check
       }
 
       // check that values match
-      const fieldsWithMismatchedValues = Object.keys(customFields)
-        .filter((key) => {
-          const valueToSet = customFields[key as keyof typeof customFields]
-          const valueReceived = receivedCustomFields.find(
-            ({ key: receivedKey }) => key === receivedKey
-          )?.value
+      try {
+        const customFieldsObject = JSON.parse(customFields)
+        const fieldsWithMismatchedValues = Object.keys(customFieldsObject)
+          .filter((key) => {
+            const valueToSet =
+              customFieldsObject[key as keyof typeof customFields]
+            const valueReceived = receivedCustomFields.find(
+              ({ key: receivedKey }) => key === receivedKey
+            )?.value
 
-          try {
-            // check if value is a valid JSON
-            const parsedValueToSet = JSON.parse((valueToSet as string) ?? '')
-            const parsedValueReceived = JSON.parse(valueReceived ?? '')
-            return !isEqual(parsedValueToSet, parsedValueReceived)
-          } catch (e) {
-            // if not, compare as strings
-            return valueToSet !== valueReceived
-          }
-        })
-        .filter((value) => !isNil(value))
+            try {
+              // check if value is a valid JSON
+              const parsedValueToSet = JSON.parse((valueToSet as string) ?? '')
+              const parsedValueReceived = JSON.parse(valueReceived ?? '')
+              return !isEqual(parsedValueToSet, parsedValueReceived)
+            } catch (e) {
+              // if not, compare as strings
+              return valueToSet !== valueReceived
+            }
+          })
+          .filter((value) => !isNil(value))
 
-      if (fieldsWithMismatchedValues.length > 0) {
-        await onError({
-          events: [
-            {
-              date: new Date().toISOString(),
-              text: {
-                en: `Some fields do not appear to have been correctly updated`,
+        if (fieldsWithMismatchedValues.length > 0) {
+          await onError({
+            events: [
+              {
+                date: new Date().toISOString(),
+                text: {
+                  en: `Some fields do not appear to have been correctly updated`,
+                },
+                error: {
+                  category: 'WRONG_DATA',
+                  message: `The following fields were not updated: ${fieldsWithMismatchedValues.join(
+                    ', '
+                  )}`,
+                },
               },
-              error: {
-                category: 'SERVER_ERROR',
-                message: `The following fields were not updated: ${fieldsWithMismatchedValues.join(
-                  ', '
-                )}`,
-              },
-            },
-          ],
-        })
-        return
+            ],
+          })
+          return
+        }
+      } catch (e) {
+        // if we can't parse the JSON, we can't check if all fields were updated
+        // so we just skip this check
       }
 
       // if all checks passed, we can assume that the update was successful
