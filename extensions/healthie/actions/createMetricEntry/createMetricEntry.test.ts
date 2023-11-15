@@ -23,6 +23,7 @@ describe('createMetricEntry action', () => {
       generateTestPayload({
         fields: {
           userId: '60',
+          type: 'MetricEntry',
           category: 'Weight',
           metricStat: 182,
         },
@@ -36,5 +37,71 @@ describe('createMetricEntry action', () => {
     )
     expect(onComplete).toBeCalledTimes(1)
     expect(onError).toBeCalledTimes(0)
+  })
+
+  test('Should throw an error if the user ID is not provided', async () => {
+    await createMetricEntry.onActivityCreated(
+      // @ts-expect-error - userId is missing for testing purposes
+      generateTestPayload({
+        fields: {
+          // userId: '60',
+          type: 'MetricEntry',
+          category: 'Weight',
+          metricStat: 182,
+        },
+        settings: {
+          apiKey: 'apiKey',
+          apiUrl: 'test-url',
+        },
+      }),
+      onComplete,
+      onError
+    )
+    expect(onComplete).toBeCalledTimes(0)
+    expect(onError).toBeCalledTimes(1)
+  })
+
+  test('Should throw an error if the category is not provided', async () => {
+    await createMetricEntry.onActivityCreated(
+      // @ts-expect-error - category is missing for testing purposes
+      generateTestPayload({
+        fields: {
+          userId: '60',
+          type: 'MetricEntry',
+          // category: 'Weight',
+          metricStat: 182,
+        },
+        settings: {
+          apiKey: 'apiKey',
+          apiUrl: 'test-url',
+        },
+      }),
+      onComplete,
+      onError
+    )
+    expect(onComplete).toBeCalledTimes(0)
+    expect(onError).toBeCalledTimes(1)
+  })
+
+  test('Should throw an error if the metricStat is not provided', async () => {
+    await createMetricEntry.onActivityCreated(
+      // @ts-expect-error - metricStat is missing for testing purposes
+      generateTestPayload({
+        fields: {
+          userId: '60',
+          type: 'MetricEntry',
+          category: 'Weight',
+          // metricStat: 182,
+        },
+        settings: {
+          apiKey: 'apiKey',
+          apiUrl: 'test-url',
+        },
+      }),
+      onComplete,
+      onError
+    )
+    expect(onComplete).toBeCalledTimes(0)
+    expect(onError).toBeCalledTimes(1)
   })
 })
