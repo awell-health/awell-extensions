@@ -1,4 +1,4 @@
-import { isNil } from 'lodash'
+import { isEmpty, isNil } from 'lodash'
 import {
   type DataPointDefinition,
   type Webhook,
@@ -90,7 +90,7 @@ export const eventCreated: Webhook<
         timezone,
         cancel_url,
         reschedule_url,
-        rescheduled,
+        old_invitee
       },
     } = payload
 
@@ -106,7 +106,7 @@ export const eventCreated: Webhook<
     if (
       !isNil(scheduledEventId) &&
       !isNil(scheduledEventTypeId) &&
-      !rescheduled
+      isEmpty(old_invitee)
     ) {
       await onSuccess({
         data_points: {
