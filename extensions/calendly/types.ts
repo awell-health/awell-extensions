@@ -27,6 +27,7 @@ export interface CalendlyWebhookPayload {
     timezone: string
     rescheduled: boolean,
     cancel_url: string,
-    reschedule_url: string
+    reschedule_url: string,
+    old_invitee: string
   }
 }
