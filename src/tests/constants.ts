@@ -44,7 +44,8 @@ export const generateTestPayload = <
   fields: Fields
   settings: Settings
 }): ReturnType<Fields, Settings> => ({
-  ...merge(testPayload, value),
+  // merge will mutate the first object, which is a little dangerous
+  ...merge({}, testPayload, value),
   fields,
   settings,
 })
