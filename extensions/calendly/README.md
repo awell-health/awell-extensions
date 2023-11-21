@@ -24,3 +24,15 @@ Webhooks offer a great way to automate the flow with Awell when invitees schedul
 1. An Awell webhook endpoint can only listen to one event type. So make sure that when you create a webhook in Calendly, the subscriber URL and the event trigger match the Awell webhook endpoint. This also means there can only be one event type per subscriber URL.
 2. Using a secret to verify the authenticity of the received payload is not yet supported.
 3. Custom payload templates are not supported, please use the default ones.
+
+## Notes about rescheduled appointments
+
+Apparently, Calendly doesn't make it completely clear when an `invitee.created` event is created and sent via a webhook. Instead, the `rescheduled` field is part of the `invitee.cancelled` webhook, and the `old_invitee` field is populated in the new `invitee.created` event. So, this extension uses a `is_rescheduled_event` field in the `invitee.created` listener to reflect an `old_invitee` being present. So:
+
+In order to check to see if an **event was rescheduled** (rather than a new event):
+
+- validate `is_rescheduled_event` is true
+
+In order to understand if a **cancellation was actually a rescheduling**:
+
+- validate `rescheduled` is true
