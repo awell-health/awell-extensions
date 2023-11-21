@@ -1,0 +1,135 @@
+import {
+  type CalendlyInviteeCanceledWebhook,
+  type CalendlyInviteeCreatedWebhook,
+  TriggerEvent,
+} from '../types'
+
+export const testInviteeCreated: CalendlyInviteeCreatedWebhook = {
+  created_at: '2020-11-23T17:51:19.000000Z',
+  created_by: 'https://api.calendly.com/users/AAAAAAAAAAAAAAAA',
+  event: TriggerEvent.INVITEE_CREATED,
+  payload: {
+    cancel_url: 'https://calendly.com/cancellations/AAAAAAAAAAAAAAAA',
+    created_at: '2020-11-23T17:51:18.327602Z',
+    email: 'test@example.com',
+    event: 'https://api.calendly.com/scheduled_events/AAAAAAAAAAAAAAAA',
+    name: 'John Doe',
+    new_invitee: null,
+    old_invitee: null,
+    questions_and_answers: [],
+    reschedule_url: 'https://calendly.com/reschedulings/AAAAAAAAAAAAAAAA',
+    rescheduled: false,
+    status: 'active',
+    text_reminder_number: null,
+    timezone: 'America/New_York',
+    tracking: {
+      utm_campaign: null,
+      utm_source: null,
+      utm_medium: null,
+      utm_content: null,
+      utm_term: null,
+      salesforce_uuid: null,
+    },
+    updated_at: '2020-11-23T17:51:18.341657Z',
+    uri: 'https://api.calendly.com/scheduled_events/AAAAAAAAAAAAAAAA/invitees/AAAAAAAAAAAAAAAA',
+    scheduled_event: {
+      uri: 'https://api.calendly.com/scheduled_events/GBGBDCAADAEDCRZ2',
+      name: '15 Minute Meeting',
+      status: 'active',
+      start_time: '2019-08-24T14:15:22.123456Z',
+      end_time: '2019-08-24T14:15:22.123456Z',
+      event_type: 'https://api.calendly.com/event_types/GBGBDCAADAEDCRZ2',
+      location: {
+        type: 'physical',
+        location: 'string',
+      },
+      invitees_counter: {
+        total: 0,
+        active: 0,
+        limit: 0,
+      },
+      created_at: '2019-01-02T03:04:05.678123Z',
+      updated_at: '2019-01-02T03:04:05.678123Z',
+      event_memberships: [
+        {
+          user: 'https://api.calendly.com/users/GBGBDCAADAEDCRZ2',
+          user_email: 'user@example.com',
+        },
+      ],
+      event_guests: [
+        {
+          email: 'user@example.com',
+          created_at: '2019-08-24T14:15:22.123456Z',
+          updated_at: '2019-08-24T14:15:22.123456Z',
+        },
+      ],
+    },
+  },
+}
+export const testInviteeCanceled: CalendlyInviteeCanceledWebhook = {
+  created_at: '2020-11-23T17:54:22.000000Z',
+  created_by: 'https://api.calendly.com/users/AAAAAAAAAAAAAAAA',
+  event: TriggerEvent.INVITEE_CANCELLED,
+  payload: {
+    cancel_url: 'https://calendly.com/cancellations/AAAAAAAAAAAAAAAA',
+    created_at: '2020-11-23T17:51:18.327602Z',
+    email: 'test@example.com',
+    event: 'https://api.calendly.com/scheduled_events/AAAAAAAAAAAAAAAA',
+    name: 'John Doe',
+    new_invitee: null,
+    old_invitee: null,
+    questions_and_answers: [],
+    reschedule_url: 'https://calendly.com/reschedulings/AAAAAAAAAAAAAAAA',
+    rescheduled: false,
+    status: 'canceled',
+    text_reminder_number: null,
+    timezone: 'America/New_York',
+    tracking: {
+      utm_campaign: null,
+      utm_source: null,
+      utm_medium: null,
+      utm_content: null,
+      utm_term: null,
+      salesforce_uuid: null,
+    },
+    updated_at: '2020-11-23T17:54:22.356897Z',
+    uri: 'https://api.calendly.com/scheduled_events/AAAAAAAAAAAAAAAA/invitees/AAAAAAAAAAAAAAAA',
+    cancellation: {
+      canceled_by: 'John Doe',
+      reason: 'Meeting Conflict',
+      canceler_type: 'invitee',
+      created_at: '2020-11-23T17:54:22.356897Z',
+    },
+    scheduled_event: {
+      uri: 'https://api.calendly.com/scheduled_events/GBGBDCAADAEDCRZ2',
+      name: '15 Minute Meeting',
+      status: 'canceled',
+      start_time: '2019-08-24T14:15:22.123456Z',
+      end_time: '2019-08-24T14:15:22.123456Z',
+      event_type: 'https://api.calendly.com/event_types/GBGBDCAADAEDCRZ2',
+      location: {
+        type: 'physical',
+        location: 'string',
+      },
+      invitees_counter: {
+        total: 0,
+        active: 0,
+        limit: 0,
+      },
+      created_at: '2019-01-02T03:04:05.678123Z',
+      updated_at: '2019-01-02T03:04:05.678123Z',
+      event_memberships: [
+        {
+          user: 'https://api.calendly.com/users/GBGBDCAADAEDCRZ2',
+          user_email: 'user@example.com',
+        },
+      ],
+      event_guests: [
+        {
+          email: 'user@example.com',
+          created_at: '2019-08-24T14:15:22.123456Z',
+        },
+      ],
+    },
+  },
+}
