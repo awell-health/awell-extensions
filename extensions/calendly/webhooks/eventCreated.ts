@@ -1,9 +1,15 @@
-import { isEmpty, isNil } from 'lodash'
+/* eslint-disable @typescript-eslint/naming-convention */
 import {
   type DataPointDefinition,
   type Webhook,
 } from '@awell-health/extensions-core'
 import { type CalendlyWebhookPayload } from '../types'
+import { activeSchema } from '../schema'
+import {
+  extractHostEmail,
+  extractScheduledEventId,
+  extractScheduledEventTypeId,
+} from '../helpers'
 
 const dataPoints = {
   eventId: {
@@ -69,7 +75,15 @@ const dataPoints = {
   inviteePhoneNumber: {
     key: 'inviteePhoneNumber',
     valueType: 'string',
-  }
+  },
+  rescheduled: {
+    key: 'rescheduled',
+    valueType: 'boolean',
+  },
+  is_rescheduled_event: {
+    key: 'is_rescheduled_event',
+    valueType: 'boolean',
+  },
 } satisfies Record<string, DataPointDefinition>
 
 export const eventCreated: Webhook<
@@ -90,48 +104,37 @@ export const eventCreated: Webhook<
         timezone,
         cancel_url,
         reschedule_url,
-        old_invitee
+        old_invitee,
+        rescheduled,
+        text_reminder_number,
       },
-    } = payload
+    } = activeSchema.parse(payload)
 
-    // https://api.calendly.com/scheduled_events/GBGBDCAADAEDCRZ2 => GBGBDCAADAEDCRZ2
-    const scheduledEventId = scheduled_event.uri.split('/').pop()
-    const scheduledEventTypeId = scheduled_event.event_type.split('/').pop()
+    const scheduledEventId = extractScheduledEventId(scheduled_event)
+    const scheduledEventTypeId = extractScheduledEventTypeId(scheduled_event)
+    const hostEmail = extractHostEmail(scheduled_event)
 
-    const hostEmail =
-      scheduled_event.event_memberships.length > 0
-        ? scheduled_event.event_memberships[0].user_email
-        : ''
-
-    if (
-      !isNil(scheduledEventId) &&
-      !isNil(scheduledEventTypeId) &&
-      isEmpty(old_invitee)
-    ) {
-      await onSuccess({
-        data_points: {
-          eventId: scheduledEventId,
-          eventTypeId: scheduledEventTypeId,
-          inviteeEmail: email,
-          inviteeFirstName: first_name,
-          inviteeLastName: last_name,
-          inviteeName: name,
-          inviteeStatus: status,
-          inviteeTimezone: timezone,
-          startTime: scheduled_event.start_time,
-          endTime: scheduled_event.end_time,
-          cancelUrl: cancel_url,
-          rescheduleUrl: reschedule_url,
-          hostEmail,
-          videoCallUrl: scheduled_event.location.join_url ?? "",
-          inviteePhoneNumber: scheduled_event.text_reminder_number ?? "",
-          eventName: scheduled_event.name
-        },
-      })
-    }
-
-    await onError({
-      // We should automatically send a 400 here, so no need to provide info
+    await onSuccess({
+      data_points: {
+        eventId: scheduledEventId,
+        eventTypeId: scheduledEventTypeId,
+        inviteeEmail: email,
+        inviteeFirstName: first_name ?? '',
+        inviteeLastName: last_name ?? '',
+        inviteeName: name,
+        inviteeStatus: status,
+        inviteeTimezone: timezone,
+        startTime: scheduled_event.start_time,
+        endTime: scheduled_event.end_time,
+        cancelUrl: cancel_url,
+        rescheduleUrl: reschedule_url,
+        hostEmail,
+        videoCallUrl: scheduled_event.location.join_url ?? '',
+        inviteePhoneNumber: text_reminder_number ?? '',
+        eventName: scheduled_event.name,
+        rescheduled: String(rescheduled),
+        is_rescheduled_event: String(old_invitee !== null),
+      },
     })
   },
 }
