@@ -1,7 +1,6 @@
 import { eventCanceled } from '../webhooks/eventCanceled'
 import { testInviteeCanceled } from '../__mocks__/objects'
 import { type OnWebhookReceivedParams } from '@awell-health/extensions-core'
-// import { type IncomingHttpHeaders } from 'http'
 import {
   type CalendlyInviteeCanceledWebhook,
   type CalendlyWebhookPayload,

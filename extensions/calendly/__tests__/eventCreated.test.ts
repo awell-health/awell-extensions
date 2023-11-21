@@ -1,7 +1,6 @@
 import { eventCreated } from '../webhooks/eventCreated'
 import { testInviteeCreated } from '../__mocks__/objects'
 import { type OnWebhookReceivedParams } from '@awell-health/extensions-core'
-// import { type IncomingHttpHeaders } from 'http'
 import {
   type CalendlyInviteeCreatedWebhook,
   type CalendlyWebhookPayload,
@@ -14,12 +13,8 @@ describe('Test event Created', () => {
   const onError = jest.fn()
   const buildOnWebhookReceivedParams = <Payload>({
     payload,
-  }: // headers = {},
-  // settings = {},
-  {
+  }: {
     payload: Payload
-    // headers?: IncomingHttpHeaders
-    // settings?: Record<string, string>
   }): OnWebhookReceivedParams<Payload> => {
     return {
       payload,
