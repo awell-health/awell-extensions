@@ -25,14 +25,13 @@ export const appointmentCreated: Webhook<
       await onError({
         // We should automatically send a 400 here, so no need to provide info
       })
-      return
+    } else {
+      await onSuccess({
+        data_points: {
+          appointmentId,
+        },
+      })
     }
-
-    await onSuccess({
-      data_points: {
-        appointmentId,
-      },
-    })
   },
 }
 
