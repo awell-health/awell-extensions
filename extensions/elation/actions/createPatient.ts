@@ -33,7 +33,7 @@ const fields = {
   dob: {
     id: 'dob',
     label: 'Date of Birth',
-    description: 'YYYY-MM-DD',
+    description: '',
     type: FieldType.DATE,
     required: true,
   },
