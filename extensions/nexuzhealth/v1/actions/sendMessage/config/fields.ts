@@ -10,7 +10,7 @@ export const fields = {
   },
   body: {
     id: 'body',
-    label: 'Inhoud bericht',
+    label: 'Bericht',
     type: FieldType.HTML,
     required: true,
   },

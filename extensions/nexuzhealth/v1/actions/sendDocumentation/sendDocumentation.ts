@@ -5,7 +5,7 @@ import { fields } from './config'
 
 export const sendDocumentation: Action<typeof fields, typeof settings> = {
   key: 'sendDocumentation',
-  title: 'Stuur documentation (mynexuzhealth)',
+  title: 'Stuur documentatie (mynexuzhealth)',
   description: 'Trigger documentation in the mynexuzhealth app',
   category: Category.COMMUNICATION,
   fields,
