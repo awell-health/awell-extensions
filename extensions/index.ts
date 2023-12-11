@@ -24,6 +24,7 @@ import { Transform } from './transform'
 import { Iterable } from './iterable'
 import { Zendesk } from './zendesk'
 import { Infobip } from './infobip'
+import { nexuzhealth } from './nexuzhealth'
 
 import * as json from './markdown.json'
 
@@ -47,6 +48,7 @@ export const extensions = [
   MathExtension,
   MessageBird,
   Metriport,
+  nexuzhealth,
   Transform,
   Twilio,
   Wellinks,
