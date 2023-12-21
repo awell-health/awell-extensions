@@ -30,6 +30,7 @@ export const createEmbeddedSignatureRequestWithTemplate: Action<
       const {
         patient: { id: patientId },
         activity: { id: activityId },
+        pathway: { id: pathwayId, definition_id: pathwayDefinitionId },
       } = payload
 
       const {
@@ -72,7 +73,9 @@ export const createEmbeddedSignatureRequestWithTemplate: Action<
           signingOptions: defaultSigningOptions,
           testMode,
           metadata: {
+            awellPathwayDefinitionId: pathwayDefinitionId,
             awellPatientId: patientId,
+            awellPathwayId: pathwayId,
             awellActivityId: activityId,
           },
           customFields,
