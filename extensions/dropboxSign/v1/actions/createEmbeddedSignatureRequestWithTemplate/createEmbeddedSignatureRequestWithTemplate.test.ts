@@ -82,6 +82,12 @@ describe('Create embedded signature request with template', () => {
           title: 'A title',
           subject: 'A subject',
           message: 'A message',
+          customFields: JSON.stringify([
+            {
+              name: 'hello',
+              value: 'world',
+            },
+          ]),
         },
         settings: {
           apiKey: 'apiKey',
