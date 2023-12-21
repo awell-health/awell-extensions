@@ -40,6 +40,7 @@ export const createEmbeddedSignatureRequestWithTemplate: Action<
         title,
         subject,
         message,
+        customFields,
       } = validateActionFields(payload.fields)
       const { apiKey, clientId, testMode } = validateSettings(payload.settings)
 
@@ -74,6 +75,7 @@ export const createEmbeddedSignatureRequestWithTemplate: Action<
             awellPatientId: patientId,
             awellActivityId: activityId,
           },
+          customFields,
         }
 
       const embeddedSignatureRequestResponse =
@@ -112,7 +114,6 @@ export const createEmbeddedSignatureRequestWithTemplate: Action<
         },
       })
     } catch (err) {
-      console.log(err)
       if (err instanceof ZodError) {
         const error = fromZodError(err)
         await onError({
