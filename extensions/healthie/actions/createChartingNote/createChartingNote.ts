@@ -16,7 +16,7 @@ export const createChartingNote: Action<typeof fields, typeof settings> = {
   previewable: true,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
     const { fields, settings } = payload
-    const { healthie_patient_id, form_id, note_content, marked_locked } = fields
+    const { healthie_patient_id, form_id, note_content, marked_locked, appointment_id } = fields
     try {
       if (isNil(healthie_patient_id) || isNil(form_id) || isNil(note_content)) {
         await onError({
@@ -60,7 +60,7 @@ export const createChartingNote: Action<typeof fields, typeof settings> = {
           return
         }
 
-        if (moduleForm.use_for_charting !== true) {
+        if (!moduleForm.use_for_charting) {
           await onError({
             events: [
               {
@@ -103,6 +103,7 @@ export const createChartingNote: Action<typeof fields, typeof settings> = {
             finished: true,
             custom_module_form_id: form_id,
             user_id: healthie_patient_id,
+            appointment_id,
             form_answers: [
               {
                 custom_module_id: firstTextAreaField.id,
