@@ -2,37 +2,37 @@ import { z, type ZodTypeAny } from 'zod'
 import { type Field, FieldType } from '@awell-health/extensions-core'
 
 export const fields = {
-  questionLabel: {
-    id: 'questionLabel',
+  label: {
+    id: 'label',
     label: 'Label text',
     description:
       'Enter the label text that will be displayed before the selector.',
     type: FieldType.STRING,
     required: true,
   },
-  optionsSourceUrl: {
-    id: 'optionsSourceUrl',
+  url: {
+    id: 'url',
     label: 'Options endpoint URL',
     description:
-      'Enter the URL containing the options to display in the selector. The endpoint must return an array of objects with the following properties: `id`, `label` and `value`.',
+      'Enter the URL where the options to display in the selector can be fetched. The endpoint must return an array of objects with the following properties: `label` and `value`.',
     type: FieldType.STRING,
     required: true,
   },
-  optionsSourceHeaders: {
-    id: 'optionsSourceHeaders',
+  headers: {
+    id: 'headers',
     label: 'Options endpoint headers',
     description:
       'Enter the headers to send to the options source URL. The headers must be in JSON format.',
     type: FieldType.JSON,
     required: false,
   },
-  optionsSourceSearchQueryParams: {
-    id: 'optionsSourceSearchQueryParams',
+  queryParam: {
+    id: 'queryParam',
     label: 'Options endpoint search query param key',
     description:
-      'Enter the key of the search query param to send to the options source URL e.g. `search` for `https://example.com/options?search=foo`.',
+      'Enter the key of the free text search query param if the endpoint supports this e.g. `search` for `https://example.com/options?search=foo`.',
     type: FieldType.STRING,
-    required: true,
+    required: false,
   },
   mandatory: {
     id: 'mandatory',
@@ -44,10 +44,11 @@ export const fields = {
 } satisfies Record<string, Field>
 
 export const FieldsValidationSchema = z.object({
-  questionLabel: z.string().nonempty(),
-  optionsSourceUrl: z.string().url(),
-  optionsSourceHeaders: z.record(z.string()),
-  optionsSourceQueryParams: z.string().nonempty(),
+  label: z.string().nonempty(),
+  url: z.string().url(),
+  headers: z.record(z.string()),
+  queryParam: z.string().optional(),
+  mandatory: z.boolean(),
 } satisfies Record<keyof typeof fields, ZodTypeAny>)
 
 export const validateActionFields = (
