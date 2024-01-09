@@ -12,10 +12,11 @@ describe('Complete flow action', () => {
     await remoteSingleSelect.onActivityCreated(
       generateTestPayload({
         fields: {
-          optionsSourceHeaders: '{"Content-Type": "application/json"}',
-          optionsSourceQueryParams: 'search',
-          optionsSourceUrl: 'https://example.com',
-          questionLabel: 'label',
+          headers: '{"Content-Type": "application/json"}',
+          queryParam: 'search',
+          url: 'https://example.com',
+          label: 'label',
+          mandatory: true,
         },
         settings: {},
       }),
