@@ -1,12 +1,12 @@
 import { type DataPointDefinition } from '@awell-health/extensions-core'
 
 export const dataPoints = {
-  valueSelected: {
-    key: 'valueSelected',
+  value: {
+    key: 'value',
     valueType: 'string',
   },
-  labelSelected: {
-    key: 'labelSelected',
+  label: {
+    key: 'label',
     valueType: 'string',
   },
 } satisfies Record<string, DataPointDefinition>
