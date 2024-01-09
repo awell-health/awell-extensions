@@ -26,7 +26,7 @@ export const getMetricEntry: Action<
     try {
       const {
         settings,
-        fields: { category },
+        fields: { patientId, category },
       } = validate({
         schema: z.object({
           settings: settingsValidationSchema,
@@ -38,7 +38,11 @@ export const getMetricEntry: Action<
       const client = initialiseClient(settings)
       if (client != null) {
         const sdk = getSdk(client)
-        const { data } = await sdk.entries({ type: 'MetricEntry', category })
+        const { data } = await sdk.entries({
+          type: 'MetricEntry',
+          category,
+          client_id: patientId,
+        })
 
         const mostRecentMetricObject =
           data.entries === undefined || data.entries?.length === 0

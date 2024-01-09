@@ -1,5 +1,13 @@
-query entries($category: String, $type: String) {
-  entries(category: $category, type: $type) {
+query entries(
+  $category: String
+  $type: String
+  $client_id: String
+) {
+  entries(
+    category: $category
+    type: $type
+    client_id: $client_id
+  ) {
     id
     metric_stat
     created_at

@@ -30,6 +30,7 @@ export const createEmbeddedSignatureRequestWithTemplate: Action<
       const {
         patient: { id: patientId },
         activity: { id: activityId },
+        pathway: { id: pathwayId, definition_id: pathwayDefinitionId },
       } = payload
 
       const {
@@ -40,6 +41,7 @@ export const createEmbeddedSignatureRequestWithTemplate: Action<
         title,
         subject,
         message,
+        customFields,
       } = validateActionFields(payload.fields)
       const { apiKey, clientId, testMode } = validateSettings(payload.settings)
 
@@ -71,9 +73,12 @@ export const createEmbeddedSignatureRequestWithTemplate: Action<
           signingOptions: defaultSigningOptions,
           testMode,
           metadata: {
+            awellPathwayDefinitionId: pathwayDefinitionId,
             awellPatientId: patientId,
+            awellPathwayId: pathwayId,
             awellActivityId: activityId,
           },
+          customFields,
         }
 
       const embeddedSignatureRequestResponse =
@@ -112,7 +117,6 @@ export const createEmbeddedSignatureRequestWithTemplate: Action<
         },
       })
     } catch (err) {
-      console.log(err)
       if (err instanceof ZodError) {
         const error = fromZodError(err)
         await onError({
