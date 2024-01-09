@@ -12,19 +12,10 @@ describe("Update customer's custom fields", () => {
   const onError = jest.fn()
 
   const basePayload = generateTestPayload({
-    pathway: {
-      id: 'pathway-id',
-      definition_id: 'pathway-definition-id',
-    },
-    activity: {
-      id: 'activity-id',
-    },
-    patient: { id: 'test-patient' },
     fields: {
       customerId: mockedCustomerData.id,
       customFields: JSON.stringify({
-        [mockedCustomerData.customFields[0].key]:
-          mockedCustomerData.customFields[0].value,
+        email: 'test@test.com',
       }),
     },
     settings: {
@@ -53,7 +44,7 @@ describe("Update customer's custom fields", () => {
           mockedCustomerData.customFields[0].value,
       }),
     })
-    expect(onComplete).toHaveBeenCalled()
     expect(onError).not.toHaveBeenCalled()
+    expect(onComplete).toHaveBeenCalled()
   })
 })
