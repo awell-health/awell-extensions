@@ -31,4 +31,12 @@ export const fields = {
     type: FieldType.BOOLEAN,
     required: false,
   },
+  appointment_id: {
+    id: 'appointment_id',
+    label: 'Appointment ID',
+    description:
+      'The ID of the appointment you would like the charting note associated with.',
+    type: FieldType.STRING,
+    required: false,
+  },
 } satisfies Record<string, Field>
