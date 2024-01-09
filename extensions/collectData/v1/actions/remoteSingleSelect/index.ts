@@ -1,1 +1,1 @@
-export * from './remoteSingleSelect'
+export { remoteSingleSelect } from './remoteSingleSelect'
