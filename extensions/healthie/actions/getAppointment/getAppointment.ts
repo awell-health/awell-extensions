@@ -37,6 +37,7 @@ export const getAppointment: Action<
             contactType: data.appointment?.contact_type,
             date,
             patientId: data?.appointment?.user?.id,
+            appointmentStatus: data.appointment?.pm_status,
           },
         })
       } else {
