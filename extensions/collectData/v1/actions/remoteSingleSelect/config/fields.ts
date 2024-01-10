@@ -1,5 +1,10 @@
 import { z, type ZodTypeAny } from 'zod'
-import { type Field, FieldType } from '@awell-health/extensions-core'
+import {
+  type Field,
+  FieldType,
+  makeStringOptional,
+} from '@awell-health/extensions-core'
+import { JsonStringValidationSchema } from '../../../../../sendbird/v1/validation'
 
 export const fields = {
   label: {
@@ -46,8 +51,8 @@ export const fields = {
 export const FieldsValidationSchema = z.object({
   label: z.string().nonempty(),
   url: z.string().url(),
-  headers: z.record(z.string()),
-  queryParam: z.string().optional(),
+  headers: makeStringOptional(JsonStringValidationSchema),
+  queryParam: makeStringOptional(z.string()),
   mandatory: z.boolean(),
 } satisfies Record<keyof typeof fields, ZodTypeAny>)
 
