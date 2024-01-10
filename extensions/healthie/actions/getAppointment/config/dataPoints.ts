@@ -13,6 +13,10 @@ export const dataPoints = {
     key: 'appointmentTypeName',
     valueType: 'string',
   },
+  appointmentStatus: {
+    key: 'appointmentStatus',
+    valueType: 'string',
+  },
   contactType: {
     key: 'contactType',
     valueType: 'string',

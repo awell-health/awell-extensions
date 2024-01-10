@@ -33,8 +33,14 @@ describe('getAppointment action', () => {
     date: '2023-06-05 14:10:00 +0200',
   }
 
+  const appointmentWithStatus = {
+    ...appointmentWithNoDate,
+    date: '2023-06-05 14:10:00 +0200',
+    pm_status: 'Cancelled'
+  }
+
   beforeAll(() => {
-    ;(getSdk as jest.Mock).mockImplementation(mockGetSdk)
+    ; (getSdk as jest.Mock).mockImplementation(mockGetSdk)
   })
 
   beforeEach(() => {
@@ -91,6 +97,31 @@ describe('getAppointment action', () => {
         contactType: appointmentWithNoDate.contact_type,
         date: '2023-06-05T12:10:00Z',
         patientId: appointmentWithNoDate.user.id,
+      },
+    })
+  })
+
+  test('Should handle an appointment with a status', async () => {
+    mockGetSdkReturn.getAppointment.mockReturnValueOnce({
+      data: {
+        appointment: appointmentWithStatus,
+      },
+    })
+
+    await getAppointment.onActivityCreated(
+      newActivityPayload,
+      onComplete,
+      jest.fn()
+    )
+
+    expect(onComplete).toHaveBeenCalledWith({
+      data_points: {
+        appointmentTypeId: appointmentWithNoDate.appointment_type.id,
+        appointmentTypeName: appointmentWithNoDate.appointment_type.name,
+        contactType: appointmentWithNoDate.contact_type,
+        date: '2023-06-05T12:10:00Z',
+        patientId: appointmentWithNoDate.user.id,
+        appointmentStatus: 'Cancelled'
       },
     })
   })
