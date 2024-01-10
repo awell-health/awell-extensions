@@ -22,6 +22,7 @@ describe('Healthie - Get metric entry', () => {
     await getMetricEntry.onActivityCreated(
       generateTestPayload({
         fields: {
+          patientId: '123',
           category: 'Weight',
         },
         settings: {

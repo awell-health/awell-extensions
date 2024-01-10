@@ -1,6 +1,7 @@
 // import { AvaAi } from './avaAi'
 import { Awell } from './awell'
 import { CalDotCom } from './calDotCom'
+import { Calendly } from './calendly'
 import { CanvasMedical } from './canvasMedical'
 import { Cloudinary } from './cloudinary'
 import { DropboxSign } from './dropboxSign'
@@ -22,6 +23,9 @@ import { Sendbird } from './sendbird'
 import { Transform } from './transform'
 import { Iterable } from './iterable'
 import { Zendesk } from './zendesk'
+import { Infobip } from './infobip'
+import { nexuzhealth } from './nexuzhealth'
+import { CollectData } from './collectData'
 
 import * as json from './markdown.json'
 
@@ -30,29 +34,33 @@ export const markdown: Markdown = json
 
 export const extensions = [
   // AvaAi, Best to disable this until we cleared out data privacy & HIPAA with OpenAI
+  // ZusHealth is not ready for public use yet
+  // ZusHealth,
   Awell,
   CalDotCom,
+  Calendly,
   CanvasMedical,
   Cloudinary,
+  CmDotCom,
+  CollectData,
+  DocuSign,
   DropboxSign,
   Elation,
   Formsort,
   Healthie,
   HelloWorld,
+  Infobip,
+  Iterable,
   Mailchimp,
   Mailgun,
   MathExtension,
   MessageBird,
   Metriport,
+  nexuzhealth,
+  Sendbird,
+  Sendgrid,
   Transform,
   Twilio,
   Wellinks,
-  Sendgrid,
-  CmDotCom,
-  DocuSign,
-  Sendbird,
-  // ZusHealth is not ready for public use yet
-  // ZusHealth,
-  Iterable,
   Zendesk,
 ]

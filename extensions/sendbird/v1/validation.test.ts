@@ -224,7 +224,8 @@ describe('CustomFields validation', () => {
       expect.objectContaining({
         issues: [
           expect.objectContaining({
-            message: 'JSON should have maximum of 20 key-value items',
+            message:
+              'The Customer object in Sendbird can only support a maximum of 20 custom fields',
           }),
         ],
       })
@@ -242,7 +243,9 @@ describe('CustomFields validation', () => {
       expect.objectContaining({
         issues: [
           expect.objectContaining({
-            message: 'Each key of the JSON must not exceed 20 characters',
+            message: expect.stringContaining(
+              `The length of each JSON field's key must not exceed 20 characters. Please fix the following keys:`
+            ),
           }),
         ],
       })
@@ -260,8 +263,9 @@ describe('CustomFields validation', () => {
       expect.objectContaining({
         issues: [
           expect.objectContaining({
-            message:
-              'The value of each JSON key must not exceed 190 characters',
+            message: expect.stringContaining(
+              `The value of each JSON field must not exceed 190 characters. Please fix the following values:`
+            ),
           }),
         ],
       })

@@ -25,13 +25,13 @@ export const metricEntryUpdated: Webhook<
       await onError({
         // We should automatically send a 400 here, so no need to provide info
       })
+    } else {
+      await onSuccess({
+        data_points: {
+          updatedMetricId,
+        },
+      })
     }
-
-    await onSuccess({
-      data_points: {
-        updatedMetricId,
-      },
-    })
   },
 }
 

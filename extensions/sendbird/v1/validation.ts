@@ -93,30 +93,37 @@ export const CustomFieldsValidationSchema =
     if (isNil(jsonObject) || isEmpty(jsonObject)) return ''
 
     try {
+      const keys = Object.keys(jsonObject)
       const values = Object.values(jsonObject)
 
-      if (values.length > 20) {
+      const tooManyKeys = keys.length > 20
+      if (tooManyKeys) {
         ctx.addIssue({
           code: 'custom',
-          message: 'JSON should have maximum of 20 key-value items',
+          message:
+            'The Customer object in Sendbird can only support a maximum of 20 custom fields',
         })
         return z.NEVER
       }
 
-      if (values.some((val) => val.length > 190)) {
+      const keysTooLong = keys.filter((key) => key.length > 20)
+      if (keysTooLong.length > 0) {
         ctx.addIssue({
           code: 'custom',
-          message: 'The value of each JSON key must not exceed 190 characters',
+          message: `The length of each JSON field's key must not exceed 20 characters. Please fix the following keys: ${keysTooLong.join(
+            ', '
+          )}`,
         })
         return z.NEVER
       }
 
-      const keys = Object.keys(jsonObject)
-
-      if (keys.some((key) => key.length > 20)) {
+      const valuesTooLong = values.filter((val) => val.length > 190)
+      if (valuesTooLong.length > 0) {
         ctx.addIssue({
           code: 'custom',
-          message: 'Each key of the JSON must not exceed 20 characters',
+          message: `The value of each JSON field must not exceed 190 characters. Please fix the following values: ${valuesTooLong.join(
+            ', '
+          )}`,
         })
         return z.NEVER
       }

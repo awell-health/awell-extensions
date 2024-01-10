@@ -1,0 +1,1 @@
+export { remoteSingleSelect } from './remoteSingleSelect'
