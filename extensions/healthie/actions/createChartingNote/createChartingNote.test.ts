@@ -25,6 +25,7 @@ describe('createChartingNote action', () => {
           healthie_patient_id: 'patient-1',
           note_content: 'Test content',
           marked_locked: true,
+          appointment_id: 'appointment-1'
         },
         settings: {
           apiKey: 'apiKey',
