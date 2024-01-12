@@ -24,6 +24,10 @@ export const remoteSingleSelect: Action<typeof fields, typeof settings> = {
   onActivityCreated: async (payload, onComplete, onError) => {
     try {
       validateActionFields(payload.fields)
+
+      /**
+       * Completion happens in Awell Hosted Pages
+       */
     } catch (err) {
       if (err instanceof ZodError) {
         const error = fromZodError(err)
