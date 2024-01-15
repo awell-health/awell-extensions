@@ -11,7 +11,7 @@ In order to set up this extension, no settings are required.
 
 ## Custom Actions
 
-### Remote Single Select
+### Dynamic choice selector
 
 Standard select questions in Awell forms have a discrete set of choices to select from that are defined at the time that the form is created. If the list of choices to present to your responders isn't known at the time the form is being built, or changes often, this action allows you to load choices dynamically from a remote data source.
 
