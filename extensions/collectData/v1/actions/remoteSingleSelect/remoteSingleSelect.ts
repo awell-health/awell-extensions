@@ -8,9 +8,9 @@ import { ZodError } from 'zod'
 
 export const remoteSingleSelect: Action<typeof fields, typeof settings> = {
   key: 'remoteSingleSelect',
-  title: 'Remote Single Select',
+  title: 'Dynamic choice selector',
   description:
-    'Allow a stakeholder to select a single option from a set fetched from an API endpoint',
+    'The dynamic choice selector allow you to set up a select question where the available choices are dynamically populated through an API lookup',
   category: Category.FORMS,
   fields,
   dataPoints,
