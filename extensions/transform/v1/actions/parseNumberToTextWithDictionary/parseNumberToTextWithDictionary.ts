@@ -35,9 +35,11 @@ export const parseNumberToTextWithDictionary: Action<
          * Get string value from the dict.
          * If no mapping is found in dict, return the number as a string
          */
-        return Object.prototype.hasOwnProperty.call(dictionary, key)
+        const output = Object.prototype.hasOwnProperty.call(dictionary, key)
           ? dictionary[key]
           : key
+
+        return String(output)
       }
 
       await onComplete({

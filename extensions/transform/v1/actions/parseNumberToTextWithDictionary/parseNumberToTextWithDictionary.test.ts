@@ -102,4 +102,26 @@ describe('Transform - Parse number to text with dictionary', () => {
       },
     })
   })
+
+  test('Should parse number to text even if dictionary has number value', async () => {
+    const mockOnActivityCreateParams = generateTestPayload({
+      fields: {
+        number: 2,
+        dictionary: JSON.stringify({ 2: 5 }),
+      },
+      settings: {},
+    })
+
+    await parseNumberToTextWithDictionary.onActivityCreated(
+      mockOnActivityCreateParams,
+      onComplete,
+      onError
+    )
+
+    expect(onComplete).toBeCalledWith({
+      data_points: {
+        text: '5',
+      },
+    })
+  })
 })
