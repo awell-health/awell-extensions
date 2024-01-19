@@ -35,7 +35,7 @@ The dictionary should be structured in JSON format with string keys mapping to s
 ```json
 {
   "0": "Male",
-  "1": "Femake",
+  "1": "Female",
   "2": "Not known",
   // ... other number mappings ...
 }
