@@ -5,6 +5,7 @@ import {
   parseNumberToText,
   parseTextToNumber,
   parseUnixTimestampToDate,
+  parseNumberToTextWithDictionary,
 } from './v1/actions'
 import { settings } from './settings'
 
@@ -24,6 +25,7 @@ export const Transform: Extension = {
     parseNumberToText,
     parseTextToNumber,
     parseUnixTimestampToDate,
+    parseNumberToTextWithDictionary,
   },
   settings,
 }
