@@ -25,3 +25,18 @@ Transform or parse a date to a unix timestamp.
 
 Transform or parse a unix timestamp to a date.
 
+## Parse number to text with dictionary
+
+Transform or parse a number to a string using a dictionary. Useful for when you have numeric data points but want to map them to strings based on a dictionary. When the action is called with a number that does not have a corresponding mapping in the provided dictionary, it simply returns the number itself as a string. 
+
+The dictionary should be structured in JSON format with string keys mapping to string values. Each key represents a number (as a string), and each value is the corresponding text representation.
+
+**Example:**
+```json
+{
+  "0": "Male",
+  "1": "Female",
+  "2": "Not known",
+  // ... other number mappings ...
+}
+
