@@ -34,7 +34,7 @@ export class WellinksFlourishClient {
             thirdPartyIdentifier
           ),
           headers: {
-            contentType: 'text/xml',
+            'Content-Type': 'text/xml',
             accept: 'application/xml',
           },
         })
