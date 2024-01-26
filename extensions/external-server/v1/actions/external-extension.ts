@@ -37,7 +37,7 @@ const fields: Fields = {
 const dataPoints = {
   data_points: {
     key: 'data_points',
-    valueType: 'json',
+    valueType: 'string',
   },
 } satisfies Record<string, DataPointDefinition>
 
@@ -57,9 +57,10 @@ export const externalServer: Action<
   typeof settings,
   keyof typeof dataPoints
 > = {
-  key: 'parseDateToUnixTimestamp',
-  title: 'Parse date to unix timestamp',
-  description: 'Transform or parse a date to a unix timestamp.',
+  key: 'externalServer',
+  title: 'External Server',
+  description:
+    'An extension action used to prototype extensions on your local machine.',
   category: Category.DATA,
   fields,
   dataPoints,
