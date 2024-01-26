@@ -28,6 +28,7 @@ import { nexuzhealth } from './nexuzhealth'
 import { CollectData } from './collectData'
 
 import * as json from './markdown.json'
+import { ExternalServer } from './external-server'
 
 export type Markdown = Record<string, { readme: string; changelog: string }>
 export const markdown: Markdown = json
@@ -46,6 +47,7 @@ export const extensions = [
   DocuSign,
   DropboxSign,
   Elation,
+  ExternalServer,
   Formsort,
   Healthie,
   HelloWorld,
