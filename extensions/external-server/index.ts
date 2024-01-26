@@ -3,7 +3,7 @@ import { AuthorType, Category } from '@awell-health/extensions-core'
 import * as actions from './v1/actions'
 import { settings } from './settings'
 
-export const Transform: Extension = {
+export const ExternalServer: Extension = {
   key: 'external',
   title: 'External Server',
   icon_url:
