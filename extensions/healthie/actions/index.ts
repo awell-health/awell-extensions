@@ -21,6 +21,7 @@ import { getMetricEntry } from './getMetricEntry'
 import { updatePatientQuickNote } from './updatePatientQuickNote'
 import { createMetricEntry } from './createMetricEntry'
 
+import { createChartingNoteAdvanced } from './createChartingNoteAdvanced'
 export const actions = {
   createAppointment,
   createTask,
@@ -53,4 +54,5 @@ export const actions = {
   getMetricEntry,
   updatePatientQuickNote,
   createMetricEntry,
+  createChartingNoteAdvanced,
 }
