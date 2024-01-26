@@ -9,7 +9,7 @@ export const Transform: Extension = {
   icon_url:
     'https://res.cloudinary.com/da7x4rzl4/image/upload/v1696493305/Awell%20Extensions/imgbin-computer-icons-data-migration-extract-transform-load-others-z1r9GD10ftiy2XXyhy7kWi413.jpg',
   description:
-    "Transform is an extension on Awell's Marketplace with utility functions that allows you to transform data from one type to another.",
+    'External server used for prototyping. See README for additional documentation.',
   category: Category.DATA,
   author: {
     authorType: AuthorType.AWELL,
