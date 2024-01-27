@@ -37,7 +37,7 @@ const fields: Fields = {
 const dataPoints = {
   data_points: {
     key: 'data_points',
-    valueType: 'json',
+    valueType: 'string',
   },
 } satisfies Record<string, DataPointDefinition>
 
@@ -57,19 +57,23 @@ export const externalServer: Action<
   typeof settings,
   keyof typeof dataPoints
 > = {
-  key: 'parseDateToUnixTimestamp',
-  title: 'Parse date to unix timestamp',
-  description: 'Transform or parse a date to a unix timestamp.',
+  key: 'externalServer',
+  title: 'External Server',
+  description:
+    'An extension action used to prototype extensions on your local machine.',
   category: Category.DATA,
   fields,
   dataPoints,
   previewable: true,
   onActivityCreated: async (payload, onComplete, onError) => {
     const { fields, settings } = PayloadSchema.parse(payload)
-
     const client = new axios.Axios({ validateStatus: (s) => s === 200 })
-
-    const { data } = await client.post(settings.url, fields)
+    const clientPayload = fields.input ?? { fields: {}, settings: {} }
+    const { data } = await client.post(
+      `${settings.url}/${fields.extension}/${fields.action}`,
+      { json: clientPayload },
+      { headers: { 'Content-Type': 'application/json' } }
+    )
     // eslint-disable-next-line @typescript-eslint/naming-convention
     const { response, data_points, events } = data
     if (response === 'success') {
