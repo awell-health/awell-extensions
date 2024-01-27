@@ -67,11 +67,11 @@ export const externalServer: Action<
   previewable: true,
   onActivityCreated: async (payload, onComplete, onError) => {
     const { fields, settings } = PayloadSchema.parse(payload)
-    const client = new axios.Axios({ validateStatus: (s) => s === 200 })
+    // const client = new axios.Axios({ validateStatus: (s) => s === 200 })
     const clientPayload = fields.input ?? { fields: {}, settings: {} }
-    const { data } = await client.post(
+    const { data } = await axios.post(
       `${settings.url}/${fields.extension}/${fields.action}`,
-      { json: clientPayload },
+      { data: clientPayload },
       { headers: { 'Content-Type': 'application/json' } }
     )
     // eslint-disable-next-line @typescript-eslint/naming-convention
