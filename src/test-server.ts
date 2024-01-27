@@ -49,6 +49,7 @@ app.post('/:extension/:action', async (req, res) => {
     return
   }
   const payload = req.body as NewActivityPayload
+  console.log('incoming', payload)
   const onCompleteCb = createOnCompleteCallback(payload)
   const onErrorCb = createOnErrorCallback(payload)
   await action

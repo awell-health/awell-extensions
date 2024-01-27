@@ -71,7 +71,8 @@ export const externalServer: Action<
     const clientPayload = fields.input ?? { fields: {}, settings: {} }
     const { data } = await client.post(
       `${settings.url}/${fields.extension}/${fields.action}`,
-      clientPayload
+      { json: clientPayload },
+      { headers: { 'Content-Type': 'application/json' } }
     )
     // eslint-disable-next-line @typescript-eslint/naming-convention
     const { response, data_points, events } = data
