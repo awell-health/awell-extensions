@@ -12,12 +12,12 @@ import { extensions } from '../extensions'
 const app = express()
 const port = 3000
 
-type QueueInput = (
-  | Parameters<OnCompleteCallback>[0]
-  | Parameters<OnErrorCallback>[0]
-) & { response: 'success' | 'failure' }
+// type QueueInput = (
+//   | Parameters<OnCompleteCallback>[0]
+//   | Parameters<OnErrorCallback>[0]
+// ) & { response: 'success' | 'failure' }
 
-const queue: QueueInput[] = []
+// const queue: QueueInput[] = []
 
 app.use(bodyParser.json())
 
@@ -48,10 +48,10 @@ app.post('/:extension/:action', async (req, res) => {
       .send(`Action ${actionKey} not found in extension ${extensionKey}`)
     return
   }
-  const payload = req.body as NewActivityPayload
+  const payload = JSON.parse(req.body.data) as NewActivityPayload
   console.log('incoming', payload)
-  const onCompleteCb = createOnCompleteCallback(payload)
-  const onErrorCb = createOnErrorCallback(payload)
+  const onCompleteCb = createOnCompleteCallback(res)
+  const onErrorCb = createOnErrorCallback(res)
   await action
     .onActivityCreated(payload, onCompleteCb, onErrorCb)
     .catch((err) => {
@@ -73,8 +73,8 @@ app.post('/:extension/:action', async (req, res) => {
         ],
       })
     })
-  const result = queue.shift()
-  res.send(result)
+  // const result = queue.shift()
+  // res.send(result)
 })
 
 app.listen(port, () => {
@@ -82,18 +82,22 @@ app.listen(port, () => {
 })
 
 const createOnCompleteCallback = (
-  payload: NewActivityPayload
+  // payload: NewActivityPayload,
+  res: express.Response
 ): OnCompleteCallback => {
   return async (params = {}) => {
-    queue.push({ ...params, response: 'success' })
     console.log({ ...params, response: 'success' })
+    res.send({ ...params, response: 'success' })
+    // queue.push({ ...params, response: 'success' })
   }
 }
 const createOnErrorCallback = (
-  payload: NewActivityPayload
+  // payload: NewActivityPayload,
+  res: express.Response
 ): OnErrorCallback => {
   return async (params = {}) => {
-    queue.push({ ...params, response: 'failure' })
     console.error({ ...params, response: 'failure' })
+    res.send({ ...params, response: 'failure' })
+    // queue.push({ ...params, response: 'failure' })
   }
 }
