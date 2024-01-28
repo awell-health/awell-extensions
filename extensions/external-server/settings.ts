@@ -4,7 +4,7 @@ export const settings = {
   url: {
     key: 'url',
     label: 'URL',
-    obfuscated: true,
+    obfuscated: false,
     description:
       'The URL you want to use in order to test your local extensions',
   },
