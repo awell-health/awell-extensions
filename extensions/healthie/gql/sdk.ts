@@ -14,6 +14,7 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
+  Cursor: any;
   ISO8601DateTime: any;
   ISO8601Duration: any;
   JSON: any;
@@ -102,7 +103,7 @@ export type AddedUsersInput = {
 export type AdvanceAppointmentPrice = {
   __typename?: 'AdvanceAppointmentPrice';
   /** Appointment type ID this appointment price is associated with. */
-  appointment_type_id: Scalars['ID'];
+  appointment_type_id?: Maybe<Scalars['ID']>;
   /** The unique identifier of the price */
   id: Scalars['ID'];
   /** The advance price for this appointment type */
@@ -189,6 +190,8 @@ export type Announcement = {
   announcement_image_name?: Maybe<Scalars['String']>;
   /** URL of image associated with announcement */
   announcement_image_url?: Maybe<Scalars['String']>;
+  /** Pagination cursor */
+  cursor: Scalars['Cursor'];
   /** Announcement content(viewable by client) */
   description?: Maybe<Scalars['String']>;
   /** Unique identifier of the announcement */
@@ -220,6 +223,8 @@ export type ApiKey = {
   __typename?: 'ApiKey';
   /** The datetime the API Key was created */
   created_at: Scalars['String'];
+  /** Pagination cursor */
+  cursor: Scalars['Cursor'];
   /** Upon the initial creation of the key, this field displays the actual key to be used to authenticate. */
   displayable_key?: Maybe<Scalars['String']>;
   /** Unique identifier of the key */
@@ -227,6 +232,14 @@ export type ApiKey = {
   /** A user-chosen name for the API key. */
   name?: Maybe<Scalars['String']>;
 };
+
+/** API Key sorting enum */
+export enum ApiKeyOrderKeys {
+  CreatedAtAsc = 'CREATED_AT_ASC',
+  CreatedAtDesc = 'CREATED_AT_DESC',
+  NameAsc = 'NAME_ASC',
+  NameDesc = 'NAME_DESC'
+}
 
 /** An Apple Health Sync */
 export type AppleHealth = {
@@ -309,6 +322,8 @@ export type Appointment = {
   created_at: Scalars['String'];
   /** The position of the appointment in the recurring series */
   current_position_in_recurring_series?: Maybe<Scalars['Int']>;
+  /** Pagination cursor */
+  cursor: Scalars['Cursor'];
   /** The date and time of the appointment */
   date?: Maybe<Scalars['String']>;
   /** default color of appointment based on confirmation/type */
@@ -587,6 +602,17 @@ export type AppointmentLocationInput = {
   /** The rooms at this location */
   rooms?: InputMaybe<Array<InputMaybe<RoomInput>>>;
 };
+
+/** Appointment sorting enum */
+export enum AppointmentOrderKeys {
+  CreatedAtAsc = 'CREATED_AT_ASC',
+  CreatedAtDesc = 'CREATED_AT_DESC',
+  DateAsc = 'DATE_ASC',
+  DateDesc = 'DATE_DESC',
+  Unsorted = 'UNSORTED',
+  UpdatedAtAsc = 'UPDATED_AT_ASC',
+  UpdatedAtDesc = 'UPDATED_AT_DESC'
+}
 
 /** The appointment count for the specific day */
 export type AppointmentPerDayData = {
@@ -920,6 +946,10 @@ export type AppointmentType = {
   clients_can_book: Scalars['Boolean'];
   /** Checks to see if the client has enough credit to book */
   clients_have_credit?: Maybe<Scalars['Boolean']>;
+  /** The date the Appointment Type was created */
+  created_at: Scalars['String'];
+  /** Pagination cursor */
+  cursor: Scalars['Cursor'];
   /** If the provider's organization has this feature, this will customize the content of SMS reminder's Healthie sends. */
   custom_text_reminder_body?: Maybe<Scalars['String']>;
   /** Date time appointment type was deleted */
@@ -970,6 +1000,8 @@ export type AppointmentType = {
   row_order?: Maybe<Scalars['String']>;
   /** A label that includes the length of the appointment */
   time_on_label?: Maybe<Scalars['String']>;
+  /** The date the Appointment Type was updated */
+  updated_at: Scalars['String'];
   /** The user group associated with this appointment type. */
   user_group?: Maybe<UserGroup>;
   /** The ID of the group clients are placed in after booking */
@@ -1179,6 +1211,18 @@ export type AppointmentTypeFormConnectionInput = {
   interval?: InputMaybe<Scalars['ISO8601Duration']>;
 };
 
+/** Appointment Type sorting enum */
+export enum AppointmentTypeOrderKeys {
+  CreatedAtAsc = 'CREATED_AT_ASC',
+  CreatedAtDesc = 'CREATED_AT_DESC',
+  /** Sort ascending by the manual order set for Appointment Types on the list */
+  PositionAsc = 'POSITION_ASC',
+  /** Sort descending by the manual order set for Appointment Types on the list */
+  PositionDesc = 'POSITION_DESC',
+  UpdatedAtAsc = 'UPDATED_AT_ASC',
+  UpdatedAtDesc = 'UPDATED_AT_DESC'
+}
+
 /** Payload for an AttendedClient */
 export type AttendedClientsInput = {
   /** If the client attended the event */
@@ -1368,6 +1412,8 @@ export type BillingItem = {
   created_at: Scalars['String'];
   /** type of currency */
   currency?: Maybe<Scalars['String']>;
+  /** Pagination cursor */
+  cursor: Scalars['Cursor'];
   /** date payment was deleted */
   deleted_at?: Maybe<Scalars['String']>;
   /** Error message returned when payment failed */
@@ -1450,6 +1496,24 @@ export type BillingItem = {
   /** User Package Selection connected to this payment */
   user_package_selection?: Maybe<UserPackageSelection>;
 };
+
+/** BillingItem sorting enum */
+export enum BillingItemOrderKeys {
+  AmountPaidAsc = 'AMOUNT_PAID_ASC',
+  AmountPaidDesc = 'AMOUNT_PAID_DESC',
+  CreatedAtAsc = 'CREATED_AT_ASC',
+  CreatedAtDesc = 'CREATED_AT_DESC',
+  /** Sort by the payment medium ascending */
+  MethodAsc = 'METHOD_ASC',
+  /** Sort by the payment medium descending */
+  MethodDesc = 'METHOD_DESC',
+  PatientFirstNameAsc = 'PATIENT_FIRST_NAME_ASC',
+  PatientFirstNameDesc = 'PATIENT_FIRST_NAME_DESC',
+  ProviderFirstNameAsc = 'PROVIDER_FIRST_NAME_ASC',
+  ProviderFirstNameDesc = 'PROVIDER_FIRST_NAME_DESC',
+  StateAsc = 'STATE_ASC',
+  StateDesc = 'STATE_DESC'
+}
 
 /** Body Report is a sub category of a HealthAssessment */
 export type BodyReport = {
@@ -1854,6 +1918,20 @@ export type CarePlanConnection = {
   id: Scalars['ID'];
 };
 
+/** CarePlan sorting enum */
+export enum CarePlanOrderKeys {
+  ClientFirstNameAsc = 'CLIENT_FIRST_NAME_ASC',
+  ClientFirstNameDesc = 'CLIENT_FIRST_NAME_DESC',
+  CreatedAtAsc = 'CREATED_AT_ASC',
+  CreatedAtDesc = 'CREATED_AT_DESC',
+  DeactivatedAsc = 'DEACTIVATED_ASC',
+  DeactivatedDesc = 'DEACTIVATED_DESC',
+  NameAsc = 'NAME_ASC',
+  NameDesc = 'NAME_DESC',
+  StatusAsc = 'STATUS_ASC',
+  StatusDesc = 'STATUS_DESC'
+}
+
 /** Info on connection to Change Health */
 export type ChangeClaimSubmitter = {
   __typename?: 'ChangeClaimSubmitter';
@@ -1910,6 +1988,8 @@ export type ChargeBack = {
   status?: Maybe<Scalars['String']>;
   /** The total cost of the chargeback. Includes both the disputed amount and the fee */
   total_amount?: Maybe<Scalars['String']>;
+  /** The date and time the chargeback was last updated */
+  updated_at: Scalars['String'];
 };
 
 /** A Chargeback Evidence object, contains info to contest the dispute */
@@ -1972,6 +2052,14 @@ export type ChargeBackEvidenceInput = {
   /** The uncategorized reason of the chargeback */
   uncategorized_text?: InputMaybe<Scalars['String']>;
 };
+
+/** Charge back sorting enum */
+export enum ChargeBackOrderKeys {
+  CreatedAtAsc = 'CREATED_AT_ASC',
+  CreatedAtDesc = 'CREATED_AT_DESC',
+  UpdatedAtAsc = 'UPDATED_AT_ASC',
+  UpdatedAtDesc = 'UPDATED_AT_DESC'
+}
 
 /** Charting Item */
 export type ChartingItemType = {
@@ -2404,6 +2492,20 @@ export type Cms1500 = {
   use_indiv_npi?: Maybe<Scalars['Boolean']>;
 };
 
+/** Cms1500 sorting enum */
+export enum Cms1500OrderKeys {
+  CreatedAtAsc = 'CREATED_AT_ASC',
+  CreatedAtDesc = 'CREATED_AT_DESC',
+  PatientLastNameAsc = 'PATIENT_LAST_NAME_ASC',
+  PatientLastNameDesc = 'PATIENT_LAST_NAME_DESC',
+  PrimaryPlanNameAsc = 'PRIMARY_PLAN_NAME_ASC',
+  PrimaryPlanNameDesc = 'PRIMARY_PLAN_NAME_DESC',
+  ServiceDateAsc = 'SERVICE_DATE_ASC',
+  ServiceDateDesc = 'SERVICE_DATE_DESC',
+  StatusAsc = 'STATUS_ASC',
+  StatusDesc = 'STATUS_DESC'
+}
+
 /** A CMS1500 policy */
 export type Cms1500Policy = {
   __typename?: 'Cms1500Policy';
@@ -2499,6 +2601,8 @@ export type Comment = {
   created_at: Scalars['String'];
   /** User who created comment */
   creator?: Maybe<User>;
+  /** Pagination cursor */
+  cursor: Scalars['Cursor'];
   /** The id of the entry associated with the comment */
   entry_id?: Maybe<Scalars['String']>;
   /** The unique identifier of the comment */
@@ -2609,6 +2713,8 @@ export type Conversation = {
   conversation_memberships: Array<ConversationMembership>;
   /** The number of users in the conversation */
   conversation_memberships_count?: Maybe<Scalars['Int']>;
+  /** The time the Conversation was created */
+  created_at: Scalars['String'];
   /** The conversation membership for the current user */
   current_user_conversation_membership?: Maybe<ConversationMembership>;
   /** ID of dietitian */
@@ -2654,8 +2760,12 @@ export type ConversationMembership = {
   convo?: Maybe<Conversation>;
   /** The time the conversation of the */
   convo_updated_at?: Maybe<User>;
+  /** The date the Conversation Membership was created */
+  created_at: Scalars['String'];
   /** The creator of this ConversationMembership */
   creator?: Maybe<User>;
+  /** Pagination cursor */
+  cursor: Scalars['Cursor'];
   /** URL to the avatar to display */
   display_avatar?: Maybe<Scalars['String']>;
   /** Either the name of the owner or conversation subject? */
@@ -2685,6 +2795,18 @@ export type ConversationMembership = {
 export type ConversationMembershipLast_TaskArgs = {
   notes_type?: InputMaybe<Scalars['String']>;
 };
+
+/** Conversation Membership sorting enum */
+export enum ConversationMembershipOrderKeys {
+  ConversationCreatedAtAsc = 'CONVERSATION_CREATED_AT_ASC',
+  ConversationCreatedAtDesc = 'CONVERSATION_CREATED_AT_DESC',
+  ConversationUpdatedAtAsc = 'CONVERSATION_UPDATED_AT_ASC',
+  ConversationUpdatedAtDesc = 'CONVERSATION_UPDATED_AT_DESC',
+  CreatedAtAsc = 'CREATED_AT_ASC',
+  CreatedAtDesc = 'CREATED_AT_DESC',
+  UpdatedAtAsc = 'UPDATED_AT_ASC',
+  UpdatedAtDesc = 'UPDATED_AT_DESC'
+}
 
 /** Autogenerated input type of ConvertToMetric */
 export type ConvertToMetricInput = {
@@ -2730,6 +2852,8 @@ export type Course = {
   course_type: Scalars['String'];
   /** date course was created */
   created_at: Scalars['String'];
+  /** Pagination cursor */
+  cursor: Scalars['Cursor'];
   /** date course was deleted */
   deleted_at?: Maybe<Scalars['String']>;
   /** Description of course */
@@ -2975,6 +3099,8 @@ export type CourseMembership = {
   course_status: Scalars['String'];
   /** date membership was created */
   created_at: Scalars['String'];
+  /** Pagination cursor */
+  cursor: Scalars['Cursor'];
   /** The unique identifier of the membership */
   id: Scalars['ID'];
   /** The next incomplete item */
@@ -3003,6 +3129,8 @@ export type CptCode = {
   code?: Maybe<Scalars['String']>;
   /** The date when the CPT code was created */
   created_at: Scalars['String'];
+  /** Pagination cursor */
+  cursor: Scalars['Cursor'];
   /** The description of the CPT code */
   description?: Maybe<Scalars['String']>;
   /** The name of the CPT code for use in labels */
@@ -3234,6 +3362,8 @@ export type CustomEmail = {
   __typename?: 'CustomEmail';
   /** created at */
   created_at: Scalars['String'];
+  /** Pagination cursor */
+  cursor: Scalars['Cursor'];
   /** type of email */
   email_type?: Maybe<Scalars['String']>;
   /** email greeting */
@@ -3246,6 +3376,8 @@ export type CustomEmail = {
   name?: Maybe<Scalars['String']>;
   /** reactivation_wait_days */
   reactivation_wait_days?: Maybe<Scalars['String']>;
+  /** Appointment Type, Program or Package object */
+  related_object?: Maybe<CustomEmailRelatedObject>;
   /** subject of email */
   subject?: Maybe<Scalars['String']>;
   /** updated at */
@@ -3253,6 +3385,9 @@ export type CustomEmail = {
   /** user id of provider */
   user_id?: Maybe<Scalars['ID']>;
 };
+
+/** CustomEmail related_object union */
+export type CustomEmailRelatedObject = AppointmentType | Course | Offering;
 
 /** A custom metric for a user */
 export type CustomMetric = {
@@ -3441,6 +3576,22 @@ export type CustomModuleForm = {
   user?: Maybe<User>;
 };
 
+/** CustomModuleForm sorting enum */
+export enum CustomModuleFormOrderKeys {
+  CreatedAtAsc = 'CREATED_AT_ASC',
+  CreatedAtDesc = 'CREATED_AT_DESC',
+  NameAsc = 'NAME_ASC',
+  NameDesc = 'NAME_DESC',
+  TypeAsc = 'TYPE_ASC',
+  TypeDesc = 'TYPE_DESC',
+  UpdatedAtAsc = 'UPDATED_AT_ASC',
+  UpdatedAtDesc = 'UPDATED_AT_DESC',
+  /** Sort by owner last name ascending */
+  UserLastNameAsc = 'USER_LAST_NAME_ASC',
+  /** Sort by owner last name descending */
+  UserLastNameDesc = 'USER_LAST_NAME_DESC'
+}
+
 /** A custom sidebar override */
 export type CustomSidebarOverride = {
   __typename?: 'CustomSidebarOverride';
@@ -3551,6 +3702,15 @@ export type DietitianInput = {
   qualifications?: InputMaybe<Scalars['String']>;
 };
 
+/** Information on the direct message attachment */
+export type DirectMessageAttachment = {
+  __typename?: 'DirectMessageAttachment';
+  /** The file name of the attachment */
+  attachment_name?: Maybe<Scalars['String']>;
+  /** The unique ID of the direct message attachment */
+  id?: Maybe<Scalars['ID']>;
+};
+
 /** A discount from stripe as object */
 export type Discount = {
   __typename?: 'Discount';
@@ -3631,9 +3791,19 @@ export type DocumentCreated_AtArgs = {
   viewable_user_id?: InputMaybe<Scalars['String']>;
 };
 
+/** Document sorting enum */
+export enum DocumentOrderKeys {
+  CreatedAtAsc = 'CREATED_AT_ASC',
+  CreatedAtDesc = 'CREATED_AT_DESC',
+  NameAsc = 'NAME_ASC',
+  NameDesc = 'NAME_DESC'
+}
+
 /** Information about a document being opened */
 export type DocumentViewing = {
   __typename?: 'DocumentViewing';
+  /** Pagination cursor */
+  cursor: Scalars['Cursor'];
   /** The ID of the document that was opened */
   document_id: Scalars['ID'];
   /** The unique identifier of the viewing */
@@ -3807,6 +3977,40 @@ export type Entry = {
   viewed: Scalars['Boolean'];
 };
 
+/** Entry sorting enum */
+export enum EntryOrderKeys {
+  CreatedAtAsc = 'CREATED_AT_ASC',
+  CreatedAtDesc = 'CREATED_AT_DESC',
+  MetricStatAsc = 'METRIC_STAT_ASC',
+  MetricStatDesc = 'METRIC_STAT_DESC',
+  ThirdPartySourceAsc = 'THIRD_PARTY_SOURCE_ASC',
+  ThirdPartySourceDesc = 'THIRD_PARTY_SOURCE_DESC',
+  Unsorted = 'UNSORTED',
+  UpdatedAtAsc = 'UPDATED_AT_ASC',
+  UpdatedAtDesc = 'UPDATED_AT_DESC'
+}
+
+/** Autogenerated input type of ExtendPaywall */
+export type ExtendPaywallInput = {
+  extended_paywall_date: Scalars['String'];
+  force_extension?: InputMaybe<Scalars['Boolean']>;
+  id: Scalars['ID'];
+};
+
+/** Autogenerated return type of ExtendPaywall. */
+export type ExtendPaywallPayload = {
+  __typename?: 'ExtendPaywallPayload';
+  additional_info?: Maybe<Scalars['String']>;
+  /**
+   * DO NOT USE
+   * @deprecated DO NOT USE
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The list of errors occurred during the mutation */
+  messages?: Maybe<Array<Maybe<FieldError>>>;
+  success_string?: Maybe<Scalars['String']>;
+};
+
 /** An object containing info about the provider's exrernal calendar */
 export type ExternalCalendar = {
   __typename?: 'ExternalCalendar';
@@ -3832,6 +4036,17 @@ export type ExternalCalendar = {
   pulled_in_calendars?: Maybe<Array<Maybe<Scalars['String']>>>;
   /** The resource name (sync partner assigned ID) for the sync */
   resource_name?: Maybe<Scalars['String']>;
+};
+
+/** A family history condition record for a client */
+export type FamilyHistoryCondition = {
+  __typename?: 'FamilyHistoryCondition';
+  /** The unique identifier of the family history condition */
+  id: Scalars['ID'];
+  /** Enum field for family relationships */
+  relationships?: Maybe<Array<Scalars['String']>>;
+  /** snomed term associated with the condition */
+  snomed_term?: Maybe<SnomedTerm>;
 };
 
 /** Attributes to change a fax dietitian */
@@ -3892,11 +4107,11 @@ export type FeatureToggle = {
   allow_apple_health_sync: Scalars['Boolean'];
   /** Allow clients to sync with Clearstep */
   allow_clearstep_sync: Scalars['Boolean'];
-  /** Allow send meessages to community chat */
+  /** Allow send messages to community chat */
   allow_community_chat: Scalars['Boolean'];
   /** Allow clients to sync with Dexcom */
   allow_dexcom_sync?: Maybe<Scalars['Boolean']>;
-  /** Allow send meessages to direct chat */
+  /** Allow send messages to direct chat */
   allow_direct_chat: Scalars['Boolean'];
   /** Allow clients to sync with Fitbit */
   allow_fitbit_sync: Scalars['Boolean'];
@@ -4187,11 +4402,21 @@ export type FolderFolder_PathArgs = {
   client_id?: InputMaybe<Scalars['String']>;
 };
 
+/** Folder sorting enum */
+export enum FolderOrderKeys {
+  CreatedAtAsc = 'CREATED_AT_ASC',
+  CreatedAtDesc = 'CREATED_AT_DESC',
+  NameAsc = 'NAME_ASC',
+  NameDesc = 'NAME_DESC'
+}
+
 /** A food object */
 export type Food = {
   __typename?: 'Food';
   /** The name of the food creator */
   creator_name?: Maybe<Scalars['String']>;
+  /** Pagination cursor */
+  cursor: Scalars['Cursor'];
   /** first serving size of the food object */
   default_serving_size?: Maybe<ServingSize>;
   /** The name of the food to display */
@@ -4241,7 +4466,7 @@ export type FoodNutrient = {
   /** The unit of the nutrient */
   nutrient_unit?: Maybe<Scalars['String']>;
   /** The value of the nutrient */
-  nutrient_value: Scalars['Float'];
+  nutrient_value?: Maybe<Scalars['Float']>;
 };
 
 /** An answer in a filled form */
@@ -4302,6 +4527,8 @@ export type FormAnswerGroup = {
   form_answer_group_users_connections?: Maybe<Array<FormAnswerGroupUserConnection>>;
   /** The visible answers for the filled form */
   form_answers: Array<FormAnswer>;
+  /** when true, the note cannot be edited */
+  frozen?: Maybe<Scalars['Boolean']>;
   /** All patients that have attended in the related group appointment */
   group_appointment_attendees?: Maybe<Array<User>>;
   /** The unique identifier of the group */
@@ -4341,7 +4568,7 @@ export type FormAnswerGroupForm_AnswersArgs = {
 
 /** A completed form, with metadata about the completion, and the saved answers */
 export type FormAnswerGroupIndividual_Client_NotesArgs = {
-  sort_by?: InputMaybe<IndividualClientNoteSorting>;
+  order_by?: InputMaybe<IndividualClientNoteOrderKeys>;
 };
 
 
@@ -4349,6 +4576,17 @@ export type FormAnswerGroupIndividual_Client_NotesArgs = {
 export type FormAnswerGroupIndividual_NoteArgs = {
   user_id?: InputMaybe<Scalars['ID']>;
 };
+
+/** FormAnswerGroup sorting enum */
+export enum FormAnswerGroupOrderKeys {
+  CreatedAtAsc = 'CREATED_AT_ASC',
+  CreatedAtDesc = 'CREATED_AT_DESC',
+  RecordCreatedAtAsc = 'RECORD_CREATED_AT_ASC',
+  RecordCreatedAtDesc = 'RECORD_CREATED_AT_DESC',
+  Unsorted = 'UNSORTED',
+  UpdatedAtAsc = 'UPDATED_AT_ASC',
+  UpdatedAtDesc = 'UPDATED_AT_DESC'
+}
 
 /** An instance representing connection between a charting note(form_answer_group) and a user signing the note */
 export type FormAnswerGroupSigning = {
@@ -4643,6 +4881,22 @@ export type GoalInstance = {
   start_range?: Maybe<Scalars['String']>;
 };
 
+/** Goal sorting enum */
+export enum GoalOrderKeys {
+  DueDateAsc = 'DUE_DATE_ASC',
+  DueDateDesc = 'DUE_DATE_DESC',
+  /** Order by due date and start date descending */
+  DueDateStartDateDesc = 'DUE_DATE_START_DATE_DESC',
+  FrequencyAsc = 'FREQUENCY_ASC',
+  FrequencyDesc = 'FREQUENCY_DESC',
+  NameAsc = 'NAME_ASC',
+  NameDesc = 'NAME_DESC',
+  StartDateAsc = 'START_DATE_ASC',
+  StartDateDesc = 'START_DATE_DESC',
+  StatusAsc = 'STATUS_ASC',
+  StatusDesc = 'STATUS_DESC'
+}
+
 /** Related info for a collection of goals overall completion rate */
 export type GoalOverallCompletionRateInfo = {
   __typename?: 'GoalOverallCompletionRateInfo';
@@ -4879,6 +5133,18 @@ export type IcdCodeIs_FavoriteArgs = {
   known_value?: InputMaybe<Scalars['Boolean']>;
 };
 
+/** ICD Code sorting enum */
+export enum IcdCodeOrderKeys {
+  CodeAsc = 'CODE_ASC',
+  CodeDesc = 'CODE_DESC',
+  CreatedAtAsc = 'CREATED_AT_ASC',
+  CreatedAtDesc = 'CREATED_AT_DESC',
+  FavoritesAsc = 'FAVORITES_ASC',
+  FavoritesDesc = 'FAVORITES_DESC',
+  UpdatedAtAsc = 'UPDATED_AT_ASC',
+  UpdatedAtDesc = 'UPDATED_AT_DESC'
+}
+
 /** icd codes cms 1500s join table */
 export type IcdCodesCms1500 = {
   __typename?: 'IcdCodesCms1500';
@@ -5027,6 +5293,64 @@ export type Immunization = {
   vaccine_name: Scalars['String'];
 };
 
+/** An implantable device */
+export type ImplantableDevice = {
+  __typename?: 'ImplantableDevice';
+  /** Brand name of the implantable device. */
+  brand_name?: Maybe<Scalars['String']>;
+  /** Name of the company that manufactures the implantable device. */
+  company_name?: Maybe<Scalars['String']>;
+  /** A string representation of the date/time when the device record was created in the database. */
+  created_at?: Maybe<Scalars['String']>;
+  /** A unique identifier assigned to the device. */
+  device_id?: Maybe<Scalars['String']>;
+  /** The agency that issued the device identifier. */
+  device_id_issuing_agency?: Maybe<Scalars['String']>;
+  /** Dun & Bradstreet number (DUNS number) is a unique nine-digit identifier for businesses. */
+  duns_number?: Maybe<Scalars['String']>;
+  /** Global Medical Device Nomenclature (GMDN) terms, a system of internationally agreed generic descriptors used to identify all medical device products. */
+  gmdn_terms?: Maybe<Scalars['String']>;
+  /** The unique identifier of the implantable device type */
+  id: Scalars['ID'];
+  /** Whether the device contains natural rubber latex or not. */
+  labeled_contains_nrl?: Maybe<Scalars['String']>;
+  /** Status of the device's safety in an MRI environment (e.g., safe, conditional, unsafe). */
+  mri_safety_status?: Maybe<Scalars['String']>;
+  /** Key of the device's public record. */
+  public_device_record_key?: Maybe<Scalars['String']>;
+  /** Date when the public version of the device record was created or updated. */
+  public_version_date?: Maybe<Scalars['String']>;
+  /** Version number of the public device record. */
+  public_version_number?: Maybe<Scalars['String']>;
+  /** Status of the public version of the device record (e.g., active, retired). */
+  public_version_status?: Maybe<Scalars['String']>;
+  /** A string representation of the date/time when the device record was last updated in the database. */
+  updated_at?: Maybe<Scalars['String']>;
+  /** Version or model number of the device. */
+  version_model_number?: Maybe<Scalars['String']>;
+};
+
+/** An Implantable Device User  */
+export type ImplantableDeviceUser = {
+  __typename?: 'ImplantableDeviceUser';
+  /** A boolean value representing if the Implantable Device is currently active. */
+  active?: Maybe<Scalars['Boolean']>;
+  /** Unique identifier for the Implantable Device User connection record. */
+  id?: Maybe<Scalars['ID']>;
+  /** Details of the Implantable Device. */
+  implantable_device?: Maybe<ImplantableDevice>;
+  /** Unique identifier for the associated Implantable Device record. */
+  implantable_device_id?: Maybe<Scalars['ID']>;
+  /** User provided name for the Implantable Device. */
+  name?: Maybe<Scalars['String']>;
+  /** Recorded UDI for this associated Implantable Device User record. */
+  udi?: Maybe<Scalars['String']>;
+  /** User associated with the Implantable Device, including all User details. */
+  user?: Maybe<User>;
+  /** Unique identifier for the associated User record. */
+  user_id?: Maybe<Scalars['ID']>;
+};
+
 /** An object containing info about the import data request */
 export type ImportDataRequest = {
   __typename?: 'ImportDataRequest';
@@ -5046,6 +5370,8 @@ export type ImportDataRequest = {
 
 /** Payload for an individual client note */
 export type IndividualClientNoteInput = {
+  /** The client's attendance status. This gets applied to the AppointmentInclusion object */
+  attended?: InputMaybe<Scalars['Boolean']>;
   /** The content of the individual client note */
   content?: InputMaybe<Scalars['String']>;
   /** Diagnoses connected to the individual client attendance */
@@ -5061,8 +5387,16 @@ export type IndividualClientNoteInput = {
 };
 
 /** Individual client note sorting enum */
-export enum IndividualClientNoteSorting {
+export enum IndividualClientNoteOrderKeys {
   AttendedDesc = 'ATTENDED_DESC',
+  CreatedAtDesc = 'CREATED_AT_DESC'
+}
+
+/** Individual client note sorting enum */
+export enum IndividualClientNoteSorting {
+  /** @deprecated Use `IndividualClientNoteOrderKeys` and `order_by` instead */
+  AttendedDesc = 'ATTENDED_DESC',
+  /** @deprecated Use `IndividualClientNoteOrderKeys` and `order_by` instead */
   CreatedAtDesc = 'CREATED_AT_DESC'
 }
 
@@ -5179,6 +5513,10 @@ export type InsuranceAuthorizationType = {
 /** An Insurance Plan */
 export type InsurancePlan = {
   __typename?: 'InsurancePlan';
+  /** The Eligibility Payer ID for eligibility requests in Change that this maps to */
+  change_healthcare_eligibility_payer_id?: Maybe<Scalars['String']>;
+  /** The Payer ID for claims requests in Change that this maps to */
+  change_healthcare_payer_id?: Maybe<Scalars['String']>;
   /** Location of the first policy associated to the current user and insurance plan */
   default_payer_location?: Maybe<Location>;
   /** The unique identifier of the plan */
@@ -5218,6 +5556,12 @@ export type InsurancePlanInput = {
   payer_name?: InputMaybe<Scalars['String']>;
 };
 
+/** InsurancePlan sorting enum */
+export enum InsurancePlanOrderKeys {
+  Accepted = 'ACCEPTED',
+  PayerNameAsc = 'PAYER_NAME_ASC'
+}
+
 /** The intake flow item */
 export type IntakeFlowItem = {
   __typename?: 'IntakeFlowItem';
@@ -5254,6 +5598,18 @@ export type IntakeFlowItem = {
   /** View url */
   view_url?: Maybe<Scalars['String']>;
 };
+
+/** IntakeFlow sorting enum */
+export enum IntakeFlowOrderKeys {
+  DateAsc = 'DATE_ASC',
+  DateDesc = 'DATE_DESC',
+  NameAsc = 'NAME_ASC',
+  NameDesc = 'NAME_DESC',
+  StatusAsc = 'STATUS_ASC',
+  StatusDesc = 'STATUS_DESC',
+  TypeAsc = 'TYPE_ASC',
+  TypeDesc = 'TYPE_DESC'
+}
 
 /** Intake Flow */
 export type IntakeFlowType = {
@@ -5439,6 +5795,22 @@ export type LabOrder = {
   view_rupa_order_url?: Maybe<Scalars['String']>;
 };
 
+/** LabOrder sorting enum */
+export enum LabOrderOrderKeys {
+  ApptAsc = 'APPT_ASC',
+  ApptDesc = 'APPT_DESC',
+  ClientLastNameAsc = 'CLIENT_LAST_NAME_ASC',
+  ClientLastNameDesc = 'CLIENT_LAST_NAME_DESC',
+  LabAsc = 'LAB_ASC',
+  LabDesc = 'LAB_DESC',
+  NameAsc = 'NAME_ASC',
+  NameDesc = 'NAME_DESC',
+  ProviderLastNameAsc = 'PROVIDER_LAST_NAME_ASC',
+  ProviderLastNameDesc = 'PROVIDER_LAST_NAME_DESC',
+  UpdatedAtAsc = 'UPDATED_AT_ASC',
+  UpdatedAtDesc = 'UPDATED_AT_DESC'
+}
+
 /** Lab Result */
 export type LabResult = {
   __typename?: 'LabResult';
@@ -5456,6 +5828,8 @@ export type LabResult = {
   patient?: Maybe<User>;
   /** The type of the lab result */
   result_type?: Maybe<Scalars['String']>;
+  /** The status of the result */
+  status_flag?: Maybe<Scalars['String']>;
 };
 
 /** A location */
@@ -5830,6 +6204,8 @@ export type Mutation = {
   createEntry?: Maybe<CreateEntryPayload>;
   /** Create an External Calendar */
   createExternalCalendar?: Maybe<CreateExternalCalendarPayload>;
+  /** Create Family History */
+  createFamilyHistory?: Maybe<CreateFamilyHistoryPayload>;
   /** create Fax Acct Info */
   createFaxAcctInfo?: Maybe<CreateFaxAcctInfoPayload>;
   /** Create and return a fax line request */
@@ -5860,6 +6236,8 @@ export type Mutation = {
   createHealthConcern?: Maybe<CreateHealthConcernPayload>;
   /** Create an Immunization */
   createImmunization?: Maybe<CreateImmunizationPayload>;
+  /** Create Implantable Device User association */
+  createImplantableDeviceUser?: Maybe<CreateImplantableDeviceUserPayload>;
   /** Create an import data request */
   createImportDataRequest?: Maybe<CreateImportDataRequestPayload>;
   /** create an insurance authorization */
@@ -5926,6 +6304,8 @@ export type Mutation = {
   createRequestedPayment?: Maybe<CreateRequestedPaymentPayload>;
   /** Create a Rupa order */
   createRupaOrder?: Maybe<CreateRupaOrderPayload>;
+  /** Create a sent direct message */
+  createSentDirectMessage?: Maybe<CreateSentDirectMessagePayload>;
   /** create Sent Fax */
   createSentFax?: Maybe<CreateSentFaxPayload>;
   /** Create a Smart Phrase */
@@ -6010,6 +6390,8 @@ export type Mutation = {
   deleteEntry?: Maybe<DeleteEntryPayload>;
   /** Destroy an External Calendar */
   deleteExternalCalendar?: Maybe<DeleteExternalCalendarPayload>;
+  /** Delete a Family History Condition */
+  deleteFamilyHistory?: Maybe<DeleteFamilyHistoryPayload>;
   /** destroy Fax Acct Info */
   deleteFaxAcctInfo?: Maybe<DestroyFaxAcctInfoPayload>;
   /** Destroy Fitbit */
@@ -6028,6 +6410,8 @@ export type Mutation = {
   deleteGoogleFit?: Maybe<DeleteGoogleFitPayload>;
   /** Delete a HealthConcern Object */
   deleteHealthConcern?: Maybe<DeleteHealthConcernPayload>;
+  /** Delete an Implantable Device User association */
+  deleteImplantableDeviceUser?: Maybe<DeleteImplantableDeviceUserPayload>;
   /** delete an insurance authorization */
   deleteInsuranceAuthorization?: Maybe<DeleteInsuranceAuthorizationPayload>;
   /** Delete Insurance Plan */
@@ -6112,8 +6496,14 @@ export type Mutation = {
   editAvailability?: Maybe<EditAvailabilityPayload>;
   /** Embed Forms to Objects */
   embedForm?: Maybe<EmbedFormPayload>;
+  /** Generate Patients Dosespot SSO for a Given Provider  */
+  enableDosespotSelfSignup?: Maybe<EnableSelfSignupPayload>;
   /** Creates a template from existing Care Plan. Original object is not touched */
   exportCarePlanToTemplate?: Maybe<ExportToTemplatePayload>;
+  /** Export Client EHI data */
+  exportClientEhi?: Maybe<ExportClientEhiPayload>;
+  /** extend paywall for a provider */
+  extendPaywall?: Maybe<ExtendPaywallPayload>;
   /** Generate a PDF of charting notes for a client */
   generateChartingPdf?: Maybe<GenerateChartingPdfPayload>;
   /** Generate Patients Dosespot SSO for a Given Provider  */
@@ -6178,6 +6568,8 @@ export type Mutation = {
   togglePaywall?: Maybe<TogglePaywallPayload>;
   /** Toggle Reason for Appointment on Appointment Type of Provider */
   toggleReasonForAppt?: Maybe<ToggleReasonForApptPayload>;
+  /** Unlock Charting Note */
+  unlockChartingNote?: Maybe<UnlockChartingNotePayload>;
   /** Update a Notification Setting to unsubscribe from a specific notification type */
   unsubscribeFromNotification?: Maybe<UnsubscribeFromNotificationPayload>;
   /** Update existing addendum for the selected charting note */
@@ -6254,6 +6646,8 @@ export type Mutation = {
   updateEntry?: Maybe<UpdateEntryPayload>;
   /** Update an External Calendar */
   updateExternalCalendar?: Maybe<UpdateExternalCalendarPayload>;
+  /** Update Family History */
+  updateFamilyHistory?: Maybe<UpdateFamilyHistoryPayload>;
   /** update Fax Acct Info */
   updateFaxAcctInfo?: Maybe<UpdateFaxAcctInfoPayload>;
   /** Update a FeatureToggle and Return FeatureToggle */
@@ -6278,6 +6672,8 @@ export type Mutation = {
   updateHuman?: Maybe<UpdateHumanPayload>;
   /** Update an Immunization and return Immunization */
   updateImmunization?: Maybe<UpdateImmunizationPayload>;
+  /** Update Implantable Device User association */
+  updateImplantableDeviceUser?: Maybe<UpdateImplantableDeviceUserPayload>;
   /** update an insurance authorization */
   updateInsuranceAuthorization?: Maybe<UpdateInsuranceAuthorizationPayload>;
   /** Update Insurance Plan */
@@ -6760,6 +7156,12 @@ export type MutationCreateExternalCalendarArgs = {
 
 
 /** The mutation root of this schema. See available mutations. */
+export type MutationCreateFamilyHistoryArgs = {
+  input?: InputMaybe<CreateFamilyHistoryInput>;
+};
+
+
+/** The mutation root of this schema. See available mutations. */
 export type MutationCreateFaxAcctInfoArgs = {
   input?: InputMaybe<CreateFaxAcctInfoInput>;
 };
@@ -6846,6 +7248,12 @@ export type MutationCreateHealthConcernArgs = {
 /** The mutation root of this schema. See available mutations. */
 export type MutationCreateImmunizationArgs = {
   input?: InputMaybe<CreateImmunizationInput>;
+};
+
+
+/** The mutation root of this schema. See available mutations. */
+export type MutationCreateImplantableDeviceUserArgs = {
+  input?: InputMaybe<CreateImplantableDeviceUserInput>;
 };
 
 
@@ -7044,6 +7452,12 @@ export type MutationCreateRequestedPaymentArgs = {
 /** The mutation root of this schema. See available mutations. */
 export type MutationCreateRupaOrderArgs = {
   input?: InputMaybe<CreateRupaOrderInput>;
+};
+
+
+/** The mutation root of this schema. See available mutations. */
+export type MutationCreateSentDirectMessageArgs = {
+  input?: InputMaybe<CreateSentDirectMessageInput>;
 };
 
 
@@ -7300,6 +7714,12 @@ export type MutationDeleteExternalCalendarArgs = {
 
 
 /** The mutation root of this schema. See available mutations. */
+export type MutationDeleteFamilyHistoryArgs = {
+  input?: InputMaybe<DeleteFamilyHistoryInput>;
+};
+
+
+/** The mutation root of this schema. See available mutations. */
 export type MutationDeleteFaxAcctInfoArgs = {
   input?: InputMaybe<DestroyFaxAcctInfoInput>;
 };
@@ -7350,6 +7770,12 @@ export type MutationDeleteGoogleFitArgs = {
 /** The mutation root of this schema. See available mutations. */
 export type MutationDeleteHealthConcernArgs = {
   input?: InputMaybe<DeleteHealthConcernInput>;
+};
+
+
+/** The mutation root of this schema. See available mutations. */
+export type MutationDeleteImplantableDeviceUserArgs = {
+  input?: InputMaybe<DeleteImplantableDeviceUserInput>;
 };
 
 
@@ -7606,8 +8032,26 @@ export type MutationEmbedFormArgs = {
 
 
 /** The mutation root of this schema. See available mutations. */
+export type MutationEnableDosespotSelfSignupArgs = {
+  input?: InputMaybe<EnableSelfSignupInput>;
+};
+
+
+/** The mutation root of this schema. See available mutations. */
 export type MutationExportCarePlanToTemplateArgs = {
   input?: InputMaybe<ExportToTemplateInput>;
+};
+
+
+/** The mutation root of this schema. See available mutations. */
+export type MutationExportClientEhiArgs = {
+  input?: InputMaybe<ExportClientEhiInput>;
+};
+
+
+/** The mutation root of this schema. See available mutations. */
+export type MutationExtendPaywallArgs = {
+  input?: InputMaybe<ExtendPaywallInput>;
 };
 
 
@@ -7800,6 +8244,12 @@ export type MutationTogglePaywallArgs = {
 /** The mutation root of this schema. See available mutations. */
 export type MutationToggleReasonForApptArgs = {
   input?: InputMaybe<ToggleReasonForApptInput>;
+};
+
+
+/** The mutation root of this schema. See available mutations. */
+export type MutationUnlockChartingNoteArgs = {
+  input?: InputMaybe<UnlockChartingNoteInput>;
 };
 
 
@@ -8032,6 +8482,12 @@ export type MutationUpdateExternalCalendarArgs = {
 
 
 /** The mutation root of this schema. See available mutations. */
+export type MutationUpdateFamilyHistoryArgs = {
+  input?: InputMaybe<UpdateFamilyHistoryInput>;
+};
+
+
+/** The mutation root of this schema. See available mutations. */
 export type MutationUpdateFaxAcctInfoArgs = {
   input?: InputMaybe<UpdateFaxAcctInfoInput>;
 };
@@ -8100,6 +8556,12 @@ export type MutationUpdateHumanArgs = {
 /** The mutation root of this schema. See available mutations. */
 export type MutationUpdateImmunizationArgs = {
   input?: InputMaybe<UpdateImmunizationInput>;
+};
+
+
+/** The mutation root of this schema. See available mutations. */
+export type MutationUpdateImplantableDeviceUserArgs = {
+  input?: InputMaybe<UpdateImplantableDeviceUserInput>;
 };
 
 
@@ -8500,6 +8962,12 @@ export type NoteInput = {
   content?: InputMaybe<Scalars['String']>;
 };
 
+/** Note sorting enum */
+export enum NoteOrderKeys {
+  CreatedAtAsc = 'CREATED_AT_ASC',
+  CreatedAtDesc = 'CREATED_AT_DESC'
+}
+
 /** Scheduled chat notes */
 export type NoteScheduler = {
   __typename?: 'NoteScheduler';
@@ -8608,6 +9076,12 @@ export type NotificationContactInput = {
   /** The ID of the notification contact */
   id?: InputMaybe<Scalars['ID']>;
 };
+
+/** Notification sorting enum */
+export enum NotificationOrderKeys {
+  CreatedAtAsc = 'CREATED_AT_ASC',
+  CreatedAtDesc = 'CREATED_AT_DESC'
+}
 
 /** An object containing the users preferences on notification */
 export type NotificationSetting = {
@@ -8825,15 +9299,19 @@ export type Offering = {
   row_order?: Maybe<Scalars['String']>;
   /** offering image id */
   selected_image_id?: Maybe<Scalars['String']>;
+  /** show free text to customers on offerings of zero price */
+  show_free_text: Scalars['Boolean'];
   /** show offering toggle */
   show_offering: Scalars['Boolean'];
+  /** show price toggle */
+  show_price: Scalars['Boolean'];
   /** start_fb_pixel */
   start_fb_pixel?: Maybe<Scalars['String']>;
   /** total of billing_items.amount_paid for a given offering */
   total_revenue?: Maybe<Scalars['Float']>;
   /** When false, the package is at its purchase cap, and cannot be bought by a client */
   under_purchase_cap?: Maybe<Scalars['Boolean']>;
-  /** udpated at */
+  /** updated at */
   updated_at: Scalars['String'];
   /** The user who owns the package */
   user?: Maybe<User>;
@@ -8900,6 +9378,22 @@ export type OfferingCoupon = {
   /** The user id who created this offering coupon */
   user_id?: Maybe<Scalars['String']>;
 };
+
+/** OfferingCoupon sorting enum */
+export enum OfferingCouponOrderKeys {
+  AmountAsc = 'AMOUNT_ASC',
+  AmountDesc = 'AMOUNT_DESC',
+  AppliesToAsc = 'APPLIES_TO_ASC',
+  AppliesToDesc = 'APPLIES_TO_DESC',
+  CodeAsc = 'CODE_ASC',
+  CodeDesc = 'CODE_DESC',
+  ExpiresAtAsc = 'EXPIRES_AT_ASC',
+  ExpiresAtDesc = 'EXPIRES_AT_DESC',
+  TotalUsageAsc = 'TOTAL_USAGE_ASC',
+  TotalUsageDesc = 'TOTAL_USAGE_DESC',
+  TypeAsc = 'TYPE_ASC',
+  TypeDesc = 'TYPE_DESC'
+}
 
 /** Offering Course */
 export type OfferingCourse = {
@@ -9018,6 +9512,17 @@ export type OfferingLabOption = {
   updated_at: Scalars['String'];
 };
 
+/** Offering sorting enum */
+export enum OfferingOrderKeys {
+  /** Sort by billing items count descending */
+  BestSeller = 'BEST_SELLER',
+  NameAsc = 'NAME_ASC',
+  NameDesc = 'NAME_DESC',
+  PriceAsc = 'PRICE_ASC',
+  PriceDesc = 'PRICE_DESC',
+  SetOrder = 'SET_ORDER'
+}
+
 /** Offering product type */
 export type OfferingProduct = {
   __typename?: 'OfferingProduct';
@@ -9115,6 +9620,16 @@ export type OnboardingFlow = {
 export type OnboardingFlowOnboarding_ItemsArgs = {
   custom_module_forms_only?: InputMaybe<Scalars['Boolean']>;
 };
+
+/** OnboardingFlow sorting enum */
+export enum OnboardingFlowOrderKeys {
+  CreatedAtAsc = 'CREATED_AT_ASC',
+  CreatedAtDesc = 'CREATED_AT_DESC',
+  FormsCountAsc = 'FORMS_COUNT_ASC',
+  FormsCountDesc = 'FORMS_COUNT_DESC',
+  NameAsc = 'NAME_ASC',
+  NameDesc = 'NAME_DESC'
+}
 
 /** An onboarding item that has something for the client to complete */
 export type OnboardingItem = {
@@ -9426,6 +9941,8 @@ export type OrganizationInfoInput = {
 /** An organization membership */
 export type OrganizationMembership = {
   __typename?: 'OrganizationMembership';
+  /** Allows group level actions (e.g. send group messages in chat, assigning group to course modules, request form completions from group) */
+  allow_group_level_actions: Scalars['Boolean'];
   /** If true, clients who this org member has been added as a care team member will be able to schedule appointments with them. */
   allow_self_scheduling_in_care_team?: Maybe<Scalars['Boolean']>;
   /** If true, clients who this org member has been added as a care team member for will automatically see a Chat conversation with this org member. */
@@ -9506,6 +10023,8 @@ export type OrganizationMembership = {
   can_see_transfers?: Maybe<Scalars['Boolean']>;
   /** If true, the user can set a password for organization clients */
   can_set_client_password?: Maybe<Scalars['Boolean']>;
+  /** If true, the user can share documents and folders with organizations members */
+  can_share_documents_and_folders_with_org_members?: Maybe<Scalars['Boolean']>;
   /** If true, the user can sign charting notes other providers created */
   can_sign_others_charting_notes?: Maybe<Scalars['Boolean']>;
   /** If true, the user can sign charting notes they created */
@@ -9608,6 +10127,19 @@ export type OrganizationMembership = {
   user?: Maybe<User>;
 };
 
+/** OrganizationMembership sorting enum */
+export enum OrganizationMembershipOrderKeys {
+  FirstNameAsc = 'FIRST_NAME_ASC',
+  FirstNameDesc = 'FIRST_NAME_DESC',
+  LastNameAsc = 'LAST_NAME_ASC',
+  LastNameDesc = 'LAST_NAME_DESC',
+  PositionAsc = 'POSITION_ASC',
+  StatusAsc = 'STATUS_ASC',
+  StatusDesc = 'STATUS_DESC',
+  TypeAsc = 'TYPE_ASC',
+  TypeDesc = 'TYPE_DESC'
+}
+
 /** Alternative ID numbers for a provider */
 export type OtherIdNumber = {
   __typename?: 'OtherIdNumber';
@@ -9668,6 +10200,8 @@ export type PairAccountsPayload = {
 export type PatientInput = {
   /** The date of birth of the patient */
   dob?: InputMaybe<Scalars['String']>;
+  /** The full legal name and preferred name of the patient */
+  full_legal_name_with_preferred?: InputMaybe<Scalars['String']>;
   /** DEPRECATED: The gender of the patient */
   gender?: InputMaybe<Scalars['String']>;
   /** The ID of the patient */
@@ -9707,6 +10241,8 @@ export type PatientLocationInputs = {
 /** An permission templateType */
 export type PermissionTemplateType = {
   __typename?: 'PermissionTemplateType';
+  /** Allows group level actions (e.g. send group messages in chat, assigning group to course modules, request form completions from group) */
+  allow_group_level_actions: Scalars['Boolean'];
   /** If true, clients who this org member has been added as a care team member will be able to schedule appointments with them. */
   allow_self_scheduling_in_care_team?: Maybe<Scalars['Boolean']>;
   /** If true, clients who this org member has been added as a care team member for will automatically see a Chat conversation with this org member. */
@@ -9783,6 +10319,8 @@ export type PermissionTemplateType = {
   can_see_transfers?: Maybe<Scalars['Boolean']>;
   /** If true, user can set client passwords */
   can_set_client_password?: Maybe<Scalars['Boolean']>;
+  /** If true, the user can share documents and folders with organizations members */
+  can_share_documents_and_folders_with_org_members?: Maybe<Scalars['Boolean']>;
   /** If true, the user can sign charting notes other providers created */
   can_sign_others_charting_notes?: Maybe<Scalars['Boolean']>;
   /** If true, the user can sign charting notes they created */
@@ -10293,6 +10831,18 @@ export type ProductInput = {
   name?: InputMaybe<Scalars['String']>;
 };
 
+/** Product sorting enum */
+export enum ProductOrderKeys {
+  CreatedAtAsc = 'CREATED_AT_ASC',
+  CreatedAtDesc = 'CREATED_AT_DESC',
+  NameAsc = 'NAME_ASC',
+  NameDesc = 'NAME_DESC',
+  PriceAsc = 'PRICE_ASC',
+  PriceDesc = 'PRICE_DESC',
+  QuantityAsc = 'QUANTITY_ASC',
+  QuantityDesc = 'QUANTITY_DESC'
+}
+
 /** Profession */
 export type Profession = {
   __typename?: 'Profession';
@@ -10478,10 +11028,16 @@ export type Query = {
   changeClaimSubmitter?: Maybe<ChangeClaimSubmitter>;
   /** fetch a chargeback by the Healthie ID or the Stripe Dispute ID.  */
   chargeBack?: Maybe<ChargeBack>;
+  /** fetch all charge backs for a user or organization */
+  chargeBacks?: Maybe<Array<ChargeBack>>;
+  /** fetch count of all charge backs */
+  chargeBacksCount?: Maybe<Scalars['Int']>;
   /** All items to include in the charting list */
   chartingItems?: Maybe<Array<ChartingItemType>>;
   /** All items to include in the charting list */
   chartingItemsCount?: Maybe<Scalars['Int']>;
+  /** Fetch a charting note addendum by id */
+  chartingNoteAddendum?: Maybe<ChartingNoteAddendumType>;
   /** fetch a Chat Setting */
   chatSetting?: Maybe<ChatSetting>;
   /** get current video chats for a user. */
@@ -10560,6 +11116,8 @@ export type Query = {
   currentUserNotificationsCount?: Maybe<UserNotificationsCount>;
   /** get current video chats for a user. */
   currentVideoChats?: Maybe<Array<Appointment>>;
+  /** Custom Email object */
+  customEmail?: Maybe<CustomEmail>;
   /** A HTML string containing mailer template for certain email type */
   customEmailPreview?: Maybe<Scalars['String']>;
   /** Fetch paginated custom emails collection */
@@ -10616,9 +11174,9 @@ export type Query = {
   foodSearchCount?: Maybe<Scalars['Int']>;
   /** Fetch a form answer group by id */
   formAnswerGroup?: Maybe<FormAnswerGroup>;
-  /** All filled forms for a given user */
+  /** All filled forms for a given set of arguments */
   formAnswerGroups?: Maybe<Array<FormAnswerGroup>>;
-  /** All filled forms for a given user */
+  /** The number of filled forms for a given set of a arguments */
   formAnswerGroupsCount?: Maybe<Scalars['Int']>;
   /** Fetch available forms to request */
   formTypesToRequest?: Maybe<Array<FormTypesToRequest>>;
@@ -10855,6 +11413,14 @@ export type Query = {
   questionBankModules?: Maybe<Array<CustomModule>>;
   /** Fetch receipt_line_items collection by super_bill_id */
   receiptLineItems?: Maybe<Array<ReceiptLineItem>>;
+  /** Fetch received direct message via ID */
+  receivedDirectMessage?: Maybe<ReceivedDirectMessage>;
+  /** Fetch Received Direct Meessages */
+  receivedDirectMessages?: Maybe<Array<ReceivedDirectMessage>>;
+  /** Fetch number of Received Direct Meessages */
+  receivedDirectMessagesCount?: Maybe<Scalars['Int']>;
+  /** Fetch Received Fax by ID */
+  receivedFax?: Maybe<ReceivedFax>;
   /** Fetch paginated Received Faxes collection */
   receivedFaxes?: Maybe<Array<ReceivedFax>>;
   /** Number of Received Faxes */
@@ -10865,6 +11431,8 @@ export type Query = {
   recurringForms?: Maybe<Array<RecurringForm>>;
   /** Fetch active recurring_payments */
   recurringPayments?: Maybe<Array<RecurringPayment>>;
+  /** Fetch Referral by ID */
+  referral?: Maybe<Referral>;
   /** Get referring physician based on id */
   referringPhysician?: Maybe<ReferringPhysician>;
   /** all referring physicians based on current user */
@@ -10881,14 +11449,18 @@ export type Query = {
   requestedPayments?: Maybe<Array<RequestedPayment>>;
   /** Number of Requested Payments */
   requestedPaymentsCount?: Maybe<Scalars['Int']>;
-  /** Only available to Internal Healthie Users -- Roles assigned to a given User */
-  roles?: Maybe<Array<Role>>;
   /** Fetch user's scheduled message blasts */
   scheduledMessageBlasts?: Maybe<Array<NoteScheduler>>;
   /** Fetch collection of all scheduled packages */
   scheduledUserPackageSelections?: Maybe<Array<ScheduledUserPackageSelection>>;
   /** SDK configuration */
   sdkConfig: SdkConfig;
+  /** Fetch sent direct message via ID */
+  sentDirectMessage?: Maybe<SentDirectMessage>;
+  /** Fetch number of Sent Direct Messages */
+  sentDirectMessages?: Maybe<Array<SentDirectMessage>>;
+  /** Fetch number of Sent Direct Meessages */
+  sentDirectMessagesCount?: Maybe<Scalars['Int']>;
   /** Fetch paginated Sent Faxes collection */
   sentFaxes?: Maybe<Array<SentFax>>;
   /** Number of Sent Faxes */
@@ -10939,18 +11511,8 @@ export type Query = {
   superBills?: Maybe<Array<SuperBill>>;
   /** Number of super bills */
   superBillsCount?: Maybe<Scalars['Int']>;
-  /** INTERNAL - Query for FormAnswer */
-  supportDashboardFormAnswer?: Maybe<SdFormAnswer>;
-  /** INTERNAL - Query for FormAnswerGroup */
-  supportDashboardFormAnswerGroup?: Maybe<SupportDashboardFormAnswerGroup>;
-  /** INTERNAL -- Query Lab Order Based on Order ID */
-  supportDashboardLabOrder?: Maybe<SdLabOrderType>;
-  /** INTERNAL -- Query User Object */
-  supportDashboardOrganization?: Maybe<SupportDashboardOrg>;
-  /** Rough Total Patient Count */
-  supportDashboardTotalPatientCount?: Maybe<Scalars['Int']>;
-  /** INTERNAL -- Query User Object */
-  supportDashboardUsers?: Maybe<SupportDashboardHuman>;
+  /** Endpoint for Support Dashboard Queries */
+  supportDashboard?: Maybe<SupportDashboardType>;
   /** A collection of tags related to current patient/provider/organization */
   tags?: Maybe<Array<Tag>>;
   /** Number of tags */
@@ -11030,9 +11592,11 @@ export type QueryAnnouncementArgs = {
 
 /** The query root of this schema. See available queries. */
 export type QueryAnnouncementsArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
   exclude_dismissed?: InputMaybe<Scalars['Boolean']>;
   keywords?: InputMaybe<Scalars['String']>;
   offset?: InputMaybe<Scalars['Int']>;
+  page_size?: InputMaybe<Scalars['Int']>;
   should_paginate?: InputMaybe<Scalars['Boolean']>;
 };
 
@@ -11046,9 +11610,11 @@ export type QueryAnnouncementsCountArgs = {
 
 /** The query root of this schema. See available queries. */
 export type QueryApiKeysArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
   keywords?: InputMaybe<Scalars['String']>;
   offset?: InputMaybe<Scalars['Int']>;
-  sort_by?: InputMaybe<Scalars['String']>;
+  order_by?: InputMaybe<ApiKeyOrderKeys>;
+  page_size?: InputMaybe<Scalars['Int']>;
 };
 
 
@@ -11155,12 +11721,14 @@ export type QueryAppointmentTypeCreditChangesArgs = {
 
 /** The query root of this schema. See available queries. */
 export type QueryAppointmentTypesArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
   appointment_type_ids?: InputMaybe<Scalars['String']>;
   clients_can_book?: InputMaybe<Scalars['Boolean']>;
   embed_or_sharing_link?: InputMaybe<Scalars['Boolean']>;
   keywords?: InputMaybe<Scalars['String']>;
   offering_id?: InputMaybe<Scalars['String']>;
   offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<AppointmentTypeOrderKeys>;
   org_level?: InputMaybe<Scalars['Boolean']>;
   page_size?: InputMaybe<Scalars['Int']>;
   provider_id?: InputMaybe<Scalars['String']>;
@@ -11186,6 +11754,8 @@ export type QueryAppointmentTypesCountArgs = {
 
 /** The query root of this schema. See available queries. */
 export type QueryAppointmentsArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  attendee_ids?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   colorSchemeId?: InputMaybe<Scalars['String']>;
   currentWeek?: InputMaybe<Scalars['Boolean']>;
   endDate?: InputMaybe<Scalars['String']>;
@@ -11211,12 +11781,12 @@ export type QueryAppointmentsArgs = {
   is_with_clients?: InputMaybe<Scalars['Boolean']>;
   keywords?: InputMaybe<Scalars['String']>;
   offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<AppointmentOrderKeys>;
   page_size?: InputMaybe<Scalars['Int']>;
   provider_id?: InputMaybe<Scalars['ID']>;
   provider_ids?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   should_paginate?: InputMaybe<Scalars['Boolean']>;
   show_appointments?: InputMaybe<Scalars['Boolean']>;
-  sort_by?: InputMaybe<Scalars['String']>;
   specificDay?: InputMaybe<Scalars['String']>;
   startDate?: InputMaybe<Scalars['String']>;
   unconfirmed?: InputMaybe<Scalars['Boolean']>;
@@ -11370,14 +11940,16 @@ export type QueryBillingItemArgs = {
 
 /** The query root of this schema. See available queries. */
 export type QueryBillingItemsArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
   client_id?: InputMaybe<Scalars['ID']>;
   created_at_end?: InputMaybe<Scalars['String']>;
   created_at_start?: InputMaybe<Scalars['String']>;
   keywords?: InputMaybe<Scalars['String']>;
   offerings_only?: InputMaybe<Scalars['Boolean']>;
   offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<BillingItemOrderKeys>;
+  page_size?: InputMaybe<Scalars['Int']>;
   provider_id?: InputMaybe<Scalars['ID']>;
-  sort_by?: InputMaybe<Scalars['String']>;
   state?: InputMaybe<Scalars['String']>;
   status?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   user_id?: InputMaybe<Scalars['ID']>;
@@ -11435,7 +12007,7 @@ export type QueryCanCapOfferingPurchasesArgs = {
 /** The query root of this schema. See available queries. */
 export type QueryCardIssuesArgs = {
   offset?: InputMaybe<Scalars['Int']>;
-  sort_by?: InputMaybe<Scalars['String']>;
+  order_by?: InputMaybe<StripeCustomerDetailOrderKeys>;
 };
 
 
@@ -11449,8 +12021,8 @@ export type QueryCarePlanArgs = {
 /** The query root of this schema. See available queries. */
 export type QueryCarePlansArgs = {
   offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<CarePlanOrderKeys>;
   patient_id?: InputMaybe<Scalars['ID']>;
-  sort_by?: InputMaybe<Scalars['String']>;
   template_search_keywords?: InputMaybe<Scalars['String']>;
   templates_only?: InputMaybe<Scalars['Boolean']>;
 };
@@ -11472,6 +12044,21 @@ export type QueryCarePlansTemplatesCountArgs = {
 export type QueryChargeBackArgs = {
   id?: InputMaybe<Scalars['ID']>;
   stripe_dispute_id?: InputMaybe<Scalars['ID']>;
+};
+
+
+/** The query root of this schema. See available queries. */
+export type QueryChargeBacksArgs = {
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<ChargeBackOrderKeys>;
+  per_page?: InputMaybe<Scalars['Int']>;
+  show_all_for_org?: InputMaybe<Scalars['Boolean']>;
+};
+
+
+/** The query root of this schema. See available queries. */
+export type QueryChargeBacksCountArgs = {
+  show_all_for_org?: InputMaybe<Scalars['Boolean']>;
 };
 
 
@@ -11508,6 +12095,12 @@ export type QueryChartingItemsCountArgs = {
 
 
 /** The query root of this schema. See available queries. */
+export type QueryChartingNoteAddendumArgs = {
+  id?: InputMaybe<Scalars['ID']>;
+};
+
+
+/** The query root of this schema. See available queries. */
 export type QueryChatSettingArgs = {
   id?: InputMaybe<Scalars['ID']>;
 };
@@ -11530,9 +12123,9 @@ export type QueryCms1500sArgs = {
   client_id?: InputMaybe<Scalars['ID']>;
   keywords?: InputMaybe<Scalars['String']>;
   offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Cms1500OrderKeys>;
   provider_id?: InputMaybe<Scalars['ID']>;
   should_paginate?: InputMaybe<Scalars['Boolean']>;
-  sort_by?: InputMaybe<Scalars['String']>;
   status?: InputMaybe<Scalars['String']>;
 };
 
@@ -11561,6 +12154,7 @@ export type QueryCommentArgs = {
 
 /** The query root of this schema. See available queries. */
 export type QueryCommentsArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
   entry_id?: InputMaybe<Scalars['ID']>;
   entry_ids?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   offset?: InputMaybe<Scalars['Int']>;
@@ -11605,12 +12199,16 @@ export type QueryConversationMembershipInviteesArgs = {
 /** The query root of this schema. See available queries. */
 export type QueryConversationMembershipsArgs = {
   active_status?: InputMaybe<Scalars['String']>;
+  after?: InputMaybe<Scalars['Cursor']>;
   client_id?: InputMaybe<Scalars['String']>;
   conversation_type?: InputMaybe<Scalars['String']>;
   keywords?: InputMaybe<Scalars['String']>;
   notes_type?: InputMaybe<Scalars['String']>;
   offset?: InputMaybe<Scalars['Int']>;
+  only_include_shared_memberships?: InputMaybe<Scalars['Boolean']>;
+  order_by?: InputMaybe<ConversationMembershipOrderKeys>;
   org_chat?: InputMaybe<Scalars['Boolean']>;
+  page_size?: InputMaybe<Scalars['Int']>;
   provider_id?: InputMaybe<Scalars['ID']>;
   provider_ids?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   read_status?: InputMaybe<Scalars['String']>;
@@ -11624,6 +12222,7 @@ export type QueryConversationMembershipsCountArgs = {
   conversation_type?: InputMaybe<Scalars['String']>;
   keywords?: InputMaybe<Scalars['String']>;
   notes_type?: InputMaybe<Scalars['String']>;
+  only_include_shared_memberships?: InputMaybe<Scalars['Boolean']>;
   org_chat?: InputMaybe<Scalars['Boolean']>;
   provider_id?: InputMaybe<Scalars['ID']>;
   provider_ids?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
@@ -11717,6 +12316,7 @@ export type QueryCourseMembershipArgs = {
 
 /** The query root of this schema. See available queries. */
 export type QueryCourseMembershipsArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
   client_id?: InputMaybe<Scalars['ID']>;
   fetch_all?: InputMaybe<Scalars['Boolean']>;
   offset?: InputMaybe<Scalars['Int']>;
@@ -11733,6 +12333,7 @@ export type QueryCourseMembershipsCountArgs = {
 /** The query root of this schema. See available queries. */
 export type QueryCoursesArgs = {
   active?: InputMaybe<Scalars['Boolean']>;
+  after?: InputMaybe<Scalars['Cursor']>;
   course_type?: InputMaybe<Scalars['String']>;
   keywords?: InputMaybe<Scalars['String']>;
   offset?: InputMaybe<Scalars['Int']>;
@@ -11752,10 +12353,12 @@ export type QueryCoursesCountArgs = {
 
 /** The query root of this schema. See available queries. */
 export type QueryCptCodesArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
   for_superbill?: InputMaybe<Scalars['Boolean']>;
   is_favorited?: InputMaybe<Scalars['Boolean']>;
   keywords?: InputMaybe<Scalars['String']>;
   offset?: InputMaybe<Scalars['Int']>;
+  page_size?: InputMaybe<Scalars['Int']>;
   should_paginate?: InputMaybe<Scalars['Boolean']>;
 };
 
@@ -11770,6 +12373,12 @@ export type QueryCptCodesCountArgs = {
 export type QueryCurrentVideoChatsArgs = {
   only_current?: InputMaybe<Scalars['Boolean']>;
   user_id?: InputMaybe<Scalars['String']>;
+};
+
+
+/** The query root of this schema. See available queries. */
+export type QueryCustomEmailArgs = {
+  id?: InputMaybe<Scalars['ID']>;
 };
 
 
@@ -11790,6 +12399,7 @@ export type QueryCustomEmailPreviewArgs = {
 
 /** The query root of this schema. See available queries. */
 export type QueryCustomEmailsArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
   email_type?: InputMaybe<Scalars['String']>;
   offset?: InputMaybe<Scalars['Int']>;
   provider_id?: InputMaybe<Scalars['ID']>;
@@ -11817,8 +12427,8 @@ export type QueryCustomModuleFormsArgs = {
   include_default_templates?: InputMaybe<Scalars['Boolean']>;
   keywords?: InputMaybe<Scalars['String']>;
   offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<CustomModuleFormOrderKeys>;
   should_paginate?: InputMaybe<Scalars['Boolean']>;
-  sort_by?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -11828,7 +12438,6 @@ export type QueryCustomModuleFormsCountArgs = {
   category?: InputMaybe<Scalars['String']>;
   include_default_templates?: InputMaybe<Scalars['Boolean']>;
   keywords?: InputMaybe<Scalars['String']>;
-  sort_by?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -11866,6 +12475,7 @@ export type QueryDocumentArgs = {
 
 /** The query root of this schema. See available queries. */
 export type QueryDocumentViewingsArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
   document_id?: InputMaybe<Scalars['ID']>;
   offset?: InputMaybe<Scalars['Int']>;
   per_page?: InputMaybe<Scalars['Int']>;
@@ -11888,10 +12498,10 @@ export type QueryDocumentsArgs = {
   for_template_use?: InputMaybe<Scalars['Boolean']>;
   keywords?: InputMaybe<Scalars['String']>;
   offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<DocumentOrderKeys>;
   private_user_id?: InputMaybe<Scalars['String']>;
   provider_id?: InputMaybe<Scalars['ID']>;
   should_paginate?: InputMaybe<Scalars['Boolean']>;
-  sort_by?: InputMaybe<Scalars['String']>;
   viewable_user_id?: InputMaybe<Scalars['String']>;
 };
 
@@ -11952,8 +12562,8 @@ export type QueryEntriesArgs = {
   is_org?: InputMaybe<Scalars['Boolean']>;
   keywords?: InputMaybe<Scalars['String']>;
   offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<EntryOrderKeys>;
   page_size?: InputMaybe<Scalars['Int']>;
-  sort_by?: InputMaybe<Scalars['String']>;
   start_datetime_range?: InputMaybe<Scalars['String']>;
   start_range?: InputMaybe<Scalars['String']>;
   summary_view?: InputMaybe<Scalars['Boolean']>;
@@ -12018,10 +12628,10 @@ export type QueryFoldersArgs = {
   folder_to_move_id?: InputMaybe<Scalars['ID']>;
   for_template_use?: InputMaybe<Scalars['Boolean']>;
   keywords?: InputMaybe<Scalars['String']>;
+  order_by?: InputMaybe<FolderOrderKeys>;
   private_user_id?: InputMaybe<Scalars['String']>;
   provider_id?: InputMaybe<Scalars['ID']>;
   should_paginate?: InputMaybe<Scalars['Boolean']>;
-  sort_by?: InputMaybe<Scalars['String']>;
   viewable_user_id?: InputMaybe<Scalars['String']>;
 };
 
@@ -12040,10 +12650,12 @@ export type QueryFoldersCountArgs = {
 
 /** The query root of this schema. See available queries. */
 export type QueryFoodSearchArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
   exclude_recent?: InputMaybe<Scalars['Boolean']>;
   food_type?: InputMaybe<Scalars['String']>;
   keywords?: InputMaybe<Scalars['String']>;
   offset?: InputMaybe<Scalars['Int']>;
+  page_size?: InputMaybe<Scalars['Int']>;
   upc?: InputMaybe<Scalars['String']>;
   user_id?: InputMaybe<Scalars['String']>;
 };
@@ -12077,6 +12689,10 @@ export type QueryFormAnswerGroupsArgs = {
   ids?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   include_group_notes?: InputMaybe<Scalars['Boolean']>;
   name?: InputMaybe<Scalars['String']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<FormAnswerGroupOrderKeys>;
+  page_size?: InputMaybe<Scalars['Int']>;
+  should_paginate?: InputMaybe<Scalars['Boolean']>;
   user_id?: InputMaybe<Scalars['String']>;
 };
 
@@ -12095,7 +12711,6 @@ export type QueryFormAnswerGroupsCountArgs = {
 /** The query root of this schema. See available queries. */
 export type QueryFormTypesToRequestArgs = {
   keywords?: InputMaybe<Scalars['String']>;
-  sort_by?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -12185,9 +12800,9 @@ export type QueryGoalsArgs = {
   frequency_filter?: InputMaybe<Scalars['String']>;
   keywords?: InputMaybe<Scalars['String']>;
   offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<GoalOrderKeys>;
   per_page?: InputMaybe<Scalars['Int']>;
   rel_goal_id?: InputMaybe<Scalars['String']>;
-  sort_by?: InputMaybe<Scalars['String']>;
   start_range?: InputMaybe<Scalars['String']>;
   status_filter?: InputMaybe<Scalars['String']>;
   user_id?: InputMaybe<Scalars['ID']>;
@@ -12202,7 +12817,6 @@ export type QueryGoalsCountArgs = {
   keywords?: InputMaybe<Scalars['String']>;
   offset?: InputMaybe<Scalars['Int']>;
   rel_goal_id?: InputMaybe<Scalars['String']>;
-  sort_by?: InputMaybe<Scalars['String']>;
   start_range?: InputMaybe<Scalars['String']>;
   status_filter?: InputMaybe<Scalars['String']>;
   user_id?: InputMaybe<Scalars['ID']>;
@@ -12216,9 +12830,9 @@ export type QueryGoalsDataArgs = {
   frequency_filter?: InputMaybe<Scalars['String']>;
   keywords?: InputMaybe<Scalars['String']>;
   offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<GoalOrderKeys>;
   per_page?: InputMaybe<Scalars['Int']>;
   rel_goal_id?: InputMaybe<Scalars['String']>;
-  sort_by?: InputMaybe<Scalars['String']>;
   start_range?: InputMaybe<Scalars['String']>;
   status_filter?: InputMaybe<Scalars['String']>;
   user_id?: InputMaybe<Scalars['ID']>;
@@ -12233,7 +12847,6 @@ export type QueryGoalsOverallCompletionRateArgs = {
   keywords?: InputMaybe<Scalars['String']>;
   offset?: InputMaybe<Scalars['Int']>;
   rel_goal_id?: InputMaybe<Scalars['String']>;
-  sort_by?: InputMaybe<Scalars['String']>;
   start_range?: InputMaybe<Scalars['String']>;
   status_filter?: InputMaybe<Scalars['String']>;
   user_id?: InputMaybe<Scalars['ID']>;
@@ -12249,7 +12862,6 @@ export type QueryGoalsOverallCompletionRateInfoArgs = {
   keywords?: InputMaybe<Scalars['String']>;
   offset?: InputMaybe<Scalars['Int']>;
   rel_goal_id?: InputMaybe<Scalars['String']>;
-  sort_by?: InputMaybe<Scalars['String']>;
   start_range?: InputMaybe<Scalars['String']>;
   status_filter?: InputMaybe<Scalars['String']>;
   user_id?: InputMaybe<Scalars['ID']>;
@@ -12265,7 +12877,6 @@ export type QueryGoalsStreakCountArgs = {
   keywords?: InputMaybe<Scalars['String']>;
   offset?: InputMaybe<Scalars['Int']>;
   rel_goal_id?: InputMaybe<Scalars['String']>;
-  sort_by?: InputMaybe<Scalars['String']>;
   start_range?: InputMaybe<Scalars['String']>;
   status_filter?: InputMaybe<Scalars['String']>;
   user_id?: InputMaybe<Scalars['ID']>;
@@ -12304,6 +12915,7 @@ export type QueryIcdCodesArgs = {
   is_favorited?: InputMaybe<Scalars['Boolean']>;
   keywords?: InputMaybe<Scalars['String']>;
   offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<IcdCodeOrderKeys>;
   should_paginate?: InputMaybe<Scalars['Boolean']>;
 };
 
@@ -12358,8 +12970,8 @@ export type QueryInsurancePlansArgs = {
   is_custom?: InputMaybe<Scalars['Boolean']>;
   keywords?: InputMaybe<Scalars['String']>;
   offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<InsurancePlanOrderKeys>;
   should_paginate?: InputMaybe<Scalars['Boolean']>;
-  sort_by?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -12375,7 +12987,7 @@ export type QueryInsurancePlansCountArgs = {
 /** The query root of this schema. See available queries. */
 export type QueryIntakeFlowArgs = {
   keywords?: InputMaybe<Scalars['String']>;
-  sort_by?: InputMaybe<Scalars['String']>;
+  order_by?: InputMaybe<IntakeFlowOrderKeys>;
   user_id?: InputMaybe<Scalars['ID']>;
 };
 
@@ -12419,9 +13031,9 @@ export type QueryLabOrdersArgs = {
   keywords?: InputMaybe<Scalars['String']>;
   lab_filter?: InputMaybe<Scalars['String']>;
   offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<LabOrderOrderKeys>;
   provider_filter?: InputMaybe<Scalars['String']>;
   recent_orders?: InputMaybe<Scalars['Boolean']>;
-  sort_by?: InputMaybe<Scalars['String']>;
   status_filter?: InputMaybe<Scalars['String']>;
 };
 
@@ -12626,11 +13238,11 @@ export type QueryNotesArgs = {
   ids?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   keywords?: InputMaybe<Scalars['String']>;
   offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<NoteOrderKeys>;
   org_chat?: InputMaybe<Scalars['Boolean']>;
   provider_id?: InputMaybe<Scalars['ID']>;
   scheduled_notes?: InputMaybe<Scalars['Boolean']>;
   since_note_id?: InputMaybe<Scalars['ID']>;
-  sort_by?: InputMaybe<Scalars['String']>;
   with_tasks?: InputMaybe<Scalars['Boolean']>;
 };
 
@@ -12665,11 +13277,11 @@ export type QueryNotificationSettingArgs = {
 /** The query root of this schema. See available queries. */
 export type QueryNotificationsArgs = {
   offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<NotificationOrderKeys>;
   other_party_id?: InputMaybe<Scalars['String']>;
   page_size?: InputMaybe<Scalars['Int']>;
   read_status?: InputMaybe<Scalars['Boolean']>;
   seen_status?: InputMaybe<Scalars['Boolean']>;
-  sort_by?: InputMaybe<Scalars['String']>;
   types?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
@@ -12699,7 +13311,7 @@ export type QueryOfferingCouponsArgs = {
   keywords?: InputMaybe<Scalars['String']>;
   offering_id?: InputMaybe<Scalars['ID']>;
   offset?: InputMaybe<Scalars['Int']>;
-  sort_by?: InputMaybe<Scalars['String']>;
+  order_by?: InputMaybe<OfferingCouponOrderKeys>;
   user_id?: InputMaybe<Scalars['ID']>;
 };
 
@@ -12727,11 +13339,11 @@ export type QueryOfferingsArgs = {
   offering_user_group_id?: InputMaybe<Scalars['ID']>;
   offset?: InputMaybe<Scalars['Int']>;
   only_client_visible?: InputMaybe<Scalars['Boolean']>;
+  order_by?: InputMaybe<OfferingOrderKeys>;
   page_size?: InputMaybe<Scalars['Int']>;
   provider_id?: InputMaybe<Scalars['ID']>;
   should_paginate?: InputMaybe<Scalars['Boolean']>;
   show_only_visible?: InputMaybe<Scalars['Boolean']>;
-  sort_by?: InputMaybe<Scalars['String']>;
   status?: InputMaybe<Scalars['String']>;
 };
 
@@ -12768,8 +13380,8 @@ export type QueryOnboardingFlowArgs = {
 export type QueryOnboardingFlowsArgs = {
   keywords?: InputMaybe<Scalars['String']>;
   offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<OnboardingFlowOrderKeys>;
   should_paginate?: InputMaybe<Scalars['Boolean']>;
-  sort_by?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -12777,7 +13389,6 @@ export type QueryOnboardingFlowsArgs = {
 export type QueryOnboardingFlowsCountArgs = {
   keywords?: InputMaybe<Scalars['String']>;
   offset?: InputMaybe<Scalars['Int']>;
-  sort_by?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -12816,7 +13427,8 @@ export type QueryOrganizationMembersArgs = {
   keywords?: InputMaybe<Scalars['String']>;
   licensed_in_state?: InputMaybe<Scalars['String']>;
   offset?: InputMaybe<Scalars['Int']>;
-  sort_by?: InputMaybe<Scalars['String']>;
+  order_by?: InputMaybe<UserOrderKeys>;
+  page_size?: InputMaybe<Scalars['Int']>;
 };
 
 
@@ -12830,6 +13442,7 @@ export type QueryOrganizationMembersCountArgs = {
 
 /** The query root of this schema. See available queries. */
 export type QueryOrganizationMembershipArgs = {
+  id?: InputMaybe<Scalars['ID']>;
   user_id?: InputMaybe<Scalars['ID']>;
 };
 
@@ -12837,7 +13450,7 @@ export type QueryOrganizationMembershipArgs = {
 /** The query root of this schema. See available queries. */
 export type QueryOrganizationMembershipsArgs = {
   id?: InputMaybe<Scalars['String']>;
-  sort_by?: InputMaybe<Scalars['String']>;
+  order_by?: InputMaybe<OrganizationMembershipOrderKeys>;
   user_ids?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
 };
 
@@ -12934,8 +13547,8 @@ export type QueryPrevCourseItemArgs = {
 export type QueryProductsArgs = {
   keywords?: InputMaybe<Scalars['String']>;
   offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<ProductOrderKeys>;
   should_paginate?: InputMaybe<Scalars['Boolean']>;
-  sort_by?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -12979,11 +13592,38 @@ export type QueryReceiptLineItemsArgs = {
 
 
 /** The query root of this schema. See available queries. */
+export type QueryReceivedDirectMessageArgs = {
+  id?: InputMaybe<Scalars['ID']>;
+};
+
+
+/** The query root of this schema. See available queries. */
+export type QueryReceivedDirectMessagesArgs = {
+  keywords?: InputMaybe<Scalars['String']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<ReceivedDirectMessageOrderKeys>;
+};
+
+
+/** The query root of this schema. See available queries. */
+export type QueryReceivedDirectMessagesCountArgs = {
+  keywords?: InputMaybe<Scalars['String']>;
+  offset?: InputMaybe<Scalars['Int']>;
+};
+
+
+/** The query root of this schema. See available queries. */
+export type QueryReceivedFaxArgs = {
+  id?: InputMaybe<Scalars['ID']>;
+};
+
+
+/** The query root of this schema. See available queries. */
 export type QueryReceivedFaxesArgs = {
   active_status?: InputMaybe<Scalars['String']>;
   keywords?: InputMaybe<Scalars['String']>;
   offset?: InputMaybe<Scalars['Int']>;
-  sort_by?: InputMaybe<Scalars['String']>;
+  order_by?: InputMaybe<ReceivedFaxOrderKeys>;
 };
 
 
@@ -13017,6 +13657,12 @@ export type QueryRecurringPaymentsArgs = {
 
 
 /** The query root of this schema. See available queries. */
+export type QueryReferralArgs = {
+  id?: InputMaybe<Scalars['ID']>;
+};
+
+
+/** The query root of this schema. See available queries. */
 export type QueryReferringPhysicianArgs = {
   has_fax_number?: InputMaybe<Scalars['Boolean']>;
   id?: InputMaybe<Scalars['ID']>;
@@ -13029,8 +13675,8 @@ export type QueryReferringPhysiciansArgs = {
   has_fax_number?: InputMaybe<Scalars['Boolean']>;
   keywords?: InputMaybe<Scalars['String']>;
   offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<ReferringPhysicianOrderKeys>;
   should_paginate?: InputMaybe<Scalars['Boolean']>;
-  sort_by?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -13062,9 +13708,9 @@ export type QueryRequestedPaymentsArgs = {
   keywords?: InputMaybe<Scalars['String']>;
   offset?: InputMaybe<Scalars['Int']>;
   only_unpaid?: InputMaybe<Scalars['Boolean']>;
+  order_by?: InputMaybe<RequestedPaymentOrderKeys>;
   preview?: InputMaybe<Scalars['Boolean']>;
   sender_id?: InputMaybe<Scalars['ID']>;
-  sort_by?: InputMaybe<Scalars['String']>;
   status_filter?: InputMaybe<Scalars['String']>;
 };
 
@@ -13075,12 +13721,6 @@ export type QueryRequestedPaymentsCountArgs = {
   only_unpaid?: InputMaybe<Scalars['Boolean']>;
   sender_id?: InputMaybe<Scalars['ID']>;
   status_filter?: InputMaybe<Scalars['String']>;
-};
-
-
-/** The query root of this schema. See available queries. */
-export type QueryRolesArgs = {
-  user_id?: InputMaybe<Scalars['ID']>;
 };
 
 
@@ -13108,10 +13748,31 @@ export type QuerySdkConfigArgs = {
 
 
 /** The query root of this schema. See available queries. */
+export type QuerySentDirectMessageArgs = {
+  id?: InputMaybe<Scalars['ID']>;
+};
+
+
+/** The query root of this schema. See available queries. */
+export type QuerySentDirectMessagesArgs = {
+  keywords?: InputMaybe<Scalars['String']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<SentDirectMessageOrderKeys>;
+};
+
+
+/** The query root of this schema. See available queries. */
+export type QuerySentDirectMessagesCountArgs = {
+  keywords?: InputMaybe<Scalars['String']>;
+  offset?: InputMaybe<Scalars['Int']>;
+};
+
+
+/** The query root of this schema. See available queries. */
 export type QuerySentFaxesArgs = {
   keywords?: InputMaybe<Scalars['String']>;
   offset?: InputMaybe<Scalars['Int']>;
-  sort_by?: InputMaybe<Scalars['String']>;
+  order_by?: InputMaybe<SentFaxOrderKeys>;
 };
 
 
@@ -13151,7 +13812,7 @@ export type QuerySentNotificationRecordsCountArgs = {
 export type QuerySentWebhooksArgs = {
   keywords?: InputMaybe<Scalars['String']>;
   offset?: InputMaybe<Scalars['Int']>;
-  sort_by?: InputMaybe<Scalars['String']>;
+  order_by?: InputMaybe<SentWebhookOrderKeys>;
 };
 
 
@@ -13251,8 +13912,8 @@ export type QuerySuperBillsArgs = {
   client_id?: InputMaybe<Scalars['ID']>;
   keywords?: InputMaybe<Scalars['String']>;
   offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<SuperBillOrderKeys>;
   provider_id?: InputMaybe<Scalars['ID']>;
-  sort_by?: InputMaybe<Scalars['String']>;
   status?: InputMaybe<Scalars['String']>;
 };
 
@@ -13267,49 +13928,10 @@ export type QuerySuperBillsCountArgs = {
 
 
 /** The query root of this schema. See available queries. */
-export type QuerySupportDashboardFormAnswerArgs = {
-  item_id?: InputMaybe<Scalars['ID']>;
-};
-
-
-/** The query root of this schema. See available queries. */
-export type QuerySupportDashboardFormAnswerGroupArgs = {
-  item_id?: InputMaybe<Scalars['ID']>;
-};
-
-
-/** The query root of this schema. See available queries. */
-export type QuerySupportDashboardLabOrderArgs = {
-  order_id?: InputMaybe<Scalars['String']>;
-};
-
-
-/** The query root of this schema. See available queries. */
-export type QuerySupportDashboardOrganizationArgs = {
-  provider_id?: InputMaybe<Scalars['ID']>;
-};
-
-
-/** The query root of this schema. See available queries. */
-export type QuerySupportDashboardTotalPatientCountArgs = {
-  offset?: InputMaybe<Scalars['Int']>;
-};
-
-
-/** The query root of this schema. See available queries. */
-export type QuerySupportDashboardUsersArgs = {
-  email?: InputMaybe<Scalars['String']>;
-  human_id?: InputMaybe<Scalars['ID']>;
-  namespace?: InputMaybe<Scalars['String']>;
-  user_id?: InputMaybe<Scalars['ID']>;
-};
-
-
-/** The query root of this schema. See available queries. */
 export type QueryTagsArgs = {
   applied_to_providers?: InputMaybe<Scalars['Boolean']>;
   ids?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
-  sort_by?: InputMaybe<Scalars['String']>;
+  order_by?: InputMaybe<TagOrderKeys>;
   user_id?: InputMaybe<Scalars['String']>;
 };
 
@@ -13335,9 +13957,9 @@ export type QueryTasksArgs = {
   created_by_self?: InputMaybe<Scalars['Boolean']>;
   keywords?: InputMaybe<Scalars['String']>;
   offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<TaskOrderKeys>;
   per_page?: InputMaybe<Scalars['Int']>;
   show_hidden?: InputMaybe<Scalars['Boolean']>;
-  sort_by?: InputMaybe<Scalars['String']>;
   type?: InputMaybe<Scalars['String']>;
   withoutPagination?: InputMaybe<Scalars['Boolean']>;
 };
@@ -13373,7 +13995,7 @@ export type QueryTransactionsArgs = {
 /** The query root of this schema. See available queries. */
 export type QueryTransfersArgs = {
   limit?: InputMaybe<Scalars['Int']>;
-  sort_by?: InputMaybe<Scalars['String']>;
+  order_by?: InputMaybe<TransferOrderKeys>;
   starting_after?: InputMaybe<Scalars['String']>;
 };
 
@@ -13408,7 +14030,6 @@ export type QueryUngroupedCourseMembershipsCountArgs = {
 /** The query root of this schema. See available queries. */
 export type QueryUserArgs = {
   clear_notifs?: InputMaybe<Scalars['Boolean']>;
-  email?: InputMaybe<Scalars['String']>;
   id?: InputMaybe<Scalars['ID']>;
   or_current_user?: InputMaybe<Scalars['Boolean']>;
 };
@@ -13422,23 +14043,27 @@ export type QueryUserGroupArgs = {
 
 /** The query root of this schema. See available queries. */
 export type QueryUserGroupsArgs = {
+  check_group_level_actions?: InputMaybe<Scalars['Boolean']>;
   keywords?: InputMaybe<Scalars['String']>;
   offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<UserGroupOrderKeys>;
   should_paginate?: InputMaybe<Scalars['Boolean']>;
-  sort_by?: InputMaybe<Scalars['String']>;
 };
 
 
 /** The query root of this schema. See available queries. */
 export type QueryUserGroupsCountArgs = {
+  check_group_level_actions?: InputMaybe<Scalars['Boolean']>;
   keywords?: InputMaybe<Scalars['String']>;
 };
 
 
 /** The query root of this schema. See available queries. */
 export type QueryUserPackageSelectionsArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
   offering_id?: InputMaybe<Scalars['ID']>;
   offset?: InputMaybe<Scalars['Int']>;
+  page_size?: InputMaybe<Scalars['Int']>;
   user_id?: InputMaybe<Scalars['ID']>;
 };
 
@@ -13465,11 +14090,11 @@ export type QueryUsersArgs = {
   keywords?: InputMaybe<Scalars['String']>;
   limited_to_provider?: InputMaybe<Scalars['Boolean']>;
   offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<UserOrderKeys>;
   page_size?: InputMaybe<Scalars['Int']>;
   provider_id?: InputMaybe<Scalars['String']>;
   should_paginate?: InputMaybe<Scalars['Boolean']>;
   show_all_by_default?: InputMaybe<Scalars['Boolean']>;
-  sort_by?: InputMaybe<Scalars['String']>;
   tag_ids?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   with_feature_toggles?: InputMaybe<Scalars['Boolean']>;
 };
@@ -13522,7 +14147,7 @@ export type QueryWaterIntakeEntryArgs = {
 export type QueryWebhooksArgs = {
   keywords?: InputMaybe<Scalars['String']>;
   offset?: InputMaybe<Scalars['Int']>;
-  sort_by?: InputMaybe<Scalars['String']>;
+  order_by?: InputMaybe<WebhookOrderKeys>;
 };
 
 
@@ -13577,6 +14202,39 @@ export type ReceiptLineItemInput = {
   price?: InputMaybe<Scalars['String']>;
 };
 
+/** A Received Direct Message */
+export type ReceivedDirectMessage = {
+  __typename?: 'ReceivedDirectMessage';
+  /** The number of attachments for the received direct message */
+  attachments_count?: Maybe<Scalars['Int']>;
+  /** The XML data contained in the attach CDA file */
+  cda_xml?: Maybe<Scalars['String']>;
+  /** The received date of the direct message */
+  created_at?: Maybe<Scalars['String']>;
+  /** Array of direct message attachments */
+  direct_message_attachments?: Maybe<Array<DirectMessageAttachment>>;
+  /** When true, the message has an attached CDA */
+  has_cda?: Maybe<Scalars['Boolean']>;
+  /** The unique identifier of the fax */
+  id: Scalars['ID'];
+  /** The listed recipient */
+  listed_recipient?: Maybe<Scalars['String']>;
+  /** The listed sender */
+  listed_sender?: Maybe<Scalars['String']>;
+  /** The message body of the direct message */
+  message_body?: Maybe<Scalars['String']>;
+  /** The subject */
+  subject?: Maybe<Scalars['String']>;
+};
+
+/** ReceivedDirectMessage sorting enum */
+export enum ReceivedDirectMessageOrderKeys {
+  CreatedAtAsc = 'CREATED_AT_ASC',
+  CreatedAtDesc = 'CREATED_AT_DESC',
+  UpdatedAtAsc = 'UPDATED_AT_ASC',
+  UpdatedAtDesc = 'UPDATED_AT_DESC'
+}
+
 /** A Received Fax */
 export type ReceivedFax = {
   __typename?: 'ReceivedFax';
@@ -13595,6 +14253,14 @@ export type ReceivedFax = {
   /** Whether the received fax has been viewed by the current user */
   viewed_by_current_user?: Maybe<Scalars['Boolean']>;
 };
+
+/** ReceivedFax sorting enum */
+export enum ReceivedFaxOrderKeys {
+  CreatedAtAsc = 'CREATED_AT_ASC',
+  CreatedAtDesc = 'CREATED_AT_DESC',
+  NumberAsc = 'NUMBER_ASC',
+  NumberDesc = 'NUMBER_DESC'
+}
 
 /** A Care Plan Recommendation */
 export type Recommendation = {
@@ -13696,6 +14362,8 @@ export type RecurringPayment = {
   amount_paid?: Maybe<Scalars['String']>;
   /** The amount to be paid for the next payment */
   amount_to_pay?: Maybe<Scalars['String']>;
+  /** The ID of the appointment associated with this recurring payment */
+  appointment_id?: Maybe<Scalars['ID']>;
   /** The frequency the payment should be made */
   billing_frequency?: Maybe<Scalars['String']>;
   /** The number of billing items */
@@ -13948,6 +14616,20 @@ export type ReferringPhysicianInput = {
   /** The phone number of the referring physician */
   phone_number?: InputMaybe<Scalars['String']>;
 };
+
+/** ReferringPhysician sorting enum */
+export enum ReferringPhysicianOrderKeys {
+  BusinessNameAsc = 'BUSINESS_NAME_ASC',
+  BusinessNameDesc = 'BUSINESS_NAME_DESC',
+  CityAsc = 'CITY_ASC',
+  CityDesc = 'CITY_DESC',
+  ClientsReferredAsc = 'CLIENTS_REFERRED_ASC',
+  ClientsReferredDesc = 'CLIENTS_REFERRED_DESC',
+  NameAsc = 'NAME_ASC',
+  NameDesc = 'NAME_DESC',
+  SpecialityAsc = 'SPECIALITY_ASC',
+  SpecialityDesc = 'SPECIALITY_DESC'
+}
 
 /** Autogenerated input type of RefetchChangeHealthLabOrder */
 export type RefetchChangeHealthLabOrderInput = {
@@ -14217,6 +14899,28 @@ export type RequestedPaymentBilling_ItemsArgs = {
   only_successful?: InputMaybe<Scalars['Boolean']>;
 };
 
+/** RequestedPayment sorting enum */
+export enum RequestedPaymentOrderKeys {
+  /** Sort by client last name and first name ascending */
+  ClientNameAsc = 'CLIENT_NAME_ASC',
+  /** Sort by client last name and first name descending */
+  ClientNameDesc = 'CLIENT_NAME_DESC',
+  CreatedAtAsc = 'CREATED_AT_ASC',
+  CreatedAtDesc = 'CREATED_AT_DESC',
+  InvoiceIdAsc = 'INVOICE_ID_ASC',
+  InvoiceIdDesc = 'INVOICE_ID_DESC',
+  PriceAsc = 'PRICE_ASC',
+  PriceDesc = 'PRICE_DESC',
+  /** Sort by provider last name and first name ascending */
+  ProviderNameAsc = 'PROVIDER_NAME_ASC',
+  /** Sort by provider last name and first name descending */
+  ProviderNameDesc = 'PROVIDER_NAME_DESC',
+  StatusAsc = 'STATUS_ASC',
+  StatusDesc = 'STATUS_DESC',
+  TypeAsc = 'TYPE_ASC',
+  TypeDesc = 'TYPE_DESC'
+}
+
 /** Requested payment template */
 export type RequestedPaymentTemplate = {
   __typename?: 'RequestedPaymentTemplate';
@@ -14272,13 +14976,33 @@ export type RoomInput = {
   name?: InputMaybe<Scalars['String']>;
 };
 
+/** Configuration for the SDK */
+export type SdkConfig = {
+  __typename?: 'SDKConfig';
+  /** Stripe's publishable key */
+  stripe_publishable_key: Scalars['String'];
+};
+
+/** Billing items that are scheduled and will have a user package selection associated with them */
+export type ScheduledUserPackageSelection = {
+  __typename?: 'ScheduledUserPackageSelection';
+  /** The unique identifier of the room */
+  id: Scalars['ID'];
+  /** Related offering */
+  offering?: Maybe<Offering>;
+  /** Related recurring_payment */
+  recurring_payment?: Maybe<RecurringPayment>;
+  /** Related user */
+  user?: Maybe<User>;
+};
+
 /** INTERNAL -- A Form Answer Group query for Support Dashboard */
 export type SdFormAnswer = {
-  __typename?: 'SDFormAnswer';
+  __typename?: 'SdFormAnswer';
   /** Form Answer and their previous versions */
   answer?: Maybe<Scalars['String']>;
   /** Created At */
-  created_at: Scalars['String'];
+  created_at?: Maybe<Scalars['String']>;
   /** The unique identifier of the object */
   id: Scalars['ID'];
   /** Name */
@@ -14296,10 +15020,46 @@ export type SdFormAnswerVersionsArgs = {
 };
 
 /** INTERNAL -- A Form Answer Group query for Support Dashboard */
-export type SdFormAnswerVersion = {
-  __typename?: 'SDFormAnswerVersion';
+export type SdFormAnswerGroup = {
+  __typename?: 'SdFormAnswerGroup';
   /** Created At */
-  created_at: Scalars['String'];
+  created_at?: Maybe<Scalars['String']>;
+  /** Cursor for FormAnswerGroup Pagination */
+  cursor: Scalars['String'];
+  /** The form template that was filled out */
+  custom_module_form?: Maybe<CustomModuleForm>;
+  /** Form Answers and their previous versions */
+  form_answers?: Maybe<Array<SdFormAnswer>>;
+  /** The unique identifier of the object */
+  id: Scalars['ID'];
+  /** The date and time when the charting note was locked */
+  locked_at?: Maybe<Scalars['String']>;
+  /** The provider who have locked the charting note */
+  locked_by?: Maybe<SdUser>;
+  /** Name */
+  name?: Maybe<Scalars['String']>;
+  /** Updated At */
+  updated_at?: Maybe<Scalars['String']>;
+  /** The user the form is about */
+  user?: Maybe<SdUser>;
+  /** ID of the user */
+  user_id?: Maybe<Scalars['String']>;
+};
+
+/** INTERNAL -- FormAnswerGroup Collection */
+export type SdFormAnswerGroupCollection = {
+  __typename?: 'SdFormAnswerGroupCollection';
+  /** List of FormAnswerGroups */
+  form_answer_groups?: Maybe<Array<SdFormAnswerGroup>>;
+  /** Determines if has more FormAnswerGroups in pagination */
+  has_more_fangs?: Maybe<Scalars['Boolean']>;
+};
+
+/** INTERNAL -- A Form Answer Group query for Support Dashboard */
+export type SdFormAnswerVersion = {
+  __typename?: 'SdFormAnswerVersion';
+  /** Created At */
+  created_at?: Maybe<Scalars['String']>;
   /** Description of Event: Update/Create/Delete */
   event?: Maybe<Scalars['String']>;
   /** The unique identifier of the object */
@@ -14310,33 +15070,62 @@ export type SdFormAnswerVersion = {
   whodunnit?: Maybe<Scalars['String']>;
 };
 
-/** Configuration for the SDK */
-export type SdkConfig = {
-  __typename?: 'SDKConfig';
-  /** Stripe's publishable key */
-  stripe_publishable_key: Scalars['String'];
-};
-
-/** INTERNAL -- User Collection */
-export type SdUserCollection = {
-  __typename?: 'SDUserCollection';
-  /** Determines if has more users in pagination */
-  has_more_users?: Maybe<Scalars['Boolean']>;
-  /** List of Users */
-  users?: Maybe<Array<SupportDashboardUser>>;
-};
-
-/** Billing items that are scheduled and will have a user package selection associated with them */
-export type ScheduledUserPackageSelection = {
-  __typename?: 'ScheduledUserPackageSelection';
-  /** The unique identifier of the room */
+/** INTERNAL -- Data on the Human Object */
+export type SdHuman = {
+  __typename?: 'SdHuman';
+  /** The API key for the human */
+  api_key?: Maybe<Scalars['String']>;
+  /** The time when the human was created */
+  created_at?: Maybe<Scalars['String']>;
+  /** The time when the human is currently signed in */
+  current_sign_in_at?: Maybe<Scalars['String']>;
+  /** The IP address of the human when they signed in to the current session */
+  current_sign_in_ip?: Maybe<Scalars['String']>;
+  /** The current user for the human */
+  current_user?: Maybe<SdUser>;
+  /** The ID of the current user for the human */
+  current_user_id?: Maybe<Scalars['String']>;
+  /** The time when the human was deleted */
+  deleted_at?: Maybe<Scalars['String']>;
+  /** The email of the human */
+  email?: Maybe<Scalars['String']>;
+  /** The unique identifier of the human */
   id: Scalars['ID'];
-  /** Related offering */
-  offering?: Maybe<Offering>;
-  /** Related recurring_payment */
-  recurring_payment?: Maybe<RecurringPayment>;
-  /** Related user */
-  user?: Maybe<User>;
+  /** The time when the human last signed in */
+  last_sign_in_at?: Maybe<Scalars['String']>;
+  /** The IP address of the human when they last signed in */
+  last_sign_in_ip?: Maybe<Scalars['String']>;
+  /** The namespace of the human */
+  namespace?: Maybe<Scalars['String']>;
+  /** Whether the human requires 2FA */
+  requires_2fa?: Maybe<Scalars['String']>;
+  /** The time when the human reset their password */
+  reset_password_sent_at?: Maybe<Scalars['String']>;
+  /** The User with the ID matching the Search Term */
+  searched_user?: Maybe<SdUser>;
+  /** The number of times the human has signed in */
+  sign_in_count?: Maybe<Scalars['String']>;
+  /** The time when the human switched providers */
+  switched_provider_at?: Maybe<Scalars['String']>;
+  /** The time when the human was last updated */
+  updated_at?: Maybe<Scalars['String']>;
+  /** The list of users for the human */
+  user_collection?: Maybe<SdUserCollection>;
+  /** The username of the human */
+  username?: Maybe<Scalars['String']>;
+};
+
+
+/** INTERNAL -- Data on the Human Object */
+export type SdHumanSearched_UserArgs = {
+  user_id?: InputMaybe<Scalars['ID']>;
+};
+
+
+/** INTERNAL -- Data on the Human Object */
+export type SdHumanUser_CollectionArgs = {
+  cursor?: InputMaybe<Scalars['String']>;
+  org_name?: InputMaybe<Scalars['String']>;
 };
 
 /** Interal - Lab Order Type Support Dashboard */
@@ -14359,9 +15148,9 @@ export type SdLabOrderType = {
   /** The normalized status of the order */
   normalized_status?: Maybe<Scalars['String']>;
   /** Provider for lab order */
-  orderer?: Maybe<SupportDashboardUser>;
+  orderer?: Maybe<SdUser>;
   /** Patient for lab order */
-  patient?: Maybe<SupportDashboardUser>;
+  patient?: Maybe<SdUser>;
   /** Order ID on the rupa health */
   rupa_order_id?: Maybe<Scalars['String']>;
   /** Status of the Lab Order */
@@ -14372,6 +15161,136 @@ export type SdLabOrderType = {
   updated_at?: Maybe<Scalars['String']>;
   /** Link to view the rupa order */
   view_rupa_order_url?: Maybe<Scalars['String']>;
+};
+
+/** INTERNAL -- Data on the Org Object */
+export type SdOrg = {
+  __typename?: 'SdOrg';
+  /** The number of standard seats of the organization */
+  active_standard_seats?: Maybe<Scalars['Int']>;
+  /** The unique identifier of the object */
+  id: Scalars['ID'];
+  /** Name of the organization */
+  name?: Maybe<Scalars['String']>;
+  /** The number of active providers of the organization */
+  only_active_providers_count?: Maybe<Scalars['Int']>;
+  /** The number of active support user of the organization */
+  only_active_support_count?: Maybe<Scalars['Int']>;
+  /** Owner of Organization */
+  owner?: Maybe<SdUser>;
+  /** Parent Organization for this org */
+  parent_organization?: Maybe<SdOrg>;
+  /** The ID of the parent organization */
+  parent_organization_id?: Maybe<Scalars['ID']>;
+  /** Suborganizations for this org */
+  suborganizations?: Maybe<Array<SdOrg>>;
+  /** The list of users in this org */
+  users?: Maybe<Array<SdUser>>;
+};
+
+/** INTERNAL -- Data on the Organization Membership Object */
+export type SdOrganizationMembership = {
+  __typename?: 'SdOrganizationMembership';
+  /** Clients can schedule sessions with this org member */
+  allow_self_scheduling_in_care_team?: Maybe<Scalars['Boolean']>;
+  /** Can access all Chat conversations of all org members */
+  can_access_to_members_chat?: Maybe<Scalars['Boolean']>;
+  /** Can add new clients */
+  can_add_clients?: Maybe<Scalars['Boolean']>;
+  /** Can add members to the organization */
+  can_add_members?: Maybe<Scalars['Boolean']>;
+  /** Can add other org members to Chat conversations */
+  can_add_members_to_chat?: Maybe<Scalars['Boolean']>;
+  /** Can be added as a care team member */
+  can_be_care_team_member?: Maybe<Scalars['Boolean']>;
+  /** Can add and edit appointment types that are then visible within the entire organization */
+  can_edit_appointment_types?: Maybe<Scalars['Boolean']>;
+  /** Can edit and delete appointments on behalf of other org members */
+  can_edit_calendar?: Maybe<Scalars['Boolean']>;
+  /** Can edit folders documents uploaded by other org members */
+  can_edit_docs?: Maybe<Scalars['Boolean']>;
+  /** Can create, edit, archive and delete programs */
+  can_edit_education?: Maybe<Scalars['Boolean']>;
+  /** Can create, edit, and delete forms, charting templates and intake flows */
+  can_edit_forms?: Maybe<Scalars['Boolean']>;
+  /** Can edit and remove members in the organization */
+  can_edit_members?: Maybe<Scalars['Boolean']>;
+  /** Can create, edit and delete packages */
+  can_edit_packages?: Maybe<Scalars['Boolean']>;
+  /** Can view and edit settings that impact the organization */
+  can_edit_settings?: Maybe<Scalars['Boolean']>;
+  /** Can enroll and remove clients from programs */
+  can_enroll_clients_to_programs?: Maybe<Scalars['Boolean']>;
+  /** Can lock charting notes of other providers */
+  can_lock_others_charting_notes?: Maybe<Scalars['Boolean']>;
+  /** Can merge clients */
+  can_merge_clients?: Maybe<Scalars['Boolean']>;
+  /** Can view all organizational billing */
+  can_see_billing?: Maybe<Scalars['Boolean']>;
+  /** Can view the organization calendar that includes all org members' schedules */
+  can_see_calendar?: Maybe<Scalars['Boolean']>;
+  /** Can search across all clients in the organization */
+  can_see_clients?: Maybe<Scalars['Boolean']>;
+  /** Can view other org members Documents */
+  can_see_docs?: Maybe<Scalars['Boolean']>;
+  /** Can sign charting notes of other providers */
+  can_sign_others_charting_notes?: Maybe<Scalars['Boolean']>;
+  /** The unique identifier of the object */
+  id: Scalars['ID'];
+  /** Whether the user is an admin of the organization */
+  is_admin?: Maybe<Scalars['Boolean']>;
+  /** Whether the user is a provider of the organization */
+  is_provider?: Maybe<Scalars['Boolean']>;
+  /** The role of the user in the organization */
+  org_role?: Maybe<Scalars['String']>;
+  /** Sees all clients in the organization on the Clients page */
+  sees_all_clients?: Maybe<Scalars['Boolean']>;
+};
+
+/** INTERNAL -- Data on the User Object */
+export type SdUser = {
+  __typename?: 'SdUser';
+  /** Whether the user is active */
+  active?: Maybe<Scalars['Boolean']>;
+  /** Cursor for User Pagination */
+  cursor: Scalars['String'];
+  /** The dietitian of the user */
+  dietitian?: Maybe<SdUser>;
+  /** The email of the user */
+  email?: Maybe<Scalars['String']>;
+  /** The full name of the user */
+  full_name?: Maybe<Scalars['String']>;
+  /** The unique identifier of the user */
+  id: Scalars['ID'];
+  /** Whether the user is a patient */
+  is_patient?: Maybe<Scalars['Boolean']>;
+  /** The last name of the user */
+  last_name?: Maybe<Scalars['String']>;
+  /** Other organization members. */
+  organization?: Maybe<SdOrg>;
+  /** The organization membership of the user */
+  organization_membership?: Maybe<SdOrganizationMembership>;
+  /** The stripe customer details of the user */
+  stripe_customer_details?: Maybe<Array<StripeCustomerDetail>>;
+  /** The stripe id of the user */
+  stripe_id?: Maybe<Scalars['String']>;
+  /** The stripe person id of the user */
+  stripe_person_id?: Maybe<Scalars['String']>;
+  /** Returns the subscription for this user */
+  subscription?: Maybe<SubscriptionInstance>;
+  /** The total patient count of the user */
+  total_patient_count?: Maybe<Scalars['Int']>;
+  /** The whitelabel setting of the user */
+  whitelabel_setting?: Maybe<WhitelabelSetting>;
+};
+
+/** INTERNAL -- User Collection */
+export type SdUserCollection = {
+  __typename?: 'SdUserCollection';
+  /** Determines if has more users in pagination */
+  has_more_users?: Maybe<Scalars['Boolean']>;
+  /** List of Users */
+  users?: Maybe<Array<SdUser>>;
 };
 
 /** Autogenerated input type of SendSpeakToTrainerNotification */
@@ -14411,6 +15330,37 @@ export type SendWelcomeEmailPayload = {
   success_string?: Maybe<Scalars['String']>;
 };
 
+/** A Received Direct Message */
+export type SentDirectMessage = {
+  __typename?: 'SentDirectMessage';
+  /** The number of attachments for the received direct message */
+  attachments_count?: Maybe<Scalars['Int']>;
+  /** The received date of the direct message */
+  created_at?: Maybe<Scalars['String']>;
+  /** When true, the message has an attached CDA */
+  has_cda?: Maybe<Scalars['Boolean']>;
+  /** The unique identifier of the fax */
+  id: Scalars['ID'];
+  /** The body of the direct message */
+  message_body?: Maybe<Scalars['String']>;
+  /** The outbound recipient */
+  outbound_recipient?: Maybe<Scalars['String']>;
+  /** ID of the related patient */
+  patient_id?: Maybe<Scalars['String']>;
+  /** The status */
+  status?: Maybe<Scalars['String']>;
+  /** The subject of the direct message */
+  subject?: Maybe<Scalars['String']>;
+};
+
+/** SentDirectMessage sorting enum */
+export enum SentDirectMessageOrderKeys {
+  CreatedAtAsc = 'CREATED_AT_ASC',
+  CreatedAtDesc = 'CREATED_AT_DESC',
+  UpdatedAtAsc = 'UPDATED_AT_ASC',
+  UpdatedAtDesc = 'UPDATED_AT_DESC'
+}
+
 /** A Sent Fax */
 export type SentFax = {
   __typename?: 'SentFax';
@@ -14420,6 +15370,8 @@ export type SentFax = {
   destination_number?: Maybe<Scalars['String']>;
   /** The unique identifier of the fax */
   id: Scalars['ID'];
+  /** The ids of the chart notes sent with the fax */
+  parsed_form_answer_group_ids?: Maybe<Array<Scalars['ID']>>;
   /** The patient that the fax is in regards to */
   patient?: Maybe<User>;
   /** False if no document ids or form answer group ids (fax existed before the addition of document ids column) */
@@ -14433,6 +15385,21 @@ export type SentFax = {
   /** The updated date of the sent fax */
   updated_at?: Maybe<Scalars['String']>;
 };
+
+/** SentFax sorting enum */
+export enum SentFaxOrderKeys {
+  ClientLastNameAsc = 'CLIENT_LAST_NAME_ASC',
+  ClientLastNameDesc = 'CLIENT_LAST_NAME_DESC',
+  CreatedAtAsc = 'CREATED_AT_ASC',
+  CreatedAtDesc = 'CREATED_AT_DESC',
+  NumberAsc = 'NUMBER_ASC',
+  NumberDesc = 'NUMBER_DESC',
+  SenderLastNameAsc = 'SENDER_LAST_NAME_ASC',
+  SenderLastNameDesc = 'SENDER_LAST_NAME_DESC',
+  Status = 'STATUS',
+  StatusAsc = 'STATUS_ASC',
+  StatusDesc = 'STATUS_DESC'
+}
 
 /** A Sent Notification */
 export type SentNotificationRecord = {
@@ -14451,6 +15418,8 @@ export type SentNotificationRecord = {
   notification_type?: Maybe<Scalars['String']>;
   /** The type categorizing notification_type into subgroups. Accepted values: [appointments, billing, chat_messages, accounting, documents, forms, goals, journals, packages, programs] */
   representation_type?: Maybe<Scalars['String']>;
+  /** The ID of the user this notification was sent to */
+  user_id?: Maybe<Scalars['ID']>;
 };
 
 /** The record of a sent webhook */
@@ -14473,6 +15442,16 @@ export type SentWebhook = {
   /** The configured webhook thst was sent */
   webhook_id?: Maybe<Scalars['ID']>;
 };
+
+/** SentWebhook sorting enum */
+export enum SentWebhookOrderKeys {
+  CreatedAtAsc = 'CREATED_AT_ASC',
+  CreatedAtDesc = 'CREATED_AT_DESC',
+  EventTypeAsc = 'EVENT_TYPE_ASC',
+  EventTypeDesc = 'EVENT_TYPE_DESC',
+  UrlAsc = 'URL_ASC',
+  UrlDesc = 'URL_DESC'
+}
 
 /** A serving size object */
 export type ServingSize = {
@@ -14552,6 +15531,15 @@ export type SmokingStatus = {
   user_id?: Maybe<Scalars['ID']>;
 };
 
+/** Snomed terms */
+export type SnomedTerm = {
+  __typename?: 'SnomedTerm';
+  /** id for snomed term */
+  concept_id?: Maybe<Scalars['String']>;
+  /** snomed term name */
+  term?: Maybe<Scalars['String']>;
+};
+
 /** The properties of the specialty */
 export type SpecialtiesInput = {
   /** The graphql_name of the specialty */
@@ -14625,7 +15613,7 @@ export type StripeBankAccountType = {
   /** The date of birth of the company's business representative */
   dob?: Maybe<Scalars['String']>;
   /** The ID of the bank account object (generated by Stripe) */
-  id: Scalars['String'];
+  id?: Maybe<Scalars['String']>;
   /** If the holder has verified government issued id */
   id_image_provided?: Maybe<Scalars['Boolean']>;
   /** The first line of the business address */
@@ -14731,6 +15719,16 @@ export type StripeCustomerDetail = {
   /** Stripe card address zip */
   zip?: Maybe<Scalars['String']>;
 };
+
+/** StripeCustomerDetails sorting enum */
+export enum StripeCustomerDetailOrderKeys {
+  CreatedAtAsc = 'CREATED_AT_ASC',
+  CreatedAtDesc = 'CREATED_AT_DESC',
+  ExpirationDateAsc = 'EXPIRATION_DATE_ASC',
+  ExpirationDateDesc = 'EXPIRATION_DATE_DESC',
+  PatientFirstNameAsc = 'PATIENT_FIRST_NAME_ASC',
+  PatientFirstNameDesc = 'PATIENT_FIRST_NAME_DESC'
+}
 
 /** An invoice from stripe as object */
 export type StripeInvoice = {
@@ -14841,6 +15839,8 @@ export type Subscription = {
   conversationChangedSubscription?: Maybe<Conversation>;
   /** Track new members of conversations */
   conversationMembershipAddedSubscription?: Maybe<ConversationMembership>;
+  /** Track new updates to members of conversations */
+  conversationMembershipUpdatedSubscription?: Maybe<ConversationMembership>;
   /** Track modifications of form answer groups */
   formAnswerGroupModifiedSubscription?: Maybe<FormAnswerGroup>;
   /** Track added notes */
@@ -14871,6 +15871,12 @@ export type SubscriptionConversationMembershipAddedSubscriptionArgs = {
 
 
 /** Subscriptions for events tracking */
+export type SubscriptionConversationMembershipUpdatedSubscriptionArgs = {
+  notesType?: InputMaybe<Scalars['String']>;
+};
+
+
+/** Subscriptions for events tracking */
 export type SubscriptionFormAnswerGroupModifiedSubscriptionArgs = {
   id?: InputMaybe<Scalars['ID']>;
 };
@@ -14879,7 +15885,6 @@ export type SubscriptionFormAnswerGroupModifiedSubscriptionArgs = {
 /** Subscriptions for events tracking */
 export type SubscriptionNoteAddedSubscriptionArgs = {
   conversationId?: InputMaybe<Scalars['String']>;
-  sortBy?: InputMaybe<Scalars['String']>;
 };
 
 /** a subscription object */
@@ -14951,12 +15956,16 @@ export type SubscriptionInstance = {
   stripe_balance?: Maybe<Scalars['String']>;
   /** The ID of the customer in Stripe */
   stripe_id?: Maybe<Scalars['String']>;
+  /** Stripe Subscription plan name */
+  stripe_plan?: Maybe<Scalars['String']>;
   /** The ID of the subscription in Stripe */
   stripe_subscription_id?: Maybe<Scalars['String']>;
   /** Upcoming invoice in Stripe */
   upcoming_invoice?: Maybe<StripeInvoice>;
   /** Owner of this subscription */
   user?: Maybe<User>;
+  /** The ID of the user who owns the subscription */
+  user_id?: Maybe<Scalars['String']>;
 };
 
 /** SuperBill */
@@ -15044,188 +16053,117 @@ export type SuperBill = {
   updated_at: Scalars['String'];
 };
 
-/** INTERNAL -- A Form Answer Group query for Support Dashboard */
-export type SupportDashboardFormAnswerGroup = {
-  __typename?: 'SupportDashboardFormAnswerGroup';
-  /** Created At */
-  created_at: Scalars['String'];
-  /** Form Answers and their previous versions */
-  form_answers?: Maybe<Array<SdFormAnswer>>;
-  /** The unique identifier of the object */
-  id: Scalars['ID'];
-  /** Name */
-  name?: Maybe<Scalars['String']>;
-  /** Updated At */
-  updated_at?: Maybe<Scalars['String']>;
-};
+/** SuperBill sorting enum */
+export enum SuperBillOrderKeys {
+  AmountBilledAsc = 'AMOUNT_BILLED_ASC',
+  AmountBilledDesc = 'AMOUNT_BILLED_DESC',
+  AmountPaidAsc = 'AMOUNT_PAID_ASC',
+  AmountPaidDesc = 'AMOUNT_PAID_DESC',
+  CreatedAtAsc = 'CREATED_AT_ASC',
+  CreatedAtDesc = 'CREATED_AT_DESC',
+  NameAsc = 'NAME_ASC',
+  NameDesc = 'NAME_DESC',
+  ServiceDateAsc = 'SERVICE_DATE_ASC',
+  ServiceDateDesc = 'SERVICE_DATE_DESC',
+  Status = 'STATUS'
+}
 
-/** INTERNAL -- Data on the Human Object */
-export type SupportDashboardHuman = {
-  __typename?: 'SupportDashboardHuman';
-  /** The API key for the human */
-  api_key?: Maybe<Scalars['String']>;
-  /** The time when the human was created */
-  created_at: Scalars['String'];
-  /** The time when the human is currently signed in */
-  current_sign_in_at?: Maybe<Scalars['String']>;
-  /** The IP address of the human when they signed in to the current session */
-  current_sign_in_ip?: Maybe<Scalars['String']>;
-  /** The current user for the human */
-  current_user?: Maybe<SupportDashboardUser>;
-  /** The ID of the current user for the human */
-  current_user_id?: Maybe<Scalars['String']>;
-  /** The time when the human was deleted */
-  deleted_at?: Maybe<Scalars['String']>;
-  /** The email of the human */
-  email?: Maybe<Scalars['String']>;
-  /** The unique identifier of the human */
-  id: Scalars['ID'];
-  /** The time when the human last signed in */
-  last_sign_in_at?: Maybe<Scalars['String']>;
-  /** The IP address of the human when they last signed in */
-  last_sign_in_ip?: Maybe<Scalars['String']>;
-  /** The namespace of the human */
-  namespace?: Maybe<Scalars['String']>;
-  /** Whether the human requires 2FA */
-  requires_2fa?: Maybe<Scalars['String']>;
-  /** The time when the human reset their password */
-  reset_password_sent_at?: Maybe<Scalars['String']>;
-  /** The number of times the human has signed in */
-  sign_in_count?: Maybe<Scalars['String']>;
-  /** The time when the human switched providers */
-  switched_provider_at?: Maybe<Scalars['String']>;
-  /** The time when the human was last updated */
-  updated_at?: Maybe<Scalars['String']>;
-  /** The list of users for the human */
-  user_collection?: Maybe<SdUserCollection>;
-  /** The username of the human */
-  username?: Maybe<Scalars['String']>;
+/** Support Dashboard Endpoints */
+export type SupportDashboardType = {
+  __typename?: 'SupportDashboardType';
+  /** INTERNAL | Fetch Appointment Type */
+  appointmentTypes?: Maybe<Array<AppointmentType>>;
+  /** INTERNAL | Fetch User Info on DoseSpot Object */
+  dosespotUserInfo?: Maybe<DoseSpot>;
+  /** INTERNAL | Fetch FormAnswer */
+  formAnswer?: Maybe<SdFormAnswer>;
+  /** INTERNAL | Fetch FormAnswerGroup */
+  formAnswerGroup?: Maybe<SdFormAnswerGroup>;
+  /** INTERNAL | Fetch FormAnswerGroups */
+  formAnswerGroupCollection?: Maybe<SdFormAnswerGroupCollection>;
+  /** INTERNAL | Fetch FormAnswerGroups */
+  formAnswerGroups?: Maybe<Array<FormAnswerGroup>>;
+  /** INTERNAL | Fetch Human */
+  human?: Maybe<SdHuman>;
+  /** INTERNAL | Fetch Lab Order */
+  labOrder?: Maybe<SdLabOrderType>;
+  /** INTERNAL | Fetch Organization */
+  organization?: Maybe<SdOrg>;
+  /** INTERNAL | Fetch Roles */
+  roles?: Maybe<Array<Role>>;
+  /** Rough Total Patient Count */
+  totalPatientCount?: Maybe<Scalars['Int']>;
 };
 
 
-/** INTERNAL -- Data on the Human Object */
-export type SupportDashboardHumanUser_CollectionArgs = {
+/** Support Dashboard Endpoints */
+export type SupportDashboardTypeAppointmentTypesArgs = {
+  provider_id?: InputMaybe<Scalars['String']>;
+};
+
+
+/** Support Dashboard Endpoints */
+export type SupportDashboardTypeDosespotUserInfoArgs = {
+  user_id: Scalars['ID'];
+};
+
+
+/** Support Dashboard Endpoints */
+export type SupportDashboardTypeFormAnswerArgs = {
+  item_id?: InputMaybe<Scalars['ID']>;
+};
+
+
+/** Support Dashboard Endpoints */
+export type SupportDashboardTypeFormAnswerGroupArgs = {
+  item_id?: InputMaybe<Scalars['ID']>;
+};
+
+
+/** Support Dashboard Endpoints */
+export type SupportDashboardTypeFormAnswerGroupCollectionArgs = {
   cursor?: InputMaybe<Scalars['String']>;
-  org_name?: InputMaybe<Scalars['String']>;
+  filler_id?: InputMaybe<Scalars['String']>;
+  user_id?: InputMaybe<Scalars['String']>;
 };
 
-/** INTERNAL -- Data on the Org Object */
-export type SupportDashboardOrg = {
-  __typename?: 'SupportDashboardOrg';
-  /** The unique identifier of the object */
-  id: Scalars['ID'];
-  /** Name of the organization */
-  name?: Maybe<Scalars['String']>;
-  /** The number of active providers of the organization */
-  only_active_providers_count?: Maybe<Scalars['Int']>;
-  /** The number of active support user of the organization */
-  only_active_support_count?: Maybe<Scalars['Int']>;
-  /** Owner of Organization */
-  owner?: Maybe<SupportDashboardUser>;
-  /** Parent Organization for this org */
-  parent_organization?: Maybe<SupportDashboardOrg>;
-  /** The ID of the parent organization */
-  parent_organization_id?: Maybe<Scalars['ID']>;
-  /** Suborganizations for this org */
-  suborganizations?: Maybe<Array<SupportDashboardOrg>>;
-  /** The list of users in this org */
-  users?: Maybe<Array<SupportDashboardUser>>;
+
+/** Support Dashboard Endpoints */
+export type SupportDashboardTypeFormAnswerGroupsArgs = {
+  user_id?: InputMaybe<Scalars['String']>;
 };
 
-/** INTERNAL -- Data on the Organization Membership Object */
-export type SupportDashboardOrganizationMembership = {
-  __typename?: 'SupportDashboardOrganizationMembership';
-  /** Clients can schedule sessions with this org member */
-  allow_self_scheduling_in_care_team?: Maybe<Scalars['Boolean']>;
-  /** Can access all Chat conversations of all org members */
-  can_access_to_members_chat?: Maybe<Scalars['Boolean']>;
-  /** Can add new clients */
-  can_add_clients?: Maybe<Scalars['Boolean']>;
-  /** Can add members to the organization */
-  can_add_members?: Maybe<Scalars['Boolean']>;
-  /** Can add other org members to Chat conversations */
-  can_add_members_to_chat?: Maybe<Scalars['Boolean']>;
-  /** Can be added as a care team member */
-  can_be_care_team_member?: Maybe<Scalars['Boolean']>;
-  /** Can add and edit appointment types that are then visible within the entire organization */
-  can_edit_appointment_types?: Maybe<Scalars['Boolean']>;
-  /** Can edit and delete appointments on behalf of other org members */
-  can_edit_calendar?: Maybe<Scalars['Boolean']>;
-  /** Can edit folders documents uploaded by other org members */
-  can_edit_docs?: Maybe<Scalars['Boolean']>;
-  /** Can create, edit, archive and delete programs */
-  can_edit_education?: Maybe<Scalars['Boolean']>;
-  /** Can create, edit, and delete forms, charting templates and intake flows */
-  can_edit_forms?: Maybe<Scalars['Boolean']>;
-  /** Can edit and remove members in the organization */
-  can_edit_members?: Maybe<Scalars['Boolean']>;
-  /** Can create, edit and delete packages */
-  can_edit_packages?: Maybe<Scalars['Boolean']>;
-  /** Can view and edit settings that impact the organization */
-  can_edit_settings?: Maybe<Scalars['Boolean']>;
-  /** Can enroll and remove clients from programs */
-  can_enroll_clients_to_programs?: Maybe<Scalars['Boolean']>;
-  /** Can lock charting notes of other providers */
-  can_lock_others_charting_notes?: Maybe<Scalars['Boolean']>;
-  /** Can merge clients */
-  can_merge_clients?: Maybe<Scalars['Boolean']>;
-  /** Can view all organizational billing */
-  can_see_billing?: Maybe<Scalars['Boolean']>;
-  /** Can view the organization calendar that includes all org members' schedules */
-  can_see_calendar?: Maybe<Scalars['Boolean']>;
-  /** Can search across all clients in the organization */
-  can_see_clients?: Maybe<Scalars['Boolean']>;
-  /** Can view other org members Documents */
-  can_see_docs?: Maybe<Scalars['Boolean']>;
-  /** Can sign charting notes of other providers */
-  can_sign_others_charting_notes?: Maybe<Scalars['Boolean']>;
-  /** The unique identifier of the object */
-  id: Scalars['ID'];
-  /** Whether the user is an admin of the organization */
-  is_admin?: Maybe<Scalars['Boolean']>;
-  /** Whether the user is a provider of the organization */
-  is_provider?: Maybe<Scalars['Boolean']>;
-  /** The role of the user in the organization */
-  org_role?: Maybe<Scalars['String']>;
-  /** Sees all clients in the organization on the Clients page */
-  sees_all_clients?: Maybe<Scalars['Boolean']>;
+
+/** Support Dashboard Endpoints */
+export type SupportDashboardTypeHumanArgs = {
+  email?: InputMaybe<Scalars['String']>;
+  human_id?: InputMaybe<Scalars['ID']>;
+  namespace?: InputMaybe<Scalars['String']>;
+  user_id?: InputMaybe<Scalars['ID']>;
 };
 
-/** INTERNAL -- Data on the User Object */
-export type SupportDashboardUser = {
-  __typename?: 'SupportDashboardUser';
-  /** Whether the user is active */
-  active?: Maybe<Scalars['Boolean']>;
-  /** Cursor for User Pagination */
-  cursor: Scalars['String'];
-  /** The dietitian of the user */
-  dietitian?: Maybe<SupportDashboardUser>;
-  /** The email of the user */
-  email?: Maybe<Scalars['String']>;
-  /** The full name of the user */
-  full_name?: Maybe<Scalars['String']>;
-  /** The unique identifier of the user */
-  id: Scalars['ID'];
-  /** Whether the user is a patient */
-  is_patient?: Maybe<Scalars['Boolean']>;
-  /** The last name of the user */
-  last_name?: Maybe<Scalars['String']>;
-  /** Other organization members. */
-  organization?: Maybe<SupportDashboardOrg>;
-  /** The organization membership of the user */
-  organization_membership?: Maybe<SupportDashboardOrganizationMembership>;
-  /** The stripe customer details of the user */
-  stripe_customer_details?: Maybe<Array<StripeCustomerDetail>>;
-  /** The stripe id of the user */
-  stripe_id?: Maybe<Scalars['String']>;
-  /** The stripe person id of the user */
-  stripe_person_id?: Maybe<Scalars['String']>;
-  /** Returns the subscription for this user */
-  subscription?: Maybe<SubscriptionInstance>;
-  /** The total patient count of the user */
-  total_patient_count?: Maybe<Scalars['Int']>;
-  /** The whitelabel setting of the user */
-  whitelabel_setting?: Maybe<WhitelabelSetting>;
+
+/** Support Dashboard Endpoints */
+export type SupportDashboardTypeLabOrderArgs = {
+  order_id?: InputMaybe<Scalars['String']>;
+};
+
+
+/** Support Dashboard Endpoints */
+export type SupportDashboardTypeOrganizationArgs = {
+  provider_id?: InputMaybe<Scalars['ID']>;
+};
+
+
+/** Support Dashboard Endpoints */
+export type SupportDashboardTypeRolesArgs = {
+  user_id?: InputMaybe<Scalars['ID']>;
+};
+
+
+/** Support Dashboard Endpoints */
+export type SupportDashboardTypeTotalPatientCountArgs = {
+  offset?: InputMaybe<Scalars['Int']>;
 };
 
 /** A Symptom Option */
@@ -15270,6 +16208,24 @@ export type TagTagged_UsersArgs = {
   offset?: InputMaybe<Scalars['Int']>;
   should_paginate?: InputMaybe<Scalars['Boolean']>;
 };
+
+/** Tag sorting enum */
+export enum TagOrderKeys {
+  /** Sort by amount of patients applied to this Tag ascending */
+  ActiveUsersAsc = 'ACTIVE_USERS_ASC',
+  /** Sort by amount of patients applied to this Tag descending */
+  ActiveUsersDesc = 'ACTIVE_USERS_DESC',
+  /** Sort by the first name of the user who added the Tag ascending */
+  AddedByAsc = 'ADDED_BY_ASC',
+  /** Sort by the first name of the user who added the Tag descending */
+  AddedByDesc = 'ADDED_BY_DESC',
+  NameAsc = 'NAME_ASC',
+  NameDesc = 'NAME_DESC',
+  /** Sort by amount of organization members applied to this Tag ascending */
+  OrgMembersAsc = 'ORG_MEMBERS_ASC',
+  /** Sort by amount of organization members applied to this Tag descending */
+  OrgMembersDesc = 'ORG_MEMBERS_DESC'
+}
 
 /** Tasks for providers to create, complete, and optionally assign to client profiles */
 export type Task = {
@@ -15323,6 +16279,28 @@ export type Task = {
   /** User ID of the user assigned to this task */
   user_id?: Maybe<Scalars['ID']>;
 };
+
+/** Task sorting enum */
+export enum TaskOrderKeys {
+  AssigneeAsc = 'ASSIGNEE_ASC',
+  AssigneeDesc = 'ASSIGNEE_DESC',
+  /** Order by client first name and last name ascending */
+  ClientNameAsc = 'CLIENT_NAME_ASC',
+  /** Order by client first name and last name descending */
+  ClientNameDesc = 'CLIENT_NAME_DESC',
+  CompletedAtAsc = 'COMPLETED_AT_ASC',
+  CompletedAtDesc = 'COMPLETED_AT_DESC',
+  CreatedAsc = 'CREATED_ASC',
+  CreatedDesc = 'CREATED_DESC',
+  CreatorAsc = 'CREATOR_ASC',
+  CreatorDesc = 'CREATOR_DESC',
+  DueDateAsc = 'DUE_DATE_ASC',
+  DueDateDesc = 'DUE_DATE_DESC',
+  PriorityAsc = 'PRIORITY_ASC',
+  PriorityDesc = 'PRIORITY_DESC',
+  TaskAsc = 'TASK_ASC',
+  TaskDesc = 'TASK_DESC'
+}
 
 /** Payload for a task reminder */
 export type TaskReminderInput = {
@@ -15468,6 +16446,20 @@ export type TransactionType = {
   /** Charge ID associated to transaction. Can be matched with billing_item.stripe_charge_id */
   source_name?: Maybe<Scalars['String']>;
 };
+
+/** Transfer sorting enum */
+export enum TransferOrderKeys {
+  AmountAsc = 'AMOUNT_ASC',
+  AmountDesc = 'AMOUNT_DESC',
+  CreatedAtAsc = 'CREATED_AT_ASC',
+  CreatedAtDesc = 'CREATED_AT_DESC',
+  ExpectedToHappenAsc = 'EXPECTED_TO_HAPPEN_ASC',
+  ExpectedToHappenDesc = 'EXPECTED_TO_HAPPEN_DESC',
+  StatusAsc = 'STATUS_ASC',
+  StatusDesc = 'STATUS_DESC',
+  TransactionsCountAsc = 'TRANSACTIONS_COUNT_ASC',
+  TransactionsCountDesc = 'TRANSACTIONS_COUNT_DESC'
+}
 
 /** A transfer */
 export type TransferType = {
@@ -15615,6 +16607,8 @@ export type User = {
   active_group_care_plan?: Maybe<CarePlan>;
   /** All active patients associated with this user. */
   active_patients: Array<User>;
+  /** A number of all active patients associated with this user. */
+  active_patients_count?: Maybe<Scalars['Int']>;
   /** A collection of tags applied on the specific user */
   active_tags?: Maybe<Array<Tag>>;
   /** Additional tabs to display within the provider's view of the client profile */
@@ -15697,6 +16691,8 @@ export type User = {
   brand_logo_url?: Maybe<Scalars['String']>;
   /** The Brand Name Of the User */
   brand_name?: Maybe<Scalars['String']>;
+  /** The name of the Brand */
+  branded_name?: Maybe<Scalars['String']>;
   /** Broken synced calendar */
   broken_synced_cal?: Maybe<ExternalCalendar>;
   /** HTML String to display on top of the calendar */
@@ -15865,6 +16861,8 @@ export type User = {
   expired_client_cards_count?: Maybe<Scalars['Int']>;
   /** Patient cards that will expire by next recurring payment (requires can_see_billing for org level patients) */
   expiring_client_cards_count?: Maybe<Scalars['Int']>;
+  /** Family history conditions for user */
+  family_history_conditions?: Maybe<Array<FamilyHistoryCondition>>;
   /** Fax line request data */
   fax_line_request?: Maybe<FaxLineRequest>;
   /** Fax number belonging to the user */
@@ -16039,6 +17037,8 @@ export type User = {
   id: Scalars['ID'];
   /** A collection of immunizations for this client */
   immunizations?: Maybe<Array<Immunization>>;
+  /** Implantable device users for the user */
+  implantable_devices_users?: Maybe<Array<ImplantableDeviceUser>>;
   /** True if User organization with multiple providers */
   in_multiple_providers_org?: Maybe<Scalars['Boolean']>;
   /** If a user is in an org */
@@ -16117,7 +17117,7 @@ export type User = {
   locations?: Maybe<Array<Location>>;
   /** Fetch count of medications for a given patient */
   medications_count?: Maybe<Scalars['Int']>;
-  /** a serialized JSON string of metadata */
+  /** A serialized JSON string of metadata. Maximum character limit of 1024. */
   metadata?: Maybe<Scalars['String']>;
   /** The number of metric entries the user has */
   metric_entries_count?: Maybe<Scalars['String']>;
@@ -16160,6 +17160,8 @@ export type User = {
   onc_gender_identity?: Maybe<Scalars['String']>;
   /** The number open payments for the user */
   open_payments_count?: Maybe<Scalars['Int']>;
+  /** Returns name of the org if exists, otherwise returns full name */
+  org_name_or_self_name?: Maybe<Scalars['String']>;
   /** The user of the organization token */
   organization?: Maybe<Organization>;
   /** The organization membership of the user */
@@ -16170,6 +17172,8 @@ export type User = {
   other_id_numbers?: Maybe<Array<OtherIdNumber>>;
   /** Other organization members. */
   other_org_members: Array<User>;
+  /** Other organization members for sharing */
+  other_org_members_for_sharing: Array<User>;
   /** The IDs of other care team members for the client */
   other_provider_ids?: Maybe<Array<Maybe<Scalars['ID']>>>;
   /** The Outlook Calendar Account for this user */
@@ -16272,6 +17276,8 @@ export type User = {
   sexual_orientation?: Maybe<Scalars['String']>;
   /** The sexual orientation code of the user, corresponds to sexual orientation */
   sexual_orientation_code?: Maybe<Scalars['String']>;
+  /** The sexual orientation value if other */
+  sexual_orientation_other?: Maybe<Scalars['String']>;
   /** Shapa Connection for the user */
   shapa_connection?: Maybe<ShapaConnection>;
   /** An ID that includes the shard the user is on. Matches ID unless user is on a custom shard */
@@ -16425,6 +17431,8 @@ export type User = {
   user_group_id?: Maybe<Scalars['String']>;
   /** All user groups associated with this provider. */
   user_groups: Array<UserGroup>;
+  /** A number of user groups associated with this provider. */
+  user_groups_count: Scalars['Int'];
   /** User of who sent this member an invite */
   user_who_invited_member?: Maybe<User>;
   /** Verification fields left for the provider to fill out */
@@ -16446,6 +17454,15 @@ export type User = {
 
 /** An user entry, returns basic user information */
 export type UserActive_PatientsArgs = {
+  course_id?: InputMaybe<Scalars['ID']>;
+  keywords?: InputMaybe<Scalars['String']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  should_paginate?: InputMaybe<Scalars['Boolean']>;
+};
+
+
+/** An user entry, returns basic user information */
+export type UserActive_Patients_CountArgs = {
   course_id?: InputMaybe<Scalars['ID']>;
 };
 
@@ -16602,6 +17619,17 @@ export type UserUnconfirmed_Appointment_CountArgs = {
 
 /** An user entry, returns basic user information */
 export type UserUser_GroupsArgs = {
+  check_group_level_actions?: InputMaybe<Scalars['Boolean']>;
+  course_id?: InputMaybe<Scalars['ID']>;
+  keywords?: InputMaybe<Scalars['String']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  should_paginate?: InputMaybe<Scalars['Boolean']>;
+};
+
+
+/** An user entry, returns basic user information */
+export type UserUser_Groups_CountArgs = {
+  check_group_level_actions?: InputMaybe<Scalars['Boolean']>;
   course_id?: InputMaybe<Scalars['ID']>;
 };
 
@@ -16646,6 +17674,18 @@ export type UserGroupUsersArgs = {
   should_sort?: InputMaybe<Scalars['Boolean']>;
 };
 
+/** UserGroup sorting enum */
+export enum UserGroupOrderKeys {
+  CreatedAtAsc = 'CREATED_AT_ASC',
+  CreatedAtDesc = 'CREATED_AT_DESC',
+  InviteCodeAsc = 'INVITE_CODE_ASC',
+  InviteCodeDesc = 'INVITE_CODE_DESC',
+  NameAsc = 'NAME_ASC',
+  NameDesc = 'NAME_DESC',
+  UsersCountAsc = 'USERS_COUNT_ASC',
+  UsersCountDesc = 'USERS_COUNT_DESC'
+}
+
 /** Counts of different types of notifications for a user */
 export type UserNotificationsCount = {
   __typename?: 'UserNotificationsCount';
@@ -16657,6 +17697,26 @@ export type UserNotificationsCount = {
   unscheduled_lab_orders_count?: Maybe<Scalars['Int']>;
 };
 
+/** User sorting enum */
+export enum UserOrderKeys {
+  CreatedAtAsc = 'CREATED_AT_ASC',
+  CreatedAtDesc = 'CREATED_AT_DESC',
+  EmailAsc = 'EMAIL_ASC',
+  EmailDesc = 'EMAIL_DESC',
+  FirstNameAsc = 'FIRST_NAME_ASC',
+  FirstNameDesc = 'FIRST_NAME_DESC',
+  GroupNameAsc = 'GROUP_NAME_ASC',
+  GroupNameDesc = 'GROUP_NAME_DESC',
+  LastNameAsc = 'LAST_NAME_ASC',
+  LastNameDesc = 'LAST_NAME_DESC',
+  NextApptDateAsc = 'NEXT_APPT_DATE_ASC',
+  NextApptDateDesc = 'NEXT_APPT_DATE_DESC',
+  ProviderNameAsc = 'PROVIDER_NAME_ASC',
+  ProviderNameDesc = 'PROVIDER_NAME_DESC',
+  UpdatedAtAsc = 'UPDATED_AT_ASC',
+  UpdatedAtDesc = 'UPDATED_AT_DESC'
+}
+
 /** A user package selection */
 export type UserPackageSelection = {
   __typename?: 'UserPackageSelection';
@@ -16666,6 +17726,8 @@ export type UserPackageSelection = {
   billing_item_id?: Maybe<Scalars['ID']>;
   /** The time when the user package selection was created */
   created_at: Scalars['String'];
+  /** Pagination cursor */
+  cursor: Scalars['Cursor'];
   /** The unique identifier of the user package selection */
   id: Scalars['ID'];
   /** The amount of the first payment for a package, including promo discounts */
@@ -16861,6 +17923,16 @@ export type Webhook = {
   url?: Maybe<Scalars['String']>;
 };
 
+/** Webhook sorting enum */
+export enum WebhookOrderKeys {
+  CreatedAtAsc = 'CREATED_AT_ASC',
+  CreatedAtDesc = 'CREATED_AT_DESC',
+  EventTypeAsc = 'EVENT_TYPE_ASC',
+  EventTypeDesc = 'EVENT_TYPE_DESC',
+  UrlAsc = 'URL_ASC',
+  UrlDesc = 'URL_DESC'
+}
+
 /** Info for Whitelabeling */
 export type WhitelabelSetting = {
   __typename?: 'WhitelabelSetting';
@@ -16939,7 +18011,7 @@ export type ZoomAppointment = {
   /** End time of meeting */
   end_time?: Maybe<Scalars['String']>;
   /** The unique identifier of the zoom appointment */
-  id: Scalars['ID'];
+  id?: Maybe<Scalars['ID']>;
   /** The number of meeting participants */
   participants_count?: Maybe<Scalars['Int']>;
   /** Start time of meeting */
@@ -17963,10 +19035,14 @@ export type CreateClientInput = {
   additional_record_identifier?: InputMaybe<Scalars['String']>;
   /** Also known as the provider ID */
   dietitian_id?: InputMaybe<Scalars['String']>;
+  /** format: YYYY-MM-DD */
+  dob?: InputMaybe<Scalars['String']>;
   /** if true, welcome email is not sent */
   dont_send_welcome?: InputMaybe<Scalars['Boolean']>;
   email?: InputMaybe<Scalars['String']>;
   first_name?: InputMaybe<Scalars['String']>;
+  /** Ex. Male */
+  gender?: InputMaybe<Scalars['String']>;
   last_name?: InputMaybe<Scalars['String']>;
   legal_name?: InputMaybe<Scalars['String']>;
   /** a serialized JSON string of metadata */
@@ -18575,6 +19651,27 @@ export type CreateExternalCalendarPayload = {
   messages?: Maybe<Array<Maybe<FieldError>>>;
 };
 
+/** Autogenerated input type of createFamilyHistory */
+export type CreateFamilyHistoryInput = {
+  concept_id?: InputMaybe<Scalars['String']>;
+  relationships?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  user_id?: InputMaybe<Scalars['ID']>;
+};
+
+/** Autogenerated return type of createFamilyHistory. */
+export type CreateFamilyHistoryPayload = {
+  __typename?: 'createFamilyHistoryPayload';
+  /**
+   * DO NOT USE
+   * @deprecated DO NOT USE
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  duplicate_family_history_condition?: Maybe<FamilyHistoryCondition>;
+  family_history_condition?: Maybe<FamilyHistoryCondition>;
+  /** The list of errors occurred during the mutation */
+  messages?: Maybe<Array<Maybe<FieldError>>>;
+};
+
 /** Autogenerated input type of createFaxAcctInfo */
 export type CreateFaxAcctInfoInput = {
   aes_key?: InputMaybe<Scalars['String']>;
@@ -19004,6 +20101,27 @@ export type CreateImmunizationPayload = {
   messages?: Maybe<Array<Maybe<FieldError>>>;
 };
 
+/** Autogenerated input type of createImplantableDeviceUser */
+export type CreateImplantableDeviceUserInput = {
+  active?: InputMaybe<Scalars['Boolean']>;
+  name?: InputMaybe<Scalars['String']>;
+  udi?: InputMaybe<Scalars['String']>;
+  user_id?: InputMaybe<Scalars['ID']>;
+};
+
+/** Autogenerated return type of createImplantableDeviceUser. */
+export type CreateImplantableDeviceUserPayload = {
+  __typename?: 'createImplantableDeviceUserPayload';
+  /**
+   * DO NOT USE
+   * @deprecated DO NOT USE
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  implantable_device_user?: Maybe<ImplantableDeviceUser>;
+  /** The list of errors occurred during the mutation */
+  messages?: Maybe<Array<Maybe<FieldError>>>;
+};
+
 /** Autogenerated input type of createImportDataRequest */
 export type CreateImportDataRequestInput = {
   clients_template?: InputMaybe<Scalars['Upload']>;
@@ -19322,6 +20440,7 @@ export type CreateOfferingInput = {
   repeat_times?: InputMaybe<Scalars['String']>;
   require_booking_purchase?: InputMaybe<Scalars['Boolean']>;
   selected_image_id?: InputMaybe<Scalars['ID']>;
+  show_free_text?: InputMaybe<Scalars['Boolean']>;
   show_offering?: InputMaybe<Scalars['Boolean']>;
   user_group_id?: InputMaybe<Scalars['ID']>;
   user_group_ids?: InputMaybe<Scalars['String']>;
@@ -19471,6 +20590,7 @@ export type CreateOrganizationMembershipInput = {
   last_name?: InputMaybe<Scalars['String']>;
   /** Options are ["Standard", "Support"] */
   org_role?: InputMaybe<Scalars['String']>;
+  /** Required: The ID of the organization */
   organization_id?: InputMaybe<Scalars['ID']>;
   /** Can optionally be passed in along with last_name, first_name, and email. When passed in, the newly created user will have this password */
   password?: InputMaybe<Scalars['String']>;
@@ -19575,6 +20695,7 @@ export type CreatePaymentIntentPayload = {
 
 /** Autogenerated input type of createPermissionTemplate */
 export type CreatePermissionTemplateInput = {
+  allow_group_level_actions?: InputMaybe<Scalars['Boolean']>;
   allow_self_scheduling_in_care_team?: InputMaybe<Scalars['Boolean']>;
   auto_create_convo_for_care_team?: InputMaybe<Scalars['Boolean']>;
   can_access_to_members_chat?: InputMaybe<Scalars['Boolean']>;
@@ -19613,6 +20734,7 @@ export type CreatePermissionTemplateInput = {
   can_see_sent_faxes?: InputMaybe<Scalars['Boolean']>;
   can_see_transfers?: InputMaybe<Scalars['Boolean']>;
   can_set_client_password?: InputMaybe<Scalars['Boolean']>;
+  can_share_documents_and_folders_with_org_members?: InputMaybe<Scalars['Boolean']>;
   can_sign_others_charting_notes?: InputMaybe<Scalars['Boolean']>;
   can_sign_own_charting_notes?: InputMaybe<Scalars['Boolean']>;
   can_submit_cms_1500s_to_office_ally?: InputMaybe<Scalars['Boolean']>;
@@ -19927,6 +21049,28 @@ export type CreateRupaOrderPayload = {
   /** The list of errors occurred during the mutation */
   messages?: Maybe<Array<Maybe<FieldError>>>;
   rupa_order_url?: Maybe<Scalars['String']>;
+};
+
+/** Autogenerated input type of createSentDirectMessage */
+export type CreateSentDirectMessageInput = {
+  binary_attachment_document_id?: InputMaybe<Scalars['ID']>;
+  message_body?: InputMaybe<Scalars['String']>;
+  outbound_recipient?: InputMaybe<Scalars['String']>;
+  patient_id?: InputMaybe<Scalars['ID']>;
+  subject?: InputMaybe<Scalars['String']>;
+};
+
+/** Autogenerated return type of createSentDirectMessage. */
+export type CreateSentDirectMessagePayload = {
+  __typename?: 'createSentDirectMessagePayload';
+  /**
+   * DO NOT USE
+   * @deprecated DO NOT USE
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The list of errors occurred during the mutation */
+  messages?: Maybe<Array<Maybe<FieldError>>>;
+  sent_direct_message?: Maybe<SentDirectMessage>;
 };
 
 /** Autogenerated input type of createSentFax */
@@ -20754,6 +21898,24 @@ export type DeleteExternalCalendarPayload = {
   messages?: Maybe<Array<Maybe<FieldError>>>;
 };
 
+/** Autogenerated input type of deleteFamilyHistory */
+export type DeleteFamilyHistoryInput = {
+  id?: InputMaybe<Scalars['ID']>;
+};
+
+/** Autogenerated return type of deleteFamilyHistory. */
+export type DeleteFamilyHistoryPayload = {
+  __typename?: 'deleteFamilyHistoryPayload';
+  /**
+   * DO NOT USE
+   * @deprecated DO NOT USE
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  family_history_condition?: Maybe<FamilyHistoryCondition>;
+  /** The list of errors occurred during the mutation */
+  messages?: Maybe<Array<Maybe<FieldError>>>;
+};
+
 /** Autogenerated input type of deleteFitbit */
 export type DeleteFitbitInput = {
   id?: InputMaybe<Scalars['ID']>;
@@ -20898,6 +22060,24 @@ export type DeleteHealthConcernPayload = {
    */
   clientMutationId?: Maybe<Scalars['String']>;
   health_concern?: Maybe<HealthConcern>;
+  /** The list of errors occurred during the mutation */
+  messages?: Maybe<Array<Maybe<FieldError>>>;
+};
+
+/** Autogenerated input type of deleteImplantableDeviceUser */
+export type DeleteImplantableDeviceUserInput = {
+  id?: InputMaybe<Scalars['ID']>;
+};
+
+/** Autogenerated return type of deleteImplantableDeviceUser. */
+export type DeleteImplantableDeviceUserPayload = {
+  __typename?: 'deleteImplantableDeviceUserPayload';
+  /**
+   * DO NOT USE
+   * @deprecated DO NOT USE
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  implantable_device_user?: Maybe<ImplantableDeviceUser>;
   /** The list of errors occurred during the mutation */
   messages?: Maybe<Array<Maybe<FieldError>>>;
 };
@@ -21729,6 +22909,50 @@ export type EditAvailabilityPayload = {
   messages?: Maybe<Array<Maybe<FieldError>>>;
 };
 
+/** Autogenerated input type of enableSelfSignup */
+export type EnableSelfSignupInput = {
+  /** To enable or disable */
+  enable: Scalars['String'];
+  /** The user ID of the provider */
+  user_id: Scalars['ID'];
+};
+
+/** Autogenerated return type of enableSelfSignup. */
+export type EnableSelfSignupPayload = {
+  __typename?: 'enableSelfSignupPayload';
+  /**
+   * DO NOT USE
+   * @deprecated DO NOT USE
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The list of errors occurred during the mutation */
+  messages?: Maybe<Array<Maybe<FieldError>>>;
+  /** The success string */
+  success_string?: Maybe<Scalars['String']>;
+};
+
+/** Autogenerated input type of exportClientEhi */
+export type ExportClientEhiInput = {
+  /** The ID of the client to export EHI data for. */
+  client_id?: InputMaybe<Scalars['ID']>;
+  /** Whether or not we should export the client EHI data in a job. */
+  should_run_in_job?: InputMaybe<Scalars['Boolean']>;
+};
+
+/** Autogenerated return type of exportClientEhi. */
+export type ExportClientEhiPayload = {
+  __typename?: 'exportClientEhiPayload';
+  /**
+   * DO NOT USE
+   * @deprecated DO NOT USE
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The list of errors occurred during the mutation */
+  messages?: Maybe<Array<Maybe<FieldError>>>;
+  /** The banner message shown when successful. */
+  success_string?: Maybe<Scalars['String']>;
+};
+
 /** Autogenerated input type of exportToTemplate */
 export type ExportToTemplateInput = {
   id?: InputMaybe<Scalars['ID']>;
@@ -22035,6 +23259,8 @@ export type ShareCoursePayload = {
 export type ShareCustomModuleFormInput = {
   form_share_recipient?: InputMaybe<Scalars['String']>;
   id?: InputMaybe<Scalars['ID']>;
+  /** If this arg is true, this checks user's can_edit_forms permission before sharing */
+  validate_permissions?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** Autogenerated return type of shareCustomModuleForm. */
@@ -22054,22 +23280,30 @@ export type ShareCustomModuleFormPayload = {
 export type SignInInput = {
   /** When true, an additional API key will be generated (versus replacing the old one) */
   allow_multiple_api_keys?: InputMaybe<Scalars['Boolean']>;
+  /** User email */
   email?: InputMaybe<Scalars['String']>;
-  /** When true, an API key will be returned, versus a session token. The API key will replace any existing API key for the account */
+  /** When true, an API key will be returned, versus a session token. This replaces an existing key. */
   generate_api_token?: InputMaybe<Scalars['Boolean']>;
   /** The authentication namespace to sign into. Whitelabels can have their own separated auth namespace. */
   namespace?: InputMaybe<Scalars['String']>;
+  /** Password */
   password?: InputMaybe<Scalars['String']>;
+  /** Reset Token */
   reset_token?: InputMaybe<Scalars['String']>;
+  /** Timezone of user */
   timezone?: InputMaybe<Scalars['String']>;
+  /** API Token */
   token?: InputMaybe<Scalars['String']>;
+  /** Username */
   username?: InputMaybe<Scalars['String']>;
 };
 
 /** Autogenerated return type of signIn. */
 export type SignInPayload = {
   __typename?: 'signInPayload';
+  /** API Key created */
   api_key?: Maybe<Scalars['String']>;
+  /** Blocked by 2fa status */
   blocked_by_2fa?: Maybe<Scalars['Boolean']>;
   /**
    * DO NOT USE
@@ -22078,7 +23312,9 @@ export type SignInPayload = {
   clientMutationId?: Maybe<Scalars['String']>;
   /** The list of errors occurred during the mutation */
   messages?: Maybe<Array<Maybe<FieldError>>>;
+  /** Token returned for authorization */
   token?: Maybe<Scalars['String']>;
+  /** User info */
   user?: Maybe<User>;
 };
 
@@ -22139,6 +23375,26 @@ export type ToggleCarePlanStatusForSpecificUserPayload = {
   clientMutationId?: Maybe<Scalars['String']>;
   /** The list of errors occurred during the mutation */
   messages?: Maybe<Array<Maybe<FieldError>>>;
+};
+
+/** Autogenerated input type of unlockChartingNote */
+export type UnlockChartingNoteInput = {
+  /** The ID of the FormAnswerGroup to be unlocked */
+  fang_id: Scalars['ID'];
+};
+
+/** Autogenerated return type of unlockChartingNote. */
+export type UnlockChartingNotePayload = {
+  __typename?: 'unlockChartingNotePayload';
+  /**
+   * DO NOT USE
+   * @deprecated DO NOT USE
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The list of errors occurred during the mutation */
+  messages?: Maybe<Array<Maybe<FieldError>>>;
+  /** The success string */
+  success_string?: Maybe<Scalars['String']>;
 };
 
 /** Autogenerated input type of unsubscribeFromNotification */
@@ -22887,6 +24143,7 @@ export type UpdateClientInput = {
   send_form_request_reminder?: InputMaybe<Scalars['Boolean']>;
   sex?: InputMaybe<Scalars['String']>;
   sexual_orientation_code?: InputMaybe<Scalars['String']>;
+  sexual_orientation_other?: InputMaybe<Scalars['String']>;
   skipped_email?: InputMaybe<Scalars['Boolean']>;
   timezone?: InputMaybe<Scalars['String']>;
   /** Token for credit card, created by Stripe.JS */
@@ -23318,6 +24575,28 @@ export type UpdateExternalCalendarPayload = {
   messages?: Maybe<Array<Maybe<FieldError>>>;
 };
 
+/** Autogenerated input type of updateFamilyHistory */
+export type UpdateFamilyHistoryInput = {
+  concept_id?: InputMaybe<Scalars['String']>;
+  id?: InputMaybe<Scalars['ID']>;
+  relationships?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  user_id?: InputMaybe<Scalars['ID']>;
+};
+
+/** Autogenerated return type of updateFamilyHistory. */
+export type UpdateFamilyHistoryPayload = {
+  __typename?: 'updateFamilyHistoryPayload';
+  /**
+   * DO NOT USE
+   * @deprecated DO NOT USE
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  duplicate_family_history_condition?: Maybe<FamilyHistoryCondition>;
+  family_history_condition?: Maybe<FamilyHistoryCondition>;
+  /** The list of errors occurred during the mutation */
+  messages?: Maybe<Array<Maybe<FieldError>>>;
+};
+
 /** Autogenerated input type of updateFaxAcctInfo */
 export type UpdateFaxAcctInfoInput = {
   aes_key?: InputMaybe<Scalars['String']>;
@@ -23683,6 +24962,28 @@ export type UpdateImmunizationPayload = {
   messages?: Maybe<Array<Maybe<FieldError>>>;
 };
 
+/** Autogenerated input type of updateImplantableDeviceUser */
+export type UpdateImplantableDeviceUserInput = {
+  active?: InputMaybe<Scalars['Boolean']>;
+  id?: InputMaybe<Scalars['ID']>;
+  name?: InputMaybe<Scalars['String']>;
+  udi?: InputMaybe<Scalars['String']>;
+  user_id?: InputMaybe<Scalars['ID']>;
+};
+
+/** Autogenerated return type of updateImplantableDeviceUser. */
+export type UpdateImplantableDeviceUserPayload = {
+  __typename?: 'updateImplantableDeviceUserPayload';
+  /**
+   * DO NOT USE
+   * @deprecated DO NOT USE
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  implantable_device_user?: Maybe<ImplantableDeviceUser>;
+  /** The list of errors occurred during the mutation */
+  messages?: Maybe<Array<Maybe<FieldError>>>;
+};
+
 /** Autogenerated input type of updateInsuranceAuthorization */
 export type UpdateInsuranceAuthorizationInput = {
   authorization_number?: InputMaybe<Scalars['String']>;
@@ -23956,6 +25257,7 @@ export type UpdateNotificationSettingInput = {
   send_email_on_intake_flow_start?: InputMaybe<Scalars['Boolean']>;
   send_email_on_new_document?: InputMaybe<Scalars['Boolean']>;
   send_email_on_new_folder?: InputMaybe<Scalars['Boolean']>;
+  /** Send an email when a client purchases a package */
   send_email_on_package_purchase?: InputMaybe<Scalars['Boolean']>;
   /** Get an email when a scheduled payment fails */
   send_email_on_scheduled_payment_failed?: InputMaybe<Scalars['Boolean']>;
@@ -24030,6 +25332,7 @@ export type UpdateOfferingInput = {
   require_booking_purchase?: InputMaybe<Scalars['Boolean']>;
   row_order?: InputMaybe<Scalars['Int']>;
   selected_image_id?: InputMaybe<Scalars['ID']>;
+  show_free_text?: InputMaybe<Scalars['Boolean']>;
   show_offering?: InputMaybe<Scalars['Boolean']>;
   user_group_id?: InputMaybe<Scalars['ID']>;
   user_group_ids?: InputMaybe<Scalars['String']>;
@@ -24206,6 +25509,7 @@ export type UpdateOrganizationMemberPayload = {
 export type UpdateOrganizationMembershipInput = {
   action_for_appointments?: InputMaybe<Scalars['String']>;
   active?: InputMaybe<Scalars['Boolean']>;
+  allow_group_level_actions?: InputMaybe<Scalars['Boolean']>;
   allow_self_scheduling_in_care_team?: InputMaybe<Scalars['Boolean']>;
   auto_create_convo_for_care_team?: InputMaybe<Scalars['Boolean']>;
   can_access_to_members_chat?: InputMaybe<Scalars['Boolean']>;
@@ -24246,6 +25550,7 @@ export type UpdateOrganizationMembershipInput = {
   can_see_sent_faxes?: InputMaybe<Scalars['Boolean']>;
   can_see_transfers?: InputMaybe<Scalars['Boolean']>;
   can_set_client_password?: InputMaybe<Scalars['Boolean']>;
+  can_share_documents_and_folders_with_org_members?: InputMaybe<Scalars['Boolean']>;
   can_sign_others_charting_notes?: InputMaybe<Scalars['Boolean']>;
   can_sign_own_charting_notes?: InputMaybe<Scalars['Boolean']>;
   can_submit_cms_1500s_to_change_health?: InputMaybe<Scalars['Boolean']>;
@@ -24340,6 +25645,7 @@ export type UpdateOrganizationPayload = {
 
 /** Autogenerated input type of updatePermissionTemplate */
 export type UpdatePermissionTemplateInput = {
+  allow_group_level_actions?: InputMaybe<Scalars['Boolean']>;
   allow_self_scheduling_in_care_team?: InputMaybe<Scalars['Boolean']>;
   auto_create_convo_for_care_team?: InputMaybe<Scalars['Boolean']>;
   can_access_to_members_chat?: InputMaybe<Scalars['Boolean']>;
@@ -24378,6 +25684,7 @@ export type UpdatePermissionTemplateInput = {
   can_see_sent_faxes?: InputMaybe<Scalars['Boolean']>;
   can_see_transfers?: InputMaybe<Scalars['Boolean']>;
   can_set_client_password?: InputMaybe<Scalars['Boolean']>;
+  can_share_documents_and_folders_with_org_members?: InputMaybe<Scalars['Boolean']>;
   can_sign_others_charting_notes?: InputMaybe<Scalars['Boolean']>;
   can_sign_own_charting_notes?: InputMaybe<Scalars['Boolean']>;
   can_submit_cms_1500s_to_change_health?: InputMaybe<Scalars['Boolean']>;
@@ -25062,6 +26369,7 @@ export type UpdateUserInput = {
   send_get_mobile_app_email?: InputMaybe<Scalars['Boolean']>;
   sex?: InputMaybe<Scalars['String']>;
   sexual_orientation_code?: InputMaybe<Scalars['String']>;
+  sexual_orientation_other?: InputMaybe<Scalars['String']>;
   skipped_email?: InputMaybe<Scalars['Boolean']>;
   submit_labs_immediately?: InputMaybe<Scalars['Boolean']>;
   timezone?: InputMaybe<Scalars['String']>;
@@ -25330,7 +26638,7 @@ export type GetUserQueryVariables = Exact<{
 }>;
 
 
-export type GetUserQuery = { __typename?: 'Query', user?: { __typename?: 'User', id: string, first_name?: string | null, last_name?: string | null, dob?: string | null, gender?: string | null, email?: string | null, phone_number?: string | null, next_appt_date?: string | null, dietitian_id?: string | null, quick_notes?: string | null, user_group?: { __typename?: 'UserGroup', id: string, name?: string | null } | null, providers?: Array<{ __typename?: 'User', id: string, active: boolean, first_name?: string | null, last_name?: string | null, email?: string | null }> | null } | null };
+export type GetUserQuery = { __typename?: 'Query', user?: { __typename?: 'User', id: string, first_name?: string | null, last_name?: string | null, dob?: string | null, gender?: string | null, email?: string | null, phone_number?: string | null, next_appt_date?: string | null, dietitian_id?: string | null, quick_notes?: string | null, user_group?: { __typename?: 'UserGroup', id: string, name?: string | null } | null, providers?: Array<{ __typename?: 'User', id: string, active: boolean, first_name?: string | null, last_name?: string | null, email?: string | null }> | null, active_tags?: Array<{ __typename?: 'Tag', id: string }> | null } | null };
 
 export type EntriesQueryVariables = Exact<{
   category?: InputMaybe<Scalars['String']>;
@@ -25638,11 +26946,12 @@ export const GetUserDocument = gql`
     email
     phone_number
     next_appt_date
+    dietitian_id
+    quick_notes
     user_group {
       id
       name
     }
-    dietitian_id
     providers {
       id
       active
@@ -25650,7 +26959,9 @@ export const GetUserDocument = gql`
       last_name
       email
     }
-    quick_notes
+    active_tags {
+      id
+    }
   }
 }
     `;

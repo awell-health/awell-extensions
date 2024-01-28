@@ -2,6 +2,10 @@
 
 ## October 2023
 
+- Add "Check patient tag" action
+
+## October 2023
+
 - Add "Update patient quick notes" action
 - Add "Create metric entry" action.
 

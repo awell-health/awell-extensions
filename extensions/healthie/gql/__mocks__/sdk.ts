@@ -37,6 +37,7 @@ export const mockGetSdkReturn = {
           user_group: { name: 'group' },
           dietitian_id: 'dietitian_id',
           quick_notes: '<p>quick notest</p>',
+          active_tags: [{ id: 'tag-1' }],
         },
       },
     }
