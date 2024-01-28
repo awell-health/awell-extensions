@@ -90,3 +90,7 @@ Create a metric entry for a patient in Healthie. The category of the metric is t
 ## Check patient tag
 
 Checks that a patient has an active tag with given `id`
+
+## Check scheduled appointments
+
+Checks that a patient has active scheduled appointment with given `appointmentTypeId`

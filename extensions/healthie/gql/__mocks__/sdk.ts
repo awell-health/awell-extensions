@@ -1,6 +1,8 @@
 import {
   type GetAppointmentQuery,
   type GetAppointmentQueryVariables,
+  type GetScheduledAppointmentsQuery,
+  type GetScheduledAppointmentsQueryVariables,
 } from '../sdk'
 
 export const mockGetSdkReturn = {
@@ -211,6 +213,24 @@ export const mockGetSdkReturn = {
             id: 'task-1',
           },
         },
+      },
+    }
+  }),
+  getScheduledAppointments: jest.fn<
+    { data: GetScheduledAppointmentsQuery },
+    [GetScheduledAppointmentsQueryVariables]
+  >((args) => {
+    const appointments =
+      args.appointment_type_id === 'appointment-type-1'
+        ? [
+            {
+              id: 'appointment-1',
+            },
+          ]
+        : []
+    return {
+      data: {
+        appointments,
       },
     }
   }),

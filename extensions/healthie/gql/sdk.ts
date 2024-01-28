@@ -26633,6 +26633,14 @@ export type GetFormTemplateQueryVariables = Exact<{
 
 export type GetFormTemplateQuery = { __typename?: 'Query', customModuleForm?: { __typename?: 'CustomModuleForm', id: string, name?: string | null, use_for_charting: boolean, use_for_program: boolean, prefill?: boolean | null, has_matrix_field?: boolean | null, is_video?: boolean | null, has_non_readonly_modules?: boolean | null, custom_modules: Array<{ __typename?: 'CustomModule', id: string, mod_type?: string | null, label?: string | null }> } | null };
 
+export type GetScheduledAppointmentsQueryVariables = Exact<{
+  user_id?: InputMaybe<Scalars['ID']>;
+  appointment_type_id?: InputMaybe<Scalars['ID']>;
+}>;
+
+
+export type GetScheduledAppointmentsQuery = { __typename?: 'Query', appointments?: Array<{ __typename?: 'Appointment', id: string }> | null };
+
 export type GetUserQueryVariables = Exact<{
   id?: InputMaybe<Scalars['ID']>;
 }>;
@@ -26935,6 +26943,19 @@ export const GetFormTemplateDocument = gql`
   }
 }
     `;
+export const GetScheduledAppointmentsDocument = gql`
+    query getScheduledAppointments($user_id: ID, $appointment_type_id: ID) {
+  appointments(
+    user_id: $user_id
+    filter_by_appointment_type_id: $appointment_type_id
+    is_active: true
+    should_paginate: false
+    filter: "future"
+  ) {
+    id
+  }
+}
+    `;
 export const GetUserDocument = gql`
     query getUser($id: ID) {
   user(id: $id) {
@@ -27081,6 +27102,7 @@ const DeleteTaskDocumentString = print(DeleteTaskDocument);
 const GetAppointmentDocumentString = print(GetAppointmentDocument);
 const GetConversationListDocumentString = print(GetConversationListDocument);
 const GetFormTemplateDocumentString = print(GetFormTemplateDocument);
+const GetScheduledAppointmentsDocumentString = print(GetScheduledAppointmentsDocument);
 const GetUserDocumentString = print(GetUserDocument);
 const EntriesDocumentString = print(EntriesDocument);
 const RemoveTagFromUserDocumentString = print(RemoveTagFromUserDocument);
@@ -27135,6 +27157,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     getFormTemplate(variables?: GetFormTemplateQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: GetFormTemplateQuery; extensions?: any; headers: Dom.Headers; status: number; }> {
         return withWrapper((wrappedRequestHeaders) => client.rawRequest<GetFormTemplateQuery>(GetFormTemplateDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getFormTemplate', 'query');
+    },
+    getScheduledAppointments(variables?: GetScheduledAppointmentsQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: GetScheduledAppointmentsQuery; extensions?: any; headers: Dom.Headers; status: number; }> {
+        return withWrapper((wrappedRequestHeaders) => client.rawRequest<GetScheduledAppointmentsQuery>(GetScheduledAppointmentsDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getScheduledAppointments', 'query');
     },
     getUser(variables?: GetUserQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: GetUserQuery; extensions?: any; headers: Dom.Headers; status: number; }> {
         return withWrapper((wrappedRequestHeaders) => client.rawRequest<GetUserQuery>(GetUserDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getUser', 'query');

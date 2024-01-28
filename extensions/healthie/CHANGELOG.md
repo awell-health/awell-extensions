@@ -1,8 +1,9 @@
 # Healthie changelog
 
-## October 2023
+## January 2024
 
 - Add "Check patient tag" action
+- Add "Check scheduled appointments" action
 
 ## October 2023
 
