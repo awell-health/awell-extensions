@@ -67,7 +67,6 @@ export const externalServer: Action<
   previewable: true,
   onActivityCreated: async (payload, onComplete, onError) => {
     const { fields, settings } = PayloadSchema.parse(payload)
-    // const client = new axios.Axios({ validateStatus: (s) => s === 200 })
     const clientPayload = fields.input ?? { fields: {}, settings: {} }
     const { data, status } = await axios.post<{
       data_points: any
@@ -82,7 +81,7 @@ export const externalServer: Action<
     const { data_points, events, response } = data
     if (status === 200 && response === 'success') {
       await onComplete({
-        data_points,
+        data_points: { data_points: JSON.stringify(data_points) },
       })
     } else {
       await onError({ events })
