@@ -69,17 +69,20 @@ export const externalServer: Action<
     const { fields, settings } = PayloadSchema.parse(payload)
     // const client = new axios.Axios({ validateStatus: (s) => s === 200 })
     const clientPayload = fields.input ?? { fields: {}, settings: {} }
-    const { data } = await axios.post(
+    const { data, status } = await axios.post<{
+      data_points: any
+      events: any
+      response: 'success' | 'failure'
+    }>(
       `${settings.url}/${fields.extension}/${fields.action}`,
       { data: clientPayload },
       { headers: { 'Content-Type': 'application/json' } }
     )
     // eslint-disable-next-line @typescript-eslint/naming-convention
-    const { response, data_points, events } = data
-    if (response === 'success') {
+    const { data_points, events, response } = data
+    if (status === 200 && response === 'success') {
       await onComplete({
         data_points,
-        events,
       })
     } else {
       await onError({ events })
