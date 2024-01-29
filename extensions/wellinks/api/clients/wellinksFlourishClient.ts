@@ -66,7 +66,7 @@ export class WellinksFlourishClient {
             this._apiKey
           ),
           headers: {
-            contentType: 'text/xml',
+            'Content-Type': 'text/xml',
             accept: 'application/xml',
           },
         })
@@ -139,7 +139,7 @@ export class WellinksFlourishClient {
             pa13
           ),
           headers: {
-            contentType: 'text/xml',
+            'Content-Type': 'text/xml',
             accept: 'application/xml',
           },
         })
@@ -218,7 +218,7 @@ function buildCreateUserRequest(
         <thirdpartyidentifier>${thirdPartyIdentifier}</thirdpartyidentifier> <!--- required -->
         <firstname>${firstName}</firstname>
         <lastname>${lastName}</lastname>
-        <dob day=${date.getDate()} month=${date.getMonth()} year=${date.getFullYear()}/>
+        <dob day="${date.getDate()}" month="${date.getMonth()}" year="${date.getFullYear()}"/>
     </user>
 </request>
     `

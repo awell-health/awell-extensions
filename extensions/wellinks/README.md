@@ -34,4 +34,8 @@ Queries Flourish to see if there is a record that has a matching ThirdPartyIdent
 
 ## Submit a PAM Survey
 
-Submits a PAM 13 Survey (completed in the Careflow) to Flourish and returns the PAM Score and Levl.
+Submits a PAM 13 Survey (completed in the Careflow) to Flourish and returns the PAM Score and Level
+
+## Create a Flourish Customer
+
+Creates a customer in the Flourish system that requires a user's third party identifier.
