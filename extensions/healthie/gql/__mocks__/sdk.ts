@@ -1,6 +1,8 @@
 import {
   type GetAppointmentQuery,
   type GetAppointmentQueryVariables,
+  type GetScheduledAppointmentsQuery,
+  type GetScheduledAppointmentsQueryVariables,
 } from '../sdk'
 
 export const mockGetSdkReturn = {
@@ -37,6 +39,7 @@ export const mockGetSdkReturn = {
           user_group: { name: 'group' },
           dietitian_id: 'dietitian_id',
           quick_notes: '<p>quick notest</p>',
+          active_tags: [{ id: 'tag-1' }],
         },
       },
     }
@@ -210,6 +213,24 @@ export const mockGetSdkReturn = {
             id: 'task-1',
           },
         },
+      },
+    }
+  }),
+  getScheduledAppointments: jest.fn<
+    { data: GetScheduledAppointmentsQuery },
+    [GetScheduledAppointmentsQueryVariables]
+  >((args) => {
+    const appointments =
+      args.appointment_type_id === 'appointment-type-1'
+        ? [
+            {
+              id: 'appointment-1',
+            },
+          ]
+        : []
+    return {
+      data: {
+        appointments,
       },
     }
   }),

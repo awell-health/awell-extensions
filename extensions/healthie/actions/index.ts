@@ -20,6 +20,8 @@ import { applyTagToPatient } from './applyTagToPatient'
 import { getMetricEntry } from './getMetricEntry'
 import { updatePatientQuickNote } from './updatePatientQuickNote'
 import { createMetricEntry } from './createMetricEntry'
+import { checkPatientTag } from './checkPatientTag'
+import { checkScheduledAppointments } from './checkScheduledAppointments'
 
 export const actions = {
   createAppointment,
@@ -53,4 +55,6 @@ export const actions = {
   getMetricEntry,
   updatePatientQuickNote,
   createMetricEntry,
+  checkPatientTag,
+  checkScheduledAppointments,
 }
