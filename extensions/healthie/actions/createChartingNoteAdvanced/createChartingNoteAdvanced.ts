@@ -5,7 +5,7 @@ import { type settings } from '../../settings';
 import { isNaN, isNil } from 'lodash';
 import { initialiseClient } from '../../graphqlClient';
 import { HealthieError, mapHealthieToActivityError } from '../../errors';
-import { getSdk } from '../../gql/sdk';
+import { CustomModule, getSdk } from '../../gql/sdk';
 
 interface FormAnswer {
   custom_module_id: string;
@@ -46,7 +46,7 @@ export const createChartingNoteAdvanced: Action<typeof fields, typeof settings> 
           await onError(getError(`Form with id ${form_id} cannot be used for charting`, `Form isn't a charting form`, 'SERVER_ERROR'));
         }
 
-        const answers = formatAnswers(note_content);
+        const answers = formatAnswers(note_content, moduleForm.custom_modules as CustomModule[]);
 
         if (answers?.length === 0) {
           await onError(getError(`There are no answers in the request`, `No answers provided or invalid data`, 'WRONG_INPUT'));
@@ -97,10 +97,11 @@ const getError = (message: string, text: string, category: string): object => {
   };
 }
 
-const formatAnswers = (content: any): FormAnswer[] => {
+const formatAnswers = (content: any, customModules: CustomModule[]): FormAnswer[] => {
+  const customModuleIds = customModules.map((item) => item.id);
   try {
     const data = typeof content === 'string' ? JSON.parse(content) : content
-    return data.map((item: any) => {
+    const answers = data.map((item: any) => {
       const x: FormAnswer = {
         custom_module_id: item.custom_module_id,
         user_id: item.user_id,
@@ -108,6 +109,7 @@ const formatAnswers = (content: any): FormAnswer[] => {
       }
       return x;
     });
+    return answers.filter((item: FormAnswer) => customModuleIds.includes(item.custom_module_id));
   } catch (err) {
     return [];
   }
