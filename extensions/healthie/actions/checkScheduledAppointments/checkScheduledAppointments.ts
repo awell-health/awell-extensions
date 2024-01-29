@@ -15,7 +15,7 @@ export const checkScheduledAppointments: Action<
   category: Category.EHR_INTEGRATIONS,
   title: 'Check scheduled appointments',
   description:
-    'Check does the patient have active appointment scheduled for an appointment type',
+    'Check if the given patient has an active appointment scheduled for the given appointment type.',
   fields,
   dataPoints,
   previewable: true,
