@@ -66,7 +66,7 @@ export class WellinksFlourishClient {
             this._apiKey
           ),
           headers: {
-            contentType: 'text/xml',
+            'Content-Type': 'text/xml',
             accept: 'application/xml',
           },
         })
@@ -139,7 +139,7 @@ export class WellinksFlourishClient {
             pa13
           ),
           headers: {
-            contentType: 'text/xml',
+            'Content-Type': 'text/xml',
             accept: 'application/xml',
           },
         })
@@ -186,8 +186,7 @@ function buildCheckIfUserExistsRequest(
   clientextid: string,
   apiKey: string
 ): string {
-  return `
-  <?xml version="1.0" encoding="utf-8" ?>
+  return `<?xml version="1.0" encoding="utf-8" ?>
   <request>
       <user>
           <clientextid>${clientextid}</clientextid>
@@ -208,8 +207,7 @@ function buildCreateUserRequest(
   thirdPartyIdentifier: string
 ): string {
   const date = new Date(dateOfBirth)
-  return `
-  <?xml version="1.0" encoding="utf-8" ?>
+  return `<?xml version="1.0" encoding="utf-8" ?>
 <request>
     <user>
         <clientextid>${clientextid}</clientextid> <!--- required -->
@@ -218,7 +216,7 @@ function buildCreateUserRequest(
         <thirdpartyidentifier>${thirdPartyIdentifier}</thirdpartyidentifier> <!--- required -->
         <firstname>${firstName}</firstname>
         <lastname>${lastName}</lastname>
-        <dob day=${date.getDate()} month=${date.getMonth()} year=${date.getFullYear()}/>
+        <dob day="${date.getDate()}" month="${date.getMonth()}" year="${date.getFullYear()}"/>
     </user>
 </request>
     `
@@ -247,8 +245,7 @@ function buildSubmitPamSurveyRequest(
   pa13: number
 ): string {
   const adminDateValue = new Date(adminDate)
-  return `
-  <?xml version="1.0" encoding="utf-8" ?>
+  return `<?xml version="1.0" encoding="utf-8" ?>
 <Request>
     <user>
         <clientextid>${clientextid}</clientextid>
