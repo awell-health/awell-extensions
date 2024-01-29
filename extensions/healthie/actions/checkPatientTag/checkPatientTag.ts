@@ -14,7 +14,7 @@ export const checkPatientTag: Action<
   key: 'checkPatientTag',
   category: Category.EHR_INTEGRATIONS,
   title: 'Check patient tag',
-  description: 'Check is tag applied as active tag on patient in Healthie.',
+  description: 'Check if a patient has the given tag in their active tags in Healthie.',
   fields,
   dataPoints,
   previewable: true,
