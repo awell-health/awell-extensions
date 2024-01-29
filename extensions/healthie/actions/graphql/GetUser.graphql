@@ -8,11 +8,12 @@ query getUser($id: ID) {
     email
     phone_number
     next_appt_date
+    dietitian_id
+    quick_notes
     user_group {
       id
       name
     }
-    dietitian_id
     providers {
       id
       active
@@ -20,6 +21,8 @@ query getUser($id: ID) {
       last_name
       email
     }
-    quick_notes
+    active_tags {
+      id
+    }
   }
 }
