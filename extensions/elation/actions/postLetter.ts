@@ -84,7 +84,7 @@ export const postLetter: Action<
   title: 'Post letter',
   description: "Post a letter using Elation's patient API.",
   fields,
-  previewable: true,
+  previewable: false,
   dataPoints,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
     try {
@@ -99,13 +99,15 @@ export const postLetter: Action<
       } = payload.fields
 
       const letter = letterSchema.parse({
-        patientId,
-        practiceId,
-        referralOrderId,
+        patient: patientId,
+        practice: practiceId,
+        referral_order: referralOrderId,
         subject,
         body,
-        contactId,
-        letterType,
+        letter_type: letterType,
+        send_to_contact: {
+          id: contactId,
+        },
       })
 
       const api = makeAPIClient(payload.settings)

@@ -49,7 +49,7 @@ describe('Post new letter action', () => {
     })
   })
 
-  test('Should reject when subject and referral order are both included', async () => {
+  test('Should reject when both subject and referral order are not included', async () => {
     const onError = jest
       .fn()
       .mockImplementation((obj: { events: ActivityEvent[] }) => {
@@ -60,10 +60,8 @@ describe('Post new letter action', () => {
         fields: {
           patientId: postLetterResponseExample.patient,
           practiceId: postLetterResponseExample.practice,
-          subject: postLetterResponseExample.subject,
           body: postLetterResponseExample.body,
           contactId: postLetterResponseExample.send_to_contact.id,
-          referralOrderId: 123,
         },
         settings,
       } as any,
@@ -72,7 +70,7 @@ describe('Post new letter action', () => {
     )
     expect(onError).toHaveBeenCalled()
     expect(onError).toHaveReturnedWith(
-      "Validation error: Either 'subject' or 'referral order' is required, but not both."
+      "Validation error: One of either 'subject' or 'referral order' is required."
     )
   })
 })

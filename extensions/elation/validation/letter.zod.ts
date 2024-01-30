@@ -1,5 +1,5 @@
 import { NumericIdSchema } from '@awell-health/extensions-core'
-import { isEmpty } from 'lodash'
+import { isNil } from 'lodash'
 import * as z from 'zod'
 
 // All values taken from Elation's API
@@ -20,15 +20,12 @@ export const letterSchema = z
     practice: NumericIdSchema,
     body: z.string(),
     send_to_contact: contactSchema,
-    subject: z.string().optional().nullable(),
+    subject: z.string().nonempty().optional().nullable(),
     referral_order: NumericIdSchema.optional().nullable(),
     letter_type: letterTypeEnum.default(letterTypeEnum.enum.provider),
   })
+  .strict()
   // subject and referral_order cannot be empty at the same time
-  .refine((data) => isEmpty(data.subject) && isEmpty(data.referral_order), {
+  .refine((input) => !(isNil(input.subject) && isNil(input.referral_order)), {
     message: "One of either 'subject' or 'referral order' is required.",
-  })
-  // subject and referral_order cannot be non-empty at the same time
-  .refine((data) => !isEmpty(data.subject) && !isEmpty(data.referral_order), {
-    message: "Either 'subject' or 'referral order' is required, but not both.",
   })
