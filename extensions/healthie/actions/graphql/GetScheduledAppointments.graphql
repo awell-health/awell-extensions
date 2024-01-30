@@ -1,0 +1,11 @@
+query getScheduledAppointments($user_id: ID, $appointment_type_id: ID) {
+  appointments(
+    user_id: $user_id
+    filter_by_appointment_type_id: $appointment_type_id
+    is_active: true
+    should_paginate: false
+    filter: "future"
+  ) {
+    id
+  }
+}
