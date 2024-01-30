@@ -61,7 +61,7 @@ export const mockClientReturn = {
   deleteNonVisitNote: jest.fn(() => {
     return {}
   }),
-  postLetter: jest.fn(() => {
+  postNewLetter: jest.fn(() => {
     return postLetterResponseExample
   }),
 }
