@@ -27,6 +27,7 @@ import {
   type NonVisitNoteInput,
   type NonVisitNoteResponse,
 } from './types/nonVisitNote'
+import { type PostLetterInput, type PostLetterResponse } from './types/letter'
 
 export class ElationDataWrapper extends DataWrapper {
   public async getAppointment(id: number): Promise<AppointmentResponse> {
@@ -173,6 +174,14 @@ export class ElationDataWrapper extends DataWrapper {
       url: `/non_visit_notes/${id}`,
     })
   }
+
+  public async postLetter(obj: PostLetterInput): Promise<PostLetterResponse> {
+    return await this.Request({
+      method: 'POST',
+      url: '/letters',
+      data: obj,
+    })
+  }
 }
 
 interface ElationAPIClientConstructorProps {
@@ -286,6 +295,12 @@ export class ElationAPIClient extends APIClient<ElationDataWrapper> {
     await this.FetchData(async (dw) => {
       await dw.deleteNonVisitNote(id)
     })
+  }
+
+  public async postNewLetter(
+    obj: PostLetterInput
+  ): Promise<PostLetterResponse> {
+    return await this.FetchData(async (dw) => await dw.postLetter(obj))
   }
 }
 
