@@ -6,6 +6,7 @@ import {
   nonVisitNoteResponseExample,
   patientExample,
   physicianResponseExample,
+  postLetterResponseExample,
 } from './constants'
 const { makeAPIClient: makeAPIClientActual } = jest.requireActual('../client')
 
@@ -59,6 +60,9 @@ export const mockClientReturn = {
   }),
   deleteNonVisitNote: jest.fn(() => {
     return {}
+  }),
+  postNewLetter: jest.fn(() => {
+    return postLetterResponseExample
   }),
 }
 const ElationAPIClientMock = jest.fn((params) => {
