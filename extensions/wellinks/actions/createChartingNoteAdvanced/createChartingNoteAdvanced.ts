@@ -46,7 +46,7 @@ export const createChartingNoteAdvanced: Action<typeof fields, typeof settings> 
       if (isNil(moduleForm)) {
         throw new Error(`Form with id ${form_id} doesn't exist`);
       }
-      if (!(moduleForm.use_for_charting)) {
+      if (moduleForm.use_for_charting === false) {
         throw new Error(`Form with id ${form_id} cannot be used for charting`);
       }
 
