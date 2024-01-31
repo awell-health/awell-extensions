@@ -28,6 +28,10 @@ import {
   type NonVisitNoteResponse,
 } from './types/nonVisitNote'
 import { type PostLetterInput, type PostLetterResponse } from './types/letter'
+import type {
+  CreateLabOrderInput,
+  CreateLabOrderResponse,
+} from './types/labOrder'
 
 export class ElationDataWrapper extends DataWrapper {
   public async getAppointment(id: number): Promise<AppointmentResponse> {
@@ -182,6 +186,16 @@ export class ElationDataWrapper extends DataWrapper {
       data: obj,
     })
   }
+
+  public async createLabOrder(
+    obj: CreateLabOrderInput
+  ): Promise<CreateLabOrderResponse> {
+    return await this.Request({
+      method: 'POST',
+      url: '/lab_orders',
+      data: obj,
+    })
+  }
 }
 
 interface ElationAPIClientConstructorProps {
@@ -301,6 +315,12 @@ export class ElationAPIClient extends APIClient<ElationDataWrapper> {
     obj: PostLetterInput
   ): Promise<PostLetterResponse> {
     return await this.FetchData(async (dw) => await dw.postLetter(obj))
+  }
+
+  public async createLabOrder(
+    obj: CreateLabOrderInput
+  ): Promise<CreateLabOrderResponse> {
+    return await this.FetchData(async (dw) => await dw.createLabOrder(obj))
   }
 }
 

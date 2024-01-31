@@ -1,4 +1,5 @@
 import { type AppointmentInput } from '../types/appointment'
+import { type CreateLabOrderResponse } from '../types/labOrder'
 import { type PostLetterResponse } from '../types/letter'
 import { type NonVisitNoteResponse } from '../types/nonVisitNote'
 import { type PatientInput } from '../types/patient'
@@ -96,4 +97,26 @@ export const postLetterResponseExample: PostLetterResponse = {
     id: 141377681883138,
   },
   subject: 'My test subject',
+}
+
+export const labOrderResponseExample: CreateLabOrderResponse = {
+  confidential: false,
+  content: {
+    patient_instructions: '',
+    test_center_notes: '',
+    tests: [
+      {
+        id: 142255942795326,
+      },
+    ],
+  },
+  document_date: '2024-01-25T04:33:40Z',
+  id: 142256002957345,
+  ordering_physician: 141127177601026,
+  patient: 141986488057857,
+  practice: 141127173275652,
+  site: undefined,
+  vendor: 67385753846,
+  printable_view:
+    'https://sandbox.elationemr.com/api/2.0/lab_orders/142256002957345/printable',
 }
