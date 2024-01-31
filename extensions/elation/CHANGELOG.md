@@ -1,5 +1,10 @@
 # Elation Changelog
 
+## January 30, 2024
+
+- New actions
+  - Post letter: Using patient and practice identifier, post a new letter to either Provider, Patient or associate it with an existing Referral.
+
 ## October 3, 2023
 
 - The README is now more concise with less unneeded detail. A section on the particularities of Elation subscriptions (webhooks) was added.
