@@ -6,6 +6,8 @@ import { insertMemberListEvent } from './insertMemberListEvent/insertMemberListE
 import { checkFlourishCustomer } from './checkFlourishCustomer/checkFlourishCustomer'
 import { submitPamSurvey } from './submitPamSurvey/submitPamSurvey'
 import { createFlourishCustomer } from './createFlourishCustomer/createFlourishCustomer'
+import { createChartingNoteAdvanced } from './createChartingNoteAdvanced'
+
 export const actions = {
   checkForOverride,
   checkForScheduledAppointment,
@@ -15,4 +17,5 @@ export const actions = {
   checkFlourishCustomer,
   submitPamSurvey,
   createFlourishCustomer,
+  createChartingNoteAdvanced,
 }
