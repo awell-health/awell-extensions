@@ -9,6 +9,8 @@ import { createNonVisitNote } from './createNonVisitNote'
 import { getNonVisitNote } from './getNonVisitNote'
 import { deleteNonVisitNote } from './deleteNonVisitNote'
 import { getPhysician } from './getPhysician'
+import { postLetter } from './postLetter'
+import { createLabOrder } from './createLabOrder'
 
 export const actions = {
   getPatient,
@@ -22,4 +24,6 @@ export const actions = {
   // updateNonVisitNote, // Disable for now, don't immediately see a use case for this action.
   getNonVisitNote,
   deleteNonVisitNote,
+  postLetter,
+  createLabOrder,
 }
