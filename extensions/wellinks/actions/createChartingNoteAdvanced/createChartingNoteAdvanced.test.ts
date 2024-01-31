@@ -1,7 +1,8 @@
 import { generateTestPayload } from '../../../../src/tests'
-import { getSdk } from '../../gql/sdk'
-import { mockGetSdk, mockGetSdkReturn } from '../../gql/__mocks__/sdk'
-import { createChartingNoteAdvanced } from '../createChartingNoteAdvanced'
+import { getSdk } from '../../../healthie/gql/sdk'
+import { mockGetSdk, mockGetSdkReturn } from '../../../healthie/gql/__mocks__/sdk'
+import { createChartingNoteAdvanced } from '.'
+import { mockSettings } from '../../__mocks__/config/settings'
 
 jest.mock('../../gql/sdk')
 jest.mock('../../graphqlClient')
@@ -38,10 +39,7 @@ describe('createChartingNote action', () => {
           marked_locked: true,
           appointment_id: 'appointment-1'
         },
-        settings: {
-          apiKey: 'apiKey',
-          apiUrl: 'test-url',
-        },
+        settings: mockSettings,
       }),
       onComplete,
       jest.fn()

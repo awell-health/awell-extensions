@@ -27,11 +27,32 @@ export const SCHEDULED_APPOINTMENTS_QUERY = /* GraphQl */`
 export const CONVERSATION_MEMBERSHIPS_QUERY = /* GraphQL */`
   query getConversationMemberships ($client_id: String) {
     conversationMemberships(client_id: $client_id){
-        convo {
-            last_message_content
-            updated_at
-            dietitian_id
-            patient_id
-        }
+      convo {
+        last_message_content
+        updated_at
+        dietitian_id
+        patient_id
+      }
     }
   }`
+
+
+export const FORM_TEMPLATE_QUERY = /* GraphQL */ `
+  query getFormTemplate($id: ID) {
+    customModuleForm(id: $id) {
+      id
+      name
+      use_for_charting
+      use_for_program
+      prefill
+      has_matrix_field
+      is_video
+      has_non_readonly_modules
+      custom_modules {
+        id
+        mod_type
+        label
+      }
+    }
+  }
+`

@@ -1,4 +1,5 @@
 import { type Field, FieldType } from '@awell-health/extensions-core'
+import { z } from 'zod';
 
 export const fields = {
     healthie_patient_id: {
@@ -40,3 +41,22 @@ export const fields = {
         required: false,
     },
 } satisfies Record<string, Field>
+
+const FormAnswerSchema = z.object({
+    custom_module_id: z.string(),
+    user_id: z.string(),
+    answer: z.string(),
+});
+
+const FormAnswersSchema = z.array(FormAnswerSchema);
+
+export const FieldsValidationSchema = z.object({
+  healthie_patient_id: z.string(),
+  form_id: z.string(),
+  note_content: z
+    .string()
+    .transform((t) => JSON.parse(t))
+    .transform((v) => FormAnswersSchema.parse(v)),
+  marked_locked: z.boolean().optional(),
+  appointment_id: z.string().optional(),
+});

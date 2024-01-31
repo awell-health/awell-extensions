@@ -23,7 +23,6 @@ import { createMetricEntry } from './createMetricEntry'
 import { checkPatientTag } from './checkPatientTag'
 import { checkScheduledAppointments } from './checkScheduledAppointments'
 
-import { createChartingNoteAdvanced } from './createChartingNoteAdvanced'
 export const actions = {
   createAppointment,
   createTask,
@@ -56,7 +55,6 @@ export const actions = {
   getMetricEntry,
   updatePatientQuickNote,
   createMetricEntry,
-  createChartingNoteAdvanced,
   checkPatientTag,
   checkScheduledAppointments,
 }
