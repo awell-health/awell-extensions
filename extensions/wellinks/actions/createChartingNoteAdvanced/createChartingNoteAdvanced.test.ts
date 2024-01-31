@@ -1,11 +1,11 @@
 import { generateTestPayload } from '../../../../src/tests'
-import { getSdk } from '../../../healthie/gql/sdk'
+import { getSdk } from '../../gql/wellinksSdk'
 import { mockGetSdk, mockGetSdkReturn } from '../../../healthie/gql/__mocks__/sdk'
 import { createChartingNoteAdvanced } from '.'
 import { mockSettings } from '../../__mocks__/config/settings'
 
-jest.mock('../../gql/sdk')
-jest.mock('../../graphqlClient')
+jest.mock('../../gql/wellinksSdk')
+jest.mock('../../api/clients/wellinksGraphqlClient')
 const content = [
   {
     "id": "3486803",
