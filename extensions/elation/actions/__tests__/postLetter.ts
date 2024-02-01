@@ -1,4 +1,7 @@
-import { postLetterResponseExample } from '../../__mocks__/constants'
+import {
+  findContactResponseExample,
+  postLetterResponseExample,
+} from '../../__mocks__/constants'
 import { makeAPIClientMockFunc } from '../../__mocks__/client'
 import { makeAPIClient } from '../../client'
 import { postLetter } from '../postLetter'
@@ -35,7 +38,7 @@ describe('Post new letter action', () => {
           practiceId: postLetterResponseExample.practice,
           subject: postLetterResponseExample.subject,
           body: postLetterResponseExample.body,
-          contactId: postLetterResponseExample.send_to_contact.id,
+          contactNpi: findContactResponseExample.results[0].npi,
         },
         settings,
       } as any,
@@ -61,7 +64,7 @@ describe('Post new letter action', () => {
           patientId: postLetterResponseExample.patient,
           practiceId: postLetterResponseExample.practice,
           body: postLetterResponseExample.body,
-          contactId: postLetterResponseExample.send_to_contact.id,
+          contactNpi: findContactResponseExample.results[0].npi,
         },
         settings,
       } as any,
