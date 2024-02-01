@@ -3,6 +3,7 @@ import { type NonVisitNoteResponse } from '../types/nonVisitNote'
 import { type PhysicianResponse } from '../types/physician'
 import {
   appointmentExample,
+  findContactResponseExample,
   labOrderResponseExample,
   nonVisitNoteResponseExample,
   patientExample,
@@ -67,6 +68,9 @@ export const mockClientReturn = {
   }),
   createLabOrder: jest.fn(() => {
     return labOrderResponseExample
+  }),
+  searchContactsByNpi: jest.fn(() => {
+    return findContactResponseExample
   }),
 }
 const ElationAPIClientMock = jest.fn((params) => {
