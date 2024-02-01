@@ -1,4 +1,4 @@
-import { DateOnlySchema, NumericIdSchema } from '@awell-health/extensions-core'
+import { DateTimeSchema, NumericIdSchema } from '@awell-health/extensions-core'
 import * as z from 'zod'
 
 const testSchema = z.object({
@@ -34,7 +34,7 @@ export const labOrderSchema = z
   .object({
     practice: NumericIdSchema,
     patient: NumericIdSchema,
-    document_date: DateOnlySchema,
+    document_date: DateTimeSchema,
     ordering_physician: NumericIdSchema,
     vendor: NumericIdSchema.optional(),
     content: jsonParseableContentSchema.refine(
