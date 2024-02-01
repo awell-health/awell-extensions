@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { ZodError } from 'zod'
+import { z, ZodError } from 'zod'
 import {
   FieldType,
   type Action,
@@ -49,12 +49,11 @@ const fields = {
     type: FieldType.TEXT,
     required: true,
   },
-  // the following is called `send_to_contact.id` in elation api docs
-  contactId: {
-    id: 'contactId',
-    label: 'Contact ID',
-    description: 'ID of the contact whom you want to send this letter',
-    type: FieldType.NUMERIC,
+  contactNpi: {
+    id: 'contactNpi',
+    label: 'Contact NPI code',
+    description: 'NPI of the contact whom you want to send this letter',
+    type: FieldType.STRING,
     required: true,
   },
   letterType: {
@@ -94,9 +93,26 @@ export const postLetter: Action<
         referralOrderId,
         subject,
         body,
-        contactId,
+        contactNpi,
         letterType,
       } = payload.fields
+
+      const contact_npi = z.string().parse(contactNpi)
+
+      const api = makeAPIClient(payload.settings)
+
+      const findContactsResponse = await api.searchContactsByNpi({
+        npi: contact_npi,
+      })
+
+      if (
+        findContactsResponse.count === 0 ||
+        findContactsResponse.results.length === 0
+      ) {
+        throw new Error('No contact found with this NPI')
+      }
+
+      const contact = findContactsResponse.results[0]
 
       const letter = letterSchema.parse({
         patient: patientId,
@@ -106,11 +122,10 @@ export const postLetter: Action<
         body,
         letter_type: letterType,
         send_to_contact: {
-          id: contactId,
+          id: contact.id,
         },
       })
 
-      const api = makeAPIClient(payload.settings)
       const { id } = await api.postNewLetter(letter)
       await onComplete({
         data_points: {

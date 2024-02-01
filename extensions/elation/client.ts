@@ -32,6 +32,7 @@ import type {
   CreateLabOrderInput,
   CreateLabOrderResponse,
 } from './types/labOrder'
+import { type FindContactsResponse } from './types/contact'
 
 export class ElationDataWrapper extends DataWrapper {
   public async getAppointment(id: number): Promise<AppointmentResponse> {
@@ -187,6 +188,15 @@ export class ElationDataWrapper extends DataWrapper {
     })
   }
 
+  public async findContacts(obj: {
+    npi: string
+  }): Promise<FindContactsResponse> {
+    return await this.Request({
+      method: 'GET',
+      url: `/contacts?npi=${obj.npi}`,
+    })
+  }
+
   public async createLabOrder(
     obj: CreateLabOrderInput
   ): Promise<CreateLabOrderResponse> {
@@ -315,6 +325,12 @@ export class ElationAPIClient extends APIClient<ElationDataWrapper> {
     obj: PostLetterInput
   ): Promise<PostLetterResponse> {
     return await this.FetchData(async (dw) => await dw.postLetter(obj))
+  }
+
+  public async searchContactsByNpi(obj: {
+    npi: string
+  }): Promise<FindContactsResponse> {
+    return await this.FetchData(async (dw) => await dw.findContacts(obj))
   }
 
   public async createLabOrder(

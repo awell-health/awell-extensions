@@ -1,4 +1,5 @@
 import { type AppointmentInput } from '../types/appointment'
+import { type FindContactsResponse } from '../types/contact'
 import { type CreateLabOrderResponse } from '../types/labOrder'
 import { type PostLetterResponse } from '../types/letter'
 import { type NonVisitNoteResponse } from '../types/nonVisitNote'
@@ -84,6 +85,21 @@ export const nonVisitNoteResponseExample: NonVisitNoteResponse = {
   chart_date: '2023-01-01T00:00:00Z',
   document_date: '2023-01-01T00:00:00Z',
   tags: [],
+}
+
+export const findContactResponseExample: FindContactsResponse = {
+  count: 1,
+  results: [
+    {
+      first_name: 'Test',
+      id: 141127177601026,
+      last_name: 'Doctor',
+      middle_name: 'J',
+      npi: '2047990827',
+      practice: 141127173275652,
+      user: 4067,
+    },
+  ],
 }
 
 export const postLetterResponseExample: PostLetterResponse = {
