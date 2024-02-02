@@ -114,7 +114,7 @@ export class WellinksFlourishClient {
       pa13: number
     ): Promise<FlourishSubmitPamSurveyResponse> => {
       try {
-        const response = await fetch(`${this._apiUrl}/submitpamsurvey`, {
+        const response = await fetch(`${this._apiUrl}/SubmitUserSurvey`, {
           method: 'POST',
           body: buildSubmitPamSurveyRequest(
             this._clientextid,
@@ -207,6 +207,9 @@ function buildCreateUserRequest(
   thirdPartyIdentifier: string
 ): string {
   const date = new Date(dateOfBirth)
+  const day = date.getDate()
+  const month = date.getMonth() + 1 // Flourish indexes months from 1
+  const year = date.getFullYear()
   return `<?xml version="1.0" encoding="utf-8" ?>
 <request>
     <user>
@@ -216,7 +219,7 @@ function buildCreateUserRequest(
         <thirdpartyidentifier>${thirdPartyIdentifier}</thirdpartyidentifier> <!--- required -->
         <firstname>${firstName}</firstname>
         <lastname>${lastName}</lastname>
-        <dob day="${date.getDate()}" month="${date.getMonth()}" year="${date.getFullYear()}"/>
+        <dob day="${day}" month="${month}" year="${year}"/>
     </user>
 </request>
     `
@@ -255,8 +258,8 @@ function buildSubmitPamSurveyRequest(
     <Survey>
     <Language>${language}</Language>
     <SurveyName>PAM13_S</SurveyName>
-    <Administration day=${adminDateValue.getDate()} month=${adminDateValue.getMonth()} year=${adminDateValue.getFullYear()} />
-        <SurveyResponse Age=${age} Gender=${gender} SurveyDeliveryMode="Online">
+    <Administration day="${adminDateValue.getDate()}" month="${adminDateValue.getMonth()}" year="${adminDateValue.getFullYear()}" />
+        <SurveyResponse Age="${age}" Gender="${gender}" SurveyDeliveryMode="Online">
         <Answer ID="PA1">${pa1}</Answer>
         <Answer ID="PA2">${pa2}</Answer>
         <Answer ID="PA3">${pa3}</Answer>
