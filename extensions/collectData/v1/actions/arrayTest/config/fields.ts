@@ -1,10 +1,5 @@
 import { z, type ZodTypeAny } from 'zod'
-import {
-  type Field,
-  FieldType,
-  makeStringOptional,
-} from '@awell-health/extensions-core'
-import { JsonStringValidationSchema } from '../../../../../sendbird/v1/validation'
+import { type Field, FieldType } from '@awell-health/extensions-core'
 
 export const fields = {
   stringArray: {
