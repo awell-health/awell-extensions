@@ -1,6 +1,6 @@
 import { type Extension } from '@awell-health/extensions-core'
 import { AuthorType, Category } from '@awell-health/extensions-core'
-import { remoteSingleSelect } from './v1/actions'
+import { arrayTest, remoteSingleSelect } from './v1/actions'
 import { settings } from './settings'
 
 export const CollectData: Extension = {
@@ -15,6 +15,7 @@ export const CollectData: Extension = {
     authorType: AuthorType.AWELL,
   },
   actions: {
+    arrayTest,
     remoteSingleSelect,
   },
   settings,
