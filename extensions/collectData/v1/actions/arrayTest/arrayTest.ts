@@ -23,15 +23,15 @@ export const arrayTest: Action<typeof fields, typeof settings> = {
         anotherNumericArray,
       } = validateActionFields(payload.fields)
 
-      const strings = [...stringArray, ...anotherStringArray].join()
+      const strings = [...stringArray, ...anotherStringArray]
       console.log('🚀 ~ onActivityCreated: ~ strings:', strings)
-      const numbers = [...numericArray, ...anotherNumericArray].join()
+      const numbers = [...numericArray, ...anotherNumericArray]
       console.log('🚀 ~ onActivityCreated: ~ numbers:', numbers)
 
       await onComplete({
         data_points: {
-          allStrings: strings,
-          allNumbers: numbers,
+          allStrings: JSON.stringify(strings),
+          allNumbers: JSON.stringify(numbers),
         },
       })
     } catch (err) {
