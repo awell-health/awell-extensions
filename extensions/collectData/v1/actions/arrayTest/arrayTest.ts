@@ -23,13 +23,19 @@ export const arrayTest: Action<typeof fields, typeof settings> = {
         anotherNumericArray,
       } = validateActionFields(payload.fields)
 
+      const strings = [...stringArray, ...anotherStringArray].join()
+      console.log('🚀 ~ onActivityCreated: ~ strings:', strings)
+      const numbers = [...numericArray, ...anotherNumericArray].join()
+      console.log('🚀 ~ onActivityCreated: ~ numbers:', numbers)
+
       await onComplete({
         data_points: {
-          allStrings: [...stringArray, ...anotherStringArray].join(', '),
-          allNumbers: [...numericArray, ...anotherNumericArray].join(', '),
+          allStrings: strings,
+          allNumbers: numbers,
         },
       })
     } catch (err) {
+      console.log('error', err)
       if (err instanceof ZodError) {
         const error = fromZodError(err)
         await onError({

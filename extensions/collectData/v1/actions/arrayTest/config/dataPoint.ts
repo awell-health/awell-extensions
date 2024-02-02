@@ -3,10 +3,10 @@ import { type DataPointDefinition } from '@awell-health/extensions-core'
 export const dataPoints = {
   allStrings: {
     key: 'allStrings',
-    valueType: 'string_array',
+    valueType: 'strings_array',
   },
   allNumbers: {
     key: 'allNumbers',
-    valueType: 'number_array',
+    valueType: 'numbers_array',
   },
 } satisfies Record<string, DataPointDefinition>
