@@ -5,7 +5,6 @@ import { type settings } from '../../../settings'
 import { validateActionFields } from './config/fields'
 import { fromZodError } from 'zod-validation-error'
 import { ZodError } from 'zod'
-import { sum } from 'lodash'
 
 export const arrayTest: Action<typeof fields, typeof settings> = {
   key: 'arrayTest',
@@ -27,7 +26,7 @@ export const arrayTest: Action<typeof fields, typeof settings> = {
       await onComplete({
         data_points: {
           allStrings: [...stringArray, ...anotherStringArray].join(', '),
-          numberSum: sum([...numericArray, ...anotherNumericArray]).toString(),
+          allNumbers: [...numericArray, ...anotherNumericArray].join(', '),
         },
       })
     } catch (err) {
