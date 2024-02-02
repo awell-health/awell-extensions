@@ -13,7 +13,7 @@ export const arrayTest: Action<typeof fields, typeof settings> = {
   category: Category.DEMO,
   fields,
   dataPoints,
-  previewable: false, // We don't have Awell Hosted Pages in Preview so cannot be previewed.
+  previewable: true,
   onActivityCreated: async (payload, onComplete, onError) => {
     try {
       const {
