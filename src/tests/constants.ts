@@ -19,8 +19,8 @@ export const testPayload: NewActivityPayload<any, any> = {
 
 type DeepPartial<T> = T extends object
   ? {
-      [P in keyof T]?: DeepPartial<T[P]>
-    }
+    [P in keyof T]?: DeepPartial<T[P]>
+  }
   : T
 
 type FieldsType = Record<string, string | number | boolean | undefined>
