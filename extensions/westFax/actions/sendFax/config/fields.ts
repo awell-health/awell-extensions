@@ -37,8 +37,8 @@ export const fields = {
 } satisfies Record<string, Field>
 
 export const FieldsValidationSchema = z.object({
-  product_id: z.string().min(1),
-  feedback_email: makeStringOptional(z.string()),
+  productId: z.string().min(1),
+  feedbackEmail: makeStringOptional(z.string()),
   number:  z.string().min(1),
   content:  z.string().min(1),
  
