@@ -8,8 +8,8 @@ import { dataPoints } from './config/dataPoints'
 export const sendFax: Action<typeof fields, typeof settings> = {
   key: 'sendFax',
   category: Category.COMMUNICATION,
-  title: 'Send Fax',
-  description: 'Send fax in West Fax.',
+  title: 'SendFax',
+  description: 'Send fax in WestFax.',
   fields,
   dataPoints,
   previewable: false,
@@ -90,7 +90,7 @@ export const sendFax: Action<typeof fields, typeof settings> = {
               {
                 date: new Date().toISOString(),
                 text: {
-                  en: 'There is a miss configuration in the West Fax settings',
+                  en: 'There is a miss configuration in the WestFax settings',
                 },
                 error: {
                   category: 'MISSING_FIELDS',
@@ -105,7 +105,7 @@ export const sendFax: Action<typeof fields, typeof settings> = {
               {
                 date: new Date().toISOString(),
                 text: {
-                  en: 'There is a miss configuration in the West Fax settings',
+                  en: 'There is a miss configuration in the WestFax settings',
                 },
                 error: {
                   category: 'MISSING_SETTINGS',
@@ -122,7 +122,7 @@ export const sendFax: Action<typeof fields, typeof settings> = {
         events: [
           {
             date: new Date().toISOString(),
-            text: { en: 'West Fax API reported an error' },
+            text: { en: 'WestFax API reported an error' },
             error: {
               category: 'SERVER_ERROR',
               message: error.message,

@@ -7,14 +7,14 @@ export const settings = {
     label: 'Username',
     obfuscated: false,
     required: true,
-    description: 'Your West Fax username',
+    description: 'Your WestFax username',
   },
   password: {
     key: 'password',
     label: 'Password',
     obfuscated: true,
     required: true,
-    description: 'Your West Fax password',
+    description: 'Your WestFax password',
   },
 } satisfies Record<string, Setting>
 
