@@ -7,14 +7,14 @@ import { type ZodTypeAny, z } from 'zod'
 
 export const fields = {
   productId: {
-    id: 'product_id',
+    id: 'productId',
     label: 'Product Id',
     description: 'Product id. Guid Ex. 12345678-1234-1234-1234-123456789abc',
     type: FieldType.STRING,
     required: true,
   },
   feedbackEmail: {
-    id: 'feedback_email',
+    id: 'feedbackEmail',
     label: 'Feedback Email',
     description: 'The email that the fax is sent to',
     type: FieldType.STRING,
