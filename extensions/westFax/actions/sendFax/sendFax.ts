@@ -1,9 +1,11 @@
+import { z } from 'zod'
 import { isNil } from 'lodash'
 import { type Action } from '@awell-health/extensions-core'
-import { Category } from '@awell-health/extensions-core'
-import { type settings } from '../../settings'
+import { Category, validate } from '@awell-health/extensions-core'
+import { SettingsValidationSchema, type settings } from '../../settings'
 import { fields } from './config'
 import { dataPoints } from './config/dataPoints'
+import { FieldsValidationSchema } from './config/fields'
 
 export const sendFax: Action<typeof fields, typeof settings> = {
   key: 'sendFax',
@@ -14,59 +16,34 @@ export const sendFax: Action<typeof fields, typeof settings> = {
   dataPoints,
   previewable: false,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
-    const { fields, settings } = payload
-    const { product_id, feedback_email, number, content } = fields
+    const { fields, settings } = 
+    validate({
+      schema: z.object({
+        settings: SettingsValidationSchema,
+        fields: FieldsValidationSchema,
+      }),
+      payload,
+    }) 
+    const { productId, feedbackEmail, number, content } = fields
+    const { username, password } = settings
+
     try {
-      if (isNil(product_id) || isNil(number) || isNil(content)) {
-        await onError({
-          events: [
-            {
-              date: new Date().toISOString(),
-              text: { en: 'Fields are missing' },
-              error: {
-                category: 'MISSING_FIELDS',
-                message:
-                  '`product_id`, `fax_ids` or `feedback_email` is missing',
-              },
-            },
-          ],
-        })
-        return
-      }
-
-      const { username, password } = settings
-      if (isNil(username) || isNil(password)) {
-        await onError({
-          events: [
-            {
-              date: new Date().toISOString(),
-              text: { en: 'API requires an Username and password' },
-              error: {
-                category: 'MISSING_SETTINGS',
-                message: '`username` or `password` is missing',
-              },
-            },
-          ],
-        })
-        return
-      }
-
       const blob = new Blob([content], { type: 'text/html' })
 
-      const formdata = new FormData()
-      formdata.append('Username', username)
-      formdata.append('Password', password)
-      formdata.append('Cookies', 'false')
-      formdata.append('ProductId', product_id)
-      if (!isNil(feedback_email)) {
-        formdata.append('FeedbackEmail', feedback_email)
+      const formData = new FormData()
+      formData.append('Username', username)
+      formData.append('Password', password)
+      formData.append('Cookies', 'false')
+      formData.append('ProductId', productId)
+      if (!isNil(feedbackEmail)) {
+        formData.append('FeedbackEmail', feedbackEmail)
       }
-      formdata.append('Numbers1', number)
-      formdata.append('Files0', blob, 'content.html')
+      formData.append('Numbers1', number)
+      formData.append('Files0', blob, 'content.html')
 
       const requestOptions = {
         method: 'POST',
-        body: formdata,
+        body: formData,
       }
 
       const response = await fetch(

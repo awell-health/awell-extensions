@@ -1,17 +1,19 @@
 import {
   type Field,
   FieldType,
+  makeStringOptional,
 } from '@awell-health/extensions-core'
+import { type ZodTypeAny, z } from 'zod'
 
 export const fields = {
-  product_id: {
+  productId: {
     id: 'product_id',
     label: 'Product Id',
     description: 'Product id. Guid Ex. 12345678-1234-1234-1234-123456789abc',
     type: FieldType.STRING,
     required: true,
   },
-  feedback_email: {
+  feedbackEmail: {
     id: 'feedback_email',
     label: 'Feedback Email',
     description: 'The email that the fax is sent to',
@@ -33,3 +35,12 @@ export const fields = {
     required: false,
   },
 } satisfies Record<string, Field>
+
+export const FieldsValidationSchema = z.object({
+  product_id: z.string().min(1),
+  feedback_email: makeStringOptional(z.string()),
+  number:  z.string().min(1),
+  content:  z.string().min(1),
+ 
+} satisfies Record<keyof typeof fields, ZodTypeAny>)
+

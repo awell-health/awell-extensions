@@ -18,11 +18,11 @@ export const settings = {
   },
 } satisfies Record<string, Setting>
 
-export const settingsValidationSchema = z.object({
+export const SettingsValidationSchema = z.object({
   username: z.string().min(1, {
-    message: 'Missing "API URL in the extension settings."',
+    message: 'Missing "Ursername in the extension settings."',
   }),
   password: z.string().min(1, {
-    message: 'Missing "API key in the extension settings."',
+    message: 'Missing "Password in the extension settings."',
   }),
 } satisfies Record<keyof typeof settings, ZodTypeAny>)
