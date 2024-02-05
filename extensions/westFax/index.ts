@@ -4,7 +4,7 @@ import { settings } from './settings'
 import { AuthorType, Category } from '@awell-health/extensions-core'
 
 export const WestFax: Extension = {
-  key: 'westfax',
+  key: 'westFax',
   category: Category.COMMUNICATION,
   title: 'WestFax',
   description: '** In beta ** Easily orchestrate actions in WestFax.',
