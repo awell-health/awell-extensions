@@ -24,6 +24,7 @@ import { Transform } from './transform'
 import { Iterable } from './iterable'
 import { Zendesk } from './zendesk'
 import { Infobip } from './infobip'
+import { WestFax } from './westFax'
 import { nexuzhealth } from './nexuzhealth'
 import { CollectData } from './collectData'
 
@@ -65,4 +66,5 @@ export const extensions = [
   Twilio,
   Wellinks,
   Zendesk,
+  WestFax
 ]
