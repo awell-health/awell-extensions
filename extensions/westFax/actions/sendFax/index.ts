@@ -1,0 +1,1 @@
+export { sendFax } from './sendFax'
