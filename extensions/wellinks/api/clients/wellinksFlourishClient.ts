@@ -248,6 +248,9 @@ function buildSubmitPamSurveyRequest(
   pa13: number
 ): string {
   const adminDateValue = new Date(adminDate)
+  const date = adminDateValue.getDate()
+  const month = adminDateValue.getMonth() + 1 // Flourish indexes months from 1
+  const year = adminDateValue.getFullYear()
   return `<?xml version="1.0" encoding="utf-8" ?>
 <Request>
     <user>
@@ -258,7 +261,7 @@ function buildSubmitPamSurveyRequest(
     <Survey>
     <Language>${language}</Language>
     <SurveyName>PAM13_S</SurveyName>
-    <Administration day="${adminDateValue.getDate()}" month="${adminDateValue.getMonth()}" year="${adminDateValue.getFullYear()}" />
+    <Administration day="${date}" month="${month}" year="${year}" />
         <SurveyResponse Age="${age}" Gender="${gender}" SurveyDeliveryMode="Online">
         <Answer ID="PA1">${pa1}</Answer>
         <Answer ID="PA2">${pa2}</Answer>
