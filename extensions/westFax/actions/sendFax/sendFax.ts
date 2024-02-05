@@ -5,18 +5,14 @@ import { type settings } from '../../settings'
 import { fields } from './config'
 import { dataPoints } from './config/dataPoints'
 
-export const sendFax: Action<
-  typeof fields,
-  typeof settings,
-  keyof typeof dataPoints
-> = {
+export const sendFax: Action<typeof fields, typeof settings> = {
   key: 'sendFax',
   category: Category.COMMUNICATION,
   title: 'Send Fax',
   description: 'Send fax in West Fax.',
   fields,
   dataPoints,
-  previewable: true,
+  previewable: false,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
     const { fields, settings } = payload
     const { product_id, feedback_email, number, content } = fields
@@ -88,10 +84,7 @@ export const sendFax: Action<
           },
         })
       } else {
-        if (
-          !isNil(jsonResponse.Success) &&
-          jsonResponse.Success === false
-        ) {
+        if (!isNil(jsonResponse.Success) && jsonResponse.Success === false) {
           await onError({
             events: [
               {
