@@ -9,7 +9,7 @@ export const sendFax: Action<typeof fields, typeof settings> = {
   key: 'sendFax',
   category: Category.COMMUNICATION,
   title: 'SendFax',
-  description: 'Send fax in WestFax.',
+  description: 'Send fax with WestFax.',
   fields,
   dataPoints,
   previewable: false,
