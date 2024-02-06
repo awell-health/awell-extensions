@@ -45,6 +45,7 @@ export const sendFax: Action<typeof fields, typeof settings> = {
         method: 'POST',
         body: formData,
         headers: {
+          // lib cant decompress this requests so we need to set enconding as none
           "accept-encoding": "",
         }
       }
@@ -89,7 +90,7 @@ export const sendFax: Action<typeof fields, typeof settings> = {
                 },
                 error: {
                   category: 'MISSING_SETTINGS',
-                  message: 'Missing username, password or product id',
+                  message: 'Missing username or password',
                 },
               },
             ],
