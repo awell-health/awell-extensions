@@ -44,6 +44,10 @@ export const sendFax: Action<typeof fields, typeof settings> = {
       const requestOptions = {
         method: 'POST',
         body: formData,
+        headers: {
+          // zlib cant decompress this requests so we need to set enconding as none
+          "accept-encoding": "",
+        }
       }
 
       const response = await fetch(
@@ -86,7 +90,7 @@ export const sendFax: Action<typeof fields, typeof settings> = {
                 },
                 error: {
                   category: 'MISSING_SETTINGS',
-                  message: 'Missing api url or api key',
+                  message: 'Missing username or password',
                 },
               },
             ],
