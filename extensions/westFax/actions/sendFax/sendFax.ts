@@ -45,7 +45,7 @@ export const sendFax: Action<typeof fields, typeof settings> = {
         method: 'POST',
         body: formData,
         headers: {
-          // lib cant decompress this requests so we need to set enconding as none
+          // zlib cant decompress this requests so we need to set enconding as none
           "accept-encoding": "",
         }
       }
