@@ -20,7 +20,7 @@ interface FormAnswer {
 export const createChartingNoteAdvanced: Action<typeof fields, typeof settings> = {
   key: 'createChartingNoteAdvanced',
   category: Category.EHR_INTEGRATIONS,
-  title: 'Fill Form entrance',
+  title: 'Create charting note - advanced',
   description: 'Fill a multi-part form in Healthie. Note Content must be in an array of FormAnswer objects.',
   fields,
   previewable: true,
@@ -46,7 +46,7 @@ export const createChartingNoteAdvanced: Action<typeof fields, typeof settings> 
       if (isNil(moduleForm)) {
         throw new Error(`Form with id ${form_id} doesn't exist`);
       }
-      if (moduleForm.use_for_charting === false) {
+      if (!moduleForm.use_for_charting) {
         throw new Error(`Form with id ${form_id} cannot be used for charting`);
       }
 
