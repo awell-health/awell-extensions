@@ -80,7 +80,7 @@ export class WellinksFlourishClient {
             } else {
               resolve(
                 result.UserExistsResponseData.StatusMessage[0] ===
-                  'User with external identifier exists.'
+                  'User with third party identifier exists.'
               )
             }
           })
