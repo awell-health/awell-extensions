@@ -8,14 +8,9 @@ jest.mock('../../gql/wellinksSdk')
 jest.mock('../../api/clients/wellinksGraphqlClient')
 const content = [
   {
-    "id": "3486803",
     "custom_module_id": "question-1",
     "answer": "Open Answer(Short) sample answer",
-    "user_id": "51065",
-    "label": "Test Open Answer(Short)",
-    "filter_type": null,
-    "value_to_filter": null,
-    "conditional_custom_module_id": null
+    "user_id": "patient-1",
   },
 ];
 describe('createChartingNote action', () => {
