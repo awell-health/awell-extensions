@@ -23,7 +23,7 @@ describe('WellinksFlourishClient', () => {
         const properResponse = `
             <UserExistsResponseData xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
             <StatusCode>Success_ExternalIdentifier</StatusCode>
-            <StatusMessage>User with external identifier exists.</StatusMessage>
+            <StatusMessage>User with third party identifier exists.</StatusMessage>
             <ExternalUserID>230905-OV92CZDC</ExternalUserID>
             <NationalPatientIdentifier i:nil="true"/>
             <ThirdPartyIdentifier>18071982001</ThirdPartyIdentifier>
@@ -46,7 +46,7 @@ describe('WellinksFlourishClient', () => {
         const properResponse = `
             <UserExistsResponseData xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
             <StatusCode>Success_ExternalIdentifier</StatusCode>
-            <StatusMessage>User with external identifier doesn't exist or invalid.</StatusMessage>
+            <StatusMessage>User with third party identifier doesn't exist or invalid.</StatusMessage>
             <ExternalUserID>230905-OV92CZDC</ExternalUserID>
             <NationalPatientIdentifier i:nil="true"/>
             <ThirdPartyIdentifier>18071982001</ThirdPartyIdentifier>
