@@ -16,6 +16,14 @@ export const settings = {
     required: true,
     description: 'Your WestFax password',
   },
+  faceSheetUrl: {
+    key: 'faceSheetUrl',
+    label: 'URL to facesheet (PDF)',
+    obfuscated: true,
+    required: false,
+    description:
+      'An optional URL for a face sheet document (in PDF format) which will be attached at the beginning of your actual message or document for faxes. This face sheet will only be included if it has been enabled at the action level.',
+  },
 } satisfies Record<string, Setting>
 
 export const SettingsValidationSchema = z.object({
@@ -25,4 +33,5 @@ export const SettingsValidationSchema = z.object({
   password: z.string().min(1, {
     message: 'Missing "Password in the extension settings."',
   }),
+  faceSheetUrl: z.string().url().optional().or(z.literal('')),
 } satisfies Record<keyof typeof settings, ZodTypeAny>)
