@@ -15,6 +15,7 @@ describe('send fax action', () => {
           <h1 class="slate-h1">Create some nice Fax</h1><p class="slate-p">This is a simple fax to test the integration.</p><p class="slate-p"></p>
           `,
           feedbackEmail: undefined,
+          addFaceSheet: false,
         },
         settings: {
           username: 'asd',
@@ -28,7 +29,4 @@ describe('send fax action', () => {
     expect(onComplete).not.toHaveBeenCalled()
     expect(onError).toHaveBeenCalled()
   })
-
-  
-
 })

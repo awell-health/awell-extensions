@@ -6,6 +6,7 @@ import { SettingsValidationSchema, type settings } from '../../settings'
 import { fields } from './config'
 import { dataPoints } from './config/dataPoints'
 import { FieldsValidationSchema } from './config/fields'
+import { getFaceSheet } from './facesheets/getFaceSheet'
 
 export const sendFax: Action<typeof fields, typeof settings> = {
   key: 'sendFax',
@@ -16,21 +17,22 @@ export const sendFax: Action<typeof fields, typeof settings> = {
   dataPoints,
   previewable: false,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
-    const { fields, settings } = 
-    validate({
+    const { fields, settings } = validate({
       schema: z.object({
         settings: SettingsValidationSchema,
         fields: FieldsValidationSchema,
       }),
       payload,
-    }) 
-    const { productId, feedbackEmail, number, content } = fields
+    })
+    const { productId, feedbackEmail, number, content, addFaceSheet } = fields
     const { username, password } = settings
 
     try {
-      const blob = new Blob([content], { type: 'text/html' })
+      const contentBlob = new Blob([content], { type: 'text/html' })
+      const contentFileIndex = addFaceSheet === true ? 1 : 0
 
       const formData = new FormData()
+
       formData.append('Username', username)
       formData.append('Password', password)
       formData.append('Cookies', 'false')
@@ -39,15 +41,23 @@ export const sendFax: Action<typeof fields, typeof settings> = {
         formData.append('FeedbackEmail', feedbackEmail)
       }
       formData.append('Numbers1', number)
-      formData.append('Files0', blob, 'content.html')
+      if (addFaceSheet === true) {
+        const faceSheetPdfBuffer = await getFaceSheet()
+        const faceSheetPdfBlob = new Blob([faceSheetPdfBuffer], {
+          type: 'application/pdf',
+        })
+
+        formData.append('Files0', faceSheetPdfBlob, `facesheet.pdf`)
+      }
+      formData.append(`Files${contentFileIndex}`, contentBlob, 'content.html')
 
       const requestOptions = {
         method: 'POST',
         body: formData,
         headers: {
           // zlib cant decompress this requests so we need to set enconding as none
-          "accept-encoding": "",
-        }
+          'accept-encoding': '',
+        },
       }
 
       const response = await fetch(
