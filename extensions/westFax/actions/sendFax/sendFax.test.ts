@@ -20,6 +20,7 @@ describe('send fax action', () => {
         settings: {
           username: 'asd',
           password: 'somewrongpass',
+          faceSheetUrl: '',
         },
       }),
       onComplete,

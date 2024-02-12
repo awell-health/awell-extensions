@@ -11,7 +11,7 @@ import { getFaceSheet } from './facesheets/getFaceSheet'
 export const sendFax: Action<typeof fields, typeof settings> = {
   key: 'sendFax',
   category: Category.COMMUNICATION,
-  title: 'SendFax',
+  title: 'Send fax',
   description: 'Send fax with WestFax.',
   fields,
   dataPoints,
@@ -25,7 +25,7 @@ export const sendFax: Action<typeof fields, typeof settings> = {
       payload,
     })
     const { productId, feedbackEmail, number, content, addFaceSheet } = fields
-    const { username, password } = settings
+    const { username, password, faceSheetUrl: defaultFaceSheet } = settings
 
     try {
       const contentBlob = new Blob([content], { type: 'text/html' })
@@ -42,7 +42,7 @@ export const sendFax: Action<typeof fields, typeof settings> = {
       }
       formData.append('Numbers1', number)
       if (addFaceSheet === true) {
-        const faceSheetPdfBuffer = await getFaceSheet()
+        const faceSheetPdfBuffer = await getFaceSheet(defaultFaceSheet)
         const faceSheetPdfBlob = new Blob([faceSheetPdfBuffer], {
           type: 'application/pdf',
         })
