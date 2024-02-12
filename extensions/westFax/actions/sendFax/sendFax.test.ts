@@ -9,17 +9,18 @@ describe('send fax action', () => {
     await sendFax.onActivityCreated(
       generateTestPayload({
         fields: {
-          productId: 'wrongproductid',
-          number: '234234234234',
+          productId: '1c0bb9d0-00f9-471d-9b0a-c5da533f0129',
+          number: '9702895979',
           content: `
           <h1 class="slate-h1">Create some nice Fax</h1><p class="slate-p">This is a simple fax to test the integration.</p><p class="slate-p"></p>
           `,
-          feedbackEmail: undefined,
-          addFaceSheet: false,
+          feedbackEmail: 'nick@awellhealth.com',
+          addFaceSheet: true,
         },
         settings: {
-          username: 'asd',
-          password: 'somewrongpass',
+          username: 'Awell',
+          password: 'wcd!AZF5vgu8jgh4mxh',
+          faceSheetUrl: undefined,
         },
       }),
       onComplete,
