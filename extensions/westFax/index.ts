@@ -7,9 +7,10 @@ export const WestFax: Extension = {
   key: 'westFax',
   category: Category.COMMUNICATION,
   title: 'WestFax',
-  description: 'Send secure and HIPAA compliant faxes with WestFax.',
+  description:
+    'Send faxes securely and in compliance with HIPAA regulations using WestFax.',
   icon_url:
-    'https://images.g2crowd.com/uploads/product/image/large_detail/large_detail_7dc2e23dc9bbc80068bbfde536ac5451/westfax.png',
+    'https://res.cloudinary.com/da7x4rzl4/image/upload/v1707739199/Awell%20Extensions/Screenshot_2024-02-12_at_12.59.08.png',
   author: {
     authorType: AuthorType.AWELL,
   },
