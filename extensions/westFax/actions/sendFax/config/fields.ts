@@ -9,29 +9,28 @@ export const fields = {
   productId: {
     id: 'productId',
     label: 'Product Id',
-    description: 'Product id. Guid Ex. 12345678-1234-1234-1234-123456789abc',
+    description: 'E.g. 12345678-1234-1234-1234-123456789abc',
     type: FieldType.STRING,
     required: true,
   },
   feedbackEmail: {
     id: 'feedbackEmail',
     label: 'Feedback Email',
-    description: 'The email that the fax is sent to',
+    description: 'Send a report to this address when the fax is sent',
     type: FieldType.STRING,
     required: false,
   },
   number: {
     id: 'number',
     label: 'Number',
-    description: 'Destination Fax Number',
+    description: 'Destination fax number',
     type: FieldType.STRING,
     required: true,
   },
   addFaceSheet: {
     id: 'addFaceSheet',
     label: 'Add face sheet',
-    description:
-      'Add a fax cover sheet that precedes the actual message or document',
+    description: 'Add cover sheet that precedes the actual message or document',
     type: FieldType.BOOLEAN,
     required: false,
   },
