@@ -27,6 +27,14 @@ export const fields = {
     type: FieldType.STRING,
     required: true,
   },
+  addFaceSheet: {
+    id: 'addFaceSheet',
+    label: 'Add face sheet',
+    description:
+      'Add a fax cover sheet that precedes the actual message or document',
+    type: FieldType.BOOLEAN,
+    required: false,
+  },
   content: {
     id: 'content',
     label: 'Fax content',
@@ -39,8 +47,7 @@ export const fields = {
 export const FieldsValidationSchema = z.object({
   productId: z.string().min(1),
   feedbackEmail: makeStringOptional(z.string()),
-  number:  z.string().min(1),
-  content:  z.string().min(1),
- 
+  number: z.string().min(1),
+  content: z.string().min(1),
+  addFaceSheet: z.boolean().optional(),
 } satisfies Record<keyof typeof fields, ZodTypeAny>)
-
