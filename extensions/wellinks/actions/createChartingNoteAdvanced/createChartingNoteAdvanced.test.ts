@@ -1,6 +1,6 @@
 import { generateTestPayload } from '../../../../src/tests'
 import { getSdk } from '../../gql/wellinksSdk'
-import { mockGetSdk, mockGetSdkReturn } from '../../../healthie/gql/__mocks__/sdk'
+import { mockGetSdk, mockGetSdkReturn } from '../../gql/__mocks__/wellinksSdk';
 import { createChartingNoteAdvanced } from '.'
 import { mockSettings } from '../../__mocks__/config/settings'
 
@@ -10,7 +10,7 @@ const content = [
   {
     "custom_module_id": "question-1",
     "answer": "Open Answer(Short) sample answer",
-    "user_id": "patient-1",
+    "user_id": "98778",
   },
 ];
 describe('createChartingNote action', () => {
@@ -29,7 +29,7 @@ describe('createChartingNote action', () => {
       generateTestPayload({
         fields: {
           form_id: 'form-template-1',
-          healthie_patient_id: 'patient-1',
+          healthie_patient_id: '98778',
           note_content: JSON.stringify(content),
           marked_locked: true,
           appointment_id: 'appointment-1'

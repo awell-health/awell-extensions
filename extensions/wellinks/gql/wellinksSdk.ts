@@ -344,6 +344,8 @@ export type Appointment = {
   generated_token?: Maybe<Scalars['String']>;
   /** When true, additional group charting fields are visibile in the Healthie UI */
   has_expanded_vbc_charting_fields?: Maybe<Scalars['Boolean']>;
+  /** Returns true if the apointment has inprogress job */
+  has_in_progress_job?: Maybe<Scalars['Boolean']>;
   /** The unique identifier of the appointment */
   id: Scalars['ID'];
   /** ID of user that created of appointment */
@@ -3468,6 +3470,8 @@ export type CustomMetricOverridesInput = {
 /** A question in a template */
 export type CustomModule = {
   __typename?: 'CustomModule';
+  /** True if there are conditionally displayed custom modules which rely on state of this module */
+  controls_conditional_modules?: Maybe<Scalars['Boolean']>;
   /** The name of the form this custom module has been originally copied from */
   copied_from_form_name?: Maybe<Scalars['String']>;
   /** The conditional logic for showing/hiding the custom module */
@@ -5493,20 +5497,11 @@ export type InsuranceAuthorizationType = {
   updated_at?: Maybe<Scalars['String']>;
   /** The ID of the user for whom the authorization was created */
   user_id?: Maybe<Scalars['ID']>;
-  /**
-   * The amount of units authorized by the insurance company
-   * @deprecated Use units_authorized instead
-   */
+  /** The amount of units authorized by the insurance company */
   visits_authorized?: Maybe<Scalars['String']>;
-  /**
-   * The amount of units left
-   * @deprecated Use units_left instead
-   */
+  /** The amount of units left */
   visits_left?: Maybe<Scalars['String']>;
-  /**
-   * The amount of units used by the client
-   * @deprecated Use units_used instead
-   */
+  /** The amount of units used by the client */
   visits_used?: Maybe<Scalars['String']>;
 };
 
@@ -9638,6 +9633,8 @@ export type OnboardingItem = {
   attached_object_edit_url?: Maybe<Scalars['String']>;
   /** Custom text above the billing info screen */
   billing_disclaimer?: Maybe<Scalars['String']>;
+  /** Return the ID of the associated completed form_answer_group */
+  completed_form_id?: Maybe<Scalars['String']>;
   /** The completed onboarding item for the given user id (from args) */
   completed_onboarding_item?: Maybe<CompletedOnboardingItem>;
   /** The relevant date to show */
@@ -10004,6 +10001,8 @@ export type OrganizationMembership = {
   can_remove_client?: Maybe<Scalars['Boolean']>;
   /** If true, the user should be able to rename or delete tags */
   can_rename_and_delete_tags?: Maybe<Scalars['Boolean']>;
+  /** If true, the user can request to prescribe controlled substances. Requires E-Rx */
+  can_request_to_prescribe_controlled_substances?: Maybe<Scalars['Boolean']>;
   /** If true, the user can view the billing tab */
   can_see_billing?: Maybe<Scalars['Boolean']>;
   /** If true, the user can see all calendars in the organization */
@@ -11434,6 +11433,8 @@ export type Query = {
   recentFoods?: Maybe<Array<Food>>;
   /** Fetch recurring forms collection */
   recurringForms?: Maybe<Array<RecurringForm>>;
+  /** Fetch a recurring payment by id */
+  recurringPayment?: Maybe<RecurringPayment>;
   /** Fetch active recurring_payments */
   recurringPayments?: Maybe<Array<RecurringPayment>>;
   /** Fetch Referral by ID */
@@ -11825,6 +11826,7 @@ export type QueryAppointmentsCountArgs = {
   is_upcoming?: InputMaybe<Scalars['Boolean']>;
   is_with_clients?: InputMaybe<Scalars['Boolean']>;
   keywords?: InputMaybe<Scalars['String']>;
+  only_healthie_appointments?: InputMaybe<Scalars['Boolean']>;
   provider_id?: InputMaybe<Scalars['ID']>;
   show_appointments?: InputMaybe<Scalars['Boolean']>;
   specificDay?: InputMaybe<Scalars['String']>;
@@ -13661,6 +13663,12 @@ export type QueryRecurringFormsArgs = {
 
 
 /** The query root of this schema. See available queries. */
+export type QueryRecurringPaymentArgs = {
+  id?: InputMaybe<Scalars['ID']>;
+};
+
+
+/** The query root of this schema. See available queries. */
 export type QueryRecurringPaymentsArgs = {
   active_status?: InputMaybe<Scalars['String']>;
   user_id?: InputMaybe<Scalars['ID']>;
@@ -14270,7 +14278,9 @@ export enum ReceivedFaxOrderKeys {
   CreatedAtAsc = 'CREATED_AT_ASC',
   CreatedAtDesc = 'CREATED_AT_DESC',
   NumberAsc = 'NUMBER_ASC',
-  NumberDesc = 'NUMBER_DESC'
+  NumberDesc = 'NUMBER_DESC',
+  UpdatedAtAsc = 'UPDATED_AT_ASC',
+  UpdatedAtDesc = 'UPDATED_AT_DESC'
 }
 
 /** A Care Plan Recommendation */
@@ -15014,6 +15024,8 @@ export type SdFormAnswer = {
   answer?: Maybe<Scalars['String']>;
   /** Created At */
   created_at?: Maybe<Scalars['String']>;
+  /** Cursor for FormAnswer Pagination */
+  cursor: Scalars['String'];
   /** The unique identifier of the object */
   id: Scalars['ID'];
   /** Name */
@@ -15021,13 +15033,14 @@ export type SdFormAnswer = {
   /** Updated At */
   updated_at?: Maybe<Scalars['String']>;
   /** Previous Versions of FormAnswer */
-  versions?: Maybe<Array<SdFormAnswerVersion>>;
+  version_collection?: Maybe<SdVersionCollection>;
 };
 
 
 /** INTERNAL -- A Form Answer Group query for Support Dashboard */
-export type SdFormAnswerVersionsArgs = {
+export type SdFormAnswerVersion_CollectionArgs = {
   cursor?: InputMaybe<Scalars['String']>;
+  search_term?: InputMaybe<Scalars['String']>;
 };
 
 /** INTERNAL -- A Form Answer Group query for Support Dashboard */
@@ -15064,21 +15077,6 @@ export type SdFormAnswerGroupCollection = {
   form_answer_groups?: Maybe<Array<SdFormAnswerGroup>>;
   /** Determines if has more FormAnswerGroups in pagination */
   has_more_fangs?: Maybe<Scalars['Boolean']>;
-};
-
-/** INTERNAL -- A Form Answer Group query for Support Dashboard */
-export type SdFormAnswerVersion = {
-  __typename?: 'SdFormAnswerVersion';
-  /** Created At */
-  created_at?: Maybe<Scalars['String']>;
-  /** Description of Event: Update/Create/Delete */
-  event?: Maybe<Scalars['String']>;
-  /** The unique identifier of the object */
-  id: Scalars['ID'];
-  /** Reified Version of the Given Object */
-  reified_version?: Maybe<FormAnswer>;
-  /** Human ID of User that Created/Updated Version */
-  whodunnit?: Maybe<Scalars['String']>;
 };
 
 /** INTERNAL -- Data on the Human Object */
@@ -15195,8 +15193,16 @@ export type SdOrg = {
   parent_organization_id?: Maybe<Scalars['ID']>;
   /** Suborganizations for this org */
   suborganizations?: Maybe<Array<SdOrg>>;
+  /** The list of users for the organization */
+  user_collection?: Maybe<SdUserCollection>;
   /** The list of users in this org */
   users?: Maybe<Array<SdUser>>;
+};
+
+
+/** INTERNAL -- Data on the Org Object */
+export type SdOrgUser_CollectionArgs = {
+  cursor?: InputMaybe<Scalars['String']>;
 };
 
 /** INTERNAL -- Data on the Organization Membership Object */
@@ -15304,6 +15310,39 @@ export type SdUserCollection = {
   users?: Maybe<Array<SdUser>>;
 };
 
+/** INTERNAL -- A Version Object */
+export type SdVersion = {
+  __typename?: 'SdVersion';
+  /** Created At */
+  created_at?: Maybe<Scalars['String']>;
+  /** Cursor for FormAnswerVersion Pagination */
+  cursor: Scalars['String'];
+  /** Description of Event: Update/Create/Delete */
+  event?: Maybe<Scalars['String']>;
+  /** The unique identifier of the object */
+  id: Scalars['ID'];
+  /** Email of Human who made modification */
+  modified_by?: Maybe<Scalars['String']>;
+  /** JSONified Object Change Hash */
+  object_changes?: Maybe<Scalars['String']>;
+  /** Reified Version of the Given Object */
+  reified_version?: Maybe<SdVersionUnion>;
+  /** Human ID of User that Created/Updated Version */
+  whodunnit?: Maybe<Scalars['String']>;
+};
+
+/** INTERNAL -- Version Collection */
+export type SdVersionCollection = {
+  __typename?: 'SdVersionCollection';
+  /** Determines if has more Versions in pagination */
+  has_more_versions?: Maybe<Scalars['Boolean']>;
+  /** Previous Versions */
+  versions?: Maybe<Array<SdVersion>>;
+};
+
+/** HealthieVersion reified union type */
+export type SdVersionUnion = SdFormAnswer;
+
 /** Autogenerated input type of SendSpeakToTrainerNotification */
 export type SendSpeakToTrainerNotificationInput = {
   email?: InputMaybe<Scalars['String']>;
@@ -15409,7 +15448,9 @@ export enum SentFaxOrderKeys {
   SenderLastNameDesc = 'SENDER_LAST_NAME_DESC',
   Status = 'STATUS',
   StatusAsc = 'STATUS_ASC',
-  StatusDesc = 'STATUS_DESC'
+  StatusDesc = 'STATUS_DESC',
+  UpdatedAtAsc = 'UPDATED_AT_ASC',
+  UpdatedAtDesc = 'UPDATED_AT_DESC'
 }
 
 /** A Sent Notification */
@@ -15854,6 +15895,8 @@ export type Subscription = {
   conversationMembershipUpdatedSubscription?: Maybe<ConversationMembership>;
   /** Track modifications of form answer groups */
   formAnswerGroupModifiedSubscription?: Maybe<FormAnswerGroup>;
+  /** Track clients added to group appointment */
+  groupAppointmentClientsAddedSubscription?: Maybe<Appointment>;
   /** Track added notes */
   noteAddedSubscription?: Maybe<Note>;
   /** Track user updates */
@@ -16121,13 +16164,13 @@ export type SupportDashboardTypeDosespotUserInfoArgs = {
 
 /** Support Dashboard Endpoints */
 export type SupportDashboardTypeFormAnswerArgs = {
-  item_id?: InputMaybe<Scalars['ID']>;
+  item_id: Scalars['ID'];
 };
 
 
 /** Support Dashboard Endpoints */
 export type SupportDashboardTypeFormAnswerGroupArgs = {
-  item_id?: InputMaybe<Scalars['ID']>;
+  item_id: Scalars['ID'];
 };
 
 
@@ -19885,6 +19928,8 @@ export type CreateFormAnswerGroupInput = {
   marked_complete?: InputMaybe<Scalars['Boolean']>;
   marked_locked?: InputMaybe<Scalars['Boolean']>;
   name?: InputMaybe<Scalars['String']>;
+  /** Creation of a form_answer_group in the context of an onboarding_item_id */
+  onboarding_item_id?: InputMaybe<Scalars['ID']>;
   requested_form_completion_id?: InputMaybe<Scalars['ID']>;
   set_initial_answers?: InputMaybe<Scalars['Boolean']>;
   time?: InputMaybe<Scalars['String']>;
@@ -26557,6 +26602,13 @@ export type GetFormTemplateQueryVariables = Exact<{
 
 export type GetFormTemplateQuery = { __typename?: 'Query', customModuleForm?: { __typename?: 'CustomModuleForm', id: string, name?: string | null, use_for_charting: boolean, use_for_program: boolean, prefill?: boolean | null, has_matrix_field?: boolean | null, is_video?: boolean | null, has_non_readonly_modules?: boolean | null, custom_modules: Array<{ __typename?: 'CustomModule', id: string, mod_type?: string | null, label?: string | null }> } | null };
 
+export type GetUserQueryVariables = Exact<{
+  id?: InputMaybe<Scalars['ID']>;
+}>;
+
+
+export type GetUserQuery = { __typename?: 'Query', user?: { __typename?: 'User', id: string, is_patient?: boolean | null } | null };
+
 
 export const CreateFormAnswerGroupDocument = gql`
     mutation createFormAnswerGroup($input: createFormAnswerGroupInput!) {
@@ -26633,6 +26685,14 @@ export const GetFormTemplateDocument = gql`
   }
 }
     `;
+export const GetUserDocument = gql`
+    query getUser($id: ID) {
+  user(id: $id) {
+    id
+    is_patient
+  }
+}
+    `;
 
 export type SdkFunctionWrapper = <T>(action: (requestHeaders?:Record<string, string>) => Promise<T>, operationName: string, operationType?: string) => Promise<T>;
 
@@ -26643,6 +26703,7 @@ const GetChartingItemsDocumentString = print(GetChartingItemsDocument);
 const GetScheduledAppointmentsDocumentString = print(GetScheduledAppointmentsDocument);
 const GetConversationMembershipsDocumentString = print(GetConversationMembershipsDocument);
 const GetFormTemplateDocumentString = print(GetFormTemplateDocument);
+const GetUserDocumentString = print(GetUserDocument);
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
     createFormAnswerGroup(variables: CreateFormAnswerGroupMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: CreateFormAnswerGroupMutation; extensions?: any; headers: Dom.Headers; status: number; }> {
@@ -26659,6 +26720,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     getFormTemplate(variables?: GetFormTemplateQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: GetFormTemplateQuery; extensions?: any; headers: Dom.Headers; status: number; }> {
         return withWrapper((wrappedRequestHeaders) => client.rawRequest<GetFormTemplateQuery>(GetFormTemplateDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getFormTemplate', 'query');
+    },
+    getUser(variables?: GetUserQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: GetUserQuery; extensions?: any; headers: Dom.Headers; status: number; }> {
+        return withWrapper((wrappedRequestHeaders) => client.rawRequest<GetUserQuery>(GetUserDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getUser', 'query');
     }
   };
 }
