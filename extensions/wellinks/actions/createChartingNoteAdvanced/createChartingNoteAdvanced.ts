@@ -50,6 +50,11 @@ export const createChartingNoteAdvanced: Action<typeof fields, typeof settings> 
         throw new Error(`Form with id ${form_id} cannot be used for charting`);
       }
 
+      const { data: userData } = await sdk.getUser({ id: healthie_patient_id });
+      if (isNil(userData?.user) || !userData.user?.is_patient) {
+        throw new Error(`User with id ${healthie_patient_id} doesn't exist or is not a patient`);
+      }
+
       const answers = formatAnswers(note_content, moduleForm.custom_modules as CustomModule[]);
 
       if (answers?.length === 0) {

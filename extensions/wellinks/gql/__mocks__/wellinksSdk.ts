@@ -36,6 +36,16 @@ export const mockGetSdkReturn = {
             data: {},
         }
     }),
+    getUser: jest.fn((args) => {
+        return {
+            data: {
+                user: {
+                    id: 'patient-1',
+                    is_patient: true,
+                },
+            },
+        }
+    }),
 }
 
 export const mockGetSdk = (params: any): any => {

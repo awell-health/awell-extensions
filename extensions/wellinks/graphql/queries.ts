@@ -56,3 +56,12 @@ export const FORM_TEMPLATE_QUERY = /* GraphQL */ `
     }
   }
 `
+
+export const GET_USER_QUERY = /* GraphQL */ `
+  query getUser($id: ID) {
+    user(id: $id) {
+      id
+      is_patient
+    }
+  }
+`
