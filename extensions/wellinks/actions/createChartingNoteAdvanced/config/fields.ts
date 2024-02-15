@@ -60,6 +60,15 @@ export const FieldsValidationSchema = z.object({
   marked_locked: z.boolean().optional(),
   appointment_id: z.string().optional(),
 }).superRefine((data, ctx) => {
+  if (data.healthie_patient_id.match(/^[0-9]*$/) == null) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: `healthie_patient_id ${data.healthie_patient_id} is an invalid number`,
+      path: ['healthie_patient_id'],
+      fatal: true
+    });
+  }
+
   for (const answer of data.note_content) {
     if (answer.user_id !== data.healthie_patient_id) {
       ctx.addIssue({
