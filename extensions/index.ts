@@ -27,6 +27,7 @@ import { Infobip } from './infobip'
 import { WestFax } from './westFax'
 import { nexuzhealth } from './nexuzhealth'
 import { CollectData } from './collectData'
+import { athenahealth } from './athena'
 
 import * as json from './markdown.json'
 import { ExternalServer } from './external-server'
@@ -39,6 +40,7 @@ export const extensions = [
   // ZusHealth is not ready for public use yet
   // ZusHealth,
   Awell,
+  athenahealth,
   CalDotCom,
   Calendly,
   CanvasMedical,
@@ -66,5 +68,5 @@ export const extensions = [
   Twilio,
   Wellinks,
   Zendesk,
-  WestFax
+  WestFax,
 ]
