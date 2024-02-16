@@ -32,8 +32,6 @@ export const validatePayloadAndCreateClient: ValidateAndCreateClient = async ({
       client_id,
       client_secret,
       scope,
-      // @ts-expect-error ignore
-      grant_type: 'client_credentials',
     },
     baseUrl: api_url,
   })
