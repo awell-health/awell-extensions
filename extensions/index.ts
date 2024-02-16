@@ -27,7 +27,7 @@ import { Infobip } from './infobip'
 import { WestFax } from './westFax'
 import { nexuzhealth } from './nexuzhealth'
 import { CollectData } from './collectData'
-import { athenahealth } from './athena'
+import { athenahealth } from './athenahealth'
 
 import * as json from './markdown.json'
 import { ExternalServer } from './external-server'
