@@ -27,11 +27,11 @@ export const fields = {
     type: FieldType.TEXT,
     required: true,
   },
-  startDate: {
-    id: 'startDate',
-    label: 'Start date',
+  onsetDate: {
+    id: 'onsetDate',
+    label: 'Onset date',
     description: 'The onset date to be updated for this problem',
-    type: FieldType.TEXT,
+    type: FieldType.DATE,
     required: true,
   },
 } satisfies Record<string, Field>
@@ -40,5 +40,5 @@ export const FieldsValidationSchema = z.object({
   patientId: z.string(),
   practiceId: z.string(),
   note: z.string(),
-  startDate: DateOnlySchema,
+  onsetDate: DateOnlySchema,
 } satisfies Record<keyof typeof fields, ZodTypeAny>)
