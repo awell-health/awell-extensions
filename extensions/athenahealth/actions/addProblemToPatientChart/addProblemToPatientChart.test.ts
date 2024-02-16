@@ -20,7 +20,7 @@ describe('Athena - Cancel appointment', () => {
         patientId: '1',
         practiceId: '1',
         note: 'Hello world',
-        startDate: '2024-01-01',
+        onsetDate: '2024-01-01',
       },
       settings,
     })
