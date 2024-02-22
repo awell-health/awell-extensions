@@ -15,7 +15,7 @@ import { MathExtension } from './math'
 import { MessageBird } from './messagebird'
 import { Metriport } from './metriport'
 import { Twilio } from './twilio'
-import { Wellinks } from './wellinks'
+// import { Wellinks } from './wellinks-public'
 import { Sendgrid } from './sendgrid-extension'
 import { CmDotCom } from './cmDotCom'
 import { DocuSign } from './docuSign'
@@ -66,7 +66,7 @@ export const extensions = [
   Sendgrid,
   Transform,
   Twilio,
-  Wellinks,
+  // Wellinks,
   Zendesk,
   WestFax,
 ]
