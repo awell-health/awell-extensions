@@ -203,10 +203,11 @@ export const createPatient: Action<
         notes,
       } = payload.fields
 
-      const patientEmail = isNil(email) || isEmpty(email) ? null : [{ email }]
+      const patientEmail =
+        isNil(email) || isEmpty(email) ? undefined : [{ email }]
       const patientMobilePhone =
         isNil(mobilePhone) || isEmpty(mobilePhone)
-          ? null
+          ? undefined
           : [{ phone: mobilePhone, phone_type: 'Mobile' }]
 
       const patient = patientSchema.parse({
@@ -242,7 +243,6 @@ export const createPatient: Action<
         },
       })
     } catch (err) {
-      console.log(err)
       if (err instanceof ZodError) {
         const error = fromZodError(err)
         await onError({
