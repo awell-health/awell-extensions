@@ -1,0 +1,76 @@
+import { z, type ZodTypeAny } from 'zod'
+import {
+  E164PhoneValidationOptionalSchema,
+  DateOnlyOptionalSchema,
+} from '@awell-health/extensions-core'
+import {
+  type Field,
+  FieldType,
+  StringType,
+} from '@awell-health/extensions-core'
+import { isNil } from 'lodash'
+
+export const fields = {
+  from: {
+    label: '"From" number',
+    id: 'from',
+    type: FieldType.STRING,
+    stringType: StringType.PHONE,
+    required: false,
+    description:
+      'Filter by sender. For example: Set this from parameter to +15552229999 to retrieve a list of Message resources with from properties of +15552229999'
+  },
+  recipient: {
+    id: 'recipient',
+    label: '"To" number',
+    type: FieldType.STRING,
+    stringType: StringType.PHONE,
+    description: 'Filter by recipient. For example: Set this to parameter to +15558881111 to retrieve a list of Message resources with to properties of +15558881111',
+    required: false,
+  },
+  page_size: {
+    id: 'page_size',
+    label: 'Page Size',
+    description: 'The number of results per page. Minimum is 1 and maximum is 1000.',
+    type: FieldType.NUMERIC,
+    required: false,
+  },
+  date_sent_after: {
+    id: 'date_sent_after',
+    label: 'Sent date after than',
+    description:
+      'Filter by Message sent_date after given date. Accepts GMT dates in the following formats: YYYY-MM-DD',
+    type: FieldType.DATE,
+    required: false,
+  },
+  date_sent_before: {
+    id: 'date_sent_before',
+    label: 'Sent date before than',
+    description: 'Filter by Message sent_date before given date. Accepts GMT dates in the following formats: YYYY-MM-DD',
+    type: FieldType.DATE,
+    required: false,
+  },
+  date_sent: {
+    id: 'date_sent',
+    label: 'Sent date',
+    description: 'Filter by Message sent_date in the given date. Accepts GMT dates in the following formats: YYYY-MM-DD',
+    type: FieldType.DATE,
+    required: false,
+  },
+} satisfies Record<string, Field>
+
+const toDate = (arg: string | undefined): Date | undefined =>
+  !isNil(arg) ? new Date(arg) : undefined
+
+export const FieldsValidationSchema = z.object({
+  recipient: E164PhoneValidationOptionalSchema,
+  from: E164PhoneValidationOptionalSchema,
+  page_size: z
+    .number()
+    .min(1, { message: 'Page size must be at least one' })
+    .max(1000, { message: 'Cannot fetch more than 1000 messages' })
+    .default(50),
+  date_sent: DateOnlyOptionalSchema.transform(toDate),
+  date_sent_after: DateOnlyOptionalSchema.transform(toDate),
+  date_sent_before: DateOnlyOptionalSchema.transform(toDate),
+} satisfies Record<keyof typeof fields, ZodTypeAny>)
