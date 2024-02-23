@@ -46,7 +46,7 @@ export const fields = {
   date_sent_before: {
     id: 'date_sent_before',
     label: 'Sent date before than',
-    description: 'Filter by Message sent_date before given date. Accepts GMT dates in the following formats: YYYY-MM-DD',
+    description: 'Search for messages sent before a given date',
     type: FieldType.DATE,
     required: false,
   },
