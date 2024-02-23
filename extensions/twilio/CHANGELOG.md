@@ -1,5 +1,9 @@
 # Twilio changelog
 
+## v2 2024-02-22
+
+1. Add capability to search for messages using all the allowed filters provided by Twilio API. Check here: https://www.twilio.com/docs/messaging/api/message-resource#read-multiple-message-resources
+
 ## v2 2023-06-23
 
 Full description: https://github.com/awell-health/awell-extensions/issues/157

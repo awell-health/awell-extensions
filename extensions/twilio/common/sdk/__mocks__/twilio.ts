@@ -3,7 +3,14 @@ const mockSdk = {
     create: jest.fn((params) => {
       console.log('Mocking twilio SDK call to messages.create', params)
     }),
+    list: jest.fn((params: {from: string}) => {
+      return params.from === '+18999999999' ? [{
+        body: "Yes"
+      }] : []
+    }),
   },
+
+  
 }
 
 const mockConstructor = jest.fn((params) => {
