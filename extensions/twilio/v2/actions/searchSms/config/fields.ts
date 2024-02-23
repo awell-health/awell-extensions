@@ -18,7 +18,7 @@ export const fields = {
     stringType: StringType.PHONE,
     required: false,
     description:
-      'Filter by sender. For example: Set this from parameter to +15552229999 to retrieve a list of Message resources with from properties of +15552229999'
+      'Search for text messages sent from a specific phone number'
   },
   recipient: {
     id: 'recipient',
