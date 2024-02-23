@@ -39,7 +39,7 @@ export const fields = {
     id: 'date_sent_after',
     label: 'Sent date after than',
     description:
-      'Filter by Message sent_date after given date. Accepts GMT dates in the following formats: YYYY-MM-DD',
+      'Search for messages sent after a given date',
     type: FieldType.DATE,
     required: false,
   },
