@@ -4,7 +4,7 @@ import { settings } from './config/settings'
 import { AuthorType, Category } from '@awell-health/extensions-core'
 
 export const Wellinks: Extension = {
-  key: 'wellinks',
+  key: 'wellinks-public',
   category: Category.WORKFLOW,
   title: 'Wellinks',
   description: 'Wellinks Application Logic ',
