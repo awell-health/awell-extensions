@@ -8,9 +8,9 @@ import { SettingsValidationSchema } from '../../../settings'
 import { FieldsValidationSchema, fields, dataPoints } from './config'
 import { type MessageListInstanceOptions } from 'twilio/lib/rest/api/v2010/account/message'
 
-export const searchSms: Action<typeof fields, typeof settings> = {
-  key: 'searchSms',
-  title: 'Search messages',
+export const getMessages: Action<typeof fields, typeof settings> = {
+  key: 'getMessages',
+  title: 'Get messages',
   description:
     `
     Get a list of text messages matching the given criteria.

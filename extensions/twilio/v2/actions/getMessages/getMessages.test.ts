@@ -1,7 +1,7 @@
-import { searchSms } from './searchSms'
+import { getMessages } from './getMessages'
 import { generateTestPayload } from '../../../../../src/tests'
 
-describe('Search SMS action', () => {
+describe('Get messages action', () => {
   const onComplete = jest.fn()
   const onError = jest.fn()
 
@@ -11,7 +11,7 @@ describe('Search SMS action', () => {
   })
 
   test('Should call the onComplete callback with one answer', async () => {
-    await searchSms.onActivityCreated(
+    await getMessages.onActivityCreated(
       generateTestPayload({
         fields: {
           recipient: '+19144542596',
@@ -42,7 +42,7 @@ describe('Search SMS action', () => {
   })
 
   test('Should call the onComplete callback with zero answers', async () => {
-    await searchSms.onActivityCreated(
+    await getMessages.onActivityCreated(
       generateTestPayload({
         fields: {
           recipient: '+19144542596',
@@ -73,7 +73,7 @@ describe('Search SMS action', () => {
   })
 
   test('Should call the onComplete even with no params', async () => {
-    await searchSms.onActivityCreated(
+    await getMessages.onActivityCreated(
       generateTestPayload({
         fields: {
           recipient: undefined,
@@ -103,7 +103,7 @@ describe('Search SMS action', () => {
   })
 
   test('Should call the onFail when page size is negative', async () => {
-    await searchSms.onActivityCreated(
+    await getMessages.onActivityCreated(
       generateTestPayload({
         fields: {
           recipient: undefined,
