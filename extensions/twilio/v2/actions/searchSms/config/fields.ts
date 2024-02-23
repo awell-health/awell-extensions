@@ -53,7 +53,7 @@ export const fields = {
   date_sent: {
     id: 'date_sent',
     label: 'Sent date',
-    description: 'Filter by Message sent_date in the given date. Accepts GMT dates in the following formats: YYYY-MM-DD',
+    description: 'Search for messages sent on a given date',
     type: FieldType.DATE,
     required: false,
   },
