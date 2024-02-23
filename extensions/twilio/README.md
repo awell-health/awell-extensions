@@ -21,3 +21,7 @@ In order to set up this extension, you will need:
 ### Send SMS
 
 Send an SMS with Twilio to a recipient of your liking.
+
+### Get messages
+
+Get a list of text messages matching the given criteria. Only the last 50 messages are returned.
