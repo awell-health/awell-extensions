@@ -25,7 +25,7 @@ export const fields = {
     label: '"To" number',
     type: FieldType.STRING,
     stringType: StringType.PHONE,
-    description: 'Filter by recipient. For example: Set this to parameter to +15558881111 to retrieve a list of Message resources with to properties of +15558881111',
+    description: 'Search for text messages sent to a specific phone number',
     required: false,
   },
   page_size: {
