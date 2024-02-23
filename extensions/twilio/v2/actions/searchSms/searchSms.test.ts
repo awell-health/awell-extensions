@@ -35,6 +35,7 @@ describe('Search SMS action', () => {
       data_points: {
         allMessages: '["Yes"]',
         numberOfMessages: '1',
+        latestMessage: 'Yes',
       },
     })
     expect(onError).not.toHaveBeenCalled()
@@ -65,6 +66,7 @@ describe('Search SMS action', () => {
       data_points: {
         allMessages: '[]',
         numberOfMessages: '0',
+        latestMessage: undefined,
       },
     })
     expect(onError).not.toHaveBeenCalled()

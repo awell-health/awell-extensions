@@ -53,10 +53,12 @@ export const searchSms: Action<typeof fields, typeof settings> = {
       const allMessages = messages.map(function(message) {
         return message.body;
       });
+      const latestMessage = numberOfMessages > 0 ? messages[0].body : undefined
 
       await onComplete( {data_points: {
         allMessages: JSON.stringify(allMessages),
-        numberOfMessages: String(numberOfMessages)
+        numberOfMessages: String(numberOfMessages),
+        latestMessage
       }})
     } catch (err) {
       if (err instanceof ZodError) {

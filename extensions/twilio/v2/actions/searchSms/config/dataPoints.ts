@@ -9,4 +9,8 @@ export const dataPoints = {
     key: 'allMessages',
     valueType: 'strings_array',
   },
+  latestMessage: {
+    key: 'latestMessage',
+    valueType: 'string',
+  },
 } satisfies Record<string, DataPointDefinition>
