@@ -13,7 +13,7 @@ export const searchSms: Action<typeof fields, typeof settings> = {
   title: 'Search messages',
   description:
     `
-    Get a list of messages. Results are sorted by the DateSent field, with the most recent messages appearing first.
+    Get a list of text messages matching the given criteria.
     You can also filter the Messages by providing one of the allowed filters.
     `,
   category: Category.COMMUNICATION,
