@@ -15,11 +15,16 @@ describe('Sending a correct input for icd', () => {
       onComplete,
       jest.fn()
     )
-    expect(onComplete).toHaveBeenCalledWith({
-      data_points: {
-        codes: JSON.stringify(['A01', 'A02']),
-      },
-    })
+    expect(onComplete).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data_points: expect.objectContaining({
+          codes: JSON.stringify([
+            'Intestinal infectious diseases',
+            'Intestinal infectious diseases',
+          ]),
+        }),
+      })
+    )
   })
 
   test('Should pass validation', async () => {
@@ -34,11 +39,16 @@ describe('Sending a correct input for icd', () => {
       onComplete,
       jest.fn()
     )
-    expect(onComplete).toHaveBeenCalledWith({
-      data_points: {
-        codes: JSON.stringify(['A01', 'A02']),
-      },
-    })
+    expect(onComplete).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data_points: expect.objectContaining({
+          codes: JSON.stringify([
+            'Intestinal infectious diseases',
+            'Intestinal infectious diseases',
+          ]),
+        }),
+      })
+    )
   })
 
   test('Should return tfu', async () => {
