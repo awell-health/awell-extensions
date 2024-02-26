@@ -111,7 +111,7 @@ describe('Sending a correct input for icd', () => {
     const resp = icd.onActivityCreated(
       generateTestPayload({
         fields: {
-          icd_codes: '["A01", "A02"]',
+          icd_codes: '["A01|A02"]',
         },
         settings: {},
       }),
