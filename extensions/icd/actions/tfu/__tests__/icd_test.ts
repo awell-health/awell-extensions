@@ -8,7 +8,7 @@ describe('Sending a correct input for icd', () => {
     await icd.onActivityCreated(
       generateTestPayload({
         fields: {
-          icd_codes: 'A01,A02',
+          icd_codes: '["A01", "A02"]',
         },
         settings: {},
       }),
@@ -32,7 +32,7 @@ describe('Sending a correct input for icd', () => {
     await icd.onActivityCreated(
       generateTestPayload({
         fields: {
-          icd_codes: 'A01.2,A02.4',
+          icd_codes: '["A01.2", "A02.4"]',
         },
         settings: {},
       }),
@@ -51,12 +51,32 @@ describe('Sending a correct input for icd', () => {
     )
   })
 
+  test('Should return blank', async () => {
+    const onComplete = jest.fn()
+    await icd.onActivityCreated(
+      generateTestPayload({
+        fields: {
+          icd_codes: '[" "]',
+        },
+        settings: {},
+      }),
+      onComplete,
+      jest.fn()
+    )
+    expect(onComplete).toHaveBeenCalledWith({
+      data_points: {
+        codes: JSON.stringify([]),
+        stringResponse: 'Blank',
+      },
+    })
+  })
+
   test('Should return tfu', async () => {
     const onComplete = jest.fn()
     await icd.onActivityCreated(
       generateTestPayload({
         fields: {
-          icd_codes: 'E12',
+          icd_codes: '["E12"]',
         },
         settings: {},
       }),
@@ -76,7 +96,7 @@ describe('Sending a correct input for icd', () => {
     const resp = icd.onActivityCreated(
       generateTestPayload({
         fields: {
-          icd_codes: 'A01,A02,invalid',
+          icd_codes: '["A01", "A02", "invalid"]',
         },
         settings: {},
       }),
@@ -91,7 +111,7 @@ describe('Sending a correct input for icd', () => {
     const resp = icd.onActivityCreated(
       generateTestPayload({
         fields: {
-          icd_codes: '[A01,A02]',
+          icd_codes: '["A01", "A02"]',
         },
         settings: {},
       }),

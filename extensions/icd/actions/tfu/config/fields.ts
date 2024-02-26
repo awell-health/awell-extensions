@@ -16,9 +16,10 @@ export const FieldSchema = z
     icd_codes: z.string(),
   })
   .transform((data) => {
-    const codes = data.icd_codes
-      .split(',')
-      .map((code) => code.trim().split('.')[0])
+    const codesArray = JSON.parse(data.icd_codes)
+    const codes = codesArray
+      .map((code: string) => code.trim().split('.')[0])
+      .filter((code: string) => code !== '')
     return {
       icd_codes: codes,
     }
@@ -29,7 +30,7 @@ export const FieldSchema = z
         icd_codes: [],
       }
     }
-    data.icd_codes.forEach((c) => {
+    data.icd_codes.forEach((c: string) => {
       const isValid = c.match(/^[A-Z]\d{2}$/)
       if (isValid === null) {
         ctx.addIssue({

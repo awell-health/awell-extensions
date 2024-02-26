@@ -99,6 +99,8 @@ const checkICDCode = (code: string): boolean => {
     'diabetes mellitus',
     'heart failure',
     'copd',
+    'cad',
+    'coronary artery disease',
   ]
   if (diseases.includes(code.toLowerCase())) {
     return true
@@ -167,7 +169,7 @@ const grabICDCodes = async (
       const parentResponse = await axios.get<QueryResponse>(parentUrl, {
         headers,
       })
-      
+
       const { title } = ICDSchema.parse(parentResponse.data)
       return title
     })
