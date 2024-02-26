@@ -28,6 +28,7 @@ import { WestFax } from './westFax'
 import { nexuzhealth } from './nexuzhealth'
 import { CollectData } from './collectData'
 import { athenahealth } from './athenahealth'
+import { icd } from './icd'
 
 import * as json from './markdown.json'
 import { ExternalServer } from './external-server'
@@ -54,6 +55,7 @@ export const extensions = [
   Formsort,
   Healthie,
   HelloWorld,
+  icd,
   Infobip,
   Iterable,
   Mailchimp,
