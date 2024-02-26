@@ -1,6 +1,4 @@
 import { type Extension } from '@awell-health/extensions-core'
-import { settings } from './settings'
-import { webhooks } from './webhooks'
 import { AuthorType, Category } from '@awell-health/extensions-core'
 import actions from './actions'
 
@@ -15,7 +13,6 @@ export const icd: Extension = {
   author: {
     authorType: AuthorType.AWELL,
   },
-  settings,
+  settings: {},
   actions,
-  webhooks,
 }
