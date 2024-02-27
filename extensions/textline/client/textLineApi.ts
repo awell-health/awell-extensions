@@ -25,10 +25,12 @@ class TextLineApi {
     params?: Record<string, string | number | boolean | undefined>
   ): string {
     const nonEmptyParams = omitBy(params, isNil)
-    const queryParams = new URLSearchParams({
-      todo: 'fixme',
-      ...nonEmptyParams,
-    })
+
+    const stringParams: Record<string, string> = Object.fromEntries(
+      Object.entries(nonEmptyParams).map(([key, value]) => [key, String(value)])
+    );
+    const queryParams = new URLSearchParams(stringParams);
+
 
     return `${this.baseUrl}${url}?${queryParams.toString()}`
   }

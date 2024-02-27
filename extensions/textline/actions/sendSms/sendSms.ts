@@ -4,8 +4,8 @@ import { type Action } from '@awell-health/extensions-core'
 import { type settings, SettingsValidationSchema } from '../../settings'
 import { Category, validate } from '@awell-health/extensions-core'
 import { FieldsValidationSchema, dataPoints, fields } from './config'
-import TextLineApi from '../../textLineApi'
-import { type SendMessageResponse } from '../../schema'
+import TextLineApi from '../../client/textLineApi'
+import { type SendMessageResponse } from '../../client/schema'
 
 export const sendSms: Action<typeof fields, typeof settings> = {
   key: 'sendSms',

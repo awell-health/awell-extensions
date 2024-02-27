@@ -4,9 +4,9 @@ import { type Action } from '@awell-health/extensions-core'
 import { type settings, SettingsValidationSchema } from '../../settings'
 import { Category, validate } from '@awell-health/extensions-core'
 import { FieldsValidationSchema, fields, dataPoints } from './config'
-import TextLineApi from '../../textLineApi'
+import TextLineApi from '../../client/textLineApi'
 import { isNil } from 'lodash'
-import { type Post } from '../../schema'
+import { type Post } from '../../client/schema'
 
 export const getMessages: Action<typeof fields, typeof settings> = {
   key: 'getMessages',
@@ -23,7 +23,7 @@ export const getMessages: Action<typeof fields, typeof settings> = {
     try {
       const {
         settings: { email, password, apiKey },
-        fields: { phoneNumber, page, pageSize },
+        fields: { phoneNumber },
       } = validate({
         schema: z.object({
           settings: SettingsValidationSchema,
@@ -35,8 +35,8 @@ export const getMessages: Action<typeof fields, typeof settings> = {
       const textLineApi = new TextLineApi(email, password, apiKey)
       const messages = await textLineApi.getMessages(
         phoneNumber,
-        page,
-        pageSize
+        1,
+        30
       )
 
       if (isNil(messages.posts)) {

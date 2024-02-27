@@ -1,6 +1,6 @@
 import { getMessages } from './getMessages'
 import { generateTestPayload } from '../../../../src/tests'
-import { mockReturnValue } from '../../__mocks__/textLineApi'
+import { mockReturnValue } from '../../client/__mocks__/textLineApi'
 
 jest.mock('../../textLineApi', () => jest.fn(() => mockReturnValue))
 
@@ -18,8 +18,6 @@ describe('Get messages action', () => {
       generateTestPayload({
         fields: {
           phoneNumber: '+18999999999',
-          pageSize: 30,
-          page: undefined,
         },
         settings: {
           email: 'user',
@@ -45,8 +43,6 @@ describe('Get messages action', () => {
       generateTestPayload({
         fields: {
           phoneNumber: '+19144542596',
-          pageSize: 30,
-          page: 1,
         },
         settings: {
           email: 'user',
@@ -72,8 +68,6 @@ describe('Get messages action', () => {
       generateTestPayload({
         fields: {
           phoneNumber: undefined,
-          pageSize: undefined,
-          page: undefined,
         },
         settings: {
           email: 'user',
@@ -94,24 +88,4 @@ describe('Get messages action', () => {
     expect(onError).not.toHaveBeenCalled()
   })
 
-  test('Should call the onFail when page size is negative', async () => {
-    await getMessages.onActivityCreated(
-      generateTestPayload({
-        fields: {
-          phoneNumber: '+19144542596',
-          pageSize: -30,
-          page: 1,
-        },
-        settings: {
-          email: 'user',
-          password: 'password',
-          apiKey: 'apikey',
-        },
-      }),
-      onComplete,
-      onError
-    )
-    expect(onComplete).not.toHaveBeenCalledWith()
-    expect(onError).toHaveBeenCalled()
-  })
 })
