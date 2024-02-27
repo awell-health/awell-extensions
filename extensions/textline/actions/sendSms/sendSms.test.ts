@@ -1,12 +1,9 @@
 import { sendSms } from './sendSms'
-import twilioSdk from '../../../common/sdk/twilio'
-import { generateTestPayload } from '../../../../../src/tests'
+import { generateTestPayload } from '../../../../src/tests'
 
 describe('Send SMS action', () => {
   const onComplete = jest.fn()
   const onError = jest.fn()
-  const getLastTwilioClient = (): any =>
-    (twilioSdk as any as jest.Mock<typeof twilioSdk>).mock.results.at(-1)?.value
 
   beforeEach(() => {
     onComplete.mockClear()
@@ -18,12 +15,13 @@ describe('Send SMS action', () => {
       generateTestPayload({
         fields: {
           message: 'Message content',
-          recipient: '+32494000000',
+          recipient: '+13108820245',
         },
         settings: {
-          email: 'TL-email',
+          accessToken: 'zReGRpJSXxgWb6VpreTC',
+          // todo: create zod payload schmea to get rid of unnecessary fields
+          email: 'email',
           password: 'password',
-          accessToken: 'accessToken',
         },
       }),
       onComplete,
@@ -31,7 +29,7 @@ describe('Send SMS action', () => {
     )
     expect(onComplete).toHaveBeenCalled()
     expect(onError).not.toHaveBeenCalled()
-  })
+  }, 20000)
 
   test('Should call the onError callback when there is no recipient', async () => {
     await sendSms.onActivityCreated(

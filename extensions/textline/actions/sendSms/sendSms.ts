@@ -1,14 +1,10 @@
 import { z, ZodError } from 'zod'
 import { fromZodError } from 'zod-validation-error'
-import twilioSdk from '../../../common/sdk/twilio'
 import { type Action } from '@awell-health/extensions-core'
-import { type settings } from '../../../settings'
+import { type settings, SettingsValidationSchema } from '../../settings'
 import { Category, validate } from '@awell-health/extensions-core'
-import { SettingsValidationSchema } from '../../../settings'
 import { FieldsValidationSchema, fields } from './config'
 import TextLineApi from '../../textLineApi'
-
-import { isNil } from 'lodash'
 
 export const sendSms: Action<typeof fields, typeof settings> = {
   key: 'sendSms',
@@ -24,19 +20,26 @@ export const sendSms: Action<typeof fields, typeof settings> = {
         settings: { accessToken },
         fields: { recipient, message },
       } = validate({
-        schema: z
-          .object({
-            settings: SettingsValidationSchema,
-            fields: FieldsValidationSchema,
-          }),
+        schema: z.object({
+          settings: SettingsValidationSchema,
+          fields: FieldsValidationSchema,
+        }),
         payload,
       })
 
       // TODO do we need to call authentication before each request or is access token enough?
 
       // TODO do the request and handle the response
-     
-      await onComplete()
+      const textLineApi = new TextLineApi(accessToken)
+      const sentMessageResponse = await textLineApi.sendMessage({
+        recipient,
+        content: message,
+      })
+      await onComplete({
+        data_points: {
+          sentMessageResponse: JSON.stringify(sentMessageResponse),
+        },
+      })
     } catch (err) {
       if (err instanceof ZodError) {
         const error = fromZodError(err)

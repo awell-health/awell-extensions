@@ -1,5 +1,5 @@
 import { getMessages } from './getMessages'
-import { generateTestPayload } from '../../../../../src/tests'
+import { generateTestPayload } from '../../../../src/tests'
 
 describe('Get messages action', () => {
   const onComplete = jest.fn()
@@ -20,6 +20,7 @@ describe('Get messages action', () => {
           date_sent_before: undefined,
           date_sent: undefined,
           page_size: 30,
+          page: 1,
         },
         settings: {
           accountSid: 'AC-accountSid',
@@ -51,6 +52,7 @@ describe('Get messages action', () => {
           date_sent_before: '2024-02-19',
           date_sent: undefined,
           page_size: 30,
+          page: 1,
         },
         settings: {
           accountSid: 'AC-accountSid',
@@ -82,6 +84,7 @@ describe('Get messages action', () => {
           date_sent_before: undefined,
           date_sent: undefined,
           page_size: undefined,
+          page: 1,
         },
         settings: {
           accountSid: 'AC-accountSid',
@@ -112,6 +115,7 @@ describe('Get messages action', () => {
           date_sent_before: undefined,
           date_sent: undefined,
           page_size: -1,
+          page: -1,
         },
         settings: {
           accountSid: 'AC-accountSid',

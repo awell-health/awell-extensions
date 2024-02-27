@@ -2,9 +2,9 @@ import { fetchTyped } from '@awell-health/extensions-core'
 import { isNil, omitBy } from 'lodash'
 import fetch from 'node-fetch'
 import {
-  SendMessageResponse,
+  type SendMessageResponse,
   GetMessagesSchema,
-  GetMessagesResponse,
+  type GetMessagesResponse,
 } from './schema'
 
 class TextLineApi {
