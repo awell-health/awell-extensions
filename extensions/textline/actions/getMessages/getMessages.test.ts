@@ -2,7 +2,7 @@ import { getMessages } from './getMessages'
 import { generateTestPayload } from '../../../../src/tests'
 import { mockReturnValue } from '../../client/__mocks__/textLineApi'
 
-jest.mock('../../textLineApi', () => jest.fn(() => mockReturnValue))
+jest.mock('../../client/textLineApi', () => jest.fn(() => mockReturnValue))
 
 describe('Get messages action', () => {
   const onComplete = jest.fn()

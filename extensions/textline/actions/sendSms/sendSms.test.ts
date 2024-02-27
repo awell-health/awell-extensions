@@ -2,7 +2,7 @@ import { sendSms } from './sendSms'
 import { generateTestPayload } from '../../../../src/tests'
 import { mockReturnValue } from '../../client/__mocks__/textLineApi'
 
-jest.mock('../../textLineApi', () => jest.fn(() => mockReturnValue))
+jest.mock('../../client/textLineApi', () => jest.fn(() => mockReturnValue))
 
 describe('Send SMS action', () => {
   const onComplete = jest.fn()
