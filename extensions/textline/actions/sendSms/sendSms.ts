@@ -14,7 +14,7 @@ export const sendSms: Action<typeof fields, typeof settings> = {
     'Send a text message from a given telephone number to a recipient of your choice.',
   category: Category.COMMUNICATION,
   fields,
-  previewable: false,
+  previewable: true,
   dataPoints,
   onActivityCreated: async (payload, onComplete, onError) => {
     try {
