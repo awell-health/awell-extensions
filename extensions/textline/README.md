@@ -1,6 +1,6 @@
 ---
 title: TextLine
-description: TextLine is a customer engagement platform used by hundreds of thousands of businesses and more than ten million developers worldwide to build unique, personalized experiences for their customers.
+description: Textline's business texting software offers solutions for sales, marketing, customer service and beyond. Utilize the power of SMS to grow quickly.
 ---
 
 # TextLine
