@@ -10,18 +10,17 @@ const PostSchema = z.object({
   body: z.string(),
   created_at: z.number(),
   creator: CreatorSchema,
-  conversation_uuid: z.string()
+  conversation_uuid: z.string(),
 })
 
 export const GetMessagesSchema = z.object({
-  posts: z.optional(z.array(PostSchema))
+  posts: z.optional(z.array(PostSchema)),
 })
 
 const SendMessageResponseSchema = z.object({
-  post: PostSchema
+  post: PostSchema,
 })
 
 export type SendMessageResponse = z.infer<typeof SendMessageResponseSchema>
 export type GetMessagesResponse = z.infer<typeof GetMessagesSchema>
 export type Post = z.infer<typeof PostSchema>
-

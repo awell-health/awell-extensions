@@ -33,9 +33,13 @@ export const getMessages: Action<typeof fields, typeof settings> = {
       })
 
       const textLineApi = new TextLineApi(email, password, apiKey)
-      const messages = await textLineApi.getMessages(phoneNumber, page, pageSize)
+      const messages = await textLineApi.getMessages(
+        phoneNumber,
+        page,
+        pageSize
+      )
 
-      if(isNil(messages.posts)){
+      if (isNil(messages.posts)) {
         await onComplete({
           data_points: {
             allMessages: '',
@@ -45,7 +49,9 @@ export const getMessages: Action<typeof fields, typeof settings> = {
         })
       } else {
         // received sms contain the phone number, everything else will not
-        const receivedMessages = messages.posts.filter((p: Post) => !isNil(p.creator.phone_number));
+        const receivedMessages = messages.posts.filter(
+          (p: Post) => !isNil(p.creator.phone_number)
+        )
         const numberOfMessages = receivedMessages.length
         const allMessages = receivedMessages.map(function (p: Post) {
           return p.body
@@ -61,7 +67,6 @@ export const getMessages: Action<typeof fields, typeof settings> = {
           },
         })
       }
-     
     } catch (err) {
       if (err instanceof ZodError) {
         const error = fromZodError(err)

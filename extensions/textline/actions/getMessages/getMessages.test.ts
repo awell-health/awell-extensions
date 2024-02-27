@@ -24,7 +24,8 @@ describe('Get messages action', () => {
         settings: {
           email: 'user',
           password: 'password',
-          apiKey: 'apikey',        },
+          apiKey: 'apikey',
+        },
       }),
       onComplete,
       onError
@@ -50,7 +51,7 @@ describe('Get messages action', () => {
         settings: {
           email: 'user',
           password: 'password',
-          apiKey: 'apikey',      
+          apiKey: 'apikey',
         },
       }),
       onComplete,
@@ -77,7 +78,7 @@ describe('Get messages action', () => {
         settings: {
           email: 'user',
           password: 'password',
-          apiKey: 'apikey',      
+          apiKey: 'apikey',
         },
       }),
       onComplete,

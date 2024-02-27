@@ -2,7 +2,7 @@ import { type Setting } from '@awell-health/extensions-core'
 import { z, type ZodTypeAny } from 'zod'
 
 export const settings = {
-email: {
+  email: {
     label: 'Email',
     key: 'email',
     obfuscated: false,
@@ -21,7 +21,8 @@ email: {
     key: 'apiKey',
     obfuscated: true,
     required: true,
-    description: 'Find your Api Key at https://application.textline.com/organization/api_settings.',
+    description:
+      'Find your Api Key at https://application.textline.com/organization/api_settings.',
   },
 } satisfies Record<string, Setting>
 

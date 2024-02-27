@@ -1,7 +1,5 @@
 import { z, type ZodTypeAny } from 'zod'
-import {
-  E164PhoneValidationOptionalSchema,
-} from '@awell-health/extensions-core'
+import { E164PhoneValidationOptionalSchema } from '@awell-health/extensions-core'
 import {
   type Field,
   FieldType,

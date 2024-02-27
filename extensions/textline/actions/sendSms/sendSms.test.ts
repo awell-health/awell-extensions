@@ -31,7 +31,7 @@ describe('Send SMS action', () => {
     )
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
-        conversationId: "30cded5d-90b7-4aae-9f51-b6b143376bb2"
+        conversationId: '30cded5d-90b7-4aae-9f51-b6b143376bb2',
       },
     })
     expect(onError).not.toHaveBeenCalled()
@@ -47,7 +47,8 @@ describe('Send SMS action', () => {
         settings: {
           email: 'user',
           password: 'password',
-          apiKey: 'apikey',        },
+          apiKey: 'apikey',
+        },
       }),
       onComplete,
       onError
@@ -66,7 +67,8 @@ describe('Send SMS action', () => {
         settings: {
           email: 'user',
           password: 'password',
-          apiKey: 'apikey',        },
+          apiKey: 'apikey',
+        },
       }),
       onComplete,
       onError
@@ -74,5 +76,4 @@ describe('Send SMS action', () => {
     expect(onComplete).not.toHaveBeenCalled()
     expect(onError).toHaveBeenCalled()
   })
-
 })

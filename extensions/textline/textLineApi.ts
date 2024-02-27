@@ -18,7 +18,6 @@ class TextLineApi {
     this.email = email
     this.password = password
     this.apiKey = apiKey
-
   }
 
   private constructUrl(
@@ -39,7 +38,6 @@ class TextLineApi {
     page?: number,
     pageSize?: number
   ): Promise<GetMessagesResponse> {
-
     const accessToken = await this.authenticate()
 
     const url = this.constructUrl(`/api/conversations.json`, {
@@ -47,16 +45,17 @@ class TextLineApi {
       page_size: pageSize,
       page,
     })
-    const response = await fetchTyped(url, GetMessagesSchema, { headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-      'X-TGP-ACCESS-TOKEN': accessToken,
-    },})
+    const response = await fetchTyped(url, GetMessagesSchema, {
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        'X-TGP-ACCESS-TOKEN': accessToken,
+      },
+    })
     return response
   }
 
-  async authenticate(
-  ): Promise<string> {
+  async authenticate(): Promise<string> {
     const url = this.constructUrl(`/auth/sign_in.json`)
     const response = await fetch(url, {
       method: 'POST',
@@ -64,28 +63,30 @@ class TextLineApi {
         Accept: 'application/json',
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(
-        {
-          user: {
-            email: this.email,
-            password: this.password
-          },
-          api_key: this.apiKey,
-        }
-      ),
+      body: JSON.stringify({
+        user: {
+          email: this.email,
+          password: this.password,
+        },
+        api_key: this.apiKey,
+      }),
     })
     const result = await response.json()
 
     if (response.status >= 400) {
       throw new Error(
-        isNil(result?.error) ? 'Unable to authenticate' : `Authentication failed with error: ${JSON.stringify(result.error)}`
+        isNil(result?.error)
+          ? 'Unable to authenticate'
+          : `Authentication failed with error: ${JSON.stringify(result.error)}`
       )
     }
 
-    if(isNil(result?.access_token?.token)){
+    if (isNil(result?.access_token?.token)) {
       throw new Error(
-        `Can't get access token from authentication response ${JSON.stringify(result)}`
-        )
+        `Can't get access token from authentication response ${JSON.stringify(
+          result
+        )}`
+      )
     }
 
     return result?.access_token?.token
@@ -95,7 +96,6 @@ class TextLineApi {
     content: string,
     recipient: string
   ): Promise<SendMessageResponse> {
-
     const accessToken = await this.authenticate()
 
     const url = this.constructUrl(`/api/conversations.json`)

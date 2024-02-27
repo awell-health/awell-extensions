@@ -30,13 +30,15 @@ export const sendSms: Action<typeof fields, typeof settings> = {
       })
 
       const textLineApi = new TextLineApi(email, password, apiKey)
-      const response: SendMessageResponse = await textLineApi.sendMessage(recipient, message)
+      const response: SendMessageResponse = await textLineApi.sendMessage(
+        recipient,
+        message
+      )
       await onComplete({
         data_points: {
-          conversationId: response.post.conversation_uuid
+          conversationId: response.post.conversation_uuid,
         },
       })
-      
     } catch (err) {
       if (err instanceof ZodError) {
         const error = fromZodError(err)
