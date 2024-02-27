@@ -9,7 +9,7 @@ export const icd: Extension = {
     'An example extension developers can look at to get started with building their first extension.',
   icon_url:
     'https://res.cloudinary.com/da7x4rzl4/image/upload/v1678870116/Awell%20Extensions/Awell_Logo.png',
-  category: Category.DEMO,
+  category: Category.DATA,
   author: {
     authorType: AuthorType.AWELL,
   },
