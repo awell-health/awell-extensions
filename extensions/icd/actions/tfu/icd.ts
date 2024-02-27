@@ -41,9 +41,9 @@ export const icd: Action<
       return
     }
 
+    const IDPClient = makeAPIClient()
     const icdCodes = await Promise.all(
       icd_codes.map(async (code: string) => {
-        const IDPClient = makeAPIClient()
         const response = await IDPClient.getCode(code)
         if (response.parent !== undefined) {
           const parent = await IDPClient.getCode(response.parent)
