@@ -3,7 +3,10 @@ import {
   DataWrapper,
   type DataWrapperCtor,
   OAuthClientCredentials,
- type OAuthGrantClientCredentialsRequest } from '@awell-health/extensions-core'
+  type OAuthGrantClientCredentialsRequest,
+} from '@awell-health/extensions-core'
+import { cacheService } from './cacheService'
+import { type PatientSchemaType } from './schema/patient'
 
 export class AthenaDataWrapper extends DataWrapper {
   public async getPatient({
@@ -12,11 +15,13 @@ export class AthenaDataWrapper extends DataWrapper {
   }: {
     practiceId: string
     patientId: string
-  }): Promise<any> {
-    return await this.Request<any>({
+  }): Promise<PatientSchemaType> {
+    const result = await this.Request<PatientSchemaType[]>({
       method: 'GET',
       url: `/v1/${practiceId}/patients/${patientId}`,
     })
+
+    return result[0]
   }
 }
 
@@ -42,6 +47,7 @@ export class AthenaAPIClient extends APIClient<AthenaDataWrapper> {
       auth: new OAuthClientCredentials({
         auth_url: authUrl,
         request_config: requestConfig,
+        cacheService,
       }),
     })
   }
@@ -52,8 +58,7 @@ export class AthenaAPIClient extends APIClient<AthenaDataWrapper> {
   }: {
     practiceId: string
     patientId: string
-  }): Promise<any> {
-    /** FetchData returns a 404 */
+  }): Promise<PatientSchemaType> {
     return await this.FetchData(
       async (dw) => await dw.getPatient({ patientId, practiceId })
     )
