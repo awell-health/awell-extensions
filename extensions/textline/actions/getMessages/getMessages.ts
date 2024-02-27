@@ -48,7 +48,7 @@ export const getMessages: Action<typeof fields, typeof settings> = {
           },
         })
       } else {
-        // received sms contain the phone number, everything else will not
+        // received messages contain a phone number, sent messages will not
         const receivedMessages = messages.posts.filter(
           (p: Post) => !isNil(p.creator.phone_number)
         )
