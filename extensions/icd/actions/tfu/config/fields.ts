@@ -5,8 +5,7 @@ export const fields = {
   icd_codes: {
     id: 'icd_codes',
     label: 'ICD Codes',
-    description:
-      "A comma-separated list of ICD-10 codes (e.g. 'E12.1, E14, H10', etc.)",
+    description: 'A list of ICD-10 codes (e.g. ["E12.1", "E14", "H10"] )',
     type: FieldType.STRING,
   },
 } satisfies Record<string, Field>
