@@ -22,7 +22,7 @@ export const settings = {
     obfuscated: true,
     required: true,
     description:
-      'Find your Api Key at https://application.textline.com/organization/api_settings.',
+      'Find your API key at https://application.textline.com/organization/api_settings.',
   },
 } satisfies Record<string, Setting>
 
