@@ -8,7 +8,7 @@ export const TextLine: Extension = {
   title: 'TextLine',
   icon_url:
     'https://pbs.twimg.com/profile_images/971752293841256450/OkNMApXr_400x400.jpg',
-  description: 'Add robust messaging capabilities to your care flow.',
+  description: 'Textline's business texting software offers solutions for sales, marketing, customer service, and beyond. Utilize the power of SMS to grow quickly.',
   category: Category.COMMUNICATION,
   author: {
     authorType: AuthorType.AWELL,
