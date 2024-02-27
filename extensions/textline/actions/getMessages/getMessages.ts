@@ -5,6 +5,8 @@ import { type settings, SettingsValidationSchema } from '../../settings'
 import { Category, validate } from '@awell-health/extensions-core'
 import { FieldsValidationSchema, fields, dataPoints } from './config'
 import TextLineApi from '../../textLineApi'
+import { isNil } from 'lodash'
+import { type Post } from '../../schema'
 
 export const getMessages: Action<typeof fields, typeof settings> = {
   key: 'getMessages',
@@ -20,8 +22,8 @@ export const getMessages: Action<typeof fields, typeof settings> = {
   onActivityCreated: async (payload, onComplete, onError) => {
     try {
       const {
-        settings: { accessToken },
-        fields: { recipient, page, page_size },
+        settings: { email, password, apiKey },
+        fields: { phoneNumber, page, pageSize },
       } = validate({
         schema: z.object({
           settings: SettingsValidationSchema,
@@ -30,22 +32,36 @@ export const getMessages: Action<typeof fields, typeof settings> = {
         payload,
       })
 
-      const textLineApi = new TextLineApi(accessToken)
-      const messages = await textLineApi.getMessages(recipient, page, page_size)
-      const numberOfMessages = messages.posts.length
-      const allMessages = messages.posts.map(function (message) {
-        return message.body
-      })
-      const latestMessage =
-        numberOfMessages > 0 ? messages.posts[0].body : undefined
+      const textLineApi = new TextLineApi(email, password, apiKey)
+      const messages = await textLineApi.getMessages(phoneNumber, page, pageSize)
 
-      await onComplete({
-        data_points: {
-          allMessages: JSON.stringify(allMessages),
-          numberOfMessages: String(numberOfMessages),
-          latestMessage,
-        },
-      })
+      if(isNil(messages.posts)){
+        await onComplete({
+          data_points: {
+            allMessages: '',
+            numberOfMessages: '0',
+            undefined,
+          },
+        })
+      } else {
+        // received sms contain the phone number, everything else will not
+        const receivedMessages = messages.posts.filter((p: Post) => !isNil(p.creator.phone_number));
+        const numberOfMessages = receivedMessages.length
+        const allMessages = receivedMessages.map(function (p: Post) {
+          return p.body
+        })
+        const latestMessage =
+          numberOfMessages > 0 ? receivedMessages[0].body : undefined
+
+        await onComplete({
+          data_points: {
+            allMessages: JSON.stringify(allMessages),
+            numberOfMessages: String(numberOfMessages),
+            latestMessage,
+          },
+        })
+      }
+     
     } catch (err) {
       if (err instanceof ZodError) {
         const error = fromZodError(err)

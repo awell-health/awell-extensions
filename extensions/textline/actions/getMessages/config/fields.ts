@@ -7,19 +7,18 @@ import {
   FieldType,
   StringType,
 } from '@awell-health/extensions-core'
-import { isNil } from 'lodash'
 
 export const fields = {
-  recipient: {
-    id: 'recipient',
-    label: '"To" number',
+  phoneNumber: {
+    id: 'phoneNumber',
+    label: 'Phone number to filter',
     type: FieldType.STRING,
     stringType: StringType.PHONE,
-    description: 'Search for text messages sent to a specific phone number',
+    description: 'Search for text messages sent from a specific phone number',
     required: false,
   },
-  page_size: {
-    id: 'page_size',
+  pageSize: {
+    id: 'pageSize',
     label: 'Page Size',
     description:
       'The number of results per page. Minimum is 1 and maximum is 1000.',
@@ -36,8 +35,8 @@ export const fields = {
 } satisfies Record<string, Field>
 
 export const FieldsValidationSchema = z.object({
-  recipient: E164PhoneValidationOptionalSchema,
-  page_size: z
+  phoneNumber: E164PhoneValidationOptionalSchema,
+  pageSize: z
     .number()
     .min(1, { message: 'Page size must be at least one' })
     .max(1000, { message: 'Cannot fetch more than 1000 messages' })
@@ -46,5 +45,5 @@ export const FieldsValidationSchema = z.object({
     .number()
     .min(1, { message: 'Page must be at least one' })
     .max(1000, { message: 'Cannot fetch more than 1000 pages' })
-    .default(50),
+    .default(1),
 } satisfies Record<keyof typeof fields, ZodTypeAny>)

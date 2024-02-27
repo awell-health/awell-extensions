@@ -3,8 +3,9 @@ import { fromZodError } from 'zod-validation-error'
 import { type Action } from '@awell-health/extensions-core'
 import { type settings, SettingsValidationSchema } from '../../settings'
 import { Category, validate } from '@awell-health/extensions-core'
-import { FieldsValidationSchema, fields } from './config'
+import { FieldsValidationSchema, dataPoints, fields } from './config'
 import TextLineApi from '../../textLineApi'
+import { type SendMessageResponse } from '../../schema'
 
 export const sendSms: Action<typeof fields, typeof settings> = {
   key: 'sendSms',
@@ -14,10 +15,11 @@ export const sendSms: Action<typeof fields, typeof settings> = {
   category: Category.COMMUNICATION,
   fields,
   previewable: false,
+  dataPoints,
   onActivityCreated: async (payload, onComplete, onError) => {
     try {
       const {
-        settings: { accessToken },
+        settings: { email, password, apiKey },
         fields: { recipient, message },
       } = validate({
         schema: z.object({
@@ -27,19 +29,14 @@ export const sendSms: Action<typeof fields, typeof settings> = {
         payload,
       })
 
-      // TODO do we need to call authentication before each request or is access token enough?
-
-      // TODO do the request and handle the response
-      const textLineApi = new TextLineApi(accessToken)
-      const sentMessageResponse = await textLineApi.sendMessage({
-        recipient,
-        content: message,
-      })
+      const textLineApi = new TextLineApi(email, password, apiKey)
+      const response: SendMessageResponse = await textLineApi.sendMessage(recipient, message)
       await onComplete({
         data_points: {
-          sentMessageResponse: JSON.stringify(sentMessageResponse),
+          conversationId: response.post.conversation_uuid
         },
       })
+      
     } catch (err) {
       if (err instanceof ZodError) {
         const error = fromZodError(err)

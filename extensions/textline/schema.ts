@@ -1,7 +1,7 @@
 import { z } from 'zod'
 
 const CreatorSchema = z.object({
-  phone_number: z.string(),
+  phone_number: z.optional(z.string()),
   type: z.string(),
   name: z.string(),
 })
@@ -9,11 +9,12 @@ const CreatorSchema = z.object({
 const PostSchema = z.object({
   body: z.string(),
   created_at: z.number(),
-  creator: CreatorSchema
+  creator: CreatorSchema,
+  conversation_uuid: z.string()
 })
 
 export const GetMessagesSchema = z.object({
-  posts: z.array(PostSchema)
+  posts: z.optional(z.array(PostSchema))
 })
 
 const SendMessageResponseSchema = z.object({
@@ -22,3 +23,5 @@ const SendMessageResponseSchema = z.object({
 
 export type SendMessageResponse = z.infer<typeof SendMessageResponseSchema>
 export type GetMessagesResponse = z.infer<typeof GetMessagesSchema>
+export type Post = z.infer<typeof PostSchema>
+

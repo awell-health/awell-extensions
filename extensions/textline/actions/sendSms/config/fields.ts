@@ -5,7 +5,7 @@ import {
   FieldType,
   StringType,
 } from '@awell-health/extensions-core'
-import { MessageValidationSchema } from '../../../common/validation'
+import { MessageValidationSchema } from '../../../validation'
 
 export const fields = {
   recipient: {

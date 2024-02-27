@@ -1,5 +1,8 @@
 import { sendSms } from './sendSms'
 import { generateTestPayload } from '../../../../src/tests'
+import { mockReturnValue } from '../../__mocks__/textLineApi'
+
+jest.mock('../../textLineApi', () => jest.fn(() => mockReturnValue))
 
 describe('Send SMS action', () => {
   const onComplete = jest.fn()
@@ -18,16 +21,19 @@ describe('Send SMS action', () => {
           recipient: '+13108820245',
         },
         settings: {
-          accessToken: 'zReGRpJSXxgWb6VpreTC',
-          // todo: create zod payload schmea to get rid of unnecessary fields
-          email: 'email',
+          email: 'user',
           password: 'password',
+          apiKey: 'apikey',
         },
       }),
       onComplete,
       onError
     )
-    expect(onComplete).toHaveBeenCalled()
+    expect(onComplete).toHaveBeenCalledWith({
+      data_points: {
+        conversationId: "30cded5d-90b7-4aae-9f51-b6b143376bb2"
+      },
+    })
     expect(onError).not.toHaveBeenCalled()
   }, 20000)
 
@@ -36,15 +42,12 @@ describe('Send SMS action', () => {
       generateTestPayload({
         fields: {
           message: 'Message content',
-          recipient: '',
-          from: '',
+          recipient: undefined,
         },
         settings: {
-          accountSid: 'AC-accountSid',
-          authToken: 'authToken',
-          fromNumber: '+19144542596',
-          messagingServiceSid: undefined,
-        },
+          email: 'user',
+          password: 'password',
+          apiKey: 'apikey',        },
       }),
       onComplete,
       onError
@@ -57,16 +60,13 @@ describe('Send SMS action', () => {
     await sendSms.onActivityCreated(
       generateTestPayload({
         fields: {
-          message: '',
-          recipient: '+19144542596',
-          from: '',
+          message: undefined,
+          recipient: '+13108820245',
         },
         settings: {
-          accountSid: 'AC-accountSid',
-          authToken: 'authToken',
-          fromNumber: '+19144542596',
-          messagingServiceSid: undefined,
-        },
+          email: 'user',
+          password: 'password',
+          apiKey: 'apikey',        },
       }),
       onComplete,
       onError
@@ -75,71 +75,4 @@ describe('Send SMS action', () => {
     expect(onError).toHaveBeenCalled()
   })
 
-  describe("'From' number", () => {
-    const basePayload = generateTestPayload({
-      fields: {
-        message: 'Message content',
-        recipient: '+32494000000',
-        from: '+32494000000',
-      },
-      settings: {
-        accountSid: 'AC-accountSid',
-        authToken: 'authToken',
-        fromNumber: '+19144542596',
-        messagingServiceSid: undefined,
-      },
-    })
-
-    test('Should use one provided in action fields', async () => {
-      await sendSms.onActivityCreated(basePayload, onComplete, onError)
-      expect(
-        getLastTwilioClient().messages.create.mock.calls.at(-1)[0].from
-      ).toEqual(basePayload.fields.from)
-      expect(onComplete).toHaveBeenCalled()
-      expect(onError).not.toHaveBeenCalled()
-    })
-
-    test('Should fallback to settings if no number is provided', async () => {
-      const payloadWithoutFrom = {
-        ...basePayload,
-        fields: {
-          message: 'Message content',
-          recipient: '+32494000000',
-          from: undefined,
-        },
-      }
-
-      await sendSms.onActivityCreated(payloadWithoutFrom, onComplete, onError)
-      expect(
-        getLastTwilioClient().messages.create.mock.calls.at(-1)[0].from
-      ).toEqual(payloadWithoutFrom.settings.fromNumber)
-      expect(onComplete).toHaveBeenCalled()
-      expect(onError).not.toHaveBeenCalled()
-    })
-
-    test('Should throw error if no number is provided in both settings and fields', async () => {
-      const payloadWithoutFrom = {
-        ...basePayload,
-        settings: { ...basePayload.settings, fromNumber: undefined },
-        fields: {
-          ...basePayload.fields,
-          from: undefined,
-        },
-      }
-
-      await sendSms.onActivityCreated(payloadWithoutFrom, onComplete, onError)
-      expect(onComplete).not.toHaveBeenCalled()
-      expect(onError).toHaveBeenCalledWith({
-        events: expect.arrayContaining([
-          expect.objectContaining({
-            error: {
-              category: 'BAD_REQUEST',
-              message:
-                'Validation error: "From" number is missing in both settings and in the action field.',
-            },
-          }),
-        ]),
-      })
-    })
-  })
 })

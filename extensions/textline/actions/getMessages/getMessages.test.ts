@@ -1,5 +1,8 @@
 import { getMessages } from './getMessages'
 import { generateTestPayload } from '../../../../src/tests'
+import { mockReturnValue } from '../../__mocks__/textLineApi'
+
+jest.mock('../../textLineApi', () => jest.fn(() => mockReturnValue))
 
 describe('Get messages action', () => {
   const onComplete = jest.fn()
@@ -14,29 +17,23 @@ describe('Get messages action', () => {
     await getMessages.onActivityCreated(
       generateTestPayload({
         fields: {
-          recipient: '+19144542596',
-          from: '+18999999999',
-          date_sent_after: '2024-02-19',
-          date_sent_before: undefined,
-          date_sent: undefined,
-          page_size: 30,
-          page: 1,
+          phoneNumber: '+18999999999',
+          pageSize: 30,
+          page: undefined,
         },
         settings: {
-          accountSid: 'AC-accountSid',
-          authToken: 'authToken',
-          fromNumber: '+19144542596',
-          messagingServiceSid: undefined,
-        },
+          email: 'user',
+          password: 'password',
+          apiKey: 'apikey',        },
       }),
       onComplete,
       onError
     )
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
-        allMessages: '["Yes"]',
+        allMessages: '["Received"]',
         numberOfMessages: '1',
-        latestMessage: 'Yes',
+        latestMessage: 'Received',
       },
     })
     expect(onError).not.toHaveBeenCalled()
@@ -46,19 +43,14 @@ describe('Get messages action', () => {
     await getMessages.onActivityCreated(
       generateTestPayload({
         fields: {
-          recipient: '+19144542596',
-          from: '+18888888888',
-          date_sent_after: undefined,
-          date_sent_before: '2024-02-19',
-          date_sent: undefined,
-          page_size: 30,
+          phoneNumber: '+19144542596',
+          pageSize: 30,
           page: 1,
         },
         settings: {
-          accountSid: 'AC-accountSid',
-          authToken: 'authToken',
-          fromNumber: '+19144542596',
-          messagingServiceSid: undefined,
+          email: 'user',
+          password: 'password',
+          apiKey: 'apikey',      
         },
       }),
       onComplete,
@@ -66,7 +58,7 @@ describe('Get messages action', () => {
     )
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
-        allMessages: '[]',
+        allMessages: '',
         numberOfMessages: '0',
         latestMessage: undefined,
       },
@@ -78,19 +70,14 @@ describe('Get messages action', () => {
     await getMessages.onActivityCreated(
       generateTestPayload({
         fields: {
-          recipient: undefined,
-          from: undefined,
-          date_sent_after: undefined,
-          date_sent_before: undefined,
-          date_sent: undefined,
-          page_size: undefined,
-          page: 1,
+          phoneNumber: undefined,
+          pageSize: undefined,
+          page: undefined,
         },
         settings: {
-          accountSid: 'AC-accountSid',
-          authToken: 'authToken',
-          fromNumber: '+19144542596',
-          messagingServiceSid: undefined,
+          email: 'user',
+          password: 'password',
+          apiKey: 'apikey',      
         },
       }),
       onComplete,
@@ -98,8 +85,9 @@ describe('Get messages action', () => {
     )
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
-        allMessages: '[]',
+        allMessages: '',
         numberOfMessages: '0',
+        latestMessage: undefined,
       },
     })
     expect(onError).not.toHaveBeenCalled()
@@ -109,19 +97,14 @@ describe('Get messages action', () => {
     await getMessages.onActivityCreated(
       generateTestPayload({
         fields: {
-          recipient: undefined,
-          from: undefined,
-          date_sent_after: undefined,
-          date_sent_before: undefined,
-          date_sent: undefined,
-          page_size: -1,
-          page: -1,
+          phoneNumber: '+19144542596',
+          pageSize: -30,
+          page: 1,
         },
         settings: {
-          accountSid: 'AC-accountSid',
-          authToken: 'authToken',
-          fromNumber: '+19144542596',
-          messagingServiceSid: undefined,
+          email: 'user',
+          password: 'password',
+          apiKey: 'apikey',
         },
       }),
       onComplete,
