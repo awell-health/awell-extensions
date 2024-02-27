@@ -29,6 +29,8 @@ import { nexuzhealth } from './nexuzhealth'
 import { CollectData } from './collectData'
 import { athenahealth } from './athenahealth'
 import { icd } from './icd'
+import { TextLine } from './textline'
+
 
 import * as json from './markdown.json'
 import { ExternalServer } from './external-server'
@@ -71,4 +73,5 @@ export const extensions = [
   // Wellinks,
   Zendesk,
   WestFax,
+  TextLine,
 ]
