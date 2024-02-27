@@ -3,7 +3,7 @@ import { AuthorType, Category } from '@awell-health/extensions-core'
 import { actions } from './actions'
 import { settings } from './settings'
 
-export const Twilio: Extension = {
+export const TextLine: Extension = {
   key: 'textline',
   title: 'TextLine',
   icon_url:
