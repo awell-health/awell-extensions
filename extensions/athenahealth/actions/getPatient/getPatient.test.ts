@@ -1,6 +1,6 @@
 import { getPatient } from '.'
 import { generateTestPayload } from '../../../../src/tests'
-import { type AxiosError } from 'axios' // Assuming axios is being used in the function you're testing
+import { type AxiosError } from 'axios'
 import { mockSettings } from '../../api/__mocks__/mockData'
 
 jest.mock('../../api/client')
