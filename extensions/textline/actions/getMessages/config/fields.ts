@@ -12,7 +12,7 @@ export const fields = {
     label: 'Phone number to filter',
     type: FieldType.STRING,
     stringType: StringType.PHONE,
-    description: 'Search for text messages sent from a specific phone number',
+    description: 'Search for text messages received from this phone number',
     required: false,
   },
 } satisfies Record<string, Field>
