@@ -30,7 +30,9 @@ Only the last 30 messages are returned.
 
 #### Simple Use Case
 
-*Initiating a Conversation*: A user sends a message to "Number A", initiating a conversation.
-*Receiving a Response*: "Number A" responds to the message, contributing to the ongoing conversation.
-*Searching Messages & Applying Filters*: To focus on the responses from "Number A", `phoneNumber`` filter can be applied to only show received messages from "Number A" within the conversation. This allows users to easily review and manage responses from "Number A", without the clutter of other received messages.
+**Initiating a Conversation**: A user sends a message to "Number A", initiating a conversation.
+
+**Receiving a Response**: "Number A" responds to the message, contributing to the ongoing conversation.
+
+**Searching Messages & Applying Filters**: To focus on the responses from "Number A", `phoneNumber`` filter can be applied to only show received messages from "Number A" within the conversation. This allows users to easily review and manage responses from "Number A", without the clutter of other received messages.
 
