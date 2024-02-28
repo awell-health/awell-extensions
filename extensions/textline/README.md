@@ -25,4 +25,14 @@ Send an SMS with TextLine to a recipient of your liking.
 
 ### Get messages
 
-Get a list of text messages matching the given criteria. Only the last 30 messages are returned.
+This action retrieves received messages. One can apply the `phoneNumber` filter to this action to display only received messages from that `phoneNumber`.
+Only the last 30 messages are returned.
+
+#### Simple Use Case
+
+**Initiating a Conversation**: A user sends a message to "Number A", initiating a conversation.
+
+**Receiving a Response**: "Number A" responds to the message, contributing to the ongoing conversation.
+
+**Searching Messages & Applying Filters**: To focus on the responses from "Number A", `phoneNumber`` filter can be applied to only show received messages from "Number A" within the conversation. This allows users to easily review and manage responses from "Number A", without the clutter of other received messages.
+
