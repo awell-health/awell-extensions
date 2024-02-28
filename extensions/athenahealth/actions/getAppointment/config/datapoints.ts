@@ -13,12 +13,20 @@ export const dataPoints = {
     key: 'status',
     valueType: 'string',
   },
-  type: {
+  appointmentTypeName: {
+    key: 'type',
+    valueType: 'string',
+  },
+  appointmentTypeId: {
     key: 'type',
     valueType: 'string',
   },
   date: {
     key: 'date',
     valueType: 'date',
+  },
+  duration: {
+    key: 'duration',
+    valueType: 'number',
   },
 } satisfies Record<string, DataPointDefinition>

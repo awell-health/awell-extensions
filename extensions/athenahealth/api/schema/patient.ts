@@ -1,6 +1,10 @@
 import z from 'zod'
 import { AthenaDateOnlySchema } from './date'
 
+export interface CreatePatientResponseType {
+  patientid: string
+}
+
 export const PatientSchema = z.object({
   firstname: z.string(),
   lastname: z.string(),

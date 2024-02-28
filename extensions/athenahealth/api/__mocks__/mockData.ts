@@ -1,5 +1,6 @@
 import { type z } from 'zod'
 import { type SettingsValidationSchema } from '../../settings'
+import { type AppointmentSchemaType } from '../schema/appointment'
 import { type PatientSchemaType } from '../schema/patient'
 
 export const mockSettings: z.infer<typeof SettingsValidationSchema> = {
@@ -11,7 +12,7 @@ export const mockSettings: z.infer<typeof SettingsValidationSchema> = {
     'athena/service/Athenanet.MDP.* system/Observation.read system/Patient.read',
 }
 
-export const mockPatientResponse: PatientSchemaType & Record<string, any> = {
+export const mockGetPatientResponse: PatientSchemaType & Record<string, any> = {
   email: 'nick@awellhealth.com',
   guarantorcountrycode3166: 'US',
   departmentid: '1',
@@ -61,4 +62,33 @@ export const mockPatientResponse: PatientSchemaType & Record<string, any> = {
   contactpreference_lab_email: true,
   privacyinformationverified: false,
   countrycode3166: 'US',
+}
+
+export const mockGetAppointmentResponse: AppointmentSchemaType &
+  Record<string, any> = {
+  appointmenttype: 'PHYSICAL EXAM',
+  patientid: '1',
+  copay: 0,
+  appointmentstatus: '4',
+  departmentid: '1',
+  providerid: '21',
+  patientlocationid: '64',
+  patientappointmenttypename: 'Physical Exam Visit',
+  stopcheckin: '03/29/2021 16:39:42',
+  date: '02/27/2009',
+  renderingproviderid: '21',
+  encounterstate: 'OPEN',
+  startcheckin: '03/29/2021 16:37:42',
+  appointmentcopay: {
+    collectedforappointment: 0,
+    insurancecopay: 0,
+    collectedforother: 0,
+  },
+  appointmentid: '1',
+  appointmenttypeid: '4',
+  chargeentrynotrequired: false,
+  duration: 30,
+  starttime: '08:00',
+  encounterstatus: 'CHECKEDOUT',
+  encounterid: '40941',
 }

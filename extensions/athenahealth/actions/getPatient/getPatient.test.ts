@@ -1,7 +1,11 @@
 import { getPatient } from '.'
 import { generateTestPayload } from '../../../../src/tests'
 import { type AxiosError } from 'axios'
-import { mockSettings } from '../../api/__mocks__/mockData'
+import {
+  mockGetPatientResponse,
+  mockSettings,
+} from '../../api/__mocks__/mockData'
+import { formatISO } from 'date-fns'
 
 jest.mock('../../api/client')
 
@@ -30,10 +34,12 @@ describe('athenahealth - Get patient', () => {
 
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
-        firstName: 'Nick',
-        lastName: 'Hellemans',
-        dob: '1993-11-30',
-        email: 'nick@awellhealth.com',
+        firstName: mockGetPatientResponse.firstname,
+        lastName: mockGetPatientResponse.lastname,
+        dob: formatISO(new Date(mockGetPatientResponse.dob), {
+          representation: 'date',
+        }),
+        email: mockGetPatientResponse.email,
       },
     })
   })
