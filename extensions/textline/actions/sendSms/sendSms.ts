@@ -19,7 +19,7 @@ export const sendSms: Action<typeof fields, typeof settings> = {
   onActivityCreated: async (payload, onComplete, onError) => {
     try {
       const {
-        settings: { email, password, apiKey },
+        settings: { accessToken },
         fields: { recipient, message },
       } = validate({
         schema: z.object({
@@ -29,7 +29,7 @@ export const sendSms: Action<typeof fields, typeof settings> = {
         payload,
       })
 
-      const textLineApi = new TextLineApi(email, password, apiKey)
+      const textLineApi = new TextLineApi(accessToken)
       const response: SendMessageResponse = await textLineApi.sendMessage(
         recipient,
         message
