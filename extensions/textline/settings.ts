@@ -7,7 +7,7 @@ export const settings = {
     key: 'accessToken',
     obfuscated: false,
     required: true,
-    description: 'Your TextLine accessToken',
+    description: 'Find your Access Token at https://application.textline.com/organization/api_settings.',
   },
 } satisfies Record<string, Setting>
 
