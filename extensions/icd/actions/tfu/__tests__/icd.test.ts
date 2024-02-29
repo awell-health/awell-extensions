@@ -18,10 +18,9 @@ describe('Sending a correct input for icd', () => {
     expect(onComplete).toHaveBeenCalledWith(
       expect.objectContaining({
         data_points: expect.objectContaining({
-          codes: JSON.stringify([
-            'Intestinal infectious diseases',
-            'Intestinal infectious diseases',
-          ]),
+          codes: JSON.stringify(
+            'Intestinal infectious diseases, Intestinal infectious diseases'
+          ),
         }),
       })
     )
@@ -42,10 +41,9 @@ describe('Sending a correct input for icd', () => {
     expect(onComplete).toHaveBeenCalledWith(
       expect.objectContaining({
         data_points: expect.objectContaining({
-          codes: JSON.stringify([
-            'Intestinal infectious diseases',
-            'Intestinal infectious diseases',
-          ]),
+          codes: JSON.stringify(
+            'Intestinal infectious diseases, Intestinal infectious diseases'
+          ),
         }),
       })
     )
@@ -56,7 +54,27 @@ describe('Sending a correct input for icd', () => {
     await icd.onActivityCreated(
       generateTestPayload({
         fields: {
-          icd_codes: '[" "]',
+          icd_codes: '[""]',
+        },
+        settings: {},
+      }),
+      onComplete,
+      jest.fn()
+    )
+    expect(onComplete).toHaveBeenCalledWith({
+      data_points: {
+        codes: JSON.stringify([]),
+        stringResponse: 'Blank',
+      },
+    })
+  })
+
+  test('Should return blank', async () => {
+    const onComplete = jest.fn()
+    await icd.onActivityCreated(
+      generateTestPayload({
+        fields: {
+          icd_codes: '',
         },
         settings: {},
       }),
@@ -85,8 +103,50 @@ describe('Sending a correct input for icd', () => {
     )
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
-        codes: JSON.stringify(['Diabetes mellitus']),
+        codes: JSON.stringify('Diabetes mellitus'),
         stringResponse: 'TFU',
+      },
+    })
+  })
+
+  test('Should return tfu regardless of blank', async () => {
+    const onComplete = jest.fn()
+    await icd.onActivityCreated(
+      generateTestPayload({
+        fields: {
+          icd_codes: '["E12",""]',
+        },
+        settings: {},
+      }),
+      onComplete,
+      jest.fn()
+    )
+    expect(onComplete).toHaveBeenCalledWith({
+      data_points: {
+        codes: JSON.stringify('Diabetes mellitus'),
+        stringResponse: 'TFU',
+      },
+    })
+  })
+
+  test('Should return not found with found codes', async () => {
+    const onComplete = jest.fn()
+    await icd.onActivityCreated(
+      generateTestPayload({
+        fields: {
+          icd_codes: '["R07.9","I10","I16.0","I10"]',
+        },
+        settings: {},
+      }),
+      onComplete,
+      jest.fn()
+    )
+    expect(onComplete).toHaveBeenCalledWith({
+      data_points: {
+        codes: JSON.stringify(
+          'Symptoms and signs involving the circulatory and respiratory systems, Hypertensive diseases, I16 not found, Hypertensive diseases'
+        ),
+        stringResponse: 'TCM',
       },
     })
   })

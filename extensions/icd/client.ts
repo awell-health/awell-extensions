@@ -13,16 +13,23 @@ type ICDOutput = z.output<typeof ICDSchema>
 
 export class ICDDataWrapper extends DataWrapper {
   public async getCode(code: string): Promise<ICDOutput> {
-    const req = this.Request<ICDResponse>({
-      method: 'GET',
-      url: `release/10/2019/${code}`,
-      headers: {
-        'Accept-Language': 'en',
-        'API-Version': 'v2',
-      },
-    })
-    const res = await req
-    return ICDSchema.parse(res)
+    try {
+      const req = this.Request<ICDResponse>({
+        method: 'GET',
+        url: `release/10/2019/${code}`,
+        headers: {
+          'Accept-Language': 'en',
+          'API-Version': 'v2',
+        },
+      })
+      const res = await req
+      return ICDSchema.parse(res)
+    } catch (e) {
+      return {
+        parent: 'Not Found',
+        title: `${code} not found`,
+      }
+    }
   }
 }
 

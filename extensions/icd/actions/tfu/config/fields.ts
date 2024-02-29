@@ -15,6 +15,11 @@ export const FieldSchema = z
     icd_codes: z.string(),
   })
   .transform((data) => {
+    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+    if (!data.icd_codes) {
+      data = { icd_codes: '' }
+      return data
+    }
     const codesArray = JSON.parse(data.icd_codes)
     const codes = codesArray
       .map((code: string) => code.trim().split('.')[0])
