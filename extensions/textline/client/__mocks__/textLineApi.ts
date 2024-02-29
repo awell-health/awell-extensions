@@ -11,21 +11,6 @@ export const mockReturnValue = {
   getMessages: jest.fn((phoneNumber: string) => {
     return phoneNumber === '+18999999999' ? { posts: [samplePost] } : {}
   }),
-  authenticate: jest.fn(() => {
-    return {
-      user: {
-        avatar_url: null,
-        name: 'Some User',
-        on_call: false,
-        username: 'someusername',
-        uuid: '142e542b-5cdf-47c4-99a4-dc532ed6b519',
-        email: 'someemail@awellhealth.com',
-      },
-      access_token: {
-        token: 'some_test_token',
-      },
-    }
-  }),
 }
 
 const mock = jest.fn().mockImplementation((params) => {

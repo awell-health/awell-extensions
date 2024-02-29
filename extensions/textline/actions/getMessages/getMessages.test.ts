@@ -20,9 +20,7 @@ describe('Get messages action', () => {
           phoneNumber: '+18999999999',
         },
         settings: {
-          email: 'user',
-          password: 'password',
-          apiKey: 'apikey',
+          accessToken: 'accessToken',
         },
       }),
       onComplete,
@@ -45,9 +43,7 @@ describe('Get messages action', () => {
           phoneNumber: '+19144542596',
         },
         settings: {
-          email: 'user',
-          password: 'password',
-          apiKey: 'apikey',
+          accessToken: 'accessToken',
         },
       }),
       onComplete,
@@ -70,9 +66,7 @@ describe('Get messages action', () => {
           phoneNumber: undefined,
         },
         settings: {
-          email: 'user',
-          password: 'password',
-          apiKey: 'apikey',
+          accessToken: 'accessToken',
         },
       }),
       onComplete,
@@ -87,5 +81,4 @@ describe('Get messages action', () => {
     })
     expect(onError).not.toHaveBeenCalled()
   })
-
 })
