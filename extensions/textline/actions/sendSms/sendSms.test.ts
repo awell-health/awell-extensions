@@ -21,9 +21,7 @@ describe('Send SMS action', () => {
           recipient: '+13108820245',
         },
         settings: {
-          email: 'user',
-          password: 'password',
-          apiKey: 'apikey',
+          accessToken: 'accessToken',
         },
       }),
       onComplete,
@@ -45,9 +43,7 @@ describe('Send SMS action', () => {
           recipient: undefined,
         },
         settings: {
-          email: 'user',
-          password: 'password',
-          apiKey: 'apikey',
+          accessToken: 'accessToken',
         },
       }),
       onComplete,
@@ -65,9 +61,7 @@ describe('Send SMS action', () => {
           recipient: '+13108820245',
         },
         settings: {
-          email: 'user',
-          password: 'password',
-          apiKey: 'apikey',
+          accessToken: 'accessToken',
         },
       }),
       onComplete,

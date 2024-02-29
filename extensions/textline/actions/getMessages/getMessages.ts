@@ -22,7 +22,7 @@ export const getMessages: Action<typeof fields, typeof settings> = {
   onActivityCreated: async (payload, onComplete, onError) => {
     try {
       const {
-        settings: { email, password, apiKey },
+        settings: { accessToken },
         fields: { phoneNumber },
       } = validate({
         schema: z.object({
@@ -32,12 +32,8 @@ export const getMessages: Action<typeof fields, typeof settings> = {
         payload,
       })
 
-      const textLineApi = new TextLineApi(email, password, apiKey)
-      const messages = await textLineApi.getMessages(
-        phoneNumber,
-        1,
-        30
-      )
+      const textLineApi = new TextLineApi(accessToken)
+      const messages = await textLineApi.getMessages(phoneNumber, 1, 30)
 
       if (isNil(messages.posts)) {
         await onComplete({
