@@ -34,7 +34,7 @@ export const icd: Action<
     if (icd_codes.length === 0) {
       await onComplete({
         data_points: {
-          codes: JSON.stringify([]),
+          codes: '',
           stringResponse: 'Blank',
         },
       })
@@ -46,6 +46,9 @@ export const icd: Action<
       icd_codes.map(async (code: string) => {
         const response = await IDPClient.getCode(code)
         if (response.parent !== undefined) {
+          if (response.parent === 'Not Found') {
+            return response.title
+          }
           const parent = await IDPClient.getCode(response.parent)
           return parent.title
         }
@@ -56,7 +59,7 @@ export const icd: Action<
 
     await onComplete({
       data_points: {
-        codes: JSON.stringify(icdCodes),
+        codes: icdCodes.join(', '),
         stringResponse: resp ? 'TFU' : 'TCM',
       },
     })
