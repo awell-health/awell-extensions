@@ -34,7 +34,7 @@ export const icd: Action<
     if (icd_codes.length === 0) {
       await onComplete({
         data_points: {
-          codes: JSON.stringify([]),
+          codes: '',
           stringResponse: 'Blank',
         },
       })
@@ -59,7 +59,7 @@ export const icd: Action<
 
     await onComplete({
       data_points: {
-        codes: JSON.stringify(icdCodes.join(', ')),
+        codes: icdCodes.join(', '),
         stringResponse: resp ? 'TFU' : 'TCM',
       },
     })
