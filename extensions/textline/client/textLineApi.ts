@@ -32,11 +32,13 @@ class TextLineApi {
 
   async getMessages(
     phoneNumber?: string,
+    afterMessageId?: string,
     page?: number,
-    pageSize?: number
+    pageSize?: number,
   ): Promise<GetMessagesResponse> {
     const url = this.constructUrl(`/api/conversations.json`, {
       phone_number: phoneNumber,
+      after_uuid: afterMessageId,
       page_size: pageSize,
       page,
     })
@@ -73,7 +75,9 @@ class TextLineApi {
 
     if (response.status >= 400) {
       throw new Error(
-        result?.message ?? 'Unknown error in TextLine API has occurred'
+        !isNil(result?.errors)
+          ? JSON.stringify(result?.errors)
+          : 'Unknown error in TextLine API has occurred'
       )
     }
 

@@ -31,12 +31,14 @@ export const sendSms: Action<typeof fields, typeof settings> = {
 
       const textLineApi = new TextLineApi(accessToken)
       const response: SendMessageResponse = await textLineApi.sendMessage(
+        message,
         recipient,
-        message
       )
+
       await onComplete({
         data_points: {
           conversationId: response.post.conversation_uuid,
+          messageId: response.post.uuid,
         },
       })
     } catch (err) {
