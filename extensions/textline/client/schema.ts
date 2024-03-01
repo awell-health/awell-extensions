@@ -11,6 +11,7 @@ const PostSchema = z.object({
   created_at: z.number(),
   creator: CreatorSchema,
   conversation_uuid: z.string(),
+  uuid: z.string()
 })
 
 export const GetMessagesSchema = z.object({

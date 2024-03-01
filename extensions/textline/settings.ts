@@ -5,7 +5,7 @@ export const settings = {
   accessToken: {
     label: 'accessToken',
     key: 'accessToken',
-    obfuscated: false,
+    obfuscated: true,
     required: true,
     description: 'Find your Access Token at https://application.textline.com/organization/api_settings.',
   },

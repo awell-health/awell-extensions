@@ -30,6 +30,7 @@ describe('Send SMS action', () => {
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
         conversationId: '30cded5d-90b7-4aae-9f51-b6b143376bb2',
+        messageId: '7d3d9cbc-c053-4e7c-b837-cb2e38202117'
       },
     })
     expect(onError).not.toHaveBeenCalled()

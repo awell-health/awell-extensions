@@ -18,6 +18,7 @@ describe('Get messages action', () => {
       generateTestPayload({
         fields: {
           phoneNumber: '+18999999999',
+          afterMessageId: undefined,
         },
         settings: {
           accessToken: 'accessToken',
@@ -28,9 +29,9 @@ describe('Get messages action', () => {
     )
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
-        allMessages: '["Received"]',
-        numberOfMessages: '1',
-        latestMessage: 'Received',
+        allMessages: '["Yes","Received"]',
+        numberOfMessages: '2',
+        latestMessage: 'Yes',
       },
     })
     expect(onError).not.toHaveBeenCalled()
@@ -41,6 +42,7 @@ describe('Get messages action', () => {
       generateTestPayload({
         fields: {
           phoneNumber: '+19144542596',
+          afterMessageId: undefined,
         },
         settings: {
           accessToken: 'accessToken',
@@ -64,6 +66,7 @@ describe('Get messages action', () => {
       generateTestPayload({
         fields: {
           phoneNumber: undefined,
+          afterMessageId: undefined,
         },
         settings: {
           accessToken: 'accessToken',
