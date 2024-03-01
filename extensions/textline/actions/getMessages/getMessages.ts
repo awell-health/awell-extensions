@@ -23,7 +23,7 @@ export const getMessages: Action<typeof fields, typeof settings> = {
     try {
       const {
         settings: { accessToken },
-        fields: { phoneNumber },
+        fields: { phoneNumber, afterMessageId },
       } = validate({
         schema: z.object({
           settings: SettingsValidationSchema,
@@ -33,7 +33,7 @@ export const getMessages: Action<typeof fields, typeof settings> = {
       })
 
       const textLineApi = new TextLineApi(accessToken)
-      const messages = await textLineApi.getMessages(phoneNumber, 1, 30)
+      const messages = await textLineApi.getMessages(phoneNumber, afterMessageId, 1, 30)
 
       if (isNil(messages.posts)) {
         await onComplete({
@@ -47,7 +47,9 @@ export const getMessages: Action<typeof fields, typeof settings> = {
         // received messages contain a phone number, sent messages will not
         const receivedMessages = messages.posts.filter(
           (p: Post) => !isNil(p.creator.phone_number)
-        )
+        ).sort((a: Post, b: Post) => {
+          return b.created_at - a.created_at;
+        });
         const numberOfMessages = receivedMessages.length
         const allMessages = receivedMessages.map(function (p: Post) {
           return p.body
