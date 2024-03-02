@@ -1,0 +1,1 @@
+export { createAppointmentNote } from './createAppointmentNote'

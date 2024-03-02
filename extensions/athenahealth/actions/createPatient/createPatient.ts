@@ -32,7 +32,5 @@ export const createPatient: Action<
         createdPatientId: res.patientid,
       },
     })
-
-    await onComplete()
   },
 }

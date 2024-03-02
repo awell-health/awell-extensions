@@ -79,4 +79,21 @@ export class AthenaAPIClient {
       )
     }
   )
+
+  createAppointmentNote = jest.fn(
+    ({ appointmentId }: { appointmentId: string }) => {
+      if (appointmentId === '1')
+        return {
+          success: 'true',
+        }
+
+      return Promise.reject(
+        createAxiosError(
+          404,
+          { 'Content-Type': 'text/html; charset=iso-8859-1' },
+          JSON.stringify({ error: 'The appointment is not available.' })
+        )
+      )
+    }
+  )
 }

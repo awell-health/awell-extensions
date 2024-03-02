@@ -2,16 +2,17 @@ import { Category, type Action } from '@awell-health/extensions-core'
 import { type settings } from '../../settings'
 import { fields, dataPoints, FieldsValidationSchema } from './config'
 import { validatePayloadAndCreateClient } from '../../helpers'
+import { omit } from 'lodash'
 
-export const addProblemToPatientChart: Action<
+export const createAppointmentNote: Action<
   typeof fields,
   typeof settings,
   keyof typeof dataPoints
 > = {
-  key: 'addProblemToPatientChart',
+  key: 'createAppointmentNote',
   category: Category.EHR_INTEGRATIONS,
-  title: 'Add problem to patient chart',
-  description: "Records a problem in the patient's active problem list",
+  title: 'Create appointment note',
+  description: 'Creates a note for a specific appointment',
   fields,
   previewable: false,
   dataPoints,
@@ -21,7 +22,11 @@ export const addProblemToPatientChart: Action<
       payload,
     })
 
-    console.log(input, client)
+    await client.createAppointmentNote({
+      practiceId: input.practiceid,
+      appointmentId: input.appointmentid,
+      data: omit(input, ['practiceid', 'appointmentid']),
+    })
 
     await onComplete()
   },

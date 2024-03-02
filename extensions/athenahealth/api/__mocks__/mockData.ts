@@ -4,8 +4,9 @@ import { type AppointmentSchemaType } from '../schema/appointment'
 import { type PatientSchemaType } from '../schema/patient'
 
 export const mockSettings: z.infer<typeof SettingsValidationSchema> = {
-  client_id: 'some_id',
-  client_secret: 'some_secret',
+  client_id: '0oanq1v2yx9CTrbWH297',
+  client_secret:
+    'CSU8jy1yyvr86YYzKYd3qdclj5mj1N_7HXydPMoQ8ERUKRT6tZTQXva6s3IBqRsv',
   auth_url: 'https://api.preview.platform.athenahealth.com/oauth2/v1/token',
   api_url: 'https://api.preview.platform.athenahealth.com',
   scope:
