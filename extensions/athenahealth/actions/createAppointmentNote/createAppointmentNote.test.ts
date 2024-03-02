@@ -5,9 +5,6 @@ import { mockSettings } from '../../api/__mocks__/mockData'
 
 jest.mock('../../api/client')
 
-const SECONDS = 1000
-jest.setTimeout(70 * SECONDS)
-
 describe('athenahealth - Create appointment note', () => {
   const onComplete = jest.fn()
   const onError = jest.fn()
