@@ -9,7 +9,7 @@ import { type SendMessageResponse } from '../../client/schema'
 
 export const sendSms: Action<typeof fields, typeof settings> = {
   key: 'sendSms',
-  title: 'Send SMS (with from number)',
+  title: 'Send SMS',
   description:
     'Send a text message from a given telephone number to a recipient of your choice.',
   category: Category.COMMUNICATION,

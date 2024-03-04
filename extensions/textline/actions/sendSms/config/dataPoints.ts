@@ -5,4 +5,8 @@ export const dataPoints = {
     key: 'conversationId',
     valueType: 'string',
   },
+  messageId: {
+    key: 'messageId',
+    valueType: 'string',
+  },
 } satisfies Record<string, DataPointDefinition>
