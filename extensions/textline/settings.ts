@@ -3,7 +3,7 @@ import { z, type ZodTypeAny } from 'zod'
 
 export const settings = {
   accessToken: {
-    label: 'accessToken',
+    label: 'Access Token',
     key: 'accessToken',
     obfuscated: true,
     required: true,

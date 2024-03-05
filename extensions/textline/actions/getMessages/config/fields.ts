@@ -17,7 +17,7 @@ export const fields = {
   },
   afterMessageId: {
     id: 'afterMessageId',
-    label: 'Phone number to filter',
+    label: 'Messages after',
     type: FieldType.STRING,
     description:
       'The id of a message to use as non inclusive lower bound of post results.',

@@ -21,6 +21,8 @@ export const mockReturnValue = {
   getMessages: jest.fn((phoneNumber: string) => {
     return phoneNumber === '+18999999999' ? { posts: [samplePost, samplePost2] } : {}
   }),
+  setContactConsent: jest.fn((params) => {
+  }),
 }
 
 const mock = jest.fn().mockImplementation((params) => {
