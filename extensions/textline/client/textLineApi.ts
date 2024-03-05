@@ -83,6 +83,35 @@ class TextLineApi {
 
     return result
   }
+
+  async setContactConsent(
+    consentStatus: boolean,
+    recipient: string
+  ): Promise<void> {
+    const url = this.constructUrl(`api/customers/set_consent.json`)
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        'X-TGP-ACCESS-TOKEN': this.accessToken,
+      },
+      body: JSON.stringify({
+        phone_number: recipient,
+        consent: consentStatus ? 1 : 0,
+      }),
+    })
+    const result = await response.json()
+
+    if (response.status >= 400) {
+      throw new Error(
+        !isNil(result?.errors)
+          ? JSON.stringify(result?.errors)
+          : 'Unknown error in TextLine API has occurred'
+      )
+    }
+
+  }
 }
 
 export default TextLineApi
