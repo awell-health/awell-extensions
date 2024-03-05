@@ -3,24 +3,22 @@ import { fromZodError } from 'zod-validation-error'
 import { type Action } from '@awell-health/extensions-core'
 import { type settings, SettingsValidationSchema } from '../../settings'
 import { Category, validate } from '@awell-health/extensions-core'
-import { FieldsValidationSchema, dataPoints, fields } from './config'
+import { FieldsValidationSchema, fields } from './config'
 import TextLineApi from '../../client/textLineApi'
-import { type SendMessageResponse } from '../../client/schema'
 
-export const sendSms: Action<typeof fields, typeof settings> = {
-  key: 'sendSms',
-  title: 'Send SMS',
+export const setContactConsent: Action<typeof fields, typeof settings> = {
+  key: 'setContactConsent',
+  title: 'Set Contact Consent',
   description:
-    'Send a text message from a given telephone number to a recipient of your choice.',
+    'Set contact consent status. You can set consent as true or false. ',
   category: Category.COMMUNICATION,
   fields,
   previewable: true,
-  dataPoints,
   onActivityCreated: async (payload, onComplete, onError) => {
     try {
       const {
         settings: { accessToken },
-        fields: { recipient, message },
+        fields: { recipient, consentStatus },
       } = validate({
         schema: z.object({
           settings: SettingsValidationSchema,
@@ -30,17 +28,12 @@ export const sendSms: Action<typeof fields, typeof settings> = {
       })
 
       const textLineApi = new TextLineApi(accessToken)
-      const response: SendMessageResponse = await textLineApi.sendMessage(
-        message,
+      await textLineApi.setContactConsent(
+        consentStatus,
         recipient,
       )
 
-      await onComplete({
-        data_points: {
-          conversationId: response.post.conversation_uuid,
-          messageId: response.post.uuid,
-        },
-      })
+      await onComplete()
     } catch (err) {
       if (err instanceof ZodError) {
         const error = fromZodError(err)

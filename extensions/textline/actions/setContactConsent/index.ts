@@ -1,0 +1,1 @@
+export { setContactConsent } from './setContactConsent'
