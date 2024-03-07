@@ -88,7 +88,7 @@ class TextLineApi {
     consentStatus: boolean,
     recipient: string
   ): Promise<void> {
-    const url = this.constructUrl(`api/customers/set_consent.json`)
+    const url = this.constructUrl(`/api/customers/set_consent.json`)
     const response = await fetch(url, {
       method: 'POST',
       headers: {
