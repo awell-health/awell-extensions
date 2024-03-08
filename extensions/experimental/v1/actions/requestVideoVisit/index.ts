@@ -1,1 +1,1 @@
-export { updatePatient } from './updatePatient'
+export { requestVideoVisit } from './requestVideoVisit'
