@@ -11,6 +11,12 @@ export const requestVideoVisit: Action<typeof fields, typeof settings> = {
     'Allow user to choose between requesting a video visit or simply continue',
   fields,
   dataPoints,
+  options: {
+    stakeholders: {
+      label: 'Stakeholder',
+      mode: 'single',
+    },
+  },
   previewable: false,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
     // Completion happens in Hosted Pages
