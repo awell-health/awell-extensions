@@ -1,7 +1,7 @@
 import { type Action } from '@awell-health/extensions-core'
 import { type settings } from '../../../settings'
 import { Category } from '@awell-health/extensions-core'
-import { fields } from './config'
+import { fields, dataPoints } from './config'
 
 export const requestVideoVisit: Action<typeof fields, typeof settings> = {
   key: 'requestVideoVisit',
@@ -10,6 +10,7 @@ export const requestVideoVisit: Action<typeof fields, typeof settings> = {
   description:
     'Allow user to choose between requesting a video visit or simply continue',
   fields,
+  dataPoints,
   previewable: false,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
     // Completion happens in Hosted Pages
