@@ -6,6 +6,7 @@ import { CanvasMedical } from './canvasMedical'
 import { Cloudinary } from './cloudinary'
 import { DropboxSign } from './dropboxSign'
 import { Elation } from './elation'
+import { Experimental } from './experimental'
 import { Formsort } from './formsort'
 import { Healthie } from './healthie'
 import { HelloWorld } from './hello-world'
@@ -31,7 +32,6 @@ import { athenahealth } from './athenahealth'
 import { icd } from './icd'
 import { TextLine } from './textline'
 
-
 import * as json from './markdown.json'
 import { ExternalServer } from './external-server'
 
@@ -53,6 +53,7 @@ export const extensions = [
   DocuSign,
   DropboxSign,
   Elation,
+  Experimental,
   ExternalServer,
   Formsort,
   Healthie,
