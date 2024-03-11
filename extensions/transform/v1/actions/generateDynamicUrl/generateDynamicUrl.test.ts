@@ -12,7 +12,7 @@ describe('Transform - Generate dynamic URL', () => {
   test('Should return the expected URL', async () => {
     const mockOnActivityCreateParams = generateTestPayload({
       fields: {
-        urlTemplate: 'https://your-url.com/{{placeholder}}',
+        urlTemplate: 'https://your-url.com/[placeholder]',
         value: 'hello-world',
       },
       settings: {},
@@ -34,7 +34,7 @@ describe('Transform - Generate dynamic URL', () => {
   test('Should return the expected URL', async () => {
     const mockOnActivityCreateParams = generateTestPayload({
       fields: {
-        urlTemplate: 'https://your-url.com/{{placeholder}}',
+        urlTemplate: 'https://your-url.com/[placeholder]',
         value: 'hello world, I Love you',
       },
       settings: {},
