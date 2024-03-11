@@ -39,4 +39,14 @@ The dictionary should be structured in JSON format with string keys mapping to s
   "2": "Not known",
   // ... other number mappings ...
 }
+```
 
+## Generate dynamic URL
+
+Generate a dynamic URL based on a placeholder and a data point
+
+```
+urlTemplate   https://your-url.com/{{placeholder}}
+value         hello-world
+outcome       https://your-url.com/hello-world
+```

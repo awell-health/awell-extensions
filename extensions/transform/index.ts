@@ -6,6 +6,7 @@ import {
   parseTextToNumber,
   parseUnixTimestampToDate,
   parseNumberToTextWithDictionary,
+  generateDynamicUrl,
 } from './v1/actions'
 import { settings } from './settings'
 
@@ -26,6 +27,7 @@ export const Transform: Extension = {
     parseTextToNumber,
     parseUnixTimestampToDate,
     parseNumberToTextWithDictionary,
+    generateDynamicUrl,
   },
   settings,
 }
