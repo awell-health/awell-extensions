@@ -20,7 +20,7 @@ export const sendSms: Action<typeof fields, typeof settings> = {
     try {
       const {
         settings: { accessToken },
-        fields: { recipient, message },
+        fields: { recipient, message, departmentId },
       } = validate({
         schema: z.object({
           settings: SettingsValidationSchema,
@@ -33,6 +33,7 @@ export const sendSms: Action<typeof fields, typeof settings> = {
       const response: SendMessageResponse = await textLineApi.sendMessage(
         message,
         recipient,
+        departmentId
       )
 
       await onComplete({

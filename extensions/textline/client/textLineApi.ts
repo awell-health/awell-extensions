@@ -33,6 +33,8 @@ class TextLineApi {
   async getMessages(
     phoneNumber?: string,
     afterMessageId?: string,
+    departmentId?: string,
+
     page?: number,
     pageSize?: number,
   ): Promise<GetMessagesResponse> {
@@ -41,6 +43,7 @@ class TextLineApi {
       after_uuid: afterMessageId,
       page_size: pageSize,
       page,
+      group_uuid: departmentId,
     })
     const response = await fetchTyped(url, GetMessagesSchema, {
       headers: {
@@ -54,7 +57,8 @@ class TextLineApi {
 
   async sendMessage(
     content: string,
-    recipient: string
+    recipient: string,
+    departmentId?: string
   ): Promise<SendMessageResponse> {
     const url = this.constructUrl(`/api/conversations.json`)
     const response = await fetch(url, {
@@ -63,12 +67,14 @@ class TextLineApi {
         Accept: 'application/json',
         'Content-Type': 'application/json',
         'X-TGP-ACCESS-TOKEN': this.accessToken,
+
       },
       body: JSON.stringify({
         phone_number: recipient,
         comment: {
           body: content,
         },
+        group_uuid: departmentId,
       }),
     })
     const result = await response.json()

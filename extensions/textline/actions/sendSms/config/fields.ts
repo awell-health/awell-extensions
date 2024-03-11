@@ -23,9 +23,17 @@ export const fields = {
     type: FieldType.TEXT,
     required: true,
   },
+  departmentId: {
+    id: 'departmentId',
+    label: 'Department Id',
+    description: 'The department from which you want to send the message. Defaults to to your first department.',
+    type: FieldType.TEXT,
+    required: false,
+  },
 } satisfies Record<string, Field>
 
 export const FieldsValidationSchema = z.object({
   recipient: E164PhoneValidationSchema,
   message: MessageValidationSchema,
+  departmentId: z.optional(z.string())
 } satisfies Record<keyof typeof fields, ZodTypeAny>)
