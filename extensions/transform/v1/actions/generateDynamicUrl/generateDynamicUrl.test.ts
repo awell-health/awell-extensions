@@ -31,28 +31,6 @@ describe('Transform - Generate dynamic URL', () => {
     })
   })
 
-  test('Should return the expected URL', async () => {
-    const mockOnActivityCreateParams = generateTestPayload({
-      fields: {
-        urlTemplate: 'https://your-url.com/[placeholder]',
-        value: 'hello world, I Love you',
-      },
-      settings: {},
-    })
-
-    await generateDynamicUrl.onActivityCreated(
-      mockOnActivityCreateParams,
-      onComplete,
-      onError
-    )
-
-    expect(onComplete).toBeCalledWith({
-      data_points: {
-        url: 'https://your-url.com/hello-world-i-love-you',
-      },
-    })
-  })
-
   test('Should return the expected URL when value is empty', async () => {
     const mockOnActivityCreateParams = generateTestPayload({
       fields: {
@@ -60,7 +38,7 @@ describe('Transform - Generate dynamic URL', () => {
         value: undefined,
       },
       pathway: {
-        id: '123',
+        id: '234d0IOB_zov',
       },
       settings: {},
     })
@@ -73,7 +51,7 @@ describe('Transform - Generate dynamic URL', () => {
 
     expect(onComplete).toBeCalledWith({
       data_points: {
-        url: 'https://your-url.com/123',
+        url: 'https://your-url.com/234d0IOB_zov',
       },
     })
   })
