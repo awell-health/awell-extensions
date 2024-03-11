@@ -9,7 +9,7 @@ import {
 } from './config'
 import { fromZodError } from 'zod-validation-error'
 import { z, ZodError } from 'zod'
-import { isEmpty, kebabCase } from 'lodash'
+import { isEmpty } from 'lodash'
 
 export const generateDynamicUrl: Action<
   typeof fields,
@@ -38,9 +38,8 @@ export const generateDynamicUrl: Action<
       })
 
       const placeholderPattern = /\[placeholder\]/g
-      const valueForUrl = isEmpty(value) ? pathwayId : value
-      const sanetizedValue = kebabCase(valueForUrl)
-      const url = urlTemplate.replace(placeholderPattern, sanetizedValue)
+      const valueForUrl = isEmpty(value) ? pathwayId : String(value)
+      const url = urlTemplate.replace(placeholderPattern, valueForUrl)
 
       await onComplete({
         data_points: {
