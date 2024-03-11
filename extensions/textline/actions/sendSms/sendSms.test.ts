@@ -19,6 +19,7 @@ describe('Send SMS action', () => {
         fields: {
           message: 'Message content',
           recipient: '+13108820245',
+          departmentId: undefined,
         },
         settings: {
           accessToken: 'accessToken',
@@ -42,6 +43,7 @@ describe('Send SMS action', () => {
         fields: {
           message: 'Message content',
           recipient: undefined,
+          departmentId: 'somedepartment',
         },
         settings: {
           accessToken: 'accessToken',
@@ -60,6 +62,7 @@ describe('Send SMS action', () => {
         fields: {
           message: undefined,
           recipient: '+13108820245',
+          departmentId: 'somedepartment',
         },
         settings: {
           accessToken: 'accessToken',

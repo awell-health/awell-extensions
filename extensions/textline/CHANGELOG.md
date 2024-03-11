@@ -1,5 +1,8 @@
 # TextLine changelog
 
+## 2024-03-11
+
+1. Add option to set department ID when sending messages and when retrieving messages. Check official documentation here: https://textline.docs.apiary.io/#reference/conversations/phone-numbers/message-a-phone-number
 ## 2024-03-5
 
 1. Add capability to set contact consent status (https://textline.docs.apiary.io/#reference/customers/set-contact-consent/set-contact-consent)
