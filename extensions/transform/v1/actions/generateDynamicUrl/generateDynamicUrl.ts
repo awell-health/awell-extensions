@@ -30,7 +30,7 @@ export const generateDynamicUrl: Action<
         payload,
       })
 
-      const placeholderPattern = /{{\s*placeholder\s*}}/
+      const placeholderPattern = /\[placeholder\]/g
       const sanetizedValue = kebabCase(value)
       const url = urlTemplate.replace(placeholderPattern, sanetizedValue)
 
