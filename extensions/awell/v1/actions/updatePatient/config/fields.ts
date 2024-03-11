@@ -102,6 +102,12 @@ export const fields = {
     type: FieldType.STRING,
     required: false,
   },
+  nationalRegistryNumber: {
+    id: 'nationalRegistryNumber',
+    label: 'National registry number',
+    type: FieldType.STRING,
+    required: false,
+  },
 } satisfies Record<string, Field>
 
 export const FieldsValidationSchema = z.object({
@@ -119,4 +125,5 @@ export const FieldsValidationSchema = z.object({
   zip: z.optional(z.string()),
   preferredLanguage: z.optional(z.string()),
   sex: z.optional(z.enum([Sex.Female, Sex.Male, Sex.NotKnown])),
+  nationalRegistryNumber: z.string().optional(),
 } satisfies Record<keyof typeof fields, ZodTypeAny>)
