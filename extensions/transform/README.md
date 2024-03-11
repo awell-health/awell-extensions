@@ -43,7 +43,7 @@ The dictionary should be structured in JSON format with string keys mapping to s
 
 ## Generate dynamic URL
 
-Generate a dynamic URL based on a placeholder and a data point
+Generate a dynamic URL based on a URL template with placeholder and a data point value.
 
 ```
 urlTemplate   https://your-url.com/{{placeholder}}
