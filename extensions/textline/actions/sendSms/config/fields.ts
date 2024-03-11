@@ -26,7 +26,7 @@ export const fields = {
   departmentId: {
     id: 'departmentId',
     label: 'Department Id',
-    description: 'The ID of the department from which you want to retrieve the message. Not using a department Id will default it to your first department.',
+    description: 'The ID of the department from which you want to send the message. Not using a department Id will default it to your first department.',
     type: FieldType.TEXT,
     required: false,
   },
