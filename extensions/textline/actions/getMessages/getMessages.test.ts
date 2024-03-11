@@ -19,6 +19,7 @@ describe('Get messages action', () => {
         fields: {
           phoneNumber: '+18999999999',
           afterMessageId: undefined,
+          departmentId: undefined,
         },
         settings: {
           accessToken: 'accessToken',
@@ -43,6 +44,7 @@ describe('Get messages action', () => {
         fields: {
           phoneNumber: '+19144542596',
           afterMessageId: undefined,
+          departmentId: undefined,
         },
         settings: {
           accessToken: 'accessToken',
@@ -67,6 +69,7 @@ describe('Get messages action', () => {
         fields: {
           phoneNumber: undefined,
           afterMessageId: undefined,
+          departmentId: undefined,
         },
         settings: {
           accessToken: 'accessToken',

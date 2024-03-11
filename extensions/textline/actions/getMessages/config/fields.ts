@@ -23,6 +23,13 @@ export const fields = {
       'The id of a message to use as non inclusive lower bound of post results.',
     required: false,
   },
+  departmentId: {
+    id: 'departmentId',
+    label: 'Department Id',
+    description: 'The ID of the department from which you want to send the message. Not using a department UUID will have the message go out on your first department.',
+    type: FieldType.TEXT,
+    required: false,
+  },
 } satisfies Record<string, Field>
 
 export const FieldsValidationSchema = z.object({
@@ -32,4 +39,5 @@ export const FieldsValidationSchema = z.object({
       .string()
       .min(10, { message: 'Message ID needs to be bigger than 10 characters.' })
   ),
+  departmentId: z.optional(z.string())
 } satisfies Record<keyof typeof fields, ZodTypeAny>)
