@@ -1,10 +1,15 @@
 import { type Action } from '@awell-health/extensions-core'
 import { Category, validate } from '@awell-health/extensions-core'
 import { type settings } from '../../../settings'
-import { FieldsValidationSchema, dataPoints, fields } from './config'
+import {
+  FieldsValidationSchema,
+  dataPoints,
+  fields,
+  PathwayValidationSchema,
+} from './config'
 import { fromZodError } from 'zod-validation-error'
 import { z, ZodError } from 'zod'
-import { kebabCase } from 'lodash'
+import { isEmpty, kebabCase } from 'lodash'
 
 export const generateDynamicUrl: Action<
   typeof fields,
@@ -23,15 +28,18 @@ export const generateDynamicUrl: Action<
     try {
       const {
         fields: { urlTemplate, value },
+        pathway: { id: pathwayId },
       } = validate({
         schema: z.object({
           fields: FieldsValidationSchema,
+          pathway: PathwayValidationSchema,
         }),
         payload,
       })
 
       const placeholderPattern = /\[placeholder\]/g
-      const sanetizedValue = kebabCase(value)
+      const valueForUrl = isEmpty(value) ? pathwayId : value
+      const sanetizedValue = kebabCase(valueForUrl)
       const url = urlTemplate.replace(placeholderPattern, sanetizedValue)
 
       await onComplete({
