@@ -53,6 +53,31 @@ describe('Transform - Generate dynamic URL', () => {
     })
   })
 
+  test('Should return the expected URL when value is empty', async () => {
+    const mockOnActivityCreateParams = generateTestPayload({
+      fields: {
+        urlTemplate: 'https://your-url.com/[placeholder]',
+        value: undefined,
+      },
+      pathway: {
+        id: '123',
+      },
+      settings: {},
+    })
+
+    await generateDynamicUrl.onActivityCreated(
+      mockOnActivityCreateParams,
+      onComplete,
+      onError
+    )
+
+    expect(onComplete).toBeCalledWith({
+      data_points: {
+        url: 'https://your-url.com/123',
+      },
+    })
+  })
+
   test('Should return an error if string does not contain a placeholder', async () => {
     const mockOnActivityCreateParams = generateTestPayload({
       fields: {

@@ -14,9 +14,9 @@ export const fields = {
     id: 'value',
     label: 'Value',
     description:
-      'The actual value to replace the placeholder with. Note that we will kebab case your value.',
+      'The actual value to replace the placeholder with. When left blank, we will use the id of orchestrated care flow.',
     type: FieldType.STRING,
-    required: true,
+    required: false,
   },
 } satisfies Record<string, Field>
 
@@ -27,5 +27,5 @@ export const FieldsValidationSchema = z.object({
     .refine((input) => input.includes('[placeholder]'), {
       message: 'Your URL template does not include a [placeholder]',
     }),
-  value: z.string().min(1),
+  value: z.string().optional(),
 } satisfies Record<keyof typeof fields, ZodTypeAny>)
