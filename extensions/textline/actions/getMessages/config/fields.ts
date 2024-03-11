@@ -26,8 +26,8 @@ export const fields = {
   departmentId: {
     id: 'departmentId',
     label: 'Department Id',
-    description: 'The ID of the department from which you want to send the message. Not using a department UUID will have the message go out on your first department.',
-    type: FieldType.TEXT,
+    description: 'The ID of the department from which you want to send the message. Not using a department ID will have the message go out on your first department.',
+    type: FieldType.STRING,
     required: false,
   },
 } satisfies Record<string, Field>
