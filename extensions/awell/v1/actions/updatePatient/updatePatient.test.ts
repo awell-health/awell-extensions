@@ -30,6 +30,7 @@ describe('Update patient', () => {
           zip: '1234',
           preferredLanguage: 'en',
           sex: 'MALE',
+          nationalRegistryNumber: undefined,
         },
         settings: {
           apiUrl: 'an-api-url',
@@ -61,6 +62,7 @@ describe('Update patient', () => {
           zip: undefined,
           preferredLanguage: undefined,
           sex: undefined,
+          nationalRegistryNumber: undefined,
         },
         settings: {
           apiUrl: 'an-api-url',
@@ -102,6 +104,7 @@ describe('Update patient', () => {
           zip: undefined,
           preferredLanguage: undefined,
           sex: undefined,
+          nationalRegistryNumber: undefined,
         },
         settings: {
           apiUrl: 'an-api-url',

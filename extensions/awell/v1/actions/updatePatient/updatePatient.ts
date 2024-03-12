@@ -1,6 +1,6 @@
 import { type Action } from '@awell-health/extensions-core'
 import { SettingsValidationSchema, type settings } from '../../../settings'
-import { Category , validate } from '@awell-health/extensions-core'
+import { Category, validate } from '@awell-health/extensions-core'
 import {
   fields,
   FieldsValidationSchema,
@@ -36,6 +36,7 @@ export const updatePatient: Action<typeof fields, typeof settings> = {
           zip,
           preferredLanguage,
           sex,
+          nationalRegistryNumber,
         },
         patient: { id: patientId },
       } = validate({
@@ -68,6 +69,7 @@ export const updatePatient: Action<typeof fields, typeof settings> = {
           },
           preferred_language: preferredLanguage,
           sex,
+          national_registry_number: nationalRegistryNumber,
         },
       })
 
