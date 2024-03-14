@@ -11,12 +11,6 @@ export const wait: Action<typeof fields, typeof settings> = {
   description: 'Wait n number of seconds before completing',
   fields,
   dataPoints,
-  options: {
-    stakeholders: {
-      label: 'Stakeholder',
-      mode: 'single',
-    },
-  },
   previewable: false,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
     const {
