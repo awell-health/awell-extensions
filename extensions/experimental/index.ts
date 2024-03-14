@@ -1,4 +1,4 @@
-import { requestVideoVisit, enterMedication } from './v1/actions'
+import { requestVideoVisit, enterMedication, wait } from './v1/actions'
 import { type Extension } from '@awell-health/extensions-core'
 import { settings } from './settings'
 import { AuthorType, Category } from '@awell-health/extensions-core'
@@ -16,5 +16,6 @@ export const Experimental: Extension = {
   actions: {
     requestVideoVisit,
     enterMedication,
+    wait,
   },
 }
