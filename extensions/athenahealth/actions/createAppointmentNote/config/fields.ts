@@ -2,13 +2,6 @@ import { FieldType, type Field } from '@awell-health/extensions-core'
 import z, { type ZodTypeAny } from 'zod'
 
 export const fields = {
-  practiceid: {
-    id: 'practiceid',
-    label: 'Practice ID',
-    description: '',
-    type: FieldType.STRING,
-    required: true,
-  },
   appointmentid: {
     id: 'appointmentid',
     label: 'Appointment ID',
@@ -33,7 +26,6 @@ export const fields = {
 } satisfies Record<string, Field>
 
 export const FieldsValidationSchema = z.object({
-  practiceid: z.string().min(1),
   appointmentid: z.string().min(1),
   notetext: z.string().min(1),
   displayonschedule: z.boolean().optional(),

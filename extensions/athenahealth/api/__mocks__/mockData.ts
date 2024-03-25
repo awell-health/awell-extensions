@@ -10,6 +10,7 @@ export const mockSettings: z.infer<typeof SettingsValidationSchema> = {
   api_url: 'https://api.preview.platform.athenahealth.com',
   scope:
     'athena/service/Athenanet.MDP.* system/Observation.read system/Patient.read',
+  practiceId: '123',
 }
 
 export const mockGetPatientResponse: PatientSchemaType & Record<string, any> = {
