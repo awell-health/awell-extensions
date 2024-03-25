@@ -9,6 +9,7 @@ type ValidateAndCreateClient = <T extends z.ZodTypeAny>(args: {
 }) => Promise<{
   client: AthenaAPIClient
   fields: z.infer<(typeof args)['fieldsSchema']>
+  settings: z.infer<typeof SettingsValidationSchema>
 }>
 
 export const validatePayloadAndCreateClient: ValidateAndCreateClient = async ({
@@ -18,6 +19,7 @@ export const validatePayloadAndCreateClient: ValidateAndCreateClient = async ({
   const {
     settings: { client_id, client_secret, auth_url, api_url, scope },
     fields,
+    settings,
   } = validate({
     schema: z.object({
       fields: fieldsSchema,
@@ -36,5 +38,5 @@ export const validatePayloadAndCreateClient: ValidateAndCreateClient = async ({
     baseUrl: api_url,
   })
 
-  return { client, fields }
+  return { client, fields, settings }
 }

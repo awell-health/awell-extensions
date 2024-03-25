@@ -28,35 +28,38 @@ const createAxiosError = (
 }
 export class AthenaAPIClient {
   createPatient = jest.fn(({ practiceId }: { practiceId: string }) => {
-    if (practiceId === '195900')
-      return {
-        patientid: '1',
-      }
-
-    return Promise.reject(
-      createAxiosError(
-        404,
-        { 'Content-Type': 'text/html; charset=iso-8859-1' },
-        JSON.stringify({
-          error: 'This patient does not exist in this context.',
-        })
-      )
-    )
+    return {
+      patientid: '1',
+    }
   })
 
   getPatient = jest.fn(
     ({ practiceId, patientId }: { practiceId: string; patientId: string }) => {
-      if (patientId === '56529') return mockGetPatientResponse
-
-      return Promise.reject(
-        createAxiosError(
-          404,
-          { 'Content-Type': 'text/html; charset=iso-8859-1' },
-          JSON.stringify({
-            error: 'This patient does not exist in this context.',
-          })
+      if (patientId === 'non-existing-patient-id')
+        return Promise.reject(
+          createAxiosError(
+            404,
+            { 'Content-Type': 'text/html; charset=iso-8859-1' },
+            JSON.stringify({
+              error: 'This patient does not exist in this context.',
+            })
+          )
         )
-      )
+
+      if (practiceId === 'non-existing-practice-id') {
+        return Promise.reject(
+          createAxiosError(
+            404,
+            { 'Content-Type': 'application/json' },
+            JSON.stringify({
+              error: 'Invalid practice.',
+              detailedmessage: 'The practice ID does not exist.',
+            })
+          )
+        )
+      }
+
+      return mockGetPatientResponse
     }
   )
 
@@ -68,32 +71,66 @@ export class AthenaAPIClient {
       practiceId: string
       appointmentId: string
     }) => {
-      if (appointmentId === '1') return mockGetAppointmentResponse
-
-      return Promise.reject(
-        createAxiosError(
-          404,
-          { 'Content-Type': 'text/html; charset=iso-8859-1' },
-          JSON.stringify({ error: 'The appointment is not available.' })
+      if (appointmentId === 'non-existing-appointment-id')
+        return Promise.reject(
+          createAxiosError(
+            404,
+            { 'Content-Type': 'text/html; charset=iso-8859-1' },
+            JSON.stringify({ error: 'The appointment is not available.' })
+          )
         )
-      )
+
+      if (practiceId === 'non-existing-practice-id') {
+        return Promise.reject(
+          createAxiosError(
+            404,
+            { 'Content-Type': 'application/json' },
+            JSON.stringify({
+              error: 'Invalid practice.',
+              detailedmessage: 'The practice ID does not exist.',
+            })
+          )
+        )
+      }
+
+      return mockGetAppointmentResponse
     }
   )
 
   createAppointmentNote = jest.fn(
-    ({ appointmentId }: { appointmentId: string }) => {
-      if (appointmentId === '1')
-        return {
-          success: 'true',
-        }
-
-      return Promise.reject(
-        createAxiosError(
-          404,
-          { 'Content-Type': 'text/html; charset=iso-8859-1' },
-          JSON.stringify({ error: 'The appointment is not available.' })
+    ({
+      practiceId,
+      appointmentId,
+    }: {
+      practiceId: string
+      appointmentId: string
+    }) => {
+      console.log(practiceId)
+      if (appointmentId === 'non-existing-appointment-id')
+        return Promise.reject(
+          createAxiosError(
+            404,
+            { 'Content-Type': 'text/html; charset=iso-8859-1' },
+            JSON.stringify({ error: 'The appointment is not available.' })
+          )
         )
-      )
+
+      if (practiceId === 'non-existing-practice-id') {
+        return Promise.reject(
+          createAxiosError(
+            404,
+            { 'Content-Type': 'application/json' },
+            JSON.stringify({
+              error: 'Invalid practice.',
+              detailedmessage: 'The practice ID does not exist.',
+            })
+          )
+        )
+      }
+
+      return {
+        success: 'true',
+      }
     }
   )
 }

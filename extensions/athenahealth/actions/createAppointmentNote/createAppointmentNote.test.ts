@@ -17,7 +17,6 @@ describe('athenahealth - Create appointment note', () => {
     const mockOnActivityCreateParams = generateTestPayload({
       fields: {
         appointmentid: '1',
-        practiceid: '195900',
         notetext: 'hello world',
         displayonschedule: true,
       },
@@ -36,8 +35,7 @@ describe('athenahealth - Create appointment note', () => {
   test('Should return an error when the appointment does not exist', async () => {
     const mockOnActivityCreateParams = generateTestPayload({
       fields: {
-        appointmentid: '2123223221',
-        practiceid: '195900',
+        appointmentid: 'non-existing-appointment-id',
         notetext: 'hello world',
         displayonschedule: true,
       },
@@ -56,6 +54,35 @@ describe('athenahealth - Create appointment note', () => {
       expect(axiosError.response?.status).toBe(404)
       expect(axiosError.response?.data).toStrictEqual({
         error: 'The appointment is not available.',
+      })
+    }
+
+    expect(onComplete).not.toHaveBeenCalled()
+  })
+
+  test('Should return an error when practice is not found', async () => {
+    const mockOnActivityCreateParams = generateTestPayload({
+      fields: {
+        appointmentid: '1',
+        notetext: 'hello world',
+        displayonschedule: true,
+      },
+      settings: { ...mockSettings, practiceId: 'non-existing-practice-id' },
+    })
+
+    try {
+      await createAppointmentNote.onActivityCreated(
+        mockOnActivityCreateParams,
+        onComplete,
+        onError
+      )
+    } catch (error) {
+      const axiosError = error as AxiosError
+      expect(axiosError.response).toBeDefined()
+      expect(axiosError.response?.status).toBe(404)
+      expect(axiosError.response?.data).toStrictEqual({
+        error: 'Invalid practice.',
+        detailedmessage: 'The practice ID does not exist.',
       })
     }
 
