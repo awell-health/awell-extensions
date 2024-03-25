@@ -1,6 +1,10 @@
 import z from 'zod'
 import { AthenaDateOnlySchema } from './date'
 
+export interface CreateAppointmentNoteResponseType {
+  success: string
+}
+
 export const AppointmentSchema = z.object({
   appointmenttypeid: z.string(),
   appointmenttype: z.string(),

@@ -105,7 +105,6 @@ export class AthenaAPIClient {
       practiceId: string
       appointmentId: string
     }) => {
-      console.log(practiceId)
       if (appointmentId === 'non-existing-appointment-id')
         return Promise.reject(
           createAxiosError(
