@@ -17,12 +17,16 @@ export const getPatient: Action<
   previewable: false,
   dataPoints,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
-    const { fields: input, client } = await validatePayloadAndCreateClient({
+    const {
+      fields: input,
+      client,
+      settings: { practiceId },
+    } = await validatePayloadAndCreateClient({
       fieldsSchema: FieldsValidationSchema,
       payload,
     })
 
-    const res = await client.getPatient(input)
+    const res = await client.getPatient({ practiceId, ...input })
 
     // Both validates and transforms some of the response data
     const patient = PatientSchema.parse(res)

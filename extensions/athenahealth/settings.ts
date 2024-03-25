@@ -41,12 +41,20 @@ export const settings = {
     description:
       'The value is a space-delimited, case-sensitive string of requested scopes.',
   },
+  practiceId: {
+    key: 'practiceId',
+    label: 'Practice ID',
+    obfuscated: false,
+    required: true,
+    description: 'The ID of your practice within athenahealth',
+  },
 } satisfies Record<string, Setting>
 
 export const SettingsValidationSchema = z.object({
-  client_id: z.string(),
-  client_secret: z.string(),
+  client_id: z.string().min(1),
+  client_secret: z.string().min(1),
   auth_url: z.string().url(),
   api_url: z.string().url(),
-  scope: z.string(),
+  scope: z.string().min(1),
+  practiceId: z.string().min(1),
 } satisfies Record<keyof typeof settings, ZodTypeAny>)

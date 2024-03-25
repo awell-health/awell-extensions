@@ -9,16 +9,8 @@ export const fields = {
     type: FieldType.STRING,
     required: true,
   },
-  practiceId: {
-    id: 'practiceId',
-    label: 'Practice ID',
-    description: '',
-    type: FieldType.STRING,
-    required: true,
-  },
 } satisfies Record<string, Field>
 
 export const FieldsValidationSchema = z.object({
   appointmentId: z.string(),
-  practiceId: z.string(),
 } satisfies Record<keyof typeof fields, ZodTypeAny>)

@@ -3,13 +3,6 @@ import z, { type ZodTypeAny } from 'zod'
 import { AwellToAthenaDateOnlySchema } from '../../../validation/date'
 
 export const fields = {
-  practiceid: {
-    id: 'practiceid',
-    label: 'Practice ID',
-    description: '',
-    type: FieldType.STRING,
-    required: true,
-  },
   departmentid: {
     id: 'departmentid',
     label: 'Department ID',
@@ -48,7 +41,6 @@ export const fields = {
 } satisfies Record<string, Field>
 
 export const FieldsValidationSchema = z.object({
-  practiceid: z.string().min(1),
   departmentid: z.string().min(1),
   firstname: z.string().min(1),
   lastname: z.string().min(1),

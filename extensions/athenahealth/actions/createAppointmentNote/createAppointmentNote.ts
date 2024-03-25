@@ -17,15 +17,19 @@ export const createAppointmentNote: Action<
   previewable: false,
   dataPoints,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
-    const { fields: input, client } = await validatePayloadAndCreateClient({
+    const {
+      fields: input,
+      client,
+      settings: { practiceId },
+    } = await validatePayloadAndCreateClient({
       fieldsSchema: FieldsValidationSchema,
       payload,
     })
 
     await client.createAppointmentNote({
-      practiceId: input.practiceid,
+      practiceId,
       appointmentId: input.appointmentid,
-      data: omit(input, ['practiceid', 'appointmentid']),
+      data: omit(input, ['appointmentid']),
     })
 
     await onComplete()

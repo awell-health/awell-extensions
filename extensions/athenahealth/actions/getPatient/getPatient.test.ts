@@ -21,7 +21,6 @@ describe('athenahealth - Get patient', () => {
     const mockOnActivityCreateParams = generateTestPayload({
       fields: {
         patientId: '56529',
-        practiceId: '195900',
       },
       settings: mockSettings,
     })
@@ -44,11 +43,37 @@ describe('athenahealth - Get patient', () => {
     })
   })
 
+  test('Should return an error when practice is not found', async () => {
+    const mockOnActivityCreateParams = generateTestPayload({
+      fields: {
+        patientId: '123',
+      },
+      settings: { ...mockSettings, practiceId: 'non-existing-practice-id' },
+    })
+
+    try {
+      await getPatient.onActivityCreated(
+        mockOnActivityCreateParams,
+        onComplete,
+        onError
+      )
+    } catch (error) {
+      const axiosError = error as AxiosError
+      expect(axiosError.response).toBeDefined()
+      expect(axiosError.response?.status).toBe(404)
+      expect(axiosError.response?.data).toStrictEqual({
+        error: 'Invalid practice.',
+        detailedmessage: 'The practice ID does not exist.',
+      })
+    }
+
+    expect(onComplete).not.toHaveBeenCalled()
+  })
+
   test('Should return an error when patient is not found', async () => {
     const mockOnActivityCreateParams = generateTestPayload({
       fields: {
-        patientId: 'non-existent-patient-id',
-        practiceId: '195900',
+        patientId: 'non-existing-patient-id',
       },
       settings: mockSettings,
     })
