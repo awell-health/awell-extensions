@@ -1,15 +1,17 @@
 import { getPatient } from './getPatient'
 import { getAppointment } from './getAppointment'
-import { cancelAppointment } from './cancelAppointment'
-import { addProblemToPatientChart } from './addProblemToPatientChart'
-import { addDocumentToPatientChart } from './addDocumentToPatientChart'
+import { createPatient } from './createPatient'
+import { createAppointmentNote } from './createAppointmentNote'
+// import { addProblemToPatientChart } from './addProblemToPatientChart'
+// import { addDocumentToPatientChart } from './addDocumentToPatientChart'
 
 const actions = {
   getPatient,
   getAppointment,
-  cancelAppointment,
-  addProblemToPatientChart,
-  addDocumentToPatientChart,
+  createPatient,
+  createAppointmentNote,
+  // addProblemToPatientChart,
+  // addDocumentToPatientChart,
 }
 
 export default actions

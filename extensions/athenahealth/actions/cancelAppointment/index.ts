@@ -1,1 +1,0 @@
-export { cancelAppointment } from './cancelAppointment'
