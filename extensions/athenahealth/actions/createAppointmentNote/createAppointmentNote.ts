@@ -26,12 +26,28 @@ export const createAppointmentNote: Action<
       payload,
     })
 
-    await client.createAppointmentNote({
+    const res = await client.createAppointmentNote({
       practiceId,
       appointmentId: input.appointmentid,
       data: omit(input, ['appointmentid']),
     })
 
-    await onComplete()
+    if (res.success === 'true') {
+      await onComplete()
+      return
+    }
+
+    await onError({
+      events: [
+        {
+          date: new Date().toISOString(),
+          text: { en: 'Unable to create the appointment note' },
+          error: {
+            category: 'SERVER_ERROR',
+            message: 'Unable to create the appointment note',
+          },
+        },
+      ],
+    })
   },
 }

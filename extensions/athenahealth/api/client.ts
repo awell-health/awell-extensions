@@ -9,6 +9,7 @@ import { type CreateAppointmentNoteInputType } from '../actions/createAppointmen
 import { type CreatePatientInputType } from '../actions/createPatient/config/fields'
 import { cacheService } from './cacheService'
 import { type PatientSchemaType, type AppointmentSchemaType } from './schema'
+import { type CreateAppointmentNoteResponseType } from './schema/appointment'
 import { type CreatePatientResponseType } from './schema/patient'
 
 export class AthenaDataWrapper extends DataWrapper {
@@ -67,15 +68,15 @@ export class AthenaDataWrapper extends DataWrapper {
     practiceId: string
     appointmentId: string
     data: Omit<CreateAppointmentNoteInputType, 'practiceid' | 'appointmentid'>
-  }): Promise<CreatePatientResponseType> {
-    const result = await this.Request<CreatePatientResponseType[]>({
+  }): Promise<CreateAppointmentNoteResponseType> {
+    const result = await this.Request<CreateAppointmentNoteResponseType>({
       method: 'POST',
       url: `/v1/${practiceId}/appointments/${appointmentId}/notes`,
       headers: { 'content-type': 'application/x-www-form-urlencoded' },
       data,
     })
 
-    return result[0]
+    return result
   }
 }
 
@@ -150,7 +151,7 @@ export class AthenaAPIClient extends APIClient<AthenaDataWrapper> {
     practiceId: string
     appointmentId: string
     data: Omit<CreateAppointmentNoteInputType, 'practiceid' | 'appointmentid'>
-  }): Promise<CreatePatientResponseType> {
+  }): Promise<CreateAppointmentNoteResponseType> {
     return await this.FetchData(
       async (dw) =>
         await dw.createAppointmentNote({ appointmentId, practiceId, data })
