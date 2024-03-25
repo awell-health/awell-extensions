@@ -2,6 +2,7 @@ import { Category, type Action } from '@awell-health/extensions-core'
 import { type settings } from '../../settings'
 import { fields, dataPoints, FieldsValidationSchema } from './config'
 import { validatePayloadAndCreateClient } from '../../helpers'
+import { AppointmentSchema } from '../../api/schema/appointment'
 
 export const getAppointment: Action<
   typeof fields,
@@ -21,15 +22,20 @@ export const getAppointment: Action<
       payload,
     })
 
-    console.log(input, client)
+    const res = await client.getAppointment(input)
+
+    // Both validates and transforms some of the response data
+    const appt = AppointmentSchema.parse(res)
 
     await onComplete({
       data_points: {
-        patientId: '56529',
-        startTime: '1:00 PM',
-        status: 'scheduled',
-        type: 'Follow-up',
-        date: '2024-05-05',
+        patientId: appt.patientid,
+        startTime: appt.starttime,
+        status: appt.appointmentstatus,
+        appointmentTypeName: appt.appointmenttype,
+        appointmentTypeId: appt.appointmenttypeid,
+        date: appt.date,
+        duration: String(appt.duration),
       },
     })
   },

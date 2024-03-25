@@ -2,6 +2,7 @@ import { Category, type Action } from '@awell-health/extensions-core'
 import { type settings } from '../../settings'
 import { fields, dataPoints, FieldsValidationSchema } from './config'
 import { validatePayloadAndCreateClient } from '../../helpers'
+import { PatientSchema } from '../../api/schema/patient'
 
 export const getPatient: Action<
   typeof fields,
@@ -21,17 +22,17 @@ export const getPatient: Action<
       payload,
     })
 
-    console.log(input, client)
+    const res = await client.getPatient(input)
 
-    // Client doesn't work yet :-(
-    // await client.getPatient(input)
+    // Both validates and transforms some of the response data
+    const patient = PatientSchema.parse(res)
 
     await onComplete({
       data_points: {
-        firstName: 'Rik',
-        lastName: 'Renard',
-        dob: '1993-11-30',
-        email: 'rik@awellhealth.com',
+        firstName: patient.firstname,
+        lastName: patient.lastname,
+        dob: patient.dob,
+        email: patient.email,
       },
     })
   },
