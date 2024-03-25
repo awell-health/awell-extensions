@@ -1,6 +1,7 @@
 export const checkICDCode = (code: string): boolean => {
   const diseases = [
     'hypertension',
+    'hypertensive',
     'asthma',
     'diabetes mellitus',
     'heart failure',
