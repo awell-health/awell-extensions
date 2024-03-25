@@ -34,7 +34,7 @@ describe('Update baseline info', () => {
       onComplete,
       onError
     )
-    expect(onComplete).toHaveBeenCalled()
+    expect(onComplete).toHaveBeenCalledTimes(1)
     expect(onError).not.toHaveBeenCalled()
   })
   test('Should call the onError callback', async () => {
