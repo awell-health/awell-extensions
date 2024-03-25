@@ -2,7 +2,10 @@ import { type AxiosError } from 'axios'
 import { formatISO } from 'date-fns'
 import { getAppointment } from '.'
 import { generateTestPayload } from '../../../../src/tests'
-import { mockGetAppointmentResponse , mockSettings } from '../../api/__mocks__/mockData'
+import {
+  mockGetAppointmentResponse,
+  mockSettings,
+} from '../../api/__mocks__/mockData'
 
 jest.mock('../../api/client')
 
@@ -18,7 +21,6 @@ describe('athenahealth - Get appointment', () => {
     const mockOnActivityCreateParams = generateTestPayload({
       fields: {
         appointmentId: '1',
-        practiceId: '195900',
       },
       settings: mockSettings,
     })
@@ -44,11 +46,10 @@ describe('athenahealth - Get appointment', () => {
     })
   })
 
-  test('Should return an error when patient is not found', async () => {
+  test('Should return an error when appointment is not found', async () => {
     const mockOnActivityCreateParams = generateTestPayload({
       fields: {
-        appointmentId: 'non-existent-appointment-id',
-        practiceId: '195900',
+        appointmentId: 'non-existing-appointment-id',
       },
       settings: mockSettings,
     })
@@ -65,6 +66,33 @@ describe('athenahealth - Get appointment', () => {
       expect(axiosError.response?.status).toBe(404)
       expect(axiosError.response?.data).toStrictEqual({
         error: 'The appointment is not available.',
+      })
+    }
+
+    expect(onComplete).not.toHaveBeenCalled()
+  })
+
+  test('Should return an error when practice is not found', async () => {
+    const mockOnActivityCreateParams = generateTestPayload({
+      fields: {
+        appointmentId: '1',
+      },
+      settings: { ...mockSettings, practiceId: 'non-existing-practice-id' },
+    })
+
+    try {
+      await getAppointment.onActivityCreated(
+        mockOnActivityCreateParams,
+        onComplete,
+        onError
+      )
+    } catch (error) {
+      const axiosError = error as AxiosError
+      expect(axiosError.response).toBeDefined()
+      expect(axiosError.response?.status).toBe(404)
+      expect(axiosError.response?.data).toStrictEqual({
+        error: 'Invalid practice.',
+        detailedmessage: 'The practice ID does not exist.',
       })
     }
 

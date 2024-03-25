@@ -17,12 +17,16 @@ export const getAppointment: Action<
   previewable: false,
   dataPoints,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
-    const { fields: input, client } = await validatePayloadAndCreateClient({
+    const {
+      fields: input,
+      client,
+      settings: { practiceId },
+    } = await validatePayloadAndCreateClient({
       fieldsSchema: FieldsValidationSchema,
       payload,
     })
 
-    const res = await client.getAppointment(input)
+    const res = await client.getAppointment({ ...input, practiceId })
 
     // Both validates and transforms some of the response data
     const appt = AppointmentSchema.parse(res)

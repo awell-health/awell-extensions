@@ -14,11 +14,11 @@ export const dataPoints = {
     valueType: 'string',
   },
   appointmentTypeName: {
-    key: 'type',
+    key: 'appointmentTypeName',
     valueType: 'string',
   },
   appointmentTypeId: {
-    key: 'type',
+    key: 'appointmentTypeId',
     valueType: 'string',
   },
   date: {

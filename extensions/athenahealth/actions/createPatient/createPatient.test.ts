@@ -15,7 +15,6 @@ describe('athenahealth - Create patient', () => {
   test('Should create a patient', async () => {
     const mockOnActivityCreateParams = generateTestPayload({
       fields: {
-        practiceid: '195900',
         firstname: 'Nick',
         lastname: 'Hellemans',
         dob: '11/30/1993',
