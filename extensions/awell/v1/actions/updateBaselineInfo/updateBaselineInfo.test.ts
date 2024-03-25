@@ -1,5 +1,5 @@
 import { generateTestPayload } from '../../../../../src/tests'
-import { startCareFlow } from './updateBaselineInfo'
+import { updateBaselineInfo } from './updateBaselineInfo'
 
 jest.mock('../../sdk/awellSdk')
 
@@ -13,7 +13,7 @@ describe('Update baseline info', () => {
   })
 
   test('Should call the onComplete callback', async () => {
-    await startCareFlow.onActivityCreated(
+    await updateBaselineInfo.onActivityCreated(
       generateTestPayload({
         fields: {
           baselineInfo: JSON.stringify([
@@ -38,7 +38,7 @@ describe('Update baseline info', () => {
     expect(onError).not.toHaveBeenCalled()
   })
   test('Should call the onError callback', async () => {
-    await startCareFlow.onActivityCreated(
+    const resp = updateBaselineInfo.onActivityCreated(
       generateTestPayload({
         fields: {
           baselineInfo: '',
@@ -54,7 +54,7 @@ describe('Update baseline info', () => {
       onComplete,
       onError
     )
-    expect(onError).toHaveBeenCalled()
+    await expect(resp).rejects.toThrowError()
     expect(onComplete).not.toHaveBeenCalled()
   })
 })
