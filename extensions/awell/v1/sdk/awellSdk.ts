@@ -7,6 +7,7 @@ import {
   type StartPathwayPayload,
   type UpdatePatientInput,
   type UpdatePatientPayload,
+  type UpdateBaselineInfoInput,
   type QuerySearchPatientsByPatientCodeArgs,
   type SearchPatientsPayload,
   type UserProfile,
@@ -22,6 +23,7 @@ import {
   stopPathwayMutation,
   updatePatientMutation,
   searchPatientByPatientCodeQuery,
+  updateBaselineInfoMutation,
 } from './graphql'
 
 export default class AwellSdk {
@@ -136,5 +138,20 @@ export default class AwellSdk {
     }
 
     throw new Error('Stop pathway failed.')
+  }
+
+  async updateBaselineInfo(input: UpdateBaselineInfoInput): Promise<boolean> {
+    const data = await this.client.request<{
+      updateBaselineInfo: { code: string; success: boolean }
+    }>(updateBaselineInfoMutation, { input })
+
+    if (data.updateBaselineInfo.success) {
+      return true
+    }
+    let msg: string = ''
+    if (data.updateBaselineInfo.code === '200') {
+      msg = JSON.stringify((data as unknown as { errors: any }).errors)
+    }
+    throw new Error(`Update baseline info failed. ${msg}`)
   }
 }
