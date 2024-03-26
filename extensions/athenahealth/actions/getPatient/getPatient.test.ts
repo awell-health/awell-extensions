@@ -48,7 +48,7 @@ describe('athenahealth - Get patient', () => {
       fields: {
         patientId: '123',
       },
-      settings: { ...mockSettings, practiceId: 'non-existing-practice-id' },
+      settings: { ...mockSettings, practiceId: '99999999999' },
     })
 
     try {
@@ -73,7 +73,7 @@ describe('athenahealth - Get patient', () => {
   test('Should return an error when patient is not found', async () => {
     const mockOnActivityCreateParams = generateTestPayload({
       fields: {
-        patientId: 'non-existing-patient-id',
+        patientId: '99999999999',
       },
       settings: mockSettings,
     })

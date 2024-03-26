@@ -35,7 +35,7 @@ describe('athenahealth - Create appointment note', () => {
   test('Should return an error when the appointment does not exist', async () => {
     const mockOnActivityCreateParams = generateTestPayload({
       fields: {
-        appointmentid: 'non-existing-appointment-id',
+        appointmentid: '99999999999',
         notetext: 'hello world',
         displayonschedule: true,
       },
@@ -67,7 +67,7 @@ describe('athenahealth - Create appointment note', () => {
         notetext: 'hello world',
         displayonschedule: true,
       },
-      settings: { ...mockSettings, practiceId: 'non-existing-practice-id' },
+      settings: { ...mockSettings, practiceId: '99999999999' },
     })
 
     try {

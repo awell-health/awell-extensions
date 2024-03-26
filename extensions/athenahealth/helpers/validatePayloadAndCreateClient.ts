@@ -1,7 +1,7 @@
 import { validate } from '@awell-health/extensions-core'
 import z from 'zod'
-import { AthenaAPIClient } from './api/client'
-import { SettingsValidationSchema } from './settings'
+import { AthenaAPIClient } from '../api/client'
+import { SettingsValidationSchema } from '../settings'
 
 type ValidateAndCreateClient = <T extends z.ZodTypeAny>(args: {
   fieldsSchema: T
