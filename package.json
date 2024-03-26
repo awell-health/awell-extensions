@@ -89,6 +89,7 @@
     "messagebird": "^4.0.1",
     "node-fetch": "2",
     "openai": "^3.2.1",
+    "puppeteer": "^22.6.1",
     "showdown": "^2.1.0",
     "twilio": "^4.8.0",
     "xml2js": "^0.6.2",

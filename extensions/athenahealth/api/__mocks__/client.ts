@@ -35,7 +35,7 @@ export class AthenaAPIClient {
 
   getPatient = jest.fn(
     ({ practiceId, patientId }: { practiceId: string; patientId: string }) => {
-      if (patientId === 'non-existing-patient-id')
+      if (patientId === '99999999999')
         return Promise.reject(
           createAxiosError(
             404,
@@ -46,7 +46,7 @@ export class AthenaAPIClient {
           )
         )
 
-      if (practiceId === 'non-existing-practice-id') {
+      if (practiceId === '99999999999') {
         return Promise.reject(
           createAxiosError(
             404,
@@ -71,7 +71,7 @@ export class AthenaAPIClient {
       practiceId: string
       appointmentId: string
     }) => {
-      if (appointmentId === 'non-existing-appointment-id')
+      if (appointmentId === '99999999999')
         return Promise.reject(
           createAxiosError(
             404,
@@ -80,7 +80,7 @@ export class AthenaAPIClient {
           )
         )
 
-      if (practiceId === 'non-existing-practice-id') {
+      if (practiceId === '99999999999') {
         return Promise.reject(
           createAxiosError(
             404,
@@ -105,7 +105,7 @@ export class AthenaAPIClient {
       practiceId: string
       appointmentId: string
     }) => {
-      if (appointmentId === 'non-existing-appointment-id')
+      if (appointmentId === '99999999999')
         return Promise.reject(
           createAxiosError(
             404,
@@ -114,7 +114,7 @@ export class AthenaAPIClient {
           )
         )
 
-      if (practiceId === 'non-existing-practice-id') {
+      if (practiceId === '99999999999') {
         return Promise.reject(
           createAxiosError(
             404,
@@ -129,6 +129,41 @@ export class AthenaAPIClient {
 
       return {
         success: 'true',
+      }
+    }
+  )
+
+  addClinicalDocumentToPatientChart = jest.fn(
+    ({ practiceId, patientId }: { practiceId: string; patientId: string }) => {
+      if (patientId === '99999999999')
+        return Promise.reject(
+          createAxiosError(
+            400,
+            { 'Content-Type': 'text/html; charset=iso-8859-1' },
+            JSON.stringify({
+              detailedmessage:
+                'The specified patient does not exist in that department.',
+              error: 'The specified patient does not exist in that department.',
+            })
+          )
+        )
+
+      if (practiceId === '99999999999') {
+        return Promise.reject(
+          createAxiosError(
+            404,
+            { 'Content-Type': 'application/json' },
+            JSON.stringify({
+              error: 'Invalid practice.',
+              detailedmessage: 'The practice ID does not exist.',
+            })
+          )
+        )
+      }
+
+      return {
+        clinicaldocumentid: 1234,
+        success: true,
       }
     }
   )

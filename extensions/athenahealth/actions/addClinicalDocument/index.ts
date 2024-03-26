@@ -1,0 +1,1 @@
+export { addClinicalDocument } from './addClinicalDocument'
