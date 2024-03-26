@@ -8,9 +8,14 @@ import {
 import { type CreateAppointmentNoteInputType } from '../actions/createAppointmentNote/config/fields'
 import { type CreatePatientInputType } from '../actions/createPatient/config/fields'
 import { cacheService } from './cacheService'
-import { type PatientSchemaType, type AppointmentSchemaType } from './schema'
-import { type CreateAppointmentNoteResponseType } from './schema/appointment'
-import { type CreatePatientResponseType } from './schema/patient'
+import {
+  type PatientSchemaType,
+  type AppointmentSchemaType,
+  type CreateAppointmentNoteResponseType,
+  type AddClinicalDocumentToPatientChartInputType,
+  type AddClinicalDocumentToPatientChartResponseType,
+  type CreatePatientResponseType,
+} from './schema'
 
 export class AthenaDataWrapper extends DataWrapper {
   public async createPatient({
@@ -75,6 +80,35 @@ export class AthenaDataWrapper extends DataWrapper {
       headers: { 'content-type': 'application/x-www-form-urlencoded' },
       data,
     })
+
+    return result
+  }
+
+  public async addClinicalDocumentToPatientChart({
+    practiceId,
+    patientId,
+    data,
+  }: {
+    practiceId: string
+    patientId: string
+    data: AddClinicalDocumentToPatientChartInputType
+  }): Promise<AddClinicalDocumentToPatientChartResponseType> {
+    const formData = new FormData()
+
+    Object.entries(data).forEach((entry) => {
+      const [key, value] = entry
+      formData.append(key, String(value))
+    })
+
+    const result =
+      await this.Request<AddClinicalDocumentToPatientChartResponseType>({
+        method: 'POST',
+        url: `/v1/${practiceId}/patients/${patientId}/documents/clinicaldocument`,
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+        data: formData,
+      })
 
     return result
   }
@@ -155,6 +189,25 @@ export class AthenaAPIClient extends APIClient<AthenaDataWrapper> {
     return await this.FetchData(
       async (dw) =>
         await dw.createAppointmentNote({ appointmentId, practiceId, data })
+    )
+  }
+
+  public async addClinicalDocumentToPatientChart({
+    practiceId,
+    patientId,
+    data,
+  }: {
+    practiceId: string
+    patientId: string
+    data: AddClinicalDocumentToPatientChartInputType
+  }): Promise<AddClinicalDocumentToPatientChartResponseType> {
+    return await this.FetchData(
+      async (dw) =>
+        await dw.addClinicalDocumentToPatientChart({
+          patientId,
+          practiceId,
+          data,
+        })
     )
   }
 }
