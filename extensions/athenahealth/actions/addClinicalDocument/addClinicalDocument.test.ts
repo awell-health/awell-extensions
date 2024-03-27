@@ -2,12 +2,16 @@ import { type AxiosError } from 'axios'
 import { addClinicalDocument } from '.'
 import { generateTestPayload } from '../../../../src/tests'
 import { mockSettings } from '../../api/__mocks__/mockData'
+import * as helpers from '../../helpers'
 
 jest.mock('../../api/client')
 
 describe('athenahealth - Add clinical document', () => {
   const onComplete = jest.fn()
   const onError = jest.fn()
+  jest
+    .spyOn(helpers, 'htmlToBase64Pdf')
+    .mockImplementation(async (_: string) => 'base64string')
 
   beforeEach(() => {
     jest.clearAllMocks()
