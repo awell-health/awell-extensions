@@ -26,7 +26,7 @@ Send an SMS with Twilio to a recipient of your liking.
 
 Get a list of text messages matching the given criteria. Only the last 50 messages are returned.
 
-## Schedule SMS during working hours
+## Send SMS during working hours
 
 This action allows for the scheduling of SMS messages to be sent within the "daily operational hours" of 9 AM to 5 PM. It ensures that text messages are dispatched at appropriate times during the day, avoiding early morning or late-night disturbances to recipients.
 
