@@ -6,11 +6,12 @@ import { type settings } from '../../../settings'
 import { Category, validate } from '@awell-health/extensions-core'
 import { SettingsValidationSchema } from '../../../settings'
 import { FieldsValidationSchema, fields, dataPoints } from './config'
-import { isNil } from 'lodash'
+import { isEmpty, isNil } from 'lodash'
 import {
   getNextDateWithinBusinessHours,
   isDateBetweenBusinessHours,
 } from '../../../../../src/utils/getNextDateWithinBusinessHours'
+import { formatISO } from 'date-fns'
 
 export const sendSmsDuringBusinessHours: Action<
   typeof fields,
@@ -61,29 +62,29 @@ export const sendSmsDuringBusinessHours: Action<
         accountSid,
       })
 
-      const nowString = new Date().toISOString() // curent datetime in UTC
-      const isBetweenBusinessHours = isDateBetweenBusinessHours(
-        nowString, // UTC date
-        timeZone // offset, target timezone
-      )
+      const tz = isEmpty(timeZone) ? 'UTC' : timeZone
+      const now = new Date()
+      const isBetweenBusinessHours = isDateBetweenBusinessHours(now, tz)
+
+      const scheduleType = isBetweenBusinessHours ? undefined : 'fixed'
+      const sendAt = isBetweenBusinessHours
+        ? undefined
+        : getNextDateWithinBusinessHours(now, tz)
+      const scheduled = isBetweenBusinessHours ? 'false' : 'true'
 
       const res = await client.messages.create({
         body: message,
         messagingServiceSid: messagingServiceSid ?? defaultMessagingServiceSid,
         to: recipient,
-        scheduleType: isBetweenBusinessHours ? undefined : 'fixed',
-        sendAt: isBetweenBusinessHours
-          ? undefined
-          : new Date(getNextDateWithinBusinessHours(nowString, timeZone)),
+        scheduleType,
+        sendAt,
       })
 
       await onComplete({
         data_points: {
           messageSid: res.sid,
-          scheduled: isBetweenBusinessHours ? String(false) : String(true),
-          sendAt: isBetweenBusinessHours
-            ? nowString
-            : getNextDateWithinBusinessHours(nowString),
+          scheduled,
+          sendAt: (sendAt != null) ? formatISO(sendAt) : formatISO(now),
         },
       })
     } catch (err) {

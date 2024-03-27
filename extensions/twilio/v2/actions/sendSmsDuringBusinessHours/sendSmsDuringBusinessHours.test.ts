@@ -19,7 +19,7 @@ describe('Send SMS during business hours', () => {
   })
 
   test('Should call the onComplete callback and not schedule the message if current date is between business hours', async () => {
-    const mockDate = '2024-01-01T10:00:00.000Z' // between business hours
+    const mockDate = '2024-01-01T10:00:00Z' // between business hours
     jest.setSystemTime(new Date(mockDate))
 
     await sendSmsDuringBusinessHours.onActivityCreated(
