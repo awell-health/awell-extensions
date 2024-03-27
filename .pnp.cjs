@@ -58,6 +58,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["body-parser", "npm:1.20.2"],\
             ["cheerio", "npm:1.0.0-rc.12"],\
             ["date-fns", "npm:2.29.3"],\
+            ["date-fns-tz", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:2.0.1"],\
             ["docusign-esign", "npm:6.3.0"],\
             ["driver-license-validator", "npm:2.0.2"],\
             ["eslint", "npm:8.50.0"],\
@@ -217,6 +218,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["body-parser", "npm:1.20.2"],\
             ["cheerio", "npm:1.0.0-rc.12"],\
             ["date-fns", "npm:2.29.3"],\
+            ["date-fns-tz", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:2.0.1"],\
             ["docusign-esign", "npm:6.3.0"],\
             ["driver-license-validator", "npm:2.0.2"],\
             ["eslint", "npm:8.50.0"],\
@@ -6582,6 +6584,28 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["date-fns", "npm:2.30.0"],\
             ["@babel/runtime", "npm:7.22.3"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["date-fns-tz", [\
+        ["npm:2.0.1", {\
+          "packageLocation": "./.yarn/cache/date-fns-tz-npm-2.0.1-e8e605b668-2d2bb3d67f.zip/node_modules/date-fns-tz/",\
+          "packageDependencies": [\
+            ["date-fns-tz", "npm:2.0.1"]\
+          ],\
+          "linkType": "SOFT"\
+        }],\
+        ["virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:2.0.1", {\
+          "packageLocation": "./.yarn/__virtual__/date-fns-tz-virtual-9a880b6ed1/0/cache/date-fns-tz-npm-2.0.1-e8e605b668-2d2bb3d67f.zip/node_modules/date-fns-tz/",\
+          "packageDependencies": [\
+            ["date-fns-tz", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:2.0.1"],\
+            ["@types/date-fns", null],\
+            ["date-fns", "npm:2.29.3"]\
+          ],\
+          "packagePeers": [\
+            "@types/date-fns",\
+            "date-fns"\
           ],\
           "linkType": "HARD"\
         }]\

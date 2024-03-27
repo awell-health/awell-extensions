@@ -108,6 +108,7 @@ __metadata:
     body-parser: ^1.20.2
     cheerio: ^1.0.0-rc.12
     date-fns: ^2.29.3
+    date-fns-tz: ^2.0.1
     docusign-esign: ^6.3.0
     driver-license-validator: 2.0.2
     eslint: ^8.50.0
@@ -4699,6 +4700,15 @@ __metadata:
     image-size: 1.0.0
     mimer: ^2.0.2
   checksum: 891c28a75284222f9416407c6bb4a9a7ffe29950509c6d4863984687f4a11066a838712a4ee8810e3eea390d32feb2aca50dcda1bd6f45dfa2f4420654a12b24
+  languageName: node
+  linkType: hard
+
+"date-fns-tz@npm:^2.0.1":
+  version: 2.0.1
+  resolution: "date-fns-tz@npm:2.0.1"
+  peerDependencies:
+    date-fns: 2.x
+  checksum: 2d2bb3d67f1ac876a7bd3bbe027aba61347d21c74f20a3f014c53d6057a7a1653ed3021c2d9271dc24411ab38f82763fec362c4f24e944465172cd80ee8c4b5f
   languageName: node
   linkType: hard
 
