@@ -8,13 +8,13 @@ type ISOString = string
 
 export const isDateBetweenBusinessHours = (
   date: ISOString, // all dates in Awell are in UTC
-  timeZone: string = 'UTC'
+  targetTimeZone: string = 'UTC'
 ): boolean => {
   if (!isValid(new Date(date))) {
     throw new Error('Date is not a valid date')
   }
 
-  const referenceDate = utcToZonedTime(date, timeZone)
+  const referenceDate = utcToZonedTime(date, targetTimeZone)
   const hoursOfDate = referenceDate.getHours()
 
   if (
@@ -32,19 +32,19 @@ export const isDateBetweenBusinessHours = (
  * taking into account the specified time zone.
  *
  * @param date - The ISO 8601 date string to adjust.
- * @param timeZone - The IANA time zone identifier string, such as "America/New_York".
+ * @param targetTimeZone - The IANA time zone identifier string, such as "America/New_York".
  * @returns The next date between business hours in UTC
  */
 export const getNextDateWithinBusinessHours = (
   date: ISOString, // all dates in Awell are in UTC
-  timeZone: string = 'UTC'
+  targetTimeZone: string = 'UTC'
 ): ISOString => {
   if (!isValid(new Date(date))) {
     throw new Error('Reference date is not a valid date')
   }
 
   // Convert the UTC date to the specified timezone
-  const referenceDateInTimeZone = utcToZonedTime(date, timeZone)
+  const referenceDateInTimeZone = utcToZonedTime(date, targetTimeZone)
   const hours = referenceDateInTimeZone.getHours()
 
   // If before 9 AM in the specified timezone, adjust to 9 AM of the same day in that timezone, then convert back to UTC
@@ -52,7 +52,7 @@ export const getNextDateWithinBusinessHours = (
     return formatISO(
       zonedTimeToUtc(
         setHours(startOfDay(referenceDateInTimeZone), START_HOUR_WORKING_DAY),
-        timeZone
+        targetTimeZone
       )
     )
   }
@@ -64,7 +64,7 @@ export const getNextDateWithinBusinessHours = (
           startOfDay(addDays(referenceDateInTimeZone, 1)),
           START_HOUR_WORKING_DAY
         ),
-        timeZone
+        targetTimeZone
       )
     )
   }
