@@ -11,7 +11,6 @@ import {
   getNextDateWithinBusinessHours,
   isDateBetweenBusinessHours,
 } from '../../../../../src/utils/getNextDateWithinBusinessHours'
-import { formatISO } from 'date-fns'
 
 export const sendSmsDuringBusinessHours: Action<
   typeof fields,
@@ -62,10 +61,10 @@ export const sendSmsDuringBusinessHours: Action<
         accountSid,
       })
 
-      const nowString = formatISO(new Date())
+      const nowString = new Date().toISOString() // curent datetime in UTC
       const isBetweenBusinessHours = isDateBetweenBusinessHours(
         nowString, // UTC date
-        timeZone // offset
+        timeZone // offset, target timezone
       )
 
       const res = await client.messages.create({
