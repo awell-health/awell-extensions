@@ -1,1 +1,4 @@
-export { getNextDateWithinBusinessHours } from './getNextDateWithinBusinessHours'
+export {
+  getNextDateWithinBusinessHours,
+  isDateBetweenBusinessHours,
+} from './getNextDateWithinBusinessHours'
