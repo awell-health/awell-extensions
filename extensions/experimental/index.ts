@@ -3,6 +3,7 @@ import {
   enterMedication,
   wait,
   patientRecommendation,
+  redirect,
 } from './v1/actions'
 import { type Extension } from '@awell-health/extensions-core'
 import { settings } from './settings'
@@ -23,5 +24,6 @@ export const Experimental: Extension = {
     enterMedication,
     wait,
     patientRecommendation,
+    redirect,
   },
 }
