@@ -20,7 +20,7 @@ describe('Update patient', () => {
           firstName: 'John',
           lastName: 'Doe',
           birthDate: '1993-11-30',
-          email: 'john.doe@awellhealth.com',
+          email: 'john.doe@awellhealth.com ',
           phone: undefined,
           mobilePhone: undefined,
           street: 'Doe Street',
