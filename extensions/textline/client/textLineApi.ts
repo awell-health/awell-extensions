@@ -18,18 +18,24 @@ class TextLineApi {
 
   private async validateResponse<T = unknown>(response: Response): Promise<T> {
     const result = await response.json()
+    const {status: code} = response
 
-    if (response.status >= 400) {
-      throw new Error(
-        !isNil(result?.errors)
-          ? JSON.stringify({ errors: result?.errors, code: response.status })
-          : !isNil(result?.message)
-          ? JSON.stringify({ message: result?.message, code: response.status })
-          : JSON.stringify({
+    if (code >= 400) {
+      const { errors, message } = result || {};
+      let errorContent;
+      
+      if (!isNil(errors)) {
+          errorContent = { errors, code };
+      } else if (!isNil(message)) {
+          errorContent = { message, code };
+      } else {
+          errorContent = { 
               message: 'Unknown error in TextLine API has occurred',
-              status_code: response.status,
-            })
-      )
+              status_code: code
+          };
+      }
+      
+      throw new Error(JSON.stringify(errorContent));
     }
 
     return result
