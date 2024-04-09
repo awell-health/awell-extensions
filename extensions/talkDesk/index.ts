@@ -8,7 +8,7 @@ import actions from './actions'
 
 export const TalkDesk: Extension = {
   key: 'talkDesk',
-  title: 'TalkDesk',
+  title: 'Talkdesk',
   description:
     'Talkdesk is a cloud-based customer experience and contact center software company.',
   icon_url:
