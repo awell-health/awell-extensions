@@ -2,13 +2,14 @@
 
 Talkdesk is a cloud-based customer experience and contact center software company. It provides a platform that enables businesses to set up and manage their customer service and support operations. Talkdesk offers a range of features and tools to streamline and enhance communication between businesses and their customers.
 
-## Extension settings
+## Setup
 
-In order to set up this extension, you will need to provide:
+To set up the extension, you'll need your Talkdesk account name along with a client ID and client secret. Please ensure that the credentials you provide are associated with the necessary permissions, or "scopes," to run the extension:
 
-1. Base API URL
-2. Base API Auth URL
-3. Client ID
-4. Client Secret
+- flows-interactions:start
 
 ## Custom Actions
+
+### Trigger flow
+
+Enables the initiation of a Talkdesk flow directly from an Awell careflow. This feature triggers an interaction using the most recent published version of a specific Studio flow. You'll need to supply the ID of the flow and the data (as a JSON object) that you want to input into the flow.
