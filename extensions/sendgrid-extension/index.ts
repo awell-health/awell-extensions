@@ -6,6 +6,7 @@ import {
   addOrUpdateContact,
   removeSuppressions,
   addSuppressions,
+  importStatus,
 } from './v1/actions'
 import { settings } from './settings'
 
@@ -25,6 +26,7 @@ export const Sendgrid: Extension = {
     addOrUpdateContact,
     removeSuppressions,
     addSuppressions,
+    importStatus
   },
   settings,
 }

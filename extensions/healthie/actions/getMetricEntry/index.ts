@@ -1,0 +1,1 @@
+export { getMetricEntry } from './getMetricEntry'

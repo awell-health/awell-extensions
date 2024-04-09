@@ -37,7 +37,7 @@ const fields = {
     id: 'text',
     label: 'Text',
     description: 'Text of a note. Required when "Bullet ID" is provided.',
-    type: FieldType.STRING,
+    type: FieldType.TEXT,
     required: false,
   },
   authorId: {

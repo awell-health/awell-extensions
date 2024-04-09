@@ -1,3 +1,7 @@
+---
+title: Formsort
+description: Formsort is a fully-managed form-building platform.
+---
 # Formsort
 
 Formsort is a fully-managed form-building platform. Team can use the online studio (a specialized content management system for forms) to create form content, modify styles, and configure integrations.

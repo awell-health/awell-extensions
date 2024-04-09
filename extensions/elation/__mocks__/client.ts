@@ -3,15 +3,18 @@ import { type NonVisitNoteResponse } from '../types/nonVisitNote'
 import { type PhysicianResponse } from '../types/physician'
 import {
   appointmentExample,
+  findContactResponseExample,
+  labOrderResponseExample,
   nonVisitNoteResponseExample,
   patientExample,
   physicianResponseExample,
+  postLetterResponseExample,
 } from './constants'
 const { makeAPIClient: makeAPIClientActual } = jest.requireActual('../client')
 
 export const mockClientReturn = {
   getPatient: jest.fn((params) => {
-    return { id: 1, ...patientExample, mobile_phone: 'undefined' }
+    return { id: 1, ...patientExample }
   }),
   createPatient: jest.fn((params) => {
     return { id: 1, ...patientExample }
@@ -37,6 +40,9 @@ export const mockClientReturn = {
       },
     }
   }),
+  getPhysician: jest.fn((params) => {
+    return physicianResponseExample
+  }),
   findPhysicians: jest.fn((): ElationCollection<PhysicianResponse> => {
     return {
       count: 1,
@@ -56,6 +62,15 @@ export const mockClientReturn = {
   }),
   deleteNonVisitNote: jest.fn(() => {
     return {}
+  }),
+  postNewLetter: jest.fn(() => {
+    return postLetterResponseExample
+  }),
+  createLabOrder: jest.fn(() => {
+    return labOrderResponseExample
+  }),
+  searchContactsByNpi: jest.fn(() => {
+    return findContactResponseExample
   }),
 }
 const ElationAPIClientMock = jest.fn((params) => {

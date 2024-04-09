@@ -1,7 +1,7 @@
 import { generateTestPayload } from '../../../../src/tests'
 import { uploadFiles } from './uploadFiles'
 
-describe('Upload files action', () => {
+describe('Cloudinary - Upload files', () => {
   const onComplete = jest.fn()
   const onError = jest.fn()
 

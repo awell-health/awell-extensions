@@ -1,4 +1,5 @@
 import { type Field, FieldType } from '@awell-health/extensions-core'
+import { isEmpty, isNil } from 'lodash'
 import { z, type ZodTypeAny } from 'zod'
 
 export const fields = {
@@ -54,7 +55,21 @@ export const fields = {
     type: FieldType.STRING,
     required: false,
   },
+  customFields: {
+    id: 'customFields',
+    label: 'Custom fields',
+    description: 'An array defining values and options for custom fields.',
+    type: FieldType.JSON,
+    required: false,
+  },
 } satisfies Record<string, Field>
+
+interface CustomFieldSchema {
+  name: string
+  editor?: string
+  required?: boolean
+  value: string
+}
 
 export const FieldsValidationSchema = z.object({
   signerRole: z.string(),
@@ -64,6 +79,54 @@ export const FieldsValidationSchema = z.object({
   title: z.optional(z.string()),
   subject: z.optional(z.string()),
   message: z.optional(z.string()),
+  customFields: z
+    .optional(z.string())
+    .transform((str, ctx): CustomFieldSchema[] => {
+      if (isNil(str) || isEmpty(str)) return []
+
+      try {
+        const parsedJson = JSON.parse(str)
+
+        if (isEmpty(parsedJson)) {
+          return []
+        }
+
+        if (!Array.isArray(parsedJson)) {
+          ctx.addIssue({
+            code: 'custom',
+            message: 'custom fields should be an array',
+          })
+          return z.NEVER
+        }
+
+        const allObjectsHaveKeys = parsedJson.every((obj) => {
+          if (typeof obj !== 'object') {
+            ctx.addIssue({
+              code: 'custom',
+              message:
+                'Object entries in custom fields array should be an object',
+            })
+            return z.NEVER
+          }
+
+          return 'name' in obj && 'value' in obj
+        })
+
+        if (!allObjectsHaveKeys) {
+          ctx.addIssue({
+            code: 'custom',
+            message:
+              'Every object in custom fields array should have a `name` and `value` field',
+          })
+          return z.NEVER
+        }
+
+        return parsedJson
+      } catch (e) {
+        ctx.addIssue({ code: 'custom', message: 'Invalid custom fields data' })
+        return z.NEVER
+      }
+    }),
 } satisfies Record<keyof typeof fields, ZodTypeAny>)
 
 export const validateActionFields = (

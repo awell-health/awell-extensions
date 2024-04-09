@@ -1,0 +1,1 @@
+export { sendDocumentation } from './sendDocumentation'

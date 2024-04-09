@@ -1,3 +1,7 @@
+---
+title: Mailgun
+description: Mailgun is a cloud-based email delivery service that allows businesses and developers to send, receive, and track email messages.
+---
 # Mailgun
 
 Mailgun is a cloud-based email delivery service that allows businesses and developers to send, receive, and track email messages. It provides a powerful set of APIs that enable users to integrate email into their applications, automate email delivery, and improve deliverability rates. 

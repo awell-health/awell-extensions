@@ -22,6 +22,9 @@ import { requestFormCompletionUpdated } from './requestedFormCompletionUpdated'
 import { taskCreated } from './taskCreated'
 import { taskDeleted } from './taskDeleted'
 import { taskUpdated } from './taskUpdated'
+import { goalCreated } from './goalCreated'
+import { goalUpdated } from './goalUpdated'
+import { goalDeleted } from './goalDeleted'
 
 export type { AppointmentCreated } from './appointmentCreated'
 export type { PatientCreated } from './patientCreated'
@@ -47,6 +50,9 @@ export type { RequestFormCompletionUpdated } from './requestedFormCompletionUpda
 export type { TaskCreated } from './taskCreated'
 export type { TaskDeleted } from './taskDeleted'
 export type { TaskUpdated } from './taskUpdated'
+export type { GoalCreated } from './goalCreated'
+export type { GoalUpdated } from './goalUpdated'
+export type { GoalDeleted } from './goalDeleted'
 
 export const webhooks = [
   appointmentCreated,
@@ -73,4 +79,7 @@ export const webhooks = [
   taskCreated,
   taskDeleted,
   taskUpdated,
+  goalCreated,
+  goalUpdated,
+  goalDeleted,
 ]

@@ -1,3 +1,8 @@
+---
+title: Healthie
+description: Healthie offers infrastructure for next generation digital health organizations that provide virtual-first care.
+---
+
 # What is Healthie?
 
 Healthie offers infrastructure for next generation digital health organizations that provide virtual-first care. Healthie’s API-first and fully brandable suite of solutions (Scheduling, EMR, Client Engagement) enables healthcare builders to launch and scale best-in-class experiences for their members. Healthie also offers a built-in marketplace of business and clinical integrations used by our organizations.
@@ -43,6 +48,7 @@ Removes a tag (identified by an `id`) from a patient.
 Creates a charting note with the provided `note_content`.
 
 **Prerequisites and set-up:**
+
 1. The form specified by the `form_id` exists in Healthie.
 2. The form specified by the `form_id` is a charting form (click "Convert to charting form" in the form options).
 3. The form contains at least one question of type `textarea` (long text answer). The action will write the content of the charting note in the first question of that type it finds in the form.
@@ -72,3 +78,19 @@ Deletes an appointment with a given `id`.
 ## Cancel appointment
 
 Cancels an appointment with a given `id`.
+
+## Get metric entry
+
+Retrieve the most recent metric entry from a given `category`.
+
+## Create metric entry
+
+Create a metric entry for a patient in Healthie. The category of the metric is the literal name of the metric in Healthie. So if you have a metric in Healthie called "Weight", you should use "Weight" as the category.
+
+## Check patient tag
+
+Checks that a patient has an active tag with given `id`
+
+## Check scheduled appointments
+
+Checks that a patient has active scheduled appointment with given `appointmentTypeId`

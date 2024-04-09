@@ -12,6 +12,7 @@ export const SendgridClientMockImplementation = {
   marketing: {
     contacts: {
       addOrUpdate: jest.fn(),
+      importStatus: jest.fn()
     },
   },
   groups: {

@@ -3,23 +3,21 @@ import {
   type Field,
   FieldType,
   NumericIdSchema,
-  validateCommaSeparatedList
+  validateCommaSeparatedList,
 } from '@awell-health/extensions-core'
 
 export const fields = {
   email: {
     id: 'email',
     label: 'Email',
-    description:
-      'The email address you would like to suppress',
+    description: 'The email address you would like to suppress',
     type: FieldType.STRING,
     required: true,
   },
   groups: {
     id: 'groups',
     label: 'Groups',
-    description:
-      'A comma-separated list of group IDs (e.g. `12345, 12346`)',
+    description: 'A comma-separated list of group IDs (e.g. `12345, 12346`)',
     type: FieldType.STRING,
     required: true,
   },

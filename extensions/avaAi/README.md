@@ -1,3 +1,7 @@
+---
+title: AvaAI
+description: Experimental extension to introduce AI actions in care flows.
+---
 # Awell Virtual (AI) Assistant - Ava
 
 ## Extension settings

@@ -1,23 +1,38 @@
-import { type Action } from '@awell-health/extensions-core'
+import {
+  type Action,
+  type DataPointDefinition,
+} from '@awell-health/extensions-core'
 import { fields } from './config'
 import { Category, validate } from '@awell-health/extensions-core'
 import { SettingsValidationSchema, type settings } from '../../../settings'
 import { FieldsValidationSchema } from './config/fields'
 import { fromZodError } from 'zod-validation-error'
 import { z, ZodError } from 'zod'
+import { ResponseError } from '@sendgrid/helpers/classes'
 import {
   SendgridClient,
-  ResponseError,
   mapSendgridErrorsToActivityErrors,
 } from '../../../client'
 
-export const addOrUpdateContact: Action<typeof fields, typeof settings> = {
+const dataPoints = {
+  jobId: {
+    key: 'jobId',
+    valueType: 'string',
+  },
+} satisfies Record<string, DataPointDefinition>
+
+export const addOrUpdateContact: Action<
+  typeof fields,
+  typeof settings,
+  keyof typeof dataPoints
+> = {
   key: 'addOrUpdateContact',
   title: 'Add or update contact',
   description: 'Add or update contact',
   category: Category.COMMUNICATION,
   fields,
-  previewable: false,
+  dataPoints,
+  previewable: true,
   onActivityCreated: async (payload, onComplete, onError) => {
     try {
       const {
@@ -32,7 +47,7 @@ export const addOrUpdateContact: Action<typeof fields, typeof settings> = {
       })
 
       const sendgridClient = new SendgridClient({ apiKey })
-      await sendgridClient.marketing.contacts.addOrUpdate({
+      const sgResponse = await sendgridClient.marketing.contacts.addOrUpdate({
         contacts: [
           {
             email,
@@ -43,8 +58,11 @@ export const addOrUpdateContact: Action<typeof fields, typeof settings> = {
         ],
         listIds,
       })
-
-      await onComplete()
+      await onComplete({
+        data_points: {
+          jobId: sgResponse[0].body.job_id,
+        },
+      })
     } catch (err) {
       if (err instanceof ZodError) {
         const error = fromZodError(err)

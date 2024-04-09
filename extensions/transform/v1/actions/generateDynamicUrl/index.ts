@@ -1,0 +1,1 @@
+export { generateDynamicUrl } from './generateDynamicUrl'

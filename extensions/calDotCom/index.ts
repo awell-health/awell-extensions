@@ -1,7 +1,14 @@
 import { type Extension } from '@awell-health/extensions-core'
 import { AuthorType, Category } from '@awell-health/extensions-core'
-import { bookAppointment, getBooking } from './actions'
+import {
+  bookAppointment,
+  getBooking,
+  updateBooking,
+  deleteBooking,
+  createBooking,
+} from './actions'
 import { settings } from './settings'
+import { webhooks } from './webhooks'
 
 export const CalDotCom: Extension = {
   key: 'calDotCom',
@@ -15,6 +22,10 @@ export const CalDotCom: Extension = {
   actions: {
     bookAppointment,
     getBooking,
+    updateBooking,
+    deleteBooking,
+    createBooking,
   },
+  webhooks,
   settings,
 }

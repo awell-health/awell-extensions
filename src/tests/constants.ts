@@ -19,8 +19,8 @@ export const testPayload: NewActivityPayload<any, any> = {
 
 type DeepPartial<T> = T extends object
   ? {
-      [P in keyof T]?: DeepPartial<T[P]>
-    }
+    [P in keyof T]?: DeepPartial<T[P]>
+  }
   : T
 
 type FieldsType = Record<string, string | number | boolean | undefined>
@@ -44,7 +44,8 @@ export const generateTestPayload = <
   fields: Fields
   settings: Settings
 }): ReturnType<Fields, Settings> => ({
-  ...merge(testPayload, value),
+  // merge will mutate the first object, which is a little dangerous
+  ...merge({}, testPayload, value),
   fields,
   settings,
 })

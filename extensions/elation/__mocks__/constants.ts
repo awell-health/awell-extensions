@@ -1,4 +1,7 @@
 import { type AppointmentInput } from '../types/appointment'
+import { type FindContactsResponse } from '../types/contact'
+import { type CreateLabOrderResponse } from '../types/labOrder'
+import { type PostLetterResponse } from '../types/letter'
 import { type NonVisitNoteResponse } from '../types/nonVisitNote'
 import { type PatientInput } from '../types/patient'
 import { type PhysicianResponse } from '../types/physician'
@@ -23,6 +26,17 @@ export const patientExample: PatientInput = {
   notes: 'This is test Notes',
   previous_first_name: '',
   previous_last_name: '',
+  emails: [
+    {
+      email: 'john@doe.com',
+    },
+  ],
+  phones: [
+    {
+      phone: '(213) 373 42 53',
+      phone_type: 'Mobile',
+    },
+  ],
 }
 
 export const appointmentExample: AppointmentInput = {
@@ -71,4 +85,54 @@ export const nonVisitNoteResponseExample: NonVisitNoteResponse = {
   chart_date: '2023-01-01T00:00:00Z',
   document_date: '2023-01-01T00:00:00Z',
   tags: [],
+}
+
+export const findContactResponseExample: FindContactsResponse = {
+  count: 1,
+  results: [
+    {
+      first_name: 'Test',
+      id: 141127177601026,
+      last_name: 'Doctor',
+      middle_name: 'J',
+      npi: '2047990827',
+      practice: 141127173275652,
+      user: 4067,
+    },
+  ],
+}
+
+export const postLetterResponseExample: PostLetterResponse = {
+  body: 'This my test',
+  id: 142251583930586,
+  letter_type: 'provider',
+  patient: 141986488057857,
+  practice: 141127173275652,
+  referral_order: null,
+  send_to_contact: {
+    id: 141377681883138,
+  },
+  subject: 'My test subject',
+}
+
+export const labOrderResponseExample: CreateLabOrderResponse = {
+  confidential: false,
+  content: {
+    patient_instructions: '',
+    test_center_notes: '',
+    tests: [
+      {
+        id: 142255942795326,
+      },
+    ],
+  },
+  document_date: '2024-01-25T04:33:40Z',
+  id: 142256002957345,
+  ordering_physician: 141127177601026,
+  patient: 141986488057857,
+  practice: 141127173275652,
+  site: undefined,
+  vendor: 67385753846,
+  printable_view:
+    'https://sandbox.elationemr.com/api/2.0/lab_orders/142256002957345/printable',
 }

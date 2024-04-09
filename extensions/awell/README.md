@@ -1,3 +1,8 @@
+---
+title: Awell Workflow
+description: Enrich your care flows with powerful Awell actions.
+---
+
 # Awell API extension
 
 ## Extension settings
@@ -14,16 +19,17 @@ Starts a new care flow for the patient enrolled in your current care flow.
 Please read the documentation on [our developer hub](https://developers.awellhealth.com/awell-orchestration/api-reference/mutations/start-pathway) to learn more about how to pass baseline info.
 
 **Example of how to configure a value for the baseline info action field:**
+
 ```json
 [
-    {
-        "data_point_definition_id": "age",
-        "value": "29",
-    },
-    {
-        "data_point_definition_id": "dob",
-        "value": "1993-11-30",
-    }
+  {
+    "data_point_definition_id": "age",
+    "value": "29"
+  },
+  {
+    "data_point_definition_id": "dob",
+    "value": "1993-11-30"
+  }
 ]
 ```
 
@@ -59,3 +65,7 @@ Search whether, apart from the patient currently enrolled in the care flow, anot
 1. patientAlreadyExists: a boolean which will be true if minimum one patient with the patient code already exists.
 2. numberOfPatientsFound: the number of patients found with the same patient code.
 3. awellPatientIds: a comma-separated string of all Awell patient ids (except the current patient) that have the same patient code as the patient currently enrolled in the care flow. Will return an empty string when there are no other patients with the same patient code.
+
+## Webhooks
+
+Webhooks in the Awell extension offer ways to trigger a care flow based on the end of another care flow, or from any event that happens in your system (via the pathwayStart webhook).

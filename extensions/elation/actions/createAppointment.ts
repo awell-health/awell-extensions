@@ -14,26 +14,25 @@ import { AxiosError } from 'axios'
 import { appointmentSchema } from '../validation/appointment.zod'
 
 const fields = {
+  patientId: {
+    id: 'patientId',
+    label: 'Patient ID',
+    description: 'The patient to book the appointment for',
+    type: FieldType.NUMERIC,
+    required: true,
+  },
   scheduledDate: {
     id: 'scheduledDate',
     label: 'Scheduled date',
-    description: 'Datetime (ISO8601).',
-    type: FieldType.STRING,
+    description: 'Needs to be an ISO8601 string',
+    type: FieldType.DATE,
     required: true,
   },
   reason: {
     id: 'reason',
     label: 'Reason',
-    description:
-      'Should not be free-text. The values are mapped to "appointment types" in the EMR. Maximum length of 50 characters.',
+    description: 'Should be one of the valid appointment types in Elation',
     type: FieldType.STRING,
-    required: true,
-  },
-  patientId: {
-    id: 'patientId',
-    label: 'Patient ID',
-    description: '',
-    type: FieldType.NUMERIC,
     required: true,
   },
   physicianId: {
@@ -54,13 +53,13 @@ const fields = {
     id: 'duration',
     label: 'Duration',
     description:
-      'Number (in minutes). Must be a multiple of 5 and between 1 to 1440.',
+      'Number (in minutes). Must be a multiple of 5, the default duration is 15 minutes',
     type: FieldType.NUMERIC,
   },
   description: {
     id: 'description',
     label: 'Description',
-    description: 'Maximum length of 500 characters.',
+    description: '',
     type: FieldType.STRING,
   },
   serviceLocationId: {

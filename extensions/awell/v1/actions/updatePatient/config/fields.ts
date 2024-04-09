@@ -102,21 +102,30 @@ export const fields = {
     type: FieldType.STRING,
     required: false,
   },
+  nationalRegistryNumber: {
+    id: 'nationalRegistryNumber',
+    label: 'National registry number',
+    type: FieldType.STRING,
+    required: false,
+  },
 } satisfies Record<string, Field>
 
 export const FieldsValidationSchema = z.object({
-  patientCode: z.optional(z.string()),
-  firstName: z.optional(z.string()),
-  lastName: z.optional(z.string()),
+  patientCode: z.optional(z.string().trim().nonempty()),
+  firstName: z.optional(z.string().trim()),
+  lastName: z.optional(z.string().trim()),
   birthDate: z.optional(z.coerce.date().transform((date) => formatISO(date))),
-  email: z.optional(z.string().email('Value passed is not an email address')),
+  email: z.optional(
+    z.string().trim().email('Value passed is not an email address')
+  ),
   phone: E164PhoneValidationOptionalSchema,
   mobilePhone: E164PhoneValidationOptionalSchema,
-  street: z.optional(z.string()),
-  state: z.optional(z.string()),
-  country: z.optional(z.string()),
-  city: z.optional(z.string()),
-  zip: z.optional(z.string()),
-  preferredLanguage: z.optional(z.string()),
+  street: z.optional(z.string().trim()),
+  state: z.optional(z.string().trim()),
+  country: z.optional(z.string().trim()),
+  city: z.optional(z.string().trim()),
+  zip: z.optional(z.string().trim()),
+  preferredLanguage: z.optional(z.string().trim()),
   sex: z.optional(z.enum([Sex.Female, Sex.Male, Sex.NotKnown])),
+  nationalRegistryNumber: z.string().trim().optional(),
 } satisfies Record<keyof typeof fields, ZodTypeAny>)

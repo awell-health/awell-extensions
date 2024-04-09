@@ -1,0 +1,1 @@
+export { getQuestionnaireResponse } from './getQuestionnaireResponse'

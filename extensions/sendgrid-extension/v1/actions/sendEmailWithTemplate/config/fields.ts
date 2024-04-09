@@ -36,9 +36,10 @@ export const fields = {
   subject: {
     id: 'subject',
     label: 'Subject',
-    description: 'The subject of your email.',
+    description:
+      'The subject of your email. If you would like to compose a dynamic subject line then pass a subject field with the template content below.',
     type: FieldType.STRING,
-    required: true,
+    required: false,
   },
   dynamicTemplateData: {
     id: 'dynamicTemplateData',
@@ -61,7 +62,9 @@ type TemplateData = Record<string, JSONValue>
 
 export const FieldsValidationSchema = z.object({
   to: z.string().email(),
-  subject: z.string(),
+  subject: z.optional(
+    z.string().transform((str) => (isEmpty(str) ? undefined : str))
+  ),
   templateId: z.string(),
   dynamicTemplateData: z
     .optional(z.string())

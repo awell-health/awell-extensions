@@ -1,4 +1,4 @@
-import { onCreatePatient } from './onCreatePatient'
-export type { OnCreatePatient } from './onCreatePatient'
+import { patientCreatedOrUpdated } from './patientCreatedOrUpdated'
+import { appointmentCreatedOrUpdated } from './appointmentCreatedOrUpdated'
 
-export const webhooks = [onCreatePatient]
+export const webhooks = [patientCreatedOrUpdated, appointmentCreatedOrUpdated]

@@ -1,0 +1,1 @@
+export { getPhysician } from './getPhysician'

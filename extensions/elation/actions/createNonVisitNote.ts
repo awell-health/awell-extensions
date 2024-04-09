@@ -14,24 +14,25 @@ import { AxiosError } from 'axios'
 import { nonVisitNoteSchema } from '../validation/nonVisitNote.zod'
 
 const fields = {
-  text: {
-    id: 'text',
-    label: 'Text',
-    description: 'Text of a note',
-    type: FieldType.STRING,
-    required: true,
-  },
-  authorId: {
-    id: 'authorId',
-    label: 'Author',
-    description: 'Author of a note. Should be ID of a User.',
+  patientId: {
+    id: 'patientId',
+    label: 'Patient ID',
+    description: '',
     type: FieldType.NUMERIC,
     required: true,
   },
-  patientId: {
-    id: 'patientId',
-    label: 'Patient',
-    description: 'ID of a Patient',
+  // Practice ID is not required so leaving it out for simplicity
+  // practiceId: {
+  //   id: 'practiceId',
+  //   label: 'Practice',
+  //   description: 'ID of a Practice',
+  //   type: FieldType.NUMERIC,
+  //   required: false,
+  // },
+  authorId: {
+    id: 'authorId',
+    label: 'Author',
+    description: 'The author of a note. Should be the ID of a User in Elation.',
     type: FieldType.NUMERIC,
     required: true,
   },
@@ -39,30 +40,9 @@ const fields = {
     id: 'category',
     label: 'Category',
     description:
-      'Category of a note. Defaults to "Problem". One from the list: "Problem", "Past", "Family", "Social", "Instr", "PE", "ROS", "Med", "Data", "Assessment", "Test", "Tx", "Narrative", "Followup", "Reason", "Plan", "Objective", "Hpi", "Allergies", "Habits", "Assessplan", "Consultant", "Attending", "Dateprocedure", "Surgical", "Orders", "Referenced", "Procedure".',
+      'The Category of a note, defaults to "Problem". Read the extension documentation for the list of possible values.',
     type: FieldType.STRING,
     required: false,
-  },
-  practiceId: {
-    id: 'practiceId',
-    label: 'Practice',
-    description: 'ID of a Practice',
-    type: FieldType.NUMERIC,
-    required: false,
-  },
-  documentDate: {
-    id: 'documentDate',
-    label: 'Document Date',
-    description: 'Date in ISO 8601 format',
-    type: FieldType.DATE,
-    required: true,
-  },
-  chartDate: {
-    id: 'chartDate',
-    label: 'Chart Date',
-    description: 'Date in ISO 8601 format',
-    type: FieldType.DATE,
-    required: true,
   },
   tags: {
     id: 'tags',
@@ -70,6 +50,13 @@ const fields = {
     description: 'Comma-separated list of tags IDs',
     type: FieldType.STRING,
     required: false,
+  },
+  text: {
+    id: 'text',
+    label: 'Text',
+    description: 'Text of a note',
+    type: FieldType.TEXT,
+    required: true,
   },
 } satisfies Record<string, Field>
 
@@ -98,23 +85,14 @@ export const createNonVisitNote: Action<
   dataPoints,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
     try {
-      const {
-        authorId,
-        chartDate,
-        documentDate,
-        text,
-        category,
-        patientId,
-        practiceId,
-        ...fields
-      } = payload.fields
+      const { patientId, authorId, text, category, ...fields } = payload.fields
+
       const note = nonVisitNoteSchema.parse({
         ...fields,
         patient: patientId,
-        practice: practiceId,
         bullets: [{ text, author: authorId, category }],
-        document_date: documentDate,
-        chart_date: chartDate,
+        document_date: new Date().toISOString(),
+        chart_date: new Date().toISOString(),
       })
 
       const api = makeAPIClient(payload.settings)

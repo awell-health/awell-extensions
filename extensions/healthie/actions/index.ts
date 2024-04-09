@@ -1,11 +1,8 @@
 import { createAppointment } from './createAppointment'
-import { createTask } from './createTask'
+import { createTask } from './createTask/createTask'
 import { getAppointment } from './getAppointment'
-import { getPatient } from './getPatient'
 import { sendChatMessage } from './sendChatMessage'
 import { createPatient } from './createPatient'
-import { updatePatient } from './updatePatient'
-import { applyTagToPatient } from './applyTagToPatient'
 import { removeTagFromPatient } from './removeTagFromPatient'
 import { createChartingNote } from './createChartingNote'
 import { sendFormCompletionRequest } from './sendFormCompletionRequest'
@@ -16,6 +13,15 @@ import { deleteAppointment } from './deleteAppointment'
 import { cancelAppointment } from './cancelAppointment'
 import { deleteTask } from './deleteTask'
 import { completeTask } from './completeTask'
+import { assignPatientToGroup } from './assignPatientToGroup'
+import { updatePatient } from './updatePatient'
+import { getPatient } from './getPatient'
+import { applyTagToPatient } from './applyTagToPatient'
+import { getMetricEntry } from './getMetricEntry'
+import { updatePatientQuickNote } from './updatePatientQuickNote'
+import { createMetricEntry } from './createMetricEntry'
+import { checkPatientTag } from './checkPatientTag'
+import { checkScheduledAppointments } from './checkScheduledAppointments'
 
 export const actions = {
   createAppointment,
@@ -31,9 +37,9 @@ export const actions = {
   sendFormCompletionRequest,
   archivePatient,
   /**
-  * There is bug in Healthie that prevents linking an address with a patient
-  * Waiting for fix
-  **/
+   * There is bug in Healthie that prevents linking an address with a patient
+   * Waiting for fix
+   **/
   // createLocation,
   closeChatConversation,
   deleteAppointment,
@@ -45,4 +51,10 @@ export const actions = {
   // createJournalEntry,
   deleteTask,
   completeTask,
+  assignPatientToGroup,
+  getMetricEntry,
+  updatePatientQuickNote,
+  createMetricEntry,
+  checkPatientTag,
+  checkScheduledAppointments,
 }

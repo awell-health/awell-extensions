@@ -19,7 +19,7 @@ export const sendEmailWithTemplate: Action<typeof fields, typeof settings> = {
     'Send an email based on a template to a recipient of your choice.',
   category: Category.COMMUNICATION,
   fields,
-  previewable: false,
+  previewable: true,
   onActivityCreated: async (payload, onComplete, onError) => {
     try {
       const {
@@ -77,6 +77,13 @@ export const sendEmailWithTemplate: Action<typeof fields, typeof settings> = {
         payload,
       })
 
+      const emailSubject = Object.prototype.hasOwnProperty.call(
+        dynamicTemplateData,
+        'subject'
+      )
+        ? String(dynamicTemplateData.subject)
+        : subject
+
       const sendgridClient = new SendgridClient({ apiKey })
       await sendgridClient.mail.send({
         from: {
@@ -89,11 +96,11 @@ export const sendEmailWithTemplate: Action<typeof fields, typeof settings> = {
         },
         to,
         templateId,
-        subject,
+        subject: emailSubject,
         dynamicTemplateData: {
           ...dynamicTemplateData,
           // in template subject must be a handlebars variable
-          subject,
+          subject: emailSubject,
         },
         // metadata
         customArgs: {

@@ -2,6 +2,7 @@ import { type z } from 'zod'
 import {
   type patientStatusSchema,
   type patientSchema,
+  type updatePatientSchema,
   type insuranceSchema,
   type guarantorSchema,
   type phoneSchema,
@@ -9,6 +10,7 @@ import {
 } from '../validation/patient.zod'
 
 export type PatientInput = z.infer<typeof patientSchema>
+export type UpdatePatientInput = z.infer<typeof updatePatientSchema>
 
 /**
  * There is a difference between `input` and `output` objects in Elation,
@@ -34,7 +36,7 @@ interface Phone extends z.infer<typeof phoneSchema> {
   deleted_date?: string | null
 }
 
-interface Email extends z.infer<typeof emailSchema> {
+export interface Email extends z.infer<typeof emailSchema> {
   created_date: string
   deleted_date?: string | null
 }
