@@ -84,7 +84,7 @@ export const sendSmsDuringBusinessHours: Action<
         data_points: {
           messageSid: res.sid,
           scheduled,
-          sendAt: sendAt ? formatISO(sendAt) : formatISO(now),
+          sendAt: (sendAt != null) ? formatISO(sendAt) : formatISO(now),
         },
       })
     } catch (err) {

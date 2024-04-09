@@ -19,6 +19,7 @@ import { Twilio } from './twilio'
 // import { Wellinks } from './wellinks-public'
 import { Sendgrid } from './sendgrid-extension'
 import { CmDotCom } from './cmDotCom'
+import { TalkDesk } from './talkDesk'
 import { DocuSign } from './docuSign'
 import { Sendbird } from './sendbird'
 import { Transform } from './transform'
@@ -69,6 +70,8 @@ export const extensions = [
   nexuzhealth,
   Sendbird,
   Sendgrid,
+  CmDotCom,
+  TalkDesk,
   Transform,
   Twilio,
   // Wellinks,
