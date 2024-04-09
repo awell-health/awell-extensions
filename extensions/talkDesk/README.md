@@ -16,4 +16,4 @@ Enables the initiation of a Talkdesk flow directly from an Awell careflow. This 
 
 Important: Please note that Talkdesk sets a restriction of up to two API requests per second (rps) for each account using their Flows API.
 
-[Click here](https://studio.talkdesk.com/docs/sending-notifications-to-contacts-via-api-request) to learn more about triggering flows via the Talkdesk API.
+[Click here](https://studio.talkdesk.com/docs/sending-notifications-to-contacts-via-api-request) to learn more about triggering flows via the Talkdesk API and here to read the [API docs](https://docs.talkdesk.com/reference/flows-api-ref).
