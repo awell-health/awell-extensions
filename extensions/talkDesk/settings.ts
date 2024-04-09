@@ -1,20 +1,21 @@
 import { z, type ZodTypeAny } from 'zod'
 import { type Setting } from '@awell-health/extensions-core'
+import { APIRegionSchema } from './api/apiConfig'
 
 export const settings = {
-  baseUrl: {
-    key: 'baseUrl',
-    label: 'Base URL',
+  talkDeskAccountName: {
+    key: 'talkDeskAccountName',
+    label: 'Talkdesk account name',
     obfuscated: false,
-    description: 'The base URL of TalkDesk API.',
+    description: '',
     required: true,
   },
-  authUrl: {
-    key: 'authUrl',
-    label: 'Authorization URL',
+  region: {
+    key: 'region',
+    label: 'Region',
     obfuscated: false,
-    description: 'The complete URL of TalkDesk authentication endpoint.',
-    required: true,
+    description: 'US, EU, or Canada. Defaults to US.',
+    required: false,
   },
   clientId: {
     key: 'clientId',
@@ -33,8 +34,8 @@ export const settings = {
 } satisfies Record<string, Setting>
 
 export const SettingsValidationSchema = z.object({
-  baseUrl: z.string().nonempty(),
-  authUrl: z.string().nonempty(),
+  talkDeskAccountName: z.string().nonempty(),
+  region: APIRegionSchema.default('US'),
   clientId: z.string().nonempty(),
   clientSecret: z.string().nonempty(),
 } satisfies Record<keyof typeof settings, ZodTypeAny>)
