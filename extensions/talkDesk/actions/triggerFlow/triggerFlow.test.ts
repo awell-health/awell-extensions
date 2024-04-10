@@ -5,7 +5,7 @@ import {
   mockSettings,
 } from '../../api/__mocks__/mockData'
 
-jest.mock('../../api/talkdeskClient')
+// jest.mock('../../api/talkdeskClient')
 
 describe('Talkdesk - Trigger flow', () => {
   const onComplete = jest.fn()
@@ -18,8 +18,8 @@ describe('Talkdesk - Trigger flow', () => {
   test('Should trigger a flow', async () => {
     const mockOnActivityCreateParams = generateTestPayload({
       fields: {
-        flowId: '56529',
-        data: JSON.stringify({ key: 'value' }),
+        flowId: 'dc971dd4c8044b1da94689737d42655f',
+        data: JSON.stringify({}),
       },
       settings: mockSettings,
     })

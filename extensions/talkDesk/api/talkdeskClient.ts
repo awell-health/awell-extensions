@@ -45,6 +45,9 @@ export class TalkdeskAPIClient extends APIClient<TalkdeskAthenaDataWrapper> {
     requestConfig,
     ...opts
   }: TalkdeskClientConstructorProps) {
+    console.log(authUrl)
+    console.log(opts)
+    console.log(requestConfig)
     super({
       ...opts,
       auth: new OAuthClientCredentials({
