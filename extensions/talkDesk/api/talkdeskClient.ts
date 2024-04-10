@@ -17,14 +17,18 @@ export class TalkdeskAthenaDataWrapper extends DataWrapper {
     flowId: string
     data: Record<string, string>
   }): Promise<TriggerFlowResponseType> {
-    const result = await this.Request<TriggerFlowResponseType>({
-      method: 'POST',
-      url: `flows/${flowId}/interactions`,
-      headers: { 'Content-Type': 'application/json' },
-      data: JSON.stringify(data),
-    })
-
-    return result
+    try {
+      const result = await this.Request<TriggerFlowResponseType>({
+        method: 'POST',
+        url: `flows/${flowId}/interactions`,
+        headers: { 'Content-Type': 'application/json' },
+        data: JSON.stringify(data),
+      })
+      return result
+    } catch (err) {
+      console.error(err)
+      throw err
+    }
   }
 }
 
@@ -54,6 +58,7 @@ export class TalkdeskAPIClient extends APIClient<TalkdeskAthenaDataWrapper> {
         auth_url: authUrl,
         request_config: requestConfig,
         cacheService,
+        useHeaderInAuthorization: true,
       }),
     })
   }
