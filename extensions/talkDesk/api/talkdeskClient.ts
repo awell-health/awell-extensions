@@ -17,18 +17,13 @@ export class TalkdeskAthenaDataWrapper extends DataWrapper {
     flowId: string
     data: Record<string, string>
   }): Promise<TriggerFlowResponseType> {
-    try {
-      const result = await this.Request<TriggerFlowResponseType>({
-        method: 'POST',
-        url: `flows/${flowId}/interactions`,
-        headers: { 'Content-Type': 'application/json' },
-        data: JSON.stringify(data),
-      })
-      return result
-    } catch (err) {
-      console.error(err)
-      throw err
-    }
+    const result = await this.Request<TriggerFlowResponseType>({
+      method: 'POST',
+      url: `flows/${flowId}/interactions`,
+      headers: { 'Content-Type': 'application/json' },
+      data: JSON.stringify(data),
+    })
+    return result
   }
 }
 
