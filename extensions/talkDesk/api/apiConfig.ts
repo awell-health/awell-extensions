@@ -81,5 +81,10 @@ enum TalkdeskScope {
  * The scopes we need in order to be able
  * to execute all actions in this extension
  */
-const scopesArray = [TalkdeskScope.FlowsInteractionsStart]
+const scopesArray = [
+  TalkdeskScope.FlowsInteractionsStart,
+  TalkdeskScope.ContactsRead,
+  TalkdeskScope.ContactsWrite,
+]
+
 export const scope = scopesArray.join(' ')
