@@ -5,7 +5,7 @@ import {
   mockSettings,
 } from '../../api/__mocks__/mockData'
 
-// jest.mock('../../api/talkdeskClient')
+jest.mock('../../api/talkdeskClient')
 
 describe('Talkdesk - Trigger flow', () => {
   const onComplete = jest.fn()
