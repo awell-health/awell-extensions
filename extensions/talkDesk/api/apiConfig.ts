@@ -86,4 +86,5 @@ const scopesArray = [
   TalkdeskScope.ContactsRead,
   TalkdeskScope.ContactsWrite,
 ]
+
 export const scope = scopesArray.join(' ')
