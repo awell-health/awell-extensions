@@ -23,7 +23,6 @@ export class TalkdeskAthenaDataWrapper extends DataWrapper {
       headers: { 'Content-Type': 'application/json' },
       data: JSON.stringify(data),
     })
-
     return result
   }
 }
@@ -51,6 +50,7 @@ export class TalkdeskAPIClient extends APIClient<TalkdeskAthenaDataWrapper> {
         auth_url: authUrl,
         request_config: requestConfig,
         cacheService,
+        useHeaderInAuthorization: true,
       }),
     })
   }
