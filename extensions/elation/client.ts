@@ -231,6 +231,7 @@ export class ElationAPIClient extends APIClient<ElationDataWrapper> {
         auth_url: authUrl,
         request_config: requestConfig,
         cacheService: elationCacheService,
+        useHeaderInAuthorization: true,
       }),
     })
   }
