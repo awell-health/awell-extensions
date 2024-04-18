@@ -10,10 +10,19 @@ export const fields = {
     type: FieldType.STRING,
     required: true,
   },
+  autoComplete: {
+    id: 'autoComplete',
+    label: 'Autocomplete',
+    description:
+      'If true, the activity will not wait for the flow to complete (default: false)',
+    type: FieldType.BOOLEAN,
+    required: false,
+  },
   data: {
     id: 'data',
     label: 'Data',
-    description: 'The data that will be ingested when triggering the flow.',
+    description:
+      'Data to be ingested when triggering the flow, including the `awell_activity_id` so the flow can perform the appropriate completeExtensionActivity callback.',
     type: FieldType.JSON,
     required: true,
   },
@@ -21,6 +30,7 @@ export const fields = {
 
 export const FieldsValidationSchema = z.object({
   flowId: z.string().nonempty(),
+  autoComplete: z.boolean().optional().default(false),
   data: z.string().transform((str, ctx): Record<string, string> => {
     if (isNil(str) || isEmpty(str)) {
       return {}
