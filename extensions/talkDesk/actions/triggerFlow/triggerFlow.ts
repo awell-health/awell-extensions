@@ -16,18 +16,25 @@ export const triggerFlow: Action<
   previewable: false,
   dataPoints,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
-    const { fields: input, client } = await validatePayloadAndCreateClient({
+    const { fields, client } = await validatePayloadAndCreateClient({
       fieldsSchema: FieldsValidationSchema,
       payload,
     })
+    const { activity } = payload
+    const input = {
+      flowId: fields.flowId,
+      data: { ...fields.data, awell_activity_id: activity.id },
+    }
 
     const res = await client.triggerFlow(input)
 
-    await onComplete({
-      data_points: {
-        interactionId: res.interaction_id,
-        flowVersionId: res.flow_version_id,
-      },
-    })
+    if (fields.autoComplete) {
+      await onComplete({
+        data_points: {
+          interactionId: res.interaction_id,
+          flowVersionId: res.flow_version_id,
+        },
+      })
+    }
   },
 }

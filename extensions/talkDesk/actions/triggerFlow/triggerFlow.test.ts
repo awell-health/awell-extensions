@@ -20,6 +20,7 @@ describe('Talkdesk - Trigger flow', () => {
       fields: {
         flowId: 'dc971dd4c8044b1da94689737d42655f',
         data: JSON.stringify({}),
+        autoComplete: true,
       },
       settings: mockSettings,
     })
