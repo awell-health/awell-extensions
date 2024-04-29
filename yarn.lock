@@ -88,6 +88,8 @@ __metadata:
     "@graphql-tools/apollo-engine-loader": ^7.3.26
     "@graphql-typed-document-node/core": ^3.1.2
     "@mailchimp/mailchimp_transactional": ^1.0.50
+    "@medplum/core": ^3.1.4
+    "@medplum/fhirtypes": ^3.1.4
     "@metriport/api": ^3.1.5
     "@sendgrid/client": ^7.7.0
     "@sendgrid/helpers": ^7.7.0
@@ -2186,6 +2188,25 @@ __metadata:
   dependencies:
     axios: ^0.21.1
   checksum: 5a1f563f18ef71549ca154c6d63b26ee2786e03ba162229f6e2e404766f7d67c90a5d7931b0130d9b99c4cdf5a3796b51851166b5313c104cf195711613636a7
+  languageName: node
+  linkType: hard
+
+"@medplum/core@npm:^3.1.4":
+  version: 3.1.4
+  resolution: "@medplum/core@npm:3.1.4"
+  peerDependencies:
+    pdfmake: ^0.2.5
+  peerDependenciesMeta:
+    pdfmake:
+      optional: true
+  checksum: 0acc252a6ed2375a6aae7a6e1dccb563d91cf9ad86e0112a0131277a22b2bf50d6b0d4da31986210c2c6f2e99ebdb0f002298b35e8b215b8193d0fab5bd5247a
+  languageName: node
+  linkType: hard
+
+"@medplum/fhirtypes@npm:^3.1.4":
+  version: 3.1.4
+  resolution: "@medplum/fhirtypes@npm:3.1.4"
+  checksum: c4e1fae65f2ff02d8a50999e7851f9b78e19c6b61270015965d00800c1ef4b210a23f38f4d03b81d6e6a69d9450565c751918938878bb60d17b24f0d1155b3a9
   languageName: node
   linkType: hard
 
