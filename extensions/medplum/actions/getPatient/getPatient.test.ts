@@ -1,8 +1,15 @@
 import { getPatient } from '.'
 import { generateTestPayload } from '../../../../src/tests'
-import { mockSettings } from '../../mocks'
+import { mockSettings, mockPatientResponse } from '../../__mocks__'
 
-// jest.mock('../../api/client')
+jest.mock('@medplum/core', () => {
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  const { MedplumClient: MedplumMockClient } = require('../../__mocks__')
+
+  return {
+    MedplumClient: MedplumMockClient,
+  }
+})
 
 describe('Medplum - Get patient', () => {
   const onComplete = jest.fn()
@@ -15,7 +22,7 @@ describe('Medplum - Get patient', () => {
   test('Should return a patient', async () => {
     const mockOnActivityCreateParams = generateTestPayload({
       fields: {
-        patientId: '56529',
+        patientId: '404bbc59-5b60-445d-808c-b2c7b2351d9b',
       },
       settings: mockSettings,
     })
@@ -28,7 +35,7 @@ describe('Medplum - Get patient', () => {
 
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
-        patientData: 'hello',
+        patientData: JSON.stringify(mockPatientResponse),
       },
     })
   })
