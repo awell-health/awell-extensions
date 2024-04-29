@@ -38,6 +38,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@graphql-tools/apollo-engine-loader", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:7.3.26"],\
             ["@graphql-typed-document-node/core", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:3.1.2"],\
             ["@mailchimp/mailchimp_transactional", "npm:1.0.50"],\
+            ["@medplum/core", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:3.1.4"],\
+            ["@medplum/fhirtypes", "npm:3.1.4"],\
             ["@metriport/api", "npm:3.1.5"],\
             ["@sendgrid/client", "npm:7.7.0"],\
             ["@sendgrid/helpers", "npm:7.7.0"],\
@@ -197,6 +199,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@graphql-tools/apollo-engine-loader", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:7.3.26"],\
             ["@graphql-typed-document-node/core", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:3.1.2"],\
             ["@mailchimp/mailchimp_transactional", "npm:1.0.50"],\
+            ["@medplum/core", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:3.1.4"],\
+            ["@medplum/fhirtypes", "npm:3.1.4"],\
             ["@metriport/api", "npm:3.1.5"],\
             ["@sendgrid/client", "npm:7.7.0"],\
             ["@sendgrid/helpers", "npm:7.7.0"],\
@@ -3509,6 +3513,37 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["@mailchimp/mailchimp_transactional", "npm:1.0.50"],\
             ["axios", "npm:0.21.4"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["@medplum/core", [\
+        ["npm:3.1.4", {\
+          "packageLocation": "./.yarn/cache/@medplum-core-npm-3.1.4-c47eb0fd79-0acc252a6e.zip/node_modules/@medplum/core/",\
+          "packageDependencies": [\
+            ["@medplum/core", "npm:3.1.4"]\
+          ],\
+          "linkType": "SOFT"\
+        }],\
+        ["virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:3.1.4", {\
+          "packageLocation": "./.yarn/__virtual__/@medplum-core-virtual-516621805e/0/cache/@medplum-core-npm-3.1.4-c47eb0fd79-0acc252a6e.zip/node_modules/@medplum/core/",\
+          "packageDependencies": [\
+            ["@medplum/core", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:3.1.4"],\
+            ["@types/pdfmake", null],\
+            ["pdfmake", null]\
+          ],\
+          "packagePeers": [\
+            "@types/pdfmake",\
+            "pdfmake"\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["@medplum/fhirtypes", [\
+        ["npm:3.1.4", {\
+          "packageLocation": "./.yarn/cache/@medplum-fhirtypes-npm-3.1.4-7eaa8a9757-c4e1fae65f.zip/node_modules/@medplum/fhirtypes/",\
+          "packageDependencies": [\
+            ["@medplum/fhirtypes", "npm:3.1.4"]\
           ],\
           "linkType": "HARD"\
         }]\
