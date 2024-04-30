@@ -36,4 +36,6 @@ export class MedplumClient {
       return undefined
     }
   )
+
+  executeBot = jest.fn(() => 'Bot executed!')
 }
