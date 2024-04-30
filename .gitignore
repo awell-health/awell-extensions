@@ -26,3 +26,6 @@ dist/*
 .idea
 
 .env
+
+# Zed editor
+.zed

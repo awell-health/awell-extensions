@@ -78,7 +78,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@awell-health/awell-extensions@workspace:."
   dependencies:
-    "@awell-health/extensions-core": 0.1.26
+    "@awell-health/extensions-core": 0.1.29
     "@dropbox/sign": ^1.1.3
     "@faker-js/faker": ^8.0.2
     "@graphql-codegen/cli": ^3.2.2
@@ -142,23 +142,22 @@ __metadata:
     twilio: ^4.8.0
     typescript: 4.9.5
     xml2js: ^0.6.2
-    zod: ^3.21.4
-    zod-validation-error: ^1.0.1
+    zod: ^3.23.5
+    zod-validation-error: ^3.2.0
   languageName: unknown
   linkType: soft
 
-"@awell-health/extensions-core@npm:0.1.26":
-  version: 0.1.26
-  resolution: "@awell-health/extensions-core@npm:0.1.26"
+"@awell-health/extensions-core@npm:0.1.29":
+  version: 0.1.29
+  resolution: "@awell-health/extensions-core@npm:0.1.29"
   dependencies:
-    axios: ^1.4.0
-    date-fns: ^2.30.0
-    libphonenumber-js: ^1.10.30
+    axios: ^1.6.0
+    date-fns: ^3.6.0
+    libphonenumber-js: ^1.10.61
     lodash: ^4.17.21
-    node-fetch: 2
-    zod: ^3.21.4
-    zod-validation-error: ^1.3.1
-  checksum: c963e285de5fe604416f61dfeaa8c51696bc6ba075b338c91075903907af1516de1f90ca9440ee503f90e67bb025e9f4e282b43d5dd280721e28b54cd67a3ebc
+    zod: ^3.23.4
+    zod-validation-error: ^3.2.0
+  checksum: eb5e6927369444c19c129c4323be1e57f3ffb0eaaa80dc0adbca8d5edb6f37ea04a0afcabd3878e77f737a1d2199ff7782dfea013aa7bf527c2402ab6e2c1f59
   languageName: node
   linkType: hard
 
@@ -3549,14 +3548,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"axios@npm:^1.4.0":
-  version: 1.4.0
-  resolution: "axios@npm:1.4.0"
+"axios@npm:^1.6.0":
+  version: 1.6.8
+  resolution: "axios@npm:1.6.8"
   dependencies:
-    follow-redirects: ^1.15.0
+    follow-redirects: ^1.15.6
     form-data: ^4.0.0
     proxy-from-env: ^1.1.0
-  checksum: 7fb6a4313bae7f45e89d62c70a800913c303df653f19eafec88e56cea2e3821066b8409bc68be1930ecca80e861c52aa787659df0ffec6ad4d451c7816b9386b
+  checksum: bf007fa4b207d102459300698620b3b0873503c6d47bf5a8f6e43c0c64c90035a4f698b55027ca1958f61ab43723df2781c38a99711848d232cad7accbcdfcdd
   languageName: node
   linkType: hard
 
@@ -4614,12 +4613,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"date-fns@npm:^2.30.0":
-  version: 2.30.0
-  resolution: "date-fns@npm:2.30.0"
-  dependencies:
-    "@babel/runtime": ^7.21.0
-  checksum: f7be01523282e9bb06c0cd2693d34f245247a29098527d4420628966a2d9aad154bd0e90a6b1cf66d37adcb769cd108cf8a7bd49d76db0fb119af5cdd13644f4
+"date-fns@npm:^3.6.0":
+  version: 3.6.0
+  resolution: "date-fns@npm:3.6.0"
+  checksum: 0daa1e9a436cf99f9f2ae9232b55e11f3dd46132bee10987164f3eebd29f245b2e066d7d7db40782627411ecf18551d8f4c9fcdf2226e48bb66545407d448ab7
   languageName: node
   linkType: hard
 
@@ -5906,6 +5903,16 @@ __metadata:
     debug:
       optional: true
   checksum: faa66059b66358ba65c234c2f2a37fcec029dc22775f35d9ad6abac56003268baf41e55f9ee645957b32c7d9f62baf1f0b906e68267276f54ec4b4c597c2b190
+  languageName: node
+  linkType: hard
+
+"follow-redirects@npm:^1.15.6":
+  version: 1.15.6
+  resolution: "follow-redirects@npm:1.15.6"
+  peerDependenciesMeta:
+    debug:
+      optional: true
+  checksum: a62c378dfc8c00f60b9c80cab158ba54e99ba0239a5dd7c81245e5a5b39d10f0c35e249c3379eae719ff0285fff88c365dd446fab19dee771f1d76252df1bbf5
   languageName: node
   linkType: hard
 
@@ -7818,10 +7825,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"libphonenumber-js@npm:^1.10.30":
-  version: 1.10.30
-  resolution: "libphonenumber-js@npm:1.10.30"
-  checksum: 677bdd25b709cc55f10c599df09e67b501554578e4700ae31d9f2153b4e6847710d2454b4551f19df3e443eb836c0f287a12159ee6acd931150407c0eaf010a0
+"libphonenumber-js@npm:^1.10.61":
+  version: 1.10.61
+  resolution: "libphonenumber-js@npm:1.10.61"
+  checksum: d43e2825b1edb875d44ec1913d987af787310e71bc00360bec3efc6a876abb5047ad8dc7e90de7f861b908d0a624e968faaf35a47b0b96361f9c043564fe3f88
   languageName: node
   linkType: hard
 
@@ -11495,27 +11502,25 @@ __metadata:
   languageName: node
   linkType: hard
 
-"zod-validation-error@npm:^1.0.1":
-  version: 1.0.1
-  resolution: "zod-validation-error@npm:1.0.1"
+"zod-validation-error@npm:^3.2.0":
+  version: 3.2.0
+  resolution: "zod-validation-error@npm:3.2.0"
   peerDependencies:
     zod: ^3.18.0
-  checksum: 0ad705b9eab062e06171b9f118fa2e36a8ccb9dda496bb5c65eefc0d665706e296587bf7fafb77b274e401f82029d403de689e5f58b9a5b627a254e4bd4bddac
+  checksum: 4d541566ff4bd54cc7c1c547ee69e50a11ff14c48d378f7c600146513e250067f8a9bac0170285d346d00095685cbc29a4cd84f9c6371bb4fd3ed29d0fb98be3
   languageName: node
   linkType: hard
 
-"zod-validation-error@npm:^1.3.1":
-  version: 1.3.1
-  resolution: "zod-validation-error@npm:1.3.1"
-  peerDependencies:
-    zod: ^3.18.0
-  checksum: f27484377be368e41f29b122df6d4b9276e03774e1ceb26c8b77dd3dff0a216221ae8fd63643f75742236a4df80b27fc43b4c8efae80ae8c8fe38c4d12bbd104
-  languageName: node
-  linkType: hard
-
-"zod@npm:^3.20.2, zod@npm:^3.21.4":
+"zod@npm:^3.20.2":
   version: 3.21.4
   resolution: "zod@npm:3.21.4"
   checksum: f185ba87342ff16f7a06686767c2b2a7af41110c7edf7c1974095d8db7a73792696bcb4a00853de0d2edeb34a5b2ea6a55871bc864227dace682a0a28de33e1f
+  languageName: node
+  linkType: hard
+
+"zod@npm:^3.23.4, zod@npm:^3.23.5":
+  version: 3.23.5
+  resolution: "zod@npm:3.23.5"
+  checksum: 4b83c93c4d43640b31eb4289efedb23f303a272c39f8b492ee4b2fec1a1da0de078db3786a2e6cc08d6803f03e842af2ae16b430c7f2e0fea3eba16b72a9db36
   languageName: node
   linkType: hard
