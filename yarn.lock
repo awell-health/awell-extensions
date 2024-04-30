@@ -102,6 +102,7 @@ __metadata:
     "@types/mailchimp__mailchimp_transactional": ^1.0.5
     "@types/node": ^18.13.0
     "@types/node-fetch": ^2.6.2
+    "@types/pdfmake": ^0.2.9
     "@types/showdown": ^2.0.0
     "@types/xml2js": ^0.4.12
     "@typescript-eslint/eslint-plugin": ^5.52.0
@@ -2756,6 +2757,25 @@ __metadata:
   version: 4.0.0
   resolution: "@types/parse-json@npm:4.0.0"
   checksum: fd6bce2b674b6efc3db4c7c3d336bd70c90838e8439de639b909ce22f3720d21344f52427f1d9e57b265fcb7f6c018699b99e5e0c208a1a4823014269a6bf35b
+  languageName: node
+  linkType: hard
+
+"@types/pdfkit@npm:*":
+  version: 0.13.4
+  resolution: "@types/pdfkit@npm:0.13.4"
+  dependencies:
+    "@types/node": "*"
+  checksum: 1b5af7393bd41c7499615feddfff1a319e9e531f7c5e3a523945e289e0a5a53c0900ffb90d69e758fa4ca9dda7b231d505180b0f22db9e6dba77f22b9a9097c6
+  languageName: node
+  linkType: hard
+
+"@types/pdfmake@npm:^0.2.9":
+  version: 0.2.9
+  resolution: "@types/pdfmake@npm:0.2.9"
+  dependencies:
+    "@types/node": "*"
+    "@types/pdfkit": "*"
+  checksum: 26d6d997410ddf29c53a5a7f256c98ae6946f8bb97663bfd32d84ba2f0a5e0f338afd25628f1cc6269948720ca272e5703bda4eaa5022a5e0da330b52eaf6d25
   languageName: node
   linkType: hard
 

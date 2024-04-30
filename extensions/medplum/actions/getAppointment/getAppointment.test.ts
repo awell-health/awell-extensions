@@ -1,6 +1,6 @@
-import { getPatient } from '.'
+import { getAppointment } from '.'
 import { generateTestPayload } from '../../../../src/tests'
-import { mockSettings, mockGetPatientResponse } from '../../__mocks__'
+import { mockSettings, mockAppointmentResponse } from '../../__mocks__'
 
 jest.mock('@medplum/core', () => {
   // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -11,7 +11,7 @@ jest.mock('@medplum/core', () => {
   }
 })
 
-describe('Medplum - Get patient', () => {
+describe('Medplum - Get appointment', () => {
   const onComplete = jest.fn()
   const onError = jest.fn()
 
@@ -19,15 +19,15 @@ describe('Medplum - Get patient', () => {
     jest.clearAllMocks()
   })
 
-  test('Should return a patient', async () => {
+  test('Should return an appointment', async () => {
     const mockOnActivityCreateParams = generateTestPayload({
       fields: {
-        patientId: '404bbc59-5b60-445d-808c-b2c7b2351d9b',
+        appointmentId: '3e471b29-eec4-47e0-86f1-cec848658417',
       },
       settings: mockSettings,
     })
 
-    await getPatient.onActivityCreated(
+    await getAppointment.onActivityCreated(
       mockOnActivityCreateParams,
       onComplete,
       onError
@@ -35,7 +35,7 @@ describe('Medplum - Get patient', () => {
 
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
-        patientData: JSON.stringify(mockGetPatientResponse),
+        appointmentData: JSON.stringify(mockAppointmentResponse),
       },
     })
   })

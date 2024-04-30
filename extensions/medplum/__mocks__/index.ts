@@ -1,2 +1,7 @@
-export { mockSettings, mockPatientResponse } from './mockData'
+export { mockSettings } from './mockSettings'
+export {
+  mockGetPatientResponse,
+  mockCreatePatientResponse,
+} from './mockPatient'
+export { mockAppointmentResponse } from './mockAppointment'
 export { MedplumClient } from './MedplumClient'

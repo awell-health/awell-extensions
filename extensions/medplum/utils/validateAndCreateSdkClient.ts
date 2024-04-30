@@ -1,15 +1,23 @@
-import { validate } from '@awell-health/extensions-core'
+import {
+  type NewActivityPayload,
+  type Patient,
+  validate,
+} from '@awell-health/extensions-core'
 import z from 'zod'
 import { MedplumClient } from '@medplum/core'
 import { SettingsValidationSchema } from '../settings'
 
-type ValidateAndCreateSdkClient = <T extends z.ZodTypeAny>(args: {
+type ValidateAndCreateSdkClient = <
+  T extends z.ZodTypeAny,
+  P extends NewActivityPayload<any, any>
+>(args: {
   fieldsSchema: T
-  payload: unknown
+  payload: P
 }) => Promise<{
   medplumSdk: MedplumClient
   fields: z.infer<(typeof args)['fieldsSchema']>
   settings: z.infer<typeof SettingsValidationSchema>
+  patient: Patient
 }>
 
 export const validateAndCreateSdkClient: ValidateAndCreateSdkClient = async ({
@@ -28,11 +36,13 @@ export const validateAndCreateSdkClient: ValidateAndCreateSdkClient = async ({
     payload,
   })
 
+  const { patient } = payload
+
   const medplumSdk = new MedplumClient({
     clientId,
   })
 
   await medplumSdk.startClientLogin(clientId, clientSecret)
 
-  return { medplumSdk, fields, settings }
+  return { medplumSdk, fields, settings, patient }
 }

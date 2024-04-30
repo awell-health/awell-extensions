@@ -1,6 +1,6 @@
-import { getPatient } from '.'
+import { createPatient } from '.'
 import { generateTestPayload } from '../../../../src/tests'
-import { mockSettings, mockGetPatientResponse } from '../../__mocks__'
+import { mockSettings, mockCreatePatientResponse } from '../../__mocks__'
 
 jest.mock('@medplum/core', () => {
   // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -11,7 +11,7 @@ jest.mock('@medplum/core', () => {
   }
 })
 
-describe('Medplum - Get patient', () => {
+describe('Medplum - Create patient', () => {
   const onComplete = jest.fn()
   const onError = jest.fn()
 
@@ -19,15 +19,28 @@ describe('Medplum - Get patient', () => {
     jest.clearAllMocks()
   })
 
-  test('Should return a patient', async () => {
+  test('Should create a patient', async () => {
     const mockOnActivityCreateParams = generateTestPayload({
       fields: {
-        patientId: '404bbc59-5b60-445d-808c-b2c7b2351d9b',
+        firstName: 'Awell',
+        lastName: 'Demo',
+        mobilePhone: '+1 888 206 20 11',
+        email: 'test@awellhealth.com',
+        birthDate: '1993-11-30',
+        gender: 'male',
+        address: 'Awell Street',
+        city: 'Awell City',
+        postalCode: '1111',
+        state: 'Awell State',
+        country: 'Awellien',
+      },
+      patient: {
+        id: 'test-id',
       },
       settings: mockSettings,
     })
 
-    await getPatient.onActivityCreated(
+    await createPatient.onActivityCreated(
       mockOnActivityCreateParams,
       onComplete,
       onError
@@ -35,7 +48,7 @@ describe('Medplum - Get patient', () => {
 
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
-        patientData: JSON.stringify(mockGetPatientResponse),
+        patientId: mockCreatePatientResponse.id,
       },
     })
   })
