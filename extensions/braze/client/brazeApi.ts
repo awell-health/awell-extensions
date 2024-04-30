@@ -66,6 +66,41 @@ class BrazeApi {
 
     return result
   }
+
+  async sendSms({
+    appId,
+    subscriptionGroupId,
+    body,
+  }: {
+    appId: string
+    subscriptionGroupId: string
+    body: string
+  }): Promise<SendMessageResponse> {
+    const url = this.constructUrl('/messages/send')
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        ...this.headers,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        messages: {
+          sms: { appId, subscription_group_id: subscriptionGroupId, body },
+        },
+      }),
+    })
+    const result = await response.json()
+
+    if (response.status >= 400) {
+      throw new Error(
+        !isNil(result?.errors)
+          ? JSON.stringify(result?.errors)
+          : 'Unknown error in Braze API has occurred'
+      )
+    }
+
+    return result
+  }
 }
 
 export default BrazeApi

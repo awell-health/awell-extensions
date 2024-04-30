@@ -1,6 +1,9 @@
 export const mockReturnValue = {
-  sendMessage: jest.fn(() => {
+  sendEmail: jest.fn(() => {
     return { dispatch_id: '123' }
+  }),
+  sendSms: jest.fn(() => {
+    return { dispatch_id: '321' }
   }),
 }
 
