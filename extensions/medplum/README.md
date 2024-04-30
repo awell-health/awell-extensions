@@ -10,9 +10,3 @@ Medplum is the open source healthcare developer platform that helps you build, t
 ## Extension settings
 
 A client ID and client secret needs to be provided in order for the extension to authenticate with Medplum's API.
-
-
-## Actions
-
-### Get patient
-

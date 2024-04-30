@@ -3,13 +3,7 @@ import {
   DateOnlyOptionalSchema,
   E164PhoneValidationOptionalSchema,
 } from '@awell-health/extensions-core'
-
-const fhirGenderSchema = z.union([
-  z.literal('male'),
-  z.literal('female'),
-  z.literal('other'),
-  z.literal('unknown'),
-])
+import { GenderSchema } from '../atoms'
 
 export const PatientSchema = z.object({
   firstName: z.string().optional(),
@@ -17,7 +11,7 @@ export const PatientSchema = z.object({
   email: z.string().email().optional(),
   mobilePhone: E164PhoneValidationOptionalSchema,
   birthDate: DateOnlyOptionalSchema,
-  gender: fhirGenderSchema.optional(),
+  gender: GenderSchema.optional(),
   address: z.string().optional(),
   city: z.string().optional(),
   state: z.string().optional(),
