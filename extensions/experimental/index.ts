@@ -4,6 +4,7 @@ import {
   wait,
   patientRecommendation,
   redirect,
+  returnObject,
 } from './v1/actions'
 import { type Extension } from '@awell-health/extensions-core'
 import { settings } from './settings'
@@ -25,5 +26,6 @@ export const Experimental: Extension = {
     wait,
     patientRecommendation,
     redirect,
+    returnObject,
   },
 }
