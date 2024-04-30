@@ -1,0 +1,1 @@
+export { PatientSchema } from './resources'

@@ -1,0 +1,1 @@
+export { getAppointment } from './getAppointment'
