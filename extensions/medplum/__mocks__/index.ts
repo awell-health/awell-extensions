@@ -4,4 +4,5 @@ export {
   mockCreatePatientResponse,
 } from './mockPatient'
 export { mockAppointmentResponse } from './mockAppointment'
+export { mockCreateServiceRequestResponse } from './mockServiceRequest'
 export { MedplumClient } from './MedplumClient'

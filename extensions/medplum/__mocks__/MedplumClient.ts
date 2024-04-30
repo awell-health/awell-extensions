@@ -3,6 +3,7 @@ import {
   mockAppointmentResponse,
   mockCreatePatientResponse,
   mockGetPatientResponse,
+  mockCreateServiceRequestResponse,
 } from './'
 import {
   type ResourceType,
@@ -27,6 +28,13 @@ export class MedplumClient {
       return undefined
     }
   )
+
+  createResource = jest.fn(<T extends Resource>(resource: T): T | undefined => {
+    if (resource.resourceType === 'ServiceRequest')
+      return mockCreateServiceRequestResponse as T
+
+    return undefined
+  })
 
   createResourceIfNoneExist = jest.fn(
     <T extends Resource>(resource: T): T | undefined => {

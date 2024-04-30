@@ -1,1 +1,1 @@
-export { PatientSchema } from './patient'
+export { PatientSchema } from './patient.schema'
