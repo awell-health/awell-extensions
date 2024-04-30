@@ -2,14 +2,14 @@ import { executeBot } from '.'
 import { generateTestPayload } from '../../../../src/tests'
 import { mockSettings } from '../../__mocks__'
 
-// jest.mock('@medplum/core', () => {
-//   // eslint-disable-next-line @typescript-eslint/no-var-requires
-//   const { MedplumClient: MedplumMockClient } = require('../../__mocks__')
+jest.mock('@medplum/core', () => {
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  const { MedplumClient: MedplumMockClient } = require('../../__mocks__')
 
-//   return {
-//     MedplumClient: MedplumMockClient,
-//   }
-// })
+  return {
+    MedplumClient: MedplumMockClient,
+  }
+})
 
 describe('Medplum - Execute bot', () => {
   const onComplete = jest.fn()
