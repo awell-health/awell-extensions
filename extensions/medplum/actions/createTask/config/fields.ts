@@ -57,8 +57,8 @@ export const fields = {
   performerType: {
     id: 'performerType',
     label: 'Performer type',
-    description: 'Who needs to complete the task?',
-    type: FieldType.DATE,
+    description: 'Indicate which role can/should perform this task',
+    type: FieldType.STRING,
     required: false,
   },
 } satisfies Record<string, Field>
