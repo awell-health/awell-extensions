@@ -7,13 +7,8 @@ jest.mock('../../../common/sdk/dropboxSignSdk')
 
 const mockFn = jest
   .spyOn(DropboxSignSdk.SignatureRequestApi.prototype, 'signatureRequestRemind')
-  .mockImplementation(async (signatureRequestId, data, options) => {
-    console.log(
-      'mocked DropboxSignSdk.SignatureRequestApi.signatureRequestRemind',
-      { signatureRequestId, data, options }
-    )
-
-    return {
+  .mockImplementation(
+    jest.fn().mockResolvedValue({
       body: {
         signatureRequest: {
           title: 'test-title',
@@ -26,8 +21,8 @@ const mockFn = jest
         headers: {},
         config: {},
       },
-    }
-  })
+    })
+  )
 
 describe('Send request reminder action', () => {
   const onComplete = jest.fn()

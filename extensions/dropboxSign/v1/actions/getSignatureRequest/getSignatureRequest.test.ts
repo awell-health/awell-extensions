@@ -7,13 +7,8 @@ jest.mock('../../../common/sdk/dropboxSignSdk')
 
 const mockFn = jest
   .spyOn(DropboxSignSdk.SignatureRequestApi.prototype, 'signatureRequestGet')
-  .mockImplementation(async (signatureRequestId, options) => {
-    console.log(
-      'mocked DropboxSignSdk.SignatureRequestApi.signatureRequestGet',
-      { signatureRequestId, options }
-    )
-
-    return {
+  .mockImplementation(
+    jest.fn().mockResolvedValue({
       body: {
         signatureRequest: {
           title: 'test-title',
@@ -26,8 +21,8 @@ const mockFn = jest
         headers: {},
         config: {},
       },
-    }
-  })
+    })
+  )
 
 describe('Get signature request action', () => {
   const onComplete = jest.fn()

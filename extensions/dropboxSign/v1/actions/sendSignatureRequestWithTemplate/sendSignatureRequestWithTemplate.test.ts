@@ -10,13 +10,8 @@ const mockFn = jest
     DropboxSignSdk.SignatureRequestApi.prototype,
     'signatureRequestSendWithTemplate'
   )
-  .mockImplementation(async (data) => {
-    console.log(
-      'mocked DropboxSignSdk.SignatureRequestApi.signatureRequestSendWithTemplate',
-      data
-    )
-
-    return {
+  .mockImplementation(
+    jest.fn().mockResolvedValue({
       body: {
         signatureRequest: {
           title: 'test-title',
@@ -29,8 +24,8 @@ const mockFn = jest
         headers: {},
         config: {},
       },
-    }
-  })
+    })
+  )
 
 describe('Cancel signature request action', () => {
   const onComplete = jest.fn()
