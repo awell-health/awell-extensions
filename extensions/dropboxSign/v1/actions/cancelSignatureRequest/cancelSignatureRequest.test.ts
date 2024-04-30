@@ -6,12 +6,8 @@ jest.mock('../../../common/sdk/dropboxSignSdk')
 
 const mockFn = jest
   .spyOn(DropboxSignSdk.SignatureRequestApi.prototype, 'signatureRequestCancel')
-  .mockImplementation(async () => {
-    console.log(
-      'mocked DropboxSignSdk.SignatureRequestApi.signatureRequestCancel'
-    )
-
-    return {
+  .mockImplementation(
+    jest.fn().mockResolvedValue({
       response: {
         data: {},
         status: 200,
@@ -19,8 +15,8 @@ const mockFn = jest
         headers: {},
         config: {},
       },
-    }
-  })
+    })
+  )
 
 describe('Cancel signature request action', () => {
   const onComplete = jest.fn()

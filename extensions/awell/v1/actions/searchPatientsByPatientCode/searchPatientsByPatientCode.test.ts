@@ -8,24 +8,20 @@ jest.mock('../../sdk/awellSdk')
 const mockFn = jest
   .spyOn(AwellSdk.prototype, 'searchPatientsByPatientCode')
   .mockImplementationOnce(
-    async (input: QuerySearchPatientsByPatientCodeArgs) => {
-      console.log('mocked AwellSdk.searchPatientsByPatientCode', input)
-
-      return [
-        {
-          id: 'patient-id-1',
-          profile: {
-            patient_code: '123',
-          },
+    jest.fn().mockResolvedValue([
+      {
+        id: 'patient-id-1',
+        profile: {
+          patient_code: '123',
         },
-        {
-          id: 'patient-id-2',
-          profile: {
-            patient_code: '123',
-          },
+      },
+      {
+        id: 'patient-id-2',
+        profile: {
+          patient_code: '123',
         },
-      ]
-    }
+      },
+    ])
   )
 
 describe('Search patients by patient code', () => {

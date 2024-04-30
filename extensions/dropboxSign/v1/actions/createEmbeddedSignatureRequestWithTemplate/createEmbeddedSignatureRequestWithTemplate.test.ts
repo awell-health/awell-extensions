@@ -10,13 +10,8 @@ const mocksignatureRequestCreateEmbeddedWithTemplate = jest
     DropboxSignSdk.SignatureRequestApi.prototype,
     'signatureRequestCreateEmbeddedWithTemplate'
   )
-  .mockImplementation(async (data) => {
-    console.log(
-      'mocked DropboxSignSdk.SignatureRequestApi.signatureRequestCreateEmbeddedWithTemplate',
-      data
-    )
-
-    return {
+  .mockImplementation(
+    jest.fn().mockResolvedValue({
       body: {
         signatureRequest: {
           signatureRequestId: 'signature-request-id',
@@ -34,18 +29,13 @@ const mocksignatureRequestCreateEmbeddedWithTemplate = jest
         headers: {},
         config: {},
       },
-    }
-  })
+    })
+  )
 
 const mockEmbeddedApiEmbeddedSignUrl = jest
   .spyOn(DropboxSignSdk.EmbeddedApi.prototype, 'embeddedSignUrl')
-  .mockImplementation(async (data) => {
-    console.log(
-      'mocked DropboxSignSdk.SignatureRequestApi.signatureRequestCreateEmbeddedWithTemplate',
-      data
-    )
-
-    return {
+  .mockImplementation(
+    jest.fn().mockResolvedValue({
       body: {
         embedded: {
           signUrl: 'https://developers.awellhealth.com',
@@ -59,8 +49,8 @@ const mockEmbeddedApiEmbeddedSignUrl = jest
         headers: {},
         config: {},
       },
-    }
-  })
+    })
+  )
 
 describe('Create embedded signature request with template', () => {
   const onComplete = jest.fn()
