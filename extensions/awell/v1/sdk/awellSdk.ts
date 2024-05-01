@@ -14,6 +14,9 @@ import {
   type User,
   type PatientPathwaysPayload,
   type PatientPathway,
+  type PatientPayload,
+  type AddIdentifierToPatientInput,
+  type Maybe,
 } from '../gql/graphql'
 import { isNil } from 'lodash'
 import {
@@ -24,6 +27,8 @@ import {
   updatePatientMutation,
   searchPatientByPatientCodeQuery,
   updateBaselineInfoMutation,
+  getPatientByIdentifierQuery,
+  addIdentifierToPatientMutation,
 } from './graphql'
 
 export default class AwellSdk {
@@ -153,5 +158,30 @@ export default class AwellSdk {
       msg = JSON.stringify((data as unknown as { errors: any }).errors)
     }
     throw new Error(`Update baseline info failed. ${msg}`)
+  }
+
+  async getPatientByIdentifier(input: {
+    system: string
+    value: string
+  }): Promise<Maybe<User> | undefined> {
+    const data = await this.client.request<{
+      patientByIdentifier: PatientPayload
+    }>(getPatientByIdentifierQuery, input)
+
+    return data.patientByIdentifier.patient
+  }
+
+  async addIdentifierToPatient(
+    input: AddIdentifierToPatientInput
+  ): Promise<boolean> {
+    const data = await this.client.request<{
+      addIdentifierToPatient: { code: string; success: boolean }
+    }>(addIdentifierToPatientMutation, { input })
+
+    if (data.addIdentifierToPatient.success) {
+      return true
+    }
+
+    throw new Error('Failed to add identifier to patient.')
   }
 }
