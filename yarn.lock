@@ -71,7 +71,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@awell-health/awell-extensions@workspace:."
   dependencies:
-    "@awell-health/extensions-core": 0.1.29
+    "@awell-health/extensions-core": 0.2.0
     "@dropbox/sign": ^1.1.3
     "@faker-js/faker": ^8.0.2
     "@graphql-codegen/cli": ^3.2.2
@@ -141,17 +141,18 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@awell-health/extensions-core@npm:0.1.29":
-  version: 0.1.29
-  resolution: "@awell-health/extensions-core@npm:0.1.29"
+"@awell-health/extensions-core@npm:0.2.0":
+  version: 0.2.0
+  resolution: "@awell-health/extensions-core@npm:0.2.0"
   dependencies:
+    "@types/json-schema": ^7.0.15
     axios: ^1.6.0
     date-fns: ^3.6.0
     libphonenumber-js: ^1.10.61
     lodash: ^4.17.21
     zod: ^3.23.4
     zod-validation-error: ^3.2.0
-  checksum: eb5e6927369444c19c129c4323be1e57f3ffb0eaaa80dc0adbca8d5edb6f37ea04a0afcabd3878e77f737a1d2199ff7782dfea013aa7bf527c2402ab6e2c1f59
+  checksum: b4c391f344a8fa37951428d42a69818e6f19cc4c9c0204c65a58524cb5a77d612851d7d5d172f1187baa9dda1f0fdf299b42276d75c32e8a637227bccc45014b
   languageName: node
   linkType: hard
 
@@ -2568,7 +2569,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/json-schema@npm:^7.0.11, @types/json-schema@npm:^7.0.12, @types/json-schema@npm:^7.0.9":
+"@types/json-schema@npm:^7.0.11, @types/json-schema@npm:^7.0.12, @types/json-schema@npm:^7.0.15, @types/json-schema@npm:^7.0.9":
   version: 7.0.15
   resolution: "@types/json-schema@npm:7.0.15"
   checksum: 97ed0cb44d4070aecea772b7b2e2ed971e10c81ec87dd4ecc160322ffa55ff330dace1793489540e3e318d90942064bb697cc0f8989391797792d919737b3b98
