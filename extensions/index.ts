@@ -1,4 +1,3 @@
-// import { AvaAi } from './avaAi'
 import { Awell } from './awell'
 import { CalDotCom } from './calDotCom'
 import { Calendly } from './calendly'
@@ -16,7 +15,6 @@ import { MathExtension } from './math'
 import { MessageBird } from './messagebird'
 import { Metriport } from './metriport'
 import { Twilio } from './twilio'
-// import { Wellinks } from './wellinks-public'
 import { Sendgrid } from './sendgrid-extension'
 import { CmDotCom } from './cmDotCom'
 import { TalkDesk } from './talkDesk'
@@ -41,9 +39,6 @@ export type Markdown = Record<string, { readme: string; changelog: string }>
 export const markdown: Markdown = json
 
 export const extensions = [
-  // AvaAi, Best to disable this until we cleared out data privacy & HIPAA with OpenAI
-  // ZusHealth is not ready for public use yet
-  // ZusHealth,
   Awell,
   athenahealth,
   CalDotCom,
@@ -67,17 +62,15 @@ export const extensions = [
   Mailgun,
   MathExtension,
   MessageBird,
+  Medplum,
   Metriport,
   nexuzhealth,
   Sendbird,
   Sendgrid,
-  CmDotCom,
   TalkDesk,
+  TextLine,
   Transform,
   Twilio,
-  // Wellinks,
   Zendesk,
   WestFax,
-  TextLine,
-  Medplum,
 ]

@@ -1,1 +1,0 @@
-export { generatePatientSummary } from './generatePatientSummary'
