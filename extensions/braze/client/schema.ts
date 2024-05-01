@@ -1,6 +1,6 @@
 import { z } from 'zod'
 
-const SendMessageResponseSchema = z.object({
+export const SendMessageResponseSchema = z.object({
   dispatch_id: z.string(),
 })
 

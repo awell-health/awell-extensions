@@ -5,7 +5,6 @@ import { type settings, SettingsValidationSchema } from '../../settings'
 import { Category, validate } from '@awell-health/extensions-core'
 import { FieldsValidationSchema, dataPoints, fields } from './config'
 import BrazeApi from '../../client'
-import { type SendMessageResponse } from '../../client/schema'
 
 export const sendEmail: Action<typeof fields, typeof settings> = {
   key: 'sendEmail',
@@ -29,7 +28,7 @@ export const sendEmail: Action<typeof fields, typeof settings> = {
       })
 
       const brazeApi = new BrazeApi({ apiUrl, apiKey })
-      const response: SendMessageResponse = await brazeApi.sendEmail({
+      const response = await brazeApi.sendEmail({
         appId,
         from,
         body,

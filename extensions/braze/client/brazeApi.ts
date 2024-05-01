@@ -1,6 +1,6 @@
+import { fetchTyped } from '@awell-health/extensions-core'
 import { isNil, isEmpty, omitBy } from 'lodash'
-import fetch from 'node-fetch'
-import { type SendMessageResponse } from './schema'
+import { type SendMessageResponse, SendMessageResponseSchema } from './schema'
 
 class BrazeApi {
   private readonly apiUrl: string
@@ -42,7 +42,7 @@ class BrazeApi {
     body: string
   }): Promise<SendMessageResponse> {
     const url = this.constructUrl('/messages/send')
-    const response = await fetch(url, {
+    const response = await fetchTyped(url, SendMessageResponseSchema, {
       method: 'POST',
       headers: {
         ...this.headers,
@@ -54,17 +54,7 @@ class BrazeApi {
         },
       }),
     })
-    const result = await response.json()
-
-    if (response.status >= 400) {
-      throw new Error(
-        !isNil(result?.errors)
-          ? JSON.stringify(result?.errors)
-          : 'Unknown error in Braze API has occurred'
-      )
-    }
-
-    return result
+    return { dispatch_id: response.dispatch_id }
   }
 
   async sendSms({
@@ -77,7 +67,7 @@ class BrazeApi {
     body: string
   }): Promise<SendMessageResponse> {
     const url = this.constructUrl('/messages/send')
-    const response = await fetch(url, {
+    const response = await fetchTyped(url, SendMessageResponseSchema, {
       method: 'POST',
       headers: {
         ...this.headers,
@@ -89,17 +79,7 @@ class BrazeApi {
         },
       }),
     })
-    const result = await response.json()
-
-    if (response.status >= 400) {
-      throw new Error(
-        !isNil(result?.errors)
-          ? JSON.stringify(result?.errors)
-          : 'Unknown error in Braze API has occurred'
-      )
-    }
-
-    return result
+    return { dispatch_id: response.dispatch_id }
   }
 }
 

@@ -8,8 +8,9 @@ export const Braze: Extension = {
   category: Category.COMMUNICATION,
   title: 'Braze',
   description:
-    'Send messages to your patient via various communication channels by using Braze.',
-  icon_url: 'https://res.cloudinary.com/da7x4rzl4/image/upload/v1714502941/logo-braze_v5erfe.svg',
+    '** In beta ** Send messages to your patient via various communication channels by using Braze.',
+  icon_url:
+    'https://res.cloudinary.com/da7x4rzl4/image/upload/v1714502941/logo-braze_v5erfe.svg',
   author: {
     authorType: AuthorType.AWELL,
   },
