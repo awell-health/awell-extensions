@@ -1,6 +1,6 @@
 import { type Action } from '@awell-health/extensions-core'
 import { SettingsValidationSchema, type settings } from '../../../settings'
-import { Category , validate } from '@awell-health/extensions-core'
+import { Category, validate } from '@awell-health/extensions-core'
 import { fields, PatientValidationSchema, dataPoints } from './config'
 import { fromZodError } from 'zod-validation-error'
 import { z, ZodError } from 'zod'
@@ -12,7 +12,7 @@ export const searchPatientsByPatientCode: Action<
 > = {
   key: 'searchPatientsByPatientCode',
   category: Category.WORKFLOW,
-  title: 'Search patient (by patient code)',
+  title: 'Search patient by patient code (DEPRECATED, USE IDENTIFIERS)',
   description:
     "Search whether the current patient already exists. Search happens based on the `patient_code` field which is taken from the patient's profile.",
   fields,
