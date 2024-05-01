@@ -1,0 +1,1 @@
+export { getPatientByIdentifier } from './getPatientByIdentifier'
