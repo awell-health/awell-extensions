@@ -71,7 +71,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@awell-health/awell-extensions@workspace:."
   dependencies:
-    "@awell-health/extensions-core": 0.2.0-beta.0-beta62
+    "@awell-health/extensions-core": 0.2.0-beta.0-beta65
     "@dropbox/sign": ^1.1.3
     "@faker-js/faker": ^8.0.2
     "@graphql-codegen/cli": ^3.2.2
@@ -140,9 +140,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@awell-health/extensions-core@npm:0.2.0-beta.0-beta62":
-  version: 0.2.0-beta.0-beta62
-  resolution: "@awell-health/extensions-core@npm:0.2.0-beta.0-beta62"
+"@awell-health/extensions-core@npm:0.2.0-beta.0-beta65":
+  version: 0.2.0-beta.0-beta65
+  resolution: "@awell-health/extensions-core@npm:0.2.0-beta.0-beta65"
   dependencies:
     "@types/json-schema": ^7.0.15
     axios: ^1.6.0
@@ -151,7 +151,7 @@ __metadata:
     lodash: ^4.17.21
     zod: ^3.23.4
     zod-validation-error: ^3.2.0
-  checksum: 522b82b8c8bb1b66e71b313bc93050899773156125f14ee83eac5da5fa6a696694cb3d176dbd3cfd325082c0532e4a98b8a8bdd408c50f621d00be6980c6b82e
+  checksum: 463b70828351b4ee5520440ce2d6464a33d42f6ab0ba3909b0170aaf02e21d898dac4d828d56ff7edcf542757ab4eabbe9a7f8b2e357adf36735cb9aa6f28fe6
   languageName: node
   linkType: hard
 
