@@ -5,6 +5,8 @@ import {
   stopCareFlow,
   isPatientEnrolledInCareFlow,
   updateBaselineInfo,
+  addIdentifierToPatient,
+  getPatientByIdentifier,
 } from './v1/actions'
 import { type Extension } from '@awell-health/extensions-core'
 import { settings } from './settings'
@@ -23,6 +25,8 @@ export const Awell: Extension = {
   },
   settings,
   actions: {
+    addIdentifierToPatient,
+    getPatientByIdentifier,
     startCareFlow,
     updatePatient,
     stopCareFlow,
