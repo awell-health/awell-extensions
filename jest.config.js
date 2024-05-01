@@ -5,5 +5,5 @@ process.env.TZ = 'UTC'
 module.exports = {
   preset: 'ts-jest',
   testEnvironment: 'node',
-  modulePathIgnorePatterns: ['<rootDir>/dist/', '.*__mocks__.*'],
+  modulePathIgnorePatterns: ['<rootDir>/dist/'],
 }
