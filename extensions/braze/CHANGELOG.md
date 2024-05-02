@@ -2,4 +2,4 @@
 
 ## May 2024
 
-- Initial action to send an email
+- Extension added with two actions: Send email and Send SMS
