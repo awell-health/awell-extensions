@@ -20,7 +20,7 @@ export const fields = {
   body: {
     id: 'body',
     label: 'Email body',
-    description: 'Email body content(HTML)',
+    description: 'Email body content',
     type: FieldType.HTML,
     required: true,
   },
