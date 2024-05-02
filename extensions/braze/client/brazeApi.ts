@@ -34,11 +34,11 @@ class BrazeApi {
 
   async sendEmail({
     appId,
-    from,
+    from: { email, name },
     body,
   }: {
     appId: string
-    from: string
+    from: { email: string; name: string }
     body: string
   }): Promise<SendMessageResponse> {
     const url = this.constructUrl('/messages/send')
@@ -50,7 +50,7 @@ class BrazeApi {
       },
       body: JSON.stringify({
         messages: {
-          email: { appId, from, body },
+          email: { appId, from: `${name} <${email}>`, body },
         },
       }),
     })

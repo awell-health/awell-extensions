@@ -16,7 +16,8 @@ describe('send email action', () => {
       generateTestPayload({
         fields: {
           appId: 'appId',
-          from: '234234234234',
+          fromName: 'From Name',
+          fromEmail: 'test@test.com',
           body: `
           <h1 class="slate-h1">Create some nice email</h1><p class="slate-p">This is a simple email body to test the integration.</p><p class="slate-p"></p>
           `,
@@ -41,7 +42,8 @@ describe('send email action', () => {
       generateTestPayload({
         fields: {
           appId: 'appId',
-          from: '234234234234',
+          fromName: 'From Name',
+          fromEmail: 'test@test.com',
           body: `
           <h1 class="slate-h1">Create some nice email</h1><p class="slate-p">This is a simple email body to test the integration.</p><p class="slate-p"></p>
           `,
@@ -64,7 +66,8 @@ describe('send email action', () => {
       generateTestPayload({
         fields: {
           appId: 'appId',
-          from: '234234234234',
+          fromName: 'From Name',
+          fromEmail: 'test@test.com',
           body: '',
         },
         settings: {

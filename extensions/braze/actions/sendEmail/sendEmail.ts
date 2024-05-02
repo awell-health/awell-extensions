@@ -18,7 +18,7 @@ export const sendEmail: Action<typeof fields, typeof settings> = {
     try {
       const {
         settings: { apiUrl, apiKey },
-        fields: { appId, from, body },
+        fields: { appId, fromEmail, fromName, body },
       } = validate({
         schema: z.object({
           settings: SettingsValidationSchema,
@@ -30,7 +30,7 @@ export const sendEmail: Action<typeof fields, typeof settings> = {
       const brazeApi = new BrazeApi({ apiUrl, apiKey })
       const response = await brazeApi.sendEmail({
         appId,
-        from,
+        from: { email: fromEmail, name: fromName },
         body,
       })
 

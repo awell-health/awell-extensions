@@ -9,11 +9,17 @@ export const fields = {
     type: FieldType.STRING,
     required: true,
   },
-  from: {
-    id: 'from',
-    label: 'From Email',
-    description:
-      'Valid email address in the format "Display Name <email@address.com>"',
+  fromEmail: {
+    id: 'fromEmail',
+    label: 'From email',
+    description: 'Valid email address',
+    type: FieldType.STRING,
+    required: true,
+  },
+  fromName: {
+    id: 'fromName',
+    label: 'From name',
+    description: 'Display name used for "from" address',
     type: FieldType.STRING,
     required: true,
   },
@@ -28,6 +34,7 @@ export const fields = {
 
 export const FieldsValidationSchema = z.object({
   appId: z.string().min(1),
-  from: z.string().min(1),
+  fromEmail: z.string().min(1),
+  fromName: z.string().min(1),
   body: z.string().min(1),
 } satisfies Record<keyof typeof fields, ZodTypeAny>)
