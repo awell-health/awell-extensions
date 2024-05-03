@@ -5,6 +5,7 @@ import {
 import { z } from 'zod'
 import {
   PatientReferenceSchema,
+  TaskGroupSchema,
   TaskListReferenceSchema,
   TaskMetadataSchema,
   TaskReferenceSchema,
@@ -45,7 +46,7 @@ export const TaskSchema = z.object({
   subTasksCompletedCount: z.number().optional(),
   subTasksCount: z.number().optional(),
   subtasks: z.array(z.string()).optional(),
-  taskGroups: z.array(z.any()).optional(), // Leave untyped for now
+  taskGroup: TaskGroupSchema.optional(),
   taskList: TaskListReferenceSchema, // Required when creating a task
   taskMentions: z.array(z.any()).optional(), // Leave untyped for now,
   taskMetaData: TaskMetadataSchema,
@@ -66,6 +67,7 @@ export const CreateTaskSchema = TaskSchema.pick({
   taskList: true,
   patient: true,
   taskMetaData: true,
+  taskGroup: true,
 })
 
 export type CreateTaskInput = z.infer<typeof CreateTaskSchema>

@@ -17,8 +17,9 @@ describe('Dock Health - Create task', () => {
     const mockOnActivityCreateParams = generateTestPayload({
       fields: {
         description: 'description',
-        patientId: '123',
-        taskListId: '123',
+        patientId: 'test-patient-id',
+        taskListId: 'test-task-list-id',
+        taskGroupId: 'test-task-group-id',
       },
       settings: mockSettings,
     })

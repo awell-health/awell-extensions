@@ -26,12 +26,17 @@ export const createTask: Action<
       description: fields.description,
       patient: !isEmpty(fields.patientId)
         ? {
-            id: fields.patientId ?? '',
+            id: fields.patientId as string,
           }
         : undefined,
       taskList: {
         id: fields.taskListId,
       },
+      taskGroup: !isEmpty(fields.taskGroupId)
+        ? {
+            id: fields.taskGroupId as string,
+          }
+        : undefined,
       // taskMetaData: [
       //   {
       //     customFieldIdentifier: 'awellCareflowId',

@@ -23,10 +23,18 @@ export const fields = {
     type: FieldType.STRING,
     required: false,
   },
+  taskGroupId: {
+    id: 'taskGroupId',
+    label: 'Task group ID',
+    description: 'The group to assign the task to',
+    type: FieldType.STRING,
+    required: false,
+  },
 } satisfies Record<string, Field>
 
 export const FieldsValidationSchema = z.object({
   description: z.string().min(1),
   taskListId: z.string().min(1),
   patientId: z.string().optional(),
+  taskGroupId: z.string().optional(),
 } satisfies Record<keyof typeof fields, ZodTypeAny>)
