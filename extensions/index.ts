@@ -31,6 +31,7 @@ import { athenahealth } from './athenahealth'
 import { icd } from './icd'
 import { TextLine } from './textline'
 import { Medplum } from './medplum'
+import { dockHealth } from './dockHealth'
 
 import * as json from './markdown.json'
 import { ExternalServer } from './external-server'
@@ -47,6 +48,7 @@ export const extensions = [
   Cloudinary,
   CmDotCom,
   CollectData,
+  dockHealth,
   DocuSign,
   DropboxSign,
   Elation,
