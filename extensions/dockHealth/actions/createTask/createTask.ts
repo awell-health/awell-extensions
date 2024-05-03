@@ -17,11 +17,10 @@ export const createTask: Action<
   previewable: false,
   dataPoints,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
-    const { fields, dockClient, pathwayId, activityId } =
-      await validatePayloadAndCreateClient({
-        fieldsSchema: FieldsValidationSchema,
-        payload,
-      })
+    const { fields, dockClient } = await validatePayloadAndCreateClient({
+      fieldsSchema: FieldsValidationSchema,
+      payload,
+    })
 
     const res = await dockClient.createTask({
       description: fields.description,
@@ -33,18 +32,18 @@ export const createTask: Action<
       taskList: {
         id: fields.taskListId,
       },
-      taskMetaData: [
-        {
-          customFieldIdentifier: 'awellCareflowId',
-          customFieldName: 'Awell care flow ID',
-          value: pathwayId,
-        },
-        {
-          customFieldIdentifier: 'awellActivityId',
-          customFieldName: 'Awell activity ID',
-          value: activityId,
-        },
-      ],
+      // taskMetaData: [
+      //   {
+      //     customFieldIdentifier: 'awellCareflowId',
+      //     customFieldName: 'Awell care flow ID',
+      //     value: pathwayId,
+      //   },
+      //   {
+      //     customFieldIdentifier: 'awellActivityId',
+      //     customFieldName: 'Awell activity ID',
+      //     value: activityId,
+      //   },
+      // ],
     })
 
     await onComplete({
