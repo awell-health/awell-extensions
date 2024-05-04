@@ -9,3 +9,6 @@ export { searchPatientByPatientCodeQuery } from './searchPatientByPatientCode.qu
 export { patientPathwaysQuery } from './patientPathways.query'
 export { getPatientByIdentifierQuery } from './getPatientByIdentifier.query'
 export { addIdentifierToPatientMutation } from './addIdentifier.mutation'
+export { GetPathwayActivitiesQuery } from './pathwayActivities.query'
+export { GetFormResponseQuery } from './formResponse.query'
+export { GetFormQuery } from './form.query'

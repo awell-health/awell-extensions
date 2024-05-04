@@ -2,6 +2,7 @@ import {
   type NewActivityPayload,
   type Patient,
   validate,
+  type Pathway,
 } from '@awell-health/extensions-core'
 import z from 'zod'
 import { MedplumClient } from '@medplum/core'
@@ -18,6 +19,7 @@ type ValidateAndCreateSdkClient = <
   medplumSdk: MedplumClient
   fields: z.infer<(typeof args)['fieldsSchema']>
   settings: z.infer<typeof SettingsValidationSchema>
+  pathway: Pathway
   patient: Patient
   activity: Activity
 }>
@@ -34,11 +36,13 @@ export const validateAndCreateSdkClient: ValidateAndCreateSdkClient = async ({
     schema: z.object({
       fields: fieldsSchema,
       settings: SettingsValidationSchema,
+      pathway: z.object({ id: z.string() }),
+      activity: z.object({ id: z.string() }),
     }),
     payload,
   })
 
-  const { patient, activity } = payload
+  const { patient, pathway, activity } = payload
 
   const medplumSdk = new MedplumClient({
     clientId,
@@ -46,5 +50,5 @@ export const validateAndCreateSdkClient: ValidateAndCreateSdkClient = async ({
 
   await medplumSdk.startClientLogin(clientId, clientSecret)
 
-  return { medplumSdk, fields, settings, patient, activity }
+  return { medplumSdk, fields, settings, patient, pathway, activity }
 }

@@ -1,5 +1,4 @@
 import { generateTestPayload } from '../../../../../src/tests'
-import { type QuerySearchPatientsByPatientCodeArgs } from '../../gql/graphql'
 import AwellSdk from '../../sdk/awellSdk'
 import { searchPatientsByPatientCode } from './searchPatientsByPatientCode'
 

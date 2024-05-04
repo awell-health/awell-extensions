@@ -17,6 +17,15 @@ import {
   type PatientPayload,
   type AddIdentifierToPatientInput,
   type Maybe,
+  type QueryPathwayActivitiesArgs,
+  type Activity,
+  type ActivitiesPayload,
+  type QueryFormArgs,
+  type Form,
+  type FormPayload,
+  type QueryFormResponseArgs,
+  type FormResponse,
+  type FormResponsePayload,
 } from '../gql/graphql'
 import { isNil } from 'lodash'
 import {
@@ -29,6 +38,9 @@ import {
   updateBaselineInfoMutation,
   getPatientByIdentifierQuery,
   addIdentifierToPatientMutation,
+  GetPathwayActivitiesQuery,
+  GetFormQuery,
+  GetFormResponseQuery,
 } from './graphql'
 
 export default class AwellSdk {
@@ -183,5 +195,45 @@ export default class AwellSdk {
     }
 
     throw new Error('Failed to add identifier to patient.')
+  }
+
+  async getPathwayActivities(
+    input: QueryPathwayActivitiesArgs
+  ): Promise<Activity[]> {
+    const data = await this.client.request<{
+      pathwayActivities: ActivitiesPayload
+    }>(GetPathwayActivitiesQuery, input)
+
+    if (data.pathwayActivities.success) {
+      return data.pathwayActivities.activities
+    }
+
+    throw new Error('Retrieving pathway activities failed')
+  }
+
+  async getForm(input: QueryFormArgs): Promise<Form> {
+    const data = await this.client.request<{
+      form: FormPayload
+    }>(GetFormQuery, input)
+
+    if (data.form.form != null) {
+      return data.form.form
+    }
+
+    throw new Error(`Retrieving form ${input.id} failed`)
+  }
+
+  async getFormResponse(input: QueryFormResponseArgs): Promise<FormResponse> {
+    const data = await this.client.request<{
+      formResponse: FormResponsePayload
+    }>(GetFormResponseQuery, input)
+
+    if (data.formResponse.success) {
+      return data.formResponse.response
+    }
+
+    throw new Error(
+      `Retrieving form response for activity ${input.activity_id} failed`
+    )
   }
 }
