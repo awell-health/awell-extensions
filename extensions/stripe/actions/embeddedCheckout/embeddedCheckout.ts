@@ -10,7 +10,7 @@ export const embeddedCheckout: Action<
 > = {
   key: 'embeddedCheckout',
   category: Category.BILLING,
-  title: 'Embedded checkout customer',
+  title: 'Embedded checkout',
   description: 'Embedded checkout in Awell Hosted Pages',
   fields,
   previewable: false,
