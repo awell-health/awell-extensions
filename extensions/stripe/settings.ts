@@ -45,7 +45,7 @@ export const settings = {
   hostedPagesEnvironmentVariable: {
     key: 'hostedPagesEnvironmentVariable',
     label: 'Hosted Pages environment variable',
-    obfuscated: true,
+    obfuscated: false,
     required: false,
     description:
       'This will be removed once the extension is out of alpha mode. This needs to be configured by an Awell developer.',
