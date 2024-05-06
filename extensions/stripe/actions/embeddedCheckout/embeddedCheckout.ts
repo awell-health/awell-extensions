@@ -15,6 +15,12 @@ export const embeddedCheckout: Action<
   fields,
   previewable: false,
   dataPoints,
+  options: {
+    stakeholders: {
+      label: 'Stakeholder',
+      mode: 'single',
+    },
+  },
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
     validate({
       schema: z.object({
