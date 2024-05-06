@@ -30,7 +30,12 @@ export const validateAndCreateStripeSdk: ValidateAndCreateStripeSdk = async ({
   payload,
 }) => {
   const {
-    settings: { testModeSecretKey, liveModeSecretKey, mode },
+    settings: {
+      testModeSecretKey,
+      liveModeSecretKey,
+      liveModePublishableKey,
+      mode,
+    },
     fields,
     settings,
   } = validate({
@@ -45,9 +50,12 @@ export const validateAndCreateStripeSdk: ValidateAndCreateStripeSdk = async ({
 
   const { patient, pathway, activity } = payload
 
-  if (mode === 'LIVE' && isEmpty(liveModeSecretKey))
+  if (
+    mode === 'LIVE' &&
+    (isEmpty(liveModeSecretKey) || isEmpty(liveModePublishableKey))
+  )
     throw new Error(
-      'Stripe is in "live" mode but missing secret key for live mode.'
+      'Stripe is in "live" mode but missing (publishable) secret key for live mode.'
     )
 
   const stripe = new Stripe(
