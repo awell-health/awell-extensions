@@ -19,6 +19,17 @@ export const embeddedCheckout: Action<
     validate({
       schema: z.object({
         fields: FieldsValidationSchema,
+        settings: z.object({
+          hostedPagesEnvironmentVariable: z
+            .string()
+            .min(1, 'Missing Hosted Pages environment variable'),
+          liveModePublishableKey: z
+            .string()
+            .min(1, 'Missing live mode publishable key'),
+          testModePublishableKey: z
+            .string()
+            .min(1, 'Missing test mode publishable key'),
+        }),
       }),
       payload,
     })
