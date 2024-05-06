@@ -87,6 +87,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["prettier", "npm:2.8.4"],\
             ["rimraf", "npm:4.4.1"],\
             ["showdown", "npm:2.1.0"],\
+            ["stripe", "npm:15.5.0"],\
             ["ts-jest", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:29.1.2"],\
             ["ts-node-dev", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:2.0.0"],\
             ["twilio", "npm:4.23.0"],\
@@ -240,6 +241,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["prettier", "npm:2.8.4"],\
             ["rimraf", "npm:4.4.1"],\
             ["showdown", "npm:2.1.0"],\
+            ["stripe", "npm:15.5.0"],\
             ["ts-jest", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:29.1.2"],\
             ["ts-node-dev", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:2.0.0"],\
             ["twilio", "npm:4.23.0"],\
@@ -4080,6 +4082,14 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@types-node-npm-20.12.7-3bb3d3303d-7cc979f7e2.zip/node_modules/@types/node/",\
           "packageDependencies": [\
             ["@types/node", "npm:20.12.7"],\
+            ["undici-types", "npm:5.26.5"]\
+          ],\
+          "linkType": "HARD"\
+        }],\
+        ["npm:20.12.9", {\
+          "packageLocation": "./.yarn/cache/@types-node-npm-20.12.9-009cbe0f01-9f11e68ca4.zip/node_modules/@types/node/",\
+          "packageDependencies": [\
+            ["@types/node", "npm:20.12.9"],\
             ["undici-types", "npm:5.26.5"]\
           ],\
           "linkType": "HARD"\
@@ -13214,6 +13224,17 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/strip-json-comments-npm-3.1.1-dcb2324823-492f73e272.zip/node_modules/strip-json-comments/",\
           "packageDependencies": [\
             ["strip-json-comments", "npm:3.1.1"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["stripe", [\
+        ["npm:15.5.0", {\
+          "packageLocation": "./.yarn/cache/stripe-npm-15.5.0-7766d9ea91-63da2c9d3b.zip/node_modules/stripe/",\
+          "packageDependencies": [\
+            ["stripe", "npm:15.5.0"],\
+            ["@types/node", "npm:20.12.9"],\
+            ["qs", "npm:6.12.1"]\
           ],\
           "linkType": "HARD"\
         }]\

@@ -130,6 +130,7 @@ __metadata:
     prettier: 2.8.4
     rimraf: ^4.1.2
     showdown: ^2.1.0
+    stripe: ^15.5.0
     ts-jest: ^29.0.5
     ts-node-dev: ^2.0.0
     twilio: ^4.8.0
@@ -2627,6 +2628,15 @@ __metadata:
   dependencies:
     undici-types: ~5.26.4
   checksum: 7cc979f7e2ca9a339ec71318c3901b9978555257929ef3666987f3e447123bc6dc92afcc89f6347e09e07d602fde7d51bcddea626c23aa2bb74aeaacfd1e1686
+  languageName: node
+  linkType: hard
+
+"@types/node@npm:>=8.1.0":
+  version: 20.12.9
+  resolution: "@types/node@npm:20.12.9"
+  dependencies:
+    undici-types: ~5.26.4
+  checksum: 9f11e68ca4bbbb910140c13557300586c6cc356dc43ebb858249330f0d2f32877e009ca9d2620820f09b0e3d7eba0efbc7575bfd9a1b53ddaf55f2826cd2e17f
   languageName: node
   linkType: hard
 
@@ -9389,7 +9399,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"qs@npm:^6.10.3, qs@npm:^6.10.5, qs@npm:^6.5.1, qs@npm:^6.9.4":
+"qs@npm:^6.10.3, qs@npm:^6.10.5, qs@npm:^6.11.0, qs@npm:^6.5.1, qs@npm:^6.9.4":
   version: 6.12.1
   resolution: "qs@npm:6.12.1"
   dependencies:
@@ -10394,6 +10404,16 @@ __metadata:
   version: 3.1.1
   resolution: "strip-json-comments@npm:3.1.1"
   checksum: 492f73e27268f9b1c122733f28ecb0e7e8d8a531a6662efbd08e22cccb3f9475e90a1b82cab06a392f6afae6d2de636f977e231296400d0ec5304ba70f166443
+  languageName: node
+  linkType: hard
+
+"stripe@npm:^15.5.0":
+  version: 15.5.0
+  resolution: "stripe@npm:15.5.0"
+  dependencies:
+    "@types/node": ">=8.1.0"
+    qs: ^6.11.0
+  checksum: 63da2c9d3ba83e73600ff0d0e94906b81601481fe816d7a4e75847a9a86ff3c9dee0473c2c1a7ae5597fbe9038eaf58c0d0198eb672b4e4a6b16b1e8251aaebf
   languageName: node
   linkType: hard
 

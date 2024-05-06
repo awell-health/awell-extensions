@@ -35,6 +35,7 @@ import { dockHealth } from './dockHealth'
 
 import * as json from './markdown.json'
 import { ExternalServer } from './external-server'
+import { stripe } from './stripe'
 
 export type Markdown = Record<string, { readme: string; changelog: string }>
 export const markdown: Markdown = json
@@ -69,6 +70,7 @@ export const extensions = [
   nexuzhealth,
   Sendbird,
   Sendgrid,
+  stripe,
   TalkDesk,
   TextLine,
   Transform,
