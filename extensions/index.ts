@@ -32,10 +32,10 @@ import { icd } from './icd'
 import { TextLine } from './textline'
 import { Medplum } from './medplum'
 import { dockHealth } from './dockHealth'
+import { stripe } from './stripe'
 
 import * as json from './markdown.json'
 import { ExternalServer } from './external-server'
-import { stripe } from './stripe'
 
 export type Markdown = Record<string, { readme: string; changelog: string }>
 export const markdown: Markdown = json
