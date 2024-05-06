@@ -1,0 +1,1 @@
+export { mockSettings } from './mockSettings'
