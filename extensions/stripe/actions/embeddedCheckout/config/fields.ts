@@ -14,8 +14,8 @@ export const fields = {
     id: 'item',
     label: 'Item',
     description: 'The id of the item (price ID) the customer is purchasing',
-    type: FieldType.JSON,
-    required: false,
+    type: FieldType.STRING,
+    required: true,
   },
 } satisfies Record<string, Field>
 
