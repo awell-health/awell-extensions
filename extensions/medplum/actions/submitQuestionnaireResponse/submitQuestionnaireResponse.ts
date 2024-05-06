@@ -78,7 +78,7 @@ export const submitQuestionnaireResponse: Action<
     })
 
     const formResponse = await awellSdk.getFormResponse({
-      pathway_id: 'LldfGZ7x1rZx',
+      pathway_id: pathway.id,
       activity_id: formActivityToPushToMedplum.id,
     })
 
