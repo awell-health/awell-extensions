@@ -2,6 +2,7 @@ import { Category, type Action } from '@awell-health/extensions-core'
 import { type settings } from '../../settings'
 import { fields, dataPoints, FieldsValidationSchema } from './config'
 import { validateAndCreateSdkClient } from '../../utils'
+import { extractResourceId } from '../../utils/extractResourceId/extractResourceId'
 
 export const getPatient: Action<
   typeof fields,
@@ -21,7 +22,9 @@ export const getPatient: Action<
       payload,
     })
 
-    const res = await medplumSdk.readResource('Patient', input.patientId)
+    const resourceId = extractResourceId(input.patientId, 'Patient') ?? ''
+
+    const res = await medplumSdk.readResource('Patient', resourceId)
 
     await onComplete({
       data_points: {
