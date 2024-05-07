@@ -59,6 +59,7 @@ export class DockDataWrapper extends DataWrapper {
         'x-user-id': this.userId,
         'x-organization-id': this.organizationId,
       },
+      data: JSON.stringify(input),
     })
 
     return res

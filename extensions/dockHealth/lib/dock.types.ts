@@ -9,8 +9,8 @@ export const DockEnvironmentSchema = z
 export type DockEnvironment = z.infer<typeof DockEnvironmentSchema>
 
 export const AUTH_URLS: Record<DockEnvironment, string> = {
-  PRODUCTION: 'https://partner-auth.dock.health',
-  DEVELOPMENT: 'https://partner-auth-dev.dockhealth.app',
+  PRODUCTION: 'https://partner-auth.dock.health/oauth2/token',
+  DEVELOPMENT: 'https://partner-auth-dev.dockhealth.app/oauth2/token',
 }
 
 export const API_URLS: Record<DockEnvironment, string> = {
