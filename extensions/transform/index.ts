@@ -7,6 +7,7 @@ import {
   parseUnixTimestampToDate,
   parseNumberToTextWithDictionary,
   generateDynamicUrl,
+  parseStringToPhoneNumber,
 } from './v1/actions'
 import { settings } from './settings'
 
@@ -28,6 +29,7 @@ export const Transform: Extension = {
     parseUnixTimestampToDate,
     parseNumberToTextWithDictionary,
     generateDynamicUrl,
+    parseStringToPhoneNumber,
   },
   settings,
 }
