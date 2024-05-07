@@ -1,0 +1,1 @@
+export { parseStringToPhoneNumber } from './parseStringToPhoneNumber'
