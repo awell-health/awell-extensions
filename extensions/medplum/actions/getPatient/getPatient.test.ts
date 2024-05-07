@@ -22,7 +22,7 @@ describe('Medplum - Get patient', () => {
   test('Should return a patient', async () => {
     const mockOnActivityCreateParams = generateTestPayload({
       fields: {
-        patientId: '404bbc59-5b60-445d-808c-b2c7b2351d9b',
+        patientId: 'Patient/404bbc59-5b60-445d-808c-b2c7b2351d9b',
       },
       settings: mockSettings,
     })
