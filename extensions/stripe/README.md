@@ -1,5 +1,5 @@
 ---
-title: Stripe Health
+title: Stripe
 description: Stripe powers online and in-person payment processing and financial solutions for businesses of all sizes.
 ---
 
@@ -11,6 +11,6 @@ Stripe powers online and in-person payment processing and financial solutions fo
 
 For the extension to function correctly, you must configure the following settings:
 
-- Secret key (test mode)
-- Secret key (live mode)
+- Secret key (test and live mode)
+- Publishable key (test and live mode)
 - Mode ("Test" or "Live")
