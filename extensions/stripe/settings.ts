@@ -37,7 +37,7 @@ export const settings = {
   mode: {
     key: 'mode',
     label: 'Mode',
-    obfuscated: true,
+    obfuscated: false,
     required: false,
     description:
       '"Test" or "Live", defaults to "Test". Make sure to have a secret key set for live mode when enabling it.',
