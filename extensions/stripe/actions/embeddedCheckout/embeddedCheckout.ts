@@ -1,5 +1,5 @@
 import { Category, validate, type Action } from '@awell-health/extensions-core'
-import { type settings } from '../../settings'
+import { SettingsValidationSchema, type settings } from '../../settings'
 import { fields, dataPoints, FieldsValidationSchema } from './config'
 import { z } from 'zod'
 
@@ -25,17 +25,7 @@ export const embeddedCheckout: Action<
     validate({
       schema: z.object({
         fields: FieldsValidationSchema,
-        settings: z.object({
-          hostedPagesEnvironmentVariable: z
-            .string()
-            .min(1, 'Missing Hosted Pages environment variable'),
-          liveModePublishableKey: z
-            .string()
-            .min(1, 'Missing live mode publishable key'),
-          testModePublishableKey: z
-            .string()
-            .min(1, 'Missing test mode publishable key'),
-        }),
+        settings: SettingsValidationSchema,
       }),
       payload,
     })

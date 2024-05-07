@@ -8,7 +8,6 @@ import z from 'zod'
 import Stripe from '../api/client'
 import { SettingsValidationSchema } from '../settings'
 import { type Activity } from '@awell-health/extensions-core/dist/types/Activity'
-import { isEmpty } from 'lodash'
 
 type ValidateAndCreateStripeSdk = <
   T extends z.ZodTypeAny,
@@ -30,12 +29,7 @@ export const validateAndCreateStripeSdk: ValidateAndCreateStripeSdk = async ({
   payload,
 }) => {
   const {
-    settings: {
-      testModeSecretKey,
-      liveModeSecretKey,
-      liveModePublishableKey,
-      mode,
-    },
+    settings: { testModeSecretKey, liveModeSecretKey, mode },
     fields,
     settings,
   } = validate({
@@ -50,16 +44,8 @@ export const validateAndCreateStripeSdk: ValidateAndCreateStripeSdk = async ({
 
   const { patient, pathway, activity } = payload
 
-  if (
-    mode === 'LIVE' &&
-    (isEmpty(liveModeSecretKey) || isEmpty(liveModePublishableKey))
-  )
-    throw new Error(
-      'Stripe is in "live" mode but missing (publishable) secret key for live mode.'
-    )
-
   const stripe = new Stripe(
-    mode === 'TEST' ? testModeSecretKey : (liveModeSecretKey as string)
+    mode === 'Test' ? testModeSecretKey : (liveModeSecretKey )
   )
 
   return { stripe, fields, settings, patient, pathway, activity }

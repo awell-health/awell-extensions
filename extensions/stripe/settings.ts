@@ -22,7 +22,7 @@ export const settings = {
     key: 'liveModeSecretKey',
     label: 'Live mode secret key',
     obfuscated: true,
-    required: false,
+    required: true,
     description:
       'This key is used to authenticate requests on your server when in live mode',
   },
@@ -30,7 +30,7 @@ export const settings = {
     key: 'liveModePublishableKey',
     label: 'Live mode publishable key',
     obfuscated: false,
-    required: false,
+    required: true,
     description:
       'This key is used for testing Embedded checkout in Awell Hosted Pages',
   },
@@ -38,7 +38,7 @@ export const settings = {
     key: 'mode',
     label: 'Mode',
     obfuscated: false,
-    required: false,
+    required: true,
     description:
       '"Test" or "Live", defaults to "Test". Make sure to have a secret key set for live mode when enabling it.',
   },
@@ -46,21 +46,17 @@ export const settings = {
     key: 'hostedPagesEnvironmentVariable',
     label: 'Hosted Pages environment variable',
     obfuscated: false,
-    required: false,
+    required: true,
     description:
       'This will be removed once the extension is out of alpha mode. This needs to be configured by an Awell developer.',
   },
 } satisfies Record<string, Setting>
 
 export const SettingsValidationSchema = z.object({
-  liveModeSecretKey: z.string().optional(),
-  liveModePublishableKey: z.string().optional(),
+  liveModeSecretKey: z.string().min(1),
+  liveModePublishableKey: z.string().min(1),
   testModeSecretKey: z.string().min(1),
   testModePublishableKey: z.string().min(1),
   hostedPagesEnvironmentVariable: z.string().min(1),
-  mode: z
-    .string()
-    .toUpperCase()
-    .optional()
-    .pipe(z.enum(['LIVE', 'TEST'])),
+  mode: z.enum(['Live', 'Test']),
 } satisfies Record<keyof typeof settings, ZodTypeAny>)

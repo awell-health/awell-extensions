@@ -4,5 +4,5 @@ export const mockSettings = {
   liveModeSecretKey: 'liveModeSecretKey',
   testModePublishableKey: 'testModePublishableKey',
   hostedPagesEnvironmentVariable: 'AWELL_STRIPE_SECRET',
-  mode: 'TEST',
+  mode: 'Test',
 }
