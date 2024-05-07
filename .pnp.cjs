@@ -48,6 +48,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/docusign-esign", "npm:5.19.6"],\
             ["@types/express", "npm:4.17.21"],\
             ["@types/jest", "npm:29.5.12"],\
+            ["@types/json-schema", "npm:7.0.15"],\
+            ["@types/jsonpath", "npm:0.2.4"],\
             ["@types/lodash", "npm:4.17.0"],\
             ["@types/mailchimp__mailchimp_transactional", "npm:1.0.10"],\
             ["@types/node", "npm:18.19.31"],\
@@ -77,6 +79,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["graphql-tag", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:2.12.6"],\
             ["husky", "npm:8.0.3"],\
             ["jest", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:29.7.0"],\
+            ["json-schema-faker", "npm:0.5.6"],\
+            ["jsonpath", "npm:1.1.1"],\
             ["libphonenumber-js", "npm:1.10.61"],\
             ["lint-staged", "npm:14.0.1"],\
             ["lodash", "npm:4.17.21"],\
@@ -202,6 +206,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/docusign-esign", "npm:5.19.6"],\
             ["@types/express", "npm:4.17.21"],\
             ["@types/jest", "npm:29.5.12"],\
+            ["@types/json-schema", "npm:7.0.15"],\
+            ["@types/jsonpath", "npm:0.2.4"],\
             ["@types/lodash", "npm:4.17.0"],\
             ["@types/mailchimp__mailchimp_transactional", "npm:1.0.10"],\
             ["@types/node", "npm:18.19.31"],\
@@ -231,6 +237,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["graphql-tag", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:2.12.6"],\
             ["husky", "npm:8.0.3"],\
             ["jest", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:29.7.0"],\
+            ["json-schema-faker", "npm:0.5.6"],\
+            ["jsonpath", "npm:1.1.1"],\
             ["libphonenumber-js", "npm:1.10.61"],\
             ["lint-staged", "npm:14.0.1"],\
             ["lodash", "npm:4.17.21"],\
@@ -4042,6 +4050,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
+      ["@types/jsonpath", [\
+        ["npm:0.2.4", {\
+          "packageLocation": "./.yarn/cache/@types-jsonpath-npm-0.2.4-9d28ca8478-401c59dd26.zip/node_modules/@types/jsonpath/",\
+          "packageDependencies": [\
+            ["@types/jsonpath", "npm:0.2.4"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
       ["@types/lodash", [\
         ["npm:4.17.0", {\
           "packageLocation": "./.yarn/cache/@types-lodash-npm-4.17.0-11e757616b-3f98c0b67a.zip/node_modules/@types/lodash/",\
@@ -7410,6 +7427,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["esprima", [\
+        ["npm:1.2.2", {\
+          "packageLocation": "./.yarn/cache/esprima-npm-1.2.2-506b351d14-4f10006f0e.zip/node_modules/esprima/",\
+          "packageDependencies": [\
+            ["esprima", "npm:1.2.2"]\
+          ],\
+          "linkType": "HARD"\
+        }],\
         ["npm:4.0.1", {\
           "packageLocation": "./.yarn/cache/esprima-npm-4.0.1-1084e98778-b45bc805a6.zip/node_modules/esprima/",\
           "packageDependencies": [\
@@ -7970,6 +7994,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/form-data-encoder-npm-1.9.0-f218aa1eeb-a73f617976.zip/node_modules/form-data-encoder/",\
           "packageDependencies": [\
             ["form-data-encoder", "npm:1.9.0"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["format-util", [\
+        ["npm:1.0.5", {\
+          "packageLocation": "./.yarn/cache/format-util-npm-1.0.5-a524ca953a-0c8622e54a.zip/node_modules/format-util/",\
+          "packageDependencies": [\
+            ["format-util", "npm:1.0.5"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -10014,6 +10047,17 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
+      ["json-schema-faker", [\
+        ["npm:0.5.6", {\
+          "packageLocation": "./.yarn/cache/json-schema-faker-npm-0.5.6-71e8ea75c8-06f8c2308a.zip/node_modules/json-schema-faker/",\
+          "packageDependencies": [\
+            ["json-schema-faker", "npm:0.5.6"],\
+            ["json-schema-ref-parser", "npm:6.1.0"],\
+            ["jsonpath-plus", "npm:7.2.0"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
       ["json-schema-merge-allof", [\
         ["npm:0.8.1", {\
           "packageLocation": "./.yarn/cache/json-schema-merge-allof-npm-0.8.1-411cd922f3-82700f6ac7.zip/node_modules/json-schema-merge-allof/",\
@@ -10022,6 +10066,18 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["compute-lcm", "npm:1.1.2"],\
             ["json-schema-compare", "npm:0.2.2"],\
             ["lodash", "npm:4.17.21"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["json-schema-ref-parser", [\
+        ["npm:6.1.0", {\
+          "packageLocation": "./.yarn/cache/json-schema-ref-parser-npm-6.1.0-04a76bb0c0-03944fcb5b.zip/node_modules/json-schema-ref-parser/",\
+          "packageDependencies": [\
+            ["json-schema-ref-parser", "npm:6.1.0"],\
+            ["call-me-maybe", "npm:1.0.2"],\
+            ["js-yaml", "npm:3.14.1"],\
+            ["ono", "npm:4.0.11"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -10139,6 +10195,18 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/jsonify-npm-0.0.1-22c28aed92-027287e1c0.zip/node_modules/jsonify/",\
           "packageDependencies": [\
             ["jsonify", "npm:0.0.1"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["jsonpath", [\
+        ["npm:1.1.1", {\
+          "packageLocation": "./.yarn/cache/jsonpath-npm-1.1.1-d88994ce7e-5480d8e9e4.zip/node_modules/jsonpath/",\
+          "packageDependencies": [\
+            ["jsonpath", "npm:1.1.1"],\
+            ["esprima", "npm:1.2.2"],\
+            ["static-eval", "npm:2.0.2"],\
+            ["underscore", "npm:1.12.1"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -11493,6 +11561,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["onetime", "npm:6.0.0"],\
             ["mimic-fn", "npm:4.0.0"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["ono", [\
+        ["npm:4.0.11", {\
+          "packageLocation": "./.yarn/cache/ono-npm-4.0.11-862123fce8-fabfdddb2e.zip/node_modules/ono/",\
+          "packageDependencies": [\
+            ["ono", "npm:4.0.11"],\
+            ["format-util", "npm:1.0.5"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -13032,6 +13110,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
+      ["static-eval", [\
+        ["npm:2.0.2", {\
+          "packageLocation": "./.yarn/cache/static-eval-npm-2.0.2-047eda8cb5-335a923c5c.zip/node_modules/static-eval/",\
+          "packageDependencies": [\
+            ["static-eval", "npm:2.0.2"],\
+            ["escodegen", "npm:1.14.3"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
       ["statuses", [\
         ["npm:2.0.1", {\
           "packageLocation": "./.yarn/cache/statuses-npm-2.0.1-81d2b97fee-18c7623fdb.zip/node_modules/statuses/",\
@@ -13920,6 +14008,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/unc-path-regex-npm-0.1.2-53c3343ef3-a05fa2006b.zip/node_modules/unc-path-regex/",\
           "packageDependencies": [\
             ["unc-path-regex", "npm:0.1.2"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["underscore", [\
+        ["npm:1.12.1", {\
+          "packageLocation": "./.yarn/cache/underscore-npm-1.12.1-f5ca0889f5-ec327603aa.zip/node_modules/underscore/",\
+          "packageDependencies": [\
+            ["underscore", "npm:1.12.1"]\
           ],\
           "linkType": "HARD"\
         }]\
