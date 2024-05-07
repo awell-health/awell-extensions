@@ -24,6 +24,8 @@ export const getPatient: Action<
 
     const resourceId = extractResourceId(input.patientId, 'Patient') ?? ''
 
+    console.log(resourceId)
+
     const res = await medplumSdk.readResource('Patient', resourceId)
 
     await onComplete({
