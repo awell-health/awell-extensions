@@ -65,7 +65,7 @@ const getAnswer = (
     case UserQuestionType.YesNo:
       return [
         {
-          valueBoolean: Boolean(itemResponse.value),
+          valueBoolean: Boolean(Number(itemResponse.value)),
         },
       ]
     case UserQuestionType.Date:

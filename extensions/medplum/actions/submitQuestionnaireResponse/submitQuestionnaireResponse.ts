@@ -96,7 +96,9 @@ export const submitQuestionnaireResponse: Action<
       questionnaire: `Questionnaire/${String(QuestionnaireResource.id)}`,
       status: 'completed',
       subject: {
-        reference: extractResourceId(input.patientId, 'Patient') ?? '',
+        reference: `Patient/${
+          extractResourceId(input.patientId, 'Patient') ?? 'undefined'
+        }`,
       },
       item: AwellFormResponseToFhirQuestionnaireResponseItems({
         awellFormDefinition: formDefinition,
