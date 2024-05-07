@@ -3,6 +3,6 @@ import { type DataPointDefinition } from '@awell-health/extensions-core'
 export const dataPoints = {
   appointmentData: {
     key: 'appointmentData',
-    valueType: 'string',
+    valueType: 'json',
   },
 } satisfies Record<string, DataPointDefinition>

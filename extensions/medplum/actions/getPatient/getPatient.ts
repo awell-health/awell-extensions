@@ -23,11 +23,6 @@ export const getPatient: Action<
 
     const res = await medplumSdk.readResource('Patient', input.patientId)
 
-    /**
-     * TODO:
-     * Either create specific data points and pick from the patient object what we need OR
-     * store the full object and allow introspection and picking the values the builder needs in Awell Studio.
-     */
     await onComplete({
       data_points: {
         patientData: JSON.stringify(res),
