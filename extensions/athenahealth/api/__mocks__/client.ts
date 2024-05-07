@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
+/* eslint-disable @typescript-eslint/promise-function-async */
 import {
   AxiosError,
   type AxiosResponseHeaders,

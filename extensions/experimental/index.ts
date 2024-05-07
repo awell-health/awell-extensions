@@ -8,6 +8,7 @@ import {
 } from './v1/actions'
 import { type Extension } from '@awell-health/extensions-core'
 import { settings } from './settings'
+import { schemas } from './schemas'
 import { AuthorType, Category } from '@awell-health/extensions-core'
 
 export const Experimental: Extension = {
@@ -20,6 +21,7 @@ export const Experimental: Extension = {
     authorType: AuthorType.AWELL,
   },
   settings,
+  schemas,
   actions: {
     requestVideoVisit,
     enterMedication,
