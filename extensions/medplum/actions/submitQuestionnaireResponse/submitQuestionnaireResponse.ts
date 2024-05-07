@@ -8,6 +8,7 @@ import {
   AwellFormResponseToFhirQuestionnaireResponseItems,
   AwellFormToFhirQuestionnaire,
 } from '../../../../src/lib/fhir/transformers'
+import { extractResourceId } from '../../utils/extractResourceId/extractResourceId'
 
 export const submitQuestionnaireResponse: Action<
   typeof fields,
@@ -95,7 +96,7 @@ export const submitQuestionnaireResponse: Action<
       questionnaire: `Questionnaire/${String(QuestionnaireResource.id)}`,
       status: 'completed',
       subject: {
-        reference: `Patient/${input.patientId}`,
+        reference: extractResourceId(input.patientId, 'Patient') ?? '',
       },
       item: AwellFormResponseToFhirQuestionnaireResponseItems({
         awellFormDefinition: formDefinition,
