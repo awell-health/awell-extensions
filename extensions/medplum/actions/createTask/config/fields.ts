@@ -34,7 +34,7 @@ export const fields = {
   },
   intent: {
     id: 'intent',
-    label: 'Mobile phone',
+    label: 'Intent',
     description:
       'Indicates the "level" of actionability associated with the Task. Allowed values: unknown | proposal | plan | order | original-order | reflex-order | filler-order | instance-order | option',
     type: FieldType.STRING,

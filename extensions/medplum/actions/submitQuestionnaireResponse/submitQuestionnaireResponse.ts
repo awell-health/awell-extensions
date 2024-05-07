@@ -36,7 +36,7 @@ export const submitQuestionnaireResponse: Action<
 
     if (isEmpty(awellApiKey) || isEmpty(awellApiUrl))
       throw new Error(
-        'Please provide the well API key and Awell API URL in the settings of the Medplum extension to use this action.'
+        'Please provide the Awell API key and Awell API URL in the settings of the Medplum extension to use this action.'
       )
 
     const awellSdk = new AwellSdk({

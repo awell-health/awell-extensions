@@ -26,7 +26,9 @@ describe('Medplum - Submit questionnaire response', () => {
 
   test('Should submit a questionnaire response', async () => {
     const mockOnActivityCreateParams = generateTestPayload({
-      fields: {},
+      fields: {
+        patientId: 'patient-id',
+      },
       settings: {
         clientId: 'a578f41d-be4d-48e9-801a-d969f80d4c3a',
         clientSecret:
