@@ -28,7 +28,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         [null, {\
           "packageLocation": "./",\
           "packageDependencies": [\
-            ["@awell-health/extensions-core", "npm:0.1.29"],\
+            ["@awell-health/extensions-core", "npm:0.2.0"],\
             ["@dropbox/sign", "npm:1.4.1"],\
             ["@faker-js/faker", "npm:8.4.1"],\
             ["@graphql-codegen/cli", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:3.3.1"],\
@@ -48,6 +48,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/docusign-esign", "npm:5.19.6"],\
             ["@types/express", "npm:4.17.21"],\
             ["@types/jest", "npm:29.5.12"],\
+            ["@types/json-schema", "npm:7.0.15"],\
+            ["@types/jsonpath", "npm:0.2.4"],\
             ["@types/lodash", "npm:4.17.0"],\
             ["@types/mailchimp__mailchimp_transactional", "npm:1.0.10"],\
             ["@types/node", "npm:18.19.31"],\
@@ -77,6 +79,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["graphql-tag", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:2.12.6"],\
             ["husky", "npm:8.0.3"],\
             ["jest", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:29.7.0"],\
+            ["json-schema-faker", "npm:0.5.6"],\
+            ["jsonpath", "npm:1.1.1"],\
             ["libphonenumber-js", "npm:1.10.61"],\
             ["lint-staged", "npm:14.0.1"],\
             ["lodash", "npm:4.17.21"],\
@@ -94,7 +98,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["typescript", "patch:typescript@npm%3A4.9.5#~builtin<compat/typescript>::version=4.9.5&hash=23ec76"],\
             ["xml2js", "npm:0.6.2"],\
             ["zod", "npm:3.23.5"],\
-            ["zod-validation-error", "virtual:3a9db25957b33c4b802f89188b3640b096fc0e0171a6c8235b9f9cfefa629994a914fa41a7132f06d02ad602c3d5e6bdf7da01d66595c3145d34a6d7be13502d#npm:3.2.0"]\
+            ["zod-validation-error", "virtual:4e3caac66cc14da2c73f5585b8bbceb33bc3928b4cdf7fdbbb3905ee73b0689b3f25018fd1a16171e15ae3a4284b3b5840a3f2cabf15a37c5d997783df161183#npm:3.2.0"]\
           ],\
           "linkType": "SOFT"\
         }]\
@@ -182,7 +186,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./",\
           "packageDependencies": [\
             ["@awell-health/awell-extensions", "workspace:."],\
-            ["@awell-health/extensions-core", "npm:0.1.29"],\
+            ["@awell-health/extensions-core", "npm:0.2.0"],\
             ["@dropbox/sign", "npm:1.4.1"],\
             ["@faker-js/faker", "npm:8.4.1"],\
             ["@graphql-codegen/cli", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:3.3.1"],\
@@ -202,6 +206,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/docusign-esign", "npm:5.19.6"],\
             ["@types/express", "npm:4.17.21"],\
             ["@types/jest", "npm:29.5.12"],\
+            ["@types/json-schema", "npm:7.0.15"],\
+            ["@types/jsonpath", "npm:0.2.4"],\
             ["@types/lodash", "npm:4.17.0"],\
             ["@types/mailchimp__mailchimp_transactional", "npm:1.0.10"],\
             ["@types/node", "npm:18.19.31"],\
@@ -231,6 +237,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["graphql-tag", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:2.12.6"],\
             ["husky", "npm:8.0.3"],\
             ["jest", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:29.7.0"],\
+            ["json-schema-faker", "npm:0.5.6"],\
+            ["jsonpath", "npm:1.1.1"],\
             ["libphonenumber-js", "npm:1.10.61"],\
             ["lint-staged", "npm:14.0.1"],\
             ["lodash", "npm:4.17.21"],\
@@ -248,22 +256,23 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["typescript", "patch:typescript@npm%3A4.9.5#~builtin<compat/typescript>::version=4.9.5&hash=23ec76"],\
             ["xml2js", "npm:0.6.2"],\
             ["zod", "npm:3.23.5"],\
-            ["zod-validation-error", "virtual:3a9db25957b33c4b802f89188b3640b096fc0e0171a6c8235b9f9cfefa629994a914fa41a7132f06d02ad602c3d5e6bdf7da01d66595c3145d34a6d7be13502d#npm:3.2.0"]\
+            ["zod-validation-error", "virtual:4e3caac66cc14da2c73f5585b8bbceb33bc3928b4cdf7fdbbb3905ee73b0689b3f25018fd1a16171e15ae3a4284b3b5840a3f2cabf15a37c5d997783df161183#npm:3.2.0"]\
           ],\
           "linkType": "SOFT"\
         }]\
       ]],\
       ["@awell-health/extensions-core", [\
-        ["npm:0.1.29", {\
-          "packageLocation": "./.yarn/cache/@awell-health-extensions-core-npm-0.1.29-3a9db25957-eb5e692736.zip/node_modules/@awell-health/extensions-core/",\
+        ["npm:0.2.0", {\
+          "packageLocation": "./.yarn/cache/@awell-health-extensions-core-npm-0.2.0-4e3caac66c-b4c391f344.zip/node_modules/@awell-health/extensions-core/",\
           "packageDependencies": [\
-            ["@awell-health/extensions-core", "npm:0.1.29"],\
+            ["@awell-health/extensions-core", "npm:0.2.0"],\
+            ["@types/json-schema", "npm:7.0.15"],\
             ["axios", "npm:1.6.8"],\
             ["date-fns", "npm:3.6.0"],\
             ["libphonenumber-js", "npm:1.10.61"],\
             ["lodash", "npm:4.17.21"],\
             ["zod", "npm:3.23.5"],\
-            ["zod-validation-error", "virtual:3a9db25957b33c4b802f89188b3640b096fc0e0171a6c8235b9f9cfefa629994a914fa41a7132f06d02ad602c3d5e6bdf7da01d66595c3145d34a6d7be13502d#npm:3.2.0"]\
+            ["zod-validation-error", "virtual:4e3caac66cc14da2c73f5585b8bbceb33bc3928b4cdf7fdbbb3905ee73b0689b3f25018fd1a16171e15ae3a4284b3b5840a3f2cabf15a37c5d997783df161183#npm:3.2.0"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -4041,6 +4050,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
+      ["@types/jsonpath", [\
+        ["npm:0.2.4", {\
+          "packageLocation": "./.yarn/cache/@types-jsonpath-npm-0.2.4-9d28ca8478-401c59dd26.zip/node_modules/@types/jsonpath/",\
+          "packageDependencies": [\
+            ["@types/jsonpath", "npm:0.2.4"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
       ["@types/lodash", [\
         ["npm:4.17.0", {\
           "packageLocation": "./.yarn/cache/@types-lodash-npm-4.17.0-11e757616b-3f98c0b67a.zip/node_modules/@types/lodash/",\
@@ -7409,6 +7427,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["esprima", [\
+        ["npm:1.2.2", {\
+          "packageLocation": "./.yarn/cache/esprima-npm-1.2.2-506b351d14-4f10006f0e.zip/node_modules/esprima/",\
+          "packageDependencies": [\
+            ["esprima", "npm:1.2.2"]\
+          ],\
+          "linkType": "HARD"\
+        }],\
         ["npm:4.0.1", {\
           "packageLocation": "./.yarn/cache/esprima-npm-4.0.1-1084e98778-b45bc805a6.zip/node_modules/esprima/",\
           "packageDependencies": [\
@@ -7969,6 +7994,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/form-data-encoder-npm-1.9.0-f218aa1eeb-a73f617976.zip/node_modules/form-data-encoder/",\
           "packageDependencies": [\
             ["form-data-encoder", "npm:1.9.0"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["format-util", [\
+        ["npm:1.0.5", {\
+          "packageLocation": "./.yarn/cache/format-util-npm-1.0.5-a524ca953a-0c8622e54a.zip/node_modules/format-util/",\
+          "packageDependencies": [\
+            ["format-util", "npm:1.0.5"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -10013,6 +10047,17 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
+      ["json-schema-faker", [\
+        ["npm:0.5.6", {\
+          "packageLocation": "./.yarn/cache/json-schema-faker-npm-0.5.6-71e8ea75c8-06f8c2308a.zip/node_modules/json-schema-faker/",\
+          "packageDependencies": [\
+            ["json-schema-faker", "npm:0.5.6"],\
+            ["json-schema-ref-parser", "npm:6.1.0"],\
+            ["jsonpath-plus", "npm:7.2.0"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
       ["json-schema-merge-allof", [\
         ["npm:0.8.1", {\
           "packageLocation": "./.yarn/cache/json-schema-merge-allof-npm-0.8.1-411cd922f3-82700f6ac7.zip/node_modules/json-schema-merge-allof/",\
@@ -10021,6 +10066,18 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["compute-lcm", "npm:1.1.2"],\
             ["json-schema-compare", "npm:0.2.2"],\
             ["lodash", "npm:4.17.21"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["json-schema-ref-parser", [\
+        ["npm:6.1.0", {\
+          "packageLocation": "./.yarn/cache/json-schema-ref-parser-npm-6.1.0-04a76bb0c0-03944fcb5b.zip/node_modules/json-schema-ref-parser/",\
+          "packageDependencies": [\
+            ["json-schema-ref-parser", "npm:6.1.0"],\
+            ["call-me-maybe", "npm:1.0.2"],\
+            ["js-yaml", "npm:3.14.1"],\
+            ["ono", "npm:4.0.11"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -10138,6 +10195,18 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/jsonify-npm-0.0.1-22c28aed92-027287e1c0.zip/node_modules/jsonify/",\
           "packageDependencies": [\
             ["jsonify", "npm:0.0.1"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["jsonpath", [\
+        ["npm:1.1.1", {\
+          "packageLocation": "./.yarn/cache/jsonpath-npm-1.1.1-d88994ce7e-5480d8e9e4.zip/node_modules/jsonpath/",\
+          "packageDependencies": [\
+            ["jsonpath", "npm:1.1.1"],\
+            ["esprima", "npm:1.2.2"],\
+            ["static-eval", "npm:2.0.2"],\
+            ["underscore", "npm:1.12.1"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -11492,6 +11561,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["onetime", "npm:6.0.0"],\
             ["mimic-fn", "npm:4.0.0"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["ono", [\
+        ["npm:4.0.11", {\
+          "packageLocation": "./.yarn/cache/ono-npm-4.0.11-862123fce8-fabfdddb2e.zip/node_modules/ono/",\
+          "packageDependencies": [\
+            ["ono", "npm:4.0.11"],\
+            ["format-util", "npm:1.0.5"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -13031,6 +13110,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
+      ["static-eval", [\
+        ["npm:2.0.2", {\
+          "packageLocation": "./.yarn/cache/static-eval-npm-2.0.2-047eda8cb5-335a923c5c.zip/node_modules/static-eval/",\
+          "packageDependencies": [\
+            ["static-eval", "npm:2.0.2"],\
+            ["escodegen", "npm:1.14.3"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
       ["statuses", [\
         ["npm:2.0.1", {\
           "packageLocation": "./.yarn/cache/statuses-npm-2.0.1-81d2b97fee-18c7623fdb.zip/node_modules/statuses/",\
@@ -13923,6 +14012,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
+      ["underscore", [\
+        ["npm:1.12.1", {\
+          "packageLocation": "./.yarn/cache/underscore-npm-1.12.1-f5ca0889f5-ec327603aa.zip/node_modules/underscore/",\
+          "packageDependencies": [\
+            ["underscore", "npm:1.12.1"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
       ["undici-types", [\
         ["npm:5.26.5", {\
           "packageLocation": "./.yarn/cache/undici-types-npm-5.26.5-de4f7c7bb9-3192ef6f3f.zip/node_modules/undici-types/",\
@@ -14612,10 +14710,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:3a9db25957b33c4b802f89188b3640b096fc0e0171a6c8235b9f9cfefa629994a914fa41a7132f06d02ad602c3d5e6bdf7da01d66595c3145d34a6d7be13502d#npm:3.2.0", {\
-          "packageLocation": "./.yarn/__virtual__/zod-validation-error-virtual-3cb504c0fd/0/cache/zod-validation-error-npm-3.2.0-8a0d8069b2-4d541566ff.zip/node_modules/zod-validation-error/",\
+        ["virtual:4e3caac66cc14da2c73f5585b8bbceb33bc3928b4cdf7fdbbb3905ee73b0689b3f25018fd1a16171e15ae3a4284b3b5840a3f2cabf15a37c5d997783df161183#npm:3.2.0", {\
+          "packageLocation": "./.yarn/__virtual__/zod-validation-error-virtual-32fe68e6d0/0/cache/zod-validation-error-npm-3.2.0-8a0d8069b2-4d541566ff.zip/node_modules/zod-validation-error/",\
           "packageDependencies": [\
-            ["zod-validation-error", "virtual:3a9db25957b33c4b802f89188b3640b096fc0e0171a6c8235b9f9cfefa629994a914fa41a7132f06d02ad602c3d5e6bdf7da01d66595c3145d34a6d7be13502d#npm:3.2.0"],\
+            ["zod-validation-error", "virtual:4e3caac66cc14da2c73f5585b8bbceb33bc3928b4cdf7fdbbb3905ee73b0689b3f25018fd1a16171e15ae3a4284b3b5840a3f2cabf15a37c5d997783df161183#npm:3.2.0"],\
             ["@types/zod", null],\
             ["zod", "npm:3.23.5"]\
           ],\
