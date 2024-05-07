@@ -24,6 +24,7 @@ export const submitQuestionnaireResponse: Action<
   dataPoints,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
     const {
+      fields: input,
       medplumSdk,
       pathway,
       activity,
@@ -93,6 +94,9 @@ export const submitQuestionnaireResponse: Action<
       resourceType: 'QuestionnaireResponse',
       questionnaire: `Questionnaire/${String(QuestionnaireResource.id)}`,
       status: 'completed',
+      subject: {
+        reference: `Patient/${input.patientId}`,
+      },
       item: AwellFormResponseToFhirQuestionnaireResponseItems({
         awellFormDefinition: formDefinition,
         awellFormResponse: formResponse,
