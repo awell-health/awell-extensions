@@ -26,11 +26,6 @@ export const getAppointment: Action<
       input.appointmentId
     )
 
-    /**
-     * TODO:
-     * Either create specific data points and pick from the appointment object what we need OR
-     * store the full object and allow introspection and picking the values the builder needs in Awell Studio.
-     */
     await onComplete({
       data_points: {
         appointmentData: JSON.stringify(res),
