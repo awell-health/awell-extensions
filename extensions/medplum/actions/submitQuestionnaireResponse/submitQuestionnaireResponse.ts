@@ -89,7 +89,7 @@ export const submitQuestionnaireResponse: Action<
       `identifier=${formDefinition.definition_id}/published/${formDefinition.id}`
     )
 
-    await medplumSdk.createResource({
+    const res = await medplumSdk.createResource({
       resourceType: 'QuestionnaireResponse',
       questionnaire: `Questionnaire/${String(QuestionnaireResource.id)}`,
       status: 'completed',
@@ -99,6 +99,11 @@ export const submitQuestionnaireResponse: Action<
       }),
     })
 
-    await onComplete()
+    await onComplete({
+      data_points: {
+        // @ts-expect-error id is not included in the response type?
+        questionnnaireResponseId: res.id,
+      },
+    })
   },
 }
