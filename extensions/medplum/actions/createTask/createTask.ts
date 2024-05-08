@@ -2,6 +2,7 @@ import { Category, type Action } from '@awell-health/extensions-core'
 import { type settings } from '../../settings'
 import { fields, dataPoints, FieldsValidationSchema } from './config'
 import { validateAndCreateSdkClient } from '../../utils'
+import { extractResourceId } from '../../utils/extractResourceId/extractResourceId'
 
 export const createTask: Action<
   typeof fields,
@@ -35,7 +36,9 @@ export const createTask: Action<
       intent: input.intent,
       priority: input.priority,
       for: {
-        reference: `Patient/${input.patientId}`,
+        reference: `Patient/${
+          extractResourceId(input.patientId, 'Patient') ?? 'undefined'
+        }`,
       },
       executionPeriod: {
         end: input.dueDate,
