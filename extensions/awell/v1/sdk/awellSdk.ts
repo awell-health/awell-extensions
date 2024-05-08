@@ -26,6 +26,9 @@ import {
   type QueryFormResponseArgs,
   type FormResponse,
   type FormResponsePayload,
+  type QueryCalculationResultsArgs,
+  type CalculationResultsPayload,
+  type SingleCalculationResult,
 } from '../gql/graphql'
 import { isNil } from 'lodash'
 import {
@@ -41,6 +44,7 @@ import {
   GetPathwayActivitiesQuery,
   GetFormQuery,
   GetFormResponseQuery,
+  GetCalculationResultsQuery,
 } from './graphql'
 
 export default class AwellSdk {
@@ -234,6 +238,22 @@ export default class AwellSdk {
 
     throw new Error(
       `Retrieving form response for activity ${input.activity_id} failed`
+    )
+  }
+
+  async getCalculationResults(
+    input: QueryCalculationResultsArgs
+  ): Promise<SingleCalculationResult[]> {
+    const data = await this.client.request<{
+      calculationResults: CalculationResultsPayload
+    }>(GetCalculationResultsQuery, input)
+
+    if (data.calculationResults.success) {
+      return data.calculationResults.result
+    }
+
+    throw new Error(
+      `Retrieving calculation results for activity ${input.activity_id} failed`
     )
   }
 }
