@@ -24,6 +24,7 @@ query GetPathwayActivities($pathway_id: String!) {
             }
             form {
                 title
+                metadata
                 questions {
                     key
                     title
