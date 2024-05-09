@@ -94,7 +94,7 @@ export const createCalculationObservation: Action<
       resourceType: 'Observation',
       status: 'final',
       code: {
-        text: currentActivity.object.type,
+        text: calculationActivityToPushToMedplum.object.name,
       },
       category: [
         {
@@ -106,7 +106,7 @@ export const createCalculationObservation: Action<
               display: 'Survey',
             },
           ],
-          text: currentActivity.object.type,
+          text: calculationActivityToPushToMedplum.object.name,
         },
       ],
       subject: {
