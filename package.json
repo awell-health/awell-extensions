@@ -82,7 +82,7 @@
     "cheerio": "^1.0.0-rc.12",
     "date-fns": "^2.29.3",
     "date-fns-tz": "^2.0.1",
-    "docusign-esign": "^6.3.0",
+    "docusign-esign": "7.0.0-rc1",
     "driver-license-validator": "2.0.2",
     "express": "^4.18.2",
     "form-data": "^4.0.0",
