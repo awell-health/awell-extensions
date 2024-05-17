@@ -18,7 +18,7 @@ export const updateBaselineInfo: Action<typeof fields, typeof settings> = {
     'Update some (or all) of the baseline datapoints for the patient currently enrolled in the care flow.',
   fields,
   dataPoints,
-  previewable: true,
+  previewable: false,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
     const {
       settings: { apiUrl, apiKey },
