@@ -50,6 +50,12 @@ export const appointmentExample: AppointmentInput = {
   physician: 141127177601026,
   practice: 141127173275652,
   metadata: null,
+  status: {
+    status: 'Not Seen',
+    room: 'Room 123',
+    status_date: '2024-01-01T08:00:00',
+    status_detail: 'No show',
+  },
 }
 
 export const physicianResponseExample: PhysicianResponse = {

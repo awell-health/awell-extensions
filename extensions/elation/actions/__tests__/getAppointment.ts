@@ -27,7 +27,7 @@ describe('Simple get appointment action', () => {
         settings,
       } as any,
       onComplete,
-      jest.fn()
+      jest.fn(),
     )
     const {
       patient,
@@ -38,6 +38,7 @@ describe('Simple get appointment action', () => {
       scheduled_date,
       telehealth_details,
       metadata,
+      status,
       ...appointmentFields
     } = appointmentExample
     expect(onComplete).toHaveBeenCalled()
@@ -51,6 +52,7 @@ describe('Simple get appointment action', () => {
         practiceId: String(practice),
         duration: String(duration),
         serviceLocationId: String(service_location),
+        ...(status && { status: JSON.stringify(status) }),
       },
     })
   })
