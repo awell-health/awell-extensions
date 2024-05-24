@@ -1,6 +1,7 @@
 import { getPatient } from '../getPatient'
 import { type ActivityEvent } from '@awell-health/extensions-core'
 import { patientExample } from '../../__mocks__/constants'
+import { ZodError } from 'zod'
 
 jest.mock('../../client')
 
@@ -23,12 +24,12 @@ describe('Simple get patient action', () => {
     await getPatient.onActivityCreated(
       {
         fields: {
-          patientId: 1,
+          patientId: 127385972,
         },
         settings,
       } as any,
       onComplete,
-      jest.fn()
+      jest.fn(),
     )
     expect(onComplete).toHaveBeenCalled()
     expect(onComplete).toBeCalledWith({
@@ -54,6 +55,7 @@ describe('Simple get patient action', () => {
         notes: patientExample.notes,
         previousFirstName: patientExample.previous_first_name,
         previousLastName: patientExample.previous_last_name,
+        status: patientExample.patient_status?.status,
       },
     })
   })
@@ -64,7 +66,7 @@ describe('Simple get patient action', () => {
       .mockImplementation((obj: { events: ActivityEvent[] }) => {
         return obj.events[0].error?.message
       })
-    await getPatient.onActivityCreated(
+    const activity = getPatient.onActivityCreated(
       {
         fields: {
           patientId: '',
@@ -72,11 +74,8 @@ describe('Simple get patient action', () => {
         settings,
       } as any,
       onComplete,
-      onError
+      onError,
     )
-    expect(onError).toHaveBeenCalled()
-    expect(onError).toHaveReturnedWith(
-      'Validation error: Requires a valid ID (number)'
-    )
+    await expect(activity).rejects.toThrow(ZodError)
   })
 })
