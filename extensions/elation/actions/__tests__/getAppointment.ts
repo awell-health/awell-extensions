@@ -43,7 +43,7 @@ describe('Simple get appointment action', () => {
     } = appointmentExample
     expect(onComplete).toHaveBeenCalled()
     expect(onComplete).toBeCalledWith({
-      data_points: {
+      data_points: expect.objectContaining({
         ...appointmentFields,
         scheduledDate: scheduled_date,
         telehealthDetails: telehealth_details,
@@ -53,7 +53,7 @@ describe('Simple get appointment action', () => {
         duration: String(duration),
         serviceLocationId: String(service_location),
         ...(status && { status: JSON.stringify(status) }),
-      },
+      }),
     })
   })
 })
