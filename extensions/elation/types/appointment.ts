@@ -16,7 +16,7 @@ export interface AppointmentResponse
   id: number
   time_slot_type: string
   time_slot_status: string
-  status: Status
+  status: AnyStatus
   service_location?: ServiceLocation
   recurring_event_schedule: unknown // ? cannot find in docs
   billing?: BillingDetails
@@ -29,6 +29,12 @@ export interface AppointmentResponse
 interface Status extends z.infer<typeof statusSchema> {
   status_date: string
 }
+
+interface NotSeenStatus extends Status {
+  status_detail: string
+}
+
+type AnyStatus = Status | NotSeenStatus
 
 interface ServiceLocation {
   id: number
