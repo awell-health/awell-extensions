@@ -18,6 +18,20 @@
 		"[typescript]": {
 			"editor.defaultFormatter": "esbenp.prettier-vscode",
 			"editor.formatOnSave": true
+		},
+		"files.exclude": {
+			"**/.git": true,
+			"**/.svn": true,
+			"**/.hg": true,
+			"**/CVS": true,
+			"**/.DS_Store": true,
+			"**/Thumbs.db": true,
+			"**/*.d.ts": true,
+			"**/*.js.map": true,
+			"**/.retool_types/**": true,
+			"**/*tsconfig.json": true,
+			".cache": true,
+			"retool.config.json": true
 		}
 	},
 	"extensions": {
