@@ -37,6 +37,9 @@ export const patientExample: PatientInput = {
       phone_type: 'Mobile',
     },
   ],
+  patient_status: {
+    status: 'active',
+  },
 }
 
 export const appointmentExample: AppointmentInput = {

@@ -1,4 +1,3 @@
-import { ZodError } from 'zod'
 import {
   FieldType,
   NumericIdSchema,
@@ -9,8 +8,6 @@ import {
 import { Category } from '@awell-health/extensions-core'
 import { type settings } from '../settings'
 import { makeAPIClient } from '../client'
-import { fromZodError } from 'zod-validation-error'
-import { AxiosError } from 'axios'
 import { elationMobilePhoneToE164 } from '../utils/elationMobilePhoneToE164'
 import { getLastEmail } from '../utils/getLastEmail'
 
@@ -109,6 +106,10 @@ const dataPoints = {
     key: 'previousLastName',
     valueType: 'string',
   },
+  status: {
+    key: 'status',
+    valueType: 'string',
+  },
 } satisfies Record<string, DataPointDefinition>
 
 export const getPatient: Action<
@@ -124,87 +125,39 @@ export const getPatient: Action<
   previewable: true,
   dataPoints,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
-    try {
-      const patientId = NumericIdSchema.parse(payload.fields.patientId)
+    const patientId = NumericIdSchema.parse(payload.fields.patientId)
 
-      // API Call should produce AuthError or something dif.
-      const api = makeAPIClient(payload.settings)
-      const patientInfo = await api.getPatient(patientId)
+    // API Call should produce AuthError or something dif.
+    const api = makeAPIClient(payload.settings)
+    const patientInfo = await api.getPatient(patientId)
 
-      await onComplete({
-        data_points: {
-          firstName: patientInfo.first_name,
-          lastName: patientInfo.last_name,
-          dob: patientInfo.dob,
-          sex: patientInfo.sex,
-          primaryPhysicianId: String(patientInfo.primary_physician),
-          caregiverPracticeId: String(patientInfo.caregiver_practice),
-          mobilePhone: elationMobilePhoneToE164(
-            patientInfo.phones?.find((p) => p.phone_type === 'Mobile')?.phone
-          ),
-          email: getLastEmail(patientInfo.emails),
-          middleName: patientInfo.middle_name,
-          actualName: patientInfo.actual_name,
-          genderIdentity: patientInfo.gender_identity,
-          legalGenderMarker: patientInfo.legal_gender_marker,
-          pronouns: patientInfo.pronouns,
-          sexualOrientation: patientInfo.sexual_orientation,
-          ssn: patientInfo.ssn,
-          ethnicity: patientInfo.ethnicity,
-          race: patientInfo.race,
-          preferredLanguage: patientInfo.preferred_language,
-          notes: patientInfo.notes,
-          previousFirstName: patientInfo.previous_first_name,
-          previousLastName: patientInfo.previous_last_name,
-        },
-      })
-    } catch (err) {
-      if (err instanceof ZodError) {
-        const error = fromZodError(err)
-        await onError({
-          events: [
-            {
-              date: new Date().toISOString(),
-              text: { en: error.message },
-              error: {
-                category: 'WRONG_INPUT',
-                message: error.message,
-              },
-            },
-          ],
-        })
-      } else if (err instanceof AxiosError) {
-        await onError({
-          events: [
-            {
-              date: new Date().toISOString(),
-              text: {
-                en: `${err.status ?? '(no status code)'} Error: ${err.message}`,
-              },
-              error: {
-                category: 'SERVER_ERROR',
-                message: `${err.status ?? '(no status code)'} Error: ${
-                  err.message
-                }`,
-              },
-            },
-          ],
-        })
-      } else {
-        const message = (err as Error).message
-        await onError({
-          events: [
-            {
-              date: new Date().toISOString(),
-              text: { en: message },
-              error: {
-                category: 'SERVER_ERROR',
-                message,
-              },
-            },
-          ],
-        })
-      }
-    }
+    await onComplete({
+      data_points: {
+        firstName: patientInfo.first_name,
+        lastName: patientInfo.last_name,
+        dob: patientInfo.dob,
+        sex: patientInfo.sex,
+        primaryPhysicianId: String(patientInfo.primary_physician),
+        caregiverPracticeId: String(patientInfo.caregiver_practice),
+        mobilePhone: elationMobilePhoneToE164(
+          patientInfo.phones?.find((p) => p.phone_type === 'Mobile')?.phone,
+        ),
+        email: getLastEmail(patientInfo.emails),
+        middleName: patientInfo.middle_name,
+        actualName: patientInfo.actual_name,
+        genderIdentity: patientInfo.gender_identity,
+        legalGenderMarker: patientInfo.legal_gender_marker,
+        pronouns: patientInfo.pronouns,
+        sexualOrientation: patientInfo.sexual_orientation,
+        ssn: patientInfo.ssn,
+        ethnicity: patientInfo.ethnicity,
+        race: patientInfo.race,
+        preferredLanguage: patientInfo.preferred_language,
+        notes: patientInfo.notes,
+        previousFirstName: patientInfo.previous_first_name,
+        previousLastName: patientInfo.previous_last_name,
+        status: patientInfo.patient_status.status,
+      },
+    })
   },
 }
