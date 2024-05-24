@@ -1,4 +1,3 @@
-import { ZodError } from 'zod'
 import {
   FieldType,
   NumericIdSchema,
@@ -9,8 +8,6 @@ import {
 import { Category } from '@awell-health/extensions-core'
 import { type settings } from '../settings'
 import { makeAPIClient } from '../client'
-import { fromZodError } from 'zod-validation-error'
-import { AxiosError } from 'axios'
 
 const fields = {
   appointmentId: {
@@ -64,6 +61,10 @@ const dataPoints = {
     key: 'status',
     valueType: 'json',
   },
+  appointment: {
+    key: 'appointment',
+    valueType: 'json',
+  },
 } satisfies Record<string, DataPointDefinition>
 
 export const getAppointment: Action<
@@ -96,6 +97,7 @@ export const getAppointment: Action<
         serviceLocationId: String(appointment.service_location?.id),
         telehealthDetails: appointment.telehealth_details,
         status: JSON.stringify(appointment.status),
+        appointment: JSON.stringify(appointment),
       },
     })
   },
