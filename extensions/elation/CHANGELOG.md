@@ -15,19 +15,19 @@
     - `document_date` and `chart_date` are now automatically set to the date of today so that the corresponding action fields could be removed
   - Create patient
     - `dob` is now a `date` field type (was a string)
-    - You can pass a mobile phone number and email when creating a patient  
+    - You can pass a mobile phone number and email when creating a patient
   - Find physician
     - Only returns the physician ID instead of all the details of the physician. To retrieve the details one can use the new `Get physician` action
   - Update patient
     - `dob` is now a `date` field type (was a string)
-    - We are now using `PATCH` instead of `PUT` which allows for a partial update, i.e. only update the fields that are needed. 
+    - We are now using `PATCH` instead of `PUT` which allows for a partial update, i.e. only update the fields that are needed.
 - New actions
-  - Get physician: Using a physician identifier, retrieve a physician object from Elation.   
+  - Get physician: Using a physician identifier, retrieve a physician object from Elation.
 - Removed actions
   - Update Non-Visit Note
 - Webhooks
   - Fix the type of `patientId` in `patientCreatedOrUpdated` webhook
-  - Added `appointmentCreatedOrUpdated` webhook  
+  - Added `appointmentCreatedOrUpdated` webhook
 
 ## September 4, 2023
 
@@ -37,3 +37,8 @@
 ## August 21, 2023
 
 - make non-visit note text a large input (`StringType.TEXT`)
+
+## May 23, 2024
+
+- add patient_status.status to patient object in getPatient action
+- add status to updatePatient action
