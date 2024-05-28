@@ -7,6 +7,7 @@ import {
 } from '@awell-health/extensions-core'
 import { type settings } from './settings'
 import {
+  type FindAppointmentsParams,
   type AppointmentInput,
   type AppointmentResponse,
 } from './types/appointment'
@@ -35,6 +36,18 @@ import type {
 import { type FindContactsResponse } from './types/contact'
 
 export class ElationDataWrapper extends DataWrapper {
+  public async findAppointments(
+    params: FindAppointmentsParams,
+  ): Promise<AppointmentResponse[]> {
+    const req = this.Request<ElationCollection<AppointmentResponse>>({
+      method: 'GET',
+      url: `/appointments/`,
+      params,
+    })
+    const res = await req
+    return res.results
+  }
+
   public async getAppointment(id: number): Promise<AppointmentResponse> {
     const req = this.Request<AppointmentResponse>({
       method: 'GET',
@@ -45,7 +58,7 @@ export class ElationDataWrapper extends DataWrapper {
   }
 
   public async createAppointment(
-    obj: Partial<AppointmentInput>
+    obj: Partial<AppointmentInput>,
   ): Promise<AppointmentResponse> {
     const req = this.Request<AppointmentResponse>({
       method: 'POST',
@@ -66,7 +79,7 @@ export class ElationDataWrapper extends DataWrapper {
   }
 
   public async createPatient(
-    obj: Partial<PatientInput>
+    obj: Partial<PatientInput>,
   ): Promise<PatientResponse> {
     const req = this.Request<PatientResponse>({
       method: 'POST',
@@ -79,7 +92,7 @@ export class ElationDataWrapper extends DataWrapper {
 
   public async updatePatient(
     id: number,
-    obj: Partial<UpdatePatientInput>
+    obj: Partial<UpdatePatientInput>,
   ): Promise<PatientResponse> {
     const req = this.Request<PatientResponse>({
       method: 'PATCH',
@@ -100,7 +113,7 @@ export class ElationDataWrapper extends DataWrapper {
   }
 
   public async createSubscription(
-    obj: SubscriptionRequest
+    obj: SubscriptionRequest,
   ): Promise<Subscription> {
     const req = this.Request<Subscription>({
       method: 'POST',
@@ -152,7 +165,7 @@ export class ElationDataWrapper extends DataWrapper {
   }
 
   public async createNonVisitNote(
-    obj: NonVisitNoteInput
+    obj: NonVisitNoteInput,
   ): Promise<NonVisitNoteResponse> {
     return await this.Request({
       method: 'POST',
@@ -163,7 +176,7 @@ export class ElationDataWrapper extends DataWrapper {
 
   public async updateNonVisitNote(
     id: number,
-    obj: Partial<NonVisitNoteInput>
+    obj: Partial<NonVisitNoteInput>,
   ): Promise<NonVisitNoteResponse> {
     return await this.Request({
       // PATCH - makes all fields optional in Elation (PUT requires all fields)
@@ -198,7 +211,7 @@ export class ElationDataWrapper extends DataWrapper {
   }
 
   public async createLabOrder(
-    obj: CreateLabOrderInput
+    obj: CreateLabOrderInput,
   ): Promise<CreateLabOrderResponse> {
     return await this.Request({
       method: 'POST',
@@ -217,7 +230,7 @@ interface ElationAPIClientConstructorProps {
 export class ElationAPIClient extends APIClient<ElationDataWrapper> {
   readonly ctor: DataWrapperCtor<ElationDataWrapper> = (
     token: string,
-    baseUrl: string
+    baseUrl: string,
   ) => new ElationDataWrapper(token, baseUrl)
 
   public constructor({
@@ -236,12 +249,18 @@ export class ElationAPIClient extends APIClient<ElationDataWrapper> {
     })
   }
 
+  public async findAppointments(
+    params: FindAppointmentsParams,
+  ): Promise<AppointmentResponse[]> {
+    return await this.FetchData(async (dw) => await dw.findAppointments(params))
+  }
+
   public async getAppointment(id: number): Promise<AppointmentResponse> {
     return await this.FetchData(async (dw) => await dw.getAppointment(id))
   }
 
   public async createAppointment(
-    obj: Partial<AppointmentInput>
+    obj: Partial<AppointmentInput>,
   ): Promise<AppointmentResponse> {
     return await this.FetchData(async (dw) => await dw.createAppointment(obj))
   }
@@ -251,14 +270,14 @@ export class ElationAPIClient extends APIClient<ElationDataWrapper> {
   }
 
   public async createPatient(
-    obj: Partial<PatientInput>
+    obj: Partial<PatientInput>,
   ): Promise<PatientResponse> {
     return await this.FetchData(async (dw) => await dw.createPatient(obj))
   }
 
   public async updatePatient(
     id: number,
-    obj: Partial<UpdatePatientInput>
+    obj: Partial<UpdatePatientInput>,
   ): Promise<PatientResponse> {
     return await this.FetchData(async (dw) => await dw.updatePatient(id, obj))
   }
@@ -268,7 +287,7 @@ export class ElationAPIClient extends APIClient<ElationDataWrapper> {
   }
 
   public async createSubscription(
-    obj: SubscriptionRequest
+    obj: SubscriptionRequest,
   ): Promise<Subscription> {
     return await this.FetchData(async (dw) => await dw.createSubscription(obj))
   }
@@ -293,7 +312,7 @@ export class ElationAPIClient extends APIClient<ElationDataWrapper> {
     }
   }): Promise<ElationCollection<PhysicianResponse>> {
     return await this.FetchData(
-      async (dw) => await dw.findPhysicians({ params })
+      async (dw) => await dw.findPhysicians({ params }),
     )
   }
 
@@ -302,17 +321,17 @@ export class ElationAPIClient extends APIClient<ElationDataWrapper> {
   }
 
   public async createNonVisitNote(
-    obj: NonVisitNoteInput
+    obj: NonVisitNoteInput,
   ): Promise<NonVisitNoteResponse> {
     return await this.FetchData(async (dw) => await dw.createNonVisitNote(obj))
   }
 
   public async updateNonVisitNote(
     id: number,
-    obj: Partial<NonVisitNoteInput>
+    obj: Partial<NonVisitNoteInput>,
   ): Promise<NonVisitNoteResponse> {
     return await this.FetchData(
-      async (dw) => await dw.updateNonVisitNote(id, obj)
+      async (dw) => await dw.updateNonVisitNote(id, obj),
     )
   }
 
@@ -323,7 +342,7 @@ export class ElationAPIClient extends APIClient<ElationDataWrapper> {
   }
 
   public async postNewLetter(
-    obj: PostLetterInput
+    obj: PostLetterInput,
   ): Promise<PostLetterResponse> {
     return await this.FetchData(async (dw) => await dw.postLetter(obj))
   }
@@ -335,14 +354,14 @@ export class ElationAPIClient extends APIClient<ElationDataWrapper> {
   }
 
   public async createLabOrder(
-    obj: CreateLabOrderInput
+    obj: CreateLabOrderInput,
   ): Promise<CreateLabOrderResponse> {
     return await this.FetchData(async (dw) => await dw.createLabOrder(obj))
   }
 }
 
 export const makeAPIClient = (
-  payloadSettings: Record<keyof typeof settings, string | undefined>
+  payloadSettings: Record<keyof typeof settings, string | undefined>,
 ): ElationAPIClient => {
   const { base_url, auth_url, ...auth_request_settings } =
     settingsSchema.parse(payloadSettings)

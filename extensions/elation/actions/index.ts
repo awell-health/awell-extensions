@@ -3,6 +3,7 @@ import { updatePatient } from './updatePatient'
 import { createPatient } from './createPatient'
 import { createAppointment } from './createAppointment'
 import { getAppointment } from './getAppointment'
+import { findAppointments } from './findAppointments'
 import { findPhysician } from './findPhysician'
 import { createNonVisitNote } from './createNonVisitNote'
 // import { updateNonVisitNote } from './updateNonVisitNote'
@@ -18,6 +19,7 @@ export const actions = {
   updatePatient,
   createAppointment,
   getAppointment,
+  findAppointments,
   getPhysician,
   findPhysician,
   createNonVisitNote,
