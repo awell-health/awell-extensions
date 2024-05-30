@@ -3,8 +3,8 @@ import { getSdk } from '../../lib/sdk/generated/sdk'
 import { mockGetSdk } from '../../lib/sdk/generated/__mocks__/sdk'
 import { getMetricEntry } from '.'
 
-jest.mock('../../gql/sdk')
-jest.mock('../../graphqlClient')
+jest.mock('../../lib/sdk/generated/sdk')
+jest.mock('../../lib/sdk/graphqlClient')
 
 describe('Healthie - Get metric entry', () => {
   const onComplete = jest.fn()

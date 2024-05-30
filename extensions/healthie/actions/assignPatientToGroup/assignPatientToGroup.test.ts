@@ -6,8 +6,8 @@ import {
 } from '../../lib/sdk/generated/__mocks__/sdk'
 import { assignPatientToGroup } from '../assignPatientToGroup'
 
-jest.mock('../../gql/sdk')
-jest.mock('../../graphqlClient')
+jest.mock('../../lib/sdk/generated/sdk')
+jest.mock('../../lib/sdk/graphqlClient')
 
 describe('assignPatientToGroup action', () => {
   const onComplete = jest.fn()

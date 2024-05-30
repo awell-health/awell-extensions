@@ -6,8 +6,8 @@ import {
 } from '../../lib/sdk/generated/__mocks__/sdk'
 import { getAppointment } from '../getAppointment'
 
-jest.mock('../../gql/sdk')
-jest.mock('../../graphqlClient')
+jest.mock('../../lib/sdk/generated/sdk')
+jest.mock('../../lib/sdk/graphqlClient')
 
 describe('getAppointment action', () => {
   const onComplete = jest.fn()

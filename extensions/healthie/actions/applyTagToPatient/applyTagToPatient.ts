@@ -17,6 +17,7 @@ export const applyTagToPatient: Action<typeof fields, typeof settings> = {
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
     const { fields, settings } = payload
     const { id, patient_id } = fields
+
     try {
       if (isNil(id) || isNil(patient_id)) {
         await onError({
@@ -33,7 +34,6 @@ export const applyTagToPatient: Action<typeof fields, typeof settings> = {
         })
         return
       }
-
       const client = initialiseClient(settings)
       if (client !== undefined) {
         const sdk = getSdk(client)

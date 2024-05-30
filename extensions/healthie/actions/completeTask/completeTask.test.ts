@@ -6,8 +6,8 @@ import {
 } from '../../lib/sdk/generated/__mocks__/sdk'
 import { completeTask } from '../completeTask'
 
-jest.mock('../../gql/sdk')
-jest.mock('../../graphqlClient')
+jest.mock('../../lib/sdk/generated/sdk')
+jest.mock('../../lib/sdk/graphqlClient')
 
 describe('completeTask action', () => {
   const onComplete = jest.fn()

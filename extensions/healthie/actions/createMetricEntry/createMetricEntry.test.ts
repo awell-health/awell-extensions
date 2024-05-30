@@ -3,9 +3,8 @@ import { getSdk } from '../../lib/sdk/generated/sdk'
 import { mockGetSdk } from '../../lib/sdk/generated/__mocks__/sdk'
 import { createMetricEntry } from '../createMetricEntry'
 
-jest.mock('../../gql/sdk')
-jest.mock('../../graphqlClient')
-
+jest.mock('../../lib/sdk/generated/sdk')
+jest.mock('../../lib/sdk/graphqlClient')
 describe('createMetricEntry action', () => {
   const onComplete = jest.fn()
   const onError = jest.fn()

@@ -7,8 +7,8 @@ import {
 } from '../../lib/sdk/generated/__mocks__/sdk'
 import { createTask } from '../createTask'
 
-jest.mock('../../gql/sdk')
-jest.mock('../../graphqlClient')
+jest.mock('../../lib/sdk/generated/sdk')
+jest.mock('../../lib/sdk/graphqlClient')
 
 const samplePayload = generateTestPayload({
   fields: {

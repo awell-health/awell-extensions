@@ -1,5 +1,11 @@
 // TODO
 
+describe('Healthie - Get form answers', () => {
+  test('Should work', async () => {
+    expect(true).toBe(true)
+  })
+})
+
 // import { generateTestPayload } from '../../../../src/tests'
 // import { getSdk } from '../../lib/sdk/generated/sdk'
 // import {

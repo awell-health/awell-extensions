@@ -3,8 +3,8 @@ import { getSdk } from '../../lib/sdk/generated/sdk'
 import { mockGetSdk } from '../../lib/sdk/generated/__mocks__/sdk'
 import { checkPatientTag } from '../checkPatientTag'
 
-jest.mock('../../gql/sdk')
-jest.mock('../../graphqlClient')
+jest.mock('../../lib/sdk/generated/sdk')
+jest.mock('../../lib/sdk/graphqlClient')
 
 describe('checkPatientTag action', () => {
   const onComplete = jest.fn()
