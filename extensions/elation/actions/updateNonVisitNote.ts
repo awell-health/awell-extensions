@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { ZodError } from 'zod'
 import {
   FieldType,
   type Action,
@@ -9,8 +8,6 @@ import {
 } from '@awell-health/extensions-core'
 import { type settings } from '../settings'
 import { makeAPIClient } from '../client'
-import { fromZodError } from 'zod-validation-error'
-import { AxiosError } from 'axios'
 import { nonVisitNoteSchema } from '../validation/nonVisitNote.zod'
 import { isNil } from 'lodash'
 
@@ -108,87 +105,38 @@ export const updateNonVisitNote: Action<typeof fields, typeof settings> = {
   fields,
   previewable: true,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
-    try {
-      const {
-        nonVisitNoteId,
-        nonVisitNoteBulletId,
-        authorId,
-        chartDate,
-        documentDate,
-        text,
-        category,
-        patientId,
-        practiceId,
+    const {
+      nonVisitNoteId,
+      nonVisitNoteBulletId,
+      authorId,
+      chartDate,
+      documentDate,
+      text,
+      category,
+      patientId,
+      practiceId,
+      signed_by,
+      ...fields
+    } = payload.fields
+    const noteId = NumericIdSchema.parse(nonVisitNoteId)
+    // partial - all fields are optional
+    const note = nonVisitNoteSchema.partial().parse({
+      ...fields,
+      patient: patientId,
+      practice: practiceId,
+      bullets: isNil(nonVisitNoteBulletId)
+        ? undefined
+        : [{ id: nonVisitNoteBulletId, text, author: authorId, category }],
+      document_date: documentDate,
+      chart_date: chartDate,
+      ...(!isNil(signed_by) && {
         signed_by,
-        ...fields
-      } = payload.fields
-      const noteId = NumericIdSchema.parse(nonVisitNoteId)
-      // partial - all fields are optional
-      const note = nonVisitNoteSchema.partial().parse({
-        ...fields,
-        patient: patientId,
-        practice: practiceId,
-        bullets: isNil(nonVisitNoteBulletId)
-          ? undefined
-          : [{ id: nonVisitNoteBulletId, text, author: authorId, category }],
-        document_date: documentDate,
-        chart_date: chartDate,
-        ...(!isNil(signed_by) && {
-          signed_by,
-          sign_date: new Date().toISOString(),
-        }),
-      })
+        sign_date: new Date().toISOString(),
+      }),
+    })
 
-      const api = makeAPIClient(payload.settings)
-      await api.updateNonVisitNote(noteId, note)
-      await onComplete()
-    } catch (err) {
-      if (err instanceof ZodError) {
-        const error = fromZodError(err)
-        await onError({
-          events: [
-            {
-              date: new Date().toISOString(),
-              text: { en: error.message },
-              error: {
-                category: 'WRONG_INPUT',
-                message: error.message,
-              },
-            },
-          ],
-        })
-      } else if (err instanceof AxiosError) {
-        await onError({
-          events: [
-            {
-              date: new Date().toISOString(),
-              text: {
-                en: `${err.status ?? '(no status code)'} Error: ${err.message}`,
-              },
-              error: {
-                category: 'SERVER_ERROR',
-                message: `${err.status ?? '(no status code)'} Error: ${
-                  err.message
-                }`,
-              },
-            },
-          ],
-        })
-      } else {
-        const message = (err as Error).message
-        await onError({
-          events: [
-            {
-              date: new Date().toISOString(),
-              text: { en: message },
-              error: {
-                category: 'SERVER_ERROR',
-                message,
-              },
-            },
-          ],
-        })
-      }
-    }
+    const api = makeAPIClient(payload.settings)
+    await api.updateNonVisitNote(noteId, note)
+    await onComplete()
   },
 }
