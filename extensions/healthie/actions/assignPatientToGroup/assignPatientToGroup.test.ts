@@ -1,6 +1,9 @@
 import { generateTestPayload } from '../../../../src/tests'
-import { getSdk } from '../../gql/sdk'
-import { mockGetSdk, mockGetSdkReturn } from '../../gql/__mocks__/sdk'
+import { getSdk } from '../../lib/sdk/generated/sdk'
+import {
+  mockGetSdk,
+  mockGetSdkReturn,
+} from '../../lib/sdk/generated/__mocks__/sdk'
 import { assignPatientToGroup } from '../assignPatientToGroup'
 
 jest.mock('../../gql/sdk')

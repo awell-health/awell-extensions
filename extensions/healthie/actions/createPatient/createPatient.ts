@@ -4,10 +4,10 @@ import {
   type Action,
 } from '@awell-health/extensions-core'
 import { Category } from '@awell-health/extensions-core'
-import { getSdk } from '../../gql/sdk'
-import { initialiseClient } from '../../graphqlClient'
+import { getSdk } from '../../lib/sdk/generated/sdk'
+import { initialiseClient } from '../../lib/sdk/graphqlClient'
 import { type settings } from '../../settings'
-import { HealthieError, mapHealthieToActivityError } from '../../errors'
+import { HealthieError, mapHealthieToActivityError } from '../../lib/sdk/errors'
 import { fields } from './config'
 
 const dataPoints = {

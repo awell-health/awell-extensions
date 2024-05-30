@@ -1,6 +1,9 @@
 import { generateTestPayload } from '../../../../src/tests'
-import { getSdk } from '../../gql/sdk'
-import { mockGetSdk, mockGetSdkReturn } from '../../gql/__mocks__/sdk'
+import { getSdk } from '../../lib/sdk/generated/sdk'
+import {
+  mockGetSdk,
+  mockGetSdkReturn,
+} from '../../lib/sdk/generated/__mocks__/sdk'
 import { createChartingNote } from '../createChartingNote'
 
 jest.mock('../../gql/sdk')
@@ -25,7 +28,7 @@ describe('createChartingNote action', () => {
           healthie_patient_id: 'patient-1',
           note_content: 'Test content',
           marked_locked: true,
-          appointment_id: 'appointment-1'
+          appointment_id: 'appointment-1',
         },
         settings: {
           apiKey: 'apiKey',

@@ -1,4 +1,4 @@
-import { type getSdk } from './gql/sdk'
+import { type getSdk } from './sdk/generated/sdk'
 
 export interface HealthieWebhookPayload {
   resource_id: string

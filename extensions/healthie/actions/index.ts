@@ -22,6 +22,7 @@ import { updatePatientQuickNote } from './updatePatientQuickNote'
 import { createMetricEntry } from './createMetricEntry'
 import { checkPatientTag } from './checkPatientTag'
 import { checkScheduledAppointments } from './checkScheduledAppointments'
+import { getFormAnswers } from './getFormAnswers'
 
 export const actions = {
   createAppointment,
@@ -57,4 +58,5 @@ export const actions = {
   createMetricEntry,
   checkPatientTag,
   checkScheduledAppointments,
+  getFormAnswers,
 }

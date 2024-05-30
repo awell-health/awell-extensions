@@ -1,10 +1,10 @@
 import { type Action } from '@awell-health/extensions-core'
 import { Category } from '@awell-health/extensions-core'
-import { getSdk } from '../../gql/sdk'
-import { initialiseClient } from '../../graphqlClient'
+import { getSdk } from '../../lib/sdk/generated/sdk'
+import { initialiseClient } from '../../lib/sdk/graphqlClient'
 import { type settings } from '../../settings'
-import { createTaskSchema } from '../../validation/createTask.zod'
-import { HealthieError, mapHealthieToActivityError } from '../../errors'
+import { createTaskSchema } from '../../lib/validation/createTask.zod'
+import { HealthieError, mapHealthieToActivityError } from '../../lib/sdk/errors'
 import { dataPoints, fields } from './config'
 
 export const createTask: Action<

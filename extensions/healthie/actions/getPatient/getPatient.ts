@@ -1,11 +1,11 @@
 import { type Action } from '@awell-health/extensions-core'
 import { Category } from '@awell-health/extensions-core'
-import { HealthieError, mapHealthieToActivityError } from '../../errors'
-import { getSdk } from '../../gql/sdk'
-import { initialiseClient } from '../../graphqlClient'
-import { mapHealthieGenderToIsoSex } from '../../helpers'
+import { HealthieError, mapHealthieToActivityError } from '../../lib/sdk/errors'
+import { getSdk } from '../../lib/sdk/generated/sdk'
+import { initialiseClient } from '../../lib/sdk/graphqlClient'
+import { mapHealthieGenderToIsoSex } from '../../lib/helpers'
 import { type settings } from '../../settings'
-import { validateGetPatient } from '../../validation/getPatient.zod'
+import { validateGetPatient } from '../../lib/validation/getPatient.zod'
 import { dataPoints, fields } from './config'
 
 export const getPatient: Action<

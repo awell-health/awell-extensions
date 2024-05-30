@@ -3,7 +3,7 @@ import {
   type DataPointDefinition,
   type Webhook,
 } from '@awell-health/extensions-core'
-import { type HealthieWebhookPayload } from '../types'
+import { type HealthieWebhookPayload } from '../lib/types'
 
 const dataPoints = {
   updatedMetricId: {
