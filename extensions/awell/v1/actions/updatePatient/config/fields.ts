@@ -116,7 +116,7 @@ export const FieldsValidationSchema = z.object({
   lastName: z.optional(z.string().trim()),
   birthDate: z.optional(z.coerce.date().transform((date) => formatISO(date))),
   email: z.optional(
-    z.string().trim().email('Value passed is not an email address')
+    z.string().trim().email('Value passed is not an email address'),
   ),
   phone: E164PhoneValidationOptionalSchema,
   mobilePhone: E164PhoneValidationOptionalSchema,
@@ -126,6 +126,11 @@ export const FieldsValidationSchema = z.object({
   city: z.optional(z.string().trim()),
   zip: z.optional(z.string().trim()),
   preferredLanguage: z.optional(z.string().trim()),
-  sex: z.optional(z.enum([Sex.Female, Sex.Male, Sex.NotKnown])),
+  sex: z.optional(
+    z.preprocess(
+      (v) => String(v).toUpperCase(),
+      z.enum([Sex.Female, Sex.Male, Sex.NotKnown]),
+    ),
+  ),
   nationalRegistryNumber: z.string().trim().optional(),
 } satisfies Record<keyof typeof fields, ZodTypeAny>)
