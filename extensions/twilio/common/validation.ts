@@ -6,8 +6,4 @@ export const MessageValidationSchema = z
   .max(1600, { message: 'Message can not be longer than 1600 characters' })
 
 // The expectation here is that any object can be passed
-export const ParametersValidationSchema = z
-  .object({
-    patient_id: z.any().optional(),
-  })
-  .catchall(z.any())
+export const ParametersValidationSchema = z.string()

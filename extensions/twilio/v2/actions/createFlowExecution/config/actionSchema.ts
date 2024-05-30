@@ -24,6 +24,7 @@ export const CreateFlowExecutionSchema = z
       settings: val.settings,
       fields: {
         ...val.fields,
+        parameters: JSON.parse(val.fields.parameters),
         from: val.fields.from ?? val.settings.fromNumber,
       },
     }
