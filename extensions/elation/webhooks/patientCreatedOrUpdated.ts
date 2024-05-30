@@ -35,6 +35,11 @@ export const patientCreatedOrUpdated: Webhook<
     } else {
       await onSuccess({
         data_points: { patientId: String(data.id) },
+        // Review the system used for elation identifiers
+        patient_identifier: {
+          system: 'https://www.elationhealth.com/',
+          value: String(data.id),
+        },
       })
     }
   },
