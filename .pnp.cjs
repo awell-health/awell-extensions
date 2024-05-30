@@ -59,7 +59,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/xml2js", "npm:0.4.14"],\
             ["@typescript-eslint/eslint-plugin", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:5.62.0"],\
             ["api", "npm:6.1.1"],\
-            ["axios", "npm:1.6.8"],\
             ["body-parser", "npm:1.20.2"],\
             ["cheerio", "npm:1.0.0-rc.12"],\
             ["date-fns", "npm:2.30.0"],\
@@ -217,7 +216,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/xml2js", "npm:0.4.14"],\
             ["@typescript-eslint/eslint-plugin", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:5.62.0"],\
             ["api", "npm:6.1.1"],\
-            ["axios", "npm:1.6.8"],\
             ["body-parser", "npm:1.20.2"],\
             ["cheerio", "npm:1.0.0-rc.12"],\
             ["date-fns", "npm:2.30.0"],\
@@ -267,7 +265,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["@awell-health/extensions-core", "npm:0.2.0"],\
             ["@types/json-schema", "npm:7.0.15"],\
-            ["axios", "npm:1.6.8"],\
+            ["axios", "npm:1.7.2"],\
             ["date-fns", "npm:3.6.0"],\
             ["libphonenumber-js", "npm:1.10.61"],\
             ["lodash", "npm:4.17.21"],\
@@ -1755,7 +1753,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@dropbox-sign-npm-1.4.1-40a5126a58-e3ceb0679b.zip/node_modules/@dropbox/sign/",\
           "packageDependencies": [\
             ["@dropbox/sign", "npm:1.4.1"],\
-            ["axios", "npm:1.6.8"],\
+            ["axios", "npm:1.7.2"],\
             ["bluebird", "npm:3.7.2"],\
             ["form-data", "npm:4.0.0"],\
             ["qs", "npm:6.12.1"]\
@@ -3274,7 +3272,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@mailchimp-mailchimp_transactional-npm-1.0.59-fc5c6719a5-e66de84176.zip/node_modules/@mailchimp/mailchimp_transactional/",\
           "packageDependencies": [\
             ["@mailchimp/mailchimp_transactional", "npm:1.0.59"],\
-            ["axios", "npm:1.6.8"]\
+            ["axios", "npm:1.7.2"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -3315,7 +3313,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@metriport-api-npm-3.1.6-ec77cead16-1bb0ee15c9.zip/node_modules/@metriport/api/",\
           "packageDependencies": [\
             ["@metriport/api", "npm:3.1.6"],\
-            ["axios", "npm:1.6.8"],\
+            ["axios", "npm:1.7.2"],\
             ["dayjs", "npm:1.11.11"],\
             ["zod", "npm:3.23.5"]\
           ],\
@@ -4073,7 +4071,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@types-mailchimp__mailchimp_transactional-npm-1.0.10-7e00941cbc-94e8d19c3d.zip/node_modules/@types/mailchimp__mailchimp_transactional/",\
           "packageDependencies": [\
             ["@types/mailchimp__mailchimp_transactional", "npm:1.0.10"],\
-            ["axios", "npm:1.6.8"]\
+            ["axios", "npm:1.7.2"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -4979,15 +4977,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/axios-npm-0.26.1-a6641ce4e3-d9eb58ff4b.zip/node_modules/axios/",\
           "packageDependencies": [\
             ["axios", "npm:0.26.1"],\
-            ["follow-redirects", "virtual:85cf1e7152e3c0d8e39e61ad2b81b59a43fb6bdb8f3bf49869bb97804b1403ecaee4505fcb0d4869cfdd99ee3eaa880b79498575407fb770c800bf64c64156ec#npm:1.15.6"]\
+            ["follow-redirects", "virtual:c89264f6f79513b22a07db5e53adf77eba9e48634cf471fb55eb2e75d910809bbac48d9ce7a920c63c8ff2780624fff91866270d8acf614cbd0c4cb748a8b29a#npm:1.15.6"]\
           ],\
           "linkType": "HARD"\
         }],\
-        ["npm:1.6.8", {\
-          "packageLocation": "./.yarn/cache/axios-npm-1.6.8-85cf1e7152-bf007fa4b2.zip/node_modules/axios/",\
+        ["npm:1.7.2", {\
+          "packageLocation": "./.yarn/cache/axios-npm-1.7.2-c89264f6f7-e457e2b0ab.zip/node_modules/axios/",\
           "packageDependencies": [\
-            ["axios", "npm:1.6.8"],\
-            ["follow-redirects", "virtual:85cf1e7152e3c0d8e39e61ad2b81b59a43fb6bdb8f3bf49869bb97804b1403ecaee4505fcb0d4869cfdd99ee3eaa880b79498575407fb770c800bf64c64156ec#npm:1.15.6"],\
+            ["axios", "npm:1.7.2"],\
+            ["follow-redirects", "virtual:c89264f6f79513b22a07db5e53adf77eba9e48634cf471fb55eb2e75d910809bbac48d9ce7a920c63c8ff2780624fff91866270d8acf614cbd0c4cb748a8b29a#npm:1.15.6"],\
             ["form-data", "npm:4.0.0"],\
             ["proxy-from-env", "npm:1.1.0"]\
           ],\
@@ -6503,7 +6501,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["docusign-esign", "npm:7.0.0-rc1"],\
             ["@devhigley/parse-proxy", "npm:1.0.3"],\
-            ["axios", "npm:1.6.8"],\
+            ["axios", "npm:1.7.2"],\
             ["csv-stringify", "npm:1.1.2"],\
             ["jsonwebtoken", "npm:9.0.2"],\
             ["passport-oauth2", "npm:1.8.0"],\
@@ -7846,10 +7844,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:85cf1e7152e3c0d8e39e61ad2b81b59a43fb6bdb8f3bf49869bb97804b1403ecaee4505fcb0d4869cfdd99ee3eaa880b79498575407fb770c800bf64c64156ec#npm:1.15.6", {\
-          "packageLocation": "./.yarn/__virtual__/follow-redirects-virtual-7bb5ea93fd/0/cache/follow-redirects-npm-1.15.6-50635fe51d-a62c378dfc.zip/node_modules/follow-redirects/",\
+        ["virtual:c89264f6f79513b22a07db5e53adf77eba9e48634cf471fb55eb2e75d910809bbac48d9ce7a920c63c8ff2780624fff91866270d8acf614cbd0c4cb748a8b29a#npm:1.15.6", {\
+          "packageLocation": "./.yarn/__virtual__/follow-redirects-virtual-d6f128c480/0/cache/follow-redirects-npm-1.15.6-50635fe51d-a62c378dfc.zip/node_modules/follow-redirects/",\
           "packageDependencies": [\
-            ["follow-redirects", "virtual:85cf1e7152e3c0d8e39e61ad2b81b59a43fb6bdb8f3bf49869bb97804b1403ecaee4505fcb0d4869cfdd99ee3eaa880b79498575407fb770c800bf64c64156ec#npm:1.15.6"],\
+            ["follow-redirects", "virtual:c89264f6f79513b22a07db5e53adf77eba9e48634cf471fb55eb2e75d910809bbac48d9ce7a920c63c8ff2780624fff91866270d8acf614cbd0c4cb748a8b29a#npm:1.15.6"],\
             ["@types/debug", null],\
             ["debug", null]\
           ],\
@@ -10504,7 +10502,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/mailgun.js-npm-8.2.2-51a7661c20-9736fca6e8.zip/node_modules/mailgun.js/",\
           "packageDependencies": [\
             ["mailgun.js", "npm:8.2.2"],\
-            ["axios", "npm:1.6.8"],\
+            ["axios", "npm:1.7.2"],\
             ["base-64", "npm:1.0.0"],\
             ["url-join", "npm:4.0.1"]\
           ],\
@@ -13484,7 +13482,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/twilio-npm-4.23.0-cffd8482ee-41bccb4b30.zip/node_modules/twilio/",\
           "packageDependencies": [\
             ["twilio", "npm:4.23.0"],\
-            ["axios", "npm:1.6.8"],\
+            ["axios", "npm:1.7.2"],\
             ["dayjs", "npm:1.11.11"],\
             ["https-proxy-agent", "npm:5.0.1"],\
             ["jsonwebtoken", "npm:9.0.2"],\
