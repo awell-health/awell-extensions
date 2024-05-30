@@ -29,7 +29,6 @@ export const createFlowExecution: Action<typeof fields, typeof settings> = {
     }
 
     const client = twilioSdk(accountSid, authToken, {
-      region: 'IE1',
       accountSid,
     })
 
