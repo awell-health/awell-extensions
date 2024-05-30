@@ -1,3 +1,5 @@
+import { assert } from 'console'
+import { isNil } from 'lodash'
 import { type ElationCollection } from '../types/generic'
 import { type NonVisitNoteResponse } from '../types/nonVisitNote'
 import { type PhysicianResponse } from '../types/physician'
@@ -71,7 +73,10 @@ export const mockClientReturn = {
   getNonVisitNote: jest.fn((): NonVisitNoteResponse => {
     return nonVisitNoteResponseExample
   }),
-  updateNonVisitNote: jest.fn((): NonVisitNoteResponse => {
+  updateNonVisitNote: jest.fn((noteId, note): NonVisitNoteResponse => {
+    if (!isNil(note.signed_by)) {
+      assert(!isNil(note.sign_date))
+    }
     return nonVisitNoteResponseExample
   }),
   deleteNonVisitNote: jest.fn(() => {

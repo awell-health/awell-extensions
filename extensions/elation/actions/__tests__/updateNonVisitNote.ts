@@ -17,6 +17,19 @@ describe('Update non-visit note action', () => {
     base_url: 'baseUrl',
   }
 
+  const exampleInput = {
+    nonVisitNoteId: 1,
+    nonVisitNoteBulletId: 1,
+    authorId: 1,
+    text: 'abc',
+    category: 'Problem',
+    chartDate: '2023-01-01',
+    documentDate: '2023-01-01',
+    patientId: 101,
+    practiceId: 102,
+    tags: '1,',
+  }
+
   beforeAll(() => {
     const mockAPIClient = makeAPIClient as jest.Mock
     mockAPIClient.mockImplementation(makeAPIClientMockFunc)
@@ -45,18 +58,7 @@ describe('Update non-visit note action', () => {
       },
     },
     {
-      input: {
-        nonVisitNoteId: 1,
-        nonVisitNoteBulletId: 1,
-        authorId: 1,
-        text: 'abc',
-        category: 'Problem',
-        chartDate: '2023-01-01',
-        documentDate: '2023-01-01',
-        patientId: 101,
-        practiceId: 102,
-        tags: '1,',
-      },
+      input: exampleInput,
     },
     {
       input: {
@@ -101,4 +103,18 @@ describe('Update non-visit note action', () => {
       expect(onComplete).toHaveBeenCalled()
     }
   )
+  it('make sure a signed note is updated correctly', async () => {
+    await updateNonVisitNote.onActivityCreated(
+      {
+        fields: {
+          ...exampleInput,
+          signed_by: 1,
+        },
+        settings,
+      } as any,
+      onComplete,
+      onError
+    )
+    expect(onComplete).toHaveBeenCalled()
+  })
 })

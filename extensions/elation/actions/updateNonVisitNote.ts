@@ -91,6 +91,13 @@ const fields = {
     type: FieldType.STRING,
     required: false,
   },
+  signed_by: {
+    id: 'signed_by',
+    label: 'Signed by (user ID)',
+    description: 'ID of a user who signed the note.',
+    type: FieldType.NUMERIC,
+    required: false,
+  },
 } satisfies Record<string, Field>
 
 export const updateNonVisitNote: Action<typeof fields, typeof settings> = {
@@ -112,6 +119,7 @@ export const updateNonVisitNote: Action<typeof fields, typeof settings> = {
         category,
         patientId,
         practiceId,
+        signed_by,
         ...fields
       } = payload.fields
       const noteId = NumericIdSchema.parse(nonVisitNoteId)
@@ -125,6 +133,10 @@ export const updateNonVisitNote: Action<typeof fields, typeof settings> = {
           : [{ id: nonVisitNoteBulletId, text, author: authorId, category }],
         document_date: documentDate,
         chart_date: chartDate,
+        ...(!isNil(signed_by) && {
+          signed_by,
+          sign_date: new Date().toISOString(),
+        }),
       })
 
       const api = makeAPIClient(payload.settings)
