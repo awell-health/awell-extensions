@@ -6,7 +6,7 @@ import { initialiseClient } from '../../api/clients/wellinksGraphqlClient'
 import {
   HealthieError,
   mapHealthieToActivityError,
-} from '../../../healthie/errors'
+} from '../../../healthie/lib/sdk/errors'
 import { type CustomModule, getSdk } from '../../gql/wellinksSdk'
 import { fields, FieldsValidationSchema } from './config/fields'
 import type z from 'zod'

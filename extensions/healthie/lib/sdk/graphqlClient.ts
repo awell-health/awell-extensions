@@ -2,7 +2,7 @@ import { GraphQLClient } from 'graphql-request'
 import { type PatchedRequestInit } from 'graphql-request/dist/types'
 import { isNil } from 'lodash'
 import { getHealthieErrorFromResponse, HealthieError } from './errors'
-import { type settings } from './settings'
+import { type settings } from '../../settings'
 
 export const responseMiddleware: Required<PatchedRequestInit>['responseMiddleware'] =
   (response) => {
