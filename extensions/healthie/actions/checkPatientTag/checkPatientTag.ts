@@ -1,8 +1,8 @@
 import { type Action } from '@awell-health/extensions-core'
 import { Category } from '@awell-health/extensions-core'
-import { HealthieError, mapHealthieToActivityError } from '../../errors'
-import { getSdk } from '../../gql/sdk'
-import { initialiseClient } from '../../graphqlClient'
+import { HealthieError, mapHealthieToActivityError } from '../../lib/sdk/errors'
+import { getSdk } from '../../lib/sdk/generated/sdk'
+import { initialiseClient } from '../../lib/sdk/graphqlClient'
 import { type settings } from '../../settings'
 import { dataPoints, fields } from './config'
 
@@ -14,7 +14,8 @@ export const checkPatientTag: Action<
   key: 'checkPatientTag',
   category: Category.EHR_INTEGRATIONS,
   title: 'Check patient tag',
-  description: 'Check if a patient has the given tag in their active tags in Healthie.',
+  description:
+    'Check if a patient has the given tag in their active tags in Healthie.',
   fields,
   dataPoints,
   previewable: true,

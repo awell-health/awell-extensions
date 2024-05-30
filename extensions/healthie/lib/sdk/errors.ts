@@ -1,6 +1,6 @@
 import { isNil, keys } from 'lodash'
 import { type ActivityEvent } from '@awell-health/extensions-core'
-import { type FieldError } from './gql/sdk'
+import { type FieldError } from './generated/sdk'
 import { type Response } from 'graphql-request/dist/types'
 
 export class HealthieError extends Error {

@@ -1,10 +1,10 @@
 import { type Action } from '@awell-health/extensions-core'
 import { Category } from '@awell-health/extensions-core'
-import { HealthieError, mapHealthieToActivityError } from '../../errors'
-import { getSdk } from '../../gql/sdk'
-import { initialiseClient } from '../../graphqlClient'
+import { HealthieError, mapHealthieToActivityError } from '../../lib/sdk/errors'
+import { getSdk } from '../../lib/sdk/generated/sdk'
+import { initialiseClient } from '../../lib/sdk/graphqlClient'
 import { type settings } from '../../settings'
-import { convertDate } from '../../validation/dateValidation'
+import { convertDate } from '../../lib/validation/dateValidation'
 import { dataPoints, fields } from './config'
 
 export const getAppointment: Action<

@@ -1,10 +1,10 @@
 import { isNil } from 'lodash'
 import { type Action } from '@awell-health/extensions-core'
 import { Category } from '@awell-health/extensions-core'
-import { getSdk } from '../../gql/sdk'
-import { initialiseClient } from '../../graphqlClient'
+import { getSdk } from '../../lib/sdk/generated/sdk'
+import { initialiseClient } from '../../lib/sdk/graphqlClient'
 import { type settings } from '../../settings'
-import { HealthieError, mapHealthieToActivityError } from '../../errors'
+import { HealthieError, mapHealthieToActivityError } from '../../lib/sdk/errors'
 import { fields } from './config'
 
 export const createChartingNote: Action<typeof fields, typeof settings> = {
@@ -16,7 +16,13 @@ export const createChartingNote: Action<typeof fields, typeof settings> = {
   previewable: true,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
     const { fields, settings } = payload
-    const { healthie_patient_id, form_id, note_content, marked_locked, appointment_id } = fields
+    const {
+      healthie_patient_id,
+      form_id,
+      note_content,
+      marked_locked,
+      appointment_id,
+    } = fields
     try {
       if (isNil(healthie_patient_id) || isNil(form_id) || isNil(note_content)) {
         await onError({
