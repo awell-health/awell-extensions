@@ -57,4 +57,6 @@ export const nonVisitNoteSchema = z.object({
     (value) => NumericIdSchema.safeParse(value).success,
     true
   ).optional(),
+  signed_by: NumericIdSchema.optional(),
+  sign_date: DateTimeSchema.optional(),
 })
