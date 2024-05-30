@@ -5,6 +5,7 @@ import {
   sendSms,
   sendSmsWithMessagingService,
   sendSmsDuringBusinessHours,
+  createFlowExecution,
 } from './v2/actions'
 import { settings } from './settings'
 
@@ -22,6 +23,7 @@ export const Twilio: Extension = {
     sendSmsWithMessagingService,
     getMessages,
     sendSmsDuringBusinessHours,
+    createFlowExecution,
   },
   settings,
 }
