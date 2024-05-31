@@ -1,7 +1,7 @@
 import { type Action } from '@awell-health/extensions-core'
 import { Category } from '@awell-health/extensions-core'
 import { type settings } from '../../settings'
-import { fields, FieldsValidationSchema } from './config'
+import { fields, FieldsValidationSchema, dataPoints } from './config'
 import { validatePayloadAndCreateSdk } from '../../lib/sdk/validatePayloadAndCreateSdk'
 
 export const getFormAnswers: Action<typeof fields, typeof settings> = {
@@ -11,6 +11,7 @@ export const getFormAnswers: Action<typeof fields, typeof settings> = {
   description: 'Retrieve form answers from form answer group',
   fields,
   previewable: true,
+  dataPoints,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
     const { fields: input, sdk } = await validatePayloadAndCreateSdk({
       fieldsSchema: FieldsValidationSchema,
