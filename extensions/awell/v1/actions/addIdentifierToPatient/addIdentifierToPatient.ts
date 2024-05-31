@@ -9,7 +9,8 @@ import {
 } from './config'
 import { fromZodError } from 'zod-validation-error'
 import { z, ZodError } from 'zod'
-import AwellSdk from '../../sdk/awellSdk'
+import { AwellSdk } from '@awell-health/awell-sdk'
+import { isNil } from 'lodash'
 
 export const addIdentifierToPatient: Action<typeof fields, typeof settings> = {
   key: 'addIdentifierToPatient',
@@ -36,12 +37,51 @@ export const addIdentifierToPatient: Action<typeof fields, typeof settings> = {
 
       const sdk = new AwellSdk({ apiUrl, apiKey })
 
-      await sdk.addIdentifierToPatient({
-        identifier: {
-          system,
-          value,
+      const patient = await sdk.orchestration.query({
+        patientByIdentifier: {
+          __args: {
+            system,
+            value,
+          },
+          patient: {
+            id: true,
+          },
         },
-        patient_id: patientId,
+      })
+
+      const patientAlreadyExists = !isNil(
+        patient.patientByIdentifier.patient?.id
+      )
+
+      const isCurrentPatient = patientAlreadyExists
+        ? patient.patientByIdentifier.patient?.id === patientId
+        : false
+
+      /**
+       * If a patient with the identifier already exists and it's the current patient,
+       * do nothing. The identifier is already in place, trying to add it again will
+       * throw an error
+       */
+      if (patientAlreadyExists && isCurrentPatient) {
+        await onComplete()
+        return
+      }
+
+      await sdk.orchestration.mutation({
+        addIdentifierToPatient: {
+          __args: {
+            input: {
+              patient_id: patientId,
+              identifier: {
+                system,
+                value,
+              },
+            },
+          },
+          patient: {
+            id: true,
+          },
+        },
       })
 
       await onComplete()
