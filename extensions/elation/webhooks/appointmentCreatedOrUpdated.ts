@@ -18,8 +18,8 @@ export const appointmentCreatedOrUpdated: Webhook<
   key: 'appointmentCreatedOrUpdated',
   dataPoints,
   onWebhookReceived: async ({ payload, settings }, onSuccess, onError) => {
-    const { data, resource, action } = payload
-
+    const { data: appointmentResource, resource, action } = payload
+    const { patient: patientId } = appointmentResource
     // skip non 'saved' actions for that webhook
     if (action !== 'saved') {
       return
@@ -34,7 +34,11 @@ export const appointmentCreatedOrUpdated: Webhook<
       })
     } else {
       await onSuccess({
-        data_points: { appointmentId: String(data.id) },
+        data_points: { appointmentId: String(appointmentResource.id) },
+        patient_identifier: {
+          system: 'https://www.elationhealth.com/',
+          value: String(patientId),
+        },
       })
     }
   },
