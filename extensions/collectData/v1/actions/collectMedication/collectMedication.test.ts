@@ -11,7 +11,9 @@ describe('Advanced data collection - Collect medication', () => {
 
   test('Should work', async () => {
     const mockOnActivityCreateParams = generateTestPayload({
-      fields: {},
+      fields: {
+        label: 'Test',
+      },
       settings: {},
     })
 
@@ -21,7 +23,7 @@ describe('Advanced data collection - Collect medication', () => {
       onError
     )
 
-    expect(onError).not.toBeCalled()
-    expect(onComplete).not.toBeCalled()
+    expect(onError).not.toHaveBeenCalled()
+    expect(onComplete).not.toHaveBeenCalled()
   })
 })
