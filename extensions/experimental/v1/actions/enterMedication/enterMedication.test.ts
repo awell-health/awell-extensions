@@ -11,7 +11,9 @@ describe('Experimental - Enter medication', () => {
 
   test('Should work', async () => {
     const mockOnActivityCreateParams = generateTestPayload({
-      fields: {},
+      fields: {
+        label: '<p>Test</p>',
+      },
       settings: {},
     })
 
