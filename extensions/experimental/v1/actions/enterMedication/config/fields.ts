@@ -5,7 +5,7 @@ export const fields = {
   label: {
     id: 'label',
     label: 'Label',
-    type: FieldType.HTML,
+    type: FieldType.STRING,
     required: false,
     description: 'A label or description that will be shown above the question',
   },
