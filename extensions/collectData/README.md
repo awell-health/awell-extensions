@@ -49,3 +49,7 @@ options.forEach((option) => {
 const sortedResults = results.sort((a, b) => a.label.localeCompare(b.label))
 res.json(results)
 ```
+
+### Collect medication
+
+This action enables patients to list their medications. They can add multiple medications, providing the name, dosage, and any specific instructions for each one.
