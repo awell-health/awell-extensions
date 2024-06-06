@@ -50,3 +50,7 @@ urlTemplate   https://your-url.com/{{placeholder}}
 value         hello-world
 outcome       https://your-url.com/hello-world
 ```
+
+## Feet and inches to inches
+
+Converts a measurement in feet and inches to just inches.
