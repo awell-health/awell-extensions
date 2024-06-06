@@ -1,6 +1,5 @@
 import {
   requestVideoVisit,
-  enterMedication,
   wait,
   patientRecommendation,
   redirect,
@@ -24,7 +23,6 @@ export const Experimental: Extension = {
   schemas,
   actions: {
     requestVideoVisit,
-    enterMedication,
     wait,
     patientRecommendation,
     redirect,
