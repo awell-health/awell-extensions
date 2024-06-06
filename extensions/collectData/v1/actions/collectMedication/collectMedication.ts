@@ -7,7 +7,7 @@ export const collectMedication: Action<typeof fields, typeof settings> = {
   key: 'collectMedication',
   category: Category.FORMS,
   title: 'Collect medication',
-  description: 'Collect medication in a semi-structured way from the user',
+  description: 'Collect medication from the user',
   fields,
   dataPoints,
   options: {
