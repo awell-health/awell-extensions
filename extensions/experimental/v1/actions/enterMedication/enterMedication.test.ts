@@ -23,7 +23,7 @@ describe('Experimental - Enter medication', () => {
       onError
     )
 
-    expect(onError).not.toBeCalled()
-    expect(onComplete).not.toBeCalled()
+    expect(onError).not.toHaveBeenCalled()
+    expect(onComplete).not.toHaveBeenCalled()
   })
 })
