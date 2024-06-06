@@ -1,0 +1,1 @@
+export { feetAndInchesToInches } from './feetAndInchesToInches'
