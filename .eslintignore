@@ -1,3 +1,4 @@
 dist
 **/*/generated/*.ts
 jest.config.js
+extensions/wellinks-public/**/*.ts
