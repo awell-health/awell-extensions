@@ -29,7 +29,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./",\
           "packageDependencies": [\
             ["@awell-health/awell-sdk", "npm:0.1.7"],\
-            ["@awell-health/extensions-core", "npm:0.2.1"],\
+            ["@awell-health/extensions-core", "npm:0.2.4"],\
             ["@dropbox/sign", "npm:1.4.1"],\
             ["@faker-js/faker", "npm:8.4.1"],\
             ["@graphql-codegen/cli", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:3.3.1"],\
@@ -99,7 +99,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["typescript", "patch:typescript@npm%3A4.9.5#~builtin<compat/typescript>::version=4.9.5&hash=23ec76"],\
             ["xml2js", "npm:0.6.2"],\
             ["zod", "npm:3.23.5"],\
-            ["zod-validation-error", "virtual:b5716942f1e7fb3fa6d602526bc015660c0d577a0a46764bc2ea3ecd1db58ae52f4777374f65c624a8b39ae9a260c08dc1ca9ec4cc50b217f2320d3ff71a4dfc#npm:3.2.0"]\
+            ["zod-validation-error", "virtual:aab67d28012d17d3463a9841e8c99fa96ea8b671f157150018a74e3a05c5fbdf41b9843718a5730f0dbc8ab1ccc5a5647e48da1b7559386684e602285b1fcad7#npm:3.2.0"]\
           ],\
           "linkType": "SOFT"\
         }]\
@@ -188,7 +188,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["@awell-health/awell-extensions", "workspace:."],\
             ["@awell-health/awell-sdk", "npm:0.1.7"],\
-            ["@awell-health/extensions-core", "npm:0.2.1"],\
+            ["@awell-health/extensions-core", "npm:0.2.4"],\
             ["@dropbox/sign", "npm:1.4.1"],\
             ["@faker-js/faker", "npm:8.4.1"],\
             ["@graphql-codegen/cli", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:3.3.1"],\
@@ -258,7 +258,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["typescript", "patch:typescript@npm%3A4.9.5#~builtin<compat/typescript>::version=4.9.5&hash=23ec76"],\
             ["xml2js", "npm:0.6.2"],\
             ["zod", "npm:3.23.5"],\
-            ["zod-validation-error", "virtual:b5716942f1e7fb3fa6d602526bc015660c0d577a0a46764bc2ea3ecd1db58ae52f4777374f65c624a8b39ae9a260c08dc1ca9ec4cc50b217f2320d3ff71a4dfc#npm:3.2.0"]\
+            ["zod-validation-error", "virtual:aab67d28012d17d3463a9841e8c99fa96ea8b671f157150018a74e3a05c5fbdf41b9843718a5730f0dbc8ab1ccc5a5647e48da1b7559386684e602285b1fcad7#npm:3.2.0"]\
           ],\
           "linkType": "SOFT"\
         }]\
@@ -275,17 +275,17 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@awell-health/extensions-core", [\
-        ["npm:0.2.1", {\
-          "packageLocation": "./.yarn/cache/@awell-health-extensions-core-npm-0.2.1-b5716942f1-31b331473c.zip/node_modules/@awell-health/extensions-core/",\
+        ["npm:0.2.4", {\
+          "packageLocation": "./.yarn/cache/@awell-health-extensions-core-npm-0.2.4-aab67d2801-8e19b2ba5e.zip/node_modules/@awell-health/extensions-core/",\
           "packageDependencies": [\
-            ["@awell-health/extensions-core", "npm:0.2.1"],\
+            ["@awell-health/extensions-core", "npm:0.2.4"],\
             ["@types/json-schema", "npm:7.0.15"],\
             ["axios", "npm:1.7.2"],\
             ["date-fns", "npm:3.6.0"],\
             ["libphonenumber-js", "npm:1.10.61"],\
             ["lodash", "npm:4.17.21"],\
             ["zod", "npm:3.23.5"],\
-            ["zod-validation-error", "virtual:b5716942f1e7fb3fa6d602526bc015660c0d577a0a46764bc2ea3ecd1db58ae52f4777374f65c624a8b39ae9a260c08dc1ca9ec4cc50b217f2320d3ff71a4dfc#npm:3.2.0"]\
+            ["zod-validation-error", "virtual:aab67d28012d17d3463a9841e8c99fa96ea8b671f157150018a74e3a05c5fbdf41b9843718a5730f0dbc8ab1ccc5a5647e48da1b7559386684e602285b1fcad7#npm:3.2.0"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -14482,10 +14482,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:b5716942f1e7fb3fa6d602526bc015660c0d577a0a46764bc2ea3ecd1db58ae52f4777374f65c624a8b39ae9a260c08dc1ca9ec4cc50b217f2320d3ff71a4dfc#npm:3.2.0", {\
-          "packageLocation": "./.yarn/__virtual__/zod-validation-error-virtual-d4e693dd84/0/cache/zod-validation-error-npm-3.2.0-8a0d8069b2-4d541566ff.zip/node_modules/zod-validation-error/",\
+        ["virtual:aab67d28012d17d3463a9841e8c99fa96ea8b671f157150018a74e3a05c5fbdf41b9843718a5730f0dbc8ab1ccc5a5647e48da1b7559386684e602285b1fcad7#npm:3.2.0", {\
+          "packageLocation": "./.yarn/__virtual__/zod-validation-error-virtual-3220def32d/0/cache/zod-validation-error-npm-3.2.0-8a0d8069b2-4d541566ff.zip/node_modules/zod-validation-error/",\
           "packageDependencies": [\
-            ["zod-validation-error", "virtual:b5716942f1e7fb3fa6d602526bc015660c0d577a0a46764bc2ea3ecd1db58ae52f4777374f65c624a8b39ae9a260c08dc1ca9ec4cc50b217f2320d3ff71a4dfc#npm:3.2.0"],\
+            ["zod-validation-error", "virtual:aab67d28012d17d3463a9841e8c99fa96ea8b671f157150018a74e3a05c5fbdf41b9843718a5730f0dbc8ab1ccc5a5647e48da1b7559386684e602285b1fcad7#npm:3.2.0"],\
             ["@types/zod", null],\
             ["zod", "npm:3.23.5"]\
           ],\
