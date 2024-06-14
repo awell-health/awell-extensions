@@ -3,7 +3,7 @@ name: Changes accepted
 on:
   push:
     branches:
-      - "main"
+      - 'main'
 
 jobs:
   update-version:
@@ -17,7 +17,7 @@ jobs:
       - name: Install Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: "18"
+          node-version: '18'
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -33,28 +33,3 @@ jobs:
           git add package.json .yarn/versions
           git commit -m "ci: bump version to $new_version [skip ci]" && git push
           git tag -a $new_version -m "ci: bump version to $new_version" && git push origin $new_version
-
-# TODO: Figure out why the tag push does not trigger the `version-created` workflow.
-      - name: Compile Typescript
-        run: yarn build
-
-      - name: Setup .yarnrc.yml
-        run: |
-          yarn config set npmAlwaysAuth true
-          yarn config set npmAuthToken $NPM_AUTH_TOKEN
-        env:
-          NPM_AUTH_TOKEN: ${{ secrets.NPM_AWELL_EXTENSIONS_CI }}
-
-      - name: Publish to NPM Registry
-        run: |
-          yarn npm publish --access public
-      - name: Redeploy the extension server
-        run: |
-          CURRENT_VERSION=$(cat package.json | jq -r '.version')
-          curl -L \
-            -X POST \
-            -H "Accept: application/vnd.github+json" \
-            -H "Authorization: Bearer ${{ secrets.EXTENSION_SERVER_DEPLOY_TOKEN }}"\
-            -H "X-GitHub-Api-Version: 2022-11-28" \
-            https://api.github.com/repos/awell-health/awell-extension-server/actions/workflows/update-dependency.yml/dispatches \
-            -d '{"ref":"main","inputs":{"dependency":"@awell-health/awell-extensions","version":"'"$CURRENT_VERSION"'"}}'
