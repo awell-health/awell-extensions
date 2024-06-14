@@ -1,7 +1,7 @@
 name: New version created
 
 on:
-  push:
+  create:
     tags: ['*']
 
 jobs:
@@ -16,7 +16,7 @@ jobs:
       - name: Install Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: "18"
+          node-version: '18'
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
