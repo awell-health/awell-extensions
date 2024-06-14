@@ -1,4 +1,11 @@
-import { generateRandomNumber, calculateDateDifference } from './v1/actions'
+import {
+  generateRandomNumber,
+  calculateDateDifference,
+  sum,
+  multiply,
+  subtract,
+  divide,
+} from './v1/actions'
 import { type Extension } from '@awell-health/extensions-core'
 import { settings } from './settings'
 import { AuthorType, Category } from '@awell-health/extensions-core'
@@ -18,5 +25,9 @@ export const MathExtension: Extension = {
   actions: {
     generateRandomNumber,
     calculateDateDifference,
+    subtract,
+    sum,
+    divide,
+    multiply,
   },
 }

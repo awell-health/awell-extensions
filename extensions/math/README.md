@@ -8,6 +8,22 @@ This extension adds custom actions to your care flow for simple mathematical ope
 
 ## Custom Actions
 
+### Sum
+
+Calculate the sum of two or more addends.
+
+### Subtract
+
+Calculate the difference between two numbers.
+
+### Multiply
+
+Multiply a series of numbers to get a final product.
+
+### Divide
+
+Divide two numbers.
+
 ### Generate random number
 
 Generates a random (whole) number that falls between the ranges of two numbers [min, max].
