@@ -1,2 +1,6 @@
 export { generateRandomNumber } from './generateRandomNumber'
 export { calculateDateDifference } from './calculateDateDifference'
+export { sum } from './sum'
+export { subtract } from './subtract'
+export { divide } from './divide'
+export { multiply } from './multiply'
