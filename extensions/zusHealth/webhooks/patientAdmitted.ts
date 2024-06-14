@@ -18,6 +18,7 @@ import {
   parseZodError,
 } from '../utils'
 import { type AxiosError } from 'axios'
+import { type settings } from '../settings'
 
 const dataPoints = {
   resourceId: {
@@ -60,7 +61,8 @@ const dataPoints = {
 
 export const patientAdmitted: Webhook<
   keyof typeof dataPoints,
-  AdtEventWebhookPayload
+  AdtEventWebhookPayload,
+  typeof settings
 > = {
   key: 'patientAdmitted',
   dataPoints,
