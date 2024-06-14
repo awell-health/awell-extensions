@@ -1,37 +1,58 @@
-import { isNil } from 'lodash'
 import {
   type DataPointDefinition,
   type Webhook,
 } from '@awell-health/extensions-core'
 import { type HealthieWebhookPayload } from '../lib/types'
+import z from 'zod'
+import { validateWebhookPayloadAndCreateSdk } from '../lib/sdk/validatePayloadAndCreateSdk'
+import { type settings } from '../settings'
 
 const dataPoints = {
   signedFormAnswerGroupId: {
     key: 'signedFormAnswerGroupId',
     valueType: 'string',
   },
+  signedFormAnswerGroup: {
+    key: 'signedFormAnswerGroup',
+    valueType: 'json',
+  },
 } satisfies Record<string, DataPointDefinition>
+
+const payloadSchema = z
+  .object({
+    resource_id: z.string(),
+  })
+  .transform((data) => {
+    return {
+      signedFormAnswerGroupId: data.resource_id,
+    }
+  })
 
 export const formAnswerGroupSigned: Webhook<
   keyof typeof dataPoints,
-  HealthieWebhookPayload
+  HealthieWebhookPayload,
+  typeof settings
 > = {
   key: 'formAnswerGroupSigned',
   dataPoints,
   onWebhookReceived: async ({ payload, settings }, onSuccess, onError) => {
-    const { resource_id: signedFormAnswerGroupId } = payload
-
-    if (isNil(signedFormAnswerGroupId)) {
-      await onError({
-        // We should automatically send a 400 here, so no need to provide info
-      })
-    } else {
-      await onSuccess({
-        data_points: {
-          signedFormAnswerGroupId,
-        },
-      })
-    }
+    const {
+      validatedPayload: { signedFormAnswerGroupId },
+      sdk,
+    } = await validateWebhookPayloadAndCreateSdk({
+      payloadSchema,
+      payload,
+      settings,
+    })
+    const response = await sdk.getFormAnswerGroup({
+      id: signedFormAnswerGroupId,
+    })
+    await onSuccess({
+      data_points: {
+        signedFormAnswerGroupId,
+        signedFormAnswerGroup: JSON.stringify(response?.data?.formAnswerGroup),
+      },
+    })
   },
 }
 
