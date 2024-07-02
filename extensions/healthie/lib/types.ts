@@ -13,3 +13,4 @@ export type Conversation = NonNullable<
   CreateConversation['data']['createConversation']
 >['conversation']
 export type SendChatMessage = Awaited<ReturnType<Sdk['sendChatMessage']>>
+export const HEALTHIE_IDENTIFIER = 'https://www.gethealthie.com/'
