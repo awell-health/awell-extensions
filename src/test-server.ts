@@ -21,6 +21,11 @@ const port = 3000
 
 app.use(bodyParser.json())
 
+app.post('/', async (req, res) => {
+  console.log(req.body)
+  res.send('ok')
+})
+
 app.get('/:extension', async (req, res) => {
   const extensionKey = req.params.extension
   const extension = extensions.find(({ key }) => key === extensionKey)
