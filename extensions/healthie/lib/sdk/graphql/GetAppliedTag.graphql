@@ -1,0 +1,9 @@
+query GetAppliedTag($id: ID!) {
+  appliedTag(id: $id) {
+    created_at
+    id
+    tag_id
+    updated_at
+    user_id
+  }
+}
