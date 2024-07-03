@@ -1,0 +1,6 @@
+query getMessage($id: ID) {
+  note(id: $id) {
+    id
+    conversation_id
+  }
+}
