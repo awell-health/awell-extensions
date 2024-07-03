@@ -27389,6 +27389,13 @@ export type GetAppointmentQueryVariables = Exact<{
 
 export type GetAppointmentQuery = { __typename?: 'Query', appointment?: { __typename?: 'Appointment', id: string, date?: string | null, contact_type?: string | null, pm_status?: string | null, provider?: { __typename?: 'User', id: string, full_name?: string | null } | null, user?: { __typename?: 'User', id: string, full_name?: string | null } | null, appointment_type?: { __typename?: 'AppointmentType', id: string, name?: string | null } | null } | null };
 
+export type GetConversationQueryVariables = Exact<{
+  id?: InputMaybe<Scalars['ID']>;
+}>;
+
+
+export type GetConversationQuery = { __typename?: 'Query', conversation?: { __typename?: 'Conversation', id: string, patient_id?: string | null } | null };
+
 export type GetConversationListQueryVariables = Exact<{
   offset?: InputMaybe<Scalars['Int']>;
   keywords?: InputMaybe<Scalars['String']>;
@@ -27416,6 +27423,41 @@ export type GetFormTemplateQueryVariables = Exact<{
 
 export type GetFormTemplateQuery = { __typename?: 'Query', customModuleForm?: { __typename?: 'CustomModuleForm', id: string, name?: string | null, use_for_charting: boolean, use_for_program: boolean, prefill?: boolean | null, has_matrix_field?: boolean | null, is_video?: boolean | null, has_non_readonly_modules?: boolean | null, custom_modules: Array<{ __typename?: 'CustomModule', id: string, mod_type?: string | null, label?: string | null }> } | null };
 
+export type GetGoalQueryVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type GetGoalQuery = { __typename?: 'Query', goal?: { __typename?: 'Goal', id: string, user_id?: string | null } | null };
+
+export type GetLabOrderQueryVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type GetLabOrderQuery = { __typename?: 'Query', labOrder?: { __typename?: 'LabOrder', id: string, created_at: string, patient?: { __typename?: 'User', id: string } | null } | null };
+
+export type GetMessageQueryVariables = Exact<{
+  id?: InputMaybe<Scalars['ID']>;
+}>;
+
+
+export type GetMessageQuery = { __typename?: 'Query', note?: { __typename?: 'Note', id: string, conversation_id?: string | null } | null };
+
+export type GetMetricEntryQueryVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type GetMetricEntryQuery = { __typename?: 'Query', entry?: { __typename?: 'Entry', id: string, category?: string | null, poster?: { __typename?: 'User', id: string } | null } | null };
+
+export type GetRequestedFormCompletionQueryVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type GetRequestedFormCompletionQuery = { __typename?: 'Query', requestedFormCompletion?: { __typename?: 'RequestedFormCompletion', id: string, recipient_id?: string | null } | null };
+
 export type GetScheduledAppointmentsQueryVariables = Exact<{
   user_id?: InputMaybe<Scalars['ID']>;
   appointment_type_id?: InputMaybe<Scalars['ID']>;
@@ -27423,6 +27465,13 @@ export type GetScheduledAppointmentsQueryVariables = Exact<{
 
 
 export type GetScheduledAppointmentsQuery = { __typename?: 'Query', appointments?: Array<{ __typename?: 'Appointment', id: string }> | null };
+
+export type GetTaskQueryVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type GetTaskQuery = { __typename?: 'Query', task?: { __typename?: 'Task', id: string, created_at: string, client_id?: string | null } | null };
 
 export type GetUserQueryVariables = Exact<{
   id?: InputMaybe<Scalars['ID']>;
@@ -27685,6 +27734,14 @@ export const GetAppointmentDocument = gql`
   }
 }
     `;
+export const GetConversationDocument = gql`
+    query getConversation($id: ID) {
+  conversation(id: $id) {
+    id
+    patient_id
+  }
+}
+    `;
 export const GetConversationListDocument = gql`
     query getConversationList($offset: Int, $keywords: String, $active_status: String, $client_id: String, $read_status: String, $conversation_type: String, $provider_id: ID) {
   conversationMembershipsCount(
@@ -27757,6 +27814,52 @@ export const GetFormTemplateDocument = gql`
   }
 }
     `;
+export const GetGoalDocument = gql`
+    query GetGoal($id: ID!) {
+  goal(id: $id) {
+    id
+    user_id
+  }
+}
+    `;
+export const GetLabOrderDocument = gql`
+    query GetLabOrder($id: ID!) {
+  labOrder(id: $id) {
+    id
+    created_at
+    patient {
+      id
+    }
+  }
+}
+    `;
+export const GetMessageDocument = gql`
+    query getMessage($id: ID) {
+  note(id: $id) {
+    id
+    conversation_id
+  }
+}
+    `;
+export const GetMetricEntryDocument = gql`
+    query GetMetricEntry($id: ID!) {
+  entry(id: $id, type: "MetricEntry") {
+    id
+    category
+    poster {
+      id
+    }
+  }
+}
+    `;
+export const GetRequestedFormCompletionDocument = gql`
+    query GetRequestedFormCompletion($id: ID!) {
+  requestedFormCompletion(id: $id) {
+    id
+    recipient_id
+  }
+}
+    `;
 export const GetScheduledAppointmentsDocument = gql`
     query getScheduledAppointments($user_id: ID, $appointment_type_id: ID) {
   appointments(
@@ -27767,6 +27870,15 @@ export const GetScheduledAppointmentsDocument = gql`
     filter: "future"
   ) {
     id
+  }
+}
+    `;
+export const GetTaskDocument = gql`
+    query GetTask($id: ID!) {
+  task(id: $id) {
+    id
+    created_at
+    client_id
   }
 }
     `;
@@ -27915,10 +28027,17 @@ const DeleteAppointmentDocumentString = print(DeleteAppointmentDocument);
 const DeleteTaskDocumentString = print(DeleteTaskDocument);
 const GetAppliedTagDocumentString = print(GetAppliedTagDocument);
 const GetAppointmentDocumentString = print(GetAppointmentDocument);
+const GetConversationDocumentString = print(GetConversationDocument);
 const GetConversationListDocumentString = print(GetConversationListDocument);
 const GetFormAnswerGroupDocumentString = print(GetFormAnswerGroupDocument);
 const GetFormTemplateDocumentString = print(GetFormTemplateDocument);
+const GetGoalDocumentString = print(GetGoalDocument);
+const GetLabOrderDocumentString = print(GetLabOrderDocument);
+const GetMessageDocumentString = print(GetMessageDocument);
+const GetMetricEntryDocumentString = print(GetMetricEntryDocument);
+const GetRequestedFormCompletionDocumentString = print(GetRequestedFormCompletionDocument);
 const GetScheduledAppointmentsDocumentString = print(GetScheduledAppointmentsDocument);
+const GetTaskDocumentString = print(GetTaskDocument);
 const GetUserDocumentString = print(GetUserDocument);
 const EntriesDocumentString = print(EntriesDocument);
 const RemoveTagFromUserDocumentString = print(RemoveTagFromUserDocument);
@@ -27971,6 +28090,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     getAppointment(variables?: GetAppointmentQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: GetAppointmentQuery; extensions?: any; headers: Dom.Headers; status: number; }> {
         return withWrapper((wrappedRequestHeaders) => client.rawRequest<GetAppointmentQuery>(GetAppointmentDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getAppointment', 'query');
     },
+    getConversation(variables?: GetConversationQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: GetConversationQuery; extensions?: any; headers: Dom.Headers; status: number; }> {
+        return withWrapper((wrappedRequestHeaders) => client.rawRequest<GetConversationQuery>(GetConversationDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getConversation', 'query');
+    },
     getConversationList(variables?: GetConversationListQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: GetConversationListQuery; extensions?: any; headers: Dom.Headers; status: number; }> {
         return withWrapper((wrappedRequestHeaders) => client.rawRequest<GetConversationListQuery>(GetConversationListDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getConversationList', 'query');
     },
@@ -27980,8 +28102,26 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     getFormTemplate(variables?: GetFormTemplateQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: GetFormTemplateQuery; extensions?: any; headers: Dom.Headers; status: number; }> {
         return withWrapper((wrappedRequestHeaders) => client.rawRequest<GetFormTemplateQuery>(GetFormTemplateDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getFormTemplate', 'query');
     },
+    GetGoal(variables: GetGoalQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: GetGoalQuery; extensions?: any; headers: Dom.Headers; status: number; }> {
+        return withWrapper((wrappedRequestHeaders) => client.rawRequest<GetGoalQuery>(GetGoalDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetGoal', 'query');
+    },
+    GetLabOrder(variables: GetLabOrderQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: GetLabOrderQuery; extensions?: any; headers: Dom.Headers; status: number; }> {
+        return withWrapper((wrappedRequestHeaders) => client.rawRequest<GetLabOrderQuery>(GetLabOrderDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetLabOrder', 'query');
+    },
+    getMessage(variables?: GetMessageQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: GetMessageQuery; extensions?: any; headers: Dom.Headers; status: number; }> {
+        return withWrapper((wrappedRequestHeaders) => client.rawRequest<GetMessageQuery>(GetMessageDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getMessage', 'query');
+    },
+    GetMetricEntry(variables: GetMetricEntryQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: GetMetricEntryQuery; extensions?: any; headers: Dom.Headers; status: number; }> {
+        return withWrapper((wrappedRequestHeaders) => client.rawRequest<GetMetricEntryQuery>(GetMetricEntryDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetMetricEntry', 'query');
+    },
+    GetRequestedFormCompletion(variables: GetRequestedFormCompletionQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: GetRequestedFormCompletionQuery; extensions?: any; headers: Dom.Headers; status: number; }> {
+        return withWrapper((wrappedRequestHeaders) => client.rawRequest<GetRequestedFormCompletionQuery>(GetRequestedFormCompletionDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetRequestedFormCompletion', 'query');
+    },
     getScheduledAppointments(variables?: GetScheduledAppointmentsQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: GetScheduledAppointmentsQuery; extensions?: any; headers: Dom.Headers; status: number; }> {
         return withWrapper((wrappedRequestHeaders) => client.rawRequest<GetScheduledAppointmentsQuery>(GetScheduledAppointmentsDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getScheduledAppointments', 'query');
+    },
+    GetTask(variables: GetTaskQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: GetTaskQuery; extensions?: any; headers: Dom.Headers; status: number; }> {
+        return withWrapper((wrappedRequestHeaders) => client.rawRequest<GetTaskQuery>(GetTaskDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetTask', 'query');
     },
     getUser(variables?: GetUserQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: GetUserQuery; extensions?: any; headers: Dom.Headers; status: number; }> {
         return withWrapper((wrappedRequestHeaders) => client.rawRequest<GetUserQuery>(GetUserDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getUser', 'query');
