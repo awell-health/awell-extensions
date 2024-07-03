@@ -1,0 +1,9 @@
+query GetMetricEntry($id: ID!) {
+  entry(id: $id) {
+    id
+    category
+    poster {
+      id
+    }
+  }
+}
