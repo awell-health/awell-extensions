@@ -1,4 +1,4 @@
-query GetAppliedTag($id: ID!, $include_deleted: Boolean = false) {
+query getAppliedTag($id: ID!, $include_deleted: Boolean = false) {
   appliedTag(id: $id, include_deleted: $include_deleted) {
     created_at
     id

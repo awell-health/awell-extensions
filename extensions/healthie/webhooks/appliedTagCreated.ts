@@ -41,7 +41,7 @@ export const appliedTagCreated: Webhook<
       payload,
       settings,
     })
-    const response = await sdk.GetAppliedTag({ id: createdAppliedTagId })
+    const response = await sdk.getAppliedTag({ id: createdAppliedTagId })
     const healthiePatientId = response?.data?.appliedTag?.user_id
     await onSuccess({
       data_points: {

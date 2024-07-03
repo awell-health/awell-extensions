@@ -41,7 +41,7 @@ export const requestFormCompletionUpdated: Webhook<
       payload,
       settings,
     })
-    const response = await sdk.GetRequestedFormCompletion({ id: updatedFormCompletionId })
+    const response = await sdk.getRequestedFormCompletion({ id: updatedFormCompletionId })
     const healthiePatientId = response?.data?.requestedFormCompletion?.recipient_id
     await onSuccess({
       data_points: {

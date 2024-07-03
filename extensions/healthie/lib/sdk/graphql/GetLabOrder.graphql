@@ -1,4 +1,4 @@
-query GetLabOrder($id: ID!) {
+query getLabOrder($id: ID!) {
   labOrder(id: $id) {
     id
     created_at

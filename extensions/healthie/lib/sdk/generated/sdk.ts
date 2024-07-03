@@ -27704,7 +27704,7 @@ export const DeleteTaskDocument = gql`
 }
     `;
 export const GetAppliedTagDocument = gql`
-    query GetAppliedTag($id: ID!, $include_deleted: Boolean = false) {
+    query getAppliedTag($id: ID!, $include_deleted: Boolean = false) {
   appliedTag(id: $id, include_deleted: $include_deleted) {
     created_at
     id
@@ -27817,7 +27817,7 @@ export const GetFormTemplateDocument = gql`
 }
     `;
 export const GetGoalDocument = gql`
-    query GetGoal($id: ID!) {
+    query getGoal($id: ID!) {
   goal(id: $id) {
     id
     user_id
@@ -27825,7 +27825,7 @@ export const GetGoalDocument = gql`
 }
     `;
 export const GetLabOrderDocument = gql`
-    query GetLabOrder($id: ID!) {
+    query getLabOrder($id: ID!) {
   labOrder(id: $id) {
     id
     created_at
@@ -27844,7 +27844,7 @@ export const GetMessageDocument = gql`
 }
     `;
 export const GetMetricEntryDocument = gql`
-    query GetMetricEntry($id: ID!) {
+    query getMetricEntry($id: ID!) {
   entry(id: $id, type: "MetricEntry") {
     id
     category
@@ -27855,7 +27855,7 @@ export const GetMetricEntryDocument = gql`
 }
     `;
 export const GetRequestedFormCompletionDocument = gql`
-    query GetRequestedFormCompletion($id: ID!) {
+    query getRequestedFormCompletion($id: ID!) {
   requestedFormCompletion(id: $id) {
     id
     recipient_id
@@ -27876,7 +27876,7 @@ export const GetScheduledAppointmentsDocument = gql`
 }
     `;
 export const GetTaskDocument = gql`
-    query GetTask($id: ID!) {
+    query getTask($id: ID!) {
   task(id: $id) {
     id
     created_at
@@ -28086,8 +28086,8 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     deleteTask(variables?: DeleteTaskMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: DeleteTaskMutation; extensions?: any; headers: Dom.Headers; status: number; }> {
         return withWrapper((wrappedRequestHeaders) => client.rawRequest<DeleteTaskMutation>(DeleteTaskDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'deleteTask', 'mutation');
     },
-    GetAppliedTag(variables: GetAppliedTagQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: GetAppliedTagQuery; extensions?: any; headers: Dom.Headers; status: number; }> {
-        return withWrapper((wrappedRequestHeaders) => client.rawRequest<GetAppliedTagQuery>(GetAppliedTagDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetAppliedTag', 'query');
+    getAppliedTag(variables: GetAppliedTagQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: GetAppliedTagQuery; extensions?: any; headers: Dom.Headers; status: number; }> {
+        return withWrapper((wrappedRequestHeaders) => client.rawRequest<GetAppliedTagQuery>(GetAppliedTagDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getAppliedTag', 'query');
     },
     getAppointment(variables?: GetAppointmentQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: GetAppointmentQuery; extensions?: any; headers: Dom.Headers; status: number; }> {
         return withWrapper((wrappedRequestHeaders) => client.rawRequest<GetAppointmentQuery>(GetAppointmentDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getAppointment', 'query');
@@ -28104,26 +28104,26 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     getFormTemplate(variables?: GetFormTemplateQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: GetFormTemplateQuery; extensions?: any; headers: Dom.Headers; status: number; }> {
         return withWrapper((wrappedRequestHeaders) => client.rawRequest<GetFormTemplateQuery>(GetFormTemplateDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getFormTemplate', 'query');
     },
-    GetGoal(variables: GetGoalQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: GetGoalQuery; extensions?: any; headers: Dom.Headers; status: number; }> {
-        return withWrapper((wrappedRequestHeaders) => client.rawRequest<GetGoalQuery>(GetGoalDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetGoal', 'query');
+    getGoal(variables: GetGoalQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: GetGoalQuery; extensions?: any; headers: Dom.Headers; status: number; }> {
+        return withWrapper((wrappedRequestHeaders) => client.rawRequest<GetGoalQuery>(GetGoalDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getGoal', 'query');
     },
-    GetLabOrder(variables: GetLabOrderQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: GetLabOrderQuery; extensions?: any; headers: Dom.Headers; status: number; }> {
-        return withWrapper((wrappedRequestHeaders) => client.rawRequest<GetLabOrderQuery>(GetLabOrderDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetLabOrder', 'query');
+    getLabOrder(variables: GetLabOrderQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: GetLabOrderQuery; extensions?: any; headers: Dom.Headers; status: number; }> {
+        return withWrapper((wrappedRequestHeaders) => client.rawRequest<GetLabOrderQuery>(GetLabOrderDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getLabOrder', 'query');
     },
     getMessage(variables?: GetMessageQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: GetMessageQuery; extensions?: any; headers: Dom.Headers; status: number; }> {
         return withWrapper((wrappedRequestHeaders) => client.rawRequest<GetMessageQuery>(GetMessageDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getMessage', 'query');
     },
-    GetMetricEntry(variables: GetMetricEntryQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: GetMetricEntryQuery; extensions?: any; headers: Dom.Headers; status: number; }> {
-        return withWrapper((wrappedRequestHeaders) => client.rawRequest<GetMetricEntryQuery>(GetMetricEntryDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetMetricEntry', 'query');
+    getMetricEntry(variables: GetMetricEntryQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: GetMetricEntryQuery; extensions?: any; headers: Dom.Headers; status: number; }> {
+        return withWrapper((wrappedRequestHeaders) => client.rawRequest<GetMetricEntryQuery>(GetMetricEntryDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getMetricEntry', 'query');
     },
-    GetRequestedFormCompletion(variables: GetRequestedFormCompletionQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: GetRequestedFormCompletionQuery; extensions?: any; headers: Dom.Headers; status: number; }> {
-        return withWrapper((wrappedRequestHeaders) => client.rawRequest<GetRequestedFormCompletionQuery>(GetRequestedFormCompletionDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetRequestedFormCompletion', 'query');
+    getRequestedFormCompletion(variables: GetRequestedFormCompletionQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: GetRequestedFormCompletionQuery; extensions?: any; headers: Dom.Headers; status: number; }> {
+        return withWrapper((wrappedRequestHeaders) => client.rawRequest<GetRequestedFormCompletionQuery>(GetRequestedFormCompletionDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getRequestedFormCompletion', 'query');
     },
     getScheduledAppointments(variables?: GetScheduledAppointmentsQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: GetScheduledAppointmentsQuery; extensions?: any; headers: Dom.Headers; status: number; }> {
         return withWrapper((wrappedRequestHeaders) => client.rawRequest<GetScheduledAppointmentsQuery>(GetScheduledAppointmentsDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getScheduledAppointments', 'query');
     },
-    GetTask(variables: GetTaskQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: GetTaskQuery; extensions?: any; headers: Dom.Headers; status: number; }> {
-        return withWrapper((wrappedRequestHeaders) => client.rawRequest<GetTaskQuery>(GetTaskDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetTask', 'query');
+    getTask(variables: GetTaskQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: GetTaskQuery; extensions?: any; headers: Dom.Headers; status: number; }> {
+        return withWrapper((wrappedRequestHeaders) => client.rawRequest<GetTaskQuery>(GetTaskDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getTask', 'query');
     },
     getUser(variables?: GetUserQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: GetUserQuery; extensions?: any; headers: Dom.Headers; status: number; }> {
         return withWrapper((wrappedRequestHeaders) => client.rawRequest<GetUserQuery>(GetUserDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getUser', 'query');

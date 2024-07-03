@@ -41,7 +41,7 @@ export const taskUpdated: Webhook<
       payload,
       settings,
     })
-    const response = await sdk.GetTask({ id: updatedTaskId })
+    const response = await sdk.getTask({ id: updatedTaskId })
     const healthiePatientId = response?.data?.task?.client_id
     await onSuccess({
       data_points: {

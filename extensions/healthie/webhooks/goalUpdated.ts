@@ -42,7 +42,7 @@ export const goalUpdated: Webhook<
       settings,
     })
 
-    const response = await sdk.GetGoal({ id: updatedGoalId })
+    const response = await sdk.getGoal({ id: updatedGoalId })
     const healthiePatientId = response?.data?.goal?.user_id
     await onSuccess({
       data_points: {

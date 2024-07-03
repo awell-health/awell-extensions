@@ -41,8 +41,8 @@ export const messageDeleted: Webhook<
       payload,
       settings,
     })
-    const messageResponse = await sdk.GetMessage({ id: deletedMessageId })
-    const conversationResponse = await sdk.GetConversation({ id: messageResponse?.data?.note?.conversation_id })
+    const messageResponse = await sdk.getMessage({ id: deletedMessageId })
+    const conversationResponse = await sdk.getConversation({ id: messageResponse?.data?.note?.conversation_id })
     const healthiePatientId = conversationResponse?.data?.conversation?.patient_id
     await onSuccess({
       data_points: {

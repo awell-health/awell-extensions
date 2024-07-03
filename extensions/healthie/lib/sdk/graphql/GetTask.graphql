@@ -1,4 +1,4 @@
-query GetTask($id: ID!) {
+query getTask($id: ID!) {
   task(id: $id) {
     id
     created_at
