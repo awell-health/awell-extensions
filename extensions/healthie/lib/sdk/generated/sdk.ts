@@ -27377,6 +27377,7 @@ export type DeleteTaskMutation = { __typename?: 'Mutation', deleteTask?: { __typ
 
 export type GetAppliedTagQueryVariables = Exact<{
   id: Scalars['ID'];
+  include_deleted?: InputMaybe<Scalars['Boolean']>;
 }>;
 
 
@@ -27384,6 +27385,7 @@ export type GetAppliedTagQuery = { __typename?: 'Query', appliedTag?: { __typena
 
 export type GetAppointmentQueryVariables = Exact<{
   id?: InputMaybe<Scalars['ID']>;
+  include_deleted?: InputMaybe<Scalars['Boolean']>;
 }>;
 
 
@@ -27702,8 +27704,8 @@ export const DeleteTaskDocument = gql`
 }
     `;
 export const GetAppliedTagDocument = gql`
-    query GetAppliedTag($id: ID!) {
-  appliedTag(id: $id) {
+    query GetAppliedTag($id: ID!, $include_deleted: Boolean = false) {
+  appliedTag(id: $id, include_deleted: $include_deleted) {
     created_at
     id
     tag_id
@@ -27713,8 +27715,8 @@ export const GetAppliedTagDocument = gql`
 }
     `;
 export const GetAppointmentDocument = gql`
-    query getAppointment($id: ID) {
-  appointment(id: $id) {
+    query getAppointment($id: ID, $include_deleted: Boolean = false) {
+  appointment(id: $id, include_deleted: $include_deleted) {
     id
     date
     contact_type
