@@ -42,7 +42,7 @@ export const labOrderUpdated: Webhook<
       settings,
     })
     const response = await sdk.getLabOrder({ id: updatedLabOrderId })
-    const healthiePatientId = response?.data?.labOrder?.patient.id
+    const healthiePatientId = response?.data?.labOrder?.patient?.id
     await onSuccess({
       data_points: {
          updatedLabOrderId,

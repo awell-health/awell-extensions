@@ -42,7 +42,7 @@ export const metricEntryCreated: Webhook<
       settings,
     })
     const response = await sdk.getMetricEntry({ id: createdMetricId })
-    const healthiePatientId = response?.data?.entry?.poster.id
+    const healthiePatientId = response?.data?.entry?.poster?.id
     await onSuccess({
       data_points: {
         createdMetricId,
