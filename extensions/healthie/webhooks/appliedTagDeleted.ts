@@ -41,7 +41,7 @@ export const appliedTagDeleted: Webhook<
       payload,
       settings,
     })
-    const response = await sdk.GetAppliedTag({ id: deletedAppliedTagId })
+    const response = await sdk.GetAppliedTag({ id: deletedAppliedTagId, include_deleted: true})
     const healthiePatientId = response?.data?.appliedTag?.user_id
     await onSuccess({
       data_points: {
