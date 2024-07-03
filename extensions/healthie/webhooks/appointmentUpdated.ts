@@ -1,8 +1,9 @@
+import { isNil } from 'lodash'
 import {
   type DataPointDefinition,
   type Webhook,
 } from '@awell-health/extensions-core'
-import { type HealthieWebhookPayload } from '../lib/types'
+import { HEALTHIE_IDENTIFIER, type HealthieWebhookPayload } from '../lib/types'
 import z from 'zod'
 import { validateWebhookPayloadAndCreateSdk } from '../lib/sdk/validatePayloadAndCreateSdk'
 import { type settings } from '../../awell/settings'
@@ -47,11 +48,18 @@ export const appointmentUpdated: Webhook<
     const response = await sdk.getAppointment({
       id: updatedAppointmentId,
     })
+    const healthiePatientId = response?.data?.appointment?.user?.id
     await onSuccess({
       data_points: {
         updatedAppointmentId,
         appointment: JSON.stringify(response?.data?.appointment),
       },
+      ...(!isNil(healthiePatientId) && {
+        patient_identifier: {
+          system: HEALTHIE_IDENTIFIER,
+          value: healthiePatientId,
+        },
+      }),
     })
   },
 }
