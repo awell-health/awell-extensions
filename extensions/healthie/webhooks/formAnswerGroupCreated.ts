@@ -1,8 +1,9 @@
+import { isNil } from 'lodash'
 import {
   type DataPointDefinition,
   type Webhook,
 } from '@awell-health/extensions-core'
-import { type HealthieWebhookPayload } from '../lib/types'
+import { HEALTHIE_IDENTIFIER, type HealthieWebhookPayload } from '../lib/types'
 import z from 'zod'
 import { validateWebhookPayloadAndCreateSdk } from '../lib/sdk/validatePayloadAndCreateSdk'
 import { type settings } from '../settings'
@@ -47,11 +48,18 @@ export const formAnswerGroupCreated: Webhook<
     const response = await sdk.getFormAnswerGroup({
       id: createdFormAnswerGroupId,
     })
+    const healthiePatientId = response?.data?.formAnswerGroup?.user?.id
     await onSuccess({
       data_points: {
         createdFormAnswerGroupId,
         createdFormAnswerGroup: JSON.stringify(response?.data?.formAnswerGroup),
       },
+      ...(!isNil(healthiePatientId) && {
+        patient_identifier: {
+          system: HEALTHIE_IDENTIFIER,
+          value: healthiePatientId,
+        },
+      }),
     })
   },
 }
