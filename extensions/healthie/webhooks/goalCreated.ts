@@ -4,7 +4,8 @@ import {
   type Webhook,
 } from '@awell-health/extensions-core'
 import { HEALTHIE_IDENTIFIER, type HealthieWebhookPayload } from '../lib/types'
-import z from 'zod'
+import { z, ZodError } from 'zod'
+import { fromZodError } from 'zod-validation-error'
 import { validateWebhookPayloadAndCreateSdk } from '../lib/sdk/validatePayloadAndCreateSdk'
 import { type settings } from '../settings'
 
@@ -57,18 +58,36 @@ export const goalCreated: Webhook<
         }),
       })
     } catch (error) {
-      console.log('Error in goalCreated webhook:', error)
-      await onError({
-        events: [
-          {
-            date: new Date().toISOString(),
-            error: {
-              category: 'SERVER_ERROR',
-              message: 'Unable to process goalCreated webhook',
+      if (error instanceof ZodError) {
+        const err = fromZodError(error)
+        await onError({
+          events: [
+            {
+              date: new Date().toISOString(),
+              text: { en: err.name },
+              error: {
+                category: 'WRONG_INPUT',
+                message: `${err.message}`,
+              },
             },
-          },
-        ],
-      })
+          ],
+        })
+      } else {
+        console.log('Error in goalCreated webhook:', error)
+        await onError({
+          events: [
+            {
+              date: new Date().toISOString(),
+              text: { en: 'Unable to process goalCreated webhook' },
+              error: {
+                category: 'SERVER_ERROR',
+                message: 'Unable to process goalCreated webhook',
+              },
+            },
+          ],
+        })
+      }
+
     }
   }
 }
