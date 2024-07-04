@@ -13,11 +13,6 @@ const payloadSchema = z
   .object({
     resource_id: z.string(),
   })
-  .transform((data) => {
-    return {
-      createdGoalId: data.resource_id,
-    }
-  })
 
 const dataPoints = {
   createdGoalId: {
@@ -36,13 +31,14 @@ export const goalCreated: Webhook<
   onWebhookReceived: async ({ payload, settings }, onSuccess, onError) => {
     try {
       const {
-        validatedPayload: { createdGoalId },
+        validatedPayload,
         sdk,
       } = await validateWebhookPayloadAndCreateSdk({
         payloadSchema,
         payload,
         settings,
       })
+      const createdGoalId = validatedPayload.data.resource_id;
       const response = await sdk.getGoal({ id: createdGoalId })
       const healthiePatientId = response?.data?.goal?.user_id
   
