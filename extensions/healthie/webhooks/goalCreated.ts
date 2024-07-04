@@ -62,11 +62,8 @@ export const goalCreated: Webhook<
         events: [
           {
             date: new Date().toISOString(),
-            text: {
-              en: 'Unable to process goalCreated webhook',
-            },
             error: {
-              category: 'ERROR',
+              category: 'SERVER_ERROR',
               message: 'Unable to process goalCreated webhook',
             },
           },
