@@ -33,28 +33,33 @@ export const goalCreated: Webhook<
   key: 'goalCreated',
   dataPoints,
   onWebhookReceived: async ({ payload, settings }, onSuccess, onError) => {
-    const {
-      validatedPayload: { createdGoalId },
-      sdk,
-    } = await validateWebhookPayloadAndCreateSdk({
-      payloadSchema,
-      payload,
-      settings,
-    })
-    const response = await sdk.getGoal({ id: createdGoalId })
-    const healthiePatientId = response?.data?.goal?.user_id
-
-    await onSuccess({
-      data_points: {
-        createdGoalId,
-      },
-      ...(!isNil(healthiePatientId) && {
-        patient_identifier: {
-          system: HEALTHIE_IDENTIFIER,
-          value: healthiePatientId,
+    try {
+      const {
+        validatedPayload: { createdGoalId },
+        sdk,
+      } = await validateWebhookPayloadAndCreateSdk({
+        payloadSchema,
+        payload,
+        settings,
+      })
+      const response = await sdk.getGoal({ id: createdGoalId })
+      const healthiePatientId = response?.data?.goal?.user_id
+  
+      await onSuccess({
+        data_points: {
+          createdGoalId,
         },
-      }),
-    })
+        ...(!isNil(healthiePatientId) && {
+          patient_identifier: {
+            system: HEALTHIE_IDENTIFIER,
+            value: healthiePatientId,
+          },
+        }),
+      })
+    } catch (error) {
+      console.log('Error in goalCreated webhook:', error)
+      await onError(error)
+    }
   }
 }
 
