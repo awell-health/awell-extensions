@@ -63,7 +63,7 @@ export const goalCreated: Webhook<
               text: { en: err.name },
               error: {
                 category: 'WRONG_INPUT',
-                message: `${err.message}`,
+                message: `${err.message} for ${JSON.stringify(payload)} for schema ${JSON.stringify(payloadSchema)}`,
               },
             },
           ],
