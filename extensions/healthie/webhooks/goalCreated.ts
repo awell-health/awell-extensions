@@ -58,7 +58,20 @@ export const goalCreated: Webhook<
       })
     } catch (error) {
       console.log('Error in goalCreated webhook:', error)
-      await onError(error)
+      await onError({
+        events: [
+          {
+            date: new Date().toISOString(),
+            text: {
+              en: 'Unable to process goalCreated webhook',
+            },
+            error: {
+              category: 'ERROR',
+              message: 'Unable to process goalCreated webhook',
+            },
+          },
+        ],
+      })
     }
   }
 }
