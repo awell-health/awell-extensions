@@ -14,7 +14,7 @@ import { getSdk } from '../lib/sdk/generated/sdk'
 
 const payloadSchema = z
   .object({
-    resource_id: z.string(),
+    resource_id: z.number(),
   })
 
 const dataPoints = {
