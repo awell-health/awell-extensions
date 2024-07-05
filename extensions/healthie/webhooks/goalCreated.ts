@@ -12,6 +12,9 @@ import { type settings } from '../settings'
 const payloadSchema = z
   .object({
     resource_id: z.number(),
+    resource_id_type: z.any(),
+    event_type: z.string(),
+    changed_fields: z.array(z.any()),
   })
 
 const dataPoints = {
