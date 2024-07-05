@@ -6,7 +6,7 @@ import {
 import { HEALTHIE_IDENTIFIER, type HealthieWebhookPayload } from '../lib/types'
 import { z, ZodError } from 'zod'
 import { fromZodError } from 'zod-validation-error'
-import { validateWebhookPayloadAndCreateSdk } from '../lib/sdk/validatePayloadAndCreateSdk'
+import { createSdk } from '../lib/sdk/createSdk'
 import { type settings } from '../settings'
 
 const payloadSchema = z
@@ -35,11 +35,7 @@ export const goalCreated: Webhook<
     try {
       const {
         sdk
-      } = await validateWebhookPayloadAndCreateSdk({
-        payloadSchema,
-        payload,
-        settings,
-      })
+      } = await createSdk({settings})
       // const processedPayload = payloadSchema.parse({payload})
 
       const createdGoalId = payload.resource_id.toString();
