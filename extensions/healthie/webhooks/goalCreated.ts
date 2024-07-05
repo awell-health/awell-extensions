@@ -20,7 +20,7 @@ const payloadSchema = z
 const dataPoints = {
   createdGoalId: {
     key: 'createdGoalId',
-    valueType: 'string',
+    valueType: 'number',
   },
 } satisfies Record<string, DataPointDefinition>
 
