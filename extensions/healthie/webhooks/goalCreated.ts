@@ -6,12 +6,15 @@ import {
 import { HEALTHIE_IDENTIFIER, type HealthieWebhookPayload } from '../lib/types'
 import { z, ZodError } from 'zod'
 import { fromZodError } from 'zod-validation-error'
-import { validateWebhookPayloadAndCreateSdk } from '../lib/sdk/validatePayloadAndCreateSdk'
+// import { validateWebhookPayloadAndCreateSdk } from '../lib/sdk/validatePayloadAndCreateSdk'
 import { type settings } from '../settings'
+import { initialiseClient } from '../lib/sdk/graphqlClient'
+import { getSdk } from '../lib/sdk/generated/sdk'
+import { validate } from '@awell-health/extensions-core'
 
 const payloadSchema = z
   .object({
-    resource_id: z.string(),
+    resource_id: z.union([z.string(), z.number()]),
   })
 
 const dataPoints = {
@@ -30,14 +33,28 @@ export const goalCreated: Webhook<
   dataPoints,
   onWebhookReceived: async ({ payload, settings }, onSuccess, onError) => {
     try {
-      const {
-        validatedPayload,
-        sdk,
-      } = await validateWebhookPayloadAndCreateSdk({
-        payloadSchema,
+      const { payload: validatedPayload } = validate({
+        schema: z.object({
+          payload: payloadSchema,
+        }),
         payload,
-        settings,
       })
+      const client = initialiseClient(settings)
+
+      if (client === undefined)
+        throw new Error(
+          'There was a problem creating the Healthie GraphQL API Client. Please check your extension settings to validate the API URL and API Key.'
+        )
+  
+      const sdk = getSdk(client)
+      // const {
+      //   validatedPayload,
+      //   sdk,
+      // } = await validateWebhookPayloadAndCreateSdk({
+      //   payloadSchema,
+      //   payload,
+      //   settings,
+      // })
       const createdGoalId = validatedPayload.resource_id;
       const response = await sdk.getGoal({ id: createdGoalId })
       const healthiePatientId = response?.data?.goal?.user_id
@@ -83,7 +100,6 @@ export const goalCreated: Webhook<
           ],
         })
       }
-
     }
   }
 }
