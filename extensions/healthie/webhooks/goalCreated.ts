@@ -8,8 +8,6 @@ import { z, ZodError } from 'zod'
 import { fromZodError } from 'zod-validation-error'
 import { validateWebhookPayloadAndCreateSdk } from '../lib/sdk/validatePayloadAndCreateSdk'
 import { type settings } from '../settings'
-// import { initialiseClient } from '../lib/sdk/graphqlClient'
-// import { getSdk } from '../lib/sdk/generated/sdk'
 
 const payloadSchema = z
   .object({
@@ -42,7 +40,7 @@ export const goalCreated: Webhook<
         payload,
         settings,
       })
-      const processedPayload = payloadSchema.parse(payload)
+      const processedPayload = payloadSchema.parse({payload})
 
       const createdGoalId = processedPayload.resource_id.toString();
       const response = await sdk.getGoal({ id: createdGoalId })
