@@ -14,7 +14,7 @@ import { validate } from '@awell-health/extensions-core'
 
 const payloadSchema = z
   .object({
-    resource_id: z.union([z.string(), z.number()]),
+    resource_id: z.string(),
   })
 
 const dataPoints = {
