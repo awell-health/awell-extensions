@@ -10,7 +10,7 @@ import { fromZodError } from 'zod-validation-error'
 import { type settings } from '../settings'
 import { initialiseClient } from '../lib/sdk/graphqlClient'
 import { getSdk } from '../lib/sdk/generated/sdk'
-import { validate } from '@awell-health/extensions-core'
+// import { validate } from '@awell-health/extensions-core'
 
 const payloadSchema = z
   .object({
@@ -33,12 +33,13 @@ export const goalCreated: Webhook<
   dataPoints,
   onWebhookReceived: async ({ payload, settings }, onSuccess, onError) => {
     try {
-      const { payload: validatedPayload } = validate({
-        schema: z.object({
-          payload: payloadSchema,
-        }),
-        payload,
-      })
+      // const { payload: validatedPayload } = validate({
+      //   schema: z.object({
+      //     payload: payloadSchema,
+      //   }),
+      //   payload,
+      // })
+      const validatedPayload = payloadSchema.parse(payload)
       const client = initialiseClient(settings)
 
       if (client === undefined)
