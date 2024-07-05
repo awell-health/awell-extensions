@@ -4,18 +4,9 @@ import {
   type Webhook,
 } from '@awell-health/extensions-core'
 import { HEALTHIE_IDENTIFIER, type HealthieWebhookPayload } from '../lib/types'
-import { z, ZodError } from 'zod'
-import { fromZodError } from 'zod-validation-error'
 import { createSdk } from '../lib/sdk/createSdk'
 import { type settings } from '../settings'
-
-const payloadSchema = z
-  .object({
-    resource_id: z.number(),
-    resource_id_type: z.any(),
-    event_type: z.string(),
-    changed_fields: z.array(z.any()),
-  })
+import { formatErrors } from '../lib/sdk/errors'
 
 const dataPoints = {
   createdGoalId: {
@@ -36,7 +27,7 @@ export const goalCreated: Webhook<
       const {
         sdk
       } = await createSdk({settings})
-      // const processedPayload = payloadSchema.parse({payload})
+
 
       const createdGoalId = payload.resource_id.toString();
       const response = await sdk.getGoal({ id: createdGoalId })
@@ -54,37 +45,12 @@ export const goalCreated: Webhook<
         }),
       })
     } catch (error) {
-      if (error instanceof ZodError) {
-        const err = fromZodError(error)
-        await onError({
-          events: [
-            {
-              date: new Date().toISOString(),
-              text: { en: err.name },
-              error: {
-                category: 'WRONG_INPUT',
-                message: `${err.message} for ${JSON.stringify(payload)} for schema ${JSON.stringify(payloadSchema)}`,
-              },
-            },
-          ],
-        })
-      } else {
-        console.log('Error in goalCreated webhook:', error)
-        await onError({
-          events: [
-            {
-              date: new Date().toISOString(),
-              text: { en: 'Unable to process goalCreated webhook' },
-              error: {
-                category: 'SERVER_ERROR',
-                message: 'Unable to process goalCreated webhook',
-              },
-            },
-          ],
-        })
-      }
+      const formattedError = formatErrors(error)
+      await onError(formattedError)
     }
   }
 }
 
 export type GoalCreated = typeof goalCreated
+
+

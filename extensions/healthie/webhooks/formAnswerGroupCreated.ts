@@ -4,9 +4,9 @@ import {
   type Webhook,
 } from '@awell-health/extensions-core'
 import { HEALTHIE_IDENTIFIER, type HealthieWebhookPayload } from '../lib/types'
-import z from 'zod'
-import { validateWebhookPayloadAndCreateSdk } from '../lib/sdk/validatePayloadAndCreateSdk'
 import { type settings } from '../settings'
+import { formatErrors } from '../lib/sdk/errors'
+import { createSdk } from '../lib/sdk/createSdk'
 
 const dataPoints = {
   createdFormAnswerGroupId: {
@@ -19,16 +19,6 @@ const dataPoints = {
   },
 } satisfies Record<string, DataPointDefinition>
 
-const payloadSchema = z
-  .object({
-    resource_id: z.string(),
-  })
-  .transform((data) => {
-    return {
-      createdFormAnswerGroupId: data.resource_id,
-    }
-  })
-
 export const formAnswerGroupCreated: Webhook<
   keyof typeof dataPoints,
   HealthieWebhookPayload,
@@ -37,31 +27,31 @@ export const formAnswerGroupCreated: Webhook<
   key: 'formAnswerGroupCreated',
   dataPoints,
   onWebhookReceived: async ({ payload, settings }, onSuccess, onError) => {
-    const {
-      validatedPayload: { createdFormAnswerGroupId },
-      sdk,
-    } = await validateWebhookPayloadAndCreateSdk({
-      payloadSchema,
-      payload,
-      settings,
-    })
-    const response = await sdk.getFormAnswerGroup({
-      id: createdFormAnswerGroupId,
-    })
-    const healthiePatientId = response?.data?.formAnswerGroup?.user?.id
-    await onSuccess({
-      data_points: {
-        createdFormAnswerGroupId,
-        createdFormAnswerGroup: JSON.stringify(response?.data?.formAnswerGroup),
-      },
-      ...(!isNil(healthiePatientId) && {
-        patient_identifier: {
-          system: HEALTHIE_IDENTIFIER,
-          value: healthiePatientId,
+    try {
+      const { sdk } = await createSdk({settings})
+      const createdFormAnswerGroupId = payload.resource_id.toString();
+
+      const response = await sdk.getFormAnswerGroup({
+        id: createdFormAnswerGroupId,
+      })
+      const healthiePatientId = response?.data?.formAnswerGroup?.user?.id
+      await onSuccess({
+        data_points: {
+          createdFormAnswerGroupId,
+          createdFormAnswerGroup: JSON.stringify(response?.data?.formAnswerGroup),
         },
-      }),
-    })
-  },
+        ...(!isNil(healthiePatientId) && {
+          patient_identifier: {
+            system: HEALTHIE_IDENTIFIER,
+            value: healthiePatientId,
+          },
+        }),
+      })
+    } catch (error) {
+      const formattedError = formatErrors(error)
+      await onError(formattedError)
+    }
+  }
 }
 
 export type FormAnswerGroupCreated = typeof formAnswerGroupCreated

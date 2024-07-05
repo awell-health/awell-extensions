@@ -2,6 +2,8 @@ import { isNil, keys } from 'lodash'
 import { type ActivityEvent } from '@awell-health/extensions-core'
 import { type FieldError } from './generated/sdk'
 import { type Response } from 'graphql-request/dist/types'
+import { ZodError } from 'zod'
+import { fromZodError } from 'zod-validation-error'
 
 export class HealthieError extends Error {
   errors: FieldError[]
@@ -35,6 +37,7 @@ export const getHealthieErrorFromResponse = (
 
   return undefined
 }
+
 export const mapHealthieToActivityError = (
   errors?: Array<FieldError | null>
 ): ActivityEvent[] => {
@@ -52,3 +55,39 @@ export const mapHealthieToActivityError = (
     },
   }))
 }
+
+export const formatErrors = (
+  error?: unknown | Error 
+): any => {
+  if (error instanceof ZodError) {
+    const err = fromZodError(error)
+    return {
+      events: [
+        {
+          date: new Date().toISOString(),
+          text: { en: err.name },
+          error: {
+            category: 'WRONG_INPUT',
+            message: `${err.message}`,
+          },
+        },
+      ],
+    }
+  }
+  if (error instanceof HealthieError) {
+    const errors = mapHealthieToActivityError(error.errors)
+    return {
+      events: errors,
+    }
+  }
+  const err = error as Error
+  return {
+    date: new Date().toISOString(),
+    text: { en: 'Unable to process goalCreated webhook' },
+    error: {
+      category: 'SERVER_ERROR',
+      message: err.message ?? 'Unable to process goalCreated webhook',
+    },
+  }
+}
+

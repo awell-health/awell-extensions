@@ -4,9 +4,9 @@ import {
   type Webhook,
 } from '@awell-health/extensions-core'
 import { HEALTHIE_IDENTIFIER, type HealthieWebhookPayload } from '../lib/types'
-import z from 'zod'
-import { validateWebhookPayloadAndCreateSdk } from '../lib/sdk/validatePayloadAndCreateSdk'
 import { type settings } from '../../awell/settings'
+import { formatErrors } from '../lib/sdk/errors'
+import { createSdk } from '../lib/sdk/createSdk'
 
 const dataPoints = {
   updatedAppointmentId: {
@@ -19,16 +19,6 @@ const dataPoints = {
   },
 } satisfies Record<string, DataPointDefinition>
 
-const payloadSchema = z
-  .object({
-    resource_id: z.string(),
-  })
-  .transform((d) => {
-    return {
-      updatedAppointmentId: d.resource_id,
-    }
-  })
-
 export const appointmentUpdated: Webhook<
   keyof typeof dataPoints,
   HealthieWebhookPayload,
@@ -37,30 +27,30 @@ export const appointmentUpdated: Webhook<
   key: 'appointmentUpdated',
   dataPoints,
   onWebhookReceived: async ({ payload, settings }, onSuccess, onError) => {
-    const {
-      validatedPayload: { updatedAppointmentId },
-      sdk,
-    } = await validateWebhookPayloadAndCreateSdk({
-      payload,
-      payloadSchema,
-      settings,
-    })
-    const response = await sdk.getAppointment({
-      id: updatedAppointmentId,
-    })
-    const healthiePatientId = response?.data?.appointment?.user?.id
-    await onSuccess({
-      data_points: {
-        updatedAppointmentId,
-        appointment: JSON.stringify(response?.data?.appointment),
-      },
-      ...(!isNil(healthiePatientId) && {
-        patient_identifier: {
-          system: HEALTHIE_IDENTIFIER,
-          value: healthiePatientId,
+    try {
+      const { sdk } = await createSdk({settings})
+      const updatedAppointmentId = payload.resource_id.toString()
+
+      const response = await sdk.getAppointment({
+        id: updatedAppointmentId,
+      })
+      const healthiePatientId = response?.data?.appointment?.user?.id
+      await onSuccess({
+        data_points: {
+          updatedAppointmentId,
+          appointment: JSON.stringify(response?.data?.appointment),
         },
-      }),
-    })
+        ...(!isNil(healthiePatientId) && {
+          patient_identifier: {
+            system: HEALTHIE_IDENTIFIER,
+            value: healthiePatientId,
+          },
+        }),
+      })
+    } catch (error) {
+      const formattedError = formatErrors(error)
+      await onError(formattedError)
+    } 
   },
 }
 

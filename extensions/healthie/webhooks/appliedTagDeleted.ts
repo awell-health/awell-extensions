@@ -4,19 +4,9 @@ import {
   type Webhook,
 } from '@awell-health/extensions-core'
 import { HEALTHIE_IDENTIFIER, type HealthieWebhookPayload } from '../lib/types'
-import z from 'zod'
-import { validateWebhookPayloadAndCreateSdk } from '../lib/sdk/validatePayloadAndCreateSdk'
 import { type settings } from '../settings'
-
-const payloadSchema = z
-  .object({
-    resource_id: z.string(),
-  })
-  .transform((data) => {
-    return {
-      deletedAppliedTagId: data.resource_id,
-    }
-  })
+import { formatErrors } from '../lib/sdk/errors'
+import { createSdk } from '../lib/sdk/createSdk'
 
 const dataPoints = {
   deletedAppliedTagId: {
@@ -33,27 +23,27 @@ export const appliedTagDeleted: Webhook<
   key: 'appliedTagDeleted',
   dataPoints,
   onWebhookReceived: async ({ payload, settings }, onSuccess, onError) => {
-    const {
-      validatedPayload: { deletedAppliedTagId },
-      sdk,
-    } = await validateWebhookPayloadAndCreateSdk({
-      payloadSchema,
-      payload,
-      settings,
-    })
-    const response = await sdk.getAppliedTag({ id: deletedAppliedTagId, include_deleted: true})
-    const healthiePatientId = response?.data?.appliedTag?.user_id
-    await onSuccess({
-      data_points: {
-        deletedAppliedTagId,
-      },
-      ...(!isNil(healthiePatientId) && {
-        patient_identifier: {
-          system: HEALTHIE_IDENTIFIER,
-          value: healthiePatientId,
+    try {
+      const { sdk } = await createSdk({settings})
+      const deletedAppliedTagId = payload.resource_id.toString();
+      
+      const response = await sdk.getAppliedTag({ id: deletedAppliedTagId, include_deleted: true})
+      const healthiePatientId = response?.data?.appliedTag?.user_id
+      await onSuccess({
+        data_points: {
+          deletedAppliedTagId,
         },
-      }),
-    })
+        ...(!isNil(healthiePatientId) && {
+          patient_identifier: {
+            system: HEALTHIE_IDENTIFIER,
+            value: healthiePatientId,
+          },
+        }),
+      })
+    } catch (error) {
+      const formattedError = formatErrors(error)
+      await onError(formattedError)
+    } 
   },
 }
 
