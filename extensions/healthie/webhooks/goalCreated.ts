@@ -40,9 +40,9 @@ export const goalCreated: Webhook<
         payload,
         settings,
       })
-      const processedPayload = payloadSchema.parse({payload})
+      // const processedPayload = payloadSchema.parse({payload})
 
-      const createdGoalId = processedPayload.resource_id.toString();
+      const createdGoalId = payload.resource_id.toString();
       const response = await sdk.getGoal({ id: createdGoalId })
       const healthiePatientId = response?.data?.goal?.user_id
       
