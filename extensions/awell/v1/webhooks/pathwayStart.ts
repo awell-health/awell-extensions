@@ -17,10 +17,10 @@ export const pathwayStart: Webhook<
     'Start a pathway via webhook. No data points are expected nor required.',
   dataPoints,
   onWebhookReceived: async ({ payload }, onSuccess) => {
-    if (!isNil(payload.patient_id) && typeof payload.patient_id !== 'string') {
+    if (!isNil(payload.patient_id)) {
       await onSuccess({
         data_points: {},
-        patient_id: payload.patient_id as string,
+        patient_id: payload.patient_id.toString(),
       })
     } else {
       await onSuccess({
