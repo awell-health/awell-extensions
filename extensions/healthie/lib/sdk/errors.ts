@@ -82,12 +82,16 @@ export const formatErrors = (
   }
   const err = error as Error
   return {
-    date: new Date().toISOString(),
-    text: { en: 'Unable to process the webhook' },
-    error: {
-      category: 'SERVER_ERROR',
-      message: err.message ?? 'Unable to process the webhook',
-    },
+    events: [
+      {
+        date: new Date().toISOString(),
+        text: { en: 'Unable to process the webhook' },
+        error: {
+          category: 'SERVER_ERROR',
+          message: err.message ?? 'Unable to process the webhook',
+        },
+      }
+    ]
   }
 }
 
