@@ -6,7 +6,7 @@ import {
 import { HEALTHIE_IDENTIFIER, type HealthieWebhookPayload } from '../lib/types'
 import { type settings } from '../settings'
 import { createSdk } from '../lib/sdk/createSdk'
-import { formatErrors } from '../lib/sdk/errors'
+import { formatError } from '../lib/sdk/errors'
 
 const dataPoints = {
   updatedGoalId: {
@@ -41,8 +41,7 @@ export const goalUpdated: Webhook<
         }),
       })
     } catch (error) {
-      const formattedError = formatErrors(error)
-      await onError(formattedError)
+      await onError(formatError(error))
     }
   }
 }

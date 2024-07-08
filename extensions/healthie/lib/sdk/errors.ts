@@ -56,43 +56,47 @@ export const mapHealthieToActivityError = (
   }))
 }
 
-export const formatErrors = (
+export const formatError = (
   error?: unknown | Error 
 ): any => {
-  if (error instanceof ZodError) {
-    const err = fromZodError(error)
-    return {
-      events: [
-        {
-          date: new Date().toISOString(),
-          text: { en: err.name },
-          error: {
-            category: 'WRONG_INPUT',
-            message: `${err.message}`,
+  switch (true) {
+    case (error instanceof ZodError): {
+      const err = fromZodError(error as ZodError)
+      return {
+        events: [
+          {
+            date: new Date().toISOString(),
+            text: { en: err.name },
+            error: {
+              category: 'WRONG_INPUT',
+              message: `${err.message}`,
+            },
           },
-        },
-      ],
-    }
-  }
-  if (error instanceof HealthieError) {
-    const errors = mapHealthieToActivityError(error.errors)
-    return {
-      events: errors,
-    }
-  }
-  const err = error as Error
-  const errMessage = err.message ?? 'Unable to process the webhook'
-  return {
-    events: [
-      {
-        date: new Date().toISOString(),
-        text: { en: errMessage },
-        error: {
-          category: 'SERVER_ERROR',
-          message: errMessage,
-        },
+        ],
       }
-    ]
+    }
+    case (error instanceof HealthieError): {
+      const errors = mapHealthieToActivityError((error as HealthieError).errors)
+      return {
+        events: errors,
+      }
+    }
+    default: {
+      const err = error as Error
+      const errMessage = err.message ?? 'Unable to process the webhook'
+      return {
+        events: [
+          {
+            date: new Date().toISOString(),
+            text: { en: errMessage },
+            error: {
+              category: 'SERVER_ERROR',
+              message: errMessage,
+            },
+          }
+        ]
+      }
+    }
   }
 }
 

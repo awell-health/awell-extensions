@@ -6,7 +6,8 @@ import {
 import { HEALTHIE_IDENTIFIER, type HealthieWebhookPayload } from '../lib/types'
 import { createSdk } from '../lib/sdk/createSdk'
 import { type settings } from '../settings'
-import { formatErrors } from '../lib/sdk/errors'
+import { formatError } from '../lib/sdk/errors'
+import { z } from 'zod'
 
 const dataPoints = {
   createdGoalId: {
@@ -14,6 +15,11 @@ const dataPoints = {
     valueType: 'number',
   },
 } satisfies Record<string, DataPointDefinition>
+
+const payloadSchema = z
+  .object({
+    resource_id: z.number(),
+  })
 
 export const goalCreated: Webhook<
   keyof typeof dataPoints,
@@ -28,8 +34,8 @@ export const goalCreated: Webhook<
         sdk
       } = await createSdk({settings})
 
-
-      const createdGoalId = payload.resource_id.toString();
+      const validatedPayload = payloadSchema.parse(payload)
+      const createdGoalId = validatedPayload.resource_id.toString();
       const response = await sdk.getGoal({ id: createdGoalId })
       const healthiePatientId = response?.data?.goal?.user_id
       
@@ -45,8 +51,7 @@ export const goalCreated: Webhook<
         }),
       })
     } catch (error) {
-      const formattedError = formatErrors(error)
-      await onError(formattedError)
+      await onError(formatError(error))
     }
   }
 }
