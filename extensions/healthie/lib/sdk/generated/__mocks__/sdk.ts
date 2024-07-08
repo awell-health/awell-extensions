@@ -234,6 +234,15 @@ export const mockGetSdkReturn = {
       },
     }
   }),
+  getGoal: jest.fn((args) => {
+    return {
+      data: {
+        goal: {
+          user_id: 1234,
+        },
+      },
+    }
+  }),
 }
 
 export const mockGetSdk = (params: any): any => {
