@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { ZodError } from 'zod'
 import {
   FieldType,
   NumericIdSchema,
@@ -10,8 +9,6 @@ import {
 import { Category } from '@awell-health/extensions-core'
 import { type settings } from '../settings'
 import { makeAPIClient } from '../client'
-import { fromZodError } from 'zod-validation-error'
-import { AxiosError } from 'axios'
 import { updatePatientSchema } from '../validation/patient.zod'
 import { isEmpty, isNil } from 'lodash'
 
@@ -226,7 +223,7 @@ export const updatePatient: Action<
         }
         return acc
       },
-      {}
+      {},
     )
 
     const api = makeAPIClient(payload.settings)
