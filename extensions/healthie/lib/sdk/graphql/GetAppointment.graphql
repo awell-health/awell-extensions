@@ -1,5 +1,5 @@
-query getAppointment($id: ID) {
-  appointment(id: $id) {
+query getAppointment($id: ID, $include_deleted: Boolean = false) {
+  appointment(id: $id, include_deleted: $include_deleted) {
     id
     date
     contact_type

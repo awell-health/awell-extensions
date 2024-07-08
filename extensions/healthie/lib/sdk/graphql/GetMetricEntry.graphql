@@ -1,0 +1,9 @@
+query getMetricEntry($id: ID!) {
+  entry(id: $id, type: "MetricEntry") {
+    id
+    category
+    poster {
+      id
+    }
+  }
+}

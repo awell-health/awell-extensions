@@ -1,6 +1,6 @@
 import { validate } from '@awell-health/extensions-core'
 import z from 'zod'
-import { settingsValidationSchema } from '../../settings'
+import {  settingsValidationSchema } from '../../settings'
 import { getSdk } from './generated/sdk'
 import { initialiseClient } from './graphqlClient'
 

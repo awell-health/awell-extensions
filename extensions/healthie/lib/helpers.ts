@@ -1,3 +1,5 @@
+import { z } from 'zod'
+
 export const mapHealthieGenderToIsoSex = (
   healthieGender: string | undefined | null
 ): 0 | 1 | 2 => {
@@ -13,3 +15,8 @@ export const mapHealthieGenderToIsoSex = (
       return 0
   }
 }
+
+export const webhookPayloadSchema = z
+.object({
+  resource_id: z.number(),
+})
