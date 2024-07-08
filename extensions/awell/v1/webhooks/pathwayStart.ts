@@ -6,7 +6,9 @@ import { isNil } from 'lodash'
 
 const dataPoints = {} satisfies Record<string, DataPointDefinition>
 
-export type PathwayStartPayload = Record<string, unknown>
+export type PathwayStartPayload = Record<string, unknown> & {
+  patient_id: string
+}
 
 export const pathwayStart: Webhook<
   keyof typeof dataPoints,
@@ -18,9 +20,10 @@ export const pathwayStart: Webhook<
   dataPoints,
   onWebhookReceived: async ({ payload }, onSuccess) => {
     if (!isNil(payload.patient_id)) {
+      const { patient_id } = payload
       await onSuccess({
         data_points: {},
-        patient_id: payload.patient_id.toString(),
+        patient_id,
       })
     } else {
       await onSuccess({
