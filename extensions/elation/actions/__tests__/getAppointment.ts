@@ -1,5 +1,6 @@
 import { getAppointment } from '../getAppointment'
 import { appointmentExample } from '../../__mocks__/constants'
+import { isNil } from 'lodash'
 
 jest.mock('../../client')
 
@@ -52,7 +53,7 @@ describe('Simple get appointment action', () => {
         practiceId: String(practice),
         duration: String(duration),
         serviceLocationId: String(service_location),
-        ...(status && { status: JSON.stringify(status) }),
+        ...(!isNil(status) && { status: JSON.stringify(status) }),
       }),
     })
   })

@@ -16,7 +16,7 @@
     "build": "tsc && echo 'Built new dist/' && yarn copy-markdown",
     "copy-markdown": "node copy-markdown.js && echo 'Copied markdown files to dist/'",
     "start": "node dist/src/index.js",
-    "lint": "eslint **/*.ts",
+    "lint": "eslint \"**/*.ts\"",
     "postinstall": "husky install",
     "test": "jest",
     "prepack": "yarn build",
