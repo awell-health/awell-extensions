@@ -7,6 +7,7 @@ import { HEALTHIE_IDENTIFIER, type HealthieWebhookPayload } from '../lib/types'
 import { type settings } from '../settings'
 import { formatError } from '../lib/sdk/errors'
 import { createSdk } from '../lib/sdk/createSdk'
+import { webhookPayloadSchema } from '../lib/helpers'
 
 const dataPoints = {
   deletedMessageId: {
@@ -25,7 +26,9 @@ export const messageDeleted: Webhook<
   onWebhookReceived: async ({ payload, settings }, onSuccess, onError) => {
     try {
       const { sdk } = await createSdk({ settings })
-      const deletedMessageId = payload.resource_id.toString()
+
+      const validatedPayload = webhookPayloadSchema.parse(payload)
+      const deletedMessageId = validatedPayload.resource_id.toString()
   
       const messageResponse = await sdk.getMessage({ id: deletedMessageId })
       const conversationResponse = await sdk.getConversation({ id: messageResponse?.data?.note?.conversation_id })

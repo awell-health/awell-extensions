@@ -7,7 +7,7 @@ import { HEALTHIE_IDENTIFIER, type HealthieWebhookPayload } from '../lib/types'
 import { createSdk } from '../lib/sdk/createSdk'
 import { type settings } from '../settings'
 import { formatError } from '../lib/sdk/errors'
-import { z } from 'zod'
+import { webhookPayloadSchema } from '../lib/helpers'
 
 const dataPoints = {
   createdGoalId: {
@@ -15,11 +15,6 @@ const dataPoints = {
     valueType: 'number',
   },
 } satisfies Record<string, DataPointDefinition>
-
-const payloadSchema = z
-  .object({
-    resource_id: z.number(),
-  })
 
 export const goalCreated: Webhook<
   keyof typeof dataPoints,
@@ -30,11 +25,9 @@ export const goalCreated: Webhook<
   dataPoints,
   onWebhookReceived: async ({ payload, settings }, onSuccess, onError) => {
     try {
-      const {
-        sdk
-      } = await createSdk({settings})
+      const { sdk } = await createSdk({settings})
 
-      const validatedPayload = payloadSchema.parse(payload)
+      const validatedPayload = webhookPayloadSchema.parse(payload)
       const createdGoalId = validatedPayload.resource_id.toString();
       const response = await sdk.getGoal({ id: createdGoalId })
       const healthiePatientId = response?.data?.goal?.user_id

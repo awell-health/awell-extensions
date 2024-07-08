@@ -7,6 +7,7 @@ import { HEALTHIE_IDENTIFIER, type HealthieWebhookPayload } from '../lib/types'
 import { type settings } from '../settings'
 import { formatError } from '../lib/sdk/errors'
 import { createSdk } from '../lib/sdk/createSdk'
+import { webhookPayloadSchema } from '../lib/helpers'
 
 const dataPoints = {
   signedFormAnswerGroupId: {
@@ -29,7 +30,9 @@ export const formAnswerGroupSigned: Webhook<
   onWebhookReceived: async ({ payload, settings }, onSuccess, onError) => {
     try {
       const { sdk } = await createSdk({settings})
-      const signedFormAnswerGroupId = payload.resource_id.toString();
+
+      const validatedPayload = webhookPayloadSchema.parse(payload)
+      const signedFormAnswerGroupId = validatedPayload.resource_id.toString();
 
       const response = await sdk.getFormAnswerGroup({
         id: signedFormAnswerGroupId,

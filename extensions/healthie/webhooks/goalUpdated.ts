@@ -7,6 +7,7 @@ import { HEALTHIE_IDENTIFIER, type HealthieWebhookPayload } from '../lib/types'
 import { type settings } from '../settings'
 import { createSdk } from '../lib/sdk/createSdk'
 import { formatError } from '../lib/sdk/errors'
+import { webhookPayloadSchema } from '../lib/helpers'
 
 const dataPoints = {
   updatedGoalId: {
@@ -25,7 +26,9 @@ export const goalUpdated: Webhook<
   onWebhookReceived: async ({ payload, settings }, onSuccess, onError) => {
     try {
       const { sdk } = await createSdk({settings})
-      const updatedGoalId = payload.resource_id.toString();
+
+      const validatedPayload = webhookPayloadSchema.parse(payload)
+      const updatedGoalId = validatedPayload.resource_id.toString();
 
       const response = await sdk.getGoal({ id: updatedGoalId })
       const healthiePatientId = response?.data?.goal?.user_id

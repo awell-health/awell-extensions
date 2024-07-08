@@ -7,6 +7,7 @@ import { HEALTHIE_IDENTIFIER, type HealthieWebhookPayload } from '../lib/types'
 import { type settings } from '../settings'
 import { formatError } from '../lib/sdk/errors'
 import { createSdk } from '../lib/sdk/createSdk'
+import { webhookPayloadSchema } from '../lib/helpers'
 
 const dataPoints = {
   deletedFormAnswerGroupId: {
@@ -25,7 +26,9 @@ export const formAnswerGroupDeleted: Webhook<
   onWebhookReceived: async ({ payload, settings }, onSuccess, onError) => {
     try {
       const { sdk } = await createSdk({settings})
-      const deletedFormAnswerGroupId = payload.resource_id.toString();
+
+      const validatedPayload = webhookPayloadSchema.parse(payload)
+      const deletedFormAnswerGroupId = validatedPayload.resource_id.toString();
 
       const response = await sdk.getFormAnswerGroup({
         id: deletedFormAnswerGroupId,

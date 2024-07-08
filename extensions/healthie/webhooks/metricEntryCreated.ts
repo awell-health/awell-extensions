@@ -7,6 +7,7 @@ import { HEALTHIE_IDENTIFIER, type HealthieWebhookPayload } from '../lib/types'
 import { type settings } from '../settings'
 import { formatError } from '../lib/sdk/errors'
 import { createSdk } from '../lib/sdk/createSdk'
+import { webhookPayloadSchema } from '../lib/helpers'
   
 const dataPoints = {
   createdMetricId: {
@@ -25,7 +26,9 @@ export const metricEntryCreated: Webhook<
   onWebhookReceived: async ({ payload, settings }, onSuccess, onError) => {
     try {
       const { sdk } = await createSdk({ settings })
-      const createdMetricId = payload.resource_id.toString()
+
+      const validatedPayload = webhookPayloadSchema.parse(payload)
+      const createdMetricId = validatedPayload.resource_id.toString()
   
       const response = await sdk.getMetricEntry({ id: createdMetricId })
       const healthiePatientId = response?.data?.entry?.poster?.id

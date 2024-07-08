@@ -7,6 +7,7 @@ import { HEALTHIE_IDENTIFIER, type HealthieWebhookPayload } from '../lib/types'
 import { type settings } from '../settings'
 import { formatError } from '../lib/sdk/errors'
 import { createSdk } from '../lib/sdk/createSdk'
+import { webhookPayloadSchema } from '../lib/helpers'
 
 const dataPoints = {
   deletedAppliedTagId: {
@@ -25,7 +26,9 @@ export const appliedTagDeleted: Webhook<
   onWebhookReceived: async ({ payload, settings }, onSuccess, onError) => {
     try {
       const { sdk } = await createSdk({settings})
-      const deletedAppliedTagId = payload.resource_id.toString();
+
+      const validatedPayload = webhookPayloadSchema.parse(payload)
+      const deletedAppliedTagId = validatedPayload.resource_id.toString();
       
       const response = await sdk.getAppliedTag({ id: deletedAppliedTagId, include_deleted: true})
       const healthiePatientId = response?.data?.appliedTag?.user_id
