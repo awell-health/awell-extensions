@@ -3,34 +3,55 @@ import {
   type DataPointDefinition,
   type Webhook,
 } from '@awell-health/extensions-core'
-import { type HealthieWebhookPayload } from '../lib/types'
+import { HEALTHIE_IDENTIFIER, type HealthieWebhookPayload } from '../lib/types'
+import { type settings } from '../settings'
+import { formatError } from '../lib/sdk/errors'
+import { createSdk } from '../lib/sdk/createSdk'
+import { webhookPayloadSchema } from '../lib/helpers'
 
 const dataPoints = {
   appointmentId: {
     key: 'appointmentId',
     valueType: 'string',
   },
+  appointment: {
+    key: 'appointment',
+    valueType: 'json',
+  },
 } satisfies Record<string, DataPointDefinition>
 
 export const appointmentCreated: Webhook<
   keyof typeof dataPoints,
-  HealthieWebhookPayload
+  HealthieWebhookPayload,
+  typeof settings
 > = {
   key: 'appointmentCreated',
   dataPoints,
   onWebhookReceived: async ({ payload, settings }, onSuccess, onError) => {
-    const { resource_id: appointmentId } = payload
+    try {
+      const { sdk } = await createSdk({ settings })
 
-    if (isNil(appointmentId)) {
-      await onError({
-        // We should automatically send a 400 here, so no need to provide info
+      const validatedPayload = webhookPayloadSchema.parse(payload)
+      const appointmentId = validatedPayload.resource_id.toString()
+
+      const response = await sdk.getAppointment({
+        id: appointmentId,
       })
-    } else {
+      const healthiePatientId = response?.data?.appointment?.user?.id
       await onSuccess({
         data_points: {
           appointmentId,
+          appointment: JSON.stringify(response?.data?.appointment),
         },
+        ...(!isNil(healthiePatientId) && {
+          patient_identifier: {
+            system: HEALTHIE_IDENTIFIER,
+            value: healthiePatientId,
+          },
+        }),
       })
+    } catch (error) {
+      await onError(formatError(error))
     }
   },
 }

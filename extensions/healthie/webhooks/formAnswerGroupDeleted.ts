@@ -3,7 +3,11 @@ import {
   type DataPointDefinition,
   type Webhook,
 } from '@awell-health/extensions-core'
-import { type HealthieWebhookPayload } from '../lib/types'
+import { HEALTHIE_IDENTIFIER, type HealthieWebhookPayload } from '../lib/types'
+import { type settings } from '../settings'
+import { formatError } from '../lib/sdk/errors'
+import { createSdk } from '../lib/sdk/createSdk'
+import { webhookPayloadSchema } from '../lib/helpers'
 
 const dataPoints = {
   deletedFormAnswerGroupId: {
@@ -14,24 +18,37 @@ const dataPoints = {
 
 export const formAnswerGroupDeleted: Webhook<
   keyof typeof dataPoints,
-  HealthieWebhookPayload
+  HealthieWebhookPayload,
+  typeof settings
 > = {
   key: 'formAnswerGroupDeleted',
   dataPoints,
   onWebhookReceived: async ({ payload, settings }, onSuccess, onError) => {
-    const { resource_id: deletedFormAnswerGroupId } = payload
+    try {
+      const { sdk } = await createSdk({settings})
 
-    if (isNil(deletedFormAnswerGroupId)) {
-      await onError({
-        // We should automatically send a 400 here, so no need to provide info
+      const validatedPayload = webhookPayloadSchema.parse(payload)
+      const deletedFormAnswerGroupId = validatedPayload.resource_id.toString();
+
+      const response = await sdk.getFormAnswerGroup({
+        id: deletedFormAnswerGroupId,
       })
-    } else {
+      const healthiePatientId = response?.data?.formAnswerGroup?.user?.id
       await onSuccess({
         data_points: {
           deletedFormAnswerGroupId,
         },
+        ...(!isNil(healthiePatientId) && {
+          patient_identifier: {
+            system: HEALTHIE_IDENTIFIER,
+            value: healthiePatientId,
+          },
+        }),
       })
+    } catch (error) {
+      await onError(formatError(error))
     }
+    
   },
 }
 

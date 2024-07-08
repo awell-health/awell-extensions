@@ -3,35 +3,56 @@ import {
   type DataPointDefinition,
   type Webhook,
 } from '@awell-health/extensions-core'
-import { type HealthieWebhookPayload } from '../lib/types'
+import { HEALTHIE_IDENTIFIER, type HealthieWebhookPayload } from '../lib/types'
+import { type settings } from '../settings'
+import { formatError } from '../lib/sdk/errors'
+import { createSdk } from '../lib/sdk/createSdk'
+import { webhookPayloadSchema } from '../lib/helpers'
 
 const dataPoints = {
   lockedFormAnswerGroupId: {
     key: 'lockedFormAnswerGroupId',
     valueType: 'string',
   },
+  lockedFormAnswerGroup: {
+    key: 'lockedFormAnswerGroup',
+    valueType: 'json',
+  },
 } satisfies Record<string, DataPointDefinition>
 
 export const formAnswerGroupLocked: Webhook<
   keyof typeof dataPoints,
-  HealthieWebhookPayload
+  HealthieWebhookPayload,
+  typeof settings
 > = {
   key: 'formAnswerGroupLocked',
   dataPoints,
   onWebhookReceived: async ({ payload, settings }, onSuccess, onError) => {
-    const { resource_id: lockedFormAnswerGroupId } = payload
+    try {
+      const { sdk } = await createSdk({settings})
 
-    if (isNil(lockedFormAnswerGroupId)) {
-      await onError({
-        // We should automatically send a 400 here, so no need to provide info
+      const validatedPayload = webhookPayloadSchema.parse(payload)
+      const lockedFormAnswerGroupId = validatedPayload.resource_id.toString();
+        
+      const response = await sdk.getFormAnswerGroup({
+        id: lockedFormAnswerGroupId,
       })
-    } else {
+      const healthiePatientId = response?.data?.formAnswerGroup?.user?.id
       await onSuccess({
         data_points: {
           lockedFormAnswerGroupId,
+          lockedFormAnswerGroup: JSON.stringify(response?.data?.formAnswerGroup),
         },
+        ...(!isNil(healthiePatientId) && {
+          patient_identifier: {
+            system: HEALTHIE_IDENTIFIER,
+            value: healthiePatientId,
+          },
+        }),
       })
-    }
+    } catch (error) {
+      await onError(formatError(error))
+    } 
   },
 }
 

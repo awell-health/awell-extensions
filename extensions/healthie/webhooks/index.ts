@@ -13,18 +13,14 @@ import { labOrderUpdated } from './labOrderUpdated'
 import { messageCreated } from './messageCreated'
 import { messageDeleted } from './messageDeleted'
 import { metricEntryCreated } from './metricEntryCreated'
-import { metricEntryDeleted } from './metricEntryDeleted'
 import { metricEntryUpdated } from './metricEntryUpdated'
 import { patientUpdated } from './patientUpdated'
 import { requestFormCompletionCreated } from './requestedFormCompletionCreated'
-import { requestFormCompletionDeleted } from './requestedFormCompletionDeleted'
 import { requestFormCompletionUpdated } from './requestedFormCompletionUpdated'
 import { taskCreated } from './taskCreated'
-import { taskDeleted } from './taskDeleted'
 import { taskUpdated } from './taskUpdated'
 import { goalCreated } from './goalCreated'
 import { goalUpdated } from './goalUpdated'
-import { goalDeleted } from './goalDeleted'
 
 export type { AppointmentCreated } from './appointmentCreated'
 export type { PatientCreated } from './patientCreated'
@@ -41,18 +37,14 @@ export type { LabOrderUpdated } from './labOrderUpdated'
 export type { MessageCreated } from './messageCreated'
 export type { MessageDeleted } from './messageDeleted'
 export type { MetricEntryCreated } from './metricEntryCreated'
-export type { MetricEntryDeleted } from './metricEntryDeleted'
 export type { MetricEntryUpdated } from './metricEntryUpdated'
 export type { PatientUpdated } from './patientUpdated'
 export type { RequestFormCompletionCreated } from './requestedFormCompletionCreated'
-export type { RequestFormCompletionDeleted } from './requestedFormCompletionDeleted'
 export type { RequestFormCompletionUpdated } from './requestedFormCompletionUpdated'
 export type { TaskCreated } from './taskCreated'
-export type { TaskDeleted } from './taskDeleted'
 export type { TaskUpdated } from './taskUpdated'
 export type { GoalCreated } from './goalCreated'
 export type { GoalUpdated } from './goalUpdated'
-export type { GoalDeleted } from './goalDeleted'
 
 export const webhooks = [
   appointmentCreated,
@@ -70,16 +62,12 @@ export const webhooks = [
   messageCreated,
   messageDeleted,
   metricEntryCreated,
-  metricEntryDeleted,
   metricEntryUpdated,
   patientUpdated,
   requestFormCompletionCreated,
-  requestFormCompletionDeleted,
   requestFormCompletionUpdated,
   taskCreated,
-  taskDeleted,
   taskUpdated,
   goalCreated,
   goalUpdated,
-  goalDeleted,
 ]

@@ -1,0 +1,9 @@
+query getLabOrder($id: ID!) {
+  labOrder(id: $id) {
+    id
+    created_at
+    patient {
+      id
+    }
+  }
+}

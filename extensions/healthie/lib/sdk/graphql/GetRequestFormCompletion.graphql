@@ -1,0 +1,6 @@
+query getRequestedFormCompletion($id: ID!) {
+  requestedFormCompletion(id: $id) {
+    id
+    recipient_id
+  }
+}
