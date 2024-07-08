@@ -1,7 +1,7 @@
 import { type getSdk } from './sdk/generated/sdk'
 
 export interface HealthieWebhookPayload {
-  resource_id: string
+  resource_id: number
   resource_id_type: string
   event_type: string
 }
