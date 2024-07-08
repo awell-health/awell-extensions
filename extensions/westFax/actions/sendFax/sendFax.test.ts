@@ -8,7 +8,7 @@ describe('send fax action', () => {
   fetchMock.enableMocks()
 
   fetchMock.mockResponseOnce(JSON.stringify({ Success: true, Result: 'asdf' }))
-  test('Should not send a fax', async () => {
+  test('Mock send a fax - success', async () => {
     await sendFax.onActivityCreated(
       generateTestPayload({
         fields: {
@@ -30,7 +30,11 @@ describe('send fax action', () => {
       onError,
     )
 
-    expect(onComplete).toHaveBeenCalled()
+    expect(onComplete).toHaveBeenCalledWith({
+      data_points: {
+        faxId: 'asdf',
+      },
+    })
     expect(onError).not.toHaveBeenCalled()
   })
 })
