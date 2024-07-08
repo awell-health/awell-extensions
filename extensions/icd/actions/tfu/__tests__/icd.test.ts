@@ -13,7 +13,7 @@ describe('Sending a correct input for icd', () => {
         settings: {},
       }),
       onComplete,
-      jest.fn()
+      jest.fn(),
     )
     expect(onComplete).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -21,7 +21,7 @@ describe('Sending a correct input for icd', () => {
           codes:
             'Intestinal infectious diseases, Intestinal infectious diseases',
         }),
-      })
+      }),
     )
   })
 
@@ -35,7 +35,7 @@ describe('Sending a correct input for icd', () => {
         settings: {},
       }),
       onComplete,
-      jest.fn()
+      jest.fn(),
     )
     expect(onComplete).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -43,7 +43,7 @@ describe('Sending a correct input for icd', () => {
           codes:
             'Intestinal infectious diseases, Intestinal infectious diseases',
         }),
-      })
+      }),
     )
   })
 
@@ -57,7 +57,7 @@ describe('Sending a correct input for icd', () => {
         settings: {},
       }),
       onComplete,
-      jest.fn()
+      jest.fn(),
     )
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
@@ -77,7 +77,7 @@ describe('Sending a correct input for icd', () => {
         settings: {},
       }),
       onComplete,
-      jest.fn()
+      jest.fn(),
     )
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
@@ -97,7 +97,7 @@ describe('Sending a correct input for icd', () => {
         settings: {},
       }),
       onComplete,
-      jest.fn()
+      jest.fn(),
     )
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
@@ -117,7 +117,7 @@ describe('Sending a correct input for icd', () => {
         settings: {},
       }),
       onComplete,
-      jest.fn()
+      jest.fn(),
     )
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
@@ -126,28 +126,28 @@ describe('Sending a correct input for icd', () => {
       },
     })
   })
-  
+
   // TODO: fix this if it's actually used
-  // test('Should return not found with found codes', async () => {
-  //   const onComplete = jest.fn()
-  //   await icd.onActivityCreated(
-  //     generateTestPayload({
-  //       fields: {
-  //         icd_codes: '["R07.9","I10","I16.0","I10",""]',
-  //       },
-  //       settings: {},
-  //     }),
-  //     onComplete,
-  //     jest.fn()
-  //   )
-  //   expect(onComplete).toHaveBeenCalledWith({
-  //     data_points: {
-  //       codes:
-  //         'Symptoms and signs involving the circulatory and respiratory systems, Hypertensive diseases, I16 not found, Hypertensive diseases',
-  //       stringResponse: 'TCM',
-  //     },
-  //   })
-  // })
+  test.skip('Should return not found with found codes', async () => {
+    const onComplete = jest.fn()
+    await icd.onActivityCreated(
+      generateTestPayload({
+        fields: {
+          icd_codes: '["R07.9","I10","I16.0","I10",""]',
+        },
+        settings: {},
+      }),
+      onComplete,
+      jest.fn(),
+    )
+    expect(onComplete).toHaveBeenCalledWith({
+      data_points: {
+        codes:
+          'Symptoms and signs involving the circulatory and respiratory systems, Hypertensive diseases, I16 not found, Hypertensive diseases',
+        stringResponse: 'TCM',
+      },
+    })
+  })
 
   test('Should fail validation', async () => {
     const onComplete = jest.fn()
@@ -159,7 +159,7 @@ describe('Sending a correct input for icd', () => {
         settings: {},
       }),
       onComplete,
-      jest.fn()
+      jest.fn(),
     )
     await expect(resp).rejects.toThrowError(ZodError)
   })
@@ -174,7 +174,7 @@ describe('Sending a correct input for icd', () => {
         settings: {},
       }),
       onComplete,
-      jest.fn()
+      jest.fn(),
     )
     await expect(resp).rejects.toThrowError(ZodError)
   })

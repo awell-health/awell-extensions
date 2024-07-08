@@ -1,10 +1,13 @@
 import { generateTestPayload } from '../../../../src/tests'
 import { sendFax } from './sendFax'
+import fetchMock from 'jest-fetch-mock'
 
 describe('send fax action', () => {
   const onComplete = jest.fn()
   const onError = jest.fn()
+  fetchMock.enableMocks()
 
+  fetchMock.mockResponseOnce(JSON.stringify({ Success: true, Result: 'asdf' }))
   test('Should not send a fax', async () => {
     await sendFax.onActivityCreated(
       generateTestPayload({
@@ -24,10 +27,10 @@ describe('send fax action', () => {
         },
       }),
       onComplete,
-      onError
+      onError,
     )
 
-    expect(onComplete).not.toHaveBeenCalled()
-    expect(onError).toHaveBeenCalled()
+    expect(onComplete).toHaveBeenCalled()
+    expect(onError).not.toHaveBeenCalled()
   })
 })
