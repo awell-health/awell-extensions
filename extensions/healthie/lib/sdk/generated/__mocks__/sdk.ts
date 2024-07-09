@@ -20,6 +20,17 @@ export const mockGetSdkReturn = {
       },
     }
   }),
+  createAppointment: jest.fn((args) => {
+    return {
+      data: {
+        createAppointment: {
+          appointment: {
+            id: 'appointment-id-1',
+          },
+        },
+      },
+    }
+  }),
   sendChatMessage: jest.fn((args) => {
     return {
       data: {},
@@ -184,8 +195,8 @@ export const mockGetSdkReturn = {
         appointment: {
           id: 'appointment-1',
           user: {
-            id: '2345'
-          }
+            id: '2345',
+          },
         },
       },
     }
@@ -245,7 +256,7 @@ export const mockGetSdkReturn = {
         },
       },
     }
-  })
+  }),
 }
 
 export const mockGetSdk = (params: any): any => {

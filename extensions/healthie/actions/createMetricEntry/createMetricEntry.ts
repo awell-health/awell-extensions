@@ -5,7 +5,7 @@ import { fromZodError } from 'zod-validation-error'
 import { HealthieError, mapHealthieToActivityError } from '../../lib/sdk/errors'
 import { getSdk } from '../../lib/sdk/generated/sdk'
 import { initialiseClient } from '../../lib/sdk/graphqlClient'
-import { settingsValidationSchema, type settings } from '../../settings'
+import { SettingsValidationSchema, type settings } from '../../settings'
 import { fields, FieldsValidationSchema } from './config'
 
 export const createMetricEntry: Action<typeof fields, typeof settings> = {
@@ -22,7 +22,7 @@ export const createMetricEntry: Action<typeof fields, typeof settings> = {
         fields: { userId, category, metricStat },
       } = validate({
         schema: z.object({
-          settings: settingsValidationSchema,
+          settings: SettingsValidationSchema,
           fields: FieldsValidationSchema,
         }),
         payload,

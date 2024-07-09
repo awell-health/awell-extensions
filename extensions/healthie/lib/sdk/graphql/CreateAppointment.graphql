@@ -5,6 +5,7 @@ mutation createAppointment(
   $contact_type: String, # e.g "Phone Call"
   $other_party_id: String, # ID of provider in Healthie. Defaults to authenticated user if left blank,
   $datetime: String, # Timestamp in YYYY-MM-DD HH:MM:SS or ISO8601 format, supercedes date, time params.
+  $metadata: JSON
 ) {
   createAppointment(
     input: {
@@ -13,6 +14,7 @@ mutation createAppointment(
       contact_type: $contact_type,
       other_party_id: $other_party_id,
       datetime: $datetime,
+      metadata: $metadata
     }
   ) {
     appointment {

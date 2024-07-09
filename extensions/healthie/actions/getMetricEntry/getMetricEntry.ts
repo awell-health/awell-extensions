@@ -2,7 +2,7 @@ import { ZodError, z } from 'zod'
 import { fromZodError } from 'zod-validation-error'
 import { validate, type Action } from '@awell-health/extensions-core'
 import { Category } from '@awell-health/extensions-core'
-import { type settings, settingsValidationSchema } from '../../settings'
+import { type settings, SettingsValidationSchema } from '../../settings'
 import { HealthieError, mapHealthieToActivityError } from '../../lib/sdk/errors'
 import { dataPoints, fields, FieldsValidationSchema } from './config'
 import { initialiseClient } from '../../lib/sdk/graphqlClient'
@@ -29,7 +29,7 @@ export const getMetricEntry: Action<
         fields: { patientId, category },
       } = validate({
         schema: z.object({
-          settings: settingsValidationSchema,
+          settings: SettingsValidationSchema,
           fields: FieldsValidationSchema,
         }),
         payload,

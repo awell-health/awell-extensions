@@ -6,7 +6,7 @@ export const settings = {
     key: 'clientId',
     label: 'Client ID',
     obfuscated: true,
-    required: true,
+    required: false,
     description: 'Used to authenticate with Medplum',
   },
   clientSecret: {
@@ -19,7 +19,7 @@ export const settings = {
   awellApiUrl: {
     key: 'awellApiUrl',
     label: 'Awell API URL',
-    obfuscated: true,
+    obfuscated: false,
     required: false,
     description: 'Temporary to support "Submit Questionnaire Response" action',
   },
