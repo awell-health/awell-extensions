@@ -21,7 +21,7 @@ describe('Create appointment action', () => {
     jest.clearAllMocks()
   })
 
-  test('Should create a task', async () => {
+  test('Should create an appointment', async () => {
     await createAppointment.onActivityCreated(
       generateTestPayload({
         fields: {
