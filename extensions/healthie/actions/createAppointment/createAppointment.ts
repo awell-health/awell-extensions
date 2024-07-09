@@ -38,7 +38,7 @@ export const createAppointment: Action<
       other_party_id: otherPartyId,
       datetime,
       user_id: patientId,
-      metadata,
+      metadata: JSON.stringify(metadata),
     })
 
     await onComplete({
