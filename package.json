@@ -1,6 +1,6 @@
 {
   "name": "@awell-health/awell-extensions",
-  "version": "1.1.22",
+  "version": "1.1.44",
   "packageManager": "yarn@3.4.1",
   "main": "dist/src/index.js",
   "repository": {
@@ -16,7 +16,7 @@
     "build": "tsc && echo 'Built new dist/' && yarn copy-markdown",
     "copy-markdown": "node copy-markdown.js && echo 'Copied markdown files to dist/'",
     "start": "node dist/src/index.js",
-    "lint": "eslint **/*.ts",
+    "lint": "eslint \"**/*.ts\"",
     "postinstall": "husky install",
     "test": "jest",
     "prepack": "yarn build",
@@ -59,6 +59,7 @@
     "eslint-plugin-promise": "^6.1.1",
     "husky": "^8.0.3",
     "jest": "29.7.0",
+    "jest-fetch-mock": "^3.0.3",
     "lint-staged": "^14.0.1",
     "prettier": "2.8.4",
     "rimraf": "^4.1.2",
@@ -67,7 +68,8 @@
     "typescript": "4.9.5"
   },
   "dependencies": {
-    "@awell-health/extensions-core": "0.2.1",
+    "@awell-health/awell-sdk": "^0.1.7",
+    "@awell-health/extensions-core": "0.2.15",
     "@dropbox/sign": "^1.1.3",
     "@mailchimp/mailchimp_transactional": "^1.0.50",
     "@medplum/core": "^3.1.4",
@@ -101,7 +103,7 @@
     "stripe": "^15.5.0",
     "twilio": "^4.8.0",
     "xml2js": "^0.6.2",
-    "zod": "^3.23.5",
+    "zod": "^3.23.4",
     "zod-validation-error": "^3.2.0"
   }
 }

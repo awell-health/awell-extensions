@@ -1,10 +1,13 @@
 import { generateTestPayload } from '../../../../src/tests'
-import { getSdk } from '../../gql/sdk'
-import { mockGetSdk, mockGetSdkReturn } from '../../gql/__mocks__/sdk'
+import { getSdk } from '../../lib/sdk/generated/sdk'
+import {
+  mockGetSdk,
+  mockGetSdkReturn,
+} from '../../lib/sdk/generated/__mocks__/sdk'
 import { sendFormCompletionRequest } from '../sendFormCompletionRequest'
 
-jest.mock('../../gql/sdk')
-jest.mock('../../graphqlClient')
+jest.mock('../../lib/sdk/generated/sdk')
+jest.mock('../../lib/sdk/graphqlClient')
 
 const sampleFormCompletion = {
   form: 'form-template-1',

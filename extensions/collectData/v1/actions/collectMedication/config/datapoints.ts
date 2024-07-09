@@ -5,4 +5,8 @@ export const dataPoints = {
     key: 'medicationData',
     valueType: 'json',
   },
+  medicationDataString: {
+    key: 'medicationDataString',
+    valueType: 'string',
+  },
 } satisfies Record<string, DataPointDefinition>

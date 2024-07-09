@@ -1,10 +1,13 @@
 import { generateTestPayload } from '../../../../src/tests'
-import { getSdk } from '../../gql/sdk'
-import { mockGetSdk, mockGetSdkReturn } from '../../gql/__mocks__/sdk'
+import { getSdk } from '../../lib/sdk/generated/sdk'
+import {
+  mockGetSdk,
+  mockGetSdkReturn,
+} from '../../lib/sdk/generated/__mocks__/sdk'
 import { getAppointment } from '../getAppointment'
 
-jest.mock('../../gql/sdk')
-jest.mock('../../graphqlClient')
+jest.mock('../../lib/sdk/generated/sdk')
+jest.mock('../../lib/sdk/graphqlClient')
 
 describe('getAppointment action', () => {
   const onComplete = jest.fn()
@@ -36,11 +39,11 @@ describe('getAppointment action', () => {
   const appointmentWithStatus = {
     ...appointmentWithNoDate,
     date: '2023-06-05 14:10:00 +0200',
-    pm_status: 'Cancelled'
+    pm_status: 'Cancelled',
   }
 
   beforeAll(() => {
-    ; (getSdk as jest.Mock).mockImplementation(mockGetSdk)
+    ;(getSdk as jest.Mock).mockImplementation(mockGetSdk)
   })
 
   beforeEach(() => {
@@ -121,7 +124,7 @@ describe('getAppointment action', () => {
         contactType: appointmentWithNoDate.contact_type,
         date: '2023-06-05T12:10:00Z',
         patientId: appointmentWithNoDate.user.id,
-        appointmentStatus: 'Cancelled'
+        appointmentStatus: 'Cancelled',
       },
     })
   })

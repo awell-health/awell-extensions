@@ -1,0 +1,6 @@
+query getConversation($id: ID) {
+  conversation(id: $id) {
+    id
+    patient_id
+  }
+}

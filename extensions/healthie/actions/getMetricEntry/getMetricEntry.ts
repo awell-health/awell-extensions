@@ -3,10 +3,10 @@ import { fromZodError } from 'zod-validation-error'
 import { validate, type Action } from '@awell-health/extensions-core'
 import { Category } from '@awell-health/extensions-core'
 import { type settings, settingsValidationSchema } from '../../settings'
-import { HealthieError, mapHealthieToActivityError } from '../../errors'
+import { HealthieError, mapHealthieToActivityError } from '../../lib/sdk/errors'
 import { dataPoints, fields, FieldsValidationSchema } from './config'
-import { initialiseClient } from '../../graphqlClient'
-import { getSdk } from '../../gql/sdk'
+import { initialiseClient } from '../../lib/sdk/graphqlClient'
+import { getSdk } from '../../lib/sdk/generated/sdk'
 import { isEmpty } from 'lodash'
 
 export const getMetricEntry: Action<

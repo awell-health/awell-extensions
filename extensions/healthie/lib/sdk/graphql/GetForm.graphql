@@ -1,0 +1,18 @@
+query getFormAnswerGroup($id: ID) {
+  formAnswerGroup(id: $id) {
+    id
+    finished
+    user {
+      id
+      dietitian_id
+    }
+    custom_module_form {
+      id
+    }
+    form_answers {
+      id
+      label
+      answer
+    }
+  }
+}

@@ -1,10 +1,10 @@
 import { generateTestPayload } from '../../../../src/tests'
-import { getSdk } from '../../gql/sdk'
-import { mockGetSdk } from '../../gql/__mocks__/sdk'
+import { getSdk } from '../../lib/sdk/generated/sdk'
+import { mockGetSdk } from '../../lib/sdk/generated/__mocks__/sdk'
 import { updatePatientQuickNote } from '../updatePatientQuickNote'
 
-jest.mock('../../gql/sdk')
-jest.mock('../../graphqlClient')
+jest.mock('../../lib/sdk/generated/sdk')
+jest.mock('../../lib/sdk/graphqlClient')
 
 describe('createMetricEntry action', () => {
   const onComplete = jest.fn()

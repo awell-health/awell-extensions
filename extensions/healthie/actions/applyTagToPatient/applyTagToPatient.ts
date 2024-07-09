@@ -1,9 +1,9 @@
 import { isNil } from 'lodash'
-import { HealthieError, mapHealthieToActivityError } from '../../errors'
+import { HealthieError, mapHealthieToActivityError } from '../../lib/sdk/errors'
 import { type Action } from '@awell-health/extensions-core'
 import { Category } from '@awell-health/extensions-core'
-import { getSdk } from '../../gql/sdk'
-import { initialiseClient } from '../../graphqlClient'
+import { getSdk } from '../../lib/sdk/generated/sdk'
+import { initialiseClient } from '../../lib/sdk/graphqlClient'
 import { type settings } from '../../settings'
 import { fields } from './config'
 
@@ -17,6 +17,7 @@ export const applyTagToPatient: Action<typeof fields, typeof settings> = {
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
     const { fields, settings } = payload
     const { id, patient_id } = fields
+
     try {
       if (isNil(id) || isNil(patient_id)) {
         await onError({
@@ -33,7 +34,6 @@ export const applyTagToPatient: Action<typeof fields, typeof settings> = {
         })
         return
       }
-
       const client = initialiseClient(settings)
       if (client !== undefined) {
         const sdk = getSdk(client)

@@ -1,0 +1,6 @@
+query getGoal($id: ID!) {
+  goal(id: $id) {
+    id
+    user_id
+  }
+}

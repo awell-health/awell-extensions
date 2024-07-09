@@ -1,0 +1,7 @@
+query getTask($id: ID!) {
+  task(id: $id) {
+    id
+    created_at
+    client_id
+  }
+}

@@ -3,7 +3,8 @@ import {
   type DataPointDefinition,
   type Webhook,
 } from '@awell-health/extensions-core'
-import { type HealthieWebhookPayload } from '../types'
+import { HEALTHIE_IDENTIFIER, type HealthieWebhookPayload } from '../lib/types'
+import { webhookPayloadSchema } from '../lib/helpers'
 
 const dataPoints = {
   patientId: {
@@ -19,7 +20,8 @@ export const patientCreated: Webhook<
   key: 'patientCreated',
   dataPoints,
   onWebhookReceived: async ({ payload, settings }, onSuccess, onError) => {
-    const { resource_id: patientId } = payload
+    const validatedPayload = webhookPayloadSchema.parse(payload)
+    const patientId = validatedPayload.resource_id.toString()
 
     if (isNil(patientId)) {
       await onError({
@@ -29,6 +31,10 @@ export const patientCreated: Webhook<
       await onSuccess({
         data_points: {
           patientId,
+        },
+        patient_identifier: {
+          system: HEALTHIE_IDENTIFIER,
+          value: patientId,
         },
       })
     }

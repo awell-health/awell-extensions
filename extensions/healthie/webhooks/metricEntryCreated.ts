@@ -3,8 +3,12 @@ import {
   type DataPointDefinition,
   type Webhook,
 } from '@awell-health/extensions-core'
-import { type HealthieWebhookPayload } from '../types'
-
+import { HEALTHIE_IDENTIFIER, type HealthieWebhookPayload } from '../lib/types'
+import { type settings } from '../settings'
+import { formatError } from '../lib/sdk/errors'
+import { createSdk } from '../lib/sdk/createSdk'
+import { webhookPayloadSchema } from '../lib/helpers'
+  
 const dataPoints = {
   createdMetricId: {
     key: 'createdMetricId',
@@ -14,23 +18,33 @@ const dataPoints = {
 
 export const metricEntryCreated: Webhook<
   keyof typeof dataPoints,
-  HealthieWebhookPayload
+  HealthieWebhookPayload,
+  typeof settings
 > = {
   key: 'metricEntryCreated',
   dataPoints,
   onWebhookReceived: async ({ payload, settings }, onSuccess, onError) => {
-    const { resource_id: createdMetricId } = payload
+    try {
+      const { sdk } = await createSdk({ settings })
 
-    if (isNil(createdMetricId)) {
-      await onError({
-        // We should automatically send a 400 here, so no need to provide info
-      })
-    } else {
+      const validatedPayload = webhookPayloadSchema.parse(payload)
+      const createdMetricId = validatedPayload.resource_id.toString()
+  
+      const response = await sdk.getMetricEntry({ id: createdMetricId })
+      const healthiePatientId = response?.data?.entry?.poster?.id
       await onSuccess({
         data_points: {
           createdMetricId,
         },
+        ...(!isNil(healthiePatientId) && {
+          patient_identifier: {
+            system: HEALTHIE_IDENTIFIER,
+            value: healthiePatientId,
+          },
+        }),
       })
+    } catch (error) {
+      await onError(formatError(error))
     }
   },
 }

@@ -1,0 +1,20 @@
+query getAppointment($id: ID, $include_deleted: Boolean = false) {
+  appointment(id: $id, include_deleted: $include_deleted) {
+    id
+    date
+    contact_type
+    pm_status
+    provider {
+      id
+      full_name
+    }
+    user {
+      id
+      full_name
+    }
+    appointment_type {
+      id
+      name
+    }
+  }
+}

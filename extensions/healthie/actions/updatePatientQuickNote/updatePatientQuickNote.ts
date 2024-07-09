@@ -1,12 +1,12 @@
 import { validate, type Action } from '@awell-health/extensions-core'
 import { Category } from '@awell-health/extensions-core'
-import { getSdk } from '../../gql/sdk'
-import { initialiseClient } from '../../graphqlClient'
+import { initialiseClient } from '../../lib/sdk/graphqlClient'
 import { settingsValidationSchema, type settings } from '../../settings'
-import { HealthieError, mapHealthieToActivityError } from '../../errors'
+import { HealthieError, mapHealthieToActivityError } from '../../lib/sdk/errors'
 import { z, ZodError } from 'zod'
 import { fromZodError } from 'zod-validation-error'
 import { fields, FieldsValidationSchema } from './config'
+import { getSdk } from '../../lib/sdk/generated/sdk'
 
 export const updatePatientQuickNote: Action<typeof fields, typeof settings> = {
   key: 'updatePatientQuickNote',
