@@ -1,10 +1,8 @@
 import { type Action } from '@awell-health/extensions-core'
 import { Category } from '@awell-health/extensions-core'
-import { HealthieError, mapHealthieToActivityError } from '../../lib/sdk/errors'
-import { getSdk } from '../../lib/sdk/generated/sdk'
-import { initialiseClient } from '../../lib/sdk/graphqlClient'
+import { validatePayloadAndCreateSdk } from '../../lib/sdk/validatePayloadAndCreateSdk'
 import { type settings } from '../../settings'
-import { dataPoints, fields } from './config'
+import { dataPoints, fields, FieldsValidationSchema } from './config'
 
 export const createAppointment: Action<
   typeof fields,
@@ -17,67 +15,36 @@ export const createAppointment: Action<
   description: 'Create a 1:1 appointment in Healthie.',
   fields,
   dataPoints,
-  previewable: true,
+  previewable: false,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
-    const { fields, settings } = payload
     const {
-      patientId,
-      appointmentTypeId,
+      fields: {
+        patientId,
+        appointmentTypeId,
+        datetime,
+        contactTypeId,
+        otherPartyId,
+        metadata,
+      },
+      sdk,
+    } = await validatePayloadAndCreateSdk({
+      fieldsSchema: FieldsValidationSchema,
+      payload,
+    })
+
+    const { data } = await sdk.createAppointment({
+      appointment_type_id: appointmentTypeId,
+      contact_type: contactTypeId,
+      other_party_id: otherPartyId,
       datetime,
-      contactTypeId,
-      otherPartyId,
-    } = fields
-    try {
-      const client = initialiseClient(settings)
-      if (client !== undefined) {
-        const sdk = getSdk(client)
-        const { data } = await sdk.createAppointment({
-          appointment_type_id: appointmentTypeId,
-          contact_type: contactTypeId,
-          other_party_id: otherPartyId,
-          datetime,
-          user_id: patientId,
-        })
-        await onComplete({
-          data_points: {
-            appointmentId: data.createAppointment?.appointment?.id,
-          },
-        })
-      } else {
-        await onError({
-          events: [
-            {
-              date: new Date().toISOString(),
-              text: { en: 'API client requires an API url and API key' },
-              error: {
-                category: 'MISSING_SETTINGS',
-                message: 'Missing api url or api key',
-              },
-            },
-          ],
-        })
-      }
-    } catch (err) {
-      if (err instanceof HealthieError) {
-        const errors = mapHealthieToActivityError(err.errors)
-        await onError({
-          events: errors,
-        })
-      } else {
-        const error = err as Error
-        await onError({
-          events: [
-            {
-              date: new Date().toISOString(),
-              text: { en: 'Healthie API reported an error' },
-              error: {
-                category: 'SERVER_ERROR',
-                message: error.message,
-              },
-            },
-          ],
-        })
-      }
-    }
+      user_id: patientId,
+      metadata: JSON.stringify(metadata),
+    })
+
+    await onComplete({
+      data_points: {
+        appointmentId: data.createAppointment?.appointment?.id,
+      },
+    })
   },
 }
