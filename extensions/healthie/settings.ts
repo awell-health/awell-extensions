@@ -18,7 +18,7 @@ export const settings = {
   },
 } satisfies Record<string, Setting>
 
-export const settingsValidationSchema = z.object({
+export const SettingsValidationSchema = z.object({
   apiUrl: z.string().nonempty({
     message: 'Missing "API URL in the extension settings."',
   }),

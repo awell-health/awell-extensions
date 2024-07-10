@@ -1,7 +1,7 @@
 import { validate, type Action } from '@awell-health/extensions-core'
 import { Category } from '@awell-health/extensions-core'
 import { initialiseClient } from '../../lib/sdk/graphqlClient'
-import { settingsValidationSchema, type settings } from '../../settings'
+import { SettingsValidationSchema, type settings } from '../../settings'
 import { HealthieError, mapHealthieToActivityError } from '../../lib/sdk/errors'
 import { z, ZodError } from 'zod'
 import { fromZodError } from 'zod-validation-error'
@@ -22,7 +22,7 @@ export const updatePatientQuickNote: Action<typeof fields, typeof settings> = {
         fields: { patientId, overwrite, quickNote },
       } = validate({
         schema: z.object({
-          settings: settingsValidationSchema,
+          settings: SettingsValidationSchema,
           fields: FieldsValidationSchema,
         }),
         payload,

@@ -1,6 +1,6 @@
 import { validate } from '@awell-health/extensions-core'
 import z from 'zod'
-import {  settingsValidationSchema } from '../../settings'
+import { SettingsValidationSchema } from '../../settings'
 import { getSdk } from './generated/sdk'
 import { initialiseClient } from './graphqlClient'
 
@@ -10,7 +10,7 @@ type ValidatePayloadAndCreateSdk = <T extends z.ZodTypeAny>(args: {
 }) => Promise<{
   sdk: ReturnType<typeof getSdk>
   fields: z.infer<(typeof args)['fieldsSchema']>
-  settings: z.infer<typeof settingsValidationSchema>
+  settings: z.infer<typeof SettingsValidationSchema>
 }>
 
 export const validatePayloadAndCreateSdk: ValidatePayloadAndCreateSdk = async ({
@@ -20,7 +20,7 @@ export const validatePayloadAndCreateSdk: ValidatePayloadAndCreateSdk = async ({
   const { settings, fields } = validate({
     schema: z.object({
       fields: fieldsSchema,
-      settings: settingsValidationSchema,
+      settings: SettingsValidationSchema,
     }),
     payload,
   })
