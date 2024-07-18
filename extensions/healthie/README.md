@@ -7,7 +7,7 @@ description: Healthie offers infrastructure for next generation digital health o
 
 Healthie offers infrastructure for next generation digital health organizations that provide virtual-first care. Healthie’s API-first and fully brandable suite of solutions (Scheduling, EMR, Client Engagement) enables healthcare builders to launch and scale best-in-class experiences for their members. Healthie also offers a built-in marketplace of business and clinical integrations used by our organizations.
 
-To learn more, visit [www.gethealthie.com](www.gethealthie.com).
+To learn more, visit [www.gethealthie.com](https://refer.gethealthie.com/home).
 
 ## Healthie x Awell
 
