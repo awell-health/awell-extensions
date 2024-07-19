@@ -57,13 +57,16 @@ export const FieldsValidationSchema = z.object({
   contactTypeId: z.string().min(1),
   appointmentTypeId: z.string().min(1),
   datetime: DateTimeSchema,
-  metadata: z.string().transform((str, ctx): Record<string, any> => {
-    if (isNil(str) || isEmpty(str)) return {}
-    try {
-      return JSON.parse(str)
-    } catch (e) {
-      ctx.addIssue({ code: 'custom', message: 'Invalid JSON' })
-      return z.NEVER
-    }
-  }),
+  metadata: z
+    .string()
+    .optional()
+    .transform((str, ctx): Record<string, any> => {
+      if (isNil(str) || isEmpty(str)) return {}
+      try {
+        return JSON.parse(str)
+      } catch (e) {
+        ctx.addIssue({ code: 'custom', message: 'Invalid JSON' })
+        return z.NEVER
+      }
+    }),
 } satisfies Record<keyof typeof fields, ZodTypeAny>)
