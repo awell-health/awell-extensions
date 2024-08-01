@@ -83,7 +83,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["jest-fetch-mock", "npm:3.0.3"],\
             ["json-schema-faker", "npm:0.5.6"],\
             ["jsonpath", "npm:1.1.1"],\
-            ["libphonenumber-js", "npm:1.10.61"],\
+            ["libphonenumber-js", "npm:1.11.5"],\
             ["lint-staged", "npm:14.0.1"],\
             ["lodash", "npm:4.17.21"],\
             ["mailgun.js", "npm:8.2.2"],\
@@ -243,7 +243,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["jest-fetch-mock", "npm:3.0.3"],\
             ["json-schema-faker", "npm:0.5.6"],\
             ["jsonpath", "npm:1.1.1"],\
-            ["libphonenumber-js", "npm:1.10.61"],\
+            ["libphonenumber-js", "npm:1.11.5"],\
             ["lint-staged", "npm:14.0.1"],\
             ["lodash", "npm:4.17.21"],\
             ["mailgun.js", "npm:8.2.2"],\
@@ -10236,6 +10236,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/libphonenumber-js-npm-1.10.61-5e4efda6ee-d43e2825b1.zip/node_modules/libphonenumber-js/",\
           "packageDependencies": [\
             ["libphonenumber-js", "npm:1.10.61"]\
+          ],\
+          "linkType": "HARD"\
+        }],\
+        ["npm:1.11.5", {\
+          "packageLocation": "./.yarn/cache/libphonenumber-js-npm-1.11.5-067844338a-74f4b1b138.zip/node_modules/libphonenumber-js/",\
+          "packageDependencies": [\
+            ["libphonenumber-js", "npm:1.11.5"]\
           ],\
           "linkType": "HARD"\
         }]\
