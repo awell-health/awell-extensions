@@ -6,3 +6,4 @@ export { parseNumberToTextWithDictionary } from './parseNumberToTextWithDictiona
 export { generateDynamicUrl } from './generateDynamicUrl'
 export { parseStringToPhoneNumber } from './parseStringToPhoneNumber'
 export { feetAndInchesToInches } from './feetAndInchesToInches'
+export { serializeJson } from './serializeJson'
