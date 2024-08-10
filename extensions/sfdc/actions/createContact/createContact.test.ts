@@ -1,11 +1,11 @@
-import { createTask } from '.'
+import { createContact } from '.'
 import { generateTestPayload } from '../../../../src/tests'
 import { mockSettings } from '../../api/__mocks__'
-import { mockCreateTaskResponse } from '../../api/__mocks__/mockTask'
+import { mockCreateContactResponse } from '../../api/__mocks__'
 
 jest.mock('../../api/client')
 
-describe('Dock Health - Create task', () => {
+describe('Salesforce - Create contact', () => {
   const onComplete = jest.fn()
   const onError = jest.fn()
 
@@ -13,18 +13,34 @@ describe('Dock Health - Create task', () => {
     jest.clearAllMocks()
   })
 
-  test('Should return a patient', async () => {
+  test('Should create a contact', async () => {
     const mockOnActivityCreateParams = generateTestPayload({
       fields: {
-        description: 'description',
-        patientId: 'test-patient-id',
-        taskListId: 'test-task-list-id',
-        taskGroupId: 'test-task-group-id',
+        contactKey: 'test@awellhealth.com',
+        attributeSets: JSON.stringify([
+          {
+            name: 'Email Addresses',
+            items: [
+              {
+                values: [
+                  {
+                    name: 'Email Address',
+                    value: 'test@awellhealth.com',
+                  },
+                  {
+                    name: 'HTML Enabled',
+                    value: true,
+                  },
+                ],
+              },
+            ],
+          },
+        ]),
       },
       settings: mockSettings,
     })
 
-    await createTask.onActivityCreated(
+    await createContact.onActivityCreated(
       mockOnActivityCreateParams,
       onComplete,
       onError
@@ -32,7 +48,7 @@ describe('Dock Health - Create task', () => {
 
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
-        taskId: mockCreateTaskResponse.id,
+        contactId: String(mockCreateContactResponse.contactId),
       },
     })
   })
