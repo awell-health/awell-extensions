@@ -1,8 +1,8 @@
 import { type DataPointDefinition } from '@awell-health/extensions-core'
 
 export const dataPoints = {
-  contactId: {
-    key: 'contactId',
+  createdRecordId: {
+    key: 'createdRecordId',
     valueType: 'string',
   },
 } satisfies Record<string, DataPointDefinition>

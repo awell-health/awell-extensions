@@ -1,7 +1,7 @@
-import { createContact } from './createContact'
+import { createRecord } from './createRecord'
 
 const actions = {
-  createContact,
+  createRecord,
 }
 
 export default actions

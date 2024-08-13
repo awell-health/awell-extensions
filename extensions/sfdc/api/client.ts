@@ -7,32 +7,27 @@ import {
 } from '@awell-health/extensions-core'
 import { salesforceCacheService } from './cacheService'
 import {
-  type CreateContactInputType,
-  type CreateContactResponseType,
+  type CreateRecordInputType,
+  type CreateRecordResponseType,
 } from './schema'
 
+const API_VERSION = 'v61.0'
+
 export class SalesforceDataWrapper extends DataWrapper {
-  private readonly subdomain: string
-
-  public constructor(
-    token: string,
-    baseUrl: string,
-    opts: {
-      subdomain: string
-    }
-  ) {
+  public constructor(token: string, baseUrl: string) {
     super(token, baseUrl)
-
-    this.subdomain = opts.subdomain
   }
 
-  public async createContact(
-    input: CreateContactInputType
-  ): Promise<CreateContactResponseType> {
-    const res = await this.Request<CreateContactResponseType>({
+  public async createRecord(
+    input: CreateRecordInputType
+  ): Promise<CreateRecordResponseType> {
+    const res = await this.Request<CreateRecordResponseType>({
       method: 'POST',
-      url: '/contacts/v1/contacts',
-      data: JSON.stringify(input),
+      url: `/services/data/${API_VERSION}/sobjects/${input.sObject}/`,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data: JSON.stringify(input.data),
     })
 
     return res
@@ -40,22 +35,16 @@ export class SalesforceDataWrapper extends DataWrapper {
 }
 
 interface SalesforceConstructorProps {
-  subdomain: string
   authUrl: string
   requestConfig: Omit<OAuthGrantClientCredentialsRequest, 'grant_type'>
   baseUrl: string
 }
 
-export class SalesforceAPIClient extends APIClient<SalesforceDataWrapper> {
-  readonly subdomain: string
-
+export class SalesforceRestAPIClient extends APIClient<SalesforceDataWrapper> {
   readonly ctor: DataWrapperCtor<SalesforceDataWrapper> = (
     token: string,
     baseUrl: string
-  ) =>
-    new SalesforceDataWrapper(token, baseUrl, {
-      subdomain: this.subdomain,
-    })
+  ) => new SalesforceDataWrapper(token, baseUrl)
 
   public constructor({
     authUrl,
@@ -70,13 +59,11 @@ export class SalesforceAPIClient extends APIClient<SalesforceDataWrapper> {
         cacheService: salesforceCacheService,
       }),
     })
-
-    this.subdomain = opts.subdomain
   }
 
-  public async createContact(
-    input: CreateContactInputType
-  ): Promise<CreateContactResponseType> {
-    return await this.FetchData(async (dw) => await dw.createContact(input))
+  public async createRecord(
+    input: CreateRecordInputType
+  ): Promise<CreateRecordResponseType> {
+    return await this.FetchData(async (dw) => await dw.createRecord(input))
   }
 }

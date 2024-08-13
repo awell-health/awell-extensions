@@ -1,1 +1,0 @@
-export { createContact } from './createContact'

@@ -4,11 +4,11 @@ import { z, ZodTypeAny } from 'zod'
 export const settings = {
   salesforceSubdomain: {
     key: 'salesforceSubdomain',
-    label: 'Domain',
+    label: 'Domain name',
     obfuscated: false,
     required: true,
     description:
-      'The unique subdomain for your SFDC tenant (e.g. https://<YOUR_SUBDOMAIN>.auth.marketingcloudapis.com). Only enter the subdomain, not the full URL.',
+      'The subdomain of your Salesforce org (e.g. "awell" or "awell.sandbox")',
   },
   clientId: {
     key: 'clientId',

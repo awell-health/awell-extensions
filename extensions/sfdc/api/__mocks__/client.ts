@@ -1,15 +1,15 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 
 import {
-  type CreateContactInputType,
-  type CreateContactResponseType,
+  type CreateRecordInputType,
+  type CreateRecordResponseType,
 } from '../schema'
-import { mockCreateContactResponse } from './mockContact'
+import { mockCreateRecordResponse } from './mockRecord'
 
-export class SalesforceAPIClient {
-  createContact = jest.fn(
-    (input: CreateContactInputType): CreateContactResponseType => {
-      return { ...mockCreateContactResponse, ...input }
+export class SalesforceRestAPIClient {
+  createRecord = jest.fn(
+    (input: CreateRecordInputType): CreateRecordResponseType => {
+      return mockCreateRecordResponse
     }
   )
 }

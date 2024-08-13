@@ -1,6 +1,6 @@
 import { validate } from '@awell-health/extensions-core'
 import z from 'zod'
-import { SalesforceAPIClient } from '../api/client'
+import { SalesforceRestAPIClient } from '../api/client'
 import { getApiUrl, getAuthUrl } from '../api/constants'
 import { SettingsValidationSchema } from '../settings'
 
@@ -8,7 +8,7 @@ type ValidateAndCreateClient = <T extends z.ZodTypeAny>(args: {
   fieldsSchema: T
   payload: unknown
 }) => Promise<{
-  salesforceClient: SalesforceAPIClient
+  salesforceClient: SalesforceRestAPIClient
   fields: z.infer<(typeof args)['fieldsSchema']>
   settings: z.infer<typeof SettingsValidationSchema>
   pathwayId: string
@@ -35,14 +35,13 @@ export const validatePayloadAndCreateClient: ValidateAndCreateClient = async ({
     payload,
   })
 
-  const salesforceClient = new SalesforceAPIClient({
-    authUrl: getAuthUrl('marketing', salesforceSubdomain),
-    baseUrl: getApiUrl('marketing', salesforceSubdomain),
+  const salesforceClient = new SalesforceRestAPIClient({
+    authUrl: getAuthUrl('REST', salesforceSubdomain),
+    baseUrl: getApiUrl('REST', salesforceSubdomain),
     requestConfig: {
       client_id: clientId,
       client_secret: clientSecret,
     },
-    subdomain: salesforceSubdomain,
   })
 
   return { salesforceClient, fields, settings, pathwayId, activityId }

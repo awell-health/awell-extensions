@@ -2,18 +2,16 @@ import { Category, type Action } from '@awell-health/extensions-core'
 import { type settings } from '../../settings'
 import { fields, dataPoints, FieldsValidationSchema } from './config'
 import { validatePayloadAndCreateClient } from '../../lib'
-import { isEmpty } from 'lodash'
 
-export const createContact: Action<
+export const createRecord: Action<
   typeof fields,
   typeof settings,
   keyof typeof dataPoints
 > = {
-  key: 'createContact',
+  key: 'createRecord',
   category: Category.CUSTOMER_SUPPORT,
-  title: 'Create contact',
-  description:
-    'Creates a new contact with the specified information in the specified attribute groups.',
+  title: 'Create record',
+  description: 'Creates a new record',
   fields,
   previewable: false,
   dataPoints,
@@ -23,11 +21,14 @@ export const createContact: Action<
       payload,
     })
 
-    const res = await salesforceClient.createContact(fields)
+    const res = await salesforceClient.createRecord({
+      sObject: fields.sObject,
+      data: fields.data,
+    })
 
     await onComplete({
       data_points: {
-        contactId: String(res.contactId),
+        createdRecordId: String(res.id),
       },
     })
   },

@@ -1,2 +1,2 @@
-export * from './mockContact'
+export * from './mockRecord'
 export * from './mockSettings'
