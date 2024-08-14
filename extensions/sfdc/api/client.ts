@@ -11,11 +11,19 @@ import {
   type CreateRecordResponseType,
 } from './schema'
 
-const API_VERSION = 'v61.0'
-
 export class SalesforceDataWrapper extends DataWrapper {
-  public constructor(token: string, baseUrl: string) {
+  private readonly apiVersion: string
+
+  public constructor(
+    token: string,
+    baseUrl: string,
+    opts: {
+      apiVersion: string
+    }
+  ) {
     super(token, baseUrl)
+
+    this.apiVersion = opts.apiVersion
   }
 
   public async createRecord(
@@ -23,7 +31,7 @@ export class SalesforceDataWrapper extends DataWrapper {
   ): Promise<CreateRecordResponseType> {
     const res = await this.Request<CreateRecordResponseType>({
       method: 'POST',
-      url: `/services/data/${API_VERSION}/sobjects/${input.sObject}/`,
+      url: `/services/data/${this.apiVersion}/sobjects/${input.sObject}/`,
       headers: {
         'Content-Type': 'application/json',
       },
@@ -38,13 +46,17 @@ interface SalesforceConstructorProps {
   authUrl: string
   requestConfig: Omit<OAuthGrantClientCredentialsRequest, 'grant_type'>
   baseUrl: string
+  apiVersion: string
 }
 
 export class SalesforceRestAPIClient extends APIClient<SalesforceDataWrapper> {
+  readonly apiVersion: string
+
   readonly ctor: DataWrapperCtor<SalesforceDataWrapper> = (
     token: string,
     baseUrl: string
-  ) => new SalesforceDataWrapper(token, baseUrl)
+  ) =>
+    new SalesforceDataWrapper(token, baseUrl, { apiVersion: this.apiVersion })
 
   public constructor({
     authUrl,
@@ -59,6 +71,8 @@ export class SalesforceRestAPIClient extends APIClient<SalesforceDataWrapper> {
         cacheService: salesforceCacheService,
       }),
     })
+
+    this.apiVersion = opts.apiVersion
   }
 
   public async createRecord(

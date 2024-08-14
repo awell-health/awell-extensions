@@ -27,7 +27,13 @@ describe('Salesforce - Create record', () => {
           Status: 'New',
         }),
       },
-      settings: mockSettings,
+      settings: {
+        salesforceSubdomain: 'thecollective--betsoldev.sandbox',
+        clientId: '',
+        clientSecret: '',
+        accessToken: '',
+        apiVersion: undefined,
+      },
     })
 
     await createRecord.onActivityCreated(
