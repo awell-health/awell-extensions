@@ -10,7 +10,7 @@ export const dataPoints = {
     valueType: 'string',
   },
   call_duration_ms: {
-    key: 'call_duration',
+    key: 'call_duration_ms',
     valueType: 'number',
   },
   call_disposition: {
