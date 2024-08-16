@@ -1,11 +1,10 @@
-import { createRecord } from '.'
+import { createLead } from '.'
 import { generateTestPayload } from '../../../../src/tests'
-import { mockSettings } from '../../api/__mocks__'
-import { mockCreateRecordResponse } from '../../api/__mocks__'
+import { mockSettings, mockCreateRecordResponse } from '../../api/__mocks__'
 
 jest.mock('../../api/client')
 
-describe('Salesforce - Create record', () => {
+describe('Salesforce - Create Lead', () => {
   const onComplete = jest.fn()
   const onError = jest.fn()
 
@@ -13,10 +12,9 @@ describe('Salesforce - Create record', () => {
     jest.clearAllMocks()
   })
 
-  test('Should create a record', async () => {
+  test('Should create a Lead', async () => {
     const mockOnActivityCreateParams = generateTestPayload({
       fields: {
-        sObject: 'Lead',
         data: JSON.stringify({
           RecordTypeId: '0125w000000BRDxAAO',
           LeadSource: 'Website',
@@ -27,16 +25,10 @@ describe('Salesforce - Create record', () => {
           Status: 'New',
         }),
       },
-      settings: {
-        salesforceSubdomain: 'thecollective--betsoldev.sandbox',
-        clientId: '',
-        clientSecret: '',
-        accessToken: '',
-        apiVersion: undefined,
-      },
+      settings: mockSettings,
     })
 
-    await createRecord.onActivityCreated(
+    await createLead.onActivityCreated(
       mockOnActivityCreateParams,
       onComplete,
       onError
@@ -44,7 +36,7 @@ describe('Salesforce - Create record', () => {
 
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
-        createdRecordId: String(mockCreateRecordResponse.id),
+        createdLeadId: String(mockCreateRecordResponse.id),
       },
     })
   })

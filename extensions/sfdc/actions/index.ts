@@ -1,7 +1,7 @@
-import { createRecord } from './createRecord'
+import { createLead } from './createLead'
 
 const actions = {
-  createRecord,
+  createLead,
 }
 
 export default actions

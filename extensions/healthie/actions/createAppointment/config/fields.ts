@@ -4,7 +4,7 @@ import {
   DateTimeSchema,
 } from '@awell-health/extensions-core'
 import { isEmpty, isNil } from 'lodash'
-import { z, ZodTypeAny } from 'zod'
+import { z, type ZodTypeAny } from 'zod'
 
 export const fields = {
   patientId: {

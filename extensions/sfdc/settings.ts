@@ -1,5 +1,5 @@
 import { type Setting } from '@awell-health/extensions-core'
-import { z, ZodTypeAny } from 'zod'
+import { z, type ZodTypeAny } from 'zod'
 import { DEFAULT_API_VERSION } from './api/constants'
 
 export const settings = {
@@ -9,45 +9,52 @@ export const settings = {
     obfuscated: false,
     required: true,
     description:
-      'The subdomain of your Salesforce org (e.g. "awell" or "awell.sandbox")',
+      'The subdomain of your Salesforce tenant (e.g. "awell" or "awell.sandbox")',
   },
   clientId: {
     key: 'clientId',
     label: 'Client ID',
     obfuscated: false,
-    required: false,
-    description:
-      'Client ID issued when you create the API integration in Installed Packages.',
+    required: true,
+    description: '',
   },
   clientSecret: {
     key: 'clientSecret',
     label: 'Client secret',
     obfuscated: true,
-    required: false,
-    description:
-      'Client secret issued when you create the API integration in Installed Packages.',
+    required: true,
+    description: '',
   },
-  accessToken: {
-    key: 'accessToken',
-    label: 'Access toke ',
+  username: {
+    key: 'username',
+    label: 'Username ',
     obfuscated: false,
     required: false,
     description:
-      'When an access token is provided, the extension will not obtain an access token via the client credenials grant but instead just append the given access token to the request.',
+      'The username of the user that the connected app is imitating. A username is only needed when using the Password grant, leave blank to use client credentials grant.',
+  },
+  password: {
+    key: 'password',
+    label: 'Password ',
+    obfuscated: false,
+    required: false,
+    description:
+      'The password of the user that the connected app is imitating. A password is only needed when using the Password grant, leave blank to use client credentials grant',
   },
   apiVersion: {
     key: 'apiVersion',
     label: 'API version ',
     obfuscated: false,
     required: false,
-    description: 'Defaults v61.0',
+    description: `Defaults to ${DEFAULT_API_VERSION}`,
   },
 } satisfies Record<string, Setting>
 
 export const SettingsValidationSchema = z.object({
   salesforceSubdomain: z.string().min(1),
-  clientId: z.string().optional(),
-  clientSecret: z.string().optional(),
-  accessToken: z.string().optional(),
-  apiVersion: z.string().default(DEFAULT_API_VERSION),
+  clientId: z.string(),
+  clientSecret: z.string(),
+  username: z.string().optional(),
+  password: z.string().optional(),
+  apiVersion: z.string().optional(),
 } satisfies Record<keyof typeof settings, ZodTypeAny>)

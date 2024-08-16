@@ -10,7 +10,7 @@ export const sfdc: Extension = {
   key: 'sfdc',
   title: 'Salesforce',
   description:
-    'SFDC (Salesforce.com) is a cloud-based customer relationship management (CRM) software used to manage customer data, sales processes, marketing campaigns, and customer service activities',
+    'Salesforce.com is a cloud-based customer relationship management (CRM) software used to manage customer data, sales processes, marketing campaigns, and customer service activities',
   icon_url:
     'https://res.cloudinary.com/da7x4rzl4/image/upload/v1723280338/Awell%20Extensions/logo-sfdc-netherlands-b-v-salesforce-com.jpg',
   category: Category.CUSTOMER_SUPPORT,

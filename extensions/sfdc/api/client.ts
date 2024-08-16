@@ -4,6 +4,9 @@ import {
   type DataWrapperCtor,
   OAuthClientCredentials,
   type OAuthGrantClientCredentialsRequest,
+  type OAuthGrantPasswordRequest,
+  type OAuthGrantRequest,
+  OAuthPassword,
 } from '@awell-health/extensions-core'
 import { salesforceCacheService } from './cacheService'
 import {
@@ -40,11 +43,23 @@ export class SalesforceDataWrapper extends DataWrapper {
 
     return res
   }
+
+  public async getRecordShape(sObject: string): Promise<unknown> {
+    const res = await this.Request<unknown>({
+      method: 'GET',
+      url: `/services/data/${this.apiVersion}/sobjects/${sObject}/describe`,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+
+    return res
+  }
 }
 
 interface SalesforceConstructorProps {
   authUrl: string
-  requestConfig: Omit<OAuthGrantClientCredentialsRequest, 'grant_type'>
+  requestConfig: Omit<OAuthGrantRequest, 'grant_type'>
   baseUrl: string
   apiVersion: string
 }
@@ -63,13 +78,34 @@ export class SalesforceRestAPIClient extends APIClient<SalesforceDataWrapper> {
     requestConfig,
     ...opts
   }: SalesforceConstructorProps) {
+    const getAuth = (): OAuthPassword | OAuthClientCredentials => {
+      if ('username' in requestConfig && 'password' in requestConfig) {
+        return new OAuthPassword({
+          auth_url: authUrl,
+          request_config: requestConfig as Omit<
+            OAuthGrantPasswordRequest,
+            'grant_type'
+          >,
+          /**
+           * Not sure whether caching is possible with the password grant
+           */
+          // cacheService: salesforceCacheService,
+        })
+      }
+
+      return new OAuthClientCredentials({
+        auth_url: authUrl,
+        request_config: requestConfig satisfies Omit<
+          OAuthGrantClientCredentialsRequest,
+          'grant_type'
+        >,
+        cacheService: salesforceCacheService,
+      })
+    }
+
     super({
       ...opts,
-      auth: new OAuthClientCredentials({
-        auth_url: authUrl,
-        request_config: requestConfig,
-        cacheService: salesforceCacheService,
-      }),
+      auth: getAuth(),
     })
 
     this.apiVersion = opts.apiVersion
@@ -79,5 +115,9 @@ export class SalesforceRestAPIClient extends APIClient<SalesforceDataWrapper> {
     input: CreateRecordInputType
   ): Promise<CreateRecordResponseType> {
     return await this.FetchData(async (dw) => await dw.createRecord(input))
+  }
+
+  public async getRecordShape(sObject: string): Promise<unknown> {
+    return await this.FetchData(async (dw) => await dw.getRecordShape(sObject))
   }
 }

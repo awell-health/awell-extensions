@@ -12,4 +12,10 @@ export class SalesforceRestAPIClient {
       return mockCreateRecordResponse
     }
   )
+
+  getRecordShape = jest.fn(() => {
+    return {
+      label: 'Lead',
+    }
+  })
 }

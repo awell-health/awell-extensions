@@ -1,16 +1,24 @@
-import { validate } from '@awell-health/extensions-core'
+import {
+  type OAuthGrantClientCredentialsRequest,
+  type OAuthGrantPasswordRequest,
+  validate,
+} from '@awell-health/extensions-core'
 import { isEmpty } from 'lodash'
 import z from 'zod'
 import { SalesforceRestAPIClient } from '../api/client'
-import { getApiUrl, getAuthUrl } from '../api/constants'
-import { SalesforceTemporaryClient } from '../api/temporaryRestClient'
+import {
+  DEFAULT_API_VERSION,
+  getApiUrl,
+  getAuthUrl,
+  type GrantType,
+} from '../api/constants'
 import { SettingsValidationSchema } from '../settings'
 
 type ValidateAndCreateClient = <T extends z.ZodTypeAny>(args: {
   fieldsSchema: T
   payload: unknown
 }) => Promise<{
-  salesforceClient: SalesforceRestAPIClient | SalesforceTemporaryClient
+  salesforceClient: SalesforceRestAPIClient
   fields: z.infer<(typeof args)['fieldsSchema']>
   settings: z.infer<typeof SettingsValidationSchema>
   pathwayId: string
@@ -26,8 +34,9 @@ export const validatePayloadAndCreateClient: ValidateAndCreateClient = async ({
       salesforceSubdomain,
       clientId,
       clientSecret,
+      username,
+      password,
       apiVersion,
-      accessToken,
     },
     pathway: { id: pathwayId },
     activity: { id: activityId },
@@ -43,35 +52,41 @@ export const validatePayloadAndCreateClient: ValidateAndCreateClient = async ({
     payload,
   })
 
-  const getSalesforceClient = () => {
-    if (isEmpty(accessToken) || !accessToken) {
-      if (
-        !clientId ||
-        !clientSecret ||
-        isEmpty(clientId) ||
-        isEmpty(clientSecret)
-      )
-        throw new Error('Provide a client ID and client secret')
+  const getGrantType = (): GrantType => {
+    if (isEmpty(username) || isEmpty(password)) return 'client_credentials'
 
-      return new SalesforceRestAPIClient({
-        authUrl: getAuthUrl('REST', salesforceSubdomain),
-        baseUrl: getApiUrl('REST', salesforceSubdomain),
-        requestConfig: {
-          client_id: clientId,
-          client_secret: clientSecret,
-        },
-        apiVersion,
-      })
-    }
-
-    return new SalesforceTemporaryClient({
-      accessToken,
-      apiVersion,
-      baseUrl: getApiUrl('REST', salesforceSubdomain),
-    })
+    return 'password'
   }
 
-  const salesforceClient = getSalesforceClient()
+  const grantType = getGrantType()
+
+  const getRequestConfig = ():
+    | Omit<OAuthGrantClientCredentialsRequest, 'grant_type'>
+    | Omit<OAuthGrantPasswordRequest, 'grant_type'> => {
+    if (grantType === 'client_credentials')
+      return {
+        client_id: clientId,
+        client_secret: clientSecret,
+      } satisfies Omit<OAuthGrantClientCredentialsRequest, 'grant_type'>
+
+    if (!isEmpty(username) && !isEmpty(password)) {
+      return {
+        client_id: clientId,
+        client_secret: clientSecret,
+        username: username as string,
+        password: password as string,
+      } satisfies Omit<OAuthGrantPasswordRequest, 'grant_type'>
+    }
+
+    throw new Error('Should not happen')
+  }
+
+  const salesforceClient = new SalesforceRestAPIClient({
+    authUrl: getAuthUrl('REST', grantType, salesforceSubdomain),
+    baseUrl: getApiUrl('REST', salesforceSubdomain),
+    requestConfig: getRequestConfig(),
+    apiVersion: apiVersion ?? DEFAULT_API_VERSION,
+  })
 
   return { salesforceClient, fields, settings, pathwayId, activityId }
 }
