@@ -33,6 +33,7 @@ import { TextLine } from './textline'
 import { Medplum } from './medplum'
 import { dockHealth } from './dockHealth'
 import { stripe } from './stripe'
+import { sfdc } from './sfdc'
 
 import * as json from './markdown.json'
 import { ExternalServer } from './external-server'
@@ -70,6 +71,7 @@ export const extensions = [
   nexuzhealth,
   Sendbird,
   Sendgrid,
+  sfdc,
   stripe,
   TalkDesk,
   TextLine,
