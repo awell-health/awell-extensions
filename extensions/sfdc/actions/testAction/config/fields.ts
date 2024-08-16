@@ -5,7 +5,7 @@ export const fields = {
   sObject: {
     id: 'sObject',
     label: 'sObject',
-    description: 'The type of the record to create (e.g. "Account" or "Lead")',
+    description: '',
     type: FieldType.STRING,
     required: true,
   },

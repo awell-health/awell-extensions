@@ -4,8 +4,8 @@ import z, { type ZodTypeAny } from 'zod'
 export const fields = {
   data: {
     id: 'data',
-    label: 'The values for the new record',
-    description: 'Array of information used to create a new contact',
+    label: 'Data',
+    description: 'Information used to create the Lead',
     type: FieldType.JSON,
     required: true,
   },
