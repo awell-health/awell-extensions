@@ -37,7 +37,7 @@ const fields: Fields = {
 const dataPoints = {
   data_points: {
     key: 'data_points',
-    valueType: 'string',
+    valueType: 'json',
   },
 } satisfies Record<string, DataPointDefinition>
 
@@ -65,7 +65,7 @@ export const externalServer: Action<
   fields,
   dataPoints,
   previewable: true,
-  onActivityCreated: async (payload, onComplete, onError) => {
+  onActivityCreated: async (payload, onComplete, onError, { httpsAgent }) => {
     const { fields, settings } = PayloadSchema.parse(payload)
     const clientPayload = fields.input ?? { fields: {}, settings: {} }
     const { data, status } = await axios.post<{
@@ -75,13 +75,16 @@ export const externalServer: Action<
     }>(
       `${settings.url}/${fields.extension}/${fields.action}`,
       { data: clientPayload },
-      { headers: { 'Content-Type': 'application/json' } }
+      {
+        headers: { 'Content-Type': 'application/json' },
+        httpsAgent: httpsAgent({ rejectUnauthorized: false }),
+      }
     )
     // eslint-disable-next-line @typescript-eslint/naming-convention
     const { data_points, events, response } = data
     if (status === 200 && response === 'success') {
       await onComplete({
-        data_points: { data_points: JSON.stringify(data_points) },
+        data_points: { data_points },
       })
     } else {
       await onError({ events })
