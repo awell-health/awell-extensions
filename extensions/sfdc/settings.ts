@@ -36,7 +36,7 @@ export const settings = {
   password: {
     key: 'password',
     label: 'Password ',
-    obfuscated: false,
+    obfuscated: true,
     required: false,
     description:
       'The password of the user that the connected app is imitating. A password is only needed when using the Password grant, leave blank to use client credentials grant',
