@@ -65,7 +65,7 @@ export const mtls: Action<
       { data: clientPayload },
       {
         headers: { 'Content-Type': 'application/json' },
-        httpsAgent: helpers.httpsAgent,
+        httpsAgent: helpers.httpsAgent(),
       }
     )
     if (status === 200) {
