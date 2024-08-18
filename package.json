@@ -69,7 +69,7 @@
   },
   "dependencies": {
     "@awell-health/awell-sdk": "^0.1.7",
-    "@awell-health/extensions-core": "0.2.15",
+    "@awell-health/extensions-core": "0.3.4",
     "@dropbox/sign": "^1.1.3",
     "@mailchimp/mailchimp_transactional": "^1.0.50",
     "@medplum/core": "^3.1.4",
