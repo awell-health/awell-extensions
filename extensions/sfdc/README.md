@@ -24,3 +24,7 @@ Username and password are optional. When specified, the Password grant will be u
 ### Create a Lead
 
 A lead is a standard Salesforce object (sObject). You can use this action to create a Lead object.
+
+### Update a lead
+
+Updates a Lead record based on the specified data and provided Lead record ID. Field values provided replace the existing values in the Lead record (PATCH).
