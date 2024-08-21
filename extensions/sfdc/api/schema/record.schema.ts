@@ -1,5 +1,9 @@
 import { z } from 'zod'
 
+/**
+ * Create a record
+ */
+
 export const CreateRecordInputSchema = z.object({
   sObject: z.string().min(1),
   data: z.record(z.string(), z.unknown()),
@@ -15,4 +19,22 @@ export const CreateRecordResponseSchema = z.object({
 
 export type CreateRecordResponseType = z.infer<
   typeof CreateRecordResponseSchema
+>
+
+/**
+ * Update a record
+ */
+
+export const UpdateRecordInputSchema = z.object({
+  sObject: z.string().min(1),
+  sObjectId: z.string().min(1),
+  data: z.record(z.string(), z.unknown()),
+})
+
+export type UpdateRecordInputType = z.infer<typeof UpdateRecordInputSchema>
+
+export const UpdateRecordResponseSchema = z.undefined()
+
+export type UpdateRecordResponseType = z.infer<
+  typeof UpdateRecordResponseSchema
 >

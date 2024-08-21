@@ -3,6 +3,8 @@
 import {
   type CreateRecordInputType,
   type CreateRecordResponseType,
+  type UpdateRecordInputType,
+  type UpdateRecordResponseType,
 } from '../schema'
 import { mockCreateRecordResponse } from './mockRecord'
 
@@ -10,6 +12,13 @@ export class SalesforceRestAPIClient {
   createRecord = jest.fn(
     (input: CreateRecordInputType): CreateRecordResponseType => {
       return mockCreateRecordResponse
+    }
+  )
+
+  updateRecord = jest.fn(
+    (input: UpdateRecordInputType): UpdateRecordResponseType => {
+      // 204 status code
+      return undefined
     }
   )
 
