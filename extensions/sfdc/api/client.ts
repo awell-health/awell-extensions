@@ -10,6 +10,8 @@ import {
 } from '@awell-health/extensions-core'
 import { salesforceCacheService } from './cacheService'
 import {
+  type UpdateRecordInputType,
+  type UpdateRecordResponseType,
   type CreateRecordInputType,
   type CreateRecordResponseType,
 } from './schema'
@@ -35,6 +37,21 @@ export class SalesforceDataWrapper extends DataWrapper {
     const res = await this.Request<CreateRecordResponseType>({
       method: 'POST',
       url: `/services/data/${this.apiVersion}/sobjects/${input.sObject}/`,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data: JSON.stringify(input.data),
+    })
+
+    return res
+  }
+
+  public async updateRecord(
+    input: UpdateRecordInputType
+  ): Promise<UpdateRecordResponseType> {
+    const res = await this.Request<UpdateRecordResponseType>({
+      method: 'PATCH',
+      url: `/services/data/${this.apiVersion}/sobjects/${input.sObject}/${input.sObjectId}`,
       headers: {
         'Content-Type': 'application/json',
       },
@@ -115,6 +132,12 @@ export class SalesforceRestAPIClient extends APIClient<SalesforceDataWrapper> {
     input: CreateRecordInputType
   ): Promise<CreateRecordResponseType> {
     return await this.FetchData(async (dw) => await dw.createRecord(input))
+  }
+
+  public async updateRecord(
+    input: UpdateRecordInputType
+  ): Promise<UpdateRecordResponseType> {
+    return await this.FetchData(async (dw) => await dw.updateRecord(input))
   }
 
   public async getRecordShape(sObject: string): Promise<unknown> {
