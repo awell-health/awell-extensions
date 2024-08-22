@@ -29,7 +29,7 @@ describe('Transform - Serialize JSON', () => {
 
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
-        serializedJson: 'hello',
+        serializedJson: JSON.stringify(object),
       },
     })
   })
