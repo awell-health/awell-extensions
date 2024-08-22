@@ -34,6 +34,7 @@ import { Medplum } from './medplum'
 import { dockHealth } from './dockHealth'
 import { stripe } from './stripe'
 import { sfdc } from './sfdc'
+import { rest } from './rest'
 
 import * as json from './markdown.json'
 import { ExternalServer } from './external-server'
@@ -69,6 +70,7 @@ export const extensions = [
   Medplum,
   Metriport,
   nexuzhealth,
+  rest,
   Sendbird,
   Sendgrid,
   sfdc,
