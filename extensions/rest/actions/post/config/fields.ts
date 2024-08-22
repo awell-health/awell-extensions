@@ -15,7 +15,7 @@ export const fields = {
     label: 'Headers',
     description: '',
     type: FieldType.JSON,
-    required: true,
+    required: false,
   },
   jsonPayload: {
     id: 'jsonPayload',
