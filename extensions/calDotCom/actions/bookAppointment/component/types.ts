@@ -5,7 +5,7 @@ export enum ActionKey {
   BOOK_APPOINTMENT = 'bookAppointment',
 }
 
-export interface BookAppointmentFields {
+export interface BookAppointmentFields extends Record<string, any> {
   calLink: string
 }
 
