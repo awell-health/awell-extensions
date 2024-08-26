@@ -4,6 +4,7 @@ import { z, ZodError } from 'zod'
 import { fromZodError } from 'zod-validation-error'
 import { SettingsSchema } from '../../schema'
 import { type settings } from '../../settings'
+import { BookAppointmentAction } from './component/BookAppointmentAction'
 import { dataPoints, fields, FieldsValidationSchema } from './config'
 
 export const bookAppointment: Action<typeof fields, typeof settings> = {
@@ -47,4 +48,5 @@ export const bookAppointment: Action<typeof fields, typeof settings> = {
       }
     }
   },
+  component: BookAppointmentAction,
 }
