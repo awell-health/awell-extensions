@@ -35,6 +35,22 @@ export const settings = {
     description:
       'The SID of the Messaging Service you want to associate with the Message. If you are not using a Messaging Service but a "from" number, then you can leave this field empty.',
   },
+  optOutLanguage: {
+    label: 'Opt-out language',
+    key: 'optOutLanguage',
+    obfuscated: false,
+    required: false,
+    description:
+      'The sentence that is appended at the end of your text messages that informs recipients of how they can opt out. If not specified, standard opt-out language is appended to your messages.',
+  },
+  language: {
+    label: 'Language',
+    key: 'language',
+    obfuscated: false,
+    required: false,
+    description:
+      'The language you are sending text messages in. Possible options: fr, en (default), nl.',
+  },
 } satisfies Record<string, Setting>
 
 export const SettingsValidationSchema = z.object({
@@ -42,4 +58,6 @@ export const SettingsValidationSchema = z.object({
   authToken: z.string().min(1, { message: 'Missing Twilio auth token' }),
   fromNumber: E164PhoneValidationOptionalSchema,
   messagingServiceSid: z.string().optional(),
+  optOutLanguage: z.string().optional(),
+  language: z.enum(['en', 'fr', 'nl']).optional(),
 } satisfies Record<keyof typeof settings, ZodTypeAny>)

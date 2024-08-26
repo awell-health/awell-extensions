@@ -16,6 +16,16 @@ In order to set up this extension, you will need:
 2. Your account SID which can be found in the Twilio console.
 3. A phone number to send the message from. This must be a Twilio phone number that you own.
 
+## User consent
+
+The extension has some built-in mechanisms to enforce compliance with [Twilio's messaging policy](https://www.twilio.com/en-us/legal/messaging-policy).
+
+### Opt-out
+
+By default, every text message will be appended with standard opt-out language ("Reply STOP to unsubscribe."). You can specify custom opt-out language within the settings of the extension but make sure the opt-out keywords used are supported. STOP, UNSTOP, UNSUBSCRIBE or CANCEL are the default opt-out keywords supported but Twilio also supports defining custom stop keywords.
+
+For more information, please visit the Twilio docs.
+
 ## Custom Actions
 
 ### Send SMS
