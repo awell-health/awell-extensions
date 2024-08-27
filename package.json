@@ -1,6 +1,6 @@
 {
   "name": "@awell-health/awell-extensions",
-  "version": "1.2.0-beta.1",
+  "version": "1.2.0-beta.3",
   "packageManager": "yarn@3.4.1",
   "main": "dist/src/index.js",
   "repository": {
