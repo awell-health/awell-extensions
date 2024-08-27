@@ -33,6 +33,7 @@ export const sendSmsWithMessagingService: Action<
           accountSid,
           authToken,
           messagingServiceSid: defaultMessagingServiceSid,
+          addOptOutLanguage,
           optOutLanguage,
           language,
         },
@@ -66,7 +67,9 @@ export const sendSmsWithMessagingService: Action<
       })
 
       await client.messages.create({
-        body: appendOptOutLanguage(message, optOutLanguage, language),
+        body: addOptOutLanguage
+          ? appendOptOutLanguage(message, optOutLanguage, language)
+          : message,
         messagingServiceSid: messagingServiceSid ?? defaultMessagingServiceSid,
         to: recipient,
       })

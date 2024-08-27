@@ -11,7 +11,6 @@ export interface TwilioErrorResponse {
 export const isTwilioErrorResponse = (
   data: any
 ): data is TwilioErrorResponse => {
-  console.log('twilio data', data)
   return typeof data?.moreInfo === 'string'
 }
 

@@ -30,6 +30,7 @@ export const sendSms: Action<typeof fields, typeof settings> = {
           accountSid,
           authToken,
           fromNumber: defaultFromNumber,
+          addOptOutLanguage,
           optOutLanguage,
           language,
         },
@@ -60,7 +61,9 @@ export const sendSms: Action<typeof fields, typeof settings> = {
       })
 
       await client.messages.create({
-        body: appendOptOutLanguage(message, optOutLanguage, language),
+        body: addOptOutLanguage
+          ? appendOptOutLanguage(message, optOutLanguage, language)
+          : message,
         from: from ?? defaultFromNumber,
         to: recipient,
       })

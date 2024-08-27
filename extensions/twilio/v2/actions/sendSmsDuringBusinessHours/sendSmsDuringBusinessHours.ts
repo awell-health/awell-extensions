@@ -39,6 +39,7 @@ export const sendSmsDuringBusinessHours: Action<
           accountSid,
           authToken,
           messagingServiceSid: defaultMessagingServiceSid,
+          addOptOutLanguage,
           optOutLanguage,
           language,
         },
@@ -82,7 +83,9 @@ export const sendSmsDuringBusinessHours: Action<
       const scheduled = isBetweenBusinessHours ? 'false' : 'true'
 
       const res = await client.messages.create({
-        body: appendOptOutLanguage(message, optOutLanguage, language),
+        body: addOptOutLanguage
+          ? appendOptOutLanguage(message, optOutLanguage, language)
+          : message,
         messagingServiceSid: messagingServiceSid ?? defaultMessagingServiceSid,
         to: recipient,
         scheduleType,
