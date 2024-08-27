@@ -2,8 +2,6 @@ import { Category, type Action } from '@awell-health/extensions-core'
 import { type settings } from '../../settings'
 import { fields, dataPoints, FieldsValidationSchema } from './config'
 import { validatePayloadAndCreateClient } from '../../lib'
-import { AxiosError, isAxiosError } from 'axios'
-import { parseAxiosError, parseUnknowError } from '../../lib/errors'
 
 export const updateLead: Action<
   typeof fields,
@@ -22,26 +20,12 @@ export const updateLead: Action<
       fieldsSchema: FieldsValidationSchema,
       payload,
     })
+    await salesforceClient.updateRecord({
+      sObject: 'Lead',
+      sObjectId: fields.sObjectId,
+      data: fields.data,
+    })
 
-    try {
-      await salesforceClient.updateRecord({
-        sObject: 'Lead',
-        sObjectId: fields.sObjectId,
-        data: fields.data,
-      })
-
-      await onComplete()
-    } catch (error) {
-      let parsedError
-
-      if (isAxiosError(error)) {
-        parsedError = parseAxiosError(error as AxiosError)
-      } else {
-        parsedError = parseUnknowError(error as Error)
-      }
-      await onError({
-        events: [parsedError],
-      })
-    }
+    await onComplete()
   },
 }
