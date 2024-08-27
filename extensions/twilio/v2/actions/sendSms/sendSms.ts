@@ -1,19 +1,13 @@
 import { z } from 'zod'
 import twilioSdk from '../../../common/sdk/twilio'
-import { type ActivityEvent, type Action } from '@awell-health/extensions-core'
+import { type Action } from '@awell-health/extensions-core'
 import { type settings } from '../../../settings'
 import { Category, validate } from '@awell-health/extensions-core'
 import { SettingsValidationSchema } from '../../../settings'
 import { FieldsValidationSchema, fields } from './config'
 import { isNil } from 'lodash'
 import { appendOptOutLanguage } from '../../../lib'
-import {
-  isTwilioErrorResponse,
-  parseTwilioError,
-  parseUnknowError,
-  parseZodError,
-} from '../../../lib/errors'
-import { isZodError } from '../../../../canvasMedical/v1/utils'
+import { isTwilioErrorResponse, parseTwilioError } from '../../../lib/errors'
 
 export const sendSms: Action<typeof fields, typeof settings> = {
   key: 'sendSms',
@@ -70,19 +64,14 @@ export const sendSms: Action<typeof fields, typeof settings> = {
 
       await onComplete()
     } catch (error) {
-      let parsedError: ActivityEvent
-
-      if (isZodError(error)) {
-        parsedError = parseZodError(error)
-      } else if (isTwilioErrorResponse(error)) {
-        parsedError = parseTwilioError(error)
+      if (isTwilioErrorResponse(error)) {
+        await onError({
+          events: [parseTwilioError(error)],
+        })
       } else {
-        parsedError = parseUnknowError(error as Error)
+        // we handle ZodError and unknown errors in extension-server directly
+        throw error
       }
-
-      await onError({
-        events: [parsedError],
-      })
     }
   },
 }

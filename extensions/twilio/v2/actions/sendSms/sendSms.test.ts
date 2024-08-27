@@ -1,6 +1,7 @@
 import { sendSms } from './sendSms'
 import twilioSdk from '../../../common/sdk/twilio'
 import { generateTestPayload } from '../../../../../src/tests'
+import { ZodError } from 'zod'
 
 describe('Send SMS (with from number) action', () => {
   const onComplete = jest.fn()
@@ -39,7 +40,7 @@ describe('Send SMS (with from number) action', () => {
   })
 
   test('Should call the onError callback when there is no recipient', async () => {
-    await sendSms.onActivityCreated(
+    const resp = sendSms.onActivityCreated(
       generateTestPayload({
         fields: {
           message: 'Message content',
@@ -59,12 +60,12 @@ describe('Send SMS (with from number) action', () => {
       onComplete,
       onError
     )
+    await expect(resp).rejects.toThrow(ZodError)
     expect(onComplete).not.toHaveBeenCalled()
-    expect(onError).toHaveBeenCalled()
   })
 
   test('Should call the onError callback when there is no message', async () => {
-    await sendSms.onActivityCreated(
+    const resp = sendSms.onActivityCreated(
       generateTestPayload({
         fields: {
           message: '',
@@ -84,8 +85,8 @@ describe('Send SMS (with from number) action', () => {
       onComplete,
       onError
     )
+    await expect(resp).rejects.toThrow(ZodError)
     expect(onComplete).not.toHaveBeenCalled()
-    expect(onError).toHaveBeenCalled()
   })
 
   describe("'From' number", () => {
@@ -143,19 +144,13 @@ describe('Send SMS (with from number) action', () => {
         },
       }
 
-      await sendSms.onActivityCreated(payloadWithoutFrom, onComplete, onError)
+      const resp = sendSms.onActivityCreated(
+        payloadWithoutFrom,
+        onComplete,
+        onError
+      )
+      await expect(resp).rejects.toThrow(ZodError)
       expect(onComplete).not.toHaveBeenCalled()
-      expect(onError).toHaveBeenCalledWith({
-        events: expect.arrayContaining([
-          expect.objectContaining({
-            error: {
-              category: 'BAD_REQUEST',
-              message:
-                'Validation error: "From" number is missing in both settings and in the action field.',
-            },
-          }),
-        ]),
-      })
     })
   })
 })

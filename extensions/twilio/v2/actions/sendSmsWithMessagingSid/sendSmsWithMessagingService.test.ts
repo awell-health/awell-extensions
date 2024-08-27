@@ -1,6 +1,7 @@
 import { sendSmsWithMessagingService } from './sendSmsWithMessagingService'
 import twilioSdk from '../../../common/sdk/twilio'
 import { generateTestPayload } from '../../../../../src/tests'
+import { ZodError } from 'zod'
 
 describe('Send SMS (with Messaging Service) action', () => {
   const onComplete = jest.fn()
@@ -39,7 +40,7 @@ describe('Send SMS (with Messaging Service) action', () => {
   })
 
   test('Should call the onError callback when there is no recipient', async () => {
-    await sendSmsWithMessagingService.onActivityCreated(
+    const resp = sendSmsWithMessagingService.onActivityCreated(
       generateTestPayload({
         fields: {
           message: 'Message content',
@@ -59,12 +60,12 @@ describe('Send SMS (with Messaging Service) action', () => {
       onComplete,
       onError
     )
+    await expect(resp).rejects.toThrow(ZodError)
     expect(onComplete).not.toHaveBeenCalled()
-    expect(onError).toHaveBeenCalled()
   })
 
   test('Should call the onError callback when there is no message', async () => {
-    await sendSmsWithMessagingService.onActivityCreated(
+    const resp = sendSmsWithMessagingService.onActivityCreated(
       generateTestPayload({
         fields: {
           message: '',
@@ -84,8 +85,8 @@ describe('Send SMS (with Messaging Service) action', () => {
       onComplete,
       onError
     )
+    await expect(resp).rejects.toThrow(ZodError)
     expect(onComplete).not.toHaveBeenCalled()
-    expect(onError).toHaveBeenCalled()
   })
 
   describe("'Messaging Service SID'", () => {
@@ -153,23 +154,13 @@ describe('Send SMS (with Messaging Service) action', () => {
         },
       }
 
-      await sendSmsWithMessagingService.onActivityCreated(
+      const resp = sendSmsWithMessagingService.onActivityCreated(
         payloadWithoutFrom,
         onComplete,
         onError
       )
+      await expect(resp).rejects.toThrow(ZodError)
       expect(onComplete).not.toHaveBeenCalled()
-      expect(onError).toHaveBeenCalledWith({
-        events: expect.arrayContaining([
-          expect.objectContaining({
-            error: {
-              category: 'BAD_REQUEST',
-              message:
-                'Validation error: "Messaging Service SID" is missing in both settings and in the action field.',
-            },
-          }),
-        ]),
-      })
     })
   })
 })
