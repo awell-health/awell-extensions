@@ -12,7 +12,7 @@ export const Workramp: Extension = {
     'https://www.workramp.com/wp-content/themes/workramp/images/logo-workramp.svg',
   description:
     'An LMS platform. The system identifier used is https://www.workramp.com/',
-  category: Category.SCHEDULING,
+  category: Category.CONTENT_AND_FILES,
   author: {
     authorType: AuthorType.AWELL,
   },
