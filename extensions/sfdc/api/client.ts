@@ -34,7 +34,7 @@ export class SalesforceDataWrapper extends DataWrapper {
   public async createRecord(
     input: CreateRecordInputType
   ): Promise<CreateRecordResponseType> {
-    const res = await this.Request<CreateRecordResponseType>({
+    return await this.Request<CreateRecordResponseType>({
       method: 'POST',
       url: `/services/data/${this.apiVersion}/sobjects/${input.sObject}/`,
       headers: {
@@ -42,14 +42,12 @@ export class SalesforceDataWrapper extends DataWrapper {
       },
       data: JSON.stringify(input.data),
     })
-
-    return res
   }
 
   public async updateRecord(
     input: UpdateRecordInputType
   ): Promise<UpdateRecordResponseType> {
-    const res = await this.Request<UpdateRecordResponseType>({
+    return await this.Request<UpdateRecordResponseType>({
       method: 'PATCH',
       url: `/services/data/${this.apiVersion}/sobjects/${input.sObject}/${input.sObjectId}`,
       headers: {
@@ -57,20 +55,16 @@ export class SalesforceDataWrapper extends DataWrapper {
       },
       data: JSON.stringify(input.data),
     })
-
-    return res
   }
 
   public async getRecordShape(sObject: string): Promise<unknown> {
-    const res = await this.Request<unknown>({
+    return await this.Request<unknown>({
       method: 'GET',
       url: `/services/data/${this.apiVersion}/sobjects/${sObject}/describe`,
       headers: {
         'Content-Type': 'application/json',
       },
     })
-
-    return res
   }
 }
 

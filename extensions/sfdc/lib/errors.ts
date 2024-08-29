@@ -1,21 +1,35 @@
-import { ActivityEvent } from '@awell-health/extensions-core'
-import { AxiosError } from 'axios'
+import { type ActivityEvent } from '@awell-health/extensions-core'
+import { type AxiosError } from 'axios'
 
-export const parseAxiosError = (error: AxiosError): ActivityEvent => {
+type SalesforceError = Array<{
+  message: string
+  errorCode: string
+}>
+
+export const isSalesforceError = (
+  error: any
+): error is AxiosError<SalesforceError> => {
+  return (
+    typeof error === 'object' &&
+    error !== null &&
+    'response' in error &&
+    typeof error.response === 'object' &&
+    error.response !== null &&
+    Array.isArray(error.response.data) &&
+    error.response.data.length > 0 &&
+    'errorCode' in error.response.data[0] &&
+    'message' in error.response.data[0]
+  )
+}
+
+export const parseSalesforceError = (
+  error: AxiosError<SalesforceError>
+): ActivityEvent => {
   const category = 'BAD_REQUEST'
-  let message = `${error?.response?.status?.toString() ?? 'UNKNOWN_STATUS'}: ${
-    error.message
-  }`
-
-  // Check if it's a Salesforce error
-  if (
-    Array.isArray(error?.response?.data) &&
-    error?.response?.data[0]?.errorCode &&
-    error?.response?.data[0]?.message
-  ) {
-    const salesforceError = error?.response?.data[0]
-    message = `${salesforceError.errorCode}: ${salesforceError.message}`
-  }
+  const salesforceError = error?.response?.data[0]
+  const message = `${String(salesforceError?.errorCode)}: ${String(
+    salesforceError?.message
+  )}`
 
   return {
     date: new Date().toISOString(),
@@ -24,18 +38,6 @@ export const parseAxiosError = (error: AxiosError): ActivityEvent => {
     },
     error: {
       category,
-      message,
-    },
-  }
-}
-
-export const parseUnknowError = (error: Error): ActivityEvent => {
-  const message = error.message
-  return {
-    date: new Date().toISOString(),
-    text: { en: message },
-    error: {
-      category: 'SERVER_ERROR',
       message,
     },
   }
