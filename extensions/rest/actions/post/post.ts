@@ -3,6 +3,7 @@ import { Category, validate } from '@awell-health/extensions-core'
 import { type settings } from '../../settings'
 import { FieldsValidationSchema, dataPoints, fields } from './config'
 import { z } from 'zod'
+import { FetchError } from '../../lib/errors'
 
 export const post: Action<
   typeof fields,
@@ -26,26 +27,81 @@ export const post: Action<
       payload,
     })
 
-    const response = await fetch(endpoint, {
-      method: 'POST',
-      headers: {
-        ...headers,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        ...jsonPayload,
-        ...additionalPayload,
-      }),
-    })
+    try {
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: {
+          ...headers,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          ...jsonPayload,
+          ...additionalPayload,
+        }),
+      })
 
-    const responseBody = await response.json()
-    const statusCode = response.status
+      if (response.ok) {
+        const getResponseBody = async (
+          response: Response
+        ): Promise<string | object> => {
+          const contentType = response?.headers?.get('content-type') ?? ''
+          if (contentType?.toLowerCase().includes('application/json')) {
+            return await response.json()
+          }
+          return await response.text()
+        }
 
-    await onComplete({
-      data_points: {
-        response: JSON.stringify(responseBody),
-        statusCode: String(statusCode),
-      },
-    })
+        const responseBody = await getResponseBody(response)
+        const statusCode = response.status
+        await onComplete({
+          data_points: {
+            response:
+              typeof responseBody === 'string'
+                ? responseBody
+                : JSON.stringify(responseBody),
+            statusCode: String(statusCode),
+          },
+        })
+      } else {
+        throw new FetchError(
+          response.status,
+          response.statusText,
+          response.body
+        )
+      }
+    } catch (error) {
+      if (error instanceof FetchError) {
+        await onError({
+          events: [
+            {
+              date: new Date().toISOString(),
+              text: {
+                en: `${error.message} ${error.responseBody}`,
+              },
+              error: {
+                category: 'SERVER_ERROR',
+                message: `${error.message} ${error.responseBody}`,
+              },
+            },
+          ],
+        })
+      } else {
+        const parsedError = error as Error
+        await onError({
+          events: [
+            {
+              date: new Date().toISOString(),
+              text: {
+                en: parsedError.message ?? 'Unexpected error',
+              },
+              error: {
+                category: 'SERVER_ERROR',
+                message: parsedError.message ?? 'Unexpected error',
+              },
+            },
+          ],
+        })
+      }
+    }
   },
 }
