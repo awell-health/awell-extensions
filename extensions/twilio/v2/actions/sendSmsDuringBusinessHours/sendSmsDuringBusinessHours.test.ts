@@ -1,6 +1,7 @@
 import { sendSmsDuringBusinessHours } from './sendSmsDuringBusinessHours'
 import twilioSdk from '../../../common/sdk/twilio'
 import { generateTestPayload } from '../../../../../src/tests'
+import { ZodError } from 'zod'
 
 describe('Send SMS during business hours', () => {
   const onComplete = jest.fn()
@@ -124,7 +125,7 @@ describe('Send SMS during business hours', () => {
   })
 
   test('Should call the onError callback when there is no recipient', async () => {
-    await sendSmsDuringBusinessHours.onActivityCreated(
+    const resp = sendSmsDuringBusinessHours.onActivityCreated(
       generateTestPayload({
         fields: {
           message: 'Message content',
@@ -145,12 +146,12 @@ describe('Send SMS during business hours', () => {
       onComplete,
       onError
     )
+    await expect(resp).rejects.toThrow(ZodError)
     expect(onComplete).not.toHaveBeenCalled()
-    expect(onError).toHaveBeenCalled()
   })
 
   test('Should call the onError callback when there is no message', async () => {
-    await sendSmsDuringBusinessHours.onActivityCreated(
+    const resp = sendSmsDuringBusinessHours.onActivityCreated(
       generateTestPayload({
         fields: {
           message: '',
@@ -171,8 +172,8 @@ describe('Send SMS during business hours', () => {
       onComplete,
       onError
     )
+    await expect(resp).rejects.toThrow(ZodError)
     expect(onComplete).not.toHaveBeenCalled()
-    expect(onError).toHaveBeenCalled()
   })
 
   describe("'Messaging Service SID'", () => {
@@ -243,23 +244,13 @@ describe('Send SMS during business hours', () => {
         },
       }
 
-      await sendSmsDuringBusinessHours.onActivityCreated(
+      const resp = sendSmsDuringBusinessHours.onActivityCreated(
         payloadWithoutFrom,
         onComplete,
         onError
       )
+      await expect(resp).rejects.toThrow(ZodError)
       expect(onComplete).not.toHaveBeenCalled()
-      expect(onError).toHaveBeenCalledWith({
-        events: expect.arrayContaining([
-          expect.objectContaining({
-            error: {
-              category: 'BAD_REQUEST',
-              message:
-                'Validation error: "Messaging Service SID" is missing in both settings and in the action field.',
-            },
-          }),
-        ]),
-      })
     })
   })
 })
