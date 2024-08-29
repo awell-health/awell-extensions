@@ -18,7 +18,7 @@ export const eventWebhook: Webhook<
   EventPayload,
   typeof settings
 > = {
-  key: 'appointmentCreated',
+  key: 'eventWebhook',
   dataPoints,
   onWebhookReceived: async ({ payload }, onSuccess, onError) => {
     const {
