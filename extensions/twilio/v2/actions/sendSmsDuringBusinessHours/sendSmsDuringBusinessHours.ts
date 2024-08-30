@@ -1,5 +1,4 @@
-import { z, ZodError } from 'zod'
-import { fromZodError } from 'zod-validation-error'
+import { z } from 'zod'
 import twilioSdk from '../../../common/sdk/twilio'
 import { type Action } from '@awell-health/extensions-core'
 import { type settings } from '../../../settings'
@@ -12,6 +11,8 @@ import {
   isDateBetweenBusinessHours,
 } from '../../../../../src/utils/getNextDateWithinBusinessHours'
 import { formatISO } from 'date-fns'
+import { appendOptOutLanguage } from '../../../lib'
+import { isTwilioErrorResponse, parseTwilioError } from '../../../lib/errors'
 
 export const sendSmsDuringBusinessHours: Action<
   typeof fields,
@@ -32,6 +33,9 @@ export const sendSmsDuringBusinessHours: Action<
           accountSid,
           authToken,
           messagingServiceSid: defaultMessagingServiceSid,
+          addOptOutLanguage,
+          optOutLanguage,
+          language,
         },
         fields: { recipient, message, messagingServiceSid, timeZone },
       } = validate({
@@ -73,7 +77,9 @@ export const sendSmsDuringBusinessHours: Action<
       const scheduled = isBetweenBusinessHours ? 'false' : 'true'
 
       const res = await client.messages.create({
-        body: message,
+        body: addOptOutLanguage
+          ? appendOptOutLanguage(message, optOutLanguage, language)
+          : message,
         messagingServiceSid: messagingServiceSid ?? defaultMessagingServiceSid,
         to: recipient,
         scheduleType,
@@ -84,38 +90,16 @@ export const sendSmsDuringBusinessHours: Action<
         data_points: {
           messageSid: res.sid,
           scheduled,
-          sendAt: (sendAt != null) ? formatISO(sendAt) : formatISO(now),
+          sendAt: sendAt != null ? formatISO(sendAt) : formatISO(now),
         },
       })
-    } catch (err) {
-      if (err instanceof ZodError) {
-        const error = fromZodError(err)
+    } catch (error) {
+      if (isTwilioErrorResponse(error)) {
         await onError({
-          events: [
-            {
-              date: new Date().toISOString(),
-              text: { en: error.message },
-              error: {
-                category: 'BAD_REQUEST',
-                message: error.message,
-              },
-            },
-          ],
+          events: [parseTwilioError(error)],
         })
       } else {
-        const message = (err as Error).message
-        await onError({
-          events: [
-            {
-              date: new Date().toISOString(),
-              text: { en: message },
-              error: {
-                category: 'SERVER_ERROR',
-                message,
-              },
-            },
-          ],
-        })
+        throw error
       }
     }
   },
