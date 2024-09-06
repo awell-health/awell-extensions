@@ -4,6 +4,7 @@ import { type settings } from '../../settings'
 import { FieldsValidationSchema, dataPoints, fields } from './config'
 import { z } from 'zod'
 import { FetchError } from '../../lib/errors'
+import { isEmpty } from 'lodash'
 
 export const post: Action<
   typeof fields,
@@ -44,11 +45,14 @@ export const post: Action<
         const getResponseBody = async (
           response: Response
         ): Promise<string | object> => {
-          const contentType = response?.headers?.get('content-type') ?? ''
-          if (contentType?.toLowerCase().includes('application/json')) {
-            return await response.json()
+          const res = await response.text()
+
+          try {
+            const jsonRes = JSON.parse(res)
+            return jsonRes
+          } catch (e) {
+            return isEmpty(res) ? 'No content' : res
           }
-          return await response.text()
         }
 
         const responseBody = await getResponseBody(response)
