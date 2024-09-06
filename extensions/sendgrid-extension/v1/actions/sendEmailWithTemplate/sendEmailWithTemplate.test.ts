@@ -34,7 +34,7 @@ describe('Send email with template', () => {
   })
 
   test('Should call the onComplete callback', async () => {
-    await sendEmailWithTemplate.onActivityCreated(
+    await sendEmailWithTemplate.onActivityCreated!(
       basePayload,
       onComplete,
       onError
@@ -62,7 +62,7 @@ describe('Send email with template', () => {
   })
 
   test('Should use settings values when fields are not provided', async () => {
-    await sendEmailWithTemplate.onActivityCreated(
+    await sendEmailWithTemplate.onActivityCreated!(
       {
         ...basePayload,
         fields: {
@@ -97,7 +97,7 @@ describe('Send email with template', () => {
   ])(
     '$#. Should use fields values when provided and override settings values',
     async ({ settings }) => {
-      await sendEmailWithTemplate.onActivityCreated(
+      await sendEmailWithTemplate.onActivityCreated!(
         {
           ...basePayload,
           fields: {
@@ -127,7 +127,7 @@ describe('Send email with template', () => {
   )
 
   test('Should throw error when fields and settings are not provided', async () => {
-    await sendEmailWithTemplate.onActivityCreated(
+    await sendEmailWithTemplate.onActivityCreated!(
       {
         ...basePayload,
         fields: {
@@ -160,7 +160,7 @@ describe('Send email with template', () => {
   })
 
   test('Should use the subject action field value when no subject is defined in template data', async () => {
-    await sendEmailWithTemplate.onActivityCreated(
+    await sendEmailWithTemplate.onActivityCreated!(
       generateTestPayload({
         fields: {
           ...payload.fields,
@@ -195,7 +195,7 @@ describe('Send email with template', () => {
   })
 
   test('Should use the subject value defined in template data when no subject is defined for the action field', async () => {
-    await sendEmailWithTemplate.onActivityCreated(
+    await sendEmailWithTemplate.onActivityCreated!(
       generateTestPayload({
         fields: {
           ...payload.fields,
@@ -232,7 +232,7 @@ describe('Send email with template', () => {
   })
 
   test('Should use the subject value defined in template data when both subjects are defined', async () => {
-    await sendEmailWithTemplate.onActivityCreated(
+    await sendEmailWithTemplate.onActivityCreated!(
       generateTestPayload({
         fields: {
           ...payload.fields,

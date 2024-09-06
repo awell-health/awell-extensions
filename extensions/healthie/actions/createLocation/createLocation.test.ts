@@ -21,7 +21,7 @@ describe('createLocation action', () => {
   })
 
   test('Should create a location', async () => {
-    await createLocation.onActivityCreated(
+    await createLocation.onActivityCreated!(
       generateTestPayload({
         fields: {
           id: 'patient-1',

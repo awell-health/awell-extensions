@@ -21,7 +21,7 @@ describe('deleteAppointment action', () => {
   })
 
   test('Should delete an appointment', async () => {
-    await deleteAppointment.onActivityCreated(
+    await deleteAppointment.onActivityCreated!(
       generateTestPayload({
         fields: {
           id: 'appointment-1',

@@ -21,7 +21,7 @@ describe('sendChatMessage action', () => {
   })
 
   test("Should create a new message when it doesn't exist", async () => {
-    await sendChatMessage.onActivityCreated(
+    await sendChatMessage.onActivityCreated!(
       generateTestPayload({
         fields: {
           healthie_patient_id: 'patient-1',
@@ -66,7 +66,7 @@ describe('sendChatMessage action', () => {
           },
         }),
     })
-    await sendChatMessage.onActivityCreated(
+    await sendChatMessage.onActivityCreated!(
       generateTestPayload({
         fields: {
           healthie_patient_id: 'patient-1',
@@ -136,7 +136,7 @@ describe('sendChatMessage action', () => {
           },
         }),
     })
-    await sendChatMessage.onActivityCreated(
+    await sendChatMessage.onActivityCreated!(
       generateTestPayload({
         fields: {
           healthie_patient_id: 'patient-1',

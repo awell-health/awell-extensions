@@ -27,7 +27,7 @@ describe('Update booking', () => {
   })
 
   test('Should call the onComplete callback', async () => {
-    await updateBooking.onActivityCreated(basePayload, onComplete, onError)
+    await updateBooking.onActivityCreated!(basePayload, onComplete, onError)
 
     expect(mockReturnValue.updateBooking).toHaveBeenCalledWith(
       String(sampleBooking.id),

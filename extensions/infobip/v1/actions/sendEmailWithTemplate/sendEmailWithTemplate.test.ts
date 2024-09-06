@@ -31,7 +31,7 @@ describe('Send email', () => {
   })
 
   test('Should call the onComplete callback', async () => {
-    await sendEmailWithTemplate.onActivityCreated(
+    await sendEmailWithTemplate.onActivityCreated!(
       basePayload,
       onComplete,
       onError

@@ -21,7 +21,7 @@ describe('createChartingNote action', () => {
   })
 
   test('Should create a charting note', async () => {
-    await createChartingNote.onActivityCreated(
+    await createChartingNote.onActivityCreated!(
       generateTestPayload({
         fields: {
           form_id: 'form-template-1',

@@ -21,7 +21,7 @@ describe('completeTask action', () => {
   })
 
   test('Should complete a task', async () => {
-    await completeTask.onActivityCreated(
+    await completeTask.onActivityCreated!(
       generateTestPayload({
         fields: {
           id: 'task-1',

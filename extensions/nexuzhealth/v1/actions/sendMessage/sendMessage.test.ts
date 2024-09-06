@@ -18,7 +18,7 @@ describe('Send message', () => {
   })
 
   test('Should call the onComplete callback', async () => {
-    await sendMessage.onActivityCreated(basePayload, onComplete, onError)
+    await sendMessage.onActivityCreated!(basePayload, onComplete, onError)
 
     expect(onComplete).toHaveBeenCalled()
     expect(onError).not.toHaveBeenCalled()

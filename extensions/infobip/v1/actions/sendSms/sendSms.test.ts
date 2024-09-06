@@ -31,7 +31,7 @@ describe('Send SMS', () => {
   })
 
   test('Should call the onComplete callback', async () => {
-    await sendSms.onActivityCreated(basePayload, onComplete, onError)
+    await sendSms.onActivityCreated!(basePayload, onComplete, onError)
 
     expect(InfobipClientMockImplementation.smsApi.send).toHaveBeenCalledWith(
       mockedMessageData

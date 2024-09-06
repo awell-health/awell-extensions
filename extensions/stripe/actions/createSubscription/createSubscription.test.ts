@@ -24,7 +24,7 @@ describe.skip('Stripe - Create subscription', () => {
       settings: mockSettings,
     })
 
-    await createSubscription.onActivityCreated(
+    await createSubscription.onActivityCreated!(
       mockOnActivityCreateParams,
       onComplete,
       onError

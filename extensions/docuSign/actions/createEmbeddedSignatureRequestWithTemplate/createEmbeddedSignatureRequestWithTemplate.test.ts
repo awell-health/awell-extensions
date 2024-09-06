@@ -31,7 +31,7 @@ describe('Create embedded signature request with template', () => {
   })
 
   test('Should call the onComplete callback', async () => {
-    await createEmbeddedSignatureRequestWithTemplate.onActivityCreated(
+    await createEmbeddedSignatureRequestWithTemplate.onActivityCreated!(
       generateTestPayload({
         fields: {
           signerRole: 'Demo',

@@ -1,20 +1,26 @@
-import { generateTestPayload } from '../../../../../src/tests'
+import { ZodError } from 'zod'
+import { generateTestPayload, TestHelpers } from '../../../../../src/tests'
 import { updateBaselineInfo } from './updateBaselineInfo'
 
 jest.mock('../../sdk/awellSdk')
 
 describe('Update baseline info', () => {
-  const onComplete = jest.fn()
-  const onError = jest.fn()
+  const { onComplete, onError, helpers, extensionAction, clearMocks } =
+    TestHelpers.fromAction(updateBaselineInfo)
+  const sdkMock = {
+    orchestration: {
+      mutation: jest.fn().mockResolvedValue({}),
+    },
+  }
+  helpers.awellSdk = jest.fn().mockResolvedValue(sdkMock)
 
   beforeEach(() => {
-    onComplete.mockClear()
-    onError.mockClear()
+    clearMocks()
   })
 
   test('Should call the onComplete callback', async () => {
-    await updateBaselineInfo.onActivityCreated(
-      generateTestPayload({
+    await extensionAction.onEvent({
+      payload: generateTestPayload({
         fields: {
           baselineInfo: JSON.stringify([
             {
@@ -23,38 +29,36 @@ describe('Update baseline info', () => {
             },
           ]),
         },
-        settings: {
-          apiUrl: 'an-api-url',
-          apiKey: 'an-api-key',
-        },
+        settings: {},
         pathway: {
           id: 'a-pathway-id',
         },
       }),
       onComplete,
-      onError
-    )
+      onError,
+      helpers,
+    })
     expect(onComplete).toHaveBeenCalledTimes(1)
+    expect(helpers.awellSdk).toHaveBeenCalledTimes(1)
+    expect(sdkMock.orchestration.mutation).toHaveBeenCalledTimes(1)
     expect(onError).not.toHaveBeenCalled()
   })
-  test('Should call the onError callback', async () => {
-    const resp = updateBaselineInfo.onActivityCreated(
-      generateTestPayload({
+  test('Should throw an error', async () => {
+    const resp = extensionAction.onEvent({
+      payload: generateTestPayload({
         fields: {
           baselineInfo: '',
         },
-        settings: {
-          apiUrl: 'an-api-url',
-          apiKey: 'an-api-key',
-        },
+        settings: {},
         pathway: {
           id: 'a-pathway-id',
         },
       }),
       onComplete,
-      onError
-    )
-    await expect(resp).rejects.toThrowError()
+      onError,
+      helpers,
+    })
+    await expect(resp).rejects.toThrow(ZodError)
     expect(onComplete).not.toHaveBeenCalled()
   })
 })

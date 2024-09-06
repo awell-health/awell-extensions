@@ -17,7 +17,7 @@ describe('Experimental - Request video visit', () => {
       settings: {},
     })
 
-    await wait.onActivityCreated(
+    await wait.onActivityCreated!(
       mockOnActivityCreateParams,
       onComplete,
       onError

@@ -55,7 +55,7 @@ describe('sendFormCompletionRequest action', () => {
   })
 
   test('Should send form completion request', async () => {
-    await sendFormCompletionRequest.onActivityCreated(
+    await sendFormCompletionRequest.onActivityCreated!(
       samplePayload,
       onComplete,
       onError
@@ -72,7 +72,7 @@ describe('sendFormCompletionRequest action', () => {
   ])(
     '$#. Should set "recurrence_ends" to "true" and "ends_on" to $endsOnExpected when provided with $endsOnInput"',
     async ({ endsOnInput, endsOnExpected }) => {
-      await sendFormCompletionRequest.onActivityCreated(
+      await sendFormCompletionRequest.onActivityCreated!(
         {
           ...samplePayload,
           fields: {
@@ -111,7 +111,7 @@ describe('sendFormCompletionRequest action', () => {
       test.each([false, undefined])(
         'Should call onComplete when is_recurring is %p and rest is undefined',
         async (value) => {
-          await sendFormCompletionRequest.onActivityCreated(
+          await sendFormCompletionRequest.onActivityCreated!(
             {
               ...samplePayload,
               fields: {
@@ -149,7 +149,7 @@ describe('sendFormCompletionRequest action', () => {
           period: 'PM',
         },
       ])('Should call onComplete when %p', async (value) => {
-        await sendFormCompletionRequest.onActivityCreated(
+        await sendFormCompletionRequest.onActivityCreated!(
           {
             ...samplePayload,
             fields: {
@@ -194,7 +194,7 @@ describe('sendFormCompletionRequest action', () => {
           weekdayActual: 'Wednesday',
         },
       ])('Should call onComplete when %p', async (value) => {
-        await sendFormCompletionRequest.onActivityCreated(
+        await sendFormCompletionRequest.onActivityCreated!(
           {
             ...samplePayload,
             fields: {
@@ -224,7 +224,7 @@ describe('sendFormCompletionRequest action', () => {
 
     describe('Frequency = monthly', () => {
       test('Should call onComplete when "monthday" is not empty', async () => {
-        await sendFormCompletionRequest.onActivityCreated(
+        await sendFormCompletionRequest.onActivityCreated!(
           {
             ...samplePayload,
             fields: {

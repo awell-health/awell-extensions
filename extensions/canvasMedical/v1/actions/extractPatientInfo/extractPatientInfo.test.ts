@@ -15,7 +15,7 @@ describe('extractPatientFields', () => {
   })
 
   it('should extract minimal patient data', async () => {
-    await extractPatientInfo.onActivityCreated(
+    await extractPatientInfo.onActivityCreated!(
       generateTestPayload({
         settings: mockedSettings,
         fields: {
@@ -38,7 +38,7 @@ describe('extractPatientFields', () => {
   })
 
   it('should extract patient data', async () => {
-    await extractPatientInfo.onActivityCreated(
+    await extractPatientInfo.onActivityCreated!(
       generateTestPayload({
         settings: mockedSettings,
         fields: {
@@ -63,7 +63,7 @@ describe('extractPatientFields', () => {
   })
 
   it('should not parse an empty JSON', async () => {
-    await extractPatientInfo.onActivityCreated(
+    await extractPatientInfo.onActivityCreated!(
       generateTestPayload({
         settings: mockedSettings,
         fields: {

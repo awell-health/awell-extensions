@@ -18,7 +18,7 @@ describe('Transform - Feet and inches to inches', () => {
       settings: {},
     })
 
-    await feetAndInchesToInches.onActivityCreated(
+    await feetAndInchesToInches.onActivityCreated!(
       mockOnActivityCreateParams,
       onComplete,
       onError
@@ -40,7 +40,7 @@ describe('Transform - Feet and inches to inches', () => {
       settings: {},
     })
 
-    await feetAndInchesToInches.onActivityCreated(
+    await feetAndInchesToInches.onActivityCreated!(
       mockOnActivityCreateParams,
       onComplete,
       onError

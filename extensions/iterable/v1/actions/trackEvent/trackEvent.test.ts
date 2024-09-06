@@ -26,7 +26,7 @@ describe('Iterable - Track event', () => {
   })
 
   test('Should call the onComplete callback', async () => {
-    await trackEvent.onActivityCreated(basePayload, onComplete, onError)
+    await trackEvent.onActivityCreated!(basePayload, onComplete, onError)
 
     expect(
       IterableClientMockImplementation.eventsApi.trackEvent

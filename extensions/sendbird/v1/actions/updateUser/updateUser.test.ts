@@ -38,7 +38,7 @@ describe('Update user', () => {
   })
 
   test('Should call the onComplete callback', async () => {
-    await updateUser.onActivityCreated(basePayload, onComplete, onError)
+    await updateUser.onActivityCreated!(basePayload, onComplete, onError)
     expect(
       SendbirdClientMockImplementation.chatApi.updateUser
     ).toHaveBeenCalledWith({

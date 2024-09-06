@@ -20,7 +20,7 @@ describe('Transform - Parse number to text with dictionary', () => {
       settings: {},
     })
 
-    await parseNumberToTextWithDictionary.onActivityCreated(
+    await parseNumberToTextWithDictionary.onActivityCreated!(
       mockOnActivityCreateParams,
       onComplete,
       onError
@@ -44,7 +44,7 @@ describe('Transform - Parse number to text with dictionary', () => {
       settings: {},
     })
 
-    await parseNumberToTextWithDictionary.onActivityCreated(
+    await parseNumberToTextWithDictionary.onActivityCreated!(
       mockOnActivityCreateParams,
       onComplete,
       onError
@@ -68,7 +68,7 @@ describe('Transform - Parse number to text with dictionary', () => {
       settings: {},
     })
 
-    await parseNumberToTextWithDictionary.onActivityCreated(
+    await parseNumberToTextWithDictionary.onActivityCreated!(
       mockOnActivityCreateParams,
       onComplete,
       onError
@@ -90,7 +90,7 @@ describe('Transform - Parse number to text with dictionary', () => {
       settings: {},
     })
 
-    await parseNumberToTextWithDictionary.onActivityCreated(
+    await parseNumberToTextWithDictionary.onActivityCreated!(
       mockOnActivityCreateParams,
       onComplete,
       onError
@@ -112,7 +112,7 @@ describe('Transform - Parse number to text with dictionary', () => {
       settings: {},
     })
 
-    await parseNumberToTextWithDictionary.onActivityCreated(
+    await parseNumberToTextWithDictionary.onActivityCreated!(
       mockOnActivityCreateParams,
       onComplete,
       onError

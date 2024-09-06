@@ -28,7 +28,7 @@ describe('Medplum - Execute bot', () => {
       settings: mockSettings,
     })
 
-    await executeBot.onActivityCreated(
+    await executeBot.onActivityCreated!(
       mockOnActivityCreateParams,
       onComplete,
       onError

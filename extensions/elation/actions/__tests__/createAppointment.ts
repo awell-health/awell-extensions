@@ -28,7 +28,7 @@ describe('Simple create appointment action', () => {
       telehealth_details,
       ...appointment
     } = appointmentExample
-    await createAppointment.onActivityCreated(
+    await createAppointment.onActivityCreated!(
       {
         fields: {
           ...appointment,

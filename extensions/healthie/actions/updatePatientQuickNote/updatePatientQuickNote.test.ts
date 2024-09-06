@@ -19,7 +19,7 @@ describe('createMetricEntry action', () => {
   })
 
   test('Should update patient quick note', async () => {
-    await updatePatientQuickNote.onActivityCreated(
+    await updatePatientQuickNote.onActivityCreated!(
       generateTestPayload({
         fields: {
           patientId: 'patient-id',

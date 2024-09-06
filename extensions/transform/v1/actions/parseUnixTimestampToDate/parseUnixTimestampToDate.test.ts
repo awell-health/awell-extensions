@@ -17,7 +17,7 @@ describe('Transform - Parse unix timestamp to date', () => {
       settings: {},
     })
 
-    await parseUnixTimestampToDate.onActivityCreated(
+    await parseUnixTimestampToDate.onActivityCreated!(
       mockOnActivityCreateParams,
       onComplete,
       onError

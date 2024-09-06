@@ -74,7 +74,7 @@ describe('Get non-visit note action', () => {
     '$#. Should execute onComplete with correct data point when response is $response',
     async ({ response, dataPoints }) => {
       mockClientReturn.getNonVisitNote.mockReturnValueOnce(response)
-      await getNonVisitNote.onActivityCreated(
+      await getNonVisitNote.onActivityCreated!(
         {
           fields: {
             nonVisitNoteId: 1,

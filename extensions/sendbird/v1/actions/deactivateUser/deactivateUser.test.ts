@@ -36,7 +36,7 @@ describe('Deactivate user', () => {
   })
 
   test('Should call the onComplete callback', async () => {
-    await deactivateUser.onActivityCreated(basePayload, onComplete, onError)
+    await deactivateUser.onActivityCreated!(basePayload, onComplete, onError)
 
     expect(
       SendbirdClientMockImplementation.chatApi.updateUser

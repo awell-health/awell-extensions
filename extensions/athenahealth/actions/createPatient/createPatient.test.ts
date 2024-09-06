@@ -24,7 +24,7 @@ describe('athenahealth - Create patient', () => {
       settings: mockSettings,
     })
 
-    await createPatient.onActivityCreated(
+    await createPatient.onActivityCreated!(
       mockOnActivityCreateParams,
       onComplete,
       onError

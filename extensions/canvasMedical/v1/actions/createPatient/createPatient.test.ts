@@ -23,7 +23,7 @@ describe('createPatient', () => {
   }
 
   it('should create patient', async () => {
-    await createPatient.onActivityCreated(
+    await createPatient.onActivityCreated!(
       generateTestPayload(payload),
       onComplete,
       onError

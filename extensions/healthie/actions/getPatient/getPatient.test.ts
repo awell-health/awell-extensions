@@ -49,7 +49,7 @@ describe('getPatient action', () => {
           },
         })
 
-        await getPatient.onActivityCreated(
+        await getPatient.onActivityCreated!(
           generateTestPayload({
             fields: {
               patientId: 'patient-1',
@@ -96,7 +96,7 @@ describe('getPatient action', () => {
           },
         })
 
-        await getPatient.onActivityCreated(
+        await getPatient.onActivityCreated!(
           generateTestPayload({
             fields: {
               patientId: 'patient-1',
@@ -190,7 +190,7 @@ describe('getPatient action', () => {
           },
         })
 
-        await getPatient.onActivityCreated(
+        await getPatient.onActivityCreated!(
           generateTestPayload({
             fields: {
               patientId: 'patient-1',
@@ -239,7 +239,7 @@ describe('getPatient action', () => {
           },
         })
 
-        await getPatient.onActivityCreated(
+        await getPatient.onActivityCreated!(
           generateTestPayload({
             fields: {
               patientId: 'patient-1',

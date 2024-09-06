@@ -12,7 +12,7 @@ describe('Divide', () => {
   })
 
   test('Should work', async () => {
-    await divide.onActivityCreated(
+    await divide.onActivityCreated!(
       generateTestPayload({
         fields: {
           dividend: 10,
@@ -34,7 +34,7 @@ describe('Divide', () => {
 
   test('Should return an error if action fields are undefined', async () => {
     await expect(
-      divide.onActivityCreated(
+      divide.onActivityCreated!(
         generateTestPayload({
           fields: {
             dividend: undefined,

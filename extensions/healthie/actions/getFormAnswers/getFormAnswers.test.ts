@@ -29,7 +29,7 @@ describe('Healthie - Get form answers', () => {
 //   // })
 
 //   test('Should work', async () => {
-//     await getFormAnswers.onActivityCreated(
+//     await getFormAnswers.onActivityCreated!(
 //       generateTestPayload({
 //         fields: {
 //           id: '462349',

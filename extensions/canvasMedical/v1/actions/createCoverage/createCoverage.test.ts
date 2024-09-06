@@ -21,7 +21,7 @@ describe('createCoverage', () => {
   }
 
   it('should create coverage', async () => {
-    await createCoverage.onActivityCreated(
+    await createCoverage.onActivityCreated!(
       generateTestPayload(payload),
       onComplete,
       onError

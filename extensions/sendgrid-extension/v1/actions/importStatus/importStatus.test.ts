@@ -48,7 +48,7 @@ describe('Import Status', () => {
         return [successResponse, 'status']
       }
     )
-    await importStatus.onActivityCreated(basePayload, onComplete, onError)
+    await importStatus.onActivityCreated!(basePayload, onComplete, onError)
 
     expect(
       SendgridClientMockImplementation.marketing.contacts.importStatus
@@ -77,7 +77,7 @@ describe('Import Status', () => {
       .mockImplementationOnce(() => {
         return [successResponse, 'status']
       })
-    await importStatus.onActivityCreated(
+    await importStatus.onActivityCreated!(
       {
         ...basePayload,
         fields: {
@@ -111,7 +111,7 @@ describe('Import Status', () => {
         throw new Error('An error occurred')
       }
     )
-    await importStatus.onActivityCreated(basePayload, onComplete, onError)
+    await importStatus.onActivityCreated!(basePayload, onComplete, onError)
     expect(onComplete).not.toBeCalled()
     expect(onError).toHaveBeenNthCalledWith(1, {
       events: expect.arrayContaining([

@@ -12,7 +12,7 @@ describe('Subtract', () => {
   })
 
   test('Should work', async () => {
-    await subtract.onActivityCreated(
+    await subtract.onActivityCreated!(
       generateTestPayload({
         fields: {
           minuend: 5,
@@ -35,7 +35,7 @@ describe('Subtract', () => {
 
   test('Should return an error if action fields are undefined', async () => {
     await expect(
-      subtract.onActivityCreated(
+      subtract.onActivityCreated!(
         generateTestPayload({
           fields: {
             minuend: undefined,

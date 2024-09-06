@@ -1,33 +1,38 @@
-import { generateTestPayload } from '../../../../../src/tests'
+import { generateTestPayload, TestHelpers } from '../../../../../src/tests'
 import { stopCareFlow } from './stopCareFlow'
 
 jest.mock('../../sdk/awellSdk')
 
 describe('Stop care flow', () => {
-  const onComplete = jest.fn()
-  const onError = jest.fn()
+  const { onComplete, onError, helpers, extensionAction, clearMocks } =
+    TestHelpers.fromAction(stopCareFlow)
+  const sdkMock = {
+    orchestration: {
+      mutation: jest.fn().mockResolvedValue({}),
+    },
+  }
+  helpers.awellSdk = jest.fn().mockResolvedValue(sdkMock)
 
   beforeEach(() => {
-    onComplete.mockClear()
-    onError.mockClear()
+    clearMocks()
   })
 
   test('Should call the onComplete callback', async () => {
-    await stopCareFlow.onActivityCreated(
-      generateTestPayload({
+    await extensionAction.onEvent({
+      payload: generateTestPayload({
         fields: {
           reason: 'Just because I can',
         },
-        settings: {
-          apiUrl: 'an-api-url',
-          apiKey: 'an-api-key',
-        },
+        settings: {},
       }),
       onComplete,
-      onError
-    )
+      onError,
+      helpers,
+    })
 
     expect(onComplete).toHaveBeenCalled()
+    expect(helpers.awellSdk).toHaveBeenCalledTimes(1)
+    expect(sdkMock.orchestration.mutation).toHaveBeenCalledTimes(1)
     expect(onError).not.toHaveBeenCalled()
   })
 })

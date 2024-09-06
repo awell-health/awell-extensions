@@ -28,7 +28,7 @@ describe('createLabOrder', () => {
   })
 
   test('Should return with correct data_points', async () => {
-    await createLabOrder.onActivityCreated(
+    await createLabOrder.onActivityCreated!(
       {
         fields: {
           patientId: labOrderResponseExample.patient,
@@ -59,7 +59,7 @@ describe('createLabOrder', () => {
       .mockImplementation((obj: { events: ActivityEvent[] }) => {
         return obj.events[0].error?.message
       })
-    await createLabOrder.onActivityCreated(
+    await createLabOrder.onActivityCreated!(
       {
         fields: {
           patientId: labOrderResponseExample.patient,

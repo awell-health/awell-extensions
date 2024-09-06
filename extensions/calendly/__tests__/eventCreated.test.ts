@@ -30,7 +30,7 @@ describe('Test event Created', () => {
 
   it('should return the correct data points', async () => {
     const event = testInviteeCreated
-    const evt = eventCreated.onWebhookReceived(
+    const evt = eventCreated.onWebhookReceived!(
       buildOnWebhookReceivedParams<CalendlyInviteeCreatedWebhook>({
         payload: event,
       }),
@@ -78,7 +78,7 @@ describe('Test event Created', () => {
   ])('onComplete should always be called $name', async (params) => {
     const { payload, output } = params
     const merged = _.merge({}, testInviteeCreated, { payload })
-    const evt = eventCreated.onWebhookReceived(
+    const evt = eventCreated.onWebhookReceived!(
       buildOnWebhookReceivedParams<CalendlyWebhookPayload>({
         payload: merged,
       }),
@@ -129,7 +129,7 @@ describe('Test event Created', () => {
   ])('Error should throw: $name', async (params) => {
     const { payload, error } = params
     const merged = _.merge({}, testInviteeCreated, { payload })
-    const evt = eventCreated.onWebhookReceived(
+    const evt = eventCreated.onWebhookReceived!(
       buildOnWebhookReceivedParams<CalendlyWebhookPayload>({
         payload: merged,
       }),

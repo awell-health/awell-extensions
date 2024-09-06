@@ -39,7 +39,7 @@ describe.skip('Medplum - Create calculation observation', () => {
       },
     })
 
-    await createCalculationObservation.onActivityCreated(
+    await createCalculationObservation.onActivityCreated!(
       mockOnActivityCreateParams,
       onComplete,
       onError

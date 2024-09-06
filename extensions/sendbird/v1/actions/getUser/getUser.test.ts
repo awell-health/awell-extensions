@@ -36,7 +36,7 @@ describe('Get user', () => {
   })
 
   test('Should call the onComplete callback', async () => {
-    await getUser.onActivityCreated(basePayload, onComplete, onError)
+    await getUser.onActivityCreated!(basePayload, onComplete, onError)
 
     expect(
       SendbirdClientMockImplementation.chatApi.getUser

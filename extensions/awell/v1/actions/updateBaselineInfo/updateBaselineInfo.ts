@@ -1,5 +1,5 @@
 import { type Action } from '@awell-health/extensions-core'
-import { SettingsValidationSchema, type settings } from '../../../settings'
+import { type settings } from '../../../settings'
 import { Category, validate } from '@awell-health/extensions-core'
 import {
   fields,
@@ -8,7 +8,6 @@ import {
   dataPoints,
 } from './config'
 import z from 'zod'
-import AwellSdk from '../../sdk/awellSdk'
 
 export const updateBaselineInfo: Action<typeof fields, typeof settings> = {
   key: 'updateBaselineInfo',
@@ -19,25 +18,29 @@ export const updateBaselineInfo: Action<typeof fields, typeof settings> = {
   fields,
   dataPoints,
   previewable: false,
-  onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
+  onEvent: async ({ payload, onComplete, helpers }): Promise<void> => {
     const {
-      settings: { apiUrl, apiKey },
       fields: { baselineInfo },
       pathway: { id: pathwayId },
     } = validate({
       schema: z.object({
         fields: FieldsValidationSchema,
-        settings: SettingsValidationSchema,
         pathway: PathwayValidationSchema,
       }),
       payload,
     })
 
-    const sdk = new AwellSdk({ apiUrl, apiKey })
+    const sdk = await helpers.awellSdk()
 
-    await sdk.updateBaselineInfo({
-      pathway_id: pathwayId,
-      baseline_info: baselineInfo,
+    await sdk.orchestration.mutation({
+      updateBaselineInfo: {
+        __args: {
+          input: {
+            pathway_id: pathwayId,
+            baseline_info: baselineInfo,
+          },
+        },
+      },
     })
 
     await onComplete()

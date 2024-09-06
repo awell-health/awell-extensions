@@ -11,7 +11,7 @@ describe('Simple sms notification action', () => {
   })
 
   test('Should call the onComplete callback', async () => {
-    await smsNotification.onActivityCreated(
+    await smsNotification.onActivityCreated!(
       generateTestPayload({
         fields: {
           message: 'Message content',
@@ -35,7 +35,7 @@ describe('Simple sms notification action', () => {
   })
 
   test('Should call the onError callback', async () => {
-    await smsNotification.onActivityCreated(
+    await smsNotification.onActivityCreated!(
       generateTestPayload({
         fields: {
           message: 'Message content',

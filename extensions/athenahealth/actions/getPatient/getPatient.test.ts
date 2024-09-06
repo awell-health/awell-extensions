@@ -25,7 +25,7 @@ describe('athenahealth - Get patient', () => {
       settings: mockSettings,
     })
 
-    await getPatient.onActivityCreated(
+    await getPatient.onActivityCreated!(
       mockOnActivityCreateParams,
       onComplete,
       onError
@@ -52,7 +52,7 @@ describe('athenahealth - Get patient', () => {
     })
 
     try {
-      await getPatient.onActivityCreated(
+      await getPatient.onActivityCreated!(
         mockOnActivityCreateParams,
         onComplete,
         onError
@@ -79,7 +79,7 @@ describe('athenahealth - Get patient', () => {
     })
 
     try {
-      await getPatient.onActivityCreated(
+      await getPatient.onActivityCreated!(
         mockOnActivityCreateParams,
         onComplete,
         onError

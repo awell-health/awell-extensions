@@ -31,7 +31,7 @@ describe('Post new letter action', () => {
   })
 
   test('Should return with correct data_points', async () => {
-    await postLetter.onActivityCreated(
+    await postLetter.onActivityCreated!(
       {
         fields: {
           patientId: postLetterResponseExample.patient,
@@ -58,7 +58,7 @@ describe('Post new letter action', () => {
       .mockImplementation((obj: { events: ActivityEvent[] }) => {
         return obj.events[0].error?.message
       })
-    await postLetter.onActivityCreated(
+    await postLetter.onActivityCreated!(
       {
         fields: {
           patientId: postLetterResponseExample.patient,

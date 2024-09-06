@@ -19,7 +19,7 @@ describe('Healthie - Get metric entry', () => {
   })
 
   test('Should get most recent metric entry', async () => {
-    await getMetricEntry.onActivityCreated(
+    await getMetricEntry.onActivityCreated!(
       generateTestPayload({
         fields: {
           patientId: '123',

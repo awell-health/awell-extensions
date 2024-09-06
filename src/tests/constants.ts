@@ -1,4 +1,10 @@
-import { type NewActivityPayload } from '@awell-health/extensions-core'
+import {
+  Action,
+  ExtensionAction,
+  ExtensionWebhook,
+  Webhook,
+  type NewActivityPayload,
+} from '@awell-health/extensions-core'
 import { merge } from 'lodash'
 
 export const testPayload: NewActivityPayload<any, any> = {
@@ -19,8 +25,8 @@ export const testPayload: NewActivityPayload<any, any> = {
 
 type DeepPartial<T> = T extends object
   ? {
-    [P in keyof T]?: DeepPartial<T[P]>
-  }
+      [P in keyof T]?: DeepPartial<T[P]>
+    }
   : T
 
 type FieldsType = Record<string, string | number | boolean | undefined>
@@ -49,3 +55,52 @@ export const generateTestPayload = <
   fields,
   settings,
 })
+
+export const TestHelpers = {
+  fromAction(action: Action<any, any>) {
+    const helpers = {
+      awellSdk: jest.fn().mockReturnValue({
+        apiUrl: 'api-url',
+        apiKey: 'api-key',
+      }),
+      httpsAgent: jest.fn(),
+    }
+    const onComplete = jest.fn()
+    const onError = jest.fn()
+    const clearMocks = () => {
+      onComplete.mockClear()
+      onError.mockClear()
+      Object.values(helpers).forEach((mock) => mock.mockClear())
+    }
+    return {
+      clearMocks,
+      onComplete,
+      onError,
+      helpers,
+      extensionAction: new ExtensionAction(action),
+    }
+  },
+  fromWebhook(webhook: Webhook<any, any>) {
+    const helpers = {
+      awellSdk: jest.fn().mockReturnValue({
+        apiUrl: 'api-url',
+        apiKey: 'api-key',
+      }),
+      httpsAgent: jest.fn(),
+    }
+    const onComplete = jest.fn()
+    const onError = jest.fn()
+    const clearMocks = () => {
+      onComplete.mockClear()
+      onError.mockClear()
+      Object.values(helpers).forEach((mock) => mock.mockClear())
+    }
+    return {
+      clearMocks,
+      onComplete,
+      onError,
+      helpers,
+      extensionWebhook: new ExtensionWebhook(webhook),
+    }
+  },
+}

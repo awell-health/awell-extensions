@@ -12,7 +12,7 @@ describe('Multiply', () => {
   })
 
   test('Should work', async () => {
-    await multiply.onActivityCreated(
+    await multiply.onActivityCreated!(
       generateTestPayload({
         fields: {
           factor_01: 1,
@@ -52,7 +52,7 @@ describe('Multiply', () => {
 
   test('Should return an error if all addends are undefined', async () => {
     await expect(
-      multiply.onActivityCreated(
+      multiply.onActivityCreated!(
         generateTestPayload({
           fields: {
             factor_01: undefined,

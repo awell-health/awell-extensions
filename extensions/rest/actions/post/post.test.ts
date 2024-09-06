@@ -1,9 +1,9 @@
 import { post } from '.'
-import { generateTestPayload } from '../../../../src/tests'
+import { generateTestPayload, TestHelpers } from '../../../../src/tests'
 
 describe('REST - POST', () => {
-  const onComplete = jest.fn()
-  const onError = jest.fn()
+  const { onComplete, onError, helpers, extensionAction, clearMocks } =
+    TestHelpers.fromAction(post)
 
   beforeEach(() => {
     jest.clearAllMocks()
@@ -49,11 +49,12 @@ describe('REST - POST', () => {
       settings: {},
     })
 
-    await post.onActivityCreated(
-      mockOnActivityCreateParams,
+    await extensionAction.onEvent({
+      payload: mockOnActivityCreateParams,
       onComplete,
-      onError
-    )
+      onError,
+      helpers,
+    })
 
     expect(global.fetch).toHaveBeenCalledWith(
       'https://webhook.site/bb853fec-9260-44e5-a944-17894d678a7f',
@@ -108,11 +109,12 @@ describe('REST - POST', () => {
       settings: {},
     })
 
-    await post.onActivityCreated(
-      mockOnActivityCreateParams,
+    await extensionAction.onEvent({
+      payload: mockOnActivityCreateParams,
       onComplete,
-      onError
-    )
+      onError,
+      helpers,
+    })
 
     expect(global.fetch).toHaveBeenCalledWith(
       'https://webhook.site/bb853fec-9260-44e5-a944-17894d678a7f',
@@ -162,7 +164,7 @@ describe('REST - POST', () => {
       settings: {},
     })
 
-    await post.onActivityCreated(
+    await post.onActivityCreated!(
       mockOnActivityCreateParams,
       onComplete,
       onError

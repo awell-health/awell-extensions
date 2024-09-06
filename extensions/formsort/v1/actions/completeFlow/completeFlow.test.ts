@@ -9,7 +9,7 @@ describe('Complete flow action', () => {
   })
 
   test('Should not call the onComplete callback', async () => {
-    await completeFlow.onActivityCreated(
+    await completeFlow.onActivityCreated!(
       generateTestPayload({
         fields: {
           clientLabel: 'client-label',

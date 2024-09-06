@@ -9,7 +9,7 @@ describe('Complete flow action', () => {
   })
 
   test('Should not call the onComplete callback', async () => {
-    await embeddedSigning.onActivityCreated(
+    await embeddedSigning.onActivityCreated!(
       generateTestPayload({
         fields: {
           signUrl: 'https://developers.awellhealth.com',

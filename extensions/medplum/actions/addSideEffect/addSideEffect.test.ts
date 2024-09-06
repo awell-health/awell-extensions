@@ -33,7 +33,7 @@ describe.skip('Medplum - Add side effect to medication request', () => {
       },
     })
 
-    await addSideEffect.onActivityCreated(
+    await addSideEffect.onActivityCreated!(
       mockOnActivityCreateParams,
       onComplete,
       onError

@@ -18,7 +18,7 @@ describe('createMetricEntry action', () => {
   })
 
   test('Should create a metric entry', async () => {
-    await createMetricEntry.onActivityCreated(
+    await createMetricEntry.onActivityCreated!(
       generateTestPayload({
         fields: {
           userId: '60',
@@ -39,7 +39,7 @@ describe('createMetricEntry action', () => {
   })
 
   test('Should throw an error if the user ID is not provided', async () => {
-    await createMetricEntry.onActivityCreated(
+    await createMetricEntry.onActivityCreated!(
       // @ts-expect-error - userId is missing for testing purposes
       generateTestPayload({
         fields: {
@@ -61,7 +61,7 @@ describe('createMetricEntry action', () => {
   })
 
   test('Should throw an error if the category is not provided', async () => {
-    await createMetricEntry.onActivityCreated(
+    await createMetricEntry.onActivityCreated!(
       // @ts-expect-error - category is missing for testing purposes
       generateTestPayload({
         fields: {
@@ -83,7 +83,7 @@ describe('createMetricEntry action', () => {
   })
 
   test('Should throw an error if the metricStat is not provided', async () => {
-    await createMetricEntry.onActivityCreated(
+    await createMetricEntry.onActivityCreated!(
       // @ts-expect-error - metricStat is missing for testing purposes
       generateTestPayload({
         fields: {

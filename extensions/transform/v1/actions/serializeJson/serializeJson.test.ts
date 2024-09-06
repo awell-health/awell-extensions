@@ -21,7 +21,7 @@ describe('Transform - Serialize JSON', () => {
       settings: {},
     })
 
-    await serializeJson.onActivityCreated(
+    await serializeJson.onActivityCreated!(
       mockOnActivityCreateParams,
       onComplete,
       onError

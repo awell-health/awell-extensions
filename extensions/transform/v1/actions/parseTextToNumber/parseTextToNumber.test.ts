@@ -17,7 +17,7 @@ describe('Transform - Parse text to number', () => {
       settings: {},
     })
 
-    await parseTextToNumber.onActivityCreated(
+    await parseTextToNumber.onActivityCreated!(
       mockOnActivityCreateParams,
       onComplete,
       onError
@@ -38,7 +38,7 @@ describe('Transform - Parse text to number', () => {
       settings: {},
     })
 
-    await parseTextToNumber.onActivityCreated(
+    await parseTextToNumber.onActivityCreated!(
       mockOnActivityCreateParams,
       onComplete,
       onError
@@ -59,7 +59,7 @@ describe('Transform - Parse text to number', () => {
       settings: {},
     })
 
-    await parseTextToNumber.onActivityCreated(
+    await parseTextToNumber.onActivityCreated!(
       mockOnActivityCreateParams,
       onComplete,
       onError

@@ -14,7 +14,7 @@ describe('Get messages action', () => {
   })
 
   test('Should call the onComplete callback with one answer', async () => {
-    await getMessages.onActivityCreated(
+    await getMessages.onActivityCreated!(
       generateTestPayload({
         fields: {
           phoneNumber: '+18999999999',
@@ -39,7 +39,7 @@ describe('Get messages action', () => {
   })
 
   test('Should call the onComplete callback with zero answers', async () => {
-    await getMessages.onActivityCreated(
+    await getMessages.onActivityCreated!(
       generateTestPayload({
         fields: {
           phoneNumber: '+19144542596',
@@ -64,7 +64,7 @@ describe('Get messages action', () => {
   })
 
   test('Should call the onComplete even with no params', async () => {
-    await getMessages.onActivityCreated(
+    await getMessages.onActivityCreated!(
       generateTestPayload({
         fields: {
           phoneNumber: undefined,

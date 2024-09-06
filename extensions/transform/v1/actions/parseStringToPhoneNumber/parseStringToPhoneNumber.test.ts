@@ -17,7 +17,7 @@ describe('Transform - Parse text to phone number', () => {
       settings: {},
     })
 
-    await parseStringToPhoneNumber.onActivityCreated(
+    await parseStringToPhoneNumber.onActivityCreated!(
       mockOnActivityCreateParams,
       onComplete,
       onError

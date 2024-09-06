@@ -20,7 +20,7 @@ describe('Dock Health - Get patient', () => {
       settings: mockSettings,
     })
 
-    await getPatient.onActivityCreated(
+    await getPatient.onActivityCreated!(
       mockOnActivityCreateParams,
       onComplete,
       onError

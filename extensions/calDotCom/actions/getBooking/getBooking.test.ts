@@ -24,7 +24,7 @@ describe('Cal.com GetBooking action', () => {
 
   describe('with empty apiKey', () => {
     it('should call onError', async () => {
-      await getBooking.onActivityCreated(
+      await getBooking.onActivityCreated!(
         generateTestPayload({
           ...dummyPayloadPart,
           fields: {
@@ -54,7 +54,7 @@ describe('Cal.com GetBooking action', () => {
 
   describe('with empty bookingId', () => {
     it('should call onError', async () => {
-      await getBooking.onActivityCreated(
+      await getBooking.onActivityCreated!(
         generateTestPayload({
           ...dummyPayloadPart,
           fields: {
@@ -144,7 +144,7 @@ describe('Cal.com GetBooking action', () => {
     })
 
     it('should call onComplete with data points', async () => {
-      await getBooking.onActivityCreated(
+      await getBooking.onActivityCreated!(
         generateTestPayload({
           ...dummyPayloadPart,
           fields: {
@@ -191,7 +191,7 @@ describe('Cal.com GetBooking action', () => {
     })
 
     it('should call onComplete with data points', async () => {
-      await getBooking.onActivityCreated(
+      await getBooking.onActivityCreated!(
         generateTestPayload({
           ...dummyPayloadPart,
           fields: {

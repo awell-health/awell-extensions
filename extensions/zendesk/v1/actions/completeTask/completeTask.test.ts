@@ -25,7 +25,7 @@ describe('Complete task', () => {
   })
 
   test('Should call the onComplete callback', async () => {
-    await completeTask.onActivityCreated(basePayload, onComplete, onError)
+    await completeTask.onActivityCreated!(basePayload, onComplete, onError)
 
     expect(
       ZendeskClientMockImplementation.salesApi.updateTask
