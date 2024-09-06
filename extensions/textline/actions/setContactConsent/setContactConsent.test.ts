@@ -14,7 +14,7 @@ describe('Set Contact Consent action', () => {
   })
 
   test('Should call the onComplete callback', async () => {
-    await setContactConsent.onActivityCreated(
+    await setContactConsent.onActivityCreated!(
       generateTestPayload({
         fields: {
           consentStatus: true,
@@ -32,7 +32,7 @@ describe('Set Contact Consent action', () => {
   }, 20000)
 
   test('Should call the onError callback when there is no recipient', async () => {
-    await setContactConsent.onActivityCreated(
+    await setContactConsent.onActivityCreated!(
       generateTestPayload({
         fields: {
           consentStatus: false,
@@ -50,7 +50,7 @@ describe('Set Contact Consent action', () => {
   })
 
   test('Should call the onError callback when there is no consent status', async () => {
-    await setContactConsent.onActivityCreated(
+    await setContactConsent.onActivityCreated!(
       generateTestPayload({
         fields: {
           consentStatus: undefined,

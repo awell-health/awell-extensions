@@ -1,20 +1,29 @@
-import { generateTestPayload } from '../../../../../src/tests'
+import { generateTestPayload, TestHelpers } from '../../../../../src/tests'
 import { startCareFlow } from './startCareFlow'
 
 jest.mock('../../sdk/awellSdk')
 
 describe('Start care flow', () => {
-  const onComplete = jest.fn()
-  const onError = jest.fn()
+  const { onComplete, onError, helpers, extensionAction, clearMocks } =
+    TestHelpers.fromAction(startCareFlow)
+  const sdkMock = {
+    orchestration: {
+      mutation: jest.fn().mockResolvedValue({
+        startPathway: {
+          pathway_id: 'a-care-flow-id',
+        },
+      }),
+    },
+  }
+  helpers.awellSdk = jest.fn().mockResolvedValue(sdkMock)
 
   beforeEach(() => {
-    onComplete.mockClear()
-    onError.mockClear()
+    clearMocks()
   })
 
   test('Should call the onComplete callback', async () => {
-    await startCareFlow.onActivityCreated(
-      generateTestPayload({
+    await extensionAction.onEvent({
+      payload: generateTestPayload({
         fields: {
           pathwayDefinitionId: 'a-pathway-definition-id',
           baselineInfo: JSON.stringify([
@@ -24,15 +33,21 @@ describe('Start care flow', () => {
             },
           ]),
         },
-        settings: {
-          apiUrl: 'an-api-url',
-          apiKey: 'an-api-key',
-        },
+        settings: {},
       }),
       onComplete,
-      onError
-    )
+      onError,
+      helpers,
+    })
+
     expect(onComplete).toHaveBeenCalled()
+    expect(onComplete).toHaveBeenCalledWith({
+      data_points: {
+        careFlowId: 'a-care-flow-id',
+      },
+    })
+    expect(helpers.awellSdk).toHaveBeenCalledTimes(1)
+    expect(sdkMock.orchestration.mutation).toHaveBeenCalledTimes(1)
     expect(onError).not.toHaveBeenCalled()
   })
 })

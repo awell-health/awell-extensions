@@ -21,7 +21,7 @@ describe('Stripe - Embedded checkout', () => {
       settings: mockSettings,
     })
 
-    await embeddedCheckout.onActivityCreated(
+    await embeddedCheckout.onActivityCreated!(
       mockOnActivityCreateParams,
       onComplete,
       onError

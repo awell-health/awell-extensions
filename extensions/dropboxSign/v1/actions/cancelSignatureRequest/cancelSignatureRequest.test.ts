@@ -28,7 +28,7 @@ describe('Cancel signature request action', () => {
   })
 
   test('Should call the onComplete callback', async () => {
-    await cancelSignatureRequest.onActivityCreated(
+    await cancelSignatureRequest.onActivityCreated!(
       generateTestPayload({
         fields: {
           signatureRequestId: '123',

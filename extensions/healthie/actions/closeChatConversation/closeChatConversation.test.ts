@@ -21,7 +21,7 @@ describe('closeChatConversation action', () => {
   })
 
   test('Should close a conversation', async () => {
-    await closeChatConversation.onActivityCreated(
+    await closeChatConversation.onActivityCreated!(
       generateTestPayload({
         fields: {
           id: 'conversation-1',

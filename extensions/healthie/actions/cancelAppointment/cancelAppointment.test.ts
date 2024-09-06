@@ -21,7 +21,7 @@ describe('cancelAppointment action', () => {
   })
 
   test('Should cancel an appointment', async () => {
-    await cancelAppointment.onActivityCreated(
+    await cancelAppointment.onActivityCreated!(
       generateTestPayload({
         fields: {
           id: 'appointment-1',

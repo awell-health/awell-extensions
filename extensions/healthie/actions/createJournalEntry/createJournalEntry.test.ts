@@ -22,7 +22,7 @@ describe('createJournalEntry action', () => {
   })
 
   test('Should create a journal entry', async () => {
-    await createJournalEntry.onActivityCreated(
+    await createJournalEntry.onActivityCreated!(
       generateTestPayload({
         fields: {
           id: 'patient-1',

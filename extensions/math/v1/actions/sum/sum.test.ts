@@ -12,7 +12,7 @@ describe('Sum', () => {
   })
 
   test('Should work', async () => {
-    await sum.onActivityCreated(
+    await sum.onActivityCreated!(
       generateTestPayload({
         fields: {
           addend_01: 1,
@@ -52,7 +52,7 @@ describe('Sum', () => {
 
   test('Should return an error if all addends are undefined', async () => {
     await expect(
-      sum.onActivityCreated(
+      sum.onActivityCreated!(
         generateTestPayload({
           fields: {
             addend_01: undefined,

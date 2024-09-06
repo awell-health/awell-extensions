@@ -13,7 +13,7 @@ describe('Send email', () => {
   })
 
   test('Should call the onComplete callback', async () => {
-    await sendEmail.onActivityCreated(
+    await sendEmail.onActivityCreated!(
       generateTestPayload({
         fields: {
           to: 'email@hello.com',

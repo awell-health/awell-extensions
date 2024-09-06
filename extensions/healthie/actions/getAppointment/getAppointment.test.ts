@@ -57,7 +57,7 @@ describe('getAppointment action', () => {
       },
     })
 
-    await getAppointment.onActivityCreated(
+    await getAppointment.onActivityCreated!(
       newActivityPayload,
       onComplete,
       jest.fn()
@@ -84,7 +84,7 @@ describe('getAppointment action', () => {
       },
     })
 
-    await getAppointment.onActivityCreated(
+    await getAppointment.onActivityCreated!(
       newActivityPayload,
       onComplete,
       jest.fn()
@@ -111,7 +111,7 @@ describe('getAppointment action', () => {
       },
     })
 
-    await getAppointment.onActivityCreated(
+    await getAppointment.onActivityCreated!(
       newActivityPayload,
       onComplete,
       jest.fn()

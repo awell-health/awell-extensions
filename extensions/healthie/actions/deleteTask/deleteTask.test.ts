@@ -21,7 +21,7 @@ describe('deleteTask action', () => {
   })
 
   test('Should delete a task', async () => {
-    await deleteTask.onActivityCreated(
+    await deleteTask.onActivityCreated!(
       generateTestPayload({
         fields: {
           id: 'task-1',

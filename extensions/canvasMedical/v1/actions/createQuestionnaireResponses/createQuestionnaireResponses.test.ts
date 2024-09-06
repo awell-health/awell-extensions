@@ -21,7 +21,7 @@ describe('createQuestionnaireResponses', () => {
   }
 
   it('should create questionnaire responses', async () => {
-    await createQuestionnaireResponses.onActivityCreated(
+    await createQuestionnaireResponses.onActivityCreated!(
       generateTestPayload(payload),
       onComplete,
       onError

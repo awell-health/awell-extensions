@@ -1,38 +1,54 @@
-import { generateTestPayload } from '../../../../../src/tests'
+import { generateTestPayload, TestHelpers } from '../../../../../src/tests'
 import { addIdentifierToPatient } from './addIdentifierToPatient'
-
+import { ExtensionAction } from '@awell-health/extensions-core'
 /**
  * Test needs to be fixed
  */
 jest.mock('@awell-health/awell-sdk')
 
 describe('Add identifier to patient', () => {
-  const onComplete = jest.fn()
-  const onError = jest.fn()
+  const { onComplete, onError, extensionAction, clearMocks } =
+    TestHelpers.fromAction(addIdentifierToPatient)
+  const helpers = {
+    httpsAgent: jest.fn(),
+    awellSdk: jest.fn().mockImplementation(async () => {
+      return {
+        orchestration: {
+          query: jest.fn().mockImplementation(async () => {
+            return {
+              patientByIdentifier: {
+                patient: {
+                  id: 'some-patient-id',
+                },
+              },
+            }
+          }),
+        },
+      }
+    }),
+  }
 
   beforeEach(() => {
-    onComplete.mockClear()
-    onError.mockClear()
+    clearMocks()
+    Object.values(helpers).forEach((mock) => mock.mockClear())
   })
 
   test('Should call the onComplete callback', async () => {
-    await addIdentifierToPatient.onActivityCreated(
-      generateTestPayload({
+    await extensionAction.onEvent({
+      payload: generateTestPayload({
         fields: {
           system: 'system',
           value: 'value',
         },
-        settings: {
-          apiUrl: 'api-url',
-          apiKey: 'api-key',
-        },
+        settings: {},
         patient: {
           id: 'some-patient-id',
         },
       }),
       onComplete,
-      onError
-    )
+      onError,
+      helpers,
+    })
 
     expect(true).toBe(true)
 

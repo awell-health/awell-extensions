@@ -1,4 +1,4 @@
-import { generateTestPayload } from '../../../../../src/tests'
+import { generateTestPayload, TestHelpers } from '../../../../../src/tests'
 import AwellSdk from '../../sdk/awellSdk'
 import { searchPatientsByPatientCode } from './searchPatientsByPatientCode'
 
@@ -24,17 +24,16 @@ const mockFn = jest
   )
 
 describe('Search patients by patient code', () => {
-  const onComplete = jest.fn()
-  const onError = jest.fn()
+  const { onComplete, onError, helpers, extensionAction, clearMocks } =
+    TestHelpers.fromAction(searchPatientsByPatientCode)
 
   beforeEach(() => {
-    onComplete.mockClear()
-    onError.mockClear()
+    clearMocks()
   })
 
   test('Should call the onComplete callback', async () => {
-    await searchPatientsByPatientCode.onActivityCreated(
-      generateTestPayload({
+    await extensionAction.onEvent({
+      payload: generateTestPayload({
         patient: {
           id: 'patient-id-1',
           profile: {
@@ -44,14 +43,12 @@ describe('Search patients by patient code', () => {
         fields: {
           pathwayDefinitionId: 'a-pathway-definition-id',
         },
-        settings: {
-          apiUrl: 'an-api-url',
-          apiKey: 'an-api-key',
-        },
+        settings: {},
       }),
       onComplete,
-      onError
-    )
+      onError,
+      helpers,
+    })
 
     expect(mockFn).toHaveBeenCalled()
     expect(onComplete).toHaveBeenCalledWith({

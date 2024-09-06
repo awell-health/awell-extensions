@@ -50,7 +50,7 @@ export const mtls: Action<
   fields,
   dataPoints,
   previewable: true,
-  onActivityCreated: async (payload, onComplete, onError, helpers) => {
+  onEvent: async ({ payload, onComplete, onError, helpers }) => {
     if (isNil(helpers)) {
       throw new Error('Helpers are not provided')
     }

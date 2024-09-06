@@ -4,7 +4,7 @@ import {
   type Webhook,
 } from '@awell-health/extensions-core'
 import { HEALTHIE_IDENTIFIER, type HealthieWebhookPayload } from '../lib/types'
-import { type settings } from '../../awell/settings'
+import { type settings } from '../../healthie/settings'
 import { formatError } from '../lib/sdk/errors'
 import { createSdk } from '../lib/sdk/createSdk'
 import { webhookPayloadSchema } from '../lib/helpers'
@@ -27,9 +27,9 @@ export const appointmentUpdated: Webhook<
 > = {
   key: 'appointmentUpdated',
   dataPoints,
-  onWebhookReceived: async ({ payload, settings }, onSuccess, onError) => {
+  async onEvent({ payload: { payload, settings }, onSuccess, onError }) {
     try {
-      const { sdk } = await createSdk({settings})
+      const { sdk } = await createSdk({ settings })
 
       const validatedPayload = webhookPayloadSchema.parse(payload)
       const updatedAppointmentId = validatedPayload.resource_id.toString()
@@ -52,7 +52,7 @@ export const appointmentUpdated: Webhook<
       })
     } catch (error) {
       await onError(formatError(error))
-    } 
+    }
   },
 }
 

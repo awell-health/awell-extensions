@@ -21,7 +21,7 @@ describe('createClaim', () => {
   }
 
   it('should create claim', async () => {
-    await createClaim.onActivityCreated(
+    await createClaim.onActivityCreated!(
       generateTestPayload(payload),
       onComplete,
       onError

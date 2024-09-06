@@ -23,7 +23,7 @@ describe('updateAppointment', () => {
   }
 
   it('should update appointment', async () => {
-    await updateAppointment.onActivityCreated(
+    await updateAppointment.onActivityCreated!(
       generateTestPayload(payload),
       onComplete,
       onError

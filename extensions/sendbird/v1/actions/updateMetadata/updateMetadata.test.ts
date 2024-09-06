@@ -36,7 +36,7 @@ describe('Update metadata', () => {
   })
 
   test('Should call the onComplete callback', async () => {
-    await updateMetadata.onActivityCreated(basePayload, onComplete, onError)
+    await updateMetadata.onActivityCreated!(basePayload, onComplete, onError)
 
     expect(
       SendbirdClientMockImplementation.chatApi.updateMetadata

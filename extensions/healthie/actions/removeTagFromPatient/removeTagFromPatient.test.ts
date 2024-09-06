@@ -21,7 +21,7 @@ describe('removeTagFromPatient action', () => {
   })
 
   test('Should remove tag from a patient', async () => {
-    await removeTagFromPatient.onActivityCreated(
+    await removeTagFromPatient.onActivityCreated!(
       generateTestPayload({
         fields: {
           id: 'tag-1',

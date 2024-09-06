@@ -32,7 +32,7 @@ describe('Create booking', () => {
   })
 
   test('Should call the onComplete callback', async () => {
-    await createBooking.onActivityCreated(basePayload, onComplete, onError)
+    await createBooking.onActivityCreated!(basePayload, onComplete, onError)
 
     expect(mockReturnValue.createBooking).toHaveBeenCalledWith({
       eventTypeId: sampleBooking.eventTypeId,

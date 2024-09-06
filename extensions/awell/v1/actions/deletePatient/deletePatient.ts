@@ -1,9 +1,8 @@
 import { type Action } from '@awell-health/extensions-core'
-import { SettingsValidationSchema, type settings } from '../../../settings'
-import { Category , validate } from '@awell-health/extensions-core'
+import { type settings } from '../../../settings'
+import { Category, validate } from '@awell-health/extensions-core'
 import { fields, PatientValidationSchema } from './config'
-import { fromZodError } from 'zod-validation-error'
-import { z, ZodError } from 'zod'
+import { z } from 'zod'
 import AwellSdk from '../../sdk/awellSdk'
 
 export const deletePatient: Action<typeof fields, typeof settings> = {
@@ -13,57 +12,28 @@ export const deletePatient: Action<typeof fields, typeof settings> = {
   description: 'Delete the patient currently enrolled in the care flow.',
   fields,
   previewable: false,
-  onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
-    try {
-      const {
-        settings: { apiUrl, apiKey },
-        patient: { id: patientId },
-      } = validate({
-        schema: z.object({
-          settings: SettingsValidationSchema,
-          patient: PatientValidationSchema,
-        }),
-        payload,
-      })
+  onEvent: async ({
+    payload,
+    onComplete,
+    helpers: { awellSdk },
+  }): Promise<void> => {
+    const {
+      patient: { id: patientId },
+    } = validate({
+      schema: z.object({
+        patient: PatientValidationSchema,
+      }),
+      payload,
+    })
 
-      const sdk = new AwellSdk({ apiUrl, apiKey })
+    const { apiKey, apiUrl } = await awellSdk()
 
-      await sdk.deletePatient({
-        patient_id: patientId,
-      })
+    const sdk = new AwellSdk({ apiKey, apiUrl: apiUrl as string })
 
-      await onComplete()
-    } catch (err) {
-      if (err instanceof ZodError) {
-        const error = fromZodError(err)
-        await onError({
-          events: [
-            {
-              date: new Date().toISOString(),
-              text: { en: error.name },
-              error: {
-                category: 'WRONG_INPUT',
-                message: `${error.message}`,
-              },
-            },
-          ],
-        })
-        return
-      }
+    await sdk.deletePatient({
+      patient_id: patientId,
+    })
 
-      const error = err as Error
-      await onError({
-        events: [
-          {
-            date: new Date().toISOString(),
-            text: { en: 'Awell API reported an error' },
-            error: {
-              category: 'SERVER_ERROR',
-              message: error.message,
-            },
-          },
-        ],
-      })
-    }
+    await onComplete()
   },
 }

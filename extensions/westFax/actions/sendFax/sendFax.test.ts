@@ -9,7 +9,7 @@ describe('send fax action', () => {
 
   fetchMock.mockResponseOnce(JSON.stringify({ Success: true, Result: 'asdf' }))
   test('Mock send a fax - success', async () => {
-    await sendFax.onActivityCreated(
+    await sendFax.onActivityCreated!(
       generateTestPayload({
         fields: {
           productId: 'wrongproductid',
@@ -27,7 +27,7 @@ describe('send fax action', () => {
         },
       }),
       onComplete,
-      onError,
+      onError
     )
 
     expect(onComplete).toHaveBeenCalledWith({

@@ -15,7 +15,7 @@ describe('Send SMS (with Messaging Service) action', () => {
   })
 
   test('Should call the onComplete callback', async () => {
-    await sendSmsWithMessagingService.onActivityCreated(
+    await sendSmsWithMessagingService.onActivityCreated!(
       generateTestPayload({
         fields: {
           message: 'Message content',
@@ -40,7 +40,7 @@ describe('Send SMS (with Messaging Service) action', () => {
   })
 
   test('Should call the onError callback when there is no recipient', async () => {
-    const resp = sendSmsWithMessagingService.onActivityCreated(
+    const resp = sendSmsWithMessagingService.onActivityCreated!(
       generateTestPayload({
         fields: {
           message: 'Message content',
@@ -65,7 +65,7 @@ describe('Send SMS (with Messaging Service) action', () => {
   })
 
   test('Should call the onError callback when there is no message', async () => {
-    const resp = sendSmsWithMessagingService.onActivityCreated(
+    const resp = sendSmsWithMessagingService.onActivityCreated!(
       generateTestPayload({
         fields: {
           message: '',
@@ -108,7 +108,7 @@ describe('Send SMS (with Messaging Service) action', () => {
     })
 
     test('Should use one provided in action fields', async () => {
-      await sendSmsWithMessagingService.onActivityCreated(
+      await sendSmsWithMessagingService.onActivityCreated!(
         basePayload,
         onComplete,
         onError
@@ -131,7 +131,7 @@ describe('Send SMS (with Messaging Service) action', () => {
         },
       }
 
-      await sendSmsWithMessagingService.onActivityCreated(
+      await sendSmsWithMessagingService.onActivityCreated!(
         payloadWithoutFrom,
         onComplete,
         onError
@@ -154,7 +154,7 @@ describe('Send SMS (with Messaging Service) action', () => {
         },
       }
 
-      const resp = sendSmsWithMessagingService.onActivityCreated(
+      const resp = sendSmsWithMessagingService.onActivityCreated!(
         payloadWithoutFrom,
         onComplete,
         onError

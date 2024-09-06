@@ -11,7 +11,7 @@ describe('Calculate date difference', () => {
   })
 
   test('Date difference in seconds', async () => {
-    await calculateDateDifference.onActivityCreated(
+    await calculateDateDifference.onActivityCreated!(
       generateTestPayload({
         fields: {
           dateLeft: '2023-04-08T10:00:00',
@@ -33,7 +33,7 @@ describe('Calculate date difference', () => {
   })
 
   test('Date difference in minutes', async () => {
-    await calculateDateDifference.onActivityCreated(
+    await calculateDateDifference.onActivityCreated!(
       generateTestPayload({
         fields: {
           dateLeft: '2023-04-08T10:00:00',
@@ -55,7 +55,7 @@ describe('Calculate date difference', () => {
   })
 
   test('Date difference in hours', async () => {
-    await calculateDateDifference.onActivityCreated(
+    await calculateDateDifference.onActivityCreated!(
       generateTestPayload({
         fields: {
           dateLeft: '2023-04-08T10:00:00',
@@ -77,7 +77,7 @@ describe('Calculate date difference', () => {
   })
 
   test('Date difference in days', async () => {
-    await calculateDateDifference.onActivityCreated(
+    await calculateDateDifference.onActivityCreated!(
       generateTestPayload({
         fields: {
           dateLeft: '2023-04-18T10:00:00',
@@ -99,7 +99,7 @@ describe('Calculate date difference', () => {
   })
 
   test('Date difference in weeks', async () => {
-    await calculateDateDifference.onActivityCreated(
+    await calculateDateDifference.onActivityCreated!(
       generateTestPayload({
         fields: {
           dateLeft: '2014-07-20T00:00:00',
@@ -121,7 +121,7 @@ describe('Calculate date difference', () => {
   })
 
   test('Date difference in months', async () => {
-    await calculateDateDifference.onActivityCreated(
+    await calculateDateDifference.onActivityCreated!(
       generateTestPayload({
         fields: {
           dateLeft: '2023-09-01T00:00:00',
@@ -143,7 +143,7 @@ describe('Calculate date difference', () => {
   })
 
   test('Date difference in years', async () => {
-    await calculateDateDifference.onActivityCreated(
+    await calculateDateDifference.onActivityCreated!(
       generateTestPayload({
         fields: {
           dateLeft: '2025-02-11T00:00:00',
@@ -165,7 +165,7 @@ describe('Calculate date difference', () => {
   })
 
   test('Date difference in non-supported unit should throw an error', async () => {
-    await calculateDateDifference.onActivityCreated(
+    await calculateDateDifference.onActivityCreated!(
       generateTestPayload({
         fields: {
           dateLeft: '2025-02-11T00:00:00',

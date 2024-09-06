@@ -45,7 +45,7 @@ describe('Medplum - Submit questionnaire response', () => {
       },
     })
 
-    await submitQuestionnaireResponse.onActivityCreated(
+    await submitQuestionnaireResponse.onActivityCreated!(
       mockOnActivityCreateParams,
       onComplete,
       onError

@@ -57,9 +57,8 @@ app.post('/:extension/:action', async (req, res) => {
   console.log('incoming', payload)
   const onCompleteCb = createOnCompleteCallback(res)
   const onErrorCb = createOnErrorCallback(res)
-  await action
-    .onActivityCreated(payload, onCompleteCb, onErrorCb)
-    .catch((err) => {
+  await action.onActivityCreated!(payload, onCompleteCb, onErrorCb).catch(
+    (err) => {
       const error = new AwellError({
         error: err,
         action: actionKey,
@@ -77,7 +76,8 @@ app.post('/:extension/:action', async (req, res) => {
           },
         ],
       })
-    })
+    }
+  )
   // const result = queue.shift()
   // res.send(result)
 })

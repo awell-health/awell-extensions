@@ -47,7 +47,7 @@ describe('REST - POST', () => {
       settings: {},
     })
 
-    await post.onActivityCreated(
+    await post.onActivityCreated!(
       mockOnActivityCreateParams,
       onComplete,
       onError
@@ -99,7 +99,7 @@ describe('REST - POST', () => {
       settings: {},
     })
 
-    await post.onActivityCreated(
+    await post.onActivityCreated!(
       mockOnActivityCreateParams,
       onComplete,
       onError

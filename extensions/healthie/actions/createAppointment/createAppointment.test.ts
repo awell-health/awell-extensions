@@ -22,7 +22,7 @@ describe('Create appointment action', () => {
   })
 
   test('Should create an appointment', async () => {
-    await createAppointment.onActivityCreated(
+    await createAppointment.onActivityCreated!(
       generateTestPayload({
         fields: {
           patientId: 'a-patient-id',

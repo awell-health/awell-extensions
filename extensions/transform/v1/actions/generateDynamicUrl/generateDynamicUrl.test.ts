@@ -18,7 +18,7 @@ describe('Transform - Generate dynamic URL', () => {
       settings: {},
     })
 
-    await generateDynamicUrl.onActivityCreated(
+    await generateDynamicUrl.onActivityCreated!(
       mockOnActivityCreateParams,
       onComplete,
       onError
@@ -43,7 +43,7 @@ describe('Transform - Generate dynamic URL', () => {
       settings: {},
     })
 
-    await generateDynamicUrl.onActivityCreated(
+    await generateDynamicUrl.onActivityCreated!(
       mockOnActivityCreateParams,
       onComplete,
       onError
@@ -65,7 +65,7 @@ describe('Transform - Generate dynamic URL', () => {
       settings: {},
     })
 
-    await generateDynamicUrl.onActivityCreated(
+    await generateDynamicUrl.onActivityCreated!(
       mockOnActivityCreateParams,
       onComplete,
       onError

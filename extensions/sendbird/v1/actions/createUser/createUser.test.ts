@@ -42,7 +42,7 @@ describe('Create user', () => {
   })
 
   test('Should call the onComplete callback', async () => {
-    await createUser.onActivityCreated(basePayload, onComplete, onError)
+    await createUser.onActivityCreated!(basePayload, onComplete, onError)
 
     expect(
       SendbirdClientMockImplementation.chatApi.createUser
@@ -61,7 +61,7 @@ describe('Create user', () => {
 
   test('Should call the onComplete callback with nickname as first and last name', async () => {
     basePayload.fields.nickname = ''
-    await createUser.onActivityCreated(basePayload, onComplete, onError)
+    await createUser.onActivityCreated!(basePayload, onComplete, onError)
 
     expect(
       SendbirdClientMockImplementation.chatApi.createUser
@@ -87,7 +87,7 @@ describe('Create user', () => {
       profile: { first_name: undefined, last_name: undefined },
     }
 
-    await createUser.onActivityCreated(basePayload, onComplete, onError)
+    await createUser.onActivityCreated!(basePayload, onComplete, onError)
 
     expect(onComplete).not.toHaveBeenCalled()
     expect(onError).toBeCalledTimes(1)
@@ -100,7 +100,7 @@ describe('Create user', () => {
       profile: { first_name: 'test', last_name: undefined },
     }
 
-    await createUser.onActivityCreated(basePayload, onComplete, onError)
+    await createUser.onActivityCreated!(basePayload, onComplete, onError)
 
     expect(onComplete).toHaveBeenCalledWith({
       data_points: { userId: basePayload.fields.userId },
@@ -115,7 +115,7 @@ describe('Create user', () => {
       profile: { first_name: undefined, last_name: 'test' },
     }
 
-    await createUser.onActivityCreated(basePayload, onComplete, onError)
+    await createUser.onActivityCreated!(basePayload, onComplete, onError)
 
     expect(onComplete).toHaveBeenCalledWith({
       data_points: { userId: basePayload.fields.userId },

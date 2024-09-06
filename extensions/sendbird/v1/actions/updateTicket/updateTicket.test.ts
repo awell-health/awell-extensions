@@ -38,7 +38,7 @@ describe('Update ticket', () => {
   })
 
   test('Should call the onComplete callback', async () => {
-    await updateTicket.onActivityCreated(basePayload, onComplete, onError)
+    await updateTicket.onActivityCreated!(basePayload, onComplete, onError)
 
     expect(
       SendbirdClientMockImplementation.deskApi.updateTicket
@@ -53,7 +53,7 @@ describe('Update ticket', () => {
   test('Should call the onError callback when it receives invalid ticket ID', async () => {
     basePayload.fields.ticketId = NaN
 
-    await updateTicket.onActivityCreated(basePayload, onComplete, onError)
+    await updateTicket.onActivityCreated!(basePayload, onComplete, onError)
 
     expect(onComplete).not.toHaveBeenCalled()
     expect(onError).toHaveBeenCalledTimes(1)

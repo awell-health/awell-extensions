@@ -90,7 +90,7 @@ describe('Update non-visit note action', () => {
   }>)(
     '$#. Should successfully update and execute onComplete when input is $input',
     async ({ input }) => {
-      await updateNonVisitNote.onActivityCreated(
+      await updateNonVisitNote.onActivityCreated!(
         {
           fields: {
             ...input,
@@ -104,7 +104,7 @@ describe('Update non-visit note action', () => {
     }
   )
   it('make sure a signed note is updated correctly', async () => {
-    await updateNonVisitNote.onActivityCreated(
+    await updateNonVisitNote.onActivityCreated!(
       {
         fields: {
           ...exampleInput,

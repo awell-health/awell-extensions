@@ -24,7 +24,7 @@ describe.skip('Stripe - Create customer', () => {
       settings: mockSettings,
     })
 
-    await createCustomer.onActivityCreated(
+    await createCustomer.onActivityCreated!(
       mockOnActivityCreateParams,
       onComplete,
       onError

@@ -18,7 +18,7 @@ describe('Generate random number', () => {
       settings: {},
     })
 
-    await generateRandomNumber.onActivityCreated(
+    await generateRandomNumber.onActivityCreated!(
       mockOnActivityCreateParams,
       onComplete,
       onError
@@ -35,7 +35,7 @@ describe('Generate random number', () => {
       settings: {},
     })
 
-    await generateRandomNumber.onActivityCreated(
+    await generateRandomNumber.onActivityCreated!(
       mockOnActivityCreateParams,
       onComplete,
       onError
@@ -52,7 +52,7 @@ describe('Generate random number', () => {
       settings: {},
     })
 
-    await generateRandomNumber.onActivityCreated(
+    await generateRandomNumber.onActivityCreated!(
       mockOnActivityCreateParams,
       onComplete,
       onError
@@ -69,7 +69,7 @@ describe('Generate random number', () => {
       settings: {},
     })
 
-    await generateRandomNumber.onActivityCreated(
+    await generateRandomNumber.onActivityCreated!(
       mockOnActivityCreateParams,
       onComplete,
       onError

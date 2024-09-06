@@ -1,4 +1,4 @@
-import { generateTestPayload } from '../../../../../src/tests'
+import { generateTestPayload, TestHelpers } from '../../../../../src/tests'
 import AwellSdk from '../../sdk/awellSdk'
 import { getPatientByIdentifier } from './getPatientByIdentifier'
 
@@ -13,17 +13,16 @@ const mockFn = jest
   )
 
 describe('Get patient by identifier', () => {
-  const onComplete = jest.fn()
-  const onError = jest.fn()
+  const { onComplete, onError, helpers, extensionAction, clearMocks } =
+    TestHelpers.fromAction(getPatientByIdentifier)
 
   beforeEach(() => {
-    onComplete.mockClear()
-    onError.mockClear()
+    clearMocks()
   })
 
   test('Should call the onComplete callback', async () => {
-    await getPatientByIdentifier.onActivityCreated(
-      generateTestPayload({
+    await extensionAction.onEvent({
+      payload: generateTestPayload({
         fields: {
           system: 'https://www.awellhealth.com/',
           value: '123',
@@ -34,8 +33,9 @@ describe('Get patient by identifier', () => {
         },
       }),
       onComplete,
-      onError
-    )
+      onError,
+      helpers,
+    })
 
     expect(mockFn).toHaveBeenCalled()
     expect(onComplete).toHaveBeenCalledWith({

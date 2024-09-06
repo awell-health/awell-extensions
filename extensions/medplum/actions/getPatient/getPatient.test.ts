@@ -27,7 +27,7 @@ describe('Medplum - Get patient', () => {
       settings: mockSettings,
     })
 
-    await getPatient.onActivityCreated(
+    await getPatient.onActivityCreated!(
       mockOnActivityCreateParams,
       onComplete,
       onError

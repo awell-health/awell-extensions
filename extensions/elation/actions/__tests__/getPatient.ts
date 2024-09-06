@@ -21,7 +21,7 @@ describe('Simple get patient action', () => {
   })
 
   test('Should return with correct data_points', async () => {
-    await getPatient.onActivityCreated(
+    await getPatient.onActivityCreated!(
       {
         fields: {
           patientId: 127385972,
@@ -29,7 +29,7 @@ describe('Simple get patient action', () => {
         settings,
       } as any,
       onComplete,
-      jest.fn(),
+      jest.fn()
     )
     expect(onComplete).toHaveBeenCalled()
     expect(onComplete).toBeCalledWith({
@@ -66,7 +66,7 @@ describe('Simple get patient action', () => {
       .mockImplementation((obj: { events: ActivityEvent[] }) => {
         return obj.events[0].error?.message
       })
-    const activity = getPatient.onActivityCreated(
+    const activity = getPatient.onActivityCreated!(
       {
         fields: {
           patientId: '',
@@ -74,7 +74,7 @@ describe('Simple get patient action', () => {
         settings,
       } as any,
       onComplete,
-      onError,
+      onError
     )
     await expect(activity).rejects.toThrow(ZodError)
   })

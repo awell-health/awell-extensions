@@ -32,7 +32,7 @@ describe('Create task', () => {
   })
 
   test('Should call the onComplete callback', async () => {
-    await createTask.onActivityCreated(basePayload, onComplete, onError)
+    await createTask.onActivityCreated!(basePayload, onComplete, onError)
 
     expect(
       ZendeskClientMockImplementation.salesApi.createTask

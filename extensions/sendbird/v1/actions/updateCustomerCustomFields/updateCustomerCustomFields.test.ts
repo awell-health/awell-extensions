@@ -30,7 +30,7 @@ describe("Update customer's custom fields", () => {
   })
 
   test('Should call the onComplete callback', async () => {
-    await updateCustomerCustomFields.onActivityCreated(
+    await updateCustomerCustomFields.onActivityCreated!(
       basePayload,
       onComplete,
       onError

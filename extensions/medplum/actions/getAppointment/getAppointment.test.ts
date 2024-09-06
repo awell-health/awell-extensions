@@ -27,7 +27,7 @@ describe('Medplum - Get appointment', () => {
       settings: mockSettings,
     })
 
-    await getAppointment.onActivityCreated(
+    await getAppointment.onActivityCreated!(
       mockOnActivityCreateParams,
       onComplete,
       onError

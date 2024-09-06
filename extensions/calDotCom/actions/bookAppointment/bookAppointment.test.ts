@@ -9,7 +9,7 @@ describe('Simple book appointment action', () => {
   })
 
   test('Should not call the onComplete callback', async () => {
-    await bookAppointment.onActivityCreated(
+    await bookAppointment.onActivityCreated!(
       generateTestPayload({
         fields: {
           calLink: 'awell/1h',

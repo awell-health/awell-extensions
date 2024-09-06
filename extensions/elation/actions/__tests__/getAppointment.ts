@@ -20,7 +20,7 @@ describe('Simple get appointment action', () => {
   })
 
   test('Should return with correct data_points', async () => {
-    await getAppointment.onActivityCreated(
+    await getAppointment.onActivityCreated!(
       {
         fields: {
           appointmentId: '1',

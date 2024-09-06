@@ -23,7 +23,7 @@ describe('Send SMS during business hours', () => {
     const mockDate = '2024-01-01T10:00:00Z' // between business hours
     jest.setSystemTime(new Date(mockDate))
 
-    await sendSmsDuringBusinessHours.onActivityCreated(
+    await sendSmsDuringBusinessHours.onActivityCreated!(
       generateTestPayload({
         fields: {
           message: 'Message content',
@@ -58,7 +58,7 @@ describe('Send SMS during business hours', () => {
     const mockDate = '2024-01-01T08:59:00Z' // before business hours
     jest.setSystemTime(new Date(mockDate))
 
-    await sendSmsDuringBusinessHours.onActivityCreated(
+    await sendSmsDuringBusinessHours.onActivityCreated!(
       generateTestPayload({
         fields: {
           message: 'Message content',
@@ -93,7 +93,7 @@ describe('Send SMS during business hours', () => {
     const mockDate = '2024-01-01T17:01:00Z' // after business hours
     jest.setSystemTime(new Date(mockDate))
 
-    await sendSmsDuringBusinessHours.onActivityCreated(
+    await sendSmsDuringBusinessHours.onActivityCreated!(
       generateTestPayload({
         fields: {
           message: 'Message content',
@@ -125,7 +125,7 @@ describe('Send SMS during business hours', () => {
   })
 
   test('Should call the onError callback when there is no recipient', async () => {
-    const resp = sendSmsDuringBusinessHours.onActivityCreated(
+    const resp = sendSmsDuringBusinessHours.onActivityCreated!(
       generateTestPayload({
         fields: {
           message: 'Message content',
@@ -151,7 +151,7 @@ describe('Send SMS during business hours', () => {
   })
 
   test('Should call the onError callback when there is no message', async () => {
-    const resp = sendSmsDuringBusinessHours.onActivityCreated(
+    const resp = sendSmsDuringBusinessHours.onActivityCreated!(
       generateTestPayload({
         fields: {
           message: '',
@@ -196,7 +196,7 @@ describe('Send SMS during business hours', () => {
     })
 
     test('Should use one provided in action fields', async () => {
-      await sendSmsDuringBusinessHours.onActivityCreated(
+      await sendSmsDuringBusinessHours.onActivityCreated!(
         basePayload,
         onComplete,
         onError
@@ -220,7 +220,7 @@ describe('Send SMS during business hours', () => {
         },
       }
 
-      await sendSmsDuringBusinessHours.onActivityCreated(
+      await sendSmsDuringBusinessHours.onActivityCreated!(
         payloadWithoutFrom,
         onComplete,
         onError
@@ -244,7 +244,7 @@ describe('Send SMS during business hours', () => {
         },
       }
 
-      const resp = sendSmsDuringBusinessHours.onActivityCreated(
+      const resp = sendSmsDuringBusinessHours.onActivityCreated!(
         payloadWithoutFrom,
         onComplete,
         onError

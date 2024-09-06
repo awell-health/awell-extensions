@@ -27,7 +27,7 @@ describe('Elation - Get physician', () => {
   })
 
   test('Should return the correct physician', async () => {
-    await getPhysician.onActivityCreated(
+    await getPhysician.onActivityCreated!(
       {
         fields: {
           physicianId: 1,

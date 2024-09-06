@@ -21,7 +21,7 @@ describe('updateCoverage', () => {
   }
 
   it('should update coverage', async () => {
-    await updateCoverage.onActivityCreated(
+    await updateCoverage.onActivityCreated!(
       generateTestPayload(payload),
       onComplete,
       onError

@@ -17,7 +17,7 @@ describe('Experimental - Request video visit', () => {
       settings: {},
     })
 
-    await requestVideoVisit.onActivityCreated(
+    await requestVideoVisit.onActivityCreated!(
       mockOnActivityCreateParams,
       onComplete,
       onError
@@ -34,7 +34,7 @@ describe('Experimental - Request video visit', () => {
       settings: {},
     })
 
-    await requestVideoVisit.onActivityCreated(
+    await requestVideoVisit.onActivityCreated!(
       // @ts-expect-error zod will catch this
       mockOnActivityCreateParams,
       onComplete,

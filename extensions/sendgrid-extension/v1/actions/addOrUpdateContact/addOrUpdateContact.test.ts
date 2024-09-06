@@ -40,7 +40,11 @@ describe('Add or update contact', () => {
       }
     )
 
-    await addOrUpdateContact.onActivityCreated(basePayload, onComplete, onError)
+    await addOrUpdateContact.onActivityCreated!(
+      basePayload,
+      onComplete,
+      onError
+    )
 
     expect(
       SendgridClientMockImplementation.marketing.contacts.addOrUpdate
@@ -70,7 +74,11 @@ describe('Add or update contact', () => {
       }
     )
 
-    await addOrUpdateContact.onActivityCreated(basePayload, onComplete, onError)
+    await addOrUpdateContact.onActivityCreated!(
+      basePayload,
+      onComplete,
+      onError
+    )
     expect(
       SendgridClientMockImplementation.marketing.contacts.addOrUpdate
     ).toHaveBeenCalledWith({

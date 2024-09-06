@@ -11,7 +11,7 @@ describe('Cloudinary - Upload files', () => {
   })
 
   test('Should not call the onComplete callback', async () => {
-    await uploadFiles.onActivityCreated(
+    await uploadFiles.onActivityCreated!(
       generateTestPayload({
         fields: {
           uploadPreset: undefined, // If not defined, it will use preset from the extension settings

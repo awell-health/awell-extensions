@@ -21,7 +21,7 @@ describe('applyTagToPatient action', () => {
   })
 
   test('Should apply tag to a patient', async () => {
-    await applyTagToPatient.onActivityCreated(
+    await applyTagToPatient.onActivityCreated!(
       generateTestPayload({
         fields: {
           id: 'tag-1',

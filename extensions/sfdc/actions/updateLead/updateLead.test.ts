@@ -29,7 +29,7 @@ describe('Salesforce - Update Lead', () => {
       settings: mockSettings,
     })
 
-    await updateLead.onActivityCreated(
+    await updateLead.onActivityCreated!(
       mockOnActivityCreateParams,
       onComplete,
       onError

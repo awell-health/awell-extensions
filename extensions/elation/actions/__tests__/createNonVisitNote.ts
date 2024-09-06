@@ -27,7 +27,7 @@ describe('Create non-visit note action', () => {
   })
 
   test('Should return with correct data_points', async () => {
-    await createNonVisitNote.onActivityCreated(
+    await createNonVisitNote.onActivityCreated!(
       {
         fields: {
           patientId: nonVisitNoteResponseExample.patient,

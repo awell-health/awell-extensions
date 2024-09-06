@@ -20,7 +20,7 @@ describe('checkPatientTag action', () => {
 
   describe('when tag is applied', () => {
     it('should return call onComplete with hasTag data points set to true', async () => {
-      await checkPatientTag.onActivityCreated(
+      await checkPatientTag.onActivityCreated!(
         generateTestPayload({
           fields: {
             id: 'tag-1',
@@ -44,7 +44,7 @@ describe('checkPatientTag action', () => {
   })
   describe('when tag is not applied', () => {
     it('should return call onComplete with hasTag data points set to false', async () => {
-      await checkPatientTag.onActivityCreated(
+      await checkPatientTag.onActivityCreated!(
         generateTestPayload({
           fields: {
             id: 'no-tag',

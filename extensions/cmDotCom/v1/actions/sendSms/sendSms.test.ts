@@ -33,7 +33,7 @@ describe('Send SMS', () => {
   })
 
   test('Should call the onComplete callback', async () => {
-    await sendSms.onActivityCreated(basePayload, onComplete, onError)
+    await sendSms.onActivityCreated!(basePayload, onComplete, onError)
 
     expect(CmClientMockImplementation.sendSms).toHaveBeenCalledWith({
       from: basePayload.fields.fromName,
@@ -48,7 +48,7 @@ describe('Send SMS', () => {
   test.each([{ value: undefined }, { value: '' }])(
     '$#. Should use settings values when fields equal "$value"',
     async ({ value }) => {
-      await sendSms.onActivityCreated(
+      await sendSms.onActivityCreated!(
         {
           ...basePayload,
           fields: {
@@ -81,7 +81,7 @@ describe('Send SMS', () => {
   ])(
     '$#. Should use fields values when provided and override settings values',
     async ({ settings }) => {
-      await sendSms.onActivityCreated(
+      await sendSms.onActivityCreated!(
         {
           ...basePayload,
           fields: {
@@ -110,7 +110,7 @@ describe('Send SMS', () => {
   test.each([{ value: undefined }, { value: '' }])(
     '$#. Should throw error when fields and settings are not provided',
     async ({ value }) => {
-      await sendSms.onActivityCreated(
+      await sendSms.onActivityCreated!(
         {
           ...basePayload,
           fields: {

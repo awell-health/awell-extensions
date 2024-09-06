@@ -22,7 +22,7 @@ describe('createPatient action', () => {
   })
 
   test('Should create a new patient', async () => {
-    await createPatient.onActivityCreated(
+    await createPatient.onActivityCreated!(
       generateTestPayload({
         fields: {
           first_name: 'test',

@@ -20,7 +20,7 @@ describe('Salesforce - Test action', () => {
       settings: mockSettings,
     })
 
-    await testAction.onActivityCreated(
+    await testAction.onActivityCreated!(
       mockOnActivityCreateParams,
       onComplete,
       onError

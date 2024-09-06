@@ -18,7 +18,7 @@ describe('Simple create patient action', () => {
   })
 
   test('Should return with correct data_points', async () => {
-    await createPatient.onActivityCreated(
+    await createPatient.onActivityCreated!(
       {
         fields: {
           firstName: 'Test',

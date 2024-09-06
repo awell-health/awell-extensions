@@ -15,7 +15,7 @@ describe('Send SMS (with from number) action', () => {
   })
 
   test('Should call the onComplete callback', async () => {
-    await sendSms.onActivityCreated(
+    await sendSms.onActivityCreated!(
       generateTestPayload({
         fields: {
           message: 'Message content',
@@ -40,7 +40,7 @@ describe('Send SMS (with from number) action', () => {
   })
 
   test('Should call the onError callback when there is no recipient', async () => {
-    const resp = sendSms.onActivityCreated(
+    const resp = sendSms.onActivityCreated!(
       generateTestPayload({
         fields: {
           message: 'Message content',
@@ -65,7 +65,7 @@ describe('Send SMS (with from number) action', () => {
   })
 
   test('Should call the onError callback when there is no message', async () => {
-    const resp = sendSms.onActivityCreated(
+    const resp = sendSms.onActivityCreated!(
       generateTestPayload({
         fields: {
           message: '',
@@ -108,7 +108,7 @@ describe('Send SMS (with from number) action', () => {
     })
 
     test('Should use one provided in action fields', async () => {
-      await sendSms.onActivityCreated(basePayload, onComplete, onError)
+      await sendSms.onActivityCreated!(basePayload, onComplete, onError)
       expect(
         getLastTwilioClient().messages.create.mock.calls.at(-1)[0].from
       ).toEqual(basePayload.fields.from)
@@ -126,7 +126,7 @@ describe('Send SMS (with from number) action', () => {
         },
       }
 
-      await sendSms.onActivityCreated(payloadWithoutFrom, onComplete, onError)
+      await sendSms.onActivityCreated!(payloadWithoutFrom, onComplete, onError)
       expect(
         getLastTwilioClient().messages.create.mock.calls.at(-1)[0].from
       ).toEqual(payloadWithoutFrom.settings.fromNumber)
@@ -144,7 +144,7 @@ describe('Send SMS (with from number) action', () => {
         },
       }
 
-      const resp = sendSms.onActivityCreated(
+      const resp = sendSms.onActivityCreated!(
         payloadWithoutFrom,
         onComplete,
         onError

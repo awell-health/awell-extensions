@@ -21,7 +21,7 @@ describe('updatePatient action', () => {
   })
 
   test('Should update patient', async () => {
-    await updatePatient.onActivityCreated(
+    await updatePatient.onActivityCreated!(
       generateTestPayload({
         fields: {
           id: 'patient-1',

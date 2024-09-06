@@ -17,7 +17,7 @@ describe('Advanced data collection - Collect medication', () => {
       settings: {},
     })
 
-    await collectMedication.onActivityCreated(
+    await collectMedication.onActivityCreated!(
       mockOnActivityCreateParams,
       onComplete,
       onError

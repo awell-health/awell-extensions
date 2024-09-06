@@ -34,7 +34,7 @@ describe('Get signature request action', () => {
   })
 
   test('Should call the onComplete callback', async () => {
-    await getSignatureRequest.onActivityCreated(
+    await getSignatureRequest.onActivityCreated!(
       generateTestPayload({
         fields: {
           signatureRequestId: '123',

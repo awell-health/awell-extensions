@@ -27,7 +27,7 @@ describe('Delete non-visit note action', () => {
   })
 
   test('Should complete successfully', async () => {
-    await deleteNonVisitNote.onActivityCreated(
+    await deleteNonVisitNote.onActivityCreated!(
       {
         fields: {
           nonVisitNoteId: nonVisitNoteResponseExample.id,

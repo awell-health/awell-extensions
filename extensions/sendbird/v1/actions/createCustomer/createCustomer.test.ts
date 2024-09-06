@@ -35,7 +35,7 @@ describe('Create customer', () => {
   })
 
   test('Should call the onComplete callback', async () => {
-    await createCustomer.onActivityCreated(basePayload, onComplete, onError)
+    await createCustomer.onActivityCreated!(basePayload, onComplete, onError)
 
     expect(
       SendbirdClientMockImplementation.deskApi.createCustomer

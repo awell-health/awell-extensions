@@ -33,7 +33,7 @@ describe('Medplum - Create service request', () => {
       settings: mockSettings,
     })
 
-    await createServiceRequest.onActivityCreated(
+    await createServiceRequest.onActivityCreated!(
       mockOnActivityCreateParams,
       onComplete,
       onError

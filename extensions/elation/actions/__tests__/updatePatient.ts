@@ -18,7 +18,7 @@ describe('Simple update patient action', () => {
   })
 
   test('Should call onComplete', async () => {
-    await updatePatient.onActivityCreated(
+    await updatePatient.onActivityCreated!(
       {
         fields: {
           patientId: '141375220285441',

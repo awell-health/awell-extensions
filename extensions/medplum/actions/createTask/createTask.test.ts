@@ -34,7 +34,7 @@ describe('Medplum - Create task', () => {
       settings: mockSettings,
     })
 
-    await createTask.onActivityCreated(
+    await createTask.onActivityCreated!(
       mockOnActivityCreateParams,
       onComplete,
       onError

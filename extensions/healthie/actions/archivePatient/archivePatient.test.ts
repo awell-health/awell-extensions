@@ -21,7 +21,7 @@ describe('archivePatient action', () => {
   })
 
   test('Should archive a patient', async () => {
-    await archivePatient.onActivityCreated(
+    await archivePatient.onActivityCreated!(
       generateTestPayload({
         pathway: {
           id: 'pathway-id',

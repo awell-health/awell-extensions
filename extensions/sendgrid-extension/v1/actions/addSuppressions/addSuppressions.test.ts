@@ -22,7 +22,7 @@ describe('Add Suppressions', () => {
   })
 
   test('calls onComplete when Sendgrid sends a non-error response', async () => {
-    await addSuppressions.onActivityCreated(basePayload, onComplete, onError)
+    await addSuppressions.onActivityCreated!(basePayload, onComplete, onError)
     expect(
       SendgridClientMockImplementation.groups.suppressions.add
     ).toHaveBeenNthCalledWith(1, '12345', 'test-email@email.com')
@@ -39,7 +39,7 @@ describe('Add Suppressions', () => {
         throw new Error('hiya')
       }
     )
-    await addSuppressions.onActivityCreated(basePayload, onComplete, onError)
+    await addSuppressions.onActivityCreated!(basePayload, onComplete, onError)
     expect(onComplete).not.toBeCalled()
     expect(onError).toHaveBeenNthCalledWith(1, {
       events: expect.arrayContaining([

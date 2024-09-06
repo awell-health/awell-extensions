@@ -33,7 +33,7 @@ describe('find appointments', () => {
   })
   it('validate findAppointments client', async () => {
     const payload = withFields({ patientId: PATIENT_ID_WITH_APPOINTMENTS })
-    await findAppointments.onActivityCreated(payload, onComplete, onError)
+    await findAppointments.onActivityCreated!(payload, onComplete, onError)
     expect(onComplete).toHaveBeenCalledWith({
       data_points: expect.objectContaining({
         appointments: JSON.stringify([{ id: 1 }, { id: 2 }]),
@@ -46,25 +46,25 @@ describe('find appointments', () => {
       patientId: 12345,
       practiceId: 'asdf' as unknown as number,
     })
-    const resp = findAppointments.onActivityCreated(
+    const resp = findAppointments.onActivityCreated!(
       payload,
       onComplete,
-      onError,
+      onError
     )
     await expect(resp).rejects.toThrow(ZodError)
   })
   it('validate missing patient ID', async () => {
     const payload = withFields({ patientId: undefined as unknown as number })
-    const resp = findAppointments.onActivityCreated(
+    const resp = findAppointments.onActivityCreated!(
       payload,
       onComplete,
-      onError,
+      onError
     )
     await expect(resp).rejects.toThrow(ZodError)
   })
   it('no appointments to return appointment_exists: `false`', async () => {
     const payload = withFields({ patientId: PATIENT_ID_WITHOUT_APPOINTMENTS })
-    await findAppointments.onActivityCreated(payload, onComplete, onError)
+    await findAppointments.onActivityCreated!(payload, onComplete, onError)
     expect(onComplete).toHaveBeenCalledWith({
       data_points: expect.objectContaining({
         appointments: '[]',

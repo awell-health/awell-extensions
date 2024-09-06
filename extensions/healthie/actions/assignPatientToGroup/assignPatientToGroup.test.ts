@@ -27,7 +27,7 @@ describe('assignPatientToGroup action', () => {
   ])(
     '$#. When groupId equals "$inputGroupId", then it should be called with "$assignedGroupId"',
     async ({ inputGroupId, assignedGroupId }) => {
-      await assignPatientToGroup.onActivityCreated(
+      await assignPatientToGroup.onActivityCreated!(
         generateTestPayload({
           fields: {
             id: 'patient-1',

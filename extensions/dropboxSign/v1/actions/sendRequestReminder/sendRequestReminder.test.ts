@@ -34,7 +34,7 @@ describe('Send request reminder action', () => {
   })
 
   test('Should call the onComplete callback', async () => {
-    await sendRequestReminder.onActivityCreated(
+    await sendRequestReminder.onActivityCreated!(
       generateTestPayload({
         fields: {
           signatureRequestId: '123',

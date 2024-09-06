@@ -25,7 +25,7 @@ describe('Talkdesk - Trigger flow', () => {
       settings: mockSettings,
     })
 
-    await triggerFlow.onActivityCreated(
+    await triggerFlow.onActivityCreated!(
       mockOnActivityCreateParams,
       onComplete,
       onError

@@ -28,7 +28,7 @@ describe('Event webhook', () => {
     jest.clearAllMocks()
   })
   it('should validate the example webhook', async () => {
-    await eventWebhook.onWebhookReceived(
+    await eventWebhook.onWebhookReceived!(
       {
         payload: exampleWebhook,
         settings: {} as Settings,

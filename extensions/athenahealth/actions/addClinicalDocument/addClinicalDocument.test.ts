@@ -27,7 +27,7 @@ describe('athenahealth - Add clinical document', () => {
       settings: mockSettings,
     })
 
-    await addClinicalDocument.onActivityCreated(
+    await addClinicalDocument.onActivityCreated!(
       mockOnActivityCreateParams,
       onComplete,
       onError
@@ -47,7 +47,7 @@ describe('athenahealth - Add clinical document', () => {
     })
 
     try {
-      await addClinicalDocument.onActivityCreated(
+      await addClinicalDocument.onActivityCreated!(
         mockOnActivityCreateParams,
         onComplete,
         onError
@@ -77,7 +77,7 @@ describe('athenahealth - Add clinical document', () => {
     })
 
     try {
-      await addClinicalDocument.onActivityCreated(
+      await addClinicalDocument.onActivityCreated!(
         mockOnActivityCreateParams,
         onComplete,
         onError

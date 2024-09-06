@@ -30,7 +30,7 @@ describe('Test event canceled', () => {
 
   it('should return the correct data points', async () => {
     const event = testInviteeCanceled
-    const evt = eventCanceled.onWebhookReceived(
+    const evt = eventCanceled.onWebhookReceived!(
       buildOnWebhookReceivedParams<CalendlyInviteeCanceledWebhook>({
         payload: event,
       }),
@@ -65,7 +65,7 @@ describe('Test event canceled', () => {
   ])('onComplete should always be called $name', async (params) => {
     const { payload, output } = params
     const merged = _.merge({}, testInviteeCanceled, { payload })
-    const evt = eventCanceled.onWebhookReceived(
+    const evt = eventCanceled.onWebhookReceived!(
       buildOnWebhookReceivedParams<CalendlyWebhookPayload>({
         payload: merged,
       }),
@@ -92,7 +92,7 @@ describe('Test event canceled', () => {
   ])('Error should throw: $name', async (params) => {
     const { payload, error } = params
     const merged = _.merge({}, testInviteeCanceled, { payload })
-    const evt = eventCanceled.onWebhookReceived(
+    const evt = eventCanceled.onWebhookReceived!(
       buildOnWebhookReceivedParams<CalendlyWebhookPayload>({
         payload: merged,
       }),
