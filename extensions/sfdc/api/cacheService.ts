@@ -9,4 +9,4 @@ import { cache } from '@awell-health/extensions-core'
  * Note that we will soon be releasing another implementation of the cache
  * service that will remove this restriction.
  */
-export const salesforceCacheService = new cache.InMemoryCache()
+export const salesforceCacheService = new cache.NoCache()
