@@ -100,7 +100,7 @@ export class SalesforceRestAPIClient extends APIClient<SalesforceDataWrapper> {
           /**
            * Not sure whether caching is possible with the password grant
            */
-          // cacheService: salesforceCacheService,
+          cacheService: salesforceCacheService,
         })
       }
 

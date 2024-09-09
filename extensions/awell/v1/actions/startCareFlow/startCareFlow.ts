@@ -8,7 +8,6 @@ import {
   dataPoints,
 } from './config'
 import { z } from 'zod'
-import AwellSdk from '../../sdk/awellSdk'
 
 export const startCareFlow: Action<typeof fields, typeof settings> = {
   key: 'startCareFlow',
