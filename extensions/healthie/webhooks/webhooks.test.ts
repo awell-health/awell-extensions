@@ -3,7 +3,7 @@ import { HEALTHIE_IDENTIFIER } from '../lib/types'
 import { formatError } from '../lib/sdk/errors'
 import { testCases } from './tests/testCases'
 import { processWebhook } from './tests/helpers'
-import { TestHelpers } from '../../../src/tests'
+import { TestHelpers } from '@awell-health/extensions-core'
 
 jest.mock('../lib/sdk/generated/sdk')
 jest.mock('../lib/sdk/graphqlClient')
