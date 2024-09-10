@@ -1,4 +1,5 @@
-import { generateTestPayload, TestHelpers } from '../../../../../src/tests'
+import { TestHelpers } from '@awell-health/extensions-core'
+import { generateTestPayload } from '@/tests'
 import { startCareFlow } from './startCareFlow'
 
 jest.mock('../../sdk/awellSdk')

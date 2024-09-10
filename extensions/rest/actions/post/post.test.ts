@@ -1,5 +1,6 @@
+import { TestHelpers } from '@awell-health/extensions-core'
 import { post } from '.'
-import { generateTestPayload, TestHelpers } from '../../../../src/tests'
+import { generateTestPayload } from '@/tests'
 
 describe('REST - POST', () => {
   const { onComplete, onError, helpers, extensionAction, clearMocks } =

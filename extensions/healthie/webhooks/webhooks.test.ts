@@ -3,20 +3,15 @@ import { HEALTHIE_IDENTIFIER } from '../lib/types'
 import { formatError } from '../lib/sdk/errors'
 import { testCases } from './tests/testCases'
 import { processWebhook } from './tests/helpers'
-import { TestHelpers } from '../../../src/tests'
+import { TestHelpers } from '@awell-health/extensions-core'
 
 jest.mock('../lib/sdk/generated/sdk')
 jest.mock('../lib/sdk/graphqlClient')
 
 testCases.forEach(({ webhook, payload, sdkMocks, dataPoints }) => {
   describe(webhook.key, () => {
-    const {
-      onComplete: onSuccess,
-      onError,
-      helpers,
-      clearMocks,
-      extensionWebhook,
-    } = TestHelpers.fromWebhook(webhook)
+    const { onSuccess, onError, helpers, clearMocks, extensionWebhook } =
+      TestHelpers.fromWebhook(webhook)
 
     beforeAll(() => {
       ;(getSdk as jest.Mock).mockImplementation(() => ({

@@ -1,6 +1,6 @@
-import { generateTestPayload, TestHelpers } from '../../../../../src/tests'
+import { generateTestPayload } from '@/tests'
 import { addIdentifierToPatient } from './addIdentifierToPatient'
-import { ExtensionAction } from '@awell-health/extensions-core'
+import { TestHelpers } from '@awell-health/extensions-core'
 /**
  * Test needs to be fixed
  */
