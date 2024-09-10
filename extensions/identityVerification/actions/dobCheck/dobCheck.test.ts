@@ -13,7 +13,9 @@ describe('Identity verification - DOB check', () => {
   test('Should work', async () => {
     await extensionAction.onEvent({
       payload: generateTestPayload({
-        fields: {},
+        fields: {
+          dobCheck: 'Enter your date of birth to verify your identity',
+        },
         settings: {},
       }),
       onComplete,

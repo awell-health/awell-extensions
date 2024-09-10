@@ -1,4 +1,4 @@
-import { type Field } from '@awell-health/extensions-core'
+import { type Field, FieldType } from '@awell-health/extensions-core'
 import z, { type ZodTypeAny } from 'zod'
 
 /**
@@ -8,8 +8,16 @@ import z, { type ZodTypeAny } from 'zod'
  *
  * The logic to compare the two will live in Hosted Pages as well.
  */
-export const fields = {} satisfies Record<string, Field>
+export const fields = {
+  label: {
+    id: 'label',
+    label: 'Label',
+    description: 'Label shown to the user above the date input',
+    type: FieldType.STRING,
+    required: false,
+  },
+} satisfies Record<string, Field>
 
-export const FieldsValidationSchema = z.object(
-  {} satisfies Record<keyof typeof fields, ZodTypeAny>
-)
+export const FieldsValidationSchema = z.object({
+  label: z.string().optional(),
+} satisfies Record<keyof typeof fields, ZodTypeAny>)
