@@ -1,4 +1,5 @@
-import { generateTestPayload, TestHelpers } from '../../../../../src/tests'
+import { TestHelpers } from '@awell-health/extensions-core'
+import { generateTestPayload } from '@/tests'
 import { PathwayStatus } from '../../gql/graphql'
 import AwellSdk from '../../sdk/awellSdk'
 import { isPatientEnrolledInCareFlow as actionInterface } from './isPatientEnrolledInCareFlow'

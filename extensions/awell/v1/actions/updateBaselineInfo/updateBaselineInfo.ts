@@ -40,6 +40,8 @@ export const updateBaselineInfo: Action<typeof fields, typeof settings> = {
             baseline_info: baselineInfo,
           },
         },
+        code: true,
+        success: true
       },
     })
 
