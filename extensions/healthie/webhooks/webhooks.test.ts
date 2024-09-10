@@ -10,13 +10,8 @@ jest.mock('../lib/sdk/graphqlClient')
 
 testCases.forEach(({ webhook, payload, sdkMocks, dataPoints }) => {
   describe(webhook.key, () => {
-    const {
-      onComplete: onSuccess,
-      onError,
-      helpers,
-      clearMocks,
-      extensionWebhook,
-    } = TestHelpers.fromWebhook(webhook)
+    const { onSuccess, onError, helpers, clearMocks, extensionWebhook } =
+      TestHelpers.fromWebhook(webhook)
 
     beforeAll(() => {
       ;(getSdk as jest.Mock).mockImplementation(() => ({
