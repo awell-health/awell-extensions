@@ -36,6 +36,8 @@ export const stopCareFlow: Action<typeof fields, typeof settings> = {
             reason,
           },
         },
+        code: true,
+        success: true
       },
     })
 
