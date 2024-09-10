@@ -15,6 +15,7 @@ import { ExternalServer } from './external-server'
 import { Formsort } from './formsort'
 import { Healthie } from './healthie'
 import { HelloWorld } from './hello-world'
+import { identityVerification } from './identityVerification'
 import { Infobip } from './infobip'
 import { Iterable } from './iterable'
 import { Mailchimp } from './mailchimp'
@@ -60,6 +61,7 @@ export const extensions = [
   Formsort,
   Healthie,
   HelloWorld,
+  identityVerification,
   Infobip,
   Iterable,
   Mailchimp,
