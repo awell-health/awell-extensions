@@ -4,11 +4,11 @@ import { type settings } from '../../settings'
 import { fields, FieldsValidationSchema, dataPoints } from './config'
 import { validatePayloadAndCreateSdk } from '../../lib/sdk/validatePayloadAndCreateSdk'
 
-export const createGoal: Action<typeof fields, typeof settings> = {
-  key: 'createGoal',
+export const deleteGoal: Action<typeof fields, typeof settings> = {
+  key: 'deleteGoal',
   category: Category.EHR_INTEGRATIONS,
-  title: 'Create goal',
-  description: 'Create a goal for a patient in Healthie',
+  title: 'Delete goal',
+  description: 'Delete a goal for a patient in Healthie',
   fields,
   previewable: false,
   dataPoints,
@@ -18,18 +18,12 @@ export const createGoal: Action<typeof fields, typeof settings> = {
       payload,
     })
 
-    const input = {
-      user_id: fields.healthiePatientId,
-      repeat: fields.repeat,
-      title_link: fields.titleLink,
-      name: fields.name,
-      due_date: fields.dueDate,
-    }
-
-    const res = await healthieSdk.client.mutation({
-      createGoal: {
+    await healthieSdk.client.mutation({
+      deleteGoal: {
         __args: {
-          input,
+          input: {
+            id: fields.goalId,
+          },
         },
         goal: {
           id: true,
@@ -37,10 +31,6 @@ export const createGoal: Action<typeof fields, typeof settings> = {
       },
     })
 
-    await onComplete({
-      data_points: {
-        createdGoalId: String(res.createGoal?.goal?.id),
-      },
-    })
+    await onComplete()
   },
 }

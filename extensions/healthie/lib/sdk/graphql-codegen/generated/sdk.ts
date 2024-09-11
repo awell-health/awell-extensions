@@ -1242,6 +1242,8 @@ export type AppointmentTypeCptCode = {
   cpt_code_id?: InputMaybe<Scalars['String']>;
   /** Fee (in cents) per unit */
   fee_per_unit?: InputMaybe<Scalars['Int']>;
+  /** Whether or not this appointment type will have insurance billing enabled */
+  insurance_billing_enabled?: InputMaybe<Scalars['Boolean']>;
   /** The number of units for the CPT code */
   units?: InputMaybe<Scalars['String']>;
 };
@@ -1257,6 +1259,8 @@ export type AppointmentTypeCptCodeType = {
   fee_per_unit?: Maybe<Scalars['Int']>;
   /** The unique identifier of the object */
   id: Scalars['ID'];
+  /** Whether or not insurance billing is enaled for an appointment type */
+  insurance_billing_enabled?: Maybe<Scalars['Boolean']>;
   /** Units */
   units?: Maybe<Scalars['String']>;
 };
@@ -6873,6 +6877,8 @@ export type Mutation = {
   createRequestedPayment?: Maybe<CreateRequestedPaymentPayload>;
   /** Create a Rupa order */
   createRupaOrder?: Maybe<CreateRupaOrderPayload>;
+  /** Create a new saved filter */
+  createSavedFilter?: Maybe<CreateSavedFilterPayload>;
   /** Create a sent direct message */
   createSentDirectMessage?: Maybe<CreateSentDirectMessagePayload>;
   /** create Sent Fax */
@@ -7038,6 +7044,8 @@ export type Mutation = {
   deleteRequestedFormCompletion?: Maybe<DeleteRequestedFormPayload>;
   /** destroy requested payment */
   deleteRequestedPayment?: Maybe<DeleteRequestedPaymentPayload>;
+  /** Delete a saved filter */
+  deleteSavedFilter?: Maybe<DeleteSavedFilterPayload>;
   /** Destroy Shapa Connection */
   deleteShapaConnection?: Maybe<DeleteShapaConnectionPayload>;
   /** Destroy a Smart Phrase */
@@ -7341,6 +7349,8 @@ export type Mutation = {
   updateReplyToEmailAddresses?: Maybe<AddReplyToEmailAddressesPayload>;
   /** update requested payment */
   updateRequestedPayment?: Maybe<UpdateRequestedPaymentPayload>;
+  /** Update an existing saved filter */
+  updateSavedFilter?: Maybe<UpdateSavedFilterPayload>;
   /** Update a Smart Phrase */
   updateSmartPhrase?: Maybe<UpdateSmartPhrasePayload>;
   /** Update a Smoking Status */
@@ -8109,6 +8119,12 @@ export type MutationCreateRupaOrderArgs = {
 
 
 /** The mutation root of this schema. See available mutations. */
+export type MutationCreateSavedFilterArgs = {
+  input?: InputMaybe<CreateSavedFilterInput>;
+};
+
+
+/** The mutation root of this schema. See available mutations. */
 export type MutationCreateSentDirectMessageArgs = {
   input?: InputMaybe<CreateSentDirectMessageInput>;
 };
@@ -8591,6 +8607,12 @@ export type MutationDeleteRequestedFormCompletionArgs = {
 /** The mutation root of this schema. See available mutations. */
 export type MutationDeleteRequestedPaymentArgs = {
   input?: InputMaybe<DeleteRequestedPaymentInput>;
+};
+
+
+/** The mutation root of this schema. See available mutations. */
+export type MutationDeleteSavedFilterArgs = {
+  input?: InputMaybe<DeleteSavedFilterInput>;
 };
 
 
@@ -9503,6 +9525,12 @@ export type MutationUpdateReplyToEmailAddressesArgs = {
 /** The mutation root of this schema. See available mutations. */
 export type MutationUpdateRequestedPaymentArgs = {
   input?: InputMaybe<UpdateRequestedPaymentInput>;
+};
+
+
+/** The mutation root of this schema. See available mutations. */
+export type MutationUpdateSavedFilterArgs = {
+  input?: InputMaybe<UpdateSavedFilterInput>;
 };
 
 
@@ -12286,6 +12314,10 @@ export type Query = {
   requestedPayments?: Maybe<Array<RequestedPayment>>;
   /** Number of Requested Payments */
   requestedPaymentsCount?: Maybe<Scalars['Int']>;
+  /** Fetch specific saved filter */
+  savedFilter?: Maybe<SavedFilter>;
+  /** Fetch all saved filters for a user or organization */
+  savedFilters?: Maybe<Array<SavedFilter>>;
   /** Fetch user's scheduled message blasts */
   scheduledMessageBlasts?: Maybe<Array<NoteScheduler>>;
   /** Fetch collection of all scheduled packages */
@@ -14714,6 +14746,20 @@ export type QueryRequestedPaymentsCountArgs = {
 
 
 /** The query root of this schema. See available queries. */
+export type QuerySavedFilterArgs = {
+  id?: InputMaybe<Scalars['ID']>;
+  uuid?: InputMaybe<Scalars['ID']>;
+};
+
+
+/** The query root of this schema. See available queries. */
+export type QuerySavedFiltersArgs = {
+  organization_id?: InputMaybe<Scalars['ID']>;
+  user_id?: InputMaybe<Scalars['ID']>;
+};
+
+
+/** The query root of this schema. See available queries. */
 export type QueryScheduledMessageBlastsArgs = {
   client_id?: InputMaybe<Scalars['String']>;
   org_chat?: InputMaybe<Scalars['Boolean']>;
@@ -16019,6 +16065,23 @@ export type SdkConfig = {
   __typename?: 'SDKConfig';
   /** Stripe's publishable key */
   stripe_publishable_key: Scalars['String'];
+};
+
+/** A set of filter options saved for quick loading in the calendar */
+export type SavedFilter = {
+  __typename?: 'SavedFilter';
+  /** JSON-formatted options to use for setting filter */
+  filter_data: Scalars['JSON'];
+  /** Unique ID for this filter */
+  id: Scalars['ID'];
+  /** Name of the filter */
+  name: Scalars['String'];
+  /** The organization_id that has access to the filter */
+  organization_id?: Maybe<Scalars['String']>;
+  /** The user that created the filter */
+  user_id: Scalars['String'];
+  /** The unique UUID/string of the filter, used for sharing */
+  uuid: Scalars['String'];
 };
 
 /** Billing items that are scheduled and will have a user package selection associated with them */
@@ -19658,6 +19721,7 @@ export type CreateAppointmentTypeCptCodeInput = {
   appointment_type_id?: InputMaybe<Scalars['ID']>;
   cpt_code_id?: InputMaybe<Scalars['ID']>;
   fee_per_unit?: InputMaybe<Scalars['Int']>;
+  insurance_billing_enabled?: InputMaybe<Scalars['Boolean']>;
   units?: InputMaybe<Scalars['String']>;
 };
 
@@ -21997,6 +22061,27 @@ export type CreateRupaOrderPayload = {
   rupa_order_url?: Maybe<Scalars['String']>;
 };
 
+/** Autogenerated input type of createSavedFilter */
+export type CreateSavedFilterInput = {
+  /** Name of the new saved filter */
+  name: Scalars['String'];
+  /** ID of the organization with access to the filter. Will be assigned to organization ID of user if not provided */
+  organization_id?: InputMaybe<Scalars['ID']>;
+};
+
+/** Autogenerated return type of createSavedFilter. */
+export type CreateSavedFilterPayload = {
+  __typename?: 'createSavedFilterPayload';
+  /**
+   * DO NOT USE
+   * @deprecated DO NOT USE
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The list of errors occurred during the mutation */
+  messages?: Maybe<Array<Maybe<FieldError>>>;
+  savedFilter?: Maybe<SavedFilter>;
+};
+
 /** Autogenerated input type of createSentDirectMessage */
 export type CreateSentDirectMessageInput = {
   binary_attachment_document_id?: InputMaybe<Scalars['ID']>;
@@ -23495,6 +23580,25 @@ export type DeleteRequestedPaymentPayload = {
   requested_payment?: Maybe<RequestedPayment>;
 };
 
+/** Autogenerated input type of deleteSavedFilter */
+export type DeleteSavedFilterInput = {
+  /** ID of the saved filter to delete */
+  id: Scalars['ID'];
+};
+
+/** Autogenerated return type of deleteSavedFilter. */
+export type DeleteSavedFilterPayload = {
+  __typename?: 'deleteSavedFilterPayload';
+  /**
+   * DO NOT USE
+   * @deprecated DO NOT USE
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The list of errors occurred during the mutation */
+  messages?: Maybe<Array<Maybe<FieldError>>>;
+  savedFilter?: Maybe<SavedFilter>;
+};
+
 /** Autogenerated input type of deleteShapaConnection */
 export type DeleteShapaConnectionInput = {
   id?: InputMaybe<Scalars['ID']>;
@@ -24779,6 +24883,7 @@ export type UpdateAppointmentTypeCptCodeInput = {
   cpt_code_id?: InputMaybe<Scalars['ID']>;
   fee_per_unit?: InputMaybe<Scalars['Int']>;
   id?: InputMaybe<Scalars['ID']>;
+  insurance_billing_enabled?: InputMaybe<Scalars['Boolean']>;
   units?: InputMaybe<Scalars['String']>;
 };
 
@@ -27104,6 +27209,27 @@ export type UpdateRequestedPaymentPayload = {
   /** The list of errors occurred during the mutation */
   messages?: Maybe<Array<Maybe<FieldError>>>;
   requested_payment?: Maybe<RequestedPayment>;
+};
+
+/** Autogenerated input type of updateSavedFilter */
+export type UpdateSavedFilterInput = {
+  /** ID of the saved filter to update */
+  id: Scalars['ID'];
+  /** New name for the saved filter */
+  name: Scalars['String'];
+};
+
+/** Autogenerated return type of updateSavedFilter. */
+export type UpdateSavedFilterPayload = {
+  __typename?: 'updateSavedFilterPayload';
+  /**
+   * DO NOT USE
+   * @deprecated DO NOT USE
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The list of errors occurred during the mutation */
+  messages?: Maybe<Array<Maybe<FieldError>>>;
+  savedFilter?: Maybe<SavedFilter>;
 };
 
 /** Autogenerated input type of updateSmartPhrase */

@@ -24,8 +24,10 @@ import { checkPatientTag } from './checkPatientTag'
 import { checkScheduledAppointments } from './checkScheduledAppointments'
 import { getFormAnswers } from './getFormAnswers'
 import { createGoal } from './createGoal'
+import { deleteGoal } from './deleteGoal'
 
 export const actions = {
+  deleteGoal,
   createAppointment,
   createTask,
   getAppointment,
