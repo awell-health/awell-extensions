@@ -67,6 +67,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["date-fns", "npm:2.30.0"],\
             ["date-fns-tz", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:2.0.1"],\
             ["docusign-esign", "npm:7.0.0-rc1"],\
+            ["dotenv", "npm:16.4.5"],\
             ["driver-license-validator", "npm:2.0.2"],\
             ["eslint", "npm:8.57.0"],\
             ["eslint-config-prettier", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:8.10.0"],\
@@ -229,6 +230,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["date-fns", "npm:2.30.0"],\
             ["date-fns-tz", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:2.0.1"],\
             ["docusign-esign", "npm:7.0.0-rc1"],\
+            ["dotenv", "npm:16.4.5"],\
             ["driver-license-validator", "npm:2.0.2"],\
             ["eslint", "npm:8.57.0"],\
             ["eslint-config-prettier", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:8.10.0"],\
