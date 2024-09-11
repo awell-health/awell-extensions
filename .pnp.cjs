@@ -32,6 +32,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@awell-health/extensions-core", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:1.0.3"],\
             ["@dropbox/sign", "npm:1.4.1"],\
             ["@faker-js/faker", "npm:8.4.1"],\
+            ["@genql/cli", "npm:6.3.3"],\
             ["@graphql-codegen/cli", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:3.3.1"],\
             ["@graphql-codegen/typescript", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:3.0.4"],\
             ["@graphql-codegen/typescript-graphql-request", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:4.5.9"],\
@@ -51,7 +52,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/jest", "npm:29.5.12"],\
             ["@types/json-schema", "npm:7.0.15"],\
             ["@types/jsonpath", "npm:0.2.4"],\
-            ["@types/lodash", "npm:4.17.0"],\
+            ["@types/lodash", "npm:4.17.7"],\
             ["@types/mailchimp__mailchimp_transactional", "npm:1.0.10"],\
             ["@types/node", "npm:18.19.31"],\
             ["@types/node-fetch", "npm:2.6.11"],\
@@ -95,6 +96,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["showdown", "npm:2.1.0"],\
             ["stripe", "npm:15.5.0"],\
             ["ts-jest", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:29.2.5"],\
+            ["ts-node", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:10.9.2"],\
             ["ts-node-dev", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:2.0.0"],\
             ["twilio", "npm:4.23.0"],\
             ["typescript", "patch:typescript@npm%3A4.9.5#~builtin<compat/typescript>::version=4.9.5&hash=23ec76"],\
@@ -192,6 +194,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@awell-health/extensions-core", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:1.0.3"],\
             ["@dropbox/sign", "npm:1.4.1"],\
             ["@faker-js/faker", "npm:8.4.1"],\
+            ["@genql/cli", "npm:6.3.3"],\
             ["@graphql-codegen/cli", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:3.3.1"],\
             ["@graphql-codegen/typescript", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:3.0.4"],\
             ["@graphql-codegen/typescript-graphql-request", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:4.5.9"],\
@@ -211,7 +214,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/jest", "npm:29.5.12"],\
             ["@types/json-schema", "npm:7.0.15"],\
             ["@types/jsonpath", "npm:0.2.4"],\
-            ["@types/lodash", "npm:4.17.0"],\
+            ["@types/lodash", "npm:4.17.7"],\
             ["@types/mailchimp__mailchimp_transactional", "npm:1.0.10"],\
             ["@types/node", "npm:18.19.31"],\
             ["@types/node-fetch", "npm:2.6.11"],\
@@ -255,6 +258,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["showdown", "npm:2.1.0"],\
             ["stripe", "npm:15.5.0"],\
             ["ts-jest", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:29.2.5"],\
+            ["ts-node", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:10.9.2"],\
             ["ts-node-dev", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:2.0.0"],\
             ["twilio", "npm:4.23.0"],\
             ["typescript", "patch:typescript@npm%3A4.9.5#~builtin<compat/typescript>::version=4.9.5&hash=23ec76"],\
@@ -4129,10 +4133,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@types/lodash", [\
-        ["npm:4.17.0", {\
-          "packageLocation": "./.yarn/cache/@types-lodash-npm-4.17.0-11e757616b-3f98c0b67a.zip/node_modules/@types/lodash/",\
+        ["npm:4.17.7", {\
+          "packageLocation": "./.yarn/cache/@types-lodash-npm-4.17.7-2077805efb-09e58a119c.zip/node_modules/@types/lodash/",\
           "packageDependencies": [\
-            ["@types/lodash", "npm:4.17.0"]\
+            ["@types/lodash", "npm:4.17.7"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -13541,6 +13545,42 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["ts-node", "npm:10.9.2"]\
           ],\
           "linkType": "SOFT"\
+        }],\
+        ["virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:10.9.2", {\
+          "packageLocation": "./.yarn/__virtual__/ts-node-virtual-66ad96cf75/0/cache/ts-node-npm-10.9.2-3f3890b9ac-fde256c907.zip/node_modules/ts-node/",\
+          "packageDependencies": [\
+            ["ts-node", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:10.9.2"],\
+            ["@cspotcode/source-map-support", "npm:0.8.1"],\
+            ["@swc/core", null],\
+            ["@swc/wasm", null],\
+            ["@tsconfig/node10", "npm:1.0.11"],\
+            ["@tsconfig/node12", "npm:1.0.11"],\
+            ["@tsconfig/node14", "npm:1.0.3"],\
+            ["@tsconfig/node16", "npm:1.0.4"],\
+            ["@types/node", "npm:18.19.31"],\
+            ["@types/swc__core", null],\
+            ["@types/swc__wasm", null],\
+            ["@types/typescript", null],\
+            ["acorn", "npm:8.11.3"],\
+            ["acorn-walk", "npm:8.3.2"],\
+            ["arg", "npm:4.1.3"],\
+            ["create-require", "npm:1.1.1"],\
+            ["diff", "npm:4.0.2"],\
+            ["make-error", "npm:1.3.6"],\
+            ["typescript", "patch:typescript@npm%3A4.9.5#~builtin<compat/typescript>::version=4.9.5&hash=23ec76"],\
+            ["v8-compile-cache-lib", "npm:3.0.1"],\
+            ["yn", "npm:3.1.1"]\
+          ],\
+          "packagePeers": [\
+            "@swc/core",\
+            "@swc/wasm",\
+            "@types/node",\
+            "@types/swc__core",\
+            "@types/swc__wasm",\
+            "@types/typescript",\
+            "typescript"\
+          ],\
+          "linkType": "HARD"\
         }],\
         ["virtual:da8b25d661fc1529ad466c4fc7d94b9df7a96b301a8ed9e286e13f8e1930c66fd2a9298404ee2749349a7566d24202aa27375306967bcdf07ed6f535f878a43b#npm:10.9.2", {\
           "packageLocation": "./.yarn/__virtual__/ts-node-virtual-cb060963f1/0/cache/ts-node-npm-10.9.2-3f3890b9ac-fde256c907.zip/node_modules/ts-node/",\
