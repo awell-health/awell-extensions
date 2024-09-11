@@ -10,7 +10,8 @@ type ValidatePayloadAndCreateSdk = <T extends z.ZodTypeAny>(args: {
   payload: unknown
 }) => Promise<{
   /**
-   * Deprecated, do not use anymore
+   * @deprecated DO NOT USE
+   * DO NOT USE
    */
   sdk: ReturnType<typeof getSdk>
   healthieSdk: HealthieSdk
@@ -35,8 +36,14 @@ export const validatePayloadAndCreateSdk: ValidatePayloadAndCreateSdk = async ({
   if (client === undefined)
     throw new Error('Healthie client cannot be undefined.')
 
+  /**
+   * Old sdk, generated with graphql-codegen
+   */
   const deprecatedSdk = getSdk(client)
 
+  /**
+   * New sdk, generated with GenQL
+   */
   const healthieSdk = new HealthieSdk(settings)
 
   return { settings, fields, sdk: deprecatedSdk, healthieSdk }

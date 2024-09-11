@@ -21,7 +21,7 @@
     "test": "jest",
     "prepack": "yarn build",
     "test-server": "ts-node-dev --respawn --transpile-only ./src/test-server.ts",
-    "generate-sdk": "ts-node ./src/lib/healthie/generateSdk.ts"
+    "generate-healthie-sdk": "ts-node ./extensions/healthie/lib/sdk/genql/generateSdk.ts"
   },
   "types": "dist/src/index.d.ts",
   "files": [
@@ -52,6 +52,7 @@
     "@types/showdown": "^2.0.0",
     "@types/xml2js": "^0.4.12",
     "@typescript-eslint/eslint-plugin": "^5.52.0",
+    "dotenv": "^16.4.5",
     "eslint": "^8.50.0",
     "eslint-config-prettier": "^8.6.0",
     "eslint-config-standard-with-typescript": "^34.0.0",

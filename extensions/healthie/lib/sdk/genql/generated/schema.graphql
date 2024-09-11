@@ -319,6 +319,24 @@ type AppliedTag {
   user_id: String
 }
 
+"""AppliedTag sorting enum"""
+enum AppliedTagOrderKeys {
+  """Sort by created at in ascending order"""
+  CREATED_AT_ASC
+
+  """Sort by created at in descending order"""
+  CREATED_AT_DESC
+
+  """Sort by updated at in ascending order"""
+  UPDATED_AT_ASC
+
+  """Sort by updated at in descending order"""
+  UPDATED_AT_DESC
+
+  """Do not sort records"""
+  UNSORTED
+}
+
 """
 An appointment object containing information about the appointment, including the attendees, date, location, and more.
 """
@@ -1268,6 +1286,9 @@ type AppointmentSetting {
   """The last date and time that the appointment setting was updated"""
   updated_at: String
 
+  """If true, cpt units and fees can be associated with appointment types"""
+  use_appointment_type_cpt_units_and_fees: Boolean
+
   """Whether or not to use the client credit system"""
   use_client_credit_system: Boolean
 
@@ -1300,7 +1321,7 @@ input AppointmentSettingInputs {
   appointment_type_id: Int
 
   """The base calendar interval for appointments."""
-  base_calendar_interval: Int
+  base_calendar_interval: String
 
   """The text to display on the calendar."""
   calendar_text: String
@@ -1451,6 +1472,11 @@ type AppointmentType {
 
   """Checks to see if the client call to provider"""
   client_call_provider: Boolean
+
+  """
+  A name to use in the client scheduling widget instead of the defalt name field. Falls back to name if not set.
+  """
+  client_display_name: String
 
   """
   The status of whether the client can self-book this type of appointment
@@ -1779,6 +1805,14 @@ input AppointmentTypeCptCode {
   """The ID of the CPT code"""
   cpt_code_id: String
 
+  """Fee (in cents) per unit"""
+  fee_per_unit: Int
+
+  """
+  Whether or not this appointment type will have insurance billing enabled
+  """
+  insurance_billing_enabled: Boolean
+
   """The number of units for the CPT code"""
   units: String
 }
@@ -1791,8 +1825,14 @@ type AppointmentTypeCptCodeType {
   """CPT Code ID"""
   cpt_code_id: ID!
 
+  """Fee (in cents) per unit"""
+  fee_per_unit: Int
+
   """The unique identifier of the object"""
   id: ID!
+
+  """Whether or not insurance billing is enaled for an appointment type"""
+  insurance_billing_enabled: Boolean
 
   """Units"""
   units: String
@@ -1938,6 +1978,21 @@ type AutoTaskGenerator {
 
   """The id of the user"""
   user_id_for_task: String
+}
+
+"""Automated Insurance Billing Setting Type"""
+type AutomatedInsuranceBillingSetting {
+  """When true, CMS1500s will be created automatically"""
+  auto_create_cms1500s: Boolean
+
+  """When true, CMS1500s will be submitted automatically"""
+  auto_submit_cms1500s: Boolean
+
+  """The unique identifier of the setting"""
+  id: ID!
+
+  """When true, CPT code and units will be linked to appointment types"""
+  use_cpt_codes_units_and_fees_with_appointment_types: Boolean
 }
 
 """The autoscored section for a filled form"""
@@ -3676,6 +3731,9 @@ type Cms1500 {
   """Total amount the claim was billed for"""
   total_charge: String
 
+  """The last date and time that the CMS1500 was updated"""
+  updated_at: ISO8601DateTime
+
   """True if the claim reimbursement info was updated via SFTP"""
   updated_by_sftp: Boolean
 
@@ -3695,6 +3753,8 @@ enum Cms1500OrderKeys {
   PATIENT_LAST_NAME_DESC
   SERVICE_DATE_ASC
   SERVICE_DATE_DESC
+  UPDATED_AT_ASC
+  UPDATED_AT_DESC
 }
 
 """A CMS1500 policy"""
@@ -6522,7 +6582,16 @@ type Folder {
   user_groups: [UserGroup!]!
 
   """The users who have access to this folder"""
-  users: [User!]!
+  users(
+    """Cursor to fetch results after"""
+    after: Cursor
+    should_paginate: Boolean = false
+    page_size: Int = 100
+    order_by: UserOrderKeys = LAST_NAME_ASC
+  ): [User!]!
+
+  """The number of users who have access to this folder"""
+  users_count: Int!
 }
 
 """Folder sorting enum"""
@@ -6643,6 +6712,9 @@ type FormAnswer {
 
   """The label of the question"""
   label: String
+
+  """The time of the last update"""
+  updated_at: ISO8601DateTime
 
   """The id of the user that the answered question is for"""
   user_id: String
@@ -7924,6 +7996,9 @@ type IndividualClientType {
   """
   leave_time: String
 
+  """The time of the last update"""
+  updated_at: ISO8601DateTime
+
   """Associated patient"""
   user: User
 }
@@ -8631,6 +8706,7 @@ type MaskAccountPayload {
 
   """The list of errors occurred during the mutation"""
   messages: [FieldError]
+  success: Success
   success_string: String
 }
 
@@ -8684,6 +8760,12 @@ type MedicationOptionType {
 
   """The unique identifier of the medication option"""
   id: ID!
+
+  """The monograph of the medication option"""
+  monograph(
+    """The format of the monograph"""
+    format: MonographFormat = HTML
+  ): String
 
   """The name of the medication option"""
   name: String!
@@ -8798,6 +8880,15 @@ type MetricGraphDataType {
 enum MfaType {
   SMS
   EMAIL
+}
+
+"""The format of a monograph"""
+enum MonographFormat {
+  """The monograph is in HTML format"""
+  HTML
+
+  """The monograph is in XML format"""
+  XML
 }
 
 """Monthly billing items data"""
@@ -9063,6 +9154,12 @@ type Mutation {
     """Parameters for createAutoTaskGenerator"""
     input: createAutoTaskGeneratorInput
   ): createAutoTaskGeneratorPayload
+
+  """create automated insurance billing setting"""
+  createAutomatedInsuranceBillingSetting(
+    """Parameters for createAutomatedInsuranceBillingSetting"""
+    input: createAutomatedInsuranceBillingSettingInput
+  ): createAutomatedInsuranceBillingSettingPayload
 
   """Create availability"""
   createAvailability(
@@ -9554,6 +9651,12 @@ type Mutation {
     input: createRupaOrderInput
   ): createRupaOrderPayload
 
+  """Create a new saved filter"""
+  createSavedFilter(
+    """Parameters for createSavedFilter"""
+    input: createSavedFilterInput
+  ): createSavedFilterPayload
+
   """Create a sent direct message"""
   createSentDirectMessage(
     """Parameters for createSentDirectMessage"""
@@ -10040,6 +10143,12 @@ type Mutation {
     input: deleteRequestedPaymentInput
   ): deleteRequestedPaymentPayload
 
+  """Delete a saved filter"""
+  deleteSavedFilter(
+    """Parameters for deleteSavedFilter"""
+    input: deleteSavedFilterInput
+  ): deleteSavedFilterPayload
+
   """Destroy Shapa Connection"""
   deleteShapaConnection(
     """Parameters for deleteShapaConnection"""
@@ -10388,12 +10497,6 @@ type Mutation {
     input: toggleCarePlanStatusForSpecificUserInput
   ): toggleCarePlanStatusForSpecificUserPayload
 
-  """Toggle Option to Enable Appointment Interval"""
-  toggleEnableApptInterval(
-    """Parameters for ToggleEnableApptInterval"""
-    input: ToggleEnableApptIntervalInput
-  ): ToggleEnableApptIntervalPayload
-
   """toggle paywall for a provider"""
   togglePaywall(
     """Parameters for TogglePaywall"""
@@ -10485,6 +10588,12 @@ type Mutation {
     """Parameters for updateAutoTaskGenerator"""
     input: updateAutoTaskGeneratorInput
   ): updateAutoTaskGeneratorPayload
+
+  """update automated insurance billing setting"""
+  updateAutomatedInsuranceBillingSetting(
+    """Parameters for updateAutomatedInsuranceBillingSetting"""
+    input: updateAutomatedInsuranceBillingSettingInput
+  ): updateAutomatedInsuranceBillingSettingPayload
 
   """Update a BillingItem"""
   updateBillingItem(
@@ -10881,6 +10990,10 @@ type Mutation {
     """Parameters for updateOrganizationMembership"""
     input: updateOrganizationMembershipInput
   ): updateOrganizationMembershipPayload
+  updateOrganizationUiConfiguration(
+    """Parameters for UpdateUiConfiguration"""
+    input: UpdateUiConfigurationInput
+  ): UpdateUiConfigurationPayload
 
   """update Permission Template"""
   updatePermissionTemplate(
@@ -10953,6 +11066,12 @@ type Mutation {
     """Parameters for updateRequestedPayment"""
     input: updateRequestedPaymentInput
   ): updateRequestedPaymentPayload
+
+  """Update an existing saved filter"""
+  updateSavedFilter(
+    """Parameters for updateSavedFilter"""
+    input: updateSavedFilterInput
+  ): updateSavedFilterPayload
 
   """Update a Smart Phrase"""
   updateSmartPhrase(
@@ -12855,6 +12974,15 @@ enum OrganizationMembershipOrderKeys {
   POSITION_ASC
 }
 
+"""Roles that a user can have in an organization"""
+enum OrganizationMembershipRole {
+  """The user is a standard member of the organization (includes providers)"""
+  STANDARD
+
+  """The user is a support member of the organization"""
+  SUPPORT
+}
+
 """Alternative ID numbers for a provider"""
 type OtherIdNumber {
   """The unique identifier of the other id number"""
@@ -14043,6 +14171,17 @@ type Query {
 
     """The tag ID"""
     tag_id: ID
+    order_by: AppliedTagOrderKeys = UNSORTED
+
+    """
+    When passed in, only applied tags updated after the specified datetime are returned.
+    """
+    updated_after: ISO8601DateTime
+
+    """
+    When passed in, only applied tags updated before the specified datetime are returned.
+    """
+    updated_before: ISO8601DateTime
   ): [AppliedTag!]
 
   """fetch an appointment by id, group appointments are (considered public)"""
@@ -14163,7 +14302,7 @@ type Query {
   """
   Returns a json hash of the number of appointments in each day of the month. The month is the month that the passed day is in.
   """
-  appointmentNumberPerDayOfMonth(date: String = "2024-08-19", include_blockers: Boolean = false): String
+  appointmentNumberPerDayOfMonth(date: String = "2024-09-11", include_blockers: Boolean = false): String
 
   """fetch a Appointment Setting by id (considered public)"""
   appointmentSetting(id: ID, provider_id: ID): AppointmentSetting
@@ -14366,8 +14505,8 @@ type Query {
   """Data summary for appointment reports"""
   appointmentsSummary(
     provider_ids: [ID] = []
-    range_end: String = "2024-08-31"
-    range_start: String = "2024-08-01"
+    range_end: String = "2024-09-30"
+    range_start: String = "2024-09-01"
     range_type: String
 
     """
@@ -14378,6 +14517,9 @@ type Query {
 
   """fetch auto task generators belonging to a specific user"""
   autoTaskGenerators(user_id: String): [AutoTaskGenerator!]
+
+  """fetch the automated insurance billing setting"""
+  automatedInsuranceBillingSetting(user_id: ID): AutomatedInsuranceBillingSetting
 
   """Fetch availabilities for range"""
   availabilities(
@@ -14450,7 +14592,7 @@ type Query {
     appt_type_id: String
     clients_can_join_waitlist: Boolean = false
     contact_type: String
-    end_date: String = "2024-08-19"
+    end_date: String = "2024-09-11"
 
     """
     When passed in, slots after this will not be returned. Inclusive. YYYY-MM-DD format
@@ -14476,7 +14618,7 @@ type Query {
     Filters the provider list to only include users who have one of the specified tags applied. Ignored if org_level is not true
     """
     tag_ids: [ID]
-    start_date: String = "2024-08-19"
+    start_date: String = "2024-09-11"
 
     """
     When passed in, slots before this will not be returned. YYYY-MM-DD format
@@ -14999,7 +15141,7 @@ type Query {
     appt_type_id: String
     clients_can_join_waitlist: Boolean = false
     contact_type: String
-    date_from_month: String = "2024-08-19T17:53:22+00:00"
+    date_from_month: String = "2024-09-11T17:58:02+00:00"
 
     """
     When passed in, supercedes date_from_month. Must be passed in along with start_date
@@ -16302,6 +16444,12 @@ type Query {
     status_filter: String = null
   ): Int
 
+  """Fetch specific saved filter"""
+  savedFilter(id: ID, uuid: ID): SavedFilter
+
+  """Fetch all saved filters for a user or organization"""
+  savedFilters(user_id: ID, organization_id: ID): [SavedFilter!]
+
   """Fetch user's scheduled message blasts"""
   scheduledMessageBlasts(
     """If True - returns organization membership scheduled message blasts"""
@@ -16433,7 +16581,7 @@ type Query {
     conversation_id: ID
 
     """The type of stream to get the signed stream name for"""
-    type: SignedStreamName
+    type: SignedStreamName!
   ): String
 
   """Fetch user smart phrases"""
@@ -17817,6 +17965,27 @@ type SDKConfig {
   stripe_publishable_key: String!
 }
 
+"""A set of filter options saved for quick loading in the calendar"""
+type SavedFilter {
+  """JSON-formatted options to use for setting filter"""
+  filter_data: JSON!
+
+  """Unique ID for this filter"""
+  id: ID!
+
+  """Name of the filter"""
+  name: String!
+
+  """The organization_id that has access to the filter"""
+  organization_id: String
+
+  """The user that created the filter"""
+  user_id: String!
+
+  """The unique UUID/string of the filter, used for sharing"""
+  uuid: String!
+}
+
 """
 Billing items that are scheduled and will have a user package selection associated with them
 """
@@ -18700,6 +18869,12 @@ type SubscriptionInstance {
   user_id: String
 }
 
+"""Base class for types"""
+type Success {
+  human_id: String
+  success_string: String
+}
+
 """SuperBill"""
 type SuperBill {
   """address"""
@@ -19025,6 +19200,8 @@ enum TaskOrderKeys {
   CLIENT_NAME_ASC
   COMPLETED_AT_ASC
   COMPLETED_AT_DESC
+  UPDATED_AT_ASC
+  UPDATED_AT_DESC
 }
 
 """Payload for a task reminder"""
@@ -19108,25 +19285,6 @@ input ToggleBaaInput {
 
 """Autogenerated return type of ToggleBaa."""
 type ToggleBaaPayload {
-  """DO NOT USE"""
-  clientMutationId: String @deprecated(reason: "DO NOT USE")
-
-  """The list of errors occurred during the mutation"""
-  messages: [FieldError]
-  success_string: String
-}
-
-"""Autogenerated input type of ToggleEnableApptInterval"""
-input ToggleEnableApptIntervalInput {
-  """The ID of the user"""
-  id: ID!
-
-  """Enable/Disable Toggle"""
-  enable: String!
-}
-
-"""Autogenerated return type of ToggleEnableApptInterval."""
-type ToggleEnableApptIntervalPayload {
   """DO NOT USE"""
   clientMutationId: String @deprecated(reason: "DO NOT USE")
 
@@ -19391,6 +19549,22 @@ type UpdatePayload {
 
   """The success string"""
   success_string: String
+}
+
+"""Autogenerated input type of UpdateUiConfiguration"""
+input UpdateUiConfigurationInput {
+  role: OrganizationMembershipRole!
+  ui_configuration: JSON!
+}
+
+"""Autogenerated return type of UpdateUiConfiguration."""
+type UpdateUiConfigurationPayload {
+  """DO NOT USE"""
+  clientMutationId: String @deprecated(reason: "DO NOT USE")
+
+  """The list of errors occurred during the mutation"""
+  messages: [FieldError]
+  organization: Organization
 }
 
 """Autogenerated input type of UpdateUserEmail"""
@@ -19829,9 +20003,9 @@ type User {
   default_currency: String
 
   """
-  When set for a client, the Provider Dosespot iFrame will launch into this Clinic When nil, the Dosespot iframe will launch into the provider's default clinic). This will error unless the provider is connected to that clinic in Dosespot. Only used for client objects.
+  When set for a client, the provider's Dosespot iFrame will launch into this clinic. When null, the Dosespot iframe will launch into the provider's default clinic. This will error unless the provider is connected to that clinic in Dosespot. Only used for patients.
   """
-  default_dosespot_clinic_id: String
+  default_dosespot_clinic_id: ID
 
   """Default external videochat URL for scheduling with this user"""
   default_external_video_url: String
@@ -22100,6 +22274,8 @@ input createAppointmentInput {
   appointment_location_id: String
   appointment_type_id: String
   attendee_ids: String
+
+  """The type of appointment (video, in person, phone call, etc.)"""
   contact_type: String
 
   """Cpt code associated with this appointment"""
@@ -22261,6 +22437,7 @@ input createAppointmentSettingInput {
   Allows times to be grouped by location. NOTE: changing this value will clear all prior availability
   """
   times_by_location: Boolean
+  use_appointment_type_cpt_units_and_fees: Boolean
   use_client_credit_system: Boolean
   use_client_sources: Boolean
   use_zoom_waiting_room: Boolean
@@ -22284,6 +22461,8 @@ input createAppointmentTypeCptCodeInput {
   appointment_type_id: ID
   cpt_code_id: ID
   units: String
+  fee_per_unit: Int
+  insurance_billing_enabled: Boolean
 }
 
 """Autogenerated return type of createAppointmentTypeCptCode."""
@@ -22309,6 +22488,11 @@ input createAppointmentTypeInput {
   When false, clients will not have the ability to self-book this appointment
   """
   clients_can_book: Boolean
+
+  """
+  When set, will be used as the appointment type name shown to clients in the client booking widget UI.
+  """
+  client_facing_display_name: String
   contact_type_overrides: [String]
 
   """
@@ -22369,6 +22553,24 @@ input createAutoTaskGeneratorInput {
 """Autogenerated return type of createAutoTaskGenerator."""
 type createAutoTaskGeneratorPayload {
   auto_task_generator: AutoTaskGenerator
+
+  """DO NOT USE"""
+  clientMutationId: String @deprecated(reason: "DO NOT USE")
+
+  """The list of errors occurred during the mutation"""
+  messages: [FieldError]
+}
+
+"""Autogenerated input type of createAutomatedInsuranceBillingSetting"""
+input createAutomatedInsuranceBillingSettingInput {
+  auto_create_cms1500s: Boolean
+  auto_submit_cms1500s: Boolean
+  use_cpt_codes_units_and_fees_with_appointment_types: Boolean
+}
+
+"""Autogenerated return type of createAutomatedInsuranceBillingSetting."""
+type createAutomatedInsuranceBillingSettingPayload {
+  automated_insurance_billing_setting: AutomatedInsuranceBillingSetting
 
   """DO NOT USE"""
   clientMutationId: String @deprecated(reason: "DO NOT USE")
@@ -24476,6 +24678,10 @@ input createRequestedFormInput {
   item_type: String
   recipient_id: ID
   ends_on: String
+
+  """
+  The ID of the custom form OR the name of the generic form (e.g 'billing_info')
+  """
   form: String
   frequency: String
   hour: String
@@ -24545,6 +24751,27 @@ type createRupaOrderPayload {
   """The list of errors occurred during the mutation"""
   messages: [FieldError]
   rupa_order_url: String
+}
+
+"""Autogenerated input type of createSavedFilter"""
+input createSavedFilterInput {
+  """Name of the new saved filter"""
+  name: String!
+
+  """
+  ID of the organization with access to the filter. Will be assigned to organization ID of user if not provided
+  """
+  organization_id: ID
+}
+
+"""Autogenerated return type of createSavedFilter."""
+type createSavedFilterPayload {
+  """DO NOT USE"""
+  clientMutationId: String @deprecated(reason: "DO NOT USE")
+
+  """The list of errors occurred during the mutation"""
+  messages: [FieldError]
+  savedFilter: SavedFilter
 }
 
 """Autogenerated input type of createSentDirectMessage"""
@@ -25841,6 +26068,22 @@ type deleteRequestedPaymentPayload {
   requested_payment: RequestedPayment
 }
 
+"""Autogenerated input type of deleteSavedFilter"""
+input deleteSavedFilterInput {
+  """ID of the saved filter to delete"""
+  id: ID!
+}
+
+"""Autogenerated return type of deleteSavedFilter."""
+type deleteSavedFilterPayload {
+  """DO NOT USE"""
+  clientMutationId: String @deprecated(reason: "DO NOT USE")
+
+  """The list of errors occurred during the mutation"""
+  messages: [FieldError]
+  savedFilter: SavedFilter
+}
+
 """Autogenerated input type of deleteShapaConnection"""
 input deleteShapaConnectionInput {
   id: ID
@@ -27041,6 +27284,7 @@ input updateAppointmentSettingInput {
 
   """Allows times to be grouped by location."""
   times_by_location: Boolean
+  use_appointment_type_cpt_units_and_fees: Boolean
   use_client_credit_system: Boolean
   use_client_sources: Boolean
   use_zoom_waiting_room: Boolean
@@ -27065,6 +27309,8 @@ input updateAppointmentTypeCptCodeInput {
   cpt_code_id: ID
   id: ID
   units: String
+  fee_per_unit: Int
+  insurance_billing_enabled: Boolean
 }
 
 """Autogenerated return type of updateAppointmentTypeCptCode."""
@@ -27086,6 +27332,11 @@ input updateAppointmentTypeInput {
   bookable_by_groups: Boolean
   bookable_group_ids: String
   bookable_without_group: Boolean
+
+  """
+  When set, will be used as the appointment type name shown to clients in the client booking widget UI.
+  """
+  client_facing_display_name: String
 
   """
   When false, clients will not have the ability to self-book this appointment
@@ -27163,6 +27414,25 @@ input updateAutoTaskGeneratorInput {
 """Autogenerated return type of updateAutoTaskGenerator."""
 type updateAutoTaskGeneratorPayload {
   auto_task_generator: AutoTaskGenerator
+
+  """DO NOT USE"""
+  clientMutationId: String @deprecated(reason: "DO NOT USE")
+
+  """The list of errors occurred during the mutation"""
+  messages: [FieldError]
+}
+
+"""Autogenerated input type of updateAutomatedInsuranceBillingSetting"""
+input updateAutomatedInsuranceBillingSettingInput {
+  auto_create_cms1500s: Boolean
+  auto_submit_cms1500s: Boolean
+  id: ID
+  use_cpt_codes_units_and_fees_with_appointment_types: Boolean
+}
+
+"""Autogenerated return type of updateAutomatedInsuranceBillingSetting."""
+type updateAutomatedInsuranceBillingSettingPayload {
+  automated_insurance_billing_setting: AutomatedInsuranceBillingSetting
 
   """DO NOT USE"""
   clientMutationId: String @deprecated(reason: "DO NOT USE")
@@ -29301,6 +29571,25 @@ type updateRequestedPaymentPayload {
   """The list of errors occurred during the mutation"""
   messages: [FieldError]
   requested_payment: RequestedPayment
+}
+
+"""Autogenerated input type of updateSavedFilter"""
+input updateSavedFilterInput {
+  """ID of the saved filter to update"""
+  id: ID!
+
+  """New name for the saved filter"""
+  name: String!
+}
+
+"""Autogenerated return type of updateSavedFilter."""
+type updateSavedFilterPayload {
+  """DO NOT USE"""
+  clientMutationId: String @deprecated(reason: "DO NOT USE")
+
+  """The list of errors occurred during the mutation"""
+  messages: [FieldError]
+  savedFilter: SavedFilter
 }
 
 """Autogenerated input type of updateSmartPhrase"""

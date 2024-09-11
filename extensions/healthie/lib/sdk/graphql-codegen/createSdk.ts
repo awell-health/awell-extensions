@@ -9,7 +9,10 @@ type CreateSdkArgs = (args: {
   sdk: ReturnType<typeof getSdk>
 }>
 
-// Single function to create the SDK
+/**
+ * @deprecated DO NOT USE
+ * DO NOT USE
+ */
 export const createSdk: CreateSdkArgs = async ({ settings }) => {
   const client = initialiseClient(settings)
 

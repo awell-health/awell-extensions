@@ -234,6 +234,10 @@ export interface AppliedTag {
 }
 
 
+/** AppliedTag sorting enum */
+export type AppliedTagOrderKeys = 'CREATED_AT_ASC' | 'CREATED_AT_DESC' | 'UPDATED_AT_ASC' | 'UPDATED_AT_DESC' | 'UNSORTED'
+
+
 /** An appointment object containing information about the appointment, including the attendees, date, location, and more. */
 export interface Appointment {
     /** The actual length of the appointment (in minutes). Filled in by the provider after the appointment */
@@ -829,6 +833,8 @@ export interface AppointmentSetting {
     times_by_location: (Scalars['Boolean'] | null)
     /** The last date and time that the appointment setting was updated */
     updated_at: (Scalars['String'] | null)
+    /** If true, cpt units and fees can be associated with appointment types */
+    use_appointment_type_cpt_units_and_fees: (Scalars['Boolean'] | null)
     /** Whether or not to use the client credit system */
     use_client_credit_system: (Scalars['Boolean'] | null)
     /** If true, you can see where each client came from */
@@ -895,6 +901,8 @@ export interface AppointmentType {
     bookable_without_group: Scalars['Boolean']
     /** Checks to see if the client call to provider */
     client_call_provider: (Scalars['Boolean'] | null)
+    /** A name to use in the client scheduling widget instead of the defalt name field. Falls back to name if not set. */
+    client_display_name: (Scalars['String'] | null)
     /** The status of whether the client can self-book this type of appointment */
     clients_can_book: Scalars['Boolean']
     /** Checks to see if the client has enough credit to book */
@@ -985,8 +993,12 @@ export interface AppointmentTypeCptCodeType {
     appointment_type_id: Scalars['ID']
     /** CPT Code ID */
     cpt_code_id: Scalars['ID']
+    /** Fee (in cents) per unit */
+    fee_per_unit: (Scalars['Int'] | null)
     /** The unique identifier of the object */
     id: Scalars['ID']
+    /** Whether or not insurance billing is enaled for an appointment type */
+    insurance_billing_enabled: (Scalars['Boolean'] | null)
     /** Units */
     units: (Scalars['String'] | null)
     __typename: 'AppointmentTypeCptCodeType'
@@ -1054,6 +1066,20 @@ export interface AutoTaskGenerator {
     /** The id of the user */
     user_id_for_task: (Scalars['String'] | null)
     __typename: 'AutoTaskGenerator'
+}
+
+
+/** Automated Insurance Billing Setting Type */
+export interface AutomatedInsuranceBillingSetting {
+    /** When true, CMS1500s will be created automatically */
+    auto_create_cms1500s: (Scalars['Boolean'] | null)
+    /** When true, CMS1500s will be submitted automatically */
+    auto_submit_cms1500s: (Scalars['Boolean'] | null)
+    /** The unique identifier of the setting */
+    id: Scalars['ID']
+    /** When true, CPT code and units will be linked to appointment types */
+    use_cpt_codes_units_and_fees_with_appointment_types: (Scalars['Boolean'] | null)
+    __typename: 'AutomatedInsuranceBillingSetting'
 }
 
 
@@ -1972,6 +1998,8 @@ export interface Cms1500 {
     tend_reserved: (Scalars['String'] | null)
     /** Total amount the claim was billed for */
     total_charge: (Scalars['String'] | null)
+    /** The last date and time that the CMS1500 was updated */
+    updated_at: (Scalars['ISO8601DateTime'] | null)
     /** True if the claim reimbursement info was updated via SFTP */
     updated_by_sftp: (Scalars['Boolean'] | null)
     /** When true, uses the individual npi in all npi fields */
@@ -1981,7 +2009,7 @@ export interface Cms1500 {
 
 
 /** Cms1500 sorting enum */
-export type Cms1500OrderKeys = 'CREATED_AT_ASC' | 'CREATED_AT_DESC' | 'STATUS_ASC' | 'STATUS_DESC' | 'PRIMARY_PLAN_NAME_ASC' | 'PRIMARY_PLAN_NAME_DESC' | 'PATIENT_LAST_NAME_ASC' | 'PATIENT_LAST_NAME_DESC' | 'SERVICE_DATE_ASC' | 'SERVICE_DATE_DESC'
+export type Cms1500OrderKeys = 'CREATED_AT_ASC' | 'CREATED_AT_DESC' | 'STATUS_ASC' | 'STATUS_DESC' | 'PRIMARY_PLAN_NAME_ASC' | 'PRIMARY_PLAN_NAME_DESC' | 'PATIENT_LAST_NAME_ASC' | 'PATIENT_LAST_NAME_DESC' | 'SERVICE_DATE_ASC' | 'SERVICE_DATE_DESC' | 'UPDATED_AT_ASC' | 'UPDATED_AT_DESC'
 
 
 /** A CMS1500 policy */
@@ -3695,6 +3723,8 @@ export interface Folder {
     user_groups: UserGroup[]
     /** The users who have access to this folder */
     users: User[]
+    /** The number of users who have access to this folder */
+    users_count: Scalars['Int']
     __typename: 'Folder'
 }
 
@@ -3787,6 +3817,8 @@ export interface FormAnswer {
     id: Scalars['ID']
     /** The label of the question */
     label: (Scalars['String'] | null)
+    /** The time of the last update */
+    updated_at: (Scalars['ISO8601DateTime'] | null)
     /** The id of the user that the answered question is for */
     user_id: (Scalars['String'] | null)
     /** The value to check the filter against */
@@ -4624,6 +4656,8 @@ export interface IndividualClientType {
     join_time: (Scalars['String'] | null)
     /** The datetime that the attendee left the appointment (comes from the related appointment inclusion) */
     leave_time: (Scalars['String'] | null)
+    /** The time of the last update */
+    updated_at: (Scalars['ISO8601DateTime'] | null)
     /** Associated patient */
     user: (User | null)
     __typename: 'IndividualClientType'
@@ -5040,6 +5074,7 @@ export interface MaskAccountPayload {
     clientMutationId: (Scalars['String'] | null)
     /** The list of errors occurred during the mutation */
     messages: ((FieldError | null)[] | null)
+    success: (Success | null)
     success_string: (Scalars['String'] | null)
     __typename: 'MaskAccountPayload'
 }
@@ -5085,6 +5120,8 @@ export interface MedicationOptionType {
     dosages: (Scalars['String'][] | null)
     /** The unique identifier of the medication option */
     id: Scalars['ID']
+    /** The monograph of the medication option */
+    monograph: (Scalars['String'] | null)
     /** The name of the medication option */
     name: Scalars['String']
     __typename: 'MedicationOptionType'
@@ -5170,6 +5207,10 @@ export interface MetricGraphDataType {
 
 /** Type of multi-factor authentication used */
 export type MfaType = 'SMS' | 'EMAIL'
+
+
+/** The format of a monograph */
+export type MonographFormat = 'HTML' | 'XML'
 
 
 /** Monthly billing items data */
@@ -5274,6 +5315,8 @@ export interface Mutation {
     createAppointmentTypeCptCode: (createAppointmentTypeCptCodePayload | null)
     /** Create auto task generator */
     createAutoTaskGenerator: (createAutoTaskGeneratorPayload | null)
+    /** create automated insurance billing setting */
+    createAutomatedInsuranceBillingSetting: (createAutomatedInsuranceBillingSettingPayload | null)
     /** Create availability */
     createAvailability: (createAvailabilityPayload | null)
     /** create billing item */
@@ -5436,6 +5479,8 @@ export interface Mutation {
     createRequestedPayment: (createRequestedPaymentPayload | null)
     /** Create a Rupa order */
     createRupaOrder: (createRupaOrderPayload | null)
+    /** Create a new saved filter */
+    createSavedFilter: (createSavedFilterPayload | null)
     /** Create a sent direct message */
     createSentDirectMessage: (createSentDirectMessagePayload | null)
     /** create Sent Fax */
@@ -5601,6 +5646,8 @@ export interface Mutation {
     deleteRequestedFormCompletion: (deleteRequestedFormPayload | null)
     /** destroy requested payment */
     deleteRequestedPayment: (deleteRequestedPaymentPayload | null)
+    /** Delete a saved filter */
+    deleteSavedFilter: (deleteSavedFilterPayload | null)
     /** Destroy Shapa Connection */
     deleteShapaConnection: (deleteShapaConnectionPayload | null)
     /** Destroy a Smart Phrase */
@@ -5715,8 +5762,6 @@ export interface Mutation {
     toggleBaa: (ToggleBaaPayload | null)
     /** Deactivate/activate a group/single Care Plan for a given user */
     toggleCarePlanStatusForSpecificUser: (toggleCarePlanStatusForSpecificUserPayload | null)
-    /** Toggle Option to Enable Appointment Interval */
-    toggleEnableApptInterval: (ToggleEnableApptIntervalPayload | null)
     /** toggle paywall for a provider */
     togglePaywall: (TogglePaywallPayload | null)
     /** Toggle Reason for Appointment on Appointment Type of Provider */
@@ -5747,6 +5792,8 @@ export interface Mutation {
     updateAppointmentTypeCptCode: (updateAppointmentTypeCptCodePayload | null)
     /** Update auto task generator */
     updateAutoTaskGenerator: (updateAutoTaskGeneratorPayload | null)
+    /** update automated insurance billing setting */
+    updateAutomatedInsuranceBillingSetting: (updateAutomatedInsuranceBillingSettingPayload | null)
     /** Update a BillingItem */
     updateBillingItem: (updateBillingItemPayload | null)
     /** Update a Brand and return Brand */
@@ -5879,6 +5926,7 @@ export interface Mutation {
     updateOrganizationMember: (updateOrganizationMemberPayload | null)
     /** Update a OrganizationMembership */
     updateOrganizationMembership: (updateOrganizationMembershipPayload | null)
+    updateOrganizationUiConfiguration: (UpdateUiConfigurationPayload | null)
     /** update Permission Template */
     updatePermissionTemplate: (updatePermissionTemplatePayload | null)
     /** Update a policy */
@@ -5903,6 +5951,8 @@ export interface Mutation {
     updateReplyToEmailAddresses: (AddReplyToEmailAddressesPayload | null)
     /** update requested payment */
     updateRequestedPayment: (updateRequestedPaymentPayload | null)
+    /** Update an existing saved filter */
+    updateSavedFilter: (updateSavedFilterPayload | null)
     /** Update a Smart Phrase */
     updateSmartPhrase: (updateSmartPhrasePayload | null)
     /** Update a Smoking Status */
@@ -6964,6 +7014,10 @@ export interface OrganizationMembership {
 export type OrganizationMembershipOrderKeys = 'LAST_NAME_ASC' | 'LAST_NAME_DESC' | 'FIRST_NAME_ASC' | 'FIRST_NAME_DESC' | 'STATUS_ASC' | 'STATUS_DESC' | 'TYPE_ASC' | 'TYPE_DESC' | 'POSITION_ASC'
 
 
+/** Roles that a user can have in an organization */
+export type OrganizationMembershipRole = 'STANDARD' | 'SUPPORT'
+
+
 /** Alternative ID numbers for a provider */
 export interface OtherIdNumber {
     /** The unique identifier of the other id number */
@@ -7614,6 +7668,8 @@ export interface Query {
     appointmentsSummary: (AppointmentSummaryData | null)
     /** fetch auto task generators belonging to a specific user */
     autoTaskGenerators: (AutoTaskGenerator[] | null)
+    /** fetch the automated insurance billing setting */
+    automatedInsuranceBillingSetting: (AutomatedInsuranceBillingSetting | null)
     /** Fetch availabilities for range */
     availabilities: (Availability[] | null)
     /** number of availabilities */
@@ -8118,6 +8174,10 @@ export interface Query {
     requestedPayments: (RequestedPayment[] | null)
     /** Number of Requested Payments */
     requestedPaymentsCount: (Scalars['Int'] | null)
+    /** Fetch specific saved filter */
+    savedFilter: (SavedFilter | null)
+    /** Fetch all saved filters for a user or organization */
+    savedFilters: (SavedFilter[] | null)
     /** Fetch user's scheduled message blasts */
     scheduledMessageBlasts: (NoteScheduler[] | null)
     /** Fetch collection of all scheduled packages */
@@ -8878,6 +8938,24 @@ export interface SDKConfig {
 }
 
 
+/** A set of filter options saved for quick loading in the calendar */
+export interface SavedFilter {
+    /** JSON-formatted options to use for setting filter */
+    filter_data: Scalars['JSON']
+    /** Unique ID for this filter */
+    id: Scalars['ID']
+    /** Name of the filter */
+    name: Scalars['String']
+    /** The organization_id that has access to the filter */
+    organization_id: (Scalars['String'] | null)
+    /** The user that created the filter */
+    user_id: Scalars['String']
+    /** The unique UUID/string of the filter, used for sharing */
+    uuid: Scalars['String']
+    __typename: 'SavedFilter'
+}
+
+
 /** Billing items that are scheduled and will have a user package selection associated with them */
 export interface ScheduledUserPackageSelection {
     /** The unique identifier of the room */
@@ -9436,6 +9514,14 @@ export interface SubscriptionInstance {
 }
 
 
+/** Base class for types */
+export interface Success {
+    human_id: (Scalars['String'] | null)
+    success_string: (Scalars['String'] | null)
+    __typename: 'Success'
+}
+
+
 /** SuperBill */
 export interface SuperBill {
     /** address */
@@ -9629,7 +9715,7 @@ export interface Task {
 
 
 /** Task sorting enum */
-export type TaskOrderKeys = 'TASK_ASC' | 'TASK_DESC' | 'CREATOR_ASC' | 'CREATOR_DESC' | 'ASSIGNEE_ASC' | 'ASSIGNEE_DESC' | 'CREATED_ASC' | 'CREATED_DESC' | 'PRIORITY_ASC' | 'PRIORITY_DESC' | 'DUE_DATE_ASC' | 'DUE_DATE_DESC' | 'CLIENT_NAME_DESC' | 'CLIENT_NAME_ASC' | 'COMPLETED_AT_ASC' | 'COMPLETED_AT_DESC'
+export type TaskOrderKeys = 'TASK_ASC' | 'TASK_DESC' | 'CREATOR_ASC' | 'CREATOR_DESC' | 'ASSIGNEE_ASC' | 'ASSIGNEE_DESC' | 'CREATED_ASC' | 'CREATED_DESC' | 'PRIORITY_ASC' | 'PRIORITY_DESC' | 'DUE_DATE_ASC' | 'DUE_DATE_DESC' | 'CLIENT_NAME_DESC' | 'CLIENT_NAME_ASC' | 'COMPLETED_AT_ASC' | 'COMPLETED_AT_DESC' | 'UPDATED_AT_ASC' | 'UPDATED_AT_DESC'
 
 
 /** Autogenerated return type of Toggle2Fa. */
@@ -9685,20 +9771,6 @@ export interface ToggleBaaPayload {
     messages: ((FieldError | null)[] | null)
     success_string: (Scalars['String'] | null)
     __typename: 'ToggleBaaPayload'
-}
-
-
-/** Autogenerated return type of ToggleEnableApptInterval. */
-export interface ToggleEnableApptIntervalPayload {
-    /**
-     * @deprecated DO NOT USE
-     * DO NOT USE
-     */
-    clientMutationId: (Scalars['String'] | null)
-    /** The list of errors occurred during the mutation */
-    messages: ((FieldError | null)[] | null)
-    success_string: (Scalars['String'] | null)
-    __typename: 'ToggleEnableApptIntervalPayload'
 }
 
 
@@ -9878,6 +9950,20 @@ export interface UpdatePayload {
     /** The success string */
     success_string: (Scalars['String'] | null)
     __typename: 'UpdatePayload'
+}
+
+
+/** Autogenerated return type of UpdateUiConfiguration. */
+export interface UpdateUiConfigurationPayload {
+    /**
+     * @deprecated DO NOT USE
+     * DO NOT USE
+     */
+    clientMutationId: (Scalars['String'] | null)
+    /** The list of errors occurred during the mutation */
+    messages: ((FieldError | null)[] | null)
+    organization: (Organization | null)
+    __typename: 'UpdateUiConfigurationPayload'
 }
 
 
@@ -10124,8 +10210,8 @@ export interface User {
     custom_metrics: CustomMetric[]
     /** The default currency for the user */
     default_currency: (Scalars['String'] | null)
-    /** When set for a client, the Provider Dosespot iFrame will launch into this Clinic When nil, the Dosespot iframe will launch into the provider's default clinic). This will error unless the provider is connected to that clinic in Dosespot. Only used for client objects. */
-    default_dosespot_clinic_id: (Scalars['String'] | null)
+    /** When set for a client, the provider's Dosespot iFrame will launch into this clinic. When null, the Dosespot iframe will launch into the provider's default clinic. This will error unless the provider is connected to that clinic in Dosespot. Only used for patients. */
+    default_dosespot_clinic_id: (Scalars['ID'] | null)
     /** Default external videochat URL for scheduling with this user */
     default_external_video_url: (Scalars['String'] | null)
     /** The id of the users default onboarding flow */
@@ -11549,6 +11635,20 @@ export interface createAutoTaskGeneratorPayload {
 }
 
 
+/** Autogenerated return type of createAutomatedInsuranceBillingSetting. */
+export interface createAutomatedInsuranceBillingSettingPayload {
+    automated_insurance_billing_setting: (AutomatedInsuranceBillingSetting | null)
+    /**
+     * @deprecated DO NOT USE
+     * DO NOT USE
+     */
+    clientMutationId: (Scalars['String'] | null)
+    /** The list of errors occurred during the mutation */
+    messages: ((FieldError | null)[] | null)
+    __typename: 'createAutomatedInsuranceBillingSettingPayload'
+}
+
+
 /** Autogenerated return type of createAvailability. */
 export interface createAvailabilityPayload {
     availability: (Availability | null)
@@ -12649,6 +12749,20 @@ export interface createRupaOrderPayload {
 }
 
 
+/** Autogenerated return type of createSavedFilter. */
+export interface createSavedFilterPayload {
+    /**
+     * @deprecated DO NOT USE
+     * DO NOT USE
+     */
+    clientMutationId: (Scalars['String'] | null)
+    /** The list of errors occurred during the mutation */
+    messages: ((FieldError | null)[] | null)
+    savedFilter: (SavedFilter | null)
+    __typename: 'createSavedFilterPayload'
+}
+
+
 /** Autogenerated return type of createSentDirectMessage. */
 export interface createSentDirectMessagePayload {
     /**
@@ -13731,6 +13845,20 @@ export interface deleteRequestedPaymentPayload {
 }
 
 
+/** Autogenerated return type of deleteSavedFilter. */
+export interface deleteSavedFilterPayload {
+    /**
+     * @deprecated DO NOT USE
+     * DO NOT USE
+     */
+    clientMutationId: (Scalars['String'] | null)
+    /** The list of errors occurred during the mutation */
+    messages: ((FieldError | null)[] | null)
+    savedFilter: (SavedFilter | null)
+    __typename: 'deleteSavedFilterPayload'
+}
+
+
 /** Autogenerated return type of deleteShapaConnection. */
 export interface deleteShapaConnectionPayload {
     /**
@@ -14558,6 +14686,20 @@ export interface updateAutoTaskGeneratorPayload {
     /** The list of errors occurred during the mutation */
     messages: ((FieldError | null)[] | null)
     __typename: 'updateAutoTaskGeneratorPayload'
+}
+
+
+/** Autogenerated return type of updateAutomatedInsuranceBillingSetting. */
+export interface updateAutomatedInsuranceBillingSettingPayload {
+    automated_insurance_billing_setting: (AutomatedInsuranceBillingSetting | null)
+    /**
+     * @deprecated DO NOT USE
+     * DO NOT USE
+     */
+    clientMutationId: (Scalars['String'] | null)
+    /** The list of errors occurred during the mutation */
+    messages: ((FieldError | null)[] | null)
+    __typename: 'updateAutomatedInsuranceBillingSettingPayload'
 }
 
 
@@ -15542,6 +15684,20 @@ export interface updateRequestedPaymentPayload {
     messages: ((FieldError | null)[] | null)
     requested_payment: (RequestedPayment | null)
     __typename: 'updateRequestedPaymentPayload'
+}
+
+
+/** Autogenerated return type of updateSavedFilter. */
+export interface updateSavedFilterPayload {
+    /**
+     * @deprecated DO NOT USE
+     * DO NOT USE
+     */
+    clientMutationId: (Scalars['String'] | null)
+    /** The list of errors occurred during the mutation */
+    messages: ((FieldError | null)[] | null)
+    savedFilter: (SavedFilter | null)
+    __typename: 'updateSavedFilterPayload'
 }
 
 
@@ -16725,6 +16881,8 @@ export interface AppointmentSettingGenqlSelection{
     times_by_location?: boolean | number
     /** The last date and time that the appointment setting was updated */
     updated_at?: boolean | number
+    /** If true, cpt units and fees can be associated with appointment types */
+    use_appointment_type_cpt_units_and_fees?: boolean | number
     /** Whether or not to use the client credit system */
     use_client_credit_system?: boolean | number
     /** If true, you can see where each client came from */
@@ -16749,7 +16907,7 @@ allow_past_appointment_rescheduling?: (Scalars['Boolean'] | null),
 /** The ID of the appointment type. */
 appointment_type_id?: (Scalars['Int'] | null),
 /** The base calendar interval for appointments. */
-base_calendar_interval?: (Scalars['Int'] | null),
+base_calendar_interval?: (Scalars['String'] | null),
 /** The text to display on the calendar. */
 calendar_text?: (Scalars['String'] | null),
 /** Specifies whether charge receipts are disabled. */
@@ -16841,6 +16999,8 @@ export interface AppointmentTypeGenqlSelection{
     bookable_without_group?: boolean | number
     /** Checks to see if the client call to provider */
     client_call_provider?: boolean | number
+    /** A name to use in the client scheduling widget instead of the defalt name field. Falls back to name if not set. */
+    client_display_name?: boolean | number
     /** The status of whether the client can self-book this type of appointment */
     clients_can_book?: boolean | number
     /** Checks to see if the client has enough credit to book */
@@ -17027,6 +17187,10 @@ use_client_credit_system?: (Scalars['Boolean'] | null)}
 export interface AppointmentTypeCptCode {
 /** The ID of the CPT code */
 cpt_code_id?: (Scalars['String'] | null),
+/** Fee (in cents) per unit */
+fee_per_unit?: (Scalars['Int'] | null),
+/** Whether or not this appointment type will have insurance billing enabled */
+insurance_billing_enabled?: (Scalars['Boolean'] | null),
 /** The number of units for the CPT code */
 units?: (Scalars['String'] | null)}
 
@@ -17037,8 +17201,12 @@ export interface AppointmentTypeCptCodeTypeGenqlSelection{
     appointment_type_id?: boolean | number
     /** CPT Code ID */
     cpt_code_id?: boolean | number
+    /** Fee (in cents) per unit */
+    fee_per_unit?: boolean | number
     /** The unique identifier of the object */
     id?: boolean | number
+    /** Whether or not insurance billing is enaled for an appointment type */
+    insurance_billing_enabled?: boolean | number
     /** Units */
     units?: boolean | number
     __typename?: boolean | number
@@ -17140,6 +17308,21 @@ export interface AutoTaskGeneratorGenqlSelection{
     user_id?: boolean | number
     /** The id of the user */
     user_id_for_task?: boolean | number
+    __typename?: boolean | number
+    __scalar?: boolean | number
+}
+
+
+/** Automated Insurance Billing Setting Type */
+export interface AutomatedInsuranceBillingSettingGenqlSelection{
+    /** When true, CMS1500s will be created automatically */
+    auto_create_cms1500s?: boolean | number
+    /** When true, CMS1500s will be submitted automatically */
+    auto_submit_cms1500s?: boolean | number
+    /** The unique identifier of the setting */
+    id?: boolean | number
+    /** When true, CPT code and units will be linked to appointment types */
+    use_cpt_codes_units_and_fees_with_appointment_types?: boolean | number
     __typename?: boolean | number
     __scalar?: boolean | number
 }
@@ -18398,6 +18581,8 @@ export interface Cms1500GenqlSelection{
     tend_reserved?: boolean | number
     /** Total amount the claim was billed for */
     total_charge?: boolean | number
+    /** The last date and time that the CMS1500 was updated */
+    updated_at?: boolean | number
     /** True if the claim reimbursement info was updated via SFTP */
     updated_by_sftp?: boolean | number
     /** When true, uses the individual npi in all npi fields */
@@ -20532,7 +20717,11 @@ export interface FolderGenqlSelection{
     /** The user groups who have access to this folder */
     user_groups?: UserGroupGenqlSelection
     /** The users who have access to this folder */
-    users?: UserGenqlSelection
+    users?: (UserGenqlSelection & { __args?: {
+    /** Cursor to fetch results after */
+    after?: (Scalars['Cursor'] | null), should_paginate?: (Scalars['Boolean'] | null), page_size?: (Scalars['Int'] | null), order_by?: (UserOrderKeys | null)} })
+    /** The number of users who have access to this folder */
+    users_count?: boolean | number
     __typename?: boolean | number
     __scalar?: boolean | number
 }
@@ -20625,6 +20814,8 @@ export interface FormAnswerGenqlSelection{
     id?: boolean | number
     /** The label of the question */
     label?: boolean | number
+    /** The time of the last update */
+    updated_at?: boolean | number
     /** The id of the user that the answered question is for */
     user_id?: boolean | number
     /** The value to check the filter against */
@@ -21586,6 +21777,8 @@ export interface IndividualClientTypeGenqlSelection{
     join_time?: boolean | number
     /** The datetime that the attendee left the appointment (comes from the related appointment inclusion) */
     leave_time?: boolean | number
+    /** The time of the last update */
+    updated_at?: boolean | number
     /** Associated patient */
     user?: UserGenqlSelection
     __typename?: boolean | number
@@ -22121,6 +22314,7 @@ export interface MaskAccountPayloadGenqlSelection{
     clientMutationId?: boolean | number
     /** The list of errors occurred during the mutation */
     messages?: FieldErrorGenqlSelection
+    success?: SuccessGenqlSelection
     success_string?: boolean | number
     __typename?: boolean | number
     __scalar?: boolean | number
@@ -22169,6 +22363,10 @@ export interface MedicationOptionTypeGenqlSelection{
     dosages?: boolean | number
     /** The unique identifier of the medication option */
     id?: boolean | number
+    /** The monograph of the medication option */
+    monograph?: { __args: {
+    /** The format of the monograph */
+    format?: (MonographFormat | null)} } | boolean | number
     /** The name of the medication option */
     name?: boolean | number
     __typename?: boolean | number
@@ -22436,6 +22634,10 @@ export interface MutationGenqlSelection{
     createAutoTaskGenerator?: (createAutoTaskGeneratorPayloadGenqlSelection & { __args?: {
     /** Parameters for createAutoTaskGenerator */
     input?: (createAutoTaskGeneratorInput | null)} })
+    /** create automated insurance billing setting */
+    createAutomatedInsuranceBillingSetting?: (createAutomatedInsuranceBillingSettingPayloadGenqlSelection & { __args?: {
+    /** Parameters for createAutomatedInsuranceBillingSetting */
+    input?: (createAutomatedInsuranceBillingSettingInput | null)} })
     /** Create availability */
     createAvailability?: (createAvailabilityPayloadGenqlSelection & { __args?: {
     /** Parameters for createAvailability */
@@ -22760,6 +22962,10 @@ export interface MutationGenqlSelection{
     createRupaOrder?: (createRupaOrderPayloadGenqlSelection & { __args?: {
     /** Parameters for createRupaOrder */
     input?: (createRupaOrderInput | null)} })
+    /** Create a new saved filter */
+    createSavedFilter?: (createSavedFilterPayloadGenqlSelection & { __args?: {
+    /** Parameters for createSavedFilter */
+    input?: (createSavedFilterInput | null)} })
     /** Create a sent direct message */
     createSentDirectMessage?: (createSentDirectMessagePayloadGenqlSelection & { __args?: {
     /** Parameters for createSentDirectMessage */
@@ -23087,6 +23293,10 @@ export interface MutationGenqlSelection{
     deleteRequestedPayment?: (deleteRequestedPaymentPayloadGenqlSelection & { __args?: {
     /** Parameters for deleteRequestedPayment */
     input?: (deleteRequestedPaymentInput | null)} })
+    /** Delete a saved filter */
+    deleteSavedFilter?: (deleteSavedFilterPayloadGenqlSelection & { __args?: {
+    /** Parameters for deleteSavedFilter */
+    input?: (deleteSavedFilterInput | null)} })
     /** Destroy Shapa Connection */
     deleteShapaConnection?: (deleteShapaConnectionPayloadGenqlSelection & { __args?: {
     /** Parameters for deleteShapaConnection */
@@ -23315,10 +23525,6 @@ export interface MutationGenqlSelection{
     toggleCarePlanStatusForSpecificUser?: (toggleCarePlanStatusForSpecificUserPayloadGenqlSelection & { __args?: {
     /** Parameters for toggleCarePlanStatusForSpecificUser */
     input?: (toggleCarePlanStatusForSpecificUserInput | null)} })
-    /** Toggle Option to Enable Appointment Interval */
-    toggleEnableApptInterval?: (ToggleEnableApptIntervalPayloadGenqlSelection & { __args?: {
-    /** Parameters for ToggleEnableApptInterval */
-    input?: (ToggleEnableApptIntervalInput | null)} })
     /** toggle paywall for a provider */
     togglePaywall?: (TogglePaywallPayloadGenqlSelection & { __args?: {
     /** Parameters for TogglePaywall */
@@ -23379,6 +23585,10 @@ export interface MutationGenqlSelection{
     updateAutoTaskGenerator?: (updateAutoTaskGeneratorPayloadGenqlSelection & { __args?: {
     /** Parameters for updateAutoTaskGenerator */
     input?: (updateAutoTaskGeneratorInput | null)} })
+    /** update automated insurance billing setting */
+    updateAutomatedInsuranceBillingSetting?: (updateAutomatedInsuranceBillingSettingPayloadGenqlSelection & { __args?: {
+    /** Parameters for updateAutomatedInsuranceBillingSetting */
+    input?: (updateAutomatedInsuranceBillingSettingInput | null)} })
     /** Update a BillingItem */
     updateBillingItem?: (updateBillingItemPayloadGenqlSelection & { __args?: {
     /** Parameters for updateBillingItem */
@@ -23643,6 +23853,9 @@ export interface MutationGenqlSelection{
     updateOrganizationMembership?: (updateOrganizationMembershipPayloadGenqlSelection & { __args?: {
     /** Parameters for updateOrganizationMembership */
     input?: (updateOrganizationMembershipInput | null)} })
+    updateOrganizationUiConfiguration?: (UpdateUiConfigurationPayloadGenqlSelection & { __args?: {
+    /** Parameters for UpdateUiConfiguration */
+    input?: (UpdateUiConfigurationInput | null)} })
     /** update Permission Template */
     updatePermissionTemplate?: (updatePermissionTemplatePayloadGenqlSelection & { __args?: {
     /** Parameters for updatePermissionTemplate */
@@ -23691,6 +23904,10 @@ export interface MutationGenqlSelection{
     updateRequestedPayment?: (updateRequestedPaymentPayloadGenqlSelection & { __args?: {
     /** Parameters for updateRequestedPayment */
     input?: (updateRequestedPaymentInput | null)} })
+    /** Update an existing saved filter */
+    updateSavedFilter?: (updateSavedFilterPayloadGenqlSelection & { __args?: {
+    /** Parameters for updateSavedFilter */
+    input?: (updateSavedFilterInput | null)} })
     /** Update a Smart Phrase */
     updateSmartPhrase?: (updateSmartPhrasePayloadGenqlSelection & { __args?: {
     /** Parameters for updateSmartPhrase */
@@ -25835,7 +26052,11 @@ export interface QueryGenqlSelection{
     /** Applied tags to a users */
     appliedTags?: (AppliedTagGenqlSelection & { __args?: {id?: (Scalars['ID'] | null), 
     /** The tag ID */
-    tag_id?: (Scalars['ID'] | null)} })
+    tag_id?: (Scalars['ID'] | null), order_by?: (AppliedTagOrderKeys | null), 
+    /** When passed in, only applied tags updated after the specified datetime are returned. */
+    updated_after?: (Scalars['ISO8601DateTime'] | null), 
+    /** When passed in, only applied tags updated before the specified datetime are returned. */
+    updated_before?: (Scalars['ISO8601DateTime'] | null)} })
     /** fetch an appointment by id, group appointments are (considered public) */
     appointment?: (AppointmentGenqlSelection & { __args?: {id?: (Scalars['ID'] | null), 
     /** When true, deleted appointments can be retrieved via this query. */
@@ -25969,6 +26190,8 @@ export interface QueryGenqlSelection{
     require_cache_threshold?: (Scalars['Int'] | null)} })
     /** fetch auto task generators belonging to a specific user */
     autoTaskGenerators?: (AutoTaskGeneratorGenqlSelection & { __args?: {user_id?: (Scalars['String'] | null)} })
+    /** fetch the automated insurance billing setting */
+    automatedInsuranceBillingSetting?: (AutomatedInsuranceBillingSettingGenqlSelection & { __args?: {user_id?: (Scalars['ID'] | null)} })
     /** Fetch availabilities for range */
     availabilities?: (AvailabilityGenqlSelection & { __args?: {appointment_location_id?: (Scalars['String'] | null), appointment_type_id?: (Scalars['String'] | null), 
     /** ID of the provider to show availabilities for, supercedes provider id and is_org */
@@ -26873,6 +27096,10 @@ export interface QueryGenqlSelection{
     requestedPaymentsCount?: { __args: {keywords?: (Scalars['String'] | null), sender_id?: (Scalars['ID'] | null), 
     /** Can be paid, partial or unpaid */
     status_filter?: (Scalars['String'] | null)} } | boolean | number
+    /** Fetch specific saved filter */
+    savedFilter?: (SavedFilterGenqlSelection & { __args?: {id?: (Scalars['ID'] | null), uuid?: (Scalars['ID'] | null)} })
+    /** Fetch all saved filters for a user or organization */
+    savedFilters?: (SavedFilterGenqlSelection & { __args?: {user_id?: (Scalars['ID'] | null), organization_id?: (Scalars['ID'] | null)} })
     /** Fetch user's scheduled message blasts */
     scheduledMessageBlasts?: (NoteSchedulerGenqlSelection & { __args?: {
     /** If True - returns organization membership scheduled message blasts */
@@ -26942,7 +27169,7 @@ export interface QueryGenqlSelection{
     /** The id of the conversation to get the signed stream name for */
     conversation_id?: (Scalars['ID'] | null), 
     /** The type of stream to get the signed stream name for */
-    type?: (SignedStreamName | null)} } | boolean | number
+    type: SignedStreamName} }
     /** Fetch user smart phrases */
     smartPhrases?: (SmartPhraseGenqlSelection & { __args?: {
     /** Cursor to fetch results after */
@@ -27919,6 +28146,25 @@ export interface SDKConfigGenqlSelection{
 }
 
 
+/** A set of filter options saved for quick loading in the calendar */
+export interface SavedFilterGenqlSelection{
+    /** JSON-formatted options to use for setting filter */
+    filter_data?: boolean | number
+    /** Unique ID for this filter */
+    id?: boolean | number
+    /** Name of the filter */
+    name?: boolean | number
+    /** The organization_id that has access to the filter */
+    organization_id?: boolean | number
+    /** The user that created the filter */
+    user_id?: boolean | number
+    /** The unique UUID/string of the filter, used for sharing */
+    uuid?: boolean | number
+    __typename?: boolean | number
+    __scalar?: boolean | number
+}
+
+
 /** Billing items that are scheduled and will have a user package selection associated with them */
 export interface ScheduledUserPackageSelectionGenqlSelection{
     /** The unique identifier of the room */
@@ -28591,6 +28837,15 @@ export interface SubscriptionInstanceGenqlSelection{
 }
 
 
+/** Base class for types */
+export interface SuccessGenqlSelection{
+    human_id?: boolean | number
+    success_string?: boolean | number
+    __typename?: boolean | number
+    __scalar?: boolean | number
+}
+
+
 /** SuperBill */
 export interface SuperBillGenqlSelection{
     /** address */
@@ -28875,29 +29130,6 @@ export interface ToggleBaaPayloadGenqlSelection{
 }
 
 
-/** Autogenerated input type of ToggleEnableApptInterval */
-export interface ToggleEnableApptIntervalInput {
-/** The ID of the user */
-id: Scalars['ID'],
-/** Enable/Disable Toggle */
-enable: Scalars['String']}
-
-
-/** Autogenerated return type of ToggleEnableApptInterval. */
-export interface ToggleEnableApptIntervalPayloadGenqlSelection{
-    /**
-     * @deprecated DO NOT USE
-     * DO NOT USE
-     */
-    clientMutationId?: boolean | number
-    /** The list of errors occurred during the mutation */
-    messages?: FieldErrorGenqlSelection
-    success_string?: boolean | number
-    __typename?: boolean | number
-    __scalar?: boolean | number
-}
-
-
 /** Autogenerated input type of TogglePaywall */
 export interface TogglePaywallInput {enable: Scalars['String'],id: Scalars['String']}
 
@@ -29135,6 +29367,25 @@ export interface UpdatePayloadGenqlSelection{
     messages?: FieldErrorGenqlSelection
     /** The success string */
     success_string?: boolean | number
+    __typename?: boolean | number
+    __scalar?: boolean | number
+}
+
+
+/** Autogenerated input type of UpdateUiConfiguration */
+export interface UpdateUiConfigurationInput {role: OrganizationMembershipRole,ui_configuration: Scalars['JSON']}
+
+
+/** Autogenerated return type of UpdateUiConfiguration. */
+export interface UpdateUiConfigurationPayloadGenqlSelection{
+    /**
+     * @deprecated DO NOT USE
+     * DO NOT USE
+     */
+    clientMutationId?: boolean | number
+    /** The list of errors occurred during the mutation */
+    messages?: FieldErrorGenqlSelection
+    organization?: OrganizationGenqlSelection
     __typename?: boolean | number
     __scalar?: boolean | number
 }
@@ -29426,7 +29677,7 @@ export interface UserGenqlSelection{
     custom_metrics?: CustomMetricGenqlSelection
     /** The default currency for the user */
     default_currency?: boolean | number
-    /** When set for a client, the Provider Dosespot iFrame will launch into this Clinic When nil, the Dosespot iframe will launch into the provider's default clinic). This will error unless the provider is connected to that clinic in Dosespot. Only used for client objects. */
+    /** When set for a client, the provider's Dosespot iFrame will launch into this clinic. When null, the Dosespot iframe will launch into the provider's default clinic. This will error unless the provider is connected to that clinic in Dosespot. Only used for patients. */
     default_dosespot_clinic_id?: boolean | number
     /** Default external videochat URL for scheduling with this user */
     default_external_video_url?: boolean | number
@@ -31137,7 +31388,9 @@ export interface createAppleHealthPayloadGenqlSelection{
 
 
 /** Autogenerated input type of createAppointment */
-export interface createAppointmentInput {appointment_location_id?: (Scalars['String'] | null),appointment_type_id?: (Scalars['String'] | null),attendee_ids?: (Scalars['String'] | null),contact_type?: (Scalars['String'] | null),
+export interface createAppointmentInput {appointment_location_id?: (Scalars['String'] | null),appointment_type_id?: (Scalars['String'] | null),attendee_ids?: (Scalars['String'] | null),
+/** The type of appointment (video, in person, phone call, etc.) */
+contact_type?: (Scalars['String'] | null),
 /** Cpt code associated with this appointment */
 cpt_code_id?: (Scalars['ID'] | null),date?: (Scalars['String'] | null),
 /** Timestamp in YYYY-MM-DD HH:MM:SS or ISO8601 format, supercedes date, time params. */
@@ -31188,7 +31441,7 @@ times_by_appointment_type?: (Scalars['Boolean'] | null),
 /** Allows times to be grouped by contact type. NOTE: changing this value will clear all prior availability */
 times_by_contact_type?: (Scalars['Boolean'] | null),
 /** Allows times to be grouped by location. NOTE: changing this value will clear all prior availability */
-times_by_location?: (Scalars['Boolean'] | null),use_client_credit_system?: (Scalars['Boolean'] | null),use_client_sources?: (Scalars['Boolean'] | null),use_zoom_waiting_room?: (Scalars['Boolean'] | null),user_id?: (Scalars['String'] | null),video_url_default?: (VideoUrlDefaultInput | null)}
+times_by_location?: (Scalars['Boolean'] | null),use_appointment_type_cpt_units_and_fees?: (Scalars['Boolean'] | null),use_client_credit_system?: (Scalars['Boolean'] | null),use_client_sources?: (Scalars['Boolean'] | null),use_zoom_waiting_room?: (Scalars['Boolean'] | null),user_id?: (Scalars['String'] | null),video_url_default?: (VideoUrlDefaultInput | null)}
 
 
 /** Autogenerated return type of createAppointmentSetting. */
@@ -31207,7 +31460,7 @@ export interface createAppointmentSettingPayloadGenqlSelection{
 
 
 /** Autogenerated input type of createAppointmentTypeCptCode */
-export interface createAppointmentTypeCptCodeInput {appointment_type_id?: (Scalars['ID'] | null),cpt_code_id?: (Scalars['ID'] | null),units?: (Scalars['String'] | null)}
+export interface createAppointmentTypeCptCodeInput {appointment_type_id?: (Scalars['ID'] | null),cpt_code_id?: (Scalars['ID'] | null),units?: (Scalars['String'] | null),fee_per_unit?: (Scalars['Int'] | null),insurance_billing_enabled?: (Scalars['Boolean'] | null)}
 
 
 /** Autogenerated return type of createAppointmentTypeCptCode. */
@@ -31228,7 +31481,9 @@ export interface createAppointmentTypeCptCodePayloadGenqlSelection{
 /** Autogenerated input type of createAppointmentType */
 export interface createAppointmentTypeInput {appointment_setting?: (AppointmentTypeAppointmentSettingInput | null),appointment_type_cpt_code?: (AppointmentTypeCptCode | null),bookable_by_groups?: (Scalars['Boolean'] | null),bookable_group_ids?: (Scalars['String'] | null),bookable_without_group?: (Scalars['Boolean'] | null),
 /** When false, clients will not have the ability to self-book this appointment */
-clients_can_book?: (Scalars['Boolean'] | null),contact_type_overrides?: ((Scalars['String'] | null)[] | null),
+clients_can_book?: (Scalars['Boolean'] | null),
+/** When set, will be used as the appointment type name shown to clients in the client booking widget UI. */
+client_facing_display_name?: (Scalars['String'] | null),contact_type_overrides?: ((Scalars['String'] | null)[] | null),
 /** When true, the client will not be asked to add a reason when booking an appointment of this type */
 dont_ask_for_reason?: (Scalars['Boolean'] | null),form_requests_before_appointment?: ((AppointmentTypeFormConnectionInput | null)[] | null),form_requests_after_appointment?: ((AppointmentTypeFormConnectionInput | null)[] | null),form_requests_after_appointment_booking?: ((AppointmentTypeFormConnectionInput | null)[] | null),
 /** When true, indicates that this appointment type is used for group appointments */
@@ -31265,6 +31520,25 @@ export interface createAutoTaskGeneratorInput {category?: (Scalars['String'] | n
 /** Autogenerated return type of createAutoTaskGenerator. */
 export interface createAutoTaskGeneratorPayloadGenqlSelection{
     auto_task_generator?: AutoTaskGeneratorGenqlSelection
+    /**
+     * @deprecated DO NOT USE
+     * DO NOT USE
+     */
+    clientMutationId?: boolean | number
+    /** The list of errors occurred during the mutation */
+    messages?: FieldErrorGenqlSelection
+    __typename?: boolean | number
+    __scalar?: boolean | number
+}
+
+
+/** Autogenerated input type of createAutomatedInsuranceBillingSetting */
+export interface createAutomatedInsuranceBillingSettingInput {auto_create_cms1500s?: (Scalars['Boolean'] | null),auto_submit_cms1500s?: (Scalars['Boolean'] | null),use_cpt_codes_units_and_fees_with_appointment_types?: (Scalars['Boolean'] | null)}
+
+
+/** Autogenerated return type of createAutomatedInsuranceBillingSetting. */
+export interface createAutomatedInsuranceBillingSettingPayloadGenqlSelection{
+    automated_insurance_billing_setting?: AutomatedInsuranceBillingSettingGenqlSelection
     /**
      * @deprecated DO NOT USE
      * DO NOT USE
@@ -32918,7 +33192,9 @@ export interface createReferringPhysicianPayloadGenqlSelection{
 
 
 /** Autogenerated input type of createRequestedForm */
-export interface createRequestedFormInput {custom_module_form_id?: (Scalars['ID'] | null),item_type?: (Scalars['String'] | null),recipient_id?: (Scalars['ID'] | null),ends_on?: (Scalars['String'] | null),form?: (Scalars['String'] | null),frequency?: (Scalars['String'] | null),hour?: (Scalars['String'] | null),is_recurring?: (Scalars['Boolean'] | null),minute?: (Scalars['String'] | null),monthday?: (Scalars['String'] | null),period?: (Scalars['String'] | null),
+export interface createRequestedFormInput {custom_module_form_id?: (Scalars['ID'] | null),item_type?: (Scalars['String'] | null),recipient_id?: (Scalars['ID'] | null),ends_on?: (Scalars['String'] | null),
+/** The ID of the custom form OR the name of the generic form (e.g 'billing_info') */
+form?: (Scalars['String'] | null),frequency?: (Scalars['String'] | null),hour?: (Scalars['String'] | null),is_recurring?: (Scalars['Boolean'] | null),minute?: (Scalars['String'] | null),monthday?: (Scalars['String'] | null),period?: (Scalars['String'] | null),
 /** A comma-separated list of user IDs and/or user group IDs. If passing user group IDs, they should take the following format: 'group_1,group_2,group_3' You can pass both user IDs and user group IDs. Example: '1,2,3,group_1,group_2' If you pass a user group ID, all users in that group will be sent the form. */
 recipient_ids?: (Scalars['String'] | null),recurrence_ends?: (Scalars['Boolean'] | null),weekday?: (Scalars['String'] | null)}
 
@@ -32972,6 +33248,29 @@ export interface createRupaOrderPayloadGenqlSelection{
     /** The list of errors occurred during the mutation */
     messages?: FieldErrorGenqlSelection
     rupa_order_url?: boolean | number
+    __typename?: boolean | number
+    __scalar?: boolean | number
+}
+
+
+/** Autogenerated input type of createSavedFilter */
+export interface createSavedFilterInput {
+/** Name of the new saved filter */
+name: Scalars['String'],
+/** ID of the organization with access to the filter. Will be assigned to organization ID of user if not provided */
+organization_id?: (Scalars['ID'] | null)}
+
+
+/** Autogenerated return type of createSavedFilter. */
+export interface createSavedFilterPayloadGenqlSelection{
+    /**
+     * @deprecated DO NOT USE
+     * DO NOT USE
+     */
+    clientMutationId?: boolean | number
+    /** The list of errors occurred during the mutation */
+    messages?: FieldErrorGenqlSelection
+    savedFilter?: SavedFilterGenqlSelection
     __typename?: boolean | number
     __scalar?: boolean | number
 }
@@ -34470,6 +34769,27 @@ export interface deleteRequestedPaymentPayloadGenqlSelection{
 }
 
 
+/** Autogenerated input type of deleteSavedFilter */
+export interface deleteSavedFilterInput {
+/** ID of the saved filter to delete */
+id: Scalars['ID']}
+
+
+/** Autogenerated return type of deleteSavedFilter. */
+export interface deleteSavedFilterPayloadGenqlSelection{
+    /**
+     * @deprecated DO NOT USE
+     * DO NOT USE
+     */
+    clientMutationId?: boolean | number
+    /** The list of errors occurred during the mutation */
+    messages?: FieldErrorGenqlSelection
+    savedFilter?: SavedFilterGenqlSelection
+    __typename?: boolean | number
+    __scalar?: boolean | number
+}
+
+
 /** Autogenerated input type of deleteShapaConnection */
 export interface deleteShapaConnectionInput {id?: (Scalars['ID'] | null)}
 
@@ -35637,7 +35957,7 @@ times_by_appointment_type?: (Scalars['Boolean'] | null),
 /** Allows times to be grouped by contact type. */
 times_by_contact_type?: (Scalars['Boolean'] | null),
 /** Allows times to be grouped by location. */
-times_by_location?: (Scalars['Boolean'] | null),use_client_credit_system?: (Scalars['Boolean'] | null),use_client_sources?: (Scalars['Boolean'] | null),use_zoom_waiting_room?: (Scalars['Boolean'] | null),user_id?: (Scalars['String'] | null),video_url_default?: (VideoUrlDefaultInput | null)}
+times_by_location?: (Scalars['Boolean'] | null),use_appointment_type_cpt_units_and_fees?: (Scalars['Boolean'] | null),use_client_credit_system?: (Scalars['Boolean'] | null),use_client_sources?: (Scalars['Boolean'] | null),use_zoom_waiting_room?: (Scalars['Boolean'] | null),user_id?: (Scalars['String'] | null),video_url_default?: (VideoUrlDefaultInput | null)}
 
 
 /** Autogenerated return type of updateAppointmentSetting. */
@@ -35656,7 +35976,7 @@ export interface updateAppointmentSettingPayloadGenqlSelection{
 
 
 /** Autogenerated input type of updateAppointmentTypeCptCode */
-export interface updateAppointmentTypeCptCodeInput {appointment_type_id?: (Scalars['ID'] | null),cpt_code_id?: (Scalars['ID'] | null),id?: (Scalars['ID'] | null),units?: (Scalars['String'] | null)}
+export interface updateAppointmentTypeCptCodeInput {appointment_type_id?: (Scalars['ID'] | null),cpt_code_id?: (Scalars['ID'] | null),id?: (Scalars['ID'] | null),units?: (Scalars['String'] | null),fee_per_unit?: (Scalars['Int'] | null),insurance_billing_enabled?: (Scalars['Boolean'] | null)}
 
 
 /** Autogenerated return type of updateAppointmentTypeCptCode. */
@@ -35676,6 +35996,8 @@ export interface updateAppointmentTypeCptCodePayloadGenqlSelection{
 
 /** Autogenerated input type of updateAppointmentType */
 export interface updateAppointmentTypeInput {appointment_setting?: (AppointmentTypeAppointmentSettingInput | null),appointment_type_cpt_code?: (AppointmentTypeCptCode | null),auto_increase_charge_for_actual_duration?: (Scalars['Boolean'] | null),bookable_by_groups?: (Scalars['Boolean'] | null),bookable_group_ids?: (Scalars['String'] | null),bookable_without_group?: (Scalars['Boolean'] | null),
+/** When set, will be used as the appointment type name shown to clients in the client booking widget UI. */
+client_facing_display_name?: (Scalars['String'] | null),
 /** When false, clients will not have the ability to self-book this appointment */
 clients_can_book?: (Scalars['Boolean'] | null),contact_type_override_in_person?: (ContactTypeOverride | null),contact_type_override_phone_call?: (ContactTypeOverride | null),contact_type_override_video_chat?: (ContactTypeOverride | null),
 /** If the provider's organization has this feature, setting this will customize the content of SMS reminder's Healthie sends. */
@@ -35716,6 +36038,25 @@ export interface updateAutoTaskGeneratorInput {category?: (Scalars['String'] | n
 /** Autogenerated return type of updateAutoTaskGenerator. */
 export interface updateAutoTaskGeneratorPayloadGenqlSelection{
     auto_task_generator?: AutoTaskGeneratorGenqlSelection
+    /**
+     * @deprecated DO NOT USE
+     * DO NOT USE
+     */
+    clientMutationId?: boolean | number
+    /** The list of errors occurred during the mutation */
+    messages?: FieldErrorGenqlSelection
+    __typename?: boolean | number
+    __scalar?: boolean | number
+}
+
+
+/** Autogenerated input type of updateAutomatedInsuranceBillingSetting */
+export interface updateAutomatedInsuranceBillingSettingInput {auto_create_cms1500s?: (Scalars['Boolean'] | null),auto_submit_cms1500s?: (Scalars['Boolean'] | null),id?: (Scalars['ID'] | null),use_cpt_codes_units_and_fees_with_appointment_types?: (Scalars['Boolean'] | null)}
+
+
+/** Autogenerated return type of updateAutomatedInsuranceBillingSetting. */
+export interface updateAutomatedInsuranceBillingSettingPayloadGenqlSelection{
+    automated_insurance_billing_setting?: AutomatedInsuranceBillingSettingGenqlSelection
     /**
      * @deprecated DO NOT USE
      * DO NOT USE
@@ -37196,6 +37537,29 @@ export interface updateRequestedPaymentPayloadGenqlSelection{
 }
 
 
+/** Autogenerated input type of updateSavedFilter */
+export interface updateSavedFilterInput {
+/** ID of the saved filter to update */
+id: Scalars['ID'],
+/** New name for the saved filter */
+name: Scalars['String']}
+
+
+/** Autogenerated return type of updateSavedFilter. */
+export interface updateSavedFilterPayloadGenqlSelection{
+    /**
+     * @deprecated DO NOT USE
+     * DO NOT USE
+     */
+    clientMutationId?: boolean | number
+    /** The list of errors occurred during the mutation */
+    messages?: FieldErrorGenqlSelection
+    savedFilter?: SavedFilterGenqlSelection
+    __typename?: boolean | number
+    __scalar?: boolean | number
+}
+
+
 /** Autogenerated input type of updateSmartPhrase */
 export interface updateSmartPhraseInput {id?: (Scalars['ID'] | null),name?: (Scalars['String'] | null),phrase?: (Scalars['String'] | null)}
 
@@ -37835,6 +38199,14 @@ export interface validateVerificationTokenPayloadGenqlSelection{
     export const isAutoTaskGenerator = (obj?: { __typename?: any } | null): obj is AutoTaskGenerator => {
       if (!obj?.__typename) throw new Error('__typename is missing in "isAutoTaskGenerator"')
       return AutoTaskGenerator_possibleTypes.includes(obj.__typename)
+    }
+    
+
+
+    const AutomatedInsuranceBillingSetting_possibleTypes: string[] = ['AutomatedInsuranceBillingSetting']
+    export const isAutomatedInsuranceBillingSetting = (obj?: { __typename?: any } | null): obj is AutomatedInsuranceBillingSetting => {
+      if (!obj?.__typename) throw new Error('__typename is missing in "isAutomatedInsuranceBillingSetting"')
+      return AutomatedInsuranceBillingSetting_possibleTypes.includes(obj.__typename)
     }
     
 
@@ -39615,6 +39987,14 @@ export interface validateVerificationTokenPayloadGenqlSelection{
     
 
 
+    const SavedFilter_possibleTypes: string[] = ['SavedFilter']
+    export const isSavedFilter = (obj?: { __typename?: any } | null): obj is SavedFilter => {
+      if (!obj?.__typename) throw new Error('__typename is missing in "isSavedFilter"')
+      return SavedFilter_possibleTypes.includes(obj.__typename)
+    }
+    
+
+
     const ScheduledUserPackageSelection_possibleTypes: string[] = ['ScheduledUserPackageSelection']
     export const isScheduledUserPackageSelection = (obj?: { __typename?: any } | null): obj is ScheduledUserPackageSelection => {
       if (!obj?.__typename) throw new Error('__typename is missing in "isScheduledUserPackageSelection"')
@@ -39807,6 +40187,14 @@ export interface validateVerificationTokenPayloadGenqlSelection{
     
 
 
+    const Success_possibleTypes: string[] = ['Success']
+    export const isSuccess = (obj?: { __typename?: any } | null): obj is Success => {
+      if (!obj?.__typename) throw new Error('__typename is missing in "isSuccess"')
+      return Success_possibleTypes.includes(obj.__typename)
+    }
+    
+
+
     const SuperBill_possibleTypes: string[] = ['SuperBill']
     export const isSuperBill = (obj?: { __typename?: any } | null): obj is SuperBill => {
       if (!obj?.__typename) throw new Error('__typename is missing in "isSuperBill"')
@@ -39867,14 +40255,6 @@ export interface validateVerificationTokenPayloadGenqlSelection{
     export const isToggleBaaPayload = (obj?: { __typename?: any } | null): obj is ToggleBaaPayload => {
       if (!obj?.__typename) throw new Error('__typename is missing in "isToggleBaaPayload"')
       return ToggleBaaPayload_possibleTypes.includes(obj.__typename)
-    }
-    
-
-
-    const ToggleEnableApptIntervalPayload_possibleTypes: string[] = ['ToggleEnableApptIntervalPayload']
-    export const isToggleEnableApptIntervalPayload = (obj?: { __typename?: any } | null): obj is ToggleEnableApptIntervalPayload => {
-      if (!obj?.__typename) throw new Error('__typename is missing in "isToggleEnableApptIntervalPayload"')
-      return ToggleEnableApptIntervalPayload_possibleTypes.includes(obj.__typename)
     }
     
 
@@ -39963,6 +40343,14 @@ export interface validateVerificationTokenPayloadGenqlSelection{
     export const isUpdatePayload = (obj?: { __typename?: any } | null): obj is UpdatePayload => {
       if (!obj?.__typename) throw new Error('__typename is missing in "isUpdatePayload"')
       return UpdatePayload_possibleTypes.includes(obj.__typename)
+    }
+    
+
+
+    const UpdateUiConfigurationPayload_possibleTypes: string[] = ['UpdateUiConfigurationPayload']
+    export const isUpdateUiConfigurationPayload = (obj?: { __typename?: any } | null): obj is UpdateUiConfigurationPayload => {
+      if (!obj?.__typename) throw new Error('__typename is missing in "isUpdateUiConfigurationPayload"')
+      return UpdateUiConfigurationPayload_possibleTypes.includes(obj.__typename)
     }
     
 
@@ -40339,6 +40727,14 @@ export interface validateVerificationTokenPayloadGenqlSelection{
     export const iscreateAutoTaskGeneratorPayload = (obj?: { __typename?: any } | null): obj is createAutoTaskGeneratorPayload => {
       if (!obj?.__typename) throw new Error('__typename is missing in "iscreateAutoTaskGeneratorPayload"')
       return createAutoTaskGeneratorPayload_possibleTypes.includes(obj.__typename)
+    }
+    
+
+
+    const createAutomatedInsuranceBillingSettingPayload_possibleTypes: string[] = ['createAutomatedInsuranceBillingSettingPayload']
+    export const iscreateAutomatedInsuranceBillingSettingPayload = (obj?: { __typename?: any } | null): obj is createAutomatedInsuranceBillingSettingPayload => {
+      if (!obj?.__typename) throw new Error('__typename is missing in "iscreateAutomatedInsuranceBillingSettingPayload"')
+      return createAutomatedInsuranceBillingSettingPayload_possibleTypes.includes(obj.__typename)
     }
     
 
@@ -40967,6 +41363,14 @@ export interface validateVerificationTokenPayloadGenqlSelection{
     
 
 
+    const createSavedFilterPayload_possibleTypes: string[] = ['createSavedFilterPayload']
+    export const iscreateSavedFilterPayload = (obj?: { __typename?: any } | null): obj is createSavedFilterPayload => {
+      if (!obj?.__typename) throw new Error('__typename is missing in "iscreateSavedFilterPayload"')
+      return createSavedFilterPayload_possibleTypes.includes(obj.__typename)
+    }
+    
+
+
     const createSentDirectMessagePayload_possibleTypes: string[] = ['createSentDirectMessagePayload']
     export const iscreateSentDirectMessagePayload = (obj?: { __typename?: any } | null): obj is createSentDirectMessagePayload => {
       if (!obj?.__typename) throw new Error('__typename is missing in "iscreateSentDirectMessagePayload"')
@@ -41583,6 +41987,14 @@ export interface validateVerificationTokenPayloadGenqlSelection{
     
 
 
+    const deleteSavedFilterPayload_possibleTypes: string[] = ['deleteSavedFilterPayload']
+    export const isdeleteSavedFilterPayload = (obj?: { __typename?: any } | null): obj is deleteSavedFilterPayload => {
+      if (!obj?.__typename) throw new Error('__typename is missing in "isdeleteSavedFilterPayload"')
+      return deleteSavedFilterPayload_possibleTypes.includes(obj.__typename)
+    }
+    
+
+
     const deleteShapaConnectionPayload_possibleTypes: string[] = ['deleteShapaConnectionPayload']
     export const isdeleteShapaConnectionPayload = (obj?: { __typename?: any } | null): obj is deleteShapaConnectionPayload => {
       if (!obj?.__typename) throw new Error('__typename is missing in "isdeleteShapaConnectionPayload"')
@@ -42043,6 +42455,14 @@ export interface validateVerificationTokenPayloadGenqlSelection{
     export const isupdateAutoTaskGeneratorPayload = (obj?: { __typename?: any } | null): obj is updateAutoTaskGeneratorPayload => {
       if (!obj?.__typename) throw new Error('__typename is missing in "isupdateAutoTaskGeneratorPayload"')
       return updateAutoTaskGeneratorPayload_possibleTypes.includes(obj.__typename)
+    }
+    
+
+
+    const updateAutomatedInsuranceBillingSettingPayload_possibleTypes: string[] = ['updateAutomatedInsuranceBillingSettingPayload']
+    export const isupdateAutomatedInsuranceBillingSettingPayload = (obj?: { __typename?: any } | null): obj is updateAutomatedInsuranceBillingSettingPayload => {
+      if (!obj?.__typename) throw new Error('__typename is missing in "isupdateAutomatedInsuranceBillingSettingPayload"')
+      return updateAutomatedInsuranceBillingSettingPayload_possibleTypes.includes(obj.__typename)
     }
     
 
@@ -42607,6 +43027,14 @@ export interface validateVerificationTokenPayloadGenqlSelection{
     
 
 
+    const updateSavedFilterPayload_possibleTypes: string[] = ['updateSavedFilterPayload']
+    export const isupdateSavedFilterPayload = (obj?: { __typename?: any } | null): obj is updateSavedFilterPayload => {
+      if (!obj?.__typename) throw new Error('__typename is missing in "isupdateSavedFilterPayload"')
+      return updateSavedFilterPayload_possibleTypes.includes(obj.__typename)
+    }
+    
+
+
     const updateSmartPhrasePayload_possibleTypes: string[] = ['updateSmartPhrasePayload']
     export const isupdateSmartPhrasePayload = (obj?: { __typename?: any } | null): obj is updateSmartPhrasePayload => {
       if (!obj?.__typename) throw new Error('__typename is missing in "isupdateSmartPhrasePayload"')
@@ -42765,6 +43193,14 @@ export const enumApiKeyOrderKeys = {
    NAME_DESC: 'NAME_DESC' as const
 }
 
+export const enumAppliedTagOrderKeys = {
+   CREATED_AT_ASC: 'CREATED_AT_ASC' as const,
+   CREATED_AT_DESC: 'CREATED_AT_DESC' as const,
+   UPDATED_AT_ASC: 'UPDATED_AT_ASC' as const,
+   UPDATED_AT_DESC: 'UPDATED_AT_DESC' as const,
+   UNSORTED: 'UNSORTED' as const
+}
+
 export const enumAppointmentOrderKeys = {
    DATE_ASC: 'DATE_ASC' as const,
    DATE_DESC: 'DATE_DESC' as const,
@@ -42831,7 +43267,9 @@ export const enumCms1500OrderKeys = {
    PATIENT_LAST_NAME_ASC: 'PATIENT_LAST_NAME_ASC' as const,
    PATIENT_LAST_NAME_DESC: 'PATIENT_LAST_NAME_DESC' as const,
    SERVICE_DATE_ASC: 'SERVICE_DATE_ASC' as const,
-   SERVICE_DATE_DESC: 'SERVICE_DATE_DESC' as const
+   SERVICE_DATE_DESC: 'SERVICE_DATE_DESC' as const,
+   UPDATED_AT_ASC: 'UPDATED_AT_ASC' as const,
+   UPDATED_AT_DESC: 'UPDATED_AT_DESC' as const
 }
 
 export const enumConversationMembershipOrderKeys = {
@@ -42999,6 +43437,11 @@ export const enumMfaType = {
    EMAIL: 'EMAIL' as const
 }
 
+export const enumMonographFormat = {
+   HTML: 'HTML' as const,
+   XML: 'XML' as const
+}
+
 export const enumNoteOrderKeys = {
    CREATED_AT_ASC: 'CREATED_AT_ASC' as const,
    CREATED_AT_DESC: 'CREATED_AT_DESC' as const
@@ -43052,6 +43495,11 @@ export const enumOrganizationMembershipOrderKeys = {
    TYPE_ASC: 'TYPE_ASC' as const,
    TYPE_DESC: 'TYPE_DESC' as const,
    POSITION_ASC: 'POSITION_ASC' as const
+}
+
+export const enumOrganizationMembershipRole = {
+   STANDARD: 'STANDARD' as const,
+   SUPPORT: 'SUPPORT' as const
 }
 
 export const enumProductOrderKeys = {
@@ -43198,7 +43646,9 @@ export const enumTaskOrderKeys = {
    CLIENT_NAME_DESC: 'CLIENT_NAME_DESC' as const,
    CLIENT_NAME_ASC: 'CLIENT_NAME_ASC' as const,
    COMPLETED_AT_ASC: 'COMPLETED_AT_ASC' as const,
-   COMPLETED_AT_DESC: 'COMPLETED_AT_DESC' as const
+   COMPLETED_AT_DESC: 'COMPLETED_AT_DESC' as const,
+   UPDATED_AT_ASC: 'UPDATED_AT_ASC' as const,
+   UPDATED_AT_DESC: 'UPDATED_AT_DESC' as const
 }
 
 export const enumTransferOrderKeys = {
