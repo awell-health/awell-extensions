@@ -170,9 +170,9 @@ export type Affiliate = {
 /** An allergy/sensitivity/preference for a client */
 export type AllergySensitivity = {
   __typename?: 'AllergySensitivity';
-  /** Enum field. Options: allergy, sensitivity, preference */
+  /** Enum field. Options: allergy, sensitivity, preference, intolerance, ccda */
   category: Scalars['String'];
-  /** Type of allergy or like/dislike for preference */
+  /** Type of allergy or like/dislike for preference. Options: food, drug, environmental, pet, latex, like, dislike */
   category_type?: Maybe<Scalars['String']>;
   /** Date/Time created */
   created_at: Scalars['String'];
@@ -185,6 +185,8 @@ export type AllergySensitivity = {
    * @deprecated Use status instead
    */
   is_current?: Maybe<Scalars['Boolean']>;
+  /** If the allergy is synchronized with an external system (e.g., an E-Rx system) */
+  mirrored: Scalars['Boolean'];
   /** The name of the allergy/sensitivity/preference */
   name?: Maybe<Scalars['String']>;
   /** The date of onset */
@@ -195,7 +197,7 @@ export type AllergySensitivity = {
   reaction_type?: Maybe<Scalars['String']>;
   /** When true, this object must be consolidated as part of a CCDA Ingest */
   requires_consolidation?: Maybe<Scalars['Boolean']>;
-  /** The severity of the allergy */
+  /** The severity of the allergy. Options: mild, moderate, severe, unknown */
   severity?: Maybe<Scalars['String']>;
   /** The allergy's current status. Options are [active, inactive, resolved] */
   status?: Maybe<Scalars['String']>;
@@ -291,6 +293,20 @@ export type AppliedTag = {
   user_id?: Maybe<Scalars['String']>;
 };
 
+/** AppliedTag sorting enum */
+export enum AppliedTagOrderKeys {
+  /** Sort by created at in ascending order */
+  CreatedAtAsc = 'CREATED_AT_ASC',
+  /** Sort by created at in descending order */
+  CreatedAtDesc = 'CREATED_AT_DESC',
+  /** Do not sort records */
+  Unsorted = 'UNSORTED',
+  /** Sort by updated at in ascending order */
+  UpdatedAtAsc = 'UPDATED_AT_ASC',
+  /** Sort by updated at in descending order */
+  UpdatedAtDesc = 'UPDATED_AT_DESC'
+}
+
 /** An appointment object containing information about the appointment, including the attendees, date, location, and more. */
 export type Appointment = {
   __typename?: 'Appointment';
@@ -342,6 +358,8 @@ export type Appointment = {
   conversation_id?: Maybe<Scalars['ID']>;
   /** The date and time that the appointment was created */
   created_at: Scalars['String'];
+  /** True if a credit was used for this appointment */
+  credit_was_used?: Maybe<Scalars['Boolean']>;
   /** The position of the appointment in the recurring series */
   current_position_in_recurring_series?: Maybe<Scalars['Int']>;
   /** Pagination cursor */
@@ -382,6 +400,8 @@ export type Appointment = {
   last_client_conversation_id?: Maybe<Scalars['ID']>;
   /** The ID of the provider who last updated the appointment record, if available */
   last_updated_by_id?: Maybe<Scalars['ID']>;
+  /** The Late Cancellation Fee (in cents) for this appointment */
+  late_cancellation_fee?: Maybe<Scalars['Int']>;
   /** The length of the appointment (in minutes) */
   length?: Maybe<Scalars['Int']>;
   /** The plaintext location of the appointment (only used for in-person appointments) */
@@ -396,6 +416,8 @@ export type Appointment = {
   minimum_advance_cancel_time?: Maybe<Scalars['Int']>;
   /** Minimum time (in minutes) before the appointment when client can still reschedule it */
   minimum_advance_reschedule_time?: Maybe<Scalars['Int']>;
+  /** The No Show Fee (in cents) for this appointment */
+  no_show_fee?: Maybe<Scalars['Int']>;
   /** Quick notes on the appointment (only visisble to providers) */
   notes?: Maybe<Scalars['String']>;
   /** The id of the provider */
@@ -797,8 +819,8 @@ export type AppointmentSetting = {
   insurance_eligibility_integration?: Maybe<Scalars['Boolean']>;
   /** Whether or not to send invoice to client without a valid payment card/method */
   invoice_clients_without_payment_method?: Maybe<Scalars['Boolean']>;
-  /** The fee to use for appointments marked as late cancellation */
-  late_cancellation_fee?: Maybe<Scalars['String']>;
+  /** The fee (in cents) to use for appointments marked as late cancellation */
+  late_cancellation_fee?: Maybe<Scalars['Int']>;
   /** The maximum number of days in advance a client can book */
   max_days_in_future?: Maybe<Scalars['String']>;
   /** Maximum time a client must wait before being able to reschedule a past appointment */
@@ -813,8 +835,8 @@ export type AppointmentSetting = {
   minimum_days_in_advance?: Maybe<Scalars['String']>;
   /** Minimum time a client must wait before being able to reschedule a past appointment */
   minimum_past_reschedule_time?: Maybe<Scalars['Int']>;
-  /** The fee to use for appointments marked as no show */
-  no_show_fee?: Maybe<Scalars['String']>;
+  /** The fee (in cents) to use for appointments marked as no show */
+  no_show_fee?: Maybe<Scalars['Int']>;
   /**
    * Either "even" or "hour" to restrict booking to even hours or half hours.
    * @deprecated Use booking_interval_restriction instead
@@ -916,6 +938,8 @@ export type AppointmentSetting = {
   times_by_location?: Maybe<Scalars['Boolean']>;
   /** The last date and time that the appointment setting was updated */
   updated_at?: Maybe<Scalars['String']>;
+  /** If true, cpt units and fees can be associated with appointment types */
+  use_appointment_type_cpt_units_and_fees?: Maybe<Scalars['Boolean']>;
   /** Whether or not to use the client credit system */
   use_client_credit_system?: Maybe<Scalars['Boolean']>;
   /** If true, you can see where each client came from */
@@ -937,7 +961,7 @@ export type AppointmentSettingInputs = {
   /** The ID of the appointment type. */
   appointment_type_id?: InputMaybe<Scalars['Int']>;
   /** The base calendar interval for appointments. */
-  base_calendar_interval?: InputMaybe<Scalars['Int']>;
+  base_calendar_interval?: InputMaybe<Scalars['String']>;
   /** The text to display on the calendar. */
   calendar_text?: InputMaybe<Scalars['String']>;
   /** Specifies whether charge receipts are disabled. */
@@ -1020,6 +1044,8 @@ export type AppointmentType = {
   bookable_without_group: Scalars['Boolean'];
   /** Checks to see if the client call to provider */
   client_call_provider?: Maybe<Scalars['Boolean']>;
+  /** A name to use in the client scheduling widget instead of the defalt name field. Falls back to name if not set. */
+  client_display_name?: Maybe<Scalars['String']>;
   /** The status of whether the client can self-book this type of appointment */
   clients_can_book: Scalars['Boolean'];
   /** Checks to see if the client has enough credit to book */
@@ -1054,6 +1080,8 @@ export type AppointmentType = {
   is_waitlist_enabled: Scalars['Boolean'];
   /** The length of the appointment type (in minutes) */
   length?: Maybe<Scalars['Int']>;
+  /** A serialized JSON string of metadata. Maximum character limit of 128,000. Only accessible by staff and providers */
+  metadata?: Maybe<Scalars['String']>;
   /** the name of the appointment type */
   name?: Maybe<Scalars['String']>;
   /** A custom message to display if there are no available slots on a given day for an appointment type. */
@@ -1212,6 +1240,8 @@ export type AppointmentTypeAppointmentSettingInput = {
 export type AppointmentTypeCptCode = {
   /** The ID of the CPT code */
   cpt_code_id?: InputMaybe<Scalars['String']>;
+  /** Fee (in cents) per unit */
+  fee_per_unit?: InputMaybe<Scalars['Int']>;
   /** The number of units for the CPT code */
   units?: InputMaybe<Scalars['String']>;
 };
@@ -1223,6 +1253,8 @@ export type AppointmentTypeCptCodeType = {
   appointment_type_id: Scalars['ID'];
   /** CPT Code ID */
   cpt_code_id: Scalars['ID'];
+  /** Fee (in cents) per unit */
+  fee_per_unit?: Maybe<Scalars['Int']>;
   /** The unique identifier of the object */
   id: Scalars['ID'];
   /** Units */
@@ -1332,6 +1364,19 @@ export type AutoTaskGenerator = {
   user_id?: Maybe<Scalars['String']>;
   /** The id of the user */
   user_id_for_task?: Maybe<Scalars['String']>;
+};
+
+/** Automated Insurance Billing Setting Type */
+export type AutomatedInsuranceBillingSetting = {
+  __typename?: 'AutomatedInsuranceBillingSetting';
+  /** When true, CMS1500s will be created automatically */
+  auto_create_cms1500s?: Maybe<Scalars['Boolean']>;
+  /** When true, CMS1500s will be submitted automatically */
+  auto_submit_cms1500s?: Maybe<Scalars['Boolean']>;
+  /** The unique identifier of the setting */
+  id: Scalars['ID'];
+  /** When true, CPT code and units will be linked to appointment types */
+  use_cpt_codes_units_and_fees_with_appointment_types?: Maybe<Scalars['Boolean']>;
 };
 
 /** The autoscored section for a filled form */
@@ -2289,6 +2334,8 @@ export type CheckoutFormAnswerInput = {
   id?: InputMaybe<Scalars['ID']>;
   /** The label for the answer */
   label?: InputMaybe<Scalars['String']>;
+  /** The mod_type (e.g question type) that is being answered. */
+  mod_type?: InputMaybe<Scalars['String']>;
   /** The ID of the user who created the answer */
   user_id?: InputMaybe<Scalars['String']>;
   /** The value to filter on */
@@ -2585,6 +2632,8 @@ export type Cms1500 = {
   tend_reserved?: Maybe<Scalars['String']>;
   /** Total amount the claim was billed for */
   total_charge?: Maybe<Scalars['String']>;
+  /** The last date and time that the CMS1500 was updated */
+  updated_at?: Maybe<Scalars['ISO8601DateTime']>;
   /** True if the claim reimbursement info was updated via SFTP */
   updated_by_sftp?: Maybe<Scalars['Boolean']>;
   /** When true, uses the individual npi in all npi fields */
@@ -2602,7 +2651,9 @@ export enum Cms1500OrderKeys {
   ServiceDateAsc = 'SERVICE_DATE_ASC',
   ServiceDateDesc = 'SERVICE_DATE_DESC',
   StatusAsc = 'STATUS_ASC',
-  StatusDesc = 'STATUS_DESC'
+  StatusDesc = 'STATUS_DESC',
+  UpdatedAtAsc = 'UPDATED_AT_ASC',
+  UpdatedAtDesc = 'UPDATED_AT_DESC'
 }
 
 /** A CMS1500 policy */
@@ -4018,6 +4069,8 @@ export type Document = {
   include_in_charting: Scalars['Boolean'];
   /** Notes on the document (not visible to the client) */
   internal_notes?: Maybe<Scalars['String']>;
+  /** A serialized JSON string of metadata. Maximum character limit of 128,000. Only accessible by staff and providers */
+  metadata?: Maybe<Scalars['String']>;
   /** Instances of the document being viewed/opened */
   opens?: Maybe<Array<DocumentViewing>>;
   /** Owner of this document */
@@ -4125,6 +4178,27 @@ export type Draft = {
   /** The unique identifier of the draft */
   id: Scalars['ID'];
 };
+
+/** Allergen information */
+export type DrugAllergenType = {
+  __typename?: 'DrugAllergenType';
+  /** The brand name of the allergen */
+  brand_name: Scalars['String'];
+  /** The unique identifier of the allergen */
+  id: Scalars['ID'];
+  /** The name of the allergen */
+  name: Scalars['String'];
+  /** The type of allergen */
+  type: DrugAllergenTypeEnum;
+};
+
+/** DrugAllergen class enum */
+export enum DrugAllergenTypeEnum {
+  /** A class of allergens */
+  Class = 'CLASS',
+  /** A screenable ingredient */
+  Ingredient = 'INGREDIENT'
+}
 
 /** Autogenerated input type of EmbedForm */
 export type EmbedFormInput = {
@@ -4721,6 +4795,8 @@ export type Folder = {
   user_groups: Array<UserGroup>;
   /** The users who have access to this folder */
   users: Array<User>;
+  /** The number of users who have access to this folder */
+  users_count: Scalars['Int'];
 };
 
 
@@ -4733,6 +4809,15 @@ export type FolderCreated_AtArgs = {
 /** A folder that contains documents and other folders */
 export type FolderFolder_PathArgs = {
   client_id?: InputMaybe<Scalars['String']>;
+};
+
+
+/** A folder that contains documents and other folders */
+export type FolderUsersArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  order_by?: InputMaybe<UserOrderKeys>;
+  page_size?: InputMaybe<Scalars['Int']>;
+  should_paginate?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** Folder sorting enum */
@@ -4825,6 +4910,8 @@ export type FormAnswer = {
   id: Scalars['ID'];
   /** The label of the question */
   label?: Maybe<Scalars['String']>;
+  /** The time of the last update */
+  updated_at?: Maybe<Scalars['ISO8601DateTime']>;
   /** The id of the user that the answered question is for */
   user_id?: Maybe<Scalars['String']>;
   /** The value to check the filter against */
@@ -4844,6 +4931,8 @@ export type FormAnswerGroup = {
   cms1500?: Maybe<Cms1500>;
   /** The date on which the filled form was saved */
   created_at: Scalars['String'];
+  /** The most recent generated summary. Null if no summary has been generated */
+  current_summary?: Maybe<GeneratedSummary>;
   /** Pagination cursor */
   cursor: Scalars['Cursor'];
   /** The form template that was filled out */
@@ -5102,6 +5191,17 @@ export type FunctionalStatus = {
   start_date?: Maybe<Scalars['String']>;
   /** The ID of the user who created the functional status */
   user_id: Scalars['ID'];
+};
+
+/** A generated summary for an associated Healthie object */
+export type GeneratedSummary = {
+  __typename?: 'GeneratedSummary';
+  /** The datetime the summary was generated */
+  created_at: Scalars['ISO8601DateTime'];
+  /** The unique identifier of the group */
+  id: Scalars['ID'];
+  /** A summary (most often new-line separated bullet points) of the associated object */
+  summary?: Maybe<Scalars['String']>;
 };
 
 /** Payload for a gift */
@@ -5813,6 +5913,8 @@ export type IndividualClientType = {
   join_time?: Maybe<Scalars['String']>;
   /** The datetime that the attendee left the appointment (comes from the related appointment inclusion) */
   leave_time?: Maybe<Scalars['String']>;
+  /** The time of the last update */
+  updated_at?: Maybe<Scalars['ISO8601DateTime']>;
   /** Associated patient */
   user?: Maybe<User>;
 };
@@ -6363,6 +6465,7 @@ export type MaskAccountPayload = {
   clientMutationId?: Maybe<Scalars['String']>;
   /** The list of errors occurred during the mutation */
   messages?: Maybe<Array<Maybe<FieldError>>>;
+  success?: Maybe<Success>;
   success_string?: Maybe<Scalars['String']>;
 };
 
@@ -6405,8 +6508,16 @@ export type MedicationOptionType = {
   dosages?: Maybe<Array<Scalars['String']>>;
   /** The unique identifier of the medication option */
   id: Scalars['ID'];
+  /** The monograph of the medication option */
+  monograph?: Maybe<Scalars['String']>;
   /** The name of the medication option */
   name: Scalars['String'];
+};
+
+
+/** Medication query result */
+export type MedicationOptionTypeMonographArgs = {
+  format?: InputMaybe<MonographFormat>;
 };
 
 /** Medication belonging to client */
@@ -6430,6 +6541,8 @@ export type MedicationType = {
   frequency?: Maybe<Scalars['String']>;
   /** The unique identifier of the medication */
   id: Scalars['ID'];
+  /** If the medication is synchronized with an external system (e.g., an E-Rx system) */
+  mirrored: Scalars['Boolean'];
   /** Name of medication */
   name?: Maybe<Scalars['String']>;
   /** When true, this object must be consolidated as part of a CCDA Ingest */
@@ -6485,6 +6598,14 @@ export type MetricGraphDataType = {
 export enum MfaType {
   Email = 'EMAIL',
   Sms = 'SMS'
+}
+
+/** The format of a monograph */
+export enum MonographFormat {
+  /** The monograph is in HTML format */
+  Html = 'HTML',
+  /** The monograph is in XML format */
+  Xml = 'XML'
 }
 
 /** Monthly billing items data */
@@ -6588,6 +6709,8 @@ export type Mutation = {
   createAppointmentTypeCptCode?: Maybe<CreateAppointmentTypeCptCodePayload>;
   /** Create auto task generator */
   createAutoTaskGenerator?: Maybe<CreateAutoTaskGeneratorPayload>;
+  /** create automated insurance billing setting */
+  createAutomatedInsuranceBillingSetting?: Maybe<CreateAutomatedInsuranceBillingSettingPayload>;
   /** Create availability */
   createAvailability?: Maybe<CreateAvailabilityPayload>;
   /** create billing item */
@@ -7029,8 +7152,6 @@ export type Mutation = {
   toggleBaa?: Maybe<ToggleBaaPayload>;
   /** Deactivate/activate a group/single Care Plan for a given user */
   toggleCarePlanStatusForSpecificUser?: Maybe<ToggleCarePlanStatusForSpecificUserPayload>;
-  /** Toggle Option to Enable Appointment Interval */
-  toggleEnableApptInterval?: Maybe<ToggleEnableApptIntervalPayload>;
   /** toggle paywall for a provider */
   togglePaywall?: Maybe<TogglePaywallPayload>;
   /** Toggle Reason for Appointment on Appointment Type of Provider */
@@ -7061,6 +7182,8 @@ export type Mutation = {
   updateAppointmentTypeCptCode?: Maybe<UpdateAppointmentTypeCptCodePayload>;
   /** Update auto task generator */
   updateAutoTaskGenerator?: Maybe<UpdateAutoTaskGeneratorPayload>;
+  /** update automated insurance billing setting */
+  updateAutomatedInsuranceBillingSetting?: Maybe<UpdateAutomatedInsuranceBillingSettingPayload>;
   /** Update a BillingItem */
   updateBillingItem?: Maybe<UpdateBillingItemPayload>;
   /** Update a Brand and return Brand */
@@ -7193,6 +7316,7 @@ export type Mutation = {
   updateOrganizationMember?: Maybe<UpdateOrganizationMemberPayload>;
   /** Update a OrganizationMembership */
   updateOrganizationMembership?: Maybe<UpdateOrganizationMembershipPayload>;
+  updateOrganizationUiConfiguration?: Maybe<UpdateUiConfigurationPayload>;
   /** update Permission Template */
   updatePermissionTemplate?: Maybe<UpdatePermissionTemplatePayload>;
   /** Update a policy */
@@ -7489,6 +7613,12 @@ export type MutationCreateAppointmentTypeCptCodeArgs = {
 /** The mutation root of this schema. See available mutations. */
 export type MutationCreateAutoTaskGeneratorArgs = {
   input?: InputMaybe<CreateAutoTaskGeneratorInput>;
+};
+
+
+/** The mutation root of this schema. See available mutations. */
+export type MutationCreateAutomatedInsuranceBillingSettingArgs = {
+  input?: InputMaybe<CreateAutomatedInsuranceBillingSettingInput>;
 };
 
 
@@ -8807,12 +8937,6 @@ export type MutationToggleCarePlanStatusForSpecificUserArgs = {
 
 
 /** The mutation root of this schema. See available mutations. */
-export type MutationToggleEnableApptIntervalArgs = {
-  input?: InputMaybe<ToggleEnableApptIntervalInput>;
-};
-
-
-/** The mutation root of this schema. See available mutations. */
 export type MutationTogglePaywallArgs = {
   input?: InputMaybe<TogglePaywallInput>;
 };
@@ -8899,6 +9023,12 @@ export type MutationUpdateAppointmentTypeCptCodeArgs = {
 /** The mutation root of this schema. See available mutations. */
 export type MutationUpdateAutoTaskGeneratorArgs = {
   input?: InputMaybe<UpdateAutoTaskGeneratorInput>;
+};
+
+
+/** The mutation root of this schema. See available mutations. */
+export type MutationUpdateAutomatedInsuranceBillingSettingArgs = {
+  input?: InputMaybe<UpdateAutomatedInsuranceBillingSettingInput>;
 };
 
 
@@ -9295,6 +9425,12 @@ export type MutationUpdateOrganizationMemberArgs = {
 /** The mutation root of this schema. See available mutations. */
 export type MutationUpdateOrganizationMembershipArgs = {
   input?: InputMaybe<UpdateOrganizationMembershipInput>;
+};
+
+
+/** The mutation root of this schema. See available mutations. */
+export type MutationUpdateOrganizationUiConfigurationArgs = {
+  input?: InputMaybe<UpdateUiConfigurationInput>;
 };
 
 
@@ -10433,6 +10569,7 @@ export type OrganizationActive_Care_Team_MembersArgs = {
   provider_ids?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   record_identifiers?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   state_licenses?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  tag_ids?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
 };
 
 
@@ -10777,6 +10914,14 @@ export enum OrganizationMembershipOrderKeys {
   TypeDesc = 'TYPE_DESC'
 }
 
+/** Roles that a user can have in an organization */
+export enum OrganizationMembershipRole {
+  /** The user is a standard member of the organization (includes providers) */
+  Standard = 'STANDARD',
+  /** The user is a support member of the organization */
+  Support = 'SUPPORT'
+}
+
 /** Alternative ID numbers for a provider */
 export type OtherIdNumber = {
   __typename?: 'OtherIdNumber';
@@ -10894,6 +11039,8 @@ export type PermissionTemplateType = {
   can_assign_tasks_to_all_org_members?: Maybe<Scalars['Boolean']>;
   /** If true, the user can be added to the care team members list for a client */
   can_be_care_team_member: Scalars['Boolean'];
+  /** If true, the current user can modify this permission template */
+  can_be_edited: Scalars['Boolean'];
   /** If true, the user can charge clients */
   can_charge_clients: Scalars['Boolean'];
   /** If true, user сan delete charting notes */
@@ -11341,7 +11488,10 @@ export type Prescription = {
   is_urgent?: Maybe<Scalars['Boolean']>;
   /** Date prescription was last refilled */
   last_fill_date?: Maybe<Scalars['String']>;
-  /** Monograph path entered by provider */
+  /**
+   * Monograph path entered by provider
+   * @deprecated Deprecated by vendor, use MedicationOptionType.monograph instead
+   */
   monograph_path?: Maybe<Scalars['String']>;
   /** The prescription's national drug code */
   ndc?: Maybe<Scalars['String']>;
@@ -11630,6 +11780,8 @@ export type Query = {
   appointmentsSummary?: Maybe<AppointmentSummaryData>;
   /** fetch auto task generators belonging to a specific user */
   autoTaskGenerators?: Maybe<Array<AutoTaskGenerator>>;
+  /** fetch the automated insurance billing setting */
+  automatedInsuranceBillingSetting?: Maybe<AutomatedInsuranceBillingSetting>;
   /** Fetch availabilities for range */
   availabilities?: Maybe<Array<Availability>>;
   /** number of availabilities */
@@ -11640,7 +11792,7 @@ export type Query = {
   availabilitySummaryJson?: Maybe<Scalars['String']>;
   /** Fetch available item types (for use in onboarding items) */
   availableItemTypes?: Maybe<Scalars['String']>;
-  /** Get open appointment times for a date range. Returns array of dates sorted in ascending order */
+  /** Get open appointment times for a date range. Returns array of dates sorted in ascending order (considered public) */
   availableSlotsForRange?: Maybe<Array<PotentialAppointmentSlot>>;
   /** Get the Cms1500 Policies object for a given claim and client */
   baseCms1500ForUser?: Maybe<Cms1500>;
@@ -11795,7 +11947,7 @@ export type Query = {
   customModuleForms?: Maybe<Array<CustomModuleForm>>;
   /** Fetch paginated count for provider custom module forms */
   customModuleFormsCount?: Maybe<Scalars['Int']>;
-  /** get open appointment times for a range */
+  /** get open appointment times for a range (considered public) */
   daysAvailableForRange?: Maybe<Array<Maybe<Scalars['String']>>>;
   /** fetch a document by id */
   document?: Maybe<Document>;
@@ -11813,6 +11965,10 @@ export type Query = {
   dosespot_ui_link?: Maybe<Scalars['String']>;
   /** draft by conversation_membership id */
   draft?: Maybe<Draft>;
+  /** Fetch an allergen by ID */
+  drugAllergen?: Maybe<DrugAllergenType>;
+  /** Search for allergens by name */
+  drugAllergens?: Maybe<Array<DrugAllergenType>>;
   /** Fetch a link from Fullscript to create a treatment plan for a given user */
   dynamicLink?: Maybe<Scalars['String']>;
   /** fetch embed steps based off of params */
@@ -11955,7 +12111,8 @@ export type Query = {
   meal_plan_options?: Maybe<Array<MealPlan>>;
   /** Fetch a medication by ID */
   medication?: Maybe<MedicationType>;
-  /** Fetch an array of medications options queried from Dosespot API. Considered Public */
+  medication_option?: Maybe<MedicationOptionType>;
+  /** Fetch an array of medications options. Considered Public */
   medication_options?: Maybe<Array<MedicationOptionType>>;
   /** Fetch an array of medications for a given patient */
   medications?: Maybe<Array<MedicationType>>;
@@ -11978,7 +12135,7 @@ export type Query = {
   newOrganizationSupportPriceString?: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Fetch closest appointment */
   nextAppointment?: Maybe<Appointment>;
-  /** get open appointment times for a range */
+  /** get open appointment times for a range (considered public) */
   nextAvailableSlot?: Maybe<Scalars['String']>;
   /** fetch a courseitem by id (considered public) */
   nextCourseItem?: Maybe<CourseItem>;
@@ -12141,6 +12298,8 @@ export type Query = {
   sentDirectMessages?: Maybe<Array<SentDirectMessage>>;
   /** Fetch number of Sent Direct Meessages */
   sentDirectMessagesCount?: Maybe<Scalars['Int']>;
+  /** Fetch sent Fax by ID */
+  sentFax?: Maybe<SentFax>;
   /** Fetch paginated Sent Faxes collection */
   sentFaxes?: Maybe<Array<SentFax>>;
   /** Number of Sent Faxes */
@@ -12159,6 +12318,8 @@ export type Query = {
   shareNotePreview?: Maybe<Scalars['String']>;
   /** Should current user see scheduled chat tab */
   showScheduledTab?: Maybe<Scalars['Boolean']>;
+  /** Get the signed stream name for a given stream name */
+  signedStreamName?: Maybe<Scalars['String']>;
   /** Fetch user smart phrases */
   smartPhrases?: Maybe<Array<SmartPhrase>>;
   /** Get size of user smart phrases that matches the keyword */
@@ -12312,7 +12473,10 @@ export type QueryAppliedTagArgs = {
 /** The query root of this schema. See available queries. */
 export type QueryAppliedTagsArgs = {
   id?: InputMaybe<Scalars['ID']>;
+  order_by?: InputMaybe<AppliedTagOrderKeys>;
   tag_id?: InputMaybe<Scalars['ID']>;
+  updated_after?: InputMaybe<Scalars['ISO8601DateTime']>;
+  updated_before?: InputMaybe<Scalars['ISO8601DateTime']>;
 };
 
 
@@ -12538,6 +12702,12 @@ export type QueryAutoTaskGeneratorsArgs = {
 
 
 /** The query root of this schema. See available queries. */
+export type QueryAutomatedInsuranceBillingSettingArgs = {
+  user_id?: InputMaybe<Scalars['ID']>;
+};
+
+
+/** The query root of this schema. See available queries. */
 export type QueryAvailabilitiesArgs = {
   appointment_location_id?: InputMaybe<Scalars['String']>;
   appointment_type_id?: InputMaybe<Scalars['String']>;
@@ -12602,12 +12772,12 @@ export type QueryAvailableSlotsForRangeArgs = {
   licensed_in_state?: InputMaybe<Scalars['String']>;
   make_unique?: InputMaybe<Scalars['Boolean']>;
   org_level?: InputMaybe<Scalars['Boolean']>;
-  other_provider_ids?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   outside_factors?: InputMaybe<Scalars['Boolean']>;
   provider_id?: InputMaybe<Scalars['String']>;
   provider_ids?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   start_date?: InputMaybe<Scalars['String']>;
   start_date_boundary?: InputMaybe<Scalars['String']>;
+  tag_ids?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   timezone?: InputMaybe<Scalars['String']>;
 };
 
@@ -13170,12 +13340,12 @@ export type QueryDaysAvailableForRangeArgs = {
   length?: InputMaybe<Scalars['String']>;
   licensed_in_state?: InputMaybe<Scalars['String']>;
   org_level?: InputMaybe<Scalars['Boolean']>;
-  other_provider_ids?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   outside_factors?: InputMaybe<Scalars['Boolean']>;
   provider_id?: InputMaybe<Scalars['String']>;
   provider_ids?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   start_date?: InputMaybe<Scalars['String']>;
   start_date_boundary?: InputMaybe<Scalars['String']>;
+  tag_ids?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   timezone?: InputMaybe<Scalars['String']>;
 };
 
@@ -13252,6 +13422,18 @@ export type QueryDosespot_Ui_LinkArgs = {
 /** The query root of this schema. See available queries. */
 export type QueryDraftArgs = {
   conversation_membership_id?: InputMaybe<Scalars['ID']>;
+};
+
+
+/** The query root of this schema. See available queries. */
+export type QueryDrugAllergenArgs = {
+  id: Scalars['ID'];
+};
+
+
+/** The query root of this schema. See available queries. */
+export type QueryDrugAllergensArgs = {
+  keywords: Scalars['String'];
 };
 
 
@@ -13415,6 +13597,8 @@ export type QueryFormAnswerGroupsArgs = {
   page_size?: InputMaybe<Scalars['Int']>;
   should_paginate?: InputMaybe<Scalars['Boolean']>;
   signed_status?: InputMaybe<Scalars['Boolean']>;
+  updated_after?: InputMaybe<Scalars['ISO8601DateTime']>;
+  updated_before?: InputMaybe<Scalars['ISO8601DateTime']>;
   user_id?: InputMaybe<Scalars['String']>;
 };
 
@@ -13428,6 +13612,8 @@ export type QueryFormAnswerGroupsCountArgs = {
   locked_status?: InputMaybe<Scalars['Boolean']>;
   name?: InputMaybe<Scalars['String']>;
   signed_status?: InputMaybe<Scalars['Boolean']>;
+  updated_after?: InputMaybe<Scalars['ISO8601DateTime']>;
+  updated_before?: InputMaybe<Scalars['ISO8601DateTime']>;
   user_id?: InputMaybe<Scalars['String']>;
 };
 
@@ -13872,6 +14058,12 @@ export type QueryMedicationArgs = {
 
 
 /** The query root of this schema. See available queries. */
+export type QueryMedication_OptionArgs = {
+  id: Scalars['ID'];
+};
+
+
+/** The query root of this schema. See available queries. */
 export type QueryMedication_OptionsArgs = {
   keywords?: InputMaybe<Scalars['String']>;
 };
@@ -13967,11 +14159,11 @@ export type QueryNextAvailableSlotArgs = {
   length?: InputMaybe<Scalars['String']>;
   licensed_in_state?: InputMaybe<Scalars['String']>;
   org_level?: InputMaybe<Scalars['Boolean']>;
-  other_provider_ids?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   outside_factors?: InputMaybe<Scalars['Boolean']>;
   provider_id?: InputMaybe<Scalars['String']>;
   provider_ids?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   start_date_boundary?: InputMaybe<Scalars['String']>;
+  tag_ids?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   timezone?: InputMaybe<Scalars['String']>;
 };
 
@@ -14564,6 +14756,12 @@ export type QuerySentDirectMessagesCountArgs = {
 
 
 /** The query root of this schema. See available queries. */
+export type QuerySentFaxArgs = {
+  id: Scalars['ID'];
+};
+
+
+/** The query root of this schema. See available queries. */
 export type QuerySentFaxesArgs = {
   after?: InputMaybe<Scalars['Cursor']>;
   keywords?: InputMaybe<Scalars['String']>;
@@ -14633,6 +14831,13 @@ export type QueryShareNotePreviewArgs = {
   form_answer_group_id?: InputMaybe<Scalars['String']>;
   letterhead?: InputMaybe<Scalars['Boolean']>;
   user_id?: InputMaybe<Scalars['String']>;
+};
+
+
+/** The query root of this schema. See available queries. */
+export type QuerySignedStreamNameArgs = {
+  conversation_id?: InputMaybe<Scalars['ID']>;
+  type: SignedStreamName;
 };
 
 
@@ -15235,6 +15440,8 @@ export type Referral = {
   created_at: Scalars['String'];
   /** The unique identifier of the referral */
   id: Scalars['ID'];
+  /** A serialized JSON string of metadata. Maximum character limit of 128,000. */
+  metadata?: Maybe<Scalars['String']>;
   /** The reason the client was referred to the physician */
   referral_reason?: Maybe<Scalars['String']>;
   /** The referring physician */
@@ -15387,6 +15594,8 @@ export type ReferringPhysician = {
   location?: Maybe<Location>;
   /** location id */
   location_id?: Maybe<Scalars['ID']>;
+  /** A serialized JSON string of metadata. Maximum character limit of 128,000. */
+  metadata?: Maybe<Scalars['String']>;
   /** Dietitian's notes */
   notes?: Maybe<Scalars['String']>;
   /** npi of physician */
@@ -16039,6 +16248,14 @@ export type ShapaConnection = {
   last_sync_date?: Maybe<Scalars['String']>;
 };
 
+/** The type of offered signed stream names */
+export enum SignedStreamName {
+  /** For a user's conversation membership updates */
+  ConversationMemberships = 'CONVERSATION_MEMBERSHIPS',
+  /** For new/updated notes in a conversation */
+  Notes = 'NOTES'
+}
+
 /** A smart phrase object */
 export type SmartPhrase = {
   __typename?: 'SmartPhrase';
@@ -16102,6 +16319,8 @@ export type Specialty = {
 /** Information on an SsoConnection */
 export type SsoConnection = {
   __typename?: 'SsoConnection';
+  /** Whether or not to allow Just-In-Time provisioning */
+  allow_jit_provisioning?: Maybe<Scalars['Boolean']>;
   /** The type of user this SSO is for (either patient or staff) */
   for_user_type?: Maybe<Scalars['String']>;
   /** The unique identifier of the SSO connection */
@@ -16510,6 +16729,13 @@ export type SubscriptionInstance = {
   user_id?: Maybe<Scalars['String']>;
 };
 
+/** Base class for types */
+export type Success = {
+  __typename?: 'Success';
+  human_id?: Maybe<Scalars['String']>;
+  success_string?: Maybe<Scalars['String']>;
+};
+
 /** SuperBill */
 export type SuperBill = {
   __typename?: 'SuperBill';
@@ -16722,6 +16948,8 @@ export type Task = {
   smart: Scalars['Boolean'];
   /** Get category of smart task */
   smart_category?: Maybe<Scalars['String']>;
+  /** The last date and time that the task was updated */
+  updated_at?: Maybe<Scalars['ISO8601DateTime']>;
   /** The user assigned to complete this task */
   user?: Maybe<User>;
   /** User ID of the user assigned to this task */
@@ -16747,7 +16975,9 @@ export enum TaskOrderKeys {
   PriorityAsc = 'PRIORITY_ASC',
   PriorityDesc = 'PRIORITY_DESC',
   TaskAsc = 'TASK_ASC',
-  TaskDesc = 'TASK_DESC'
+  TaskDesc = 'TASK_DESC',
+  UpdatedAtAsc = 'UPDATED_AT_ASC',
+  UpdatedAtDesc = 'UPDATED_AT_DESC'
 }
 
 /** Payload for a task reminder */
@@ -16834,27 +17064,6 @@ export type ToggleBaaInput = {
 /** Autogenerated return type of ToggleBaa. */
 export type ToggleBaaPayload = {
   __typename?: 'ToggleBaaPayload';
-  /**
-   * DO NOT USE
-   * @deprecated DO NOT USE
-   */
-  clientMutationId?: Maybe<Scalars['String']>;
-  /** The list of errors occurred during the mutation */
-  messages?: Maybe<Array<Maybe<FieldError>>>;
-  success_string?: Maybe<Scalars['String']>;
-};
-
-/** Autogenerated input type of ToggleEnableApptInterval */
-export type ToggleEnableApptIntervalInput = {
-  /** Enable/Disable Toggle */
-  enable: Scalars['String'];
-  /** The ID of the user */
-  id: Scalars['ID'];
-};
-
-/** Autogenerated return type of ToggleEnableApptInterval. */
-export type ToggleEnableApptIntervalPayload = {
-  __typename?: 'ToggleEnableApptIntervalPayload';
   /**
    * DO NOT USE
    * @deprecated DO NOT USE
@@ -17117,6 +17326,25 @@ export type UpdatePayload = {
   success_string?: Maybe<Scalars['String']>;
 };
 
+/** Autogenerated input type of UpdateUiConfiguration */
+export type UpdateUiConfigurationInput = {
+  role: OrganizationMembershipRole;
+  ui_configuration: Scalars['JSON'];
+};
+
+/** Autogenerated return type of UpdateUiConfiguration. */
+export type UpdateUiConfigurationPayload = {
+  __typename?: 'UpdateUiConfigurationPayload';
+  /**
+   * DO NOT USE
+   * @deprecated DO NOT USE
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The list of errors occurred during the mutation */
+  messages?: Maybe<Array<Maybe<FieldError>>>;
+  organization?: Maybe<Organization>;
+};
+
 /** Autogenerated input type of UpdateUserEmail */
 export type UpdateUserEmailInput = {
   current_email: Scalars['String'];
@@ -17357,6 +17585,8 @@ export type User = {
   created_at?: Maybe<Scalars['String']>;
   /** The credit balance of the user */
   credit_balance?: Maybe<Scalars['String']>;
+  /** The most recent generated summary. Null if no summary has been generated */
+  current_summary?: Maybe<GeneratedSummary>;
   /** Pagination cursor */
   cursor: Scalars['Cursor'];
   /** All custom custom emails associated with this user. */
@@ -17365,8 +17595,8 @@ export type User = {
   custom_metrics: Array<CustomMetric>;
   /** The default currency for the user */
   default_currency?: Maybe<Scalars['String']>;
-  /** When set for a client, the Provider Dosespot iFrame will launch into this Clinic When nil, the Dosespot iframe will launch into the provider's default clinic). This will error unless the provider is connected to that clinic in Dosespot. Only used for client objects. */
-  default_dosespot_clinic_id?: Maybe<Scalars['String']>;
+  /** When set for a client, the provider's Dosespot iFrame will launch into this clinic. When null, the Dosespot iframe will launch into the provider's default clinic. This will error unless the provider is connected to that clinic in Dosespot. Only used for patients. */
+  default_dosespot_clinic_id?: Maybe<Scalars['ID']>;
   /** Default external videochat URL for scheduling with this user */
   default_external_video_url?: Maybe<Scalars['String']>;
   /** The id of the users default onboarding flow */
@@ -17407,6 +17637,8 @@ export type User = {
   doc_share_id?: Maybe<Scalars['String']>;
   /** Number of notifications from Dosespot (e-prescriptions) */
   dosespot_notification_count?: Maybe<Scalars['Int']>;
+  /** Dosespot assigned ID for this patient. nil if the patient is not connected to Dosespot */
+  dosespot_patient_id?: Maybe<Scalars['String']>;
   /** The email of this user */
   email?: Maybe<Scalars['String']>;
   /** The erx dosespot role */
@@ -17687,7 +17919,7 @@ export type User = {
   locations?: Maybe<Array<Location>>;
   /** Fetch count of medications for a given patient */
   medications_count?: Maybe<Scalars['Int']>;
-  /** A serialized JSON string of metadata. Maximum character limit of 10,000. */
+  /** A serialized JSON string of metadata. Maximum character limit of 128,000. */
   metadata?: Maybe<Scalars['String']>;
   /** The number of metric entries the user has */
   metric_entries_count?: Maybe<Scalars['String']>;
@@ -19174,6 +19406,8 @@ export type CreateAllergySensitivityInput = {
   category_type?: InputMaybe<Scalars['String']>;
   custom_name?: InputMaybe<Scalars['String']>;
   custom_reaction?: InputMaybe<Scalars['String']>;
+  /** The drug allergen id to associate with the allergy sensitivity */
+  drug_allergen_id?: InputMaybe<Scalars['ID']>;
   id?: InputMaybe<Scalars['ID']>;
   name?: InputMaybe<Scalars['String']>;
   /** The date of onset */
@@ -19270,6 +19504,7 @@ export type CreateAppointmentInput = {
   appointment_location_id?: InputMaybe<Scalars['String']>;
   appointment_type_id?: InputMaybe<Scalars['String']>;
   attendee_ids?: InputMaybe<Scalars['String']>;
+  /** The type of appointment (video, in person, phone call, etc.) */
   contact_type?: InputMaybe<Scalars['String']>;
   /** Cpt code associated with this appointment */
   cpt_code_id?: InputMaybe<Scalars['ID']>;
@@ -19350,7 +19585,8 @@ export type CreateAppointmentSettingInput = {
   hide_link?: InputMaybe<Scalars['Boolean']>;
   insurance_eligibility_integration?: InputMaybe<Scalars['Boolean']>;
   invoice_clients_without_payment_method?: InputMaybe<Scalars['Boolean']>;
-  late_cancellation_fee?: InputMaybe<Scalars['String']>;
+  /** The late cancellation fee in cents */
+  late_cancellation_fee?: InputMaybe<Scalars['Int']>;
   max_days_in_future?: InputMaybe<Scalars['String']>;
   /** Prevents the patient from canceling too close the appointment time. In minutes */
   minimum_advance_cancel_time?: InputMaybe<Scalars['Int']>;
@@ -19358,7 +19594,8 @@ export type CreateAppointmentSettingInput = {
   minimum_advance_reschedule_time?: InputMaybe<Scalars['Int']>;
   /** Prevents the patient from scheduling too close to the desired appointment time. In minutes */
   minimum_advance_schedule_time?: InputMaybe<Scalars['Int']>;
-  no_show_fee?: InputMaybe<Scalars['String']>;
+  /** The no show fee in cents */
+  no_show_fee?: InputMaybe<Scalars['Int']>;
   prevent_client_booking?: InputMaybe<Scalars['Boolean']>;
   prevent_no_credit_booking?: InputMaybe<Scalars['Boolean']>;
   reply_to_provider?: InputMaybe<Scalars['Boolean']>;
@@ -19395,6 +19632,7 @@ export type CreateAppointmentSettingInput = {
   times_by_contact_type?: InputMaybe<Scalars['Boolean']>;
   /** Allows times to be grouped by location. NOTE: changing this value will clear all prior availability */
   times_by_location?: InputMaybe<Scalars['Boolean']>;
+  use_appointment_type_cpt_units_and_fees?: InputMaybe<Scalars['Boolean']>;
   use_client_credit_system?: InputMaybe<Scalars['Boolean']>;
   use_client_sources?: InputMaybe<Scalars['Boolean']>;
   use_zoom_waiting_room?: InputMaybe<Scalars['Boolean']>;
@@ -19419,6 +19657,7 @@ export type CreateAppointmentSettingPayload = {
 export type CreateAppointmentTypeCptCodeInput = {
   appointment_type_id?: InputMaybe<Scalars['ID']>;
   cpt_code_id?: InputMaybe<Scalars['ID']>;
+  fee_per_unit?: InputMaybe<Scalars['Int']>;
   units?: InputMaybe<Scalars['String']>;
 };
 
@@ -19442,6 +19681,8 @@ export type CreateAppointmentTypeInput = {
   bookable_by_groups?: InputMaybe<Scalars['Boolean']>;
   bookable_group_ids?: InputMaybe<Scalars['String']>;
   bookable_without_group?: InputMaybe<Scalars['Boolean']>;
+  /** When set, will be used as the appointment type name shown to clients in the client booking widget UI. */
+  client_facing_display_name?: InputMaybe<Scalars['String']>;
   /** When false, clients will not have the ability to self-book this appointment */
   clients_can_book?: InputMaybe<Scalars['Boolean']>;
   contact_type_overrides?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
@@ -19455,6 +19696,8 @@ export type CreateAppointmentTypeInput = {
   is_waitlist_enabled?: InputMaybe<Scalars['Boolean']>;
   /** The length of the appointment type in minutes */
   length?: InputMaybe<Scalars['Int']>;
+  /** Metadata for an appointment type. Maximum character limit of 128,000. */
+  metadata?: InputMaybe<Scalars['String']>;
   /** The name of the appointment type */
   name?: InputMaybe<Scalars['String']>;
   pricing?: InputMaybe<Scalars['String']>;
@@ -19495,6 +19738,26 @@ export type CreateAutoTaskGeneratorInput = {
 export type CreateAutoTaskGeneratorPayload = {
   __typename?: 'createAutoTaskGeneratorPayload';
   auto_task_generator?: Maybe<AutoTaskGenerator>;
+  /**
+   * DO NOT USE
+   * @deprecated DO NOT USE
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The list of errors occurred during the mutation */
+  messages?: Maybe<Array<Maybe<FieldError>>>;
+};
+
+/** Autogenerated input type of createAutomatedInsuranceBillingSetting */
+export type CreateAutomatedInsuranceBillingSettingInput = {
+  auto_create_cms1500s?: InputMaybe<Scalars['Boolean']>;
+  auto_submit_cms1500s?: InputMaybe<Scalars['Boolean']>;
+  use_cpt_codes_units_and_fees_with_appointment_types?: InputMaybe<Scalars['Boolean']>;
+};
+
+/** Autogenerated return type of createAutomatedInsuranceBillingSetting. */
+export type CreateAutomatedInsuranceBillingSettingPayload = {
+  __typename?: 'createAutomatedInsuranceBillingSettingPayload';
+  automated_insurance_billing_setting?: Maybe<AutomatedInsuranceBillingSetting>;
   /**
    * DO NOT USE
    * @deprecated DO NOT USE
@@ -20106,6 +20369,8 @@ export type CreateDocumentInput = {
   generate_human_readable_ccda_for_rel_user_id?: InputMaybe<Scalars['Boolean']>;
   include_in_charting?: InputMaybe<Scalars['Boolean']>;
   is_photo_id?: InputMaybe<Scalars['Boolean']>;
+  /** Metadata for an document type. Maximum character limit of 128,000. */
+  metadata?: InputMaybe<Scalars['String']>;
   /** Optional. This is passed in when a document is uploaded via a Form Upload question module. Should be the User ID. Otherwise, nil. */
   on_form_for_user_id?: InputMaybe<Scalars['ID']>;
   org_level?: InputMaybe<Scalars['Boolean']>;
@@ -20953,6 +21218,8 @@ export type CreateMedicationInput = {
   custom_name?: InputMaybe<Scalars['String']>;
   directions?: InputMaybe<Scalars['String']>;
   dosage?: InputMaybe<Scalars['String']>;
+  /** The dosage option id to associate with the medication */
+  dosage_option_id?: InputMaybe<Scalars['ID']>;
   end_date?: InputMaybe<Scalars['String']>;
   frequency?: InputMaybe<Scalars['String']>;
   name?: InputMaybe<Scalars['String']>;
@@ -21591,6 +21858,8 @@ export type CreateRecommendationPayload = {
 
 /** Autogenerated input type of createReferral */
 export type CreateReferralInput = {
+  /** A serialized JSON string of metadata. Maximum character limit of 128,000. */
+  metadata?: InputMaybe<Scalars['String']>;
   referral_reason?: InputMaybe<Scalars['String']>;
   referring_physician_id?: InputMaybe<Scalars['ID']>;
   user_id?: InputMaybe<Scalars['ID']>;
@@ -21618,6 +21887,8 @@ export type CreateReferringPhysicianInput = {
   first_name?: InputMaybe<Scalars['String']>;
   last_name?: InputMaybe<Scalars['String']>;
   location?: InputMaybe<PhysicianLocationInput>;
+  /** A serialized JSON string of metadata. Maximum character limit of 128,000. */
+  metadata?: InputMaybe<Scalars['String']>;
   notes?: InputMaybe<Scalars['String']>;
   npi?: InputMaybe<Scalars['String']>;
   other_id?: InputMaybe<Scalars['String']>;
@@ -21646,6 +21917,7 @@ export type CreateReferringPhysicianPayload = {
 export type CreateRequestedFormInput = {
   custom_module_form_id?: InputMaybe<Scalars['ID']>;
   ends_on?: InputMaybe<Scalars['String']>;
+  /** The ID of the custom form OR the name of the generic form (e.g 'billing_info') */
   form?: InputMaybe<Scalars['String']>;
   frequency?: InputMaybe<Scalars['String']>;
   hour?: InputMaybe<Scalars['String']>;
@@ -22547,6 +22819,8 @@ export type DeleteDocumentPayload = {
 export type DeleteDosespotInput = {
   /** The ID of the dosespot object to delete */
   dosespot_object_id?: InputMaybe<Scalars['ID']>;
+  /** The ID of the dosespot user to delete */
+  dosespot_user_id?: InputMaybe<Scalars['ID']>;
 };
 
 /** Autogenerated return type of deleteDosespot. */
@@ -24351,10 +24625,14 @@ export type UpdateAppointmentInput = {
   id?: InputMaybe<Scalars['ID']>;
   is_blocker?: InputMaybe<Scalars['Boolean']>;
   is_zoom_chat?: InputMaybe<Scalars['Boolean']>;
+  /** The late cancellation fee in cents */
+  late_cancellation_fee?: InputMaybe<Scalars['Int']>;
   location?: InputMaybe<Scalars['String']>;
   max_attendees?: InputMaybe<Scalars['String']>;
   /** a serialized JSON string of metadata */
   metadata?: InputMaybe<Scalars['JSON']>;
+  /** The no show fee in cents */
+  no_show_fee?: InputMaybe<Scalars['Int']>;
   notes?: InputMaybe<Scalars['String']>;
   other_party_id?: InputMaybe<Scalars['String']>;
   pm_status?: InputMaybe<Scalars['String']>;
@@ -24424,7 +24702,8 @@ export type UpdateAppointmentSettingInput = {
   id?: InputMaybe<Scalars['ID']>;
   insurance_eligibility_integration?: InputMaybe<Scalars['Boolean']>;
   invoice_clients_without_payment_method?: InputMaybe<Scalars['Boolean']>;
-  late_cancellation_fee?: InputMaybe<Scalars['String']>;
+  /** The late cancellation fee in cents */
+  late_cancellation_fee?: InputMaybe<Scalars['Int']>;
   max_days_in_future?: InputMaybe<Scalars['String']>;
   /** Prevents the patient from canceling too close the appointment time. In minutes */
   minimum_advance_cancel_time?: InputMaybe<Scalars['Int']>;
@@ -24432,7 +24711,8 @@ export type UpdateAppointmentSettingInput = {
   minimum_advance_reschedule_time?: InputMaybe<Scalars['Int']>;
   /** Prevents the patient from scheduling too close to the desired appointment time. In minutes */
   minimum_advance_schedule_time?: InputMaybe<Scalars['Int']>;
-  no_show_fee?: InputMaybe<Scalars['String']>;
+  /** The no show fee in cents */
+  no_show_fee?: InputMaybe<Scalars['Int']>;
   prevent_client_booking?: InputMaybe<Scalars['Boolean']>;
   prevent_no_credit_booking?: InputMaybe<Scalars['Boolean']>;
   reply_to_provider?: InputMaybe<Scalars['Boolean']>;
@@ -24472,6 +24752,7 @@ export type UpdateAppointmentSettingInput = {
   times_by_contact_type?: InputMaybe<Scalars['Boolean']>;
   /** Allows times to be grouped by location. */
   times_by_location?: InputMaybe<Scalars['Boolean']>;
+  use_appointment_type_cpt_units_and_fees?: InputMaybe<Scalars['Boolean']>;
   use_client_credit_system?: InputMaybe<Scalars['Boolean']>;
   use_client_sources?: InputMaybe<Scalars['Boolean']>;
   use_zoom_waiting_room?: InputMaybe<Scalars['Boolean']>;
@@ -24496,6 +24777,7 @@ export type UpdateAppointmentSettingPayload = {
 export type UpdateAppointmentTypeCptCodeInput = {
   appointment_type_id?: InputMaybe<Scalars['ID']>;
   cpt_code_id?: InputMaybe<Scalars['ID']>;
+  fee_per_unit?: InputMaybe<Scalars['Int']>;
   id?: InputMaybe<Scalars['ID']>;
   units?: InputMaybe<Scalars['String']>;
 };
@@ -24521,6 +24803,8 @@ export type UpdateAppointmentTypeInput = {
   bookable_by_groups?: InputMaybe<Scalars['Boolean']>;
   bookable_group_ids?: InputMaybe<Scalars['String']>;
   bookable_without_group?: InputMaybe<Scalars['Boolean']>;
+  /** When set, will be used as the appointment type name shown to clients in the client booking widget UI. */
+  client_facing_display_name?: InputMaybe<Scalars['String']>;
   /** When false, clients will not have the ability to self-book this appointment */
   clients_can_book?: InputMaybe<Scalars['Boolean']>;
   contact_type_override_in_person?: InputMaybe<ContactTypeOverride>;
@@ -24541,6 +24825,8 @@ export type UpdateAppointmentTypeInput = {
   is_waitlist_enabled?: InputMaybe<Scalars['Boolean']>;
   /** The length of the appointment type in minutes */
   length?: InputMaybe<Scalars['Int']>;
+  /** Metadata for an appointment type. Maximum character limit of 128,000. */
+  metadata?: InputMaybe<Scalars['String']>;
   /** The name of the appointment type */
   name?: InputMaybe<Scalars['String']>;
   pricing?: InputMaybe<Scalars['String']>;
@@ -24583,6 +24869,27 @@ export type UpdateAutoTaskGeneratorInput = {
 export type UpdateAutoTaskGeneratorPayload = {
   __typename?: 'updateAutoTaskGeneratorPayload';
   auto_task_generator?: Maybe<AutoTaskGenerator>;
+  /**
+   * DO NOT USE
+   * @deprecated DO NOT USE
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The list of errors occurred during the mutation */
+  messages?: Maybe<Array<Maybe<FieldError>>>;
+};
+
+/** Autogenerated input type of updateAutomatedInsuranceBillingSetting */
+export type UpdateAutomatedInsuranceBillingSettingInput = {
+  auto_create_cms1500s?: InputMaybe<Scalars['Boolean']>;
+  auto_submit_cms1500s?: InputMaybe<Scalars['Boolean']>;
+  id?: InputMaybe<Scalars['ID']>;
+  use_cpt_codes_units_and_fees_with_appointment_types?: InputMaybe<Scalars['Boolean']>;
+};
+
+/** Autogenerated return type of updateAutomatedInsuranceBillingSetting. */
+export type UpdateAutomatedInsuranceBillingSettingPayload = {
+  __typename?: 'updateAutomatedInsuranceBillingSettingPayload';
+  automated_insurance_billing_setting?: Maybe<AutomatedInsuranceBillingSetting>;
   /**
    * DO NOT USE
    * @deprecated DO NOT USE
@@ -24901,7 +25208,7 @@ export type UpdateClientInput = {
   legal_name?: InputMaybe<Scalars['String']>;
   location?: InputMaybe<ClientLocationInput>;
   locations?: InputMaybe<Array<InputMaybe<ClientLocationInput>>>;
-  /** a serialized JSON string of metadata */
+  /** a serialized JSON string of metadata, maximum length of 128,000 */
   metadata?: InputMaybe<Scalars['String']>;
   other_provider_ids?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   password?: InputMaybe<Scalars['String']>;
@@ -25272,6 +25579,8 @@ export type UpdateDocumentInput = {
   id?: InputMaybe<Scalars['ID']>;
   include_in_charting?: InputMaybe<Scalars['Boolean']>;
   internal_notes?: InputMaybe<Scalars['String']>;
+  /** Metadata for an document type. Maximum character limit of 128,000. */
+  metadata?: InputMaybe<Scalars['String']>;
   parse_ccda?: InputMaybe<Scalars['Boolean']>;
   rel_user_id?: InputMaybe<Scalars['ID']>;
   /** A comma-separated list of doc_share_ids */
@@ -26707,6 +27016,8 @@ export type UpdateRecurringFormPayload = {
 /** Autogenerated input type of updateReferral */
 export type UpdateReferralInput = {
   id?: InputMaybe<Scalars['ID']>;
+  /** A serialized JSON string of metadata. Maximum character limit of 128,000. */
+  metadata?: InputMaybe<Scalars['String']>;
   referral_reason?: InputMaybe<Scalars['String']>;
   referring_physician_id?: InputMaybe<Scalars['ID']>;
   user_id?: InputMaybe<Scalars['ID']>;
@@ -26735,6 +27046,8 @@ export type UpdateReferringPhysicianInput = {
   id?: InputMaybe<Scalars['ID']>;
   last_name?: InputMaybe<Scalars['String']>;
   location?: InputMaybe<PhysicianLocationInput>;
+  /** A serialized JSON string of metadata. Maximum character limit of 128,000. */
+  metadata?: InputMaybe<Scalars['String']>;
   notes?: InputMaybe<Scalars['String']>;
   npi?: InputMaybe<Scalars['String']>;
   other_id?: InputMaybe<Scalars['String']>;
@@ -27355,6 +27668,21 @@ export type CreateFormCompletionRequestMutationVariables = Exact<{
 
 export type CreateFormCompletionRequestMutation = { __typename?: 'Mutation', createRequestedFormCompletion?: { __typename?: 'createRequestedFormPayload', requestedFormCompletion?: { __typename?: 'RequestedFormCompletion', id: string } | null, messages?: Array<{ __typename?: 'FieldError', field?: string | null, message: string } | null> | null } | null };
 
+export type CreateGoalMutationVariables = Exact<{
+  name?: InputMaybe<Scalars['String']>;
+  user_id?: InputMaybe<Scalars['String']>;
+  program_goal?: InputMaybe<Scalars['Boolean']>;
+  repeat?: InputMaybe<Scalars['String']>;
+  due_date?: InputMaybe<Scalars['String']>;
+  start_on?: InputMaybe<Scalars['String']>;
+  reminder?: InputMaybe<ReminderInput>;
+  care_plan_id?: InputMaybe<Scalars['ID']>;
+  title_link?: InputMaybe<Scalars['String']>;
+}>;
+
+
+export type CreateGoalMutation = { __typename?: 'Mutation', createGoal?: { __typename?: 'createGoalPayload', goal?: { __typename?: 'Goal', id: string } | null, messages?: Array<{ __typename?: 'FieldError', field?: string | null, message: string } | null> | null } | null };
+
 export type CreateJournalEntryMutationVariables = Exact<{
   input: CreateEntryInput;
 }>;
@@ -27639,6 +27967,21 @@ export const CreateFormCompletionRequestDocument = gql`
     mutation createFormCompletionRequest($input: createRequestedFormInput!) {
   createRequestedFormCompletion(input: $input) {
     requestedFormCompletion {
+      id
+    }
+    messages {
+      field
+      message
+    }
+  }
+}
+    `;
+export const CreateGoalDocument = gql`
+    mutation createGoal($name: String, $user_id: String, $program_goal: Boolean, $repeat: String, $due_date: String, $start_on: String, $reminder: ReminderInput, $care_plan_id: ID, $title_link: String) {
+  createGoal(
+    input: {name: $name, user_id: $user_id, program_goal: $program_goal, repeat: $repeat, due_date: $due_date, start_on: $start_on, reminder: $reminder, care_plan_id: $care_plan_id, title_link: $title_link}
+  ) {
+    goal {
       id
     }
     messages {
@@ -28049,6 +28392,7 @@ const CreateConversationDocumentString = print(CreateConversationDocument);
 const CreateEntryDocumentString = print(CreateEntryDocument);
 const CreateFormAnswerGroupDocumentString = print(CreateFormAnswerGroupDocument);
 const CreateFormCompletionRequestDocumentString = print(CreateFormCompletionRequestDocument);
+const CreateGoalDocumentString = print(CreateGoalDocument);
 const CreateJournalEntryDocumentString = print(CreateJournalEntryDocument);
 const CreateLocationDocumentString = print(CreateLocationDocument);
 const CreatePatientDocumentString = print(CreatePatientDocument);
@@ -28095,6 +28439,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     createFormCompletionRequest(variables: CreateFormCompletionRequestMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: CreateFormCompletionRequestMutation; extensions?: any; headers: Dom.Headers; status: number; }> {
         return withWrapper((wrappedRequestHeaders) => client.rawRequest<CreateFormCompletionRequestMutation>(CreateFormCompletionRequestDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'createFormCompletionRequest', 'mutation');
+    },
+    createGoal(variables?: CreateGoalMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: CreateGoalMutation; extensions?: any; headers: Dom.Headers; status: number; }> {
+        return withWrapper((wrappedRequestHeaders) => client.rawRequest<CreateGoalMutation>(CreateGoalDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'createGoal', 'mutation');
     },
     createJournalEntry(variables: CreateJournalEntryMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: CreateJournalEntryMutation; extensions?: any; headers: Dom.Headers; status: number; }> {
         return withWrapper((wrappedRequestHeaders) => client.rawRequest<CreateJournalEntryMutation>(CreateJournalEntryDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'createJournalEntry', 'mutation');

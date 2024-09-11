@@ -1,0 +1,31 @@
+mutation createGoal(
+  $name: String,
+  $user_id: String,
+  $program_goal: Boolean
+  $repeat: String,
+  $due_date: String,
+  $start_on: String,
+  $reminder: ReminderInput,
+  $care_plan_id: ID,
+  $title_link: String
+) {
+  createGoal(input: {
+    name: $name,
+    user_id: $user_id,
+    program_goal: $program_goal,
+    repeat: $repeat,
+    due_date: $due_date,
+    start_on: $start_on,
+    reminder: $reminder,
+    care_plan_id: $care_plan_id
+    title_link: $title_link
+  }) {
+    goal {
+      id
+    }
+    messages {
+      field
+      message
+    }
+  }
+}

@@ -23,6 +23,7 @@ import { createMetricEntry } from './createMetricEntry'
 import { checkPatientTag } from './checkPatientTag'
 import { checkScheduledAppointments } from './checkScheduledAppointments'
 import { getFormAnswers } from './getFormAnswers'
+import { createGoal } from './createGoal'
 
 export const actions = {
   createAppointment,
@@ -37,6 +38,7 @@ export const actions = {
   createChartingNote,
   sendFormCompletionRequest,
   archivePatient,
+  createGoal,
   /**
    * There is bug in Healthie that prevents linking an address with a patient
    * Waiting for fix
