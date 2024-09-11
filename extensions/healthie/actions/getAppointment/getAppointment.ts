@@ -1,8 +1,11 @@
 import { type Action } from '@awell-health/extensions-core'
 import { Category } from '@awell-health/extensions-core'
-import { HealthieError, mapHealthieToActivityError } from '../../lib/sdk/errors'
-import { getSdk } from '../../lib/sdk/generated/sdk'
-import { initialiseClient } from '../../lib/sdk/graphqlClient'
+import {
+  HealthieError,
+  mapHealthieToActivityError,
+} from '../../lib/sdk/graphql-codegen/errors'
+import { getSdk } from '../../lib/sdk/graphql-codegen/generated/sdk'
+import { initialiseClient } from '../../lib/sdk/graphql-codegen/graphqlClient'
 import { type settings } from '../../settings'
 import { convertDate } from '../../lib/validation/dateValidation'
 import { dataPoints, fields } from './config'

@@ -6,8 +6,8 @@ import {
 } from '../../lib/sdk/graphql-codegen/generated/__mocks__/sdk'
 import { applyTagToPatient } from '../applyTagToPatient'
 
-jest.mock('../../lib/sdk/generated/sdk')
-jest.mock('../../lib/sdk/graphqlClient')
+jest.mock('../../lib/sdk/graphql-codegen/generated/sdk')
+jest.mock('../../lib/sdk/graphql-codegen/graphqlClient')
 
 describe('applyTagToPatient action', () => {
   const onComplete = jest.fn()

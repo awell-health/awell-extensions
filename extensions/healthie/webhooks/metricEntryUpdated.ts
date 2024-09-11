@@ -5,8 +5,8 @@ import {
 } from '@awell-health/extensions-core'
 import { HEALTHIE_IDENTIFIER, type HealthieWebhookPayload } from '../lib/types'
 import { type settings } from '../settings'
-import { createSdk } from '../lib/sdk/createSdk'
-import { formatError } from '../lib/sdk/errors'
+import { createSdk } from '../lib/sdk/graphql-codegen/createSdk'
+import { formatError } from '../lib/sdk/graphql-codegen/errors'
 import { webhookPayloadSchema } from '../lib/helpers'
 
 const dataPoints = {
@@ -29,10 +29,10 @@ export const metricEntryUpdated: Webhook<
 
       const validatedPayload = webhookPayloadSchema.parse(payload)
       const updatedMetricId = validatedPayload.resource_id.toString()
-  
+
       const response = await sdk.getMetricEntry({ id: updatedMetricId })
       const healthiePatientId = response?.data?.entry?.poster?.id
-  
+
       await onSuccess({
         data_points: {
           updatedMetricId,

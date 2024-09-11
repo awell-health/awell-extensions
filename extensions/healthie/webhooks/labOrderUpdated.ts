@@ -5,10 +5,10 @@ import {
 } from '@awell-health/extensions-core'
 import { HEALTHIE_IDENTIFIER, type HealthieWebhookPayload } from '../lib/types'
 import { type settings } from '../settings'
-import { formatError } from '../lib/sdk/errors'
-import { createSdk } from '../lib/sdk/createSdk'
+import { formatError } from '../lib/sdk/graphql-codegen/errors'
+import { createSdk } from '../lib/sdk/graphql-codegen/createSdk'
 import { webhookPayloadSchema } from '../lib/helpers'
-  
+
 const dataPoints = {
   updatedLabOrderId: {
     key: 'updatedLabOrderId',
@@ -34,8 +34,8 @@ export const labOrderUpdated: Webhook<
       const healthiePatientId = response?.data?.labOrder?.patient?.id
       await onSuccess({
         data_points: {
-           updatedLabOrderId,
-         },
+          updatedLabOrderId,
+        },
         ...(!isNil(healthiePatientId) && {
           patient_identifier: {
             system: HEALTHIE_IDENTIFIER,
@@ -45,7 +45,7 @@ export const labOrderUpdated: Webhook<
       })
     } catch (error) {
       await onError(formatError(error))
-    } 
+    }
   },
 }
 

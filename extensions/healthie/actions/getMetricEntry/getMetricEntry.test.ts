@@ -1,10 +1,10 @@
 import { generateTestPayload } from '../../../../src/tests'
-import { getSdk } from '../../lib/sdk/generated/sdk'
-import { mockGetSdk } from '../../lib/sdk/generated/__mocks__/sdk'
+import { getSdk } from '../../lib/sdk/graphql-codegen/generated/sdk'
+import { mockGetSdk } from '../../lib/sdk/graphql-codegen/generated/__mocks__/sdk'
 import { getMetricEntry } from '.'
 
-jest.mock('../../lib/sdk/generated/sdk')
-jest.mock('../../lib/sdk/graphqlClient')
+jest.mock('../../lib/sdk/graphql-codegen/generated/sdk')
+jest.mock('../../lib/sdk/graphql-codegen/graphqlClient')
 
 describe('Healthie - Get metric entry', () => {
   const onComplete = jest.fn()

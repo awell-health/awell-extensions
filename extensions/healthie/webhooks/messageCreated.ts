@@ -5,8 +5,8 @@ import {
 } from '@awell-health/extensions-core'
 import { HEALTHIE_IDENTIFIER, type HealthieWebhookPayload } from '../lib/types'
 import { type settings } from '../settings'
-import { formatError } from '../lib/sdk/errors'
-import { createSdk } from '../lib/sdk/createSdk'
+import { formatError } from '../lib/sdk/graphql-codegen/errors'
+import { createSdk } from '../lib/sdk/graphql-codegen/createSdk'
 import { webhookPayloadSchema } from '../lib/helpers'
 
 const dataPoints = {
@@ -29,10 +29,13 @@ export const messageCreated: Webhook<
 
       const validatedPayload = webhookPayloadSchema.parse(payload)
       const createdMessageId = validatedPayload.resource_id.toString()
-      
+
       const messageResponse = await sdk.getMessage({ id: createdMessageId })
-      const conversationResponse = await sdk.getConversation({ id: messageResponse?.data?.note?.conversation_id })
-      const healthiePatientId = conversationResponse?.data?.conversation?.patient_id
+      const conversationResponse = await sdk.getConversation({
+        id: messageResponse?.data?.note?.conversation_id,
+      })
+      const healthiePatientId =
+        conversationResponse?.data?.conversation?.patient_id
       await onSuccess({
         data_points: {
           createdMessageId,
@@ -41,12 +44,12 @@ export const messageCreated: Webhook<
           patient_identifier: {
             system: HEALTHIE_IDENTIFIER,
             value: healthiePatientId,
-          }
-        })
+          },
+        }),
       })
     } catch (error) {
       await onError(formatError(error))
-    } 
+    }
   },
 }
 

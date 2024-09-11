@@ -2,11 +2,14 @@ import { isNil } from 'lodash'
 import { load as cheerioLoad } from 'cheerio'
 import { type Action } from '@awell-health/extensions-core'
 import { Category } from '@awell-health/extensions-core'
-import { getSdk } from '../../lib/sdk/generated/sdk'
-import { initialiseClient } from '../../lib/sdk/graphqlClient'
+import { getSdk } from '../../lib/sdk/graphql-codegen/generated/sdk'
+import { initialiseClient } from '../../lib/sdk/graphql-codegen/graphqlClient'
 import { type settings } from '../../settings'
 import { type Conversation, type SendChatMessage } from '../../lib/types'
-import { HealthieError, mapHealthieToActivityError } from '../../lib/sdk/errors'
+import {
+  HealthieError,
+  mapHealthieToActivityError,
+} from '../../lib/sdk/graphql-codegen/errors'
 import { dataPoints, fields } from './config'
 
 export const sendChatMessage: Action<

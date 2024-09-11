@@ -4,7 +4,7 @@ import {
   E164PhoneValidationOptionalSchema,
 } from '@awell-health/extensions-core'
 import { type ActivityEvent } from '@awell-health/extensions-core'
-import { type GetUserQuery } from '../sdk/generated/sdk'
+import { type GetUserQuery } from '../sdk/graphql-codegen/generated/sdk'
 
 interface ValidateResult {
   data: { phoneNumber?: E164Number; dob?: string }

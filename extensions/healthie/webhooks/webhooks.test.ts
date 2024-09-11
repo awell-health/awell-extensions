@@ -1,12 +1,12 @@
-import { getSdk } from '../lib/sdk/generated/sdk'
+import { getSdk } from '../lib/sdk/graphql-codegen/generated/sdk'
 import { HEALTHIE_IDENTIFIER } from '../lib/types'
-import { formatError } from '../lib/sdk/errors'
+import { formatError } from '../lib/sdk/graphql-codegen/errors'
 import { testCases } from './tests/testCases'
 import { processWebhook } from './tests/helpers'
 import { TestHelpers } from '@awell-health/extensions-core'
 
-jest.mock('../lib/sdk/generated/sdk')
-jest.mock('../lib/sdk/graphqlClient')
+jest.mock('../lib/sdk/graphql-codegen/generated/sdk')
+jest.mock('../lib/sdk/graphql-codegen/graphqlClient')
 
 testCases.forEach(({ webhook, payload, sdkMocks, dataPoints }) => {
   describe(webhook.key, () => {
