@@ -2426,7 +2426,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@repeaterjs/repeater", "npm:3.0.5"],\
             ["@types/graphql", null],\
             ["@whatwg-node/fetch", "npm:0.8.8"],\
-            ["dset", "npm:3.1.3"],\
+            ["dset", "npm:3.1.4"],\
             ["extract-files", "npm:11.0.0"],\
             ["graphql", "npm:16.8.1"],\
             ["meros", "virtual:35512003f8842abd322489d0eaa237329a6171632e2204dbd79e9a856d97f40e9c7142ed0fa98bbb9d1f0144eb3f564b69c959f12694829dd60ca924c78ceea2#npm:1.3.0"],\
@@ -6688,10 +6688,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["dset", [\
-        ["npm:3.1.3", {\
-          "packageLocation": "./.yarn/cache/dset-npm-3.1.3-ee788aa7b2-5db964a36c.zip/node_modules/dset/",\
+        ["npm:3.1.4", {\
+          "packageLocation": "./.yarn/cache/dset-npm-3.1.4-f4959c71f7-9a7677e9ff.zip/node_modules/dset/",\
           "packageDependencies": [\
-            ["dset", "npm:3.1.3"]\
+            ["dset", "npm:3.1.4"]\
           ],\
           "linkType": "HARD"\
         }]\
