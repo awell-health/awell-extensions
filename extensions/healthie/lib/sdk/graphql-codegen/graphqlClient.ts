@@ -16,6 +16,10 @@ export const responseMiddleware: Required<PatchedRequestInit>['responseMiddlewar
     }
   }
 
+/**
+ * @deprecated DO NOT USE
+ * DO NOT USE
+ */
 export const initialiseClient = (
   s: Record<keyof typeof settings, string | undefined>
 ): GraphQLClient | undefined => {
