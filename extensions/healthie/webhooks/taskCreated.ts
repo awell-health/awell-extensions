@@ -5,10 +5,9 @@ import {
 } from '@awell-health/extensions-core'
 import { HEALTHIE_IDENTIFIER, type HealthieWebhookPayload } from '../lib/types'
 import { type settings } from '../settings'
-import { createSdk } from '../lib/sdk/createSdk'
-import { formatError } from '../lib/sdk/errors'
+import { createSdk } from '../lib/sdk/graphql-codegen/createSdk'
+import { formatError } from '../lib/sdk/graphql-codegen/errors'
 import { webhookPayloadSchema } from '../lib/helpers'
-
 
 const dataPoints = {
   createdTaskId: {
@@ -30,7 +29,7 @@ export const taskCreated: Webhook<
 
       const validatedPayload = webhookPayloadSchema.parse(payload)
       const createdTaskId = validatedPayload.resource_id.toString()
-  
+
       const response = await sdk.getTask({ id: createdTaskId })
       const healthiePatientId = response?.data?.task?.client_id
       await onSuccess({

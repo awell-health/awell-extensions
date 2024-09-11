@@ -4,9 +4,9 @@ import {
   type Webhook,
 } from '@awell-health/extensions-core'
 import { HEALTHIE_IDENTIFIER, type HealthieWebhookPayload } from '../lib/types'
-import { createSdk } from '../lib/sdk/createSdk'
+import { createSdk } from '../lib/sdk/graphql-codegen/createSdk'
 import { type settings } from '../settings'
-import { formatError } from '../lib/sdk/errors'
+import { formatError } from '../lib/sdk/graphql-codegen/errors'
 import { webhookPayloadSchema } from '../lib/helpers'
 
 const dataPoints = {
@@ -25,13 +25,13 @@ export const goalCreated: Webhook<
   dataPoints,
   onWebhookReceived: async ({ payload, settings }, onSuccess, onError) => {
     try {
-      const { sdk } = await createSdk({settings})
+      const { sdk } = await createSdk({ settings })
 
       const validatedPayload = webhookPayloadSchema.parse(payload)
-      const createdGoalId = validatedPayload.resource_id.toString();
+      const createdGoalId = validatedPayload.resource_id.toString()
       const response = await sdk.getGoal({ id: createdGoalId })
       const healthiePatientId = response?.data?.goal?.user_id
-      
+
       await onSuccess({
         data_points: {
           createdGoalId,
@@ -46,9 +46,7 @@ export const goalCreated: Webhook<
     } catch (error) {
       await onError(formatError(error))
     }
-  }
+  },
 }
 
 export type GoalCreated = typeof goalCreated
-
-

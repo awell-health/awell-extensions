@@ -11,7 +11,7 @@ export const Healthie: Extension = {
   description:
     'Easily orchestrate actions in Healthie and receive webhooks events.',
   icon_url:
-    'https://res.cloudinary.com/da7x4rzl4/image/upload/v1678908303/Awell%20Extensions/HealthieLogo.png',
+    'https://res.cloudinary.com/da7x4rzl4/image/upload/v1726074872/Awell%20Extensions/get_healthie_logo.jpg',
   author: {
     authorType: AuthorType.AWELL,
   },

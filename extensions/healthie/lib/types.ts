@@ -1,4 +1,4 @@
-import { type getSdk } from './sdk/generated/sdk'
+import { type getSdk } from './sdk/graphql-codegen/generated/sdk'
 
 export interface HealthieWebhookPayload {
   resource_id: number

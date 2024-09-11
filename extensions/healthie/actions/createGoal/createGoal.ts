@@ -10,24 +10,36 @@ export const createGoal: Action<typeof fields, typeof settings> = {
   title: 'Create goal',
   description: 'Create a goal for a patient in Healthie',
   fields,
-  previewable: true,
+  previewable: false,
   dataPoints,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
-    const { fields: input, sdk } = await validatePayloadAndCreateSdk({
+    const { fields, healthieSdk } = await validatePayloadAndCreateSdk({
       fieldsSchema: FieldsValidationSchema,
       payload,
     })
 
-    const res = await sdk.createGoal({
-      user_id: input.healthiePatientId,
-      repeat: input.repeat,
-      title_link: input.titleLink,
-      name: input.name,
+    const input = {
+      user_id: fields.healthiePatientId,
+      repeat: fields.repeat,
+      title_link: fields.titleLink,
+      name: fields.name,
+      due_date: fields.dueDate,
+    }
+
+    const res = await healthieSdk.client.mutation({
+      createGoal: {
+        __args: {
+          input,
+        },
+        goal: {
+          id: true,
+        },
+      },
     })
 
     await onComplete({
       data_points: {
-        createdGoalId: String(res.data?.createGoal?.goal?.id),
+        createdGoalId: String(res.createGoal?.goal?.id),
       },
     })
   },

@@ -5,8 +5,8 @@ import {
 } from '@awell-health/extensions-core'
 import { HEALTHIE_IDENTIFIER, type HealthieWebhookPayload } from '../lib/types'
 import { type settings } from '../settings'
-import { formatError } from '../lib/sdk/errors'
-import { createSdk } from '../lib/sdk/createSdk'
+import { formatError } from '../lib/sdk/graphql-codegen/errors'
+import { createSdk } from '../lib/sdk/graphql-codegen/createSdk'
 import { webhookPayloadSchema } from '../lib/helpers'
 
 const dataPoints = {
@@ -25,11 +25,11 @@ export const labOrderCreated: Webhook<
   dataPoints,
   onWebhookReceived: async ({ payload, settings }, onSuccess, onError) => {
     try {
-      const { sdk } = await createSdk({settings})
+      const { sdk } = await createSdk({ settings })
 
       const validatedPayload = webhookPayloadSchema.parse(payload)
       const createdLabOrderId = validatedPayload.resource_id.toString()
-      
+
       const response = await sdk.getLabOrder({ id: createdLabOrderId })
       const healthiePatientId = response?.data?.labOrder?.patient?.id
       await onSuccess({
@@ -45,7 +45,7 @@ export const labOrderCreated: Webhook<
       })
     } catch (error) {
       await onError(formatError(error))
-    } 
+    }
   },
 }
 

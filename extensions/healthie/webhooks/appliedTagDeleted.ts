@@ -5,8 +5,8 @@ import {
 } from '@awell-health/extensions-core'
 import { HEALTHIE_IDENTIFIER, type HealthieWebhookPayload } from '../lib/types'
 import { type settings } from '../settings'
-import { formatError } from '../lib/sdk/errors'
-import { createSdk } from '../lib/sdk/createSdk'
+import { formatError } from '../lib/sdk/graphql-codegen/errors'
+import { createSdk } from '../lib/sdk/graphql-codegen/createSdk'
 import { webhookPayloadSchema } from '../lib/helpers'
 
 const dataPoints = {
@@ -25,12 +25,15 @@ export const appliedTagDeleted: Webhook<
   dataPoints,
   onWebhookReceived: async ({ payload, settings }, onSuccess, onError) => {
     try {
-      const { sdk } = await createSdk({settings})
+      const { sdk } = await createSdk({ settings })
 
       const validatedPayload = webhookPayloadSchema.parse(payload)
-      const deletedAppliedTagId = validatedPayload.resource_id.toString();
-      
-      const response = await sdk.getAppliedTag({ id: deletedAppliedTagId, include_deleted: true})
+      const deletedAppliedTagId = validatedPayload.resource_id.toString()
+
+      const response = await sdk.getAppliedTag({
+        id: deletedAppliedTagId,
+        include_deleted: true,
+      })
       const healthiePatientId = response?.data?.appliedTag?.user_id
       await onSuccess({
         data_points: {
@@ -45,7 +48,7 @@ export const appliedTagDeleted: Webhook<
       })
     } catch (error) {
       await onError(formatError(error))
-    } 
+    }
   },
 }
 

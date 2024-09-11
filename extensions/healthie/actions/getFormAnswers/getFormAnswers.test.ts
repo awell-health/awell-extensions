@@ -7,11 +7,11 @@ describe('Healthie - Get form answers', () => {
 })
 
 // import { generateTestPayload } from '../../../../src/tests'
-// import { getSdk } from '../../lib/sdk/generated/sdk'
+// import { getSdk } from '../../lib/sdk/graphql-codegen/generated/sdk'
 // import {
 //   mockGetSdk,
 //   mockGetSdkReturn,
-// } from '../../lib/sdk/generated/__mocks__/sdk'
+// } from '../../lib/sdk/graphql-codegen/generated/__mocks__/sdk'
 // import { getFormAnswers } from '.'
 
 // // jest.mock('../../gql/sdk')

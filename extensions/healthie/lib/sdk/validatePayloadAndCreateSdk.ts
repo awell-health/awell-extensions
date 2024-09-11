@@ -1,14 +1,20 @@
 import { validate } from '@awell-health/extensions-core'
 import z from 'zod'
 import { SettingsValidationSchema } from '../../settings'
-import { getSdk } from './generated/sdk'
-import { initialiseClient } from './graphqlClient'
+import { HealthieSdk } from './genql'
+import { getSdk } from './graphql-codegen/generated/sdk'
+import { initialiseClient } from './graphql-codegen/graphqlClient'
 
 type ValidatePayloadAndCreateSdk = <T extends z.ZodTypeAny>(args: {
   fieldsSchema: T
   payload: unknown
 }) => Promise<{
+  /**
+   * @deprecated DO NOT USE
+   * DO NOT USE
+   */
   sdk: ReturnType<typeof getSdk>
+  healthieSdk: HealthieSdk
   fields: z.infer<(typeof args)['fieldsSchema']>
   settings: z.infer<typeof SettingsValidationSchema>
 }>
@@ -30,7 +36,15 @@ export const validatePayloadAndCreateSdk: ValidatePayloadAndCreateSdk = async ({
   if (client === undefined)
     throw new Error('Healthie client cannot be undefined.')
 
-  const sdk = getSdk(client)
+  /**
+   * Old sdk, generated with graphql-codegen
+   */
+  const deprecatedSdk = getSdk(client)
 
-  return { settings, fields, sdk }
+  /**
+   * New sdk, generated with GenQL
+   */
+  const healthieSdk = new HealthieSdk(settings)
+
+  return { settings, fields, sdk: deprecatedSdk, healthieSdk }
 }
