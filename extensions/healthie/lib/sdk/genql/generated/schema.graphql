@@ -483,6 +483,9 @@ type Appointment {
   """ID of user that created of appointment"""
   initiator_id: ID
 
+  """When true, insurance billing will be enabled for this appointment"""
+  insurance_billing_enabled: Boolean
+
   """
   The status of whether this appointment is specifically meant to block availability
   """
@@ -12645,6 +12648,9 @@ type OrganizationMembership {
   """
   auto_create_convo_for_care_team: Boolean
 
+  """If true, the user can access calendar quick share"""
+  can_access_calendar_quick_share: Boolean!
+
   """
   If true, the user should be able to access other active organization members conversations
   """
@@ -13112,6 +13118,9 @@ type PermissionTemplateType {
   If true, clients who this org member has been added as a care team member for will automatically see a Chat conversation with this org member.
   """
   auto_create_convo_for_care_team: Boolean
+
+  """If true, the user can access calendar quick share"""
+  can_access_calendar_quick_share: Boolean!
 
   """
   If true, the user should be able to access other active organization members conversations
@@ -15141,7 +15150,7 @@ type Query {
     appt_type_id: String
     clients_can_join_waitlist: Boolean = false
     contact_type: String
-    date_from_month: String = "2024-09-11T17:58:02+00:00"
+    date_from_month: String = "2024-09-11T19:52:54+00:00"
 
     """
     When passed in, supercedes date_from_month. Must be passed in along with start_date
@@ -22294,6 +22303,7 @@ input createAppointmentInput {
   When passed in, this video chat URL will be used instead of built-in Video Chat or Zoom
   """
   external_videochat_url: String
+  insurance_billing_enabled: Boolean
   is_blocker: Boolean
   is_zoom_chat: Boolean
   location: String
@@ -24418,6 +24428,7 @@ type createPaymentIntentPayload {
 input createPermissionTemplateInput {
   allow_self_scheduling_in_care_team: Boolean
   auto_create_convo_for_care_team: Boolean
+  can_access_calendar_quick_share: Boolean
   can_access_to_members_chat: Boolean
   can_add_clients: Boolean
   can_add_members: Boolean
@@ -27132,6 +27143,7 @@ input updateAppointmentInput {
   """
   external_videochat_url: String
   id: ID
+  insurance_billing_enabled: Boolean
   is_blocker: Boolean
   is_zoom_chat: Boolean
 
@@ -29096,6 +29108,7 @@ input updateOrganizationMembershipInput {
   allow_group_level_actions: Boolean
   allow_self_scheduling_in_care_team: Boolean
   auto_create_convo_for_care_team: Boolean
+  can_access_calendar_quick_share: Boolean
   can_access_to_members_chat: Boolean
   can_add_clients: Boolean
   can_add_members: Boolean
@@ -29235,6 +29248,7 @@ type updateOrganizationPayload {
 input updatePermissionTemplateInput {
   allow_self_scheduling_in_care_team: Boolean
   auto_create_convo_for_care_team: Boolean
+  can_access_calendar_quick_share: Boolean
   can_access_to_members_chat: Boolean
   can_add_clients: Boolean
   can_add_members: Boolean

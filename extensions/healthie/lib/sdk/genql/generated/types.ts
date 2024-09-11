@@ -543,6 +543,9 @@ export default {
             "initiator_id": [
                 241
             ],
+            "insurance_billing_enabled": [
+                61
+            ],
             "is_blocker": [
                 61
             ],
@@ -13296,6 +13299,9 @@ export default {
             "auto_create_convo_for_care_team": [
                 61
             ],
+            "can_access_calendar_quick_share": [
+                61
+            ],
             "can_access_to_members_chat": [
                 61
             ],
@@ -13715,6 +13721,9 @@ export default {
                 61
             ],
             "auto_create_convo_for_care_team": [
+                61
+            ],
+            "can_access_calendar_quick_share": [
                 61
             ],
             "can_access_to_members_chat": [
@@ -25890,6 +25899,9 @@ export default {
             "external_videochat_url": [
                 437
             ],
+            "insurance_billing_enabled": [
+                61
+            ],
             "is_blocker": [
                 61
             ],
@@ -29578,6 +29590,9 @@ export default {
                 61
             ],
             "auto_create_convo_for_care_team": [
+                61
+            ],
+            "can_access_calendar_quick_share": [
                 61
             ],
             "can_access_to_members_chat": [
@@ -33814,6 +33829,9 @@ export default {
             "id": [
                 241
             ],
+            "insurance_billing_enabled": [
+                61
+            ],
             "is_blocker": [
                 61
             ],
@@ -37485,6 +37503,9 @@ export default {
             "auto_create_convo_for_care_team": [
                 61
             ],
+            "can_access_calendar_quick_share": [
+                61
+            ],
             "can_access_to_members_chat": [
                 61
             ],
@@ -37819,6 +37840,9 @@ export default {
                 61
             ],
             "auto_create_convo_for_care_team": [
+                61
+            ],
+            "can_access_calendar_quick_share": [
                 61
             ],
             "can_access_to_members_chat": [
