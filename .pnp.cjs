@@ -61,7 +61,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/xml2js", "npm:0.4.14"],\
             ["@typescript-eslint/eslint-plugin", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:5.62.0"],\
             ["api", "npm:6.1.1"],\
-            ["axios", "npm:1.7.2"],\
+            ["axios", "npm:1.7.4"],\
             ["body-parser", "npm:1.20.2"],\
             ["cheerio", "npm:1.0.0-rc.12"],\
             ["date-fns", "npm:2.30.0"],\
@@ -224,7 +224,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/xml2js", "npm:0.4.14"],\
             ["@typescript-eslint/eslint-plugin", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:5.62.0"],\
             ["api", "npm:6.1.1"],\
-            ["axios", "npm:1.7.2"],\
+            ["axios", "npm:1.7.4"],\
             ["body-parser", "npm:1.20.2"],\
             ["cheerio", "npm:1.0.0-rc.12"],\
             ["date-fns", "npm:2.30.0"],\
