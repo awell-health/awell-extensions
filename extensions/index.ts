@@ -29,6 +29,7 @@ import { rest } from './rest'
 import { Sendbird } from './sendbird'
 import { Sendgrid } from './sendgrid-extension'
 import { sfdc } from './sfdc'
+import { shelly } from './shelly'
 import { stripe } from './stripe'
 import { TalkDesk } from './talkDesk'
 import { TextLine } from './textline'
@@ -75,6 +76,7 @@ export const extensions = [
   Sendbird,
   Sendgrid,
   sfdc,
+  shelly,
   stripe,
   TalkDesk,
   TextLine,
