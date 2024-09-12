@@ -1,0 +1,1 @@
+export { getResponseText } from './getResponseText'
