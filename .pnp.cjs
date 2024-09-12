@@ -80,7 +80,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["graphql", "npm:16.8.1"],\
             ["graphql-request", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:5.1.0"],\
             ["graphql-tag", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:2.12.6"],\
-            ["husky", "npm:8.0.3"],\
+            ["husky", "npm:9.1.6"],\
             ["jest", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:29.7.0"],\
             ["jest-fetch-mock", "npm:3.0.3"],\
             ["json-schema-faker", "npm:0.5.6"],\
@@ -243,7 +243,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["graphql", "npm:16.8.1"],\
             ["graphql-request", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:5.1.0"],\
             ["graphql-tag", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:2.12.6"],\
-            ["husky", "npm:8.0.3"],\
+            ["husky", "npm:9.1.6"],\
             ["jest", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:29.7.0"],\
             ["jest-fetch-mock", "npm:3.0.3"],\
             ["json-schema-faker", "npm:0.5.6"],\
@@ -8748,10 +8748,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["husky", [\
-        ["npm:8.0.3", {\
-          "packageLocation": "./.yarn/cache/husky-npm-8.0.3-b0b59c5127-837bc7e441.zip/node_modules/husky/",\
+        ["npm:9.1.6", {\
+          "packageLocation": "./.yarn/cache/husky-npm-9.1.6-f05821288d-421ccd8850.zip/node_modules/husky/",\
           "packageDependencies": [\
-            ["husky", "npm:8.0.3"]\
+            ["husky", "npm:9.1.6"]\
           ],\
           "linkType": "HARD"\
         }]\
