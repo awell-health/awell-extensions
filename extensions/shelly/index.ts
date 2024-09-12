@@ -11,7 +11,7 @@ export const shelly: Extension = {
   title: 'Shelly (experimental)',
   description: 'Library of AI-powered actions',
   icon_url:
-    'https://res.cloudinary.com/da7x4rzl4/image/upload/v1726037275/Awell%20Extensions/shelly_logo.png',
+    'https://res.cloudinary.com/da7x4rzl4/imgage/upload/v1726037275/Awell%20Extensions/shelly_logo.png',
   category: Category.WORKFLOW,
   author: {
     authorType: AuthorType.AWELL,
