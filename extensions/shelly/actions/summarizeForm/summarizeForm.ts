@@ -43,7 +43,7 @@ export const summarizeForm: Action<
 
     await onComplete({
       data_points: {
-        summary: responseText,
+        summary: JSON.stringify(responseText),
       },
     })
 

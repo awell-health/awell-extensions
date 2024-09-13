@@ -5,6 +5,28 @@ import {
   type Answer,
 } from '@awell-health/awell-sdk'
 
+const getBooleanAnswer = (answer: string): string => {
+  if (answer === '0') return 'No'
+
+  if (answer === '1') return 'Yes'
+
+  return ''
+}
+
+const getSingleSelectAnswer = (
+  questionDefinition: Question,
+  questionResponse: Answer
+): string => {
+  const answerValue = questionResponse.value
+  const answerOptions = questionDefinition.options
+
+  const answerLabel = answerOptions?.find(
+    (answerOption) => String(answerOption.value) === String(answerValue)
+  )?.label
+
+  return String(answerLabel)
+}
+
 const getMultipleSelectAnswers = (
   questionDefinition: Question,
   questionResponse: Answer
@@ -37,7 +59,7 @@ const getQuestionAndAnswer = (
 
   switch (userQuestionType) {
     case 'YES_NO':
-      return addQuestionLabel(String(questionResponse.value))
+      return addQuestionLabel(getBooleanAnswer(questionResponse.value))
     case 'DATE':
       return addQuestionLabel(String(questionResponse.value))
     case 'NUMBER':
@@ -45,7 +67,9 @@ const getQuestionAndAnswer = (
     case 'LONG_TEXT':
       return addQuestionLabel(String(questionResponse.value))
     case 'MULTIPLE_CHOICE':
-      return addQuestionLabel(String(questionResponse.value))
+      return addQuestionLabel(
+        getSingleSelectAnswer(questionDefinition, questionResponse)
+      )
     case 'MULTIPLE_SELECT':
       return addQuestionLabel(
         getMultipleSelectAnswers(questionDefinition, questionResponse)

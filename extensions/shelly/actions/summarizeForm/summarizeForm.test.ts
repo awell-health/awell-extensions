@@ -55,7 +55,8 @@ describe('Shelly - Summarize', () => {
     expect(onError).not.toHaveBeenCalled()
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
-        result: '99999',
+        summary:
+          "\"What's the patient's last name?\\nHellemans\\n\\nWhat's the patient's date of birth?\\n1993-11-30T00:00:00.000Z\\n\\nWhat's the patient's first name?\\nNick\\n\\nPlease provide the patient's NHS Number:\\n123\\n\\nHow often do you have a drink containing alcohol?\\nNever\"",
       },
     })
   })

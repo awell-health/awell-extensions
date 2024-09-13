@@ -29,6 +29,13 @@ export const mockFormResponseResponse = {
         value_type: 'NUMBER',
         __typename: 'Answer',
       },
+      {
+        question_id: '7ulbRDEEy6Yj',
+        value: '0',
+        label: null,
+        value_type: 'NUMBER',
+        __typename: 'Answer',
+      },
     ],
   },
 }
