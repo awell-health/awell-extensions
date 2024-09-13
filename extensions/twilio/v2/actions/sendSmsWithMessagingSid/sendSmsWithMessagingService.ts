@@ -4,7 +4,7 @@ import { type Action } from '@awell-health/extensions-core'
 import { type settings } from '../../../settings'
 import { Category, validate } from '@awell-health/extensions-core'
 import { SettingsValidationSchema } from '../../../settings'
-import { FieldsValidationSchema, fields } from './config'
+import { FieldsValidationSchema, fields, dataPoints } from './config'
 import { isNil } from 'lodash'
 import { appendOptOutLanguage } from '../../../lib'
 import { isTwilioErrorResponse, parseTwilioError } from '../../../lib/errors'
@@ -19,6 +19,7 @@ export const sendSmsWithMessagingService: Action<
     'Send a text message from a Messaging Service to a recipient of your choice.',
   category: Category.COMMUNICATION,
   fields,
+  dataPoints,
   previewable: false,
   onActivityCreated: async (payload, onComplete, onError) => {
     try {
@@ -60,7 +61,7 @@ export const sendSmsWithMessagingService: Action<
         accountSid,
       })
 
-      await client.messages.create({
+      const { sid } = await client.messages.create({
         body: addOptOutLanguage
           ? appendOptOutLanguage(message, optOutLanguage, language)
           : message,
@@ -68,7 +69,11 @@ export const sendSmsWithMessagingService: Action<
         to: recipient,
       })
 
-      await onComplete()
+      await onComplete({
+        data_points: {
+          messageSid: sid,
+        },
+      })
     } catch (error) {
       if (isTwilioErrorResponse(error)) {
         await onError({
