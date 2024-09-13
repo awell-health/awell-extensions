@@ -1,7 +1,7 @@
 // import { AwellSdk } from '@awell-health/awell-sdk'
 import { Category, type Action } from '@awell-health/extensions-core'
 import { validatePayloadAndCreateSdk } from '@extensions/shelly/lib'
-import { getLatestFormInStep } from '@extensions/shelly/lib/utils/getLastFormInStep'
+import { getLatestFormInStep } from '@extensions/shelly/lib/utils/getLatestFormInStep'
 import { type settings } from '../../settings'
 import { fields, dataPoints, FieldsValidationSchema } from './config'
 import { getResponseText } from './lib/getResponseText'

@@ -1,1 +1,1 @@
-export { getLastFormInStep } from './getLastFormInStep'
+export { getLatestFormInStep } from './getLatestFormInStep'
