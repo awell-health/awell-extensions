@@ -41,8 +41,6 @@ export const summarizeForm: Action<
       formResponse,
     })
 
-    console.log(responseText)
-
     await onComplete({
       data_points: {
         summary: responseText,
