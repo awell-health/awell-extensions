@@ -69,7 +69,7 @@ describe('Healthie - Create goal', () => {
           name: 'My new goal',
           titleLink: undefined,
           repeat: undefined,
-          dueDate: '2024-09-12',
+          dueDate: format(addDays(new Date(), 1), 'yyyy-MM-dd'),
         },
         settings: {
           apiUrl: 'https://staging-api.gethealthie.com/graphql',
