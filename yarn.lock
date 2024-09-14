@@ -77,6 +77,7 @@ __metadata:
     "@graphql-typed-document-node/core": ^3.1.2
     "@langchain/core": ^0.3.1
     "@langchain/openai": ^0.3.0
+    "@hubspot/api-client": ^11.2.0
     "@mailchimp/mailchimp_transactional": ^1.0.50
     "@medplum/core": ^3.1.4
     "@medplum/fhirtypes": ^3.1.4
@@ -94,6 +95,7 @@ __metadata:
     "@types/mailchimp__mailchimp_transactional": ^1.0.5
     "@types/node": ^18.13.0
     "@types/node-fetch": ^2.6.2
+    "@types/nodemailer": ^6.4.15
     "@types/pdfmake": ^0.2.9
     "@types/showdown": ^2.0.0
     "@types/uuid": ^10.0.0
@@ -131,6 +133,8 @@ __metadata:
     mailgun.js: ^8.2.1
     messagebird: ^4.0.1
     node-fetch: 2
+    nodemailer: ^6.9.15
+    openai: ^4.59.0
     prettier: 2.8.4
     rimraf: ^4.1.2
     showdown: ^2.1.0
@@ -1639,6 +1643,25 @@ __metadata:
 "@humanwhocodes/config-array@npm:^0.13.0":
   version: 0.13.0
   resolution: "@humanwhocodes/config-array@npm:0.13.0"
+"@hubspot/api-client@npm:^11.2.0":
+  version: 11.2.0
+  resolution: "@hubspot/api-client@npm:11.2.0"
+  dependencies:
+    "@types/node-fetch": ^2.5.7
+    bottleneck: ^2.19.5
+    es6-promise: ^4.2.4
+    form-data: ^2.5.0
+    lodash.get: ^4.4.2
+    lodash.merge: ^4.6.2
+    node-fetch: ^2.6.0
+    url-parse: ^1.4.3
+  checksum: b9b00248f9f7c917f856f028117ccd7f87af53eb0cc64907b76a7ab8d909e90b66a8eff259235951acf910dceb9f0ec807ee986fd17656e6119f38ac489baf7d
+  languageName: node
+  linkType: hard
+
+"@humanwhocodes/config-array@npm:^0.11.14":
+  version: 0.11.14
+  resolution: "@humanwhocodes/config-array@npm:0.11.14"
   dependencies:
     "@humanwhocodes/object-schema": ^2.0.3
     debug: ^4.3.1
@@ -2725,7 +2748,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node-fetch@npm:^2.6.2, @types/node-fetch@npm:^2.6.4":
+"@types/node-fetch@npm:^2.5.7, @types/node-fetch@npm:^2.6.2, @types/node-fetch@npm:^2.6.4":
   version: 2.6.11
   resolution: "@types/node-fetch@npm:2.6.11"
   dependencies:
@@ -2750,6 +2773,24 @@ __metadata:
   dependencies:
     undici-types: ~5.26.4
   checksum: 73bdd2b46fb96816a1f7309e1b609f0832a29739c87df7daa729ff497160be143e02cf18486a0112e1981b092358aed3ca0716b532aff93c7e05f7dbb4f7586a
+  languageName: node
+  linkType: hard
+
+"@types/node@npm:^18.13.0":
+  version: 18.19.31
+  resolution: "@types/node@npm:18.19.31"
+  dependencies:
+    undici-types: ~5.26.4
+  checksum: 949bddfd7071bd47300d1f33d380ee34695ccd5f046f1a03e4d2be0d953ace896905144d44a6f483f241b5ef34b86f0e40a0e312201117782eecf89e81a4ff13
+  languageName: node
+  linkType: hard
+
+"@types/nodemailer@npm:^6.4.15":
+  version: 6.4.15
+  resolution: "@types/nodemailer@npm:6.4.15"
+  dependencies:
+    "@types/node": "*"
+  checksum: f6f9a2f8a669703ecc3ca6359c12345b16f6b2e5691b93c406b9af7de639c02092ec00133526e6fecd8c60d884890a7cd0f967d8e64bedab46d5c3d8be0882d7
   languageName: node
   linkType: hard
 
@@ -3689,6 +3730,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"bottleneck@npm:^2.19.5":
+  version: 2.19.5
+  resolution: "bottleneck@npm:2.19.5"
+  checksum: c5eef1bbea12cef1f1405e7306e7d24860568b0f7ac5eeab706a86762b3fc65ef6d1c641c8a166e4db90f412fc5c948fc5ce8008a8cd3d28c7212ef9c3482bda
+  languageName: node
+  linkType: hard
+
 "brace-expansion@npm:^1.1.7":
   version: 1.1.11
   resolution: "brace-expansion@npm:1.1.11"
@@ -4220,7 +4268,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"combined-stream@npm:^1.0.8":
+"combined-stream@npm:^1.0.6, combined-stream@npm:^1.0.8":
   version: 1.0.8
   resolution: "combined-stream@npm:1.0.8"
   dependencies:
@@ -5108,6 +5156,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"es6-promise@npm:^4.2.4":
+  version: 4.2.8
+  resolution: "es6-promise@npm:4.2.8"
+  checksum: 95614a88873611cb9165a85d36afa7268af5c03a378b35ca7bda9508e1d4f1f6f19a788d4bc755b3fd37c8ebba40782018e02034564ff24c9d6fa37e959ad57d
+  languageName: node
+  linkType: hard
+
 "es6-symbol@npm:^3.1.1, es6-symbol@npm:^3.1.3":
   version: 3.1.4
   resolution: "es6-symbol@npm:3.1.4"
@@ -5945,6 +6000,17 @@ __metadata:
   version: 1.9.0
   resolution: "form-data-encoder@npm:1.9.0"
   checksum: a73f617976f91b594dbd777ec5147abdb0c52d707475130f8cefc8ae9102ccf51be154b929f7c18323729c2763ac25b16055f5034bc188834e9febeb0d971d7f
+  languageName: node
+  linkType: hard
+
+"form-data@npm:^2.5.0":
+  version: 2.5.1
+  resolution: "form-data@npm:2.5.1"
+  dependencies:
+    asynckit: ^0.4.0
+    combined-stream: ^1.0.6
+    mime-types: ^2.1.12
+  checksum: 5134ada56cc246b293a1ac7678dba6830000603a3979cf83ff7b2f21f2e3725202237cfb89e32bcb38a1d35727efbd3c3a22e65b42321e8ade8eec01ce755d08
   languageName: node
   linkType: hard
 
@@ -8139,6 +8205,14 @@ __metadata:
   linkType: hard
 
 "lodash.get@npm:~4.4.2":
+"lodash.deburr@npm:^4.1.0":
+  version: 4.1.0
+  resolution: "lodash.deburr@npm:4.1.0"
+  checksum: 6e2012315c20a4d8ed4f1884ed4b8e6b0093c6355a87bfd95ecf25a5243c8c88d747d67375d52cb87ebc99d090935ed8dc3814c8e661e3275a6dbe02b68efc99
+  languageName: node
+  linkType: hard
+
+"lodash.get@npm:^4.4.2, lodash.get@npm:~4.4.2":
   version: 4.4.2
   resolution: "lodash.get@npm:4.4.2"
   checksum: e403047ddb03181c9d0e92df9556570e2b67e0f0a930fcbbbd779370972368f5568e914f913e93f3b08f6d492abc71e14d4e9b7a18916c31fa04bd2306efe545
@@ -8806,7 +8880,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"node-fetch@npm:2, node-fetch@npm:^2.6.1, node-fetch@npm:^2.6.12, node-fetch@npm:^2.6.7":
+"node-fetch@npm:2, node-fetch@npm:^2.6.0, node-fetch@npm:^2.6.1, node-fetch@npm:^2.6.12, node-fetch@npm:^2.6.7":
   version: 2.7.0
   resolution: "node-fetch@npm:2.7.0"
   dependencies:
@@ -8860,6 +8934,13 @@ __metadata:
   version: 2.0.18
   resolution: "node-releases@npm:2.0.18"
   checksum: ef55a3d853e1269a6d6279b7692cd6ff3e40bc74947945101138745bfdc9a5edabfe72cb19a31a8e45752e1910c4c65c77d931866af6357f242b172b7283f5b3
+  languageName: node
+  linkType: hard
+
+"nodemailer@npm:^6.9.15":
+  version: 6.9.15
+  resolution: "nodemailer@npm:6.9.15"
+  checksum: 2d975f5c60f84acde52d79d43287c70197fe94bde4a731682f306e9636a148c49de29a5dd92ce7dc5aac068a148cd91da3401ede80f8f52b9f2bc00439f36ced
   languageName: node
   linkType: hard
 
@@ -11354,7 +11435,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"url-parse@npm:^1.5.9":
+"url-parse@npm:^1.4.3, url-parse@npm:^1.5.9":
   version: 1.5.10
   resolution: "url-parse@npm:1.5.10"
   dependencies:
