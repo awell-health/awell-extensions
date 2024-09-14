@@ -6,8 +6,8 @@ import {
 import actions from './actions'
 import { settings } from './settings'
 
-export const HubSpot: Extension = {
-  key: 'HubSpot',
+export const hubspot: Extension = {
+  key: 'hubspot',
   title: 'HubSpot',
   description:
     'HubSpot is a customer relationship management (CRM) platform that provides a suite of tools for marketing, sales, customer service, and content management.',
