@@ -128,7 +128,7 @@ __metadata:
     jest-fetch-mock: ^3.0.3
     json-schema-faker: ^0.5.6
     jsonpath: ^1.1.1
-    libphonenumber-js: ^1.10.26
+    libphonenumber-js: ^1.11.8
     lint-staged: ^14.0.1
     lodash: ^4.17.21
     mailgun.js: ^8.2.1
@@ -7856,10 +7856,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"libphonenumber-js@npm:^1.10.26, libphonenumber-js@npm:^1.10.61":
+"libphonenumber-js@npm:^1.10.61":
   version: 1.10.61
   resolution: "libphonenumber-js@npm:1.10.61"
   checksum: d43e2825b1edb875d44ec1913d987af787310e71bc00360bec3efc6a876abb5047ad8dc7e90de7f861b908d0a624e968faaf35a47b0b96361f9c043564fe3f88
+  languageName: node
+  linkType: hard
+
+"libphonenumber-js@npm:^1.11.8":
+  version: 1.11.8
+  resolution: "libphonenumber-js@npm:1.11.8"
+  checksum: 55397c007c1405948a67162dc57686b4bf3d735fe8d367fb3776814fac038d12ec925df8c9e1b8300716c009798c12b81a3f86c45c37090783c0c036df2fe9c0
   languageName: node
   linkType: hard
 
