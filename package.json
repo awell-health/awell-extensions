@@ -18,7 +18,7 @@
     "start": "node dist/src/index.js",
     "lint": "eslint \"**/*.ts\"",
     "postinstall": "husky install",
-    "test": "jest",
+    "test": "jest --verbose",
     "prepack": "yarn build",
     "test-server": "ts-node-dev --respawn --transpile-only ./src/test-server.ts",
     "generate-healthie-sdk": "ts-node ./extensions/healthie/lib/sdk/genql/generateSdk.ts"
@@ -108,6 +108,9 @@
     "twilio": "^4.8.0",
     "xml2js": "^0.6.2",
     "zod": "^3.23.4",
-    "zod-validation-error": "^3.2.0"
+    "zod-validation-error": "^3.2.0",
+    "langchain": "^0.2.10",
+    "langchain/core": "^0.2.10",
+    "@langchain/openai": "^0.2.10"
   }
 }
