@@ -1,8 +1,8 @@
 import { Category, type Action } from '@awell-health/extensions-core'
+import { categorizeMessageWithLLM } from './lib/categorizeMessageWithLLM'
+import { validatePayloadAndCreateSdk } from '../../lib'
 import { type settings } from '../../settings'
 import { fields, dataPoints, FieldsValidationSchema } from './config'
-import { categorizeMessageWithLLM } from './performCategorization'
-
 
 export const categorizeMessage: Action<
   typeof fields,
@@ -14,35 +14,33 @@ export const categorizeMessage: Action<
   title: 'Categorize Message',
   description: 'Categorize the input message into set of predefined categories',
   fields,
-  previewable: true, // TODO
+  previewable: false,
   dataPoints,
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
-    console.log(payload)
+    const {
+      langChainOpenAiSdk,
+      fields: { categories, message },
+    } = await validatePayloadAndCreateSdk({
+      fieldsSchema: FieldsValidationSchema,
+      payload,
+    })
+
     try {
-      const { message, categories } = await FieldsValidationSchema.parseAsync(payload.fields)
-      console.log(message)
-      console.log(categories)
-      const categorized_message = await categorizeMessageWithLLM(message, categories)
-      console.log(categorized_message)
+      const category = await categorizeMessageWithLLM({
+        langChainOpenAiSdk,
+        message,
+        categories,
+      })
 
       await onComplete({
         data_points: {
-          category: categorized_message,
+          category,
         },
       })
     } catch (error) {
-      await onError({
-        events: [
-          {
-            date: new Date().toISOString(),
-            text: { en: "Failed to categorize message" },
-            error: {
-              category: 'SERVER_ERROR', // todo improve later
-              message: String(error),
-            },
-          },
-        ],
-      })
+      console.error('Error categorizing message:', error)
+      // Catch in extention server
+      throw new Error('Error categorizing message')
     }
   },
 }

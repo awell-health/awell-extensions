@@ -40,8 +40,6 @@ describe('Shelly - Summarize', () => {
         },
         settings: {
           openAiApiKey: 'a',
-          openAiOrgId: 'b',
-          openAiProjectId: 'c',
         },
       }),
       onComplete,

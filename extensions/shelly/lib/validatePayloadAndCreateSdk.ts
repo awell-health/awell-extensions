@@ -6,7 +6,7 @@ import {
 } from '@awell-health/extensions-core'
 import z from 'zod'
 import { SettingsValidationSchema } from '../settings'
-import OpenAIApi from 'openai'
+import { OpenAI } from '@langchain/openai'
 import { type Activity } from '@awell-health/extensions-core/dist/types/Activity'
 
 type ValidatePayloadAndCreateSdk = <
@@ -16,7 +16,7 @@ type ValidatePayloadAndCreateSdk = <
   fieldsSchema: T
   payload: P
 }) => Promise<{
-  openai: OpenAIApi
+  langChainOpenAiSdk: OpenAI
   fields: z.infer<(typeof args)['fieldsSchema']>
   settings: z.infer<typeof SettingsValidationSchema>
   pathway: Pathway
@@ -41,11 +41,11 @@ export const validatePayloadAndCreateSdk: ValidatePayloadAndCreateSdk = async ({
 
   const { patient, pathway, activity } = payload
 
-  const openai = new OpenAIApi({
-    apiKey: settings.openAiApiKey,
-    project: settings.openAiProjectId,
-    organization: settings.openAiOrgId,
+  const langChainOpenAiSdk = new OpenAI({
+    modelName: 'gpt-4o',
+    openAIApiKey: settings.openAiApiKey,
+    temperature: 0, // To ensure consistency
   })
 
-  return { openai, fields, settings, patient, pathway, activity }
+  return { langChainOpenAiSdk, fields, settings, patient, pathway, activity }
 }

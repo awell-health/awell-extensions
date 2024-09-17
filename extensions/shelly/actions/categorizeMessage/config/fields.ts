@@ -5,7 +5,7 @@ export const fields = {
     id: 'message',
     label: 'Message',
     description: 'The message to be categorized',
-    type: FieldType.TEXT,
+    type: FieldType.STRING, // Should be string, TEXT doesn't allow selecting a data point
     required: true,
   },
   categories: {
@@ -19,7 +19,12 @@ export const fields = {
 
 export const FieldsValidationSchema = z.object({
   message: z.string().min(1, 'Message is required'),
-  categories: z.string().min(1, 'At least one category is required').transform(s => s.split(',').map(item => item.trim())).refine((arr) => arr.length > 0, {
-    message: "At least one category is required",
-  }),
+  categories: z
+    .string()
+    .trim()
+    .min(1, 'At least one category is required')
+    .transform((s) => s.split(',').map((item) => item.trim()))
+    .refine((arr) => arr.length > 0, {
+      message: 'At least one category is required',
+    }),
 } satisfies Record<keyof typeof fields, ZodTypeAny>)

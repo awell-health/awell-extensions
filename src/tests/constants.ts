@@ -1,10 +1,4 @@
-import {
-  Action,
-  ExtensionAction,
-  ExtensionWebhook,
-  Webhook,
-  type NewActivityPayload,
-} from '@awell-health/extensions-core'
+import { type NewActivityPayload } from '@awell-health/extensions-core'
 import { merge } from 'lodash'
 
 export const testPayload: NewActivityPayload<any, any> = {
