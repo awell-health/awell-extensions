@@ -1,0 +1,1 @@
+export { categorizeMessage } from './categorizeMessage'

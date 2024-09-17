@@ -1,0 +1,1 @@
+export { medicationFromImage } from './medicationFromImage'

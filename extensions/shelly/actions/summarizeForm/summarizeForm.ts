@@ -24,14 +24,8 @@ export const summarizeForm: Action<
       payload,
     })
 
-    // const awellSdk = new AwellSdk({
-    //   environment: 'development',
-    //   apiKey: '',
-    // })
-
     const { formDefinition, formResponse } = await getLatestFormInStep({
       awellSdk: await helpers.awellSdk(),
-      // awellSdk,
       pathwayId: pathway.id,
       activityId: activity.id,
     })
@@ -41,34 +35,12 @@ export const summarizeForm: Action<
       formResponse,
     })
 
+    console.log(responseText)
+
     await onComplete({
       data_points: {
         summary: JSON.stringify(responseText),
       },
     })
-
-    // const openAiSdk = openai
-
-    // const completion = await openAiSdk.chat.completions.create({
-    //   messages: [
-    //     // Prompt, context
-    //     {
-    //       role: 'system',
-    //       content:
-    //         'You will be provided with a questionnaire response, and your task is to summarize the meeting as follows:\n\n- Overall summary of the response',
-    //     },
-    //     // Form answers
-    //     { role: 'user', content: 'Who won the world series in 2020?' },
-    //   ],
-    //   model: 'gpt-3.5-turbo',
-    // })
-
-    // const result = completion.choices[0].message.content
-
-    // await onComplete({
-    //   data_points: {
-    //     summary: JSON.stringify(result),
-    //   },
-    // })
   },
 }
