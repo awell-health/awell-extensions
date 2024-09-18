@@ -11,8 +11,8 @@ export const medicationFromImage: Action<
 > = {
   key: 'medicationFromImage',
   category: Category.WORKFLOW,
-  title: 'Summarize form',
-  description: 'Summarize the response of a form',
+  title: 'Extract medication from image',
+  description: 'Generates structured medication list from picture ',
   fields,
   previewable: false,
   dataPoints,
@@ -25,8 +25,24 @@ export const medicationFromImage: Action<
     })
 
     console.log(imageUrl)
-    // Call whatever API with the file URL and get back JSON
-    const data = await Promise.resolve({ dummy: 'data' })
+
+    // Call whatever API with the file URL and get back JSON (ideally in the following format)
+    const data = await Promise.resolve({
+      medications: [
+        {
+          product_rxcui: '809854',
+          product_name:
+            'hydrochlorothiazide 12.5 MG / quinapril 10 MG Oral Tablet [Accuretic]', // Full medication name
+          brand_name: 'Accuretic', // Brand name
+          dose_form_name: 'Oral Tablet', // Dose form, such as tablet, capsule, etc.
+          prescribable_name: 'Accuretic 10 MG / 12.5 MG Oral Tablet', // Name used for prescribing
+          extracted_medication_name: 'Accuretic', // Extracted name from image
+          extracted_brand_name: 'Accuretic', // Extracted brand name from image
+          extracted_dosage: '10 mg / 12.5 mg', // Extracted dosage information
+          extracted_ndcg: '0006-0711-31', // National Drug Code (optional)
+        },
+      ],
+    })
 
     await onComplete({
       data_points: {
