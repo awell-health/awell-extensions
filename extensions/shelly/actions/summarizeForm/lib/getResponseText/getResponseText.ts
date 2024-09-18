@@ -70,7 +70,7 @@ const getQuestionAndAnswer = (
   const userQuestionType = questionDefinition.userQuestionType
 
   const addQuestionLabel = (answer: string): string => {
-    return `Question label: ${questionDefinition.title}\nQuestion type: ${questionDefinition.userQuestionType}\n${answer}`
+    return `Question: ${questionDefinition.title}\nQuestion type: ${questionDefinition.userQuestionType}\n${answer}`
   }
 
   switch (userQuestionType) {
