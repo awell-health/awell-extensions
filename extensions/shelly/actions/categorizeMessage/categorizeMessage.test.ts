@@ -1,18 +1,30 @@
 import { TestHelpers } from '@awell-health/extensions-core'
 import { generateTestPayload } from '@/tests'
 import { categorizeMessage } from '.'
-import { OpenAI } from '@langchain/openai'
 
-jest.mock('@langchain/openai', () => ({
-  OpenAI: jest.fn().mockImplementation(() => ({
-    pipe: jest.fn().mockReturnThis(),
-    invoke: jest.fn().mockResolvedValue({
-      matched_entity: 'Appointment Scheduling',
-    }),
-  })),
-}))
+// Mock the module
+jest.mock('@langchain/openai', () => {
+  const mockInvoke = jest.fn().mockResolvedValue({
+    matched_entity: 'Appointment Scheduling',
+  })
 
-const mockedOpenAiSdk = jest.mocked(OpenAI)
+  const mockChain = {
+    invoke: mockInvoke,
+  }
+
+  const mockPipe = jest.fn().mockReturnValue(mockChain)
+
+  const mockChatOpenAI = jest.fn().mockImplementation(() => ({
+    pipe: mockPipe,
+  }))
+
+  return {
+    ChatOpenAI: mockChatOpenAI,
+  }
+})
+
+// Now import ChatOpenAI after mocking - TODO: possible improve this
+import { ChatOpenAI } from '@langchain/openai'
 
 describe('categorizeMessage - Mocked LLM calls', () => {
   const { onComplete, onError, helpers, extensionAction, clearMocks } =
@@ -24,13 +36,6 @@ describe('categorizeMessage - Mocked LLM calls', () => {
   })
 
   it('should work', async () => {
-    const mockedOpenAiInstance = new OpenAI()
-
-    jest.spyOn(mockedOpenAiInstance, 'invoke').mockResolvedValue({
-      // @ts-expect-error fine, we have a parser
-      matched_entity: 'Appointment Scheduling',
-    })
-
     const categorizeMessageWithLLMSpy = jest.spyOn(
       require('./lib/categorizeMessageWithLLM'),
       'categorizeMessageWithLLM'
@@ -54,9 +59,9 @@ describe('categorizeMessage - Mocked LLM calls', () => {
       helpers,
     })
 
-    expect(mockedOpenAiSdk).toHaveBeenCalled()
+    expect(ChatOpenAI).toHaveBeenCalled()
     expect(categorizeMessageWithLLMSpy).toHaveBeenCalledWith({
-      langChainOpenAiSdk: expect.any(Object), // If you want to match the instance more specifically, adjust this
+      ChatModelGPT4o: expect.any(Object),
       message: 'I would like to schedule an appointment for next week.',
       categories: [
         'Appointment Scheduling',
@@ -68,7 +73,7 @@ describe('categorizeMessage - Mocked LLM calls', () => {
 
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
-        category: 'Appointment Scheduling', // Expected category
+        category: 'Appointment Scheduling',
       },
     })
 

@@ -1,12 +1,12 @@
 import { parser, systemPrompt } from './constants'
-import { type OpenAI } from '@langchain/openai'
+import { type ChatOpenAI } from '@langchain/openai'
 
 export const categorizeMessageWithLLM = async ({
-  langChainOpenAiSdk,
+  ChatModelGPT4o,
   message,
   categories,
 }: {
-  langChainOpenAiSdk: OpenAI
+  ChatModelGPT4o: ChatOpenAI
   message: string
   categories: string[]
 }): Promise<string> => {
@@ -15,7 +15,7 @@ export const categorizeMessageWithLLM = async ({
     input: message,
   })
 
-  const chain = langChainOpenAiSdk.pipe(parser)
+  const chain = ChatModelGPT4o.pipe(parser)
   console.log('Prompt:', prompt)
   const result = await chain.invoke(prompt)
 
