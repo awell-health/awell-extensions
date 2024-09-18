@@ -1,12 +1,14 @@
 import { TestHelpers } from '@awell-health/extensions-core'
 import { generateTestPayload } from '@/tests'
 import { categorizeMessage } from '.'
+import { ChatOpenAI } from '@langchain/openai'
 
 // Mock the module
 jest.mock('@langchain/openai', () => {
   const mockInvoke = jest.fn().mockResolvedValue({
     matched_category: 'Appointment Scheduling',
-    match_explanation: 'The message contains a request for scheduling an appointment.'
+    match_explanation:
+      'The message contains a request for scheduling an appointment.',
   })
 
   const mockChain = {
@@ -23,9 +25,6 @@ jest.mock('@langchain/openai', () => {
     ChatOpenAI: mockChatOpenAI,
   }
 })
-
-// Now import ChatOpenAI after mocking - TODO: possible improve this
-import { ChatOpenAI } from '@langchain/openai'
 
 describe('categorizeMessage - Mocked LLM calls', () => {
   const { onComplete, onError, helpers, extensionAction, clearMocks } =
@@ -75,7 +74,8 @@ describe('categorizeMessage - Mocked LLM calls', () => {
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
         category: 'Appointment Scheduling',
-        explanation: 'The message contains a request for scheduling an appointment.',
+        explanation:
+          'The message contains a request for scheduling an appointment.',
       },
     })
 

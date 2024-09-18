@@ -38,7 +38,8 @@ describe.skip('categorizeMessage - Real LLM calls', () => {
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
         category: 'Appointment Scheduling',
-        explanation: 'The message explicitly states a desire to schedule an appointment, which directly aligns with the Appointment Scheduling category.',
+        explanation:
+          'The message explicitly states a desire to schedule an appointment, which directly aligns with the Appointment Scheduling category.',
       },
     })
 
@@ -66,7 +67,8 @@ describe.skip('categorizeMessage - Real LLM calls', () => {
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
         category: 'None',
-        explanation: 'Categorization was ambiguous; we could not find a proper category.',
+        explanation:
+          'Categorization was ambiguous; we could not find a proper category.',
       },
     })
 

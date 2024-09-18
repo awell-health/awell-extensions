@@ -1,4 +1,3 @@
-import { getLatestFormInCurrentStep } from '@/lib/awell/getLatestFormInCurrentStep/getLatestFormInCurrentStep';
 import { Category, type Action } from '@awell-health/extensions-core'
 import { validatePayloadAndCreateSdk } from '../../lib'
 import { type settings } from '../../settings'
@@ -6,6 +5,7 @@ import { fields, dataPoints, FieldsValidationSchema } from './config'
 import { getResponseText } from './lib/getResponseText'
 import { summarizeFormWithLLM } from './lib/summarizeFormWithLLM'
 import { DISCLAIMER_MSG } from '../../lib/constants'
+import { getLatestFormInCurrentStep } from '../../../../src/lib/awell'
 
 // TODO get rid of console logs eventually
 // TODO: Please check stakeholders aand whether I can get them lioke this - it is needed for the LLM call.
@@ -21,14 +21,13 @@ export const summarizeForm: Action<
   fields,
   previewable: false,
   dataPoints,
-  options: {
-    stakeholders: {
-      label: 'Stakeholder',
-      mode: 'single',
-    },
-  },
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
-    const { ChatModelGPT4o, fields: { additional_instructions }, pathway, activity } = await validatePayloadAndCreateSdk({
+    const {
+      ChatModelGPT4o,
+      fields: { additionalInstructions, stakeholder },
+      pathway,
+      activity,
+    } = await validatePayloadAndCreateSdk({
       fieldsSchema: FieldsValidationSchema,
       payload,
     })
@@ -49,9 +48,9 @@ export const summarizeForm: Action<
     try {
       const summary = await summarizeFormWithLLM({
         ChatModelGPT4o,
-        form_data: responseText,
-        stakeholder: 'Clinician', // TODO please add actual stakeholder of the action !!!!!
-        additional_instructions: additional_instructions ?? '',
+        formData: responseText,
+        stakeholder,
+        additionalInstructions,
       })
 
       console.log(`${DISCLAIMER_MSG}\n\n${summary}`)

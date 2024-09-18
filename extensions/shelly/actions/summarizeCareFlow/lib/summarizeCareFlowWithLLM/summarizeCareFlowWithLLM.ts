@@ -1,23 +1,22 @@
 import { systemPrompt } from './constants'
 import { type ChatOpenAI } from '@langchain/openai'
 
-
 // TODO: remove console logs eventually
 export const summarizeCareFlowWithLLM = async ({
   ChatModelGPT4o,
-  care_flow_data,
+  careFlowActivities,
   stakeholder,
-  additional_instructions,
+  additionalInstructions,
 }: {
   ChatModelGPT4o: ChatOpenAI
-  care_flow_data: string
+  careFlowActivities: string
   stakeholder: string
-  additional_instructions: string
+  additionalInstructions: string
 }): Promise<string> => {
   const prompt = await systemPrompt.format({
-    stakeholder: stakeholder,
-    additional_instructions: additional_instructions,
-    input: care_flow_data,
+    stakeholder,
+    additionalInstructions,
+    input: careFlowActivities,
   })
   console.log('Prompt', prompt)
   const summaryMessage = await ChatModelGPT4o.invoke(prompt)

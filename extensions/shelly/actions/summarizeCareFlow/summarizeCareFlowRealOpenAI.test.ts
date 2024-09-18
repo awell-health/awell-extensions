@@ -4,11 +4,8 @@ import { generateTestPayload } from '@/tests'
 import { summarizeCareFlow } from '.'
 import { mockPathwayActivitiesResponse } from './__mocks__/pathwayActivitiesResponse'
 
-// Import ChatOpenAI to use real model calls
-import { ChatOpenAI } from '@langchain/openai'
-
 // remove .skip to run this test
-describe('summarizeCareFlow - Real LLM calls with mocked Awell SDK', () => {
+describe.skip('summarizeCareFlow - Real LLM calls with mocked Awell SDK', () => {
   const { onComplete, onError, helpers, extensionAction, clearMocks } =
     TestHelpers.fromAction(summarizeCareFlow)
 
@@ -26,7 +23,8 @@ describe('summarizeCareFlow - Real LLM calls with mocked Awell SDK', () => {
       },
       fields: {
         stakeholder: 'Clinician',
-        additional_instructions: 'Summarize activities focusing on important steps.',
+        additionalInstructions:
+          'Summarize activities focusing on important steps.',
       },
       settings: {
         openAiApiKey: process.env.OPENAI_TEST_KEY, // Use your actual OpenAI API key here

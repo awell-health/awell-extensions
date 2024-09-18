@@ -16,14 +16,12 @@ export const summarizeCareFlow: Action<
   fields,
   previewable: false,
   dataPoints,
-  options: {
-    stakeholders: {
-      label: 'Stakeholder',
-      mode: 'single',
-    },
-  },
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
-    const { ChatModelGPT4o, fields: { additional_instructions },pathway } = await validatePayloadAndCreateSdk({
+    const {
+      ChatModelGPT4o,
+      fields: { additionalInstructions, stakeholder },
+      pathway,
+    } = await validatePayloadAndCreateSdk({
       fieldsSchema: FieldsValidationSchema,
       payload,
     })
@@ -67,28 +65,20 @@ export const summarizeCareFlow: Action<
       },
     })
 
-    console.log(
-      JSON.stringify(
-        pathwayActivitesUntilNow.pathwayActivities.activities,
-        null,
-        2
-      )
-    )
-
     try {
       const summary = await summarizeCareFlowWithLLM({
         ChatModelGPT4o,
-        care_flow_data: JSON.stringify(
+        careFlowActivities: JSON.stringify(
           pathwayActivitesUntilNow.pathwayActivities.activities,
           null,
           2
         ),
-        stakeholder: 'Clinician', // TODO please add actual stakeholder of the action !!!!!
-        additional_instructions: additional_instructions ?? '',
+        stakeholder,
+        additionalInstructions,
       })
 
-      const finalSummary = `${DISCLAIMER_MSG}\n\n${summary}`;
-      console.log(finalSummary);
+      const finalSummary = `${DISCLAIMER_MSG}\n\n${summary}`
+      console.log(finalSummary)
 
       await onComplete({
         data_points: {

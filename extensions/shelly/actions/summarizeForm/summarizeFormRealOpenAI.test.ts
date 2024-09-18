@@ -6,9 +6,6 @@ import { mockPathwayActivitiesResponse } from './__mocks__/pathwayActivitiesResp
 import { mockFormDefinitionResponse } from './__mocks__/formDefinitionResponse'
 import { mockFormResponseResponse } from './__mocks__/formResponseResponse'
 
-// Import ChatOpenAI to use real model calls
-import { ChatOpenAI } from '@langchain/openai'
-
 // remove skip to run this test
 describe.skip('summarizeForm - Real LLM calls with mocked Awell SDK', () => {
   const { onComplete, onError, helpers, extensionAction, clearMocks } =
@@ -29,8 +26,8 @@ describe.skip('summarizeForm - Real LLM calls with mocked Awell SDK', () => {
       activity: { id: 'X74HeDQ4N0gtdaSEuzF8s' },
       patient: { id: 'whatever' },
       fields: {
-        stakeholder: 'Doctor',
-        additional_instructions: 'Report only contact information',
+        stakeholder: 'Clinician',
+        additionalInstructions: 'Report only contact information',
       },
       settings: {
         openAiApiKey: process.env.OPENAI_TEST_KEY, // Use your actual OpenAI API key here
@@ -72,8 +69,8 @@ describe.skip('summarizeForm - Real LLM calls with mocked Awell SDK', () => {
     // Ensure that the model has actually been called (real call to ChatOpenAI)
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
-        summary: expect.stringContaining('32476581696')
-      }, 
+        summary: expect.stringContaining('32476581696'),
+      },
     })
 
     expect(onError).not.toHaveBeenCalled()

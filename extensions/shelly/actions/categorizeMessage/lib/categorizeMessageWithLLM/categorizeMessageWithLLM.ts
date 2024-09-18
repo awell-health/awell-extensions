@@ -23,7 +23,9 @@ export const categorizeMessageWithLLM = async ({
     result = await chain.invoke(prompt)
   } catch (error) {
     console.error('Error invoking the chain:', error)
-    throw new Error('Failed to categorize the message due to an internal error.')
+    throw new Error(
+      'Failed to categorize the message due to an internal error.'
+    )
   }
 
   console.log('Result', typeof result)
@@ -39,7 +41,8 @@ export const categorizeMessageWithLLM = async ({
     category = matchedCategory
   } else {
     category = 'None'
-    explanation = 'Categorization was ambiguous; we could not find a proper category.'
+    explanation =
+      'Categorization was ambiguous; we could not find a proper category.'
   }
 
   return { category, explanation }

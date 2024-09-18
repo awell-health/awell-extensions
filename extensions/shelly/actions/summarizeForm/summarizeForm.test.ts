@@ -1,47 +1,47 @@
 // Import necessary modules and functions
-import { TestHelpers } from '@awell-health/extensions-core';
-import { generateTestPayload } from '@/tests';
-import { summarizeForm } from '.';
-import { mockPathwayActivitiesResponse } from './__mocks__/pathwayActivitiesResponse';
-import { mockFormDefinitionResponse } from './__mocks__/formDefinitionResponse';
-import { mockFormResponseResponse } from './__mocks__/formResponseResponse';
-import { DISCLAIMER_MSG } from '../../lib/constants';
+import { TestHelpers } from '@awell-health/extensions-core'
+import { generateTestPayload } from '@/tests'
+import { summarizeForm } from '.'
+import { mockPathwayActivitiesResponse } from './__mocks__/pathwayActivitiesResponse'
+import { mockFormDefinitionResponse } from './__mocks__/formDefinitionResponse'
+import { mockFormResponseResponse } from './__mocks__/formResponseResponse'
+import { DISCLAIMER_MSG } from '../../lib/constants'
 
 // Mock the '@langchain/openai' module
 jest.mock('@langchain/openai', () => {
   // Mock the 'invoke' method to return a resolved value
   const mockInvoke = jest.fn().mockResolvedValue({
     content: 'Mocked summary from LLM',
-  });
+  })
 
   // Mock the ChatOpenAI class
   const mockChatOpenAI = jest.fn().mockImplementation(() => ({
     invoke: mockInvoke,
-  }));
+  }))
 
   return {
     ChatOpenAI: mockChatOpenAI,
-  };
-});
+  }
+})
 
 // Import ChatOpenAI after mocking
-import { ChatOpenAI } from '@langchain/openai';
+import { ChatOpenAI } from '@langchain/openai'
 
 describe('summarizeForm - Mocked LLM calls', () => {
   const { onComplete, onError, helpers, extensionAction, clearMocks } =
-    TestHelpers.fromAction(summarizeForm);
+    TestHelpers.fromAction(summarizeForm)
 
   beforeEach(() => {
-    clearMocks();
-    jest.clearAllMocks();
-  });
+    clearMocks()
+    jest.clearAllMocks()
+  })
 
   it('Should work', async () => {
     // Spy on the 'summarizeFormWithLLM' function
     const summarizeFormWithLLMSpy = jest.spyOn(
       require('./lib/summarizeFormWithLLM'),
       'summarizeFormWithLLM'
-    );
+    )
 
     // Create the test payload
     const payload = generateTestPayload({
@@ -52,13 +52,13 @@ describe('summarizeForm - Mocked LLM calls', () => {
       activity: { id: 'X74HeDQ4N0gtdaSEuzF8s' },
       patient: { id: 'whatever' },
       fields: {
-        stakeholder: 'Doctor',
-        additional_instructions: 'Please focus on key symptoms.',
+        stakeholder: 'Clinician',
+        additionalInstructions: 'Please focus on key symptoms.',
       },
       settings: {
         openAiApiKey: 'a',
       },
-    });
+    })
 
     // Mock the Awell SDK
     const awellSdkMock = {
@@ -76,9 +76,9 @@ describe('summarizeForm - Mocked LLM calls', () => {
             formResponse: mockFormResponseResponse,
           }),
       },
-    };
+    }
 
-    helpers.awellSdk = jest.fn().mockResolvedValue(awellSdkMock);
+    helpers.awellSdk = jest.fn().mockResolvedValue(awellSdkMock)
 
     // Execute the action
     await extensionAction.onEvent({
@@ -86,23 +86,23 @@ describe('summarizeForm - Mocked LLM calls', () => {
       onComplete,
       onError,
       helpers,
-    });
+    })
 
     // Assertions
-    expect(ChatOpenAI).toHaveBeenCalled();
+    expect(ChatOpenAI).toHaveBeenCalled()
     expect(summarizeFormWithLLMSpy).toHaveBeenCalledWith({
       ChatModelGPT4o: expect.any(Object),
-      form_data: expect.any(String),
+      formData: expect.any(String),
       stakeholder: 'Clinician',
-      additional_instructions: 'Please focus on key symptoms.',
-    });
+      additionalInstructions: 'Please focus on key symptoms.',
+    })
 
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
         summary: `${DISCLAIMER_MSG}\n\n${'Mocked summary from LLM'}`,
       },
-    });
+    })
 
-    expect(onError).not.toHaveBeenCalled();
-  });
-});
+    expect(onError).not.toHaveBeenCalled()
+  })
+})

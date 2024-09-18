@@ -8,14 +8,13 @@ export const messageCategoriesSchema = z.object({
   match_explanation: z.string(), // One-sentence explanation of the match
 })
 
-
 // Create a structured output parser
 export const parser = StructuredOutputParser.fromZodSchema(
   messageCategoriesSchema
 )
 
 // TODO: move prompt to LangSmith + further tune
- export const systemPrompt = ChatPromptTemplate.fromTemplate(`
+export const systemPrompt = ChatPromptTemplate.fromTemplate(`
       You are an expert in categorizing messages different messages in a clinical context.
       Use your expertise to solve the critical task:
       1. Match the provided message to one of the following categories: {categories}.

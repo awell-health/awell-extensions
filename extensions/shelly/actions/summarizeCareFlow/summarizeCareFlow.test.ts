@@ -47,8 +47,8 @@ describe('summarizeCareFlow - Mocked LLM calls', () => {
         definition_id: 'whatever',
       },
       fields: {
-        stakeholder: 'Doctor',
-        additional_instructions: 'Summarize key activities.',
+        stakeholder: 'Clinician',
+        additionalInstructions: 'Summarize key activities.',
       },
       settings: {
         openAiApiKey: 'a',
@@ -78,9 +78,9 @@ describe('summarizeCareFlow - Mocked LLM calls', () => {
     expect(ChatOpenAI).toHaveBeenCalled()
     expect(summarizeCareFlowWithLLMSpy).toHaveBeenCalledWith({
       ChatModelGPT4o: expect.any(Object),
-      care_flow_data: expect.any(String),
+      careFlowActivities: expect.any(String),
       stakeholder: 'Clinician',
-      additional_instructions: 'Summarize key activities.',
+      additionalInstructions: 'Summarize key activities.',
     })
 
     expect(onComplete).toHaveBeenCalledWith({

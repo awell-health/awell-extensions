@@ -1,6 +1,5 @@
 import { ChatPromptTemplate } from '@langchain/core/prompts'
 
-
 // TODO: move prompt to LangSmith + further tune
 export const systemPrompt = ChatPromptTemplate.fromTemplate(`
   You are an assistant that provides summaries of forms for different stakeholders in a clinical pathway setting.
@@ -25,7 +24,7 @@ export const systemPrompt = ChatPromptTemplate.fromTemplate(`
   Do not put titles like Summary: , just provide the summary.
 
   Additional Instructions:
-  {additional_instructions}
+  {additionalInstructions}
 
   Stakeholder:
   {stakeholder}
@@ -33,4 +32,3 @@ export const systemPrompt = ChatPromptTemplate.fromTemplate(`
   Content to summarize:
   {input}
   `)
-

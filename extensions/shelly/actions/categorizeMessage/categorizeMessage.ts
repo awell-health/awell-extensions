@@ -12,7 +12,8 @@ export const categorizeMessage: Action<
   key: 'categorizeMessage',
   category: Category.WORKFLOW,
   title: 'Categorize Message',
-  description: 'Categorize the input message into set of predefined categories and provides explanation.',
+  description:
+    'Categorize the input message into set of predefined categories and provides explanation.',
   fields,
   previewable: false,
   dataPoints,
@@ -35,11 +36,12 @@ export const categorizeMessage: Action<
       console.log(categorization_result)
       const category = categorization_result.category
       const explanation = categorization_result.explanation
+
       await onComplete({
         data_points: {
-            category,
-            explanation,
-          },
+          category,
+          explanation,
+        },
       })
     } catch (error) {
       console.error('Error categorizing message:', error)
@@ -48,4 +50,3 @@ export const categorizeMessage: Action<
     }
   },
 }
-

@@ -1,8 +1,7 @@
-import 'dotenv/config';
-import { summarizeFormWithLLM } from './summarizeFormWithLLM';
-import { ChatOpenAI } from '@langchain/openai';
-import { AIMessageChunk } from '@langchain/core/messages';
-
+import 'dotenv/config'
+import { summarizeFormWithLLM } from './summarizeFormWithLLM'
+import { ChatOpenAI } from '@langchain/openai'
+import { AIMessageChunk } from '@langchain/core/messages'
 
 const sampleForms = {
   'General Health Questionnaire': {
@@ -21,46 +20,50 @@ const sampleForms = {
       'Sometimes I feel numbness in my right leg.',
     ],
   },
-};
+}
 
 describe('summarizeFormWithLLM', () => {
-  let ChatModelGPT4oMock: jest.Mocked<ChatOpenAI>;
+  let ChatModelGPT4oMock: jest.Mocked<ChatOpenAI>
 
   beforeEach(() => {
     // Define the 'invoke' method in the mock
     ChatModelGPT4oMock = {
       invoke: jest.fn(),
-    } as unknown as jest.Mocked<ChatOpenAI>;
-  });
+    } as unknown as jest.Mocked<ChatOpenAI>
+  })
 
   it('should return a mocked summary for the General Health Questionnaire', async () => {
     const mockedSummary =
-      'Patient reports persistent sharp lower back pain for two weeks, exacerbated by bending or lifting, with numbness in the right leg. No recent injuries but has started a new job involving heavy lifting.';
+      'Patient reports persistent sharp lower back pain for two weeks, exacerbated by bending or lifting, with numbness in the right leg. No recent injuries but has started a new job involving heavy lifting.'
 
     // Mock the 'invoke' method to return an AIMessage
-    ChatModelGPT4oMock.invoke.mockResolvedValueOnce(new AIMessageChunk(mockedSummary));
+    ChatModelGPT4oMock.invoke.mockResolvedValueOnce(
+      new AIMessageChunk(mockedSummary)
+    )
 
-    const formName = 'General Health Questionnaire';
-    const form = sampleForms[formName];
+    const formName = 'General Health Questionnaire'
+    const form = sampleForms[formName]
     const formData = form.questions
       .map(
-        (question, index) => `Question: ${question}\nAnswer: ${form.answers[index]}\n`
+        (question, index) =>
+          `Question: ${question}\nAnswer: ${form.answers[index]}\n`
       )
-      .join('\n');
+      .join('\n')
 
-    const stakeholder = 'Clinician';
-    const additionalInstructions = 'Highlight any critical symptoms and possible causes.';
+    const stakeholder = 'Clinician'
+    const additionalInstructions =
+      'Highlight any critical symptoms and possible causes.'
 
     const summary = await summarizeFormWithLLM({
       ChatModelGPT4o: ChatModelGPT4oMock,
-      form_data: formData,
+      formData: formData,
       stakeholder,
-      additional_instructions: additionalInstructions,
-    });
+      additionalInstructions,
+    })
 
     console.log('Summary', summary)
 
-    expect(summary).toBe(mockedSummary);
-    expect(ChatModelGPT4oMock.invoke).toHaveBeenCalledTimes(1);
-  });
-});
+    expect(summary).toBe(mockedSummary)
+    expect(ChatModelGPT4oMock.invoke).toHaveBeenCalledTimes(1)
+  })
+})

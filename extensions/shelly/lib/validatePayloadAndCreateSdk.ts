@@ -58,6 +58,13 @@ export const validatePayloadAndCreateSdk: ValidatePayloadAndCreateSdk = async ({
     timeout: 10000,
   })
 
-
-  return { ChatModelGPT4o, ChatModelGPT4oMini, fields, settings, patient, pathway, activity }
+  return {
+    ChatModelGPT4o,
+    ChatModelGPT4oMini,
+    fields,
+    settings,
+    patient,
+    pathway,
+    activity,
+  }
 }
