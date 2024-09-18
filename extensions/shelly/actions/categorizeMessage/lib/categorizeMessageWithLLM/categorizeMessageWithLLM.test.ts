@@ -16,6 +16,7 @@ describe('categorizeMessageWithLLM', () => {
     ChatModelGPT4oMiniMock.invoke.mockResolvedValue({
       // @ts-expect-error it's fine, we have a parser
       matched_category: 'Appointment Scheduling',
+      match_explanation: 'The message contains a request for scheduling an appointment.'
     })
 
     const categories = [
@@ -32,13 +33,14 @@ describe('categorizeMessageWithLLM', () => {
       categories,
     })
 
-    expect(result).toBe('Appointment Scheduling')
+    expect(result.category).toBe('Appointment Scheduling')
   })
 
   it('should categorize a message about medication using real LLM', async () => {
     ChatModelGPT4oMiniMock.invoke.mockResolvedValue({
       // @ts-expect-error it's fine, we have a parser
       matched_category: 'Medication Questions',
+      match_explanation: 'The message contains a request for medication information.'
     })
 
     const categories = [
@@ -55,13 +57,14 @@ describe('categorizeMessageWithLLM', () => {
       categories,
     })
 
-    expect(result).toBe('Medication Questions')
+    expect(result.category).toBe('Medication Questions')
   })
 
   it('should return "None" when the message does not match any category using real LLM', async () => {
     ChatModelGPT4oMiniMock.invoke.mockResolvedValue({
       // @ts-expect-error it's fine, we have a parser
       matched_category: 'None',
+      match_explanation: 'The message does not contain any information about scheduling or medication.'
     })
 
     const categories = [
@@ -78,6 +81,6 @@ describe('categorizeMessageWithLLM', () => {
       categories,
     })
 
-    expect(result).toBe('None')
+    expect(result.category).toBe('None')
   })
 })

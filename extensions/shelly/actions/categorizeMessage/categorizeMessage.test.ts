@@ -6,6 +6,7 @@ import { categorizeMessage } from '.'
 jest.mock('@langchain/openai', () => {
   const mockInvoke = jest.fn().mockResolvedValue({
     matched_category: 'Appointment Scheduling',
+    match_explanation: 'The message contains a request for scheduling an appointment.'
   })
 
   const mockChain = {
@@ -74,6 +75,7 @@ describe('categorizeMessage - Mocked LLM calls', () => {
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
         category: 'Appointment Scheduling',
+        explanation: 'The message contains a request for scheduling an appointment.',
       },
     })
 

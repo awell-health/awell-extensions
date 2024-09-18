@@ -12,7 +12,7 @@ export const categorizeMessage: Action<
   key: 'categorizeMessage',
   category: Category.WORKFLOW,
   title: 'Categorize Message',
-  description: 'Categorize the input message into set of predefined categories',
+  description: 'Categorize the input message into set of predefined categories and provides explanation.',
   fields,
   previewable: false,
   dataPoints,
@@ -26,16 +26,20 @@ export const categorizeMessage: Action<
     })
 
     try {
-      const category = await categorizeMessageWithLLM({
+      const categorization_result = await categorizeMessageWithLLM({
         ChatModelGPT4oMini,
         message,
         categories,
       })
 
+      console.log(categorization_result)
+      const category = categorization_result.category
+      const explanation = categorization_result.explanation
       await onComplete({
         data_points: {
-          category,
-        },
+            category,
+            explanation,
+          },
       })
     } catch (error) {
       console.error('Error categorizing message:', error)
@@ -44,3 +48,4 @@ export const categorizeMessage: Action<
     }
   },
 }
+
