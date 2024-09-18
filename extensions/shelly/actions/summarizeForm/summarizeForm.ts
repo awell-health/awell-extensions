@@ -1,7 +1,6 @@
-// import { AwellSdk } from '@awell-health/awell-sdk'
+import { getLatestFormInCurrentStep } from '../../../../src/lib/awell'
 import { Category, type Action } from '@awell-health/extensions-core'
 import { validatePayloadAndCreateSdk } from '../../lib'
-import { getLatestFormInStep } from '../../lib/utils/getLatestFormInStep'
 import { type settings } from '../../settings'
 import { fields, dataPoints, FieldsValidationSchema } from './config'
 import { getResponseText } from './lib/getResponseText'
@@ -24,7 +23,7 @@ export const summarizeForm: Action<
       payload,
     })
 
-    const { formDefinition, formResponse } = await getLatestFormInStep({
+    const { formDefinition, formResponse } = await getLatestFormInCurrentStep({
       awellSdk: await helpers.awellSdk(),
       pathwayId: pathway.id,
       activityId: activity.id,

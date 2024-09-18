@@ -26,6 +26,7 @@ import { getFormAnswers } from './getFormAnswers'
 import { createGoal } from './createGoal'
 import { deleteGoal } from './deleteGoal'
 import { getSetPasswordLink } from './getSetPasswordLink'
+import { pushFormResponseToHealthie } from './pushFormResponseToHealthie'
 
 export const actions = {
   deleteGoal,
@@ -65,4 +66,5 @@ export const actions = {
   checkPatientTag,
   checkScheduledAppointments,
   getFormAnswers,
+  pushFormResponseToHealthie,
 }

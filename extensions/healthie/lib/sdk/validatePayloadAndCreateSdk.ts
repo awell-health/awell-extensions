@@ -1,13 +1,22 @@
-import { validate } from '@awell-health/extensions-core'
+import {
+  type NewActivityPayload,
+  validate,
+  type Pathway,
+  type Patient,
+} from '@awell-health/extensions-core'
 import z from 'zod'
 import { SettingsValidationSchema } from '../../settings'
 import { HealthieSdk } from './genql'
 import { getSdk } from './graphql-codegen/generated/sdk'
 import { initialiseClient } from './graphql-codegen/graphqlClient'
+import { type Activity } from '@awell-health/extensions-core/dist/types/Activity'
 
-type ValidatePayloadAndCreateSdk = <T extends z.ZodTypeAny>(args: {
+type ValidatePayloadAndCreateSdk = <
+  T extends z.ZodTypeAny,
+  P extends NewActivityPayload<any, any>
+>(args: {
   fieldsSchema: T
-  payload: unknown
+  payload: P
 }) => Promise<{
   /**
    * @deprecated DO NOT USE
@@ -17,6 +26,9 @@ type ValidatePayloadAndCreateSdk = <T extends z.ZodTypeAny>(args: {
   healthieSdk: HealthieSdk
   fields: z.infer<(typeof args)['fieldsSchema']>
   settings: z.infer<typeof SettingsValidationSchema>
+  pathway: Pathway
+  patient: Patient
+  activity: Activity
 }>
 
 export const validatePayloadAndCreateSdk: ValidatePayloadAndCreateSdk = async ({
@@ -30,6 +42,8 @@ export const validatePayloadAndCreateSdk: ValidatePayloadAndCreateSdk = async ({
     }),
     payload,
   })
+
+  const { patient, pathway, activity } = payload
 
   const client = initialiseClient(settings)
 
@@ -46,5 +60,13 @@ export const validatePayloadAndCreateSdk: ValidatePayloadAndCreateSdk = async ({
    */
   const healthieSdk = new HealthieSdk(settings)
 
-  return { settings, fields, sdk: deprecatedSdk, healthieSdk }
+  return {
+    settings,
+    fields,
+    sdk: deprecatedSdk,
+    healthieSdk,
+    patient,
+    pathway,
+    activity,
+  }
 }
