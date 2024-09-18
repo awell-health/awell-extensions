@@ -3,19 +3,19 @@ import { categorizeMessageWithLLM } from './'
 import { type ChatOpenAI } from '@langchain/openai'
 
 describe('categorizeMessageWithLLM', () => {
-  let ChatModelGPT4oMock: jest.Mocked<ChatOpenAI>
+  let ChatModelGPT4oMiniMock: jest.Mocked<ChatOpenAI>
 
   beforeEach(() => {
-    ChatModelGPT4oMock = {
+    ChatModelGPT4oMiniMock = {
       pipe: jest.fn().mockReturnThis(),
       invoke: jest.fn(),
     } as unknown as jest.Mocked<ChatOpenAI>
   })
 
   it('should categorize a message about scheduling an appointment using real LLM', async () => {
-    ChatModelGPT4oMock.invoke.mockResolvedValue({
+    ChatModelGPT4oMiniMock.invoke.mockResolvedValue({
       // @ts-expect-error it's fine, we have a parser
-      matched_entity: 'Appointment Scheduling',
+      matched_category: 'Appointment Scheduling',
     })
 
     const categories = [
@@ -27,7 +27,7 @@ describe('categorizeMessageWithLLM', () => {
     const message = 'I would like to schedule an appointment for next week.'
 
     const result = await categorizeMessageWithLLM({
-      ChatModelGPT4o: ChatModelGPT4oMock,
+      ChatModelGPT4oMini: ChatModelGPT4oMiniMock,
       message,
       categories,
     })
@@ -36,9 +36,9 @@ describe('categorizeMessageWithLLM', () => {
   })
 
   it('should categorize a message about medication using real LLM', async () => {
-    ChatModelGPT4oMock.invoke.mockResolvedValue({
+    ChatModelGPT4oMiniMock.invoke.mockResolvedValue({
       // @ts-expect-error it's fine, we have a parser
-      matched_entity: 'Medication Questions',
+      matched_category: 'Medication Questions',
     })
 
     const categories = [
@@ -50,7 +50,7 @@ describe('categorizeMessageWithLLM', () => {
     const message = 'Can you tell me the correct dosage for my medication?'
 
     const result = await categorizeMessageWithLLM({
-      ChatModelGPT4o: ChatModelGPT4oMock,
+      ChatModelGPT4oMini: ChatModelGPT4oMiniMock,
       message,
       categories,
     })
@@ -59,9 +59,9 @@ describe('categorizeMessageWithLLM', () => {
   })
 
   it('should return "None" when the message does not match any category using real LLM', async () => {
-    ChatModelGPT4oMock.invoke.mockResolvedValue({
+    ChatModelGPT4oMiniMock.invoke.mockResolvedValue({
       // @ts-expect-error it's fine, we have a parser
-      matched_entity: 'None',
+      matched_category: 'None',
     })
 
     const categories = [
@@ -73,7 +73,7 @@ describe('categorizeMessageWithLLM', () => {
     const message = 'Is it going to rain tomorrow?'
 
     const result = await categorizeMessageWithLLM({
-      ChatModelGPT4o: ChatModelGPT4oMock,
+      ChatModelGPT4oMini: ChatModelGPT4oMiniMock,
       message,
       categories,
     })

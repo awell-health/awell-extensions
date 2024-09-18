@@ -8,7 +8,7 @@ const settings = {
 }
 
 // Remove skip to run the test
-describe.skip('categorizeMessage - Real LLM calls', () => {
+describe('categorizeMessage - Real LLM calls', () => {
   const { onComplete, onError, helpers, extensionAction, clearMocks } =
     TestHelpers.fromAction(categorizeMessage)
 

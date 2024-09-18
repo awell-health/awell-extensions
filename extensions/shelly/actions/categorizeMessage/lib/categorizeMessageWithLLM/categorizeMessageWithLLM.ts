@@ -2,11 +2,11 @@ import { parser, systemPrompt } from './constants'
 import { type ChatOpenAI } from '@langchain/openai'
 
 export const categorizeMessageWithLLM = async ({
-  ChatModelGPT4o,
+  ChatModelGPT4oMini,
   message,
   categories,
 }: {
-  ChatModelGPT4o: ChatOpenAI
+  ChatModelGPT4oMini: ChatOpenAI
   message: string
   categories: string[]
 }): Promise<string> => {
@@ -15,17 +15,17 @@ export const categorizeMessageWithLLM = async ({
     input: message,
   })
 
-  const chain = ChatModelGPT4o.pipe(parser)
+  const chain = ChatModelGPT4oMini.pipe(parser)
   console.log('Prompt:', prompt)
   const result = await chain.invoke(prompt)
 
   console.log('Result', typeof result)
 
-  const matchedEntity = result.matched_entity ?? 'None'
-  console.log('I am matching:', matchedEntity)
+  const matchedCategory = result.matched_category ?? 'None'
+  console.log('I am matching:', matchedCategory)
 
   // Ensure that the returned matched entity is valid
-  const category = categories.includes(matchedEntity) ? matchedEntity : 'None'
+  const category = categories.includes(matchedCategory) ? matchedCategory : 'None'
 
   return category
 }

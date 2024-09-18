@@ -5,7 +5,7 @@ import { categorizeMessage } from '.'
 // Mock the module
 jest.mock('@langchain/openai', () => {
   const mockInvoke = jest.fn().mockResolvedValue({
-    matched_entity: 'Appointment Scheduling',
+    matched_category: 'Appointment Scheduling',
   })
 
   const mockChain = {
@@ -61,7 +61,7 @@ describe('categorizeMessage - Mocked LLM calls', () => {
 
     expect(ChatOpenAI).toHaveBeenCalled()
     expect(categorizeMessageWithLLMSpy).toHaveBeenCalledWith({
-      ChatModelGPT4o: expect.any(Object),
+      ChatModelGPT4oMini: expect.any(Object),
       message: 'I would like to schedule an appointment for next week.',
       categories: [
         'Appointment Scheduling',

@@ -18,7 +18,7 @@ export const categorizeMessage: Action<
   dataPoints,
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
     const {
-      ChatModelGPT4o,
+      ChatModelGPT4oMini,
       fields: { categories, message },
     } = await validatePayloadAndCreateSdk({
       fieldsSchema: FieldsValidationSchema,
@@ -27,7 +27,7 @@ export const categorizeMessage: Action<
 
     try {
       const category = await categorizeMessageWithLLM({
-        ChatModelGPT4o,
+        ChatModelGPT4oMini,
         message,
         categories,
       })

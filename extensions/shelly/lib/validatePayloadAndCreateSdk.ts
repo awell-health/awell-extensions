@@ -16,7 +16,7 @@ type ValidatePayloadAndCreateSdk = <
   fieldsSchema: T
   payload: P
 }) => Promise<{
-  ChatModelGPT4o: ChatOpenAI
+  ChatModelGPT4oMini: ChatOpenAI
   fields: z.infer<(typeof args)['fieldsSchema']>
   settings: z.infer<typeof SettingsValidationSchema>
   pathway: Pathway
@@ -41,13 +41,13 @@ export const validatePayloadAndCreateSdk: ValidatePayloadAndCreateSdk = async ({
 
   const { patient, pathway, activity } = payload
 
-  const ChatModelGPT4o = new ChatOpenAI({
-    modelName: 'gpt-4o',
+  const ChatModelGPT4oMini = new ChatOpenAI({
+    modelName: 'gpt-4o-mini',
     openAIApiKey: settings.openAiApiKey,
     temperature: 0, // To ensure consistency
     maxRetries: 3,
     timeout: 10000,
   })
 
-  return { ChatModelGPT4o, fields, settings, patient, pathway, activity }
+  return { ChatModelGPT4oMini, fields, settings, patient, pathway, activity }
 }
