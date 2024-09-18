@@ -2,15 +2,31 @@ import { type Field, FieldType } from '@awell-health/extensions-core'
 import z, { type ZodTypeAny } from 'zod'
 
 export const fields = {
-  prompt: {
-    id: 'prompt',
-    label: 'Prompt',
-    description: 'Leave blank to use the default prompt',
-    type: FieldType.TEXT,
+  additionalInstructions: {
+    id: 'additionalInstructions',
+    label: 'Additional Instructions',
+    description:
+      'Specify additional instructions for summarization, for example format, length, etc. If not specified, default instructions will be used.',
+    type: FieldType.STRING,
+    required: false,
+  },
+  stakeholder: {
+    id: 'stakeholder',
+    label: 'Stakeholder',
+    description: 'Defaults to "Clinician"',
+    type: FieldType.STRING,
     required: false,
   },
 } satisfies Record<string, Field>
 
 export const FieldsValidationSchema = z.object({
-  prompt: z.string().optional(),
+  additionalInstructions: z.string().optional().default(''),
+  stakeholder: z
+    .string()
+    .optional()
+    .transform((val): string => {
+      if (val === undefined || val === '') return 'Clinician'
+
+      return val
+    }),
 } satisfies Record<keyof typeof fields, ZodTypeAny>)

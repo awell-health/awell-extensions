@@ -1,10 +1,14 @@
-import { getLatestFormInCurrentStep } from '../../../../src/lib/awell'
 import { Category, type Action } from '@awell-health/extensions-core'
 import { validatePayloadAndCreateSdk } from '../../lib'
 import { type settings } from '../../settings'
 import { fields, dataPoints, FieldsValidationSchema } from './config'
 import { getResponseText } from './lib/getResponseText'
+import { summarizeFormWithLLM } from './lib/summarizeFormWithLLM'
+import { DISCLAIMER_MSG } from '../../lib/constants'
+import { getLatestFormInCurrentStep } from '../../../../src/lib/awell'
 
+// TODO get rid of console logs eventually
+// TODO: Please check stakeholders aand whether I can get them lioke this - it is needed for the LLM call.
 export const summarizeForm: Action<
   typeof fields,
   typeof settings,
@@ -13,12 +17,17 @@ export const summarizeForm: Action<
   key: 'summarizeForm',
   category: Category.WORKFLOW,
   title: 'Summarize form',
-  description: 'Summarize the response of a form',
+  description: 'Summarize the response of a form with AI.',
   fields,
   previewable: false,
   dataPoints,
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
-    const { pathway, activity } = await validatePayloadAndCreateSdk({
+    const {
+      ChatModelGPT4o,
+      fields: { additionalInstructions, stakeholder },
+      pathway,
+      activity,
+    } = await validatePayloadAndCreateSdk({
       fieldsSchema: FieldsValidationSchema,
       payload,
     })
@@ -36,10 +45,24 @@ export const summarizeForm: Action<
 
     console.log(responseText)
 
-    await onComplete({
-      data_points: {
-        summary: JSON.stringify(responseText),
-      },
-    })
+    try {
+      const summary = await summarizeFormWithLLM({
+        ChatModelGPT4o,
+        formData: responseText,
+        stakeholder,
+        additionalInstructions,
+      })
+
+      console.log(`${DISCLAIMER_MSG}\n\n${summary}`)
+
+      await onComplete({
+        data_points: {
+          summary: `${DISCLAIMER_MSG}\n\n${summary}`,
+        },
+      })
+    } catch (error) {
+      console.error('Error summarizing form:', error)
+      throw new Error('Error summarizing form')
+    }
   },
 }

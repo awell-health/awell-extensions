@@ -2,52 +2,93 @@ import { TestHelpers } from '@awell-health/extensions-core'
 import { generateTestPayload } from '@/tests'
 import { summarizeCareFlow } from '.'
 import { mockPathwayActivitiesResponse } from './__mocks__/pathwayActivitiesResponse'
+import { DISCLAIMER_MSG } from '../../lib/constants'
 
-describe('Shelly - Summarize care flow', () => {
+// Mock the '@langchain/openai' module
+jest.mock('@langchain/openai', () => {
+  // Mock the 'invoke' method to return a resolved value
+  const mockInvoke = jest.fn().mockResolvedValue({
+    content: 'Mocked care flow summary from LLM',
+  })
+
+  // Mock the ChatOpenAI class
+  const mockChatOpenAI = jest.fn().mockImplementation(() => ({
+    invoke: mockInvoke,
+  }))
+
+  return {
+    ChatOpenAI: mockChatOpenAI,
+  }
+})
+
+// Import ChatOpenAI after mocking
+import { ChatOpenAI } from '@langchain/openai'
+
+describe('summarizeCareFlow - Mocked LLM calls', () => {
   const { onComplete, onError, helpers, extensionAction, clearMocks } =
     TestHelpers.fromAction(summarizeCareFlow)
 
-  const awellSdkMock = {
-    orchestration: {
-      mutation: jest.fn().mockResolvedValue({}),
-      query: jest.fn().mockResolvedValue({
-        pathwayActivities: mockPathwayActivitiesResponse,
-      }),
-    },
-  }
-
-  helpers.awellSdk = jest.fn().mockResolvedValue(awellSdkMock)
-
   beforeEach(() => {
     clearMocks()
+    jest.clearAllMocks()
   })
 
-  test('Should work', async () => {
+  it('Should summarize care flow with LLM', async () => {
+    // Spy on the 'summarizeCareFlowWithLLM' function
+    const summarizeCareFlowWithLLMSpy = jest.spyOn(
+      require('./lib/summarizeCareFlowWithLLM'),
+      'summarizeCareFlowWithLLM'
+    )
+
+    // Create the test payload
+    const payload = generateTestPayload({
+      pathway: {
+        id: 'ai4rZaYEocjB',
+        definition_id: 'whatever',
+      },
+      fields: {
+        stakeholder: 'Clinician',
+        additionalInstructions: 'Summarize key activities.',
+      },
+      settings: {
+        openAiApiKey: 'a',
+      },
+    })
+
+    // Mock the Awell SDK
+    const awellSdkMock = {
+      orchestration: {
+        query: jest.fn().mockResolvedValue({
+          pathwayActivities: mockPathwayActivitiesResponse,
+        }),
+      },
+    }
+
+    helpers.awellSdk = jest.fn().mockResolvedValue(awellSdkMock)
+
+    // Execute the action
     await extensionAction.onEvent({
-      payload: generateTestPayload({
-        pathway: {
-          id: 'whatever',
-        },
-        fields: {
-          prompt: '',
-        },
-        settings: {
-          openAiApiKey: 'a',
-        },
-      }),
+      payload,
       onComplete,
       onError,
       helpers,
     })
 
-    expect(helpers.awellSdk).toHaveBeenCalledTimes(1)
-    expect(awellSdkMock.orchestration.query).toHaveBeenCalledTimes(1)
+    // Assertions
+    expect(ChatOpenAI).toHaveBeenCalled()
+    expect(summarizeCareFlowWithLLMSpy).toHaveBeenCalledWith({
+      ChatModelGPT4o: expect.any(Object),
+      careFlowActivities: expect.any(String),
+      stakeholder: 'Clinician',
+      additionalInstructions: 'Summarize key activities.',
+    })
 
-    expect(onError).not.toHaveBeenCalled()
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
-        summary: 'Hello world',
+        summary: `${DISCLAIMER_MSG}\n\n${'Mocked care flow summary from LLM'}`,
       },
     })
+
+    expect(onError).not.toHaveBeenCalled()
   })
 })

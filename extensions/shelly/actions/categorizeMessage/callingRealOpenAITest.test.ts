@@ -37,7 +37,9 @@ describe.skip('categorizeMessage - Real LLM calls', () => {
     // Real LangChain function is called
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
-        category: 'Appointment Scheduling', // Expected category from real LLM
+        category: 'Appointment Scheduling',
+        explanation:
+          'The message explicitly states a desire to schedule an appointment, which directly aligns with the Appointment Scheduling category.',
       },
     })
 
@@ -64,7 +66,9 @@ describe.skip('categorizeMessage - Real LLM calls', () => {
     // Real LangChain function is called and returns "None"
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
-        category: 'None', // Expected no match
+        category: 'None',
+        explanation:
+          'Categorization was ambiguous; we could not find a proper category.',
       },
     })
 

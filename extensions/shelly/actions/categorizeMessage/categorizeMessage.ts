@@ -12,13 +12,14 @@ export const categorizeMessage: Action<
   key: 'categorizeMessage',
   category: Category.WORKFLOW,
   title: 'Categorize Message',
-  description: 'Categorize the input message into set of predefined categories',
+  description:
+    'Categorize the input message into set of predefined categories and provides explanation.',
   fields,
   previewable: false,
   dataPoints,
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
     const {
-      langChainOpenAiSdk,
+      ChatModelGPT4oMini,
       fields: { categories, message },
     } = await validatePayloadAndCreateSdk({
       fieldsSchema: FieldsValidationSchema,
@@ -26,15 +27,20 @@ export const categorizeMessage: Action<
     })
 
     try {
-      const category = await categorizeMessageWithLLM({
-        langChainOpenAiSdk,
+      const categorization_result = await categorizeMessageWithLLM({
+        ChatModelGPT4oMini,
         message,
         categories,
       })
 
+      console.log(categorization_result)
+      const category = categorization_result.category
+      const explanation = categorization_result.explanation
+
       await onComplete({
         data_points: {
           category,
+          explanation,
         },
       })
     } catch (error) {

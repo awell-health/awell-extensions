@@ -2,7 +2,8 @@ import { Category, type Action } from '@awell-health/extensions-core'
 import { validatePayloadAndCreateSdk } from '../../lib'
 import { type settings } from '../../settings'
 import { fields, dataPoints, FieldsValidationSchema } from './config'
-
+import { DISCLAIMER_MSG } from '../../lib/constants'
+import { summarizeCareFlowWithLLM } from './lib/summarizeCareFlowWithLLM'
 export const summarizeCareFlow: Action<
   typeof fields,
   typeof settings,
@@ -16,7 +17,11 @@ export const summarizeCareFlow: Action<
   previewable: false,
   dataPoints,
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
-    const { pathway } = await validatePayloadAndCreateSdk({
+    const {
+      ChatModelGPT4o,
+      fields: { additionalInstructions, stakeholder },
+      pathway,
+    } = await validatePayloadAndCreateSdk({
       fieldsSchema: FieldsValidationSchema,
       payload,
     })
@@ -24,7 +29,7 @@ export const summarizeCareFlow: Action<
     const awellSdk = await helpers.awellSdk()
 
     /**
-     * Limitation: this query is paginated so we might not get all pathway activities
+     * Limitation: this query is paginated so we might not get all pathway activities - which is ok for now
      */
     const pathwayActivitesUntilNow = await awellSdk.orchestration.query({
       pathwayActivities: {
@@ -60,21 +65,29 @@ export const summarizeCareFlow: Action<
       },
     })
 
-    console.log(
-      JSON.stringify(
-        pathwayActivitesUntilNow.pathwayActivities.activities,
-        null,
-        2
-      )
-    )
+    try {
+      const summary = await summarizeCareFlowWithLLM({
+        ChatModelGPT4o,
+        careFlowActivities: JSON.stringify(
+          pathwayActivitesUntilNow.pathwayActivities.activities,
+          null,
+          2
+        ),
+        stakeholder,
+        additionalInstructions,
+      })
 
-    // Call OpenAI
-    // const res = await langChainOpenAiSdk.invoke()
+      const finalSummary = `${DISCLAIMER_MSG}\n\n${summary}`
+      console.log(finalSummary)
 
-    await onComplete({
-      data_points: {
-        summary: 'Hello world',
-      },
-    })
+      await onComplete({
+        data_points: {
+          summary: finalSummary,
+        },
+      })
+    } catch (error) {
+      console.error('Error summarizing care flow:', error)
+      throw new Error('Error summarizing care flow')
+    }
   },
 }

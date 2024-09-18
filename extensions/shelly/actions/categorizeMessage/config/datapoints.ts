@@ -5,4 +5,8 @@ export const dataPoints = {
     key: 'category',
     valueType: 'string',
   },
+  explanation: {
+    key: 'explanation',
+    valueType: 'string',
+  },
 } satisfies Record<string, DataPointDefinition>
