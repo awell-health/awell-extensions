@@ -1,5 +1,4 @@
-import { HealthieOmitType } from '@awell-health/awell-sdk'
-import { getSubActivityLogs } from '.'
+import { getSubActivityLogs, HealthieOmitType } from '.'
 
 describe('getMappingStatus', () => {
   beforeEach(() => {
