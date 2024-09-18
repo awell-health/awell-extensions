@@ -27,6 +27,10 @@ describe('Shelly - Medication From Image', () => {
     })
 
     expect(onError).not.toHaveBeenCalled()
-    expect(onComplete).toHaveBeenCalled()
+    expect(onComplete).toHaveBeenCalledWith({
+      data_points: {
+        data: expect.any(String),
+      },
+    })
   })
 })
