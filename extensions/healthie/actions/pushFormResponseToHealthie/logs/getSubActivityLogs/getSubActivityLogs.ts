@@ -1,6 +1,11 @@
 import { HealthieOmitType } from '@awell-health/awell-sdk'
-import { type OmittedFormAnswer } from '@awell-health/awell-sdk/dist/lib/utils'
 import { type ActivityEvent } from '@awell-health/extensions-core'
+
+interface OmittedFormAnswer {
+  questionId: string
+  reason: string
+  omitType: HealthieOmitType
+}
 
 const getMappingLogs = (
   data: OmittedFormAnswer[]

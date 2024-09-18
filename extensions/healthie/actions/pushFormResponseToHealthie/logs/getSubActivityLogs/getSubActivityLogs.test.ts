@@ -1,5 +1,4 @@
 import { HealthieOmitType } from '@awell-health/awell-sdk'
-import { OmittedFormAnswer } from '@awell-health/awell-sdk/dist/lib/utils'
 import { getSubActivityLogs } from '.'
 
 describe('getMappingStatus', () => {
@@ -74,9 +73,7 @@ describe('getMappingStatus', () => {
   })
 
   test('Should work when there are no mapping errors', async () => {
-    const data = [] as OmittedFormAnswer[]
-
-    const res = getSubActivityLogs(data)
+    const res = getSubActivityLogs([])
 
     expect(res).toEqual([])
   })
