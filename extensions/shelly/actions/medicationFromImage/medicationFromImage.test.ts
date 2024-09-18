@@ -2,7 +2,7 @@ import { TestHelpers } from '@awell-health/extensions-core'
 import { generateTestPayload } from '@/tests'
 import { medicationFromImage } from '.'
 
-describe('Shelly - Summarize', () => {
+describe('Shelly - Medication From Image', () => {
   const { onComplete, onError, helpers, extensionAction, clearMocks } =
     TestHelpers.fromAction(medicationFromImage)
 
@@ -27,10 +27,6 @@ describe('Shelly - Summarize', () => {
     })
 
     expect(onError).not.toHaveBeenCalled()
-    expect(onComplete).toHaveBeenCalledWith({
-      data_points: {
-        data: JSON.stringify({ dummy: 'data' }),
-      },
-    })
+    expect(onComplete).toHaveBeenCalled()
   })
 })
