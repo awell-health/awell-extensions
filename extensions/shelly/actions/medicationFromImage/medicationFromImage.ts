@@ -19,6 +19,8 @@ export const medicationFromImage: Action<
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
     const {
       fields: { imageUrl },
+      pathway: { id: pathwayId },
+      activity: { id: activityId },
     } = await validatePayloadAndCreateSdk({
       fieldsSchema: FieldsValidationSchema,
       payload,
@@ -26,7 +28,8 @@ export const medicationFromImage: Action<
 
     const medicationExtractorApi = new MedicationExtractorApi()
     const data = await medicationExtractorApi.extractMedicationFromImage(
-      imageUrl
+      imageUrl,
+      { pathwayId, activityId }
     )
 
     if (data?.status !== 'OK') {
