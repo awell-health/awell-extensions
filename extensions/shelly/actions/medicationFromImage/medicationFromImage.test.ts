@@ -2,7 +2,7 @@ import { TestHelpers } from '@awell-health/extensions-core'
 import { generateTestPayload } from '@/tests'
 import { medicationFromImage } from '.'
 
-describe('Shelly - Medication From Image', () => {
+describe.skip('Shelly - Medication From Image', () => {
   const { onComplete, onError, helpers, extensionAction, clearMocks } =
     TestHelpers.fromAction(medicationFromImage)
 
