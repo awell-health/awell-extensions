@@ -75,9 +75,9 @@ __metadata:
     "@graphql-codegen/typescript-operations": ^3.0.2
     "@graphql-tools/apollo-engine-loader": ^7.3.26
     "@graphql-typed-document-node/core": ^3.1.2
+    "@hubspot/api-client": ^11.2.0
     "@langchain/core": ^0.3.1
     "@langchain/openai": ^0.3.0
-    "@hubspot/api-client": ^11.2.0
     "@mailchimp/mailchimp_transactional": ^1.0.50
     "@medplum/core": ^3.1.4
     "@medplum/fhirtypes": ^3.1.4
@@ -1640,9 +1640,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@humanwhocodes/config-array@npm:^0.13.0":
-  version: 0.13.0
-  resolution: "@humanwhocodes/config-array@npm:0.13.0"
 "@hubspot/api-client@npm:^11.2.0":
   version: 11.2.0
   resolution: "@hubspot/api-client@npm:11.2.0"
@@ -1659,9 +1656,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@humanwhocodes/config-array@npm:^0.11.14":
-  version: 0.11.14
-  resolution: "@humanwhocodes/config-array@npm:0.11.14"
+"@humanwhocodes/config-array@npm:^0.13.0":
+  version: 0.13.0
+  resolution: "@humanwhocodes/config-array@npm:0.13.0"
   dependencies:
     "@humanwhocodes/object-schema": ^2.0.3
     debug: ^4.3.1
@@ -2015,21 +2012,21 @@ __metadata:
   linkType: hard
 
 "@langchain/core@npm:^0.3.1":
-  version: 0.3.1
-  resolution: "@langchain/core@npm:0.3.1"
+  version: 0.3.3
+  resolution: "@langchain/core@npm:0.3.3"
   dependencies:
     ansi-styles: ^5.0.0
     camelcase: 6
     decamelize: 1.2.0
     js-tiktoken: ^1.0.12
-    langsmith: ^0.1.56-rc.1
+    langsmith: ^0.1.56
     mustache: ^4.2.0
     p-queue: ^6.6.2
     p-retry: 4
     uuid: ^10.0.0
     zod: ^3.22.4
     zod-to-json-schema: ^3.22.3
-  checksum: f837fecccdc5f55d234eb626546d9462bf0f9ec128a63033d5ea77cdb4d1024ad77159b8a0457a41cec4b9b6b88ec5573961e8762dbd3fcb3e41cd61e70ec015
+  checksum: 7f803d7855bd18ac8e0c67e14ef12f5f6d6023b73bee472335a936951a206ae9d80958c81dd696338aede5def407b4eb761161aefab816461a38f0685e67bc2e
   languageName: node
   linkType: hard
 
@@ -2068,21 +2065,21 @@ __metadata:
   linkType: hard
 
 "@medplum/core@npm:^3.1.4":
-  version: 3.2.12
-  resolution: "@medplum/core@npm:3.2.12"
+  version: 3.2.14
+  resolution: "@medplum/core@npm:3.2.14"
   peerDependencies:
     pdfmake: ^0.2.5
   peerDependenciesMeta:
     pdfmake:
       optional: true
-  checksum: f7577f211a2b91b82d4a793c90ae985bc37b7029929654590beb49ec049f650026221fda30ba1d836b21b8bcbe60d66c88ec51e5928b2f08d4a94009884700ef
+  checksum: 121d11be5602d5719cebf71f63bd3fede7fc8ea52d218874f86004d26b23e722d887f845c07218a20e6d9230664238c5009b0b60599b3185ae4c62040c24e6e3
   languageName: node
   linkType: hard
 
 "@medplum/fhirtypes@npm:^3.1.4, @medplum/fhirtypes@npm:^3.1.8":
-  version: 3.2.12
-  resolution: "@medplum/fhirtypes@npm:3.2.12"
-  checksum: 0cc1b7bd9f36cce17e2dd2bd9f31df5fef38148726510644d4c297e54d8edbdd495cab59c2c6d5b1a3975286a399ded5837a46d65ca336b1349a6a4ced6e5b0a
+  version: 3.2.14
+  resolution: "@medplum/fhirtypes@npm:3.2.14"
+  checksum: 7250620766b2e338acb22ab54c595400cac98ba3ee1127ce468a49f508ce6c55f733b698a9e5ccf876437fd80484d6d6b190b8f0e7b44d70eb1ffad3a9c53c72
   languageName: node
   linkType: hard
 
@@ -2776,21 +2773,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^18.13.0":
-  version: 18.19.31
-  resolution: "@types/node@npm:18.19.31"
-  dependencies:
-    undici-types: ~5.26.4
-  checksum: 949bddfd7071bd47300d1f33d380ee34695ccd5f046f1a03e4d2be0d953ace896905144d44a6f483f241b5ef34b86f0e40a0e312201117782eecf89e81a4ff13
-  languageName: node
-  linkType: hard
-
 "@types/nodemailer@npm:^6.4.15":
-  version: 6.4.15
-  resolution: "@types/nodemailer@npm:6.4.15"
+  version: 6.4.16
+  resolution: "@types/nodemailer@npm:6.4.16"
   dependencies:
     "@types/node": "*"
-  checksum: f6f9a2f8a669703ecc3ca6359c12345b16f6b2e5691b93c406b9af7de639c02092ec00133526e6fecd8c60d884890a7cd0f967d8e64bedab46d5c3d8be0882d7
+  checksum: ef34226b7b69a474a9b9b4681bcfb2461540aed92c54995b934f8072e28deff72aadd4c71522f6825938346048cfec077c69f18cfc2a3ec9f7432db11e5667a3
   languageName: node
   linkType: hard
 
@@ -2802,11 +2790,11 @@ __metadata:
   linkType: hard
 
 "@types/pdfkit@npm:*":
-  version: 0.13.4
-  resolution: "@types/pdfkit@npm:0.13.4"
+  version: 0.13.5
+  resolution: "@types/pdfkit@npm:0.13.5"
   dependencies:
     "@types/node": "*"
-  checksum: 1b5af7393bd41c7499615feddfff1a319e9e531f7c5e3a523945e289e0a5a53c0900ffb90d69e758fa4ca9dda7b231d505180b0f22db9e6dba77f22b9a9097c6
+  checksum: 193edf47b8eaeef47b489189a708a9c0bc1d0b8b60b1b4fad944e4e4d0b6309d9286728216202c2925af05ccd4d74c3635c4b6c0477f3d05c5187cd0367517ff
   languageName: node
   linkType: hard
 
@@ -2820,7 +2808,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/qs@npm:*, @types/qs@npm:^6.9.15":
+"@types/qs@npm:*":
   version: 6.9.16
   resolution: "@types/qs@npm:6.9.16"
   checksum: 2e8918150c12735630f7ee16b770c72949274938c30306025f68aaf977227f41fe0c698ed93db1099e04916d582ac5a1faf7e3c7061c8d885d9169f59a184b6c
@@ -3918,9 +3906,9 @@ __metadata:
   linkType: hard
 
 "caniuse-lite@npm:^1.0.30001646":
-  version: 1.0.30001660
-  resolution: "caniuse-lite@npm:1.0.30001660"
-  checksum: 8b2c5de2f5facd31980426afbba68238270984acfe8c1ae925b8b6480448eea2fae292f815674617e9170c730c8a238d7cc0db919f184dc0e3cd9bec18f5e5ad
+  version: 1.0.30001662
+  resolution: "caniuse-lite@npm:1.0.30001662"
+  checksum: 7a6a0c0d9f7c4a1c51de02838eb47f41f36fff57a77b846c8faed35ba9afba17b9399bc00bd637e5c1663cbc132534085d91151de48edca2ad8932a5d87e23af
   languageName: node
   linkType: hard
 
@@ -4926,9 +4914,9 @@ __metadata:
   linkType: hard
 
 "electron-to-chromium@npm:^1.5.4":
-  version: 1.5.24
-  resolution: "electron-to-chromium@npm:1.5.24"
-  checksum: 0e2a0f2fa38cf2e3be8b4bf07e62e539ffb953087d6766c69fc820468334a34ea32a975a0128f9965c970d0c100e7de7baea0e00718af21631567505dd3e70cc
+  version: 1.5.25
+  resolution: "electron-to-chromium@npm:1.5.25"
+  checksum: 3aef974d586815e9b1fd3221be3e2e124d59a9b992dbd59dbce618ac165feddebda9238be8f93b504f3cc067821e94810bf8a877be8a23a125d6c8f401aeb27e
   languageName: node
   linkType: hard
 
@@ -8052,9 +8040,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"langsmith@npm:^0.1.56-rc.1":
-  version: 0.1.56
-  resolution: "langsmith@npm:0.1.56"
+"langsmith@npm:^0.1.56, langsmith@npm:^0.1.56-rc.1":
+  version: 0.1.59
+  resolution: "langsmith@npm:0.1.59"
   dependencies:
     "@types/uuid": ^10.0.0
     commander: ^10.0.1
@@ -8067,7 +8055,7 @@ __metadata:
   peerDependenciesMeta:
     openai:
       optional: true
-  checksum: 61db6dc3016e35d14d25e78a8ecebcc6356f2efc00310f5582dce9d28a88377525425622d1b98f053e73c0b3233d44c5a2f9d5654ca72ee2e61163edd5be2d28
+  checksum: fb9b9c6d95b90f430316bee458e74c6e83139cf1023178333575a6d9ddeed301b375d7c50289b539d7f91e24125622f29c2cb95e4e63b308ece7d0de95ac0396
   languageName: node
   linkType: hard
 
@@ -8201,14 +8189,6 @@ __metadata:
   version: 4.3.0
   resolution: "lodash.camelcase@npm:4.3.0"
   checksum: cb9227612f71b83e42de93eccf1232feeb25e705bdb19ba26c04f91e885bfd3dd5c517c4a97137658190581d3493ea3973072ca010aab7e301046d90740393d1
-  languageName: node
-  linkType: hard
-
-"lodash.get@npm:~4.4.2":
-"lodash.deburr@npm:^4.1.0":
-  version: 4.1.0
-  resolution: "lodash.deburr@npm:4.1.0"
-  checksum: 6e2012315c20a4d8ed4f1884ed4b8e6b0093c6355a87bfd95ecf25a5243c8c88d747d67375d52cb87ebc99d090935ed8dc3814c8e661e3275a6dbe02b68efc99
   languageName: node
   linkType: hard
 
@@ -9214,19 +9194,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"openai@npm:^4.57.3":
-  version: 4.61.1
-  resolution: "openai@npm:4.61.1"
+"openai@npm:^4.57.3, openai@npm:^4.59.0":
+  version: 4.62.1
+  resolution: "openai@npm:4.62.1"
   dependencies:
     "@types/node": ^18.11.18
     "@types/node-fetch": ^2.6.4
-    "@types/qs": ^6.9.15
     abort-controller: ^3.0.0
     agentkeepalive: ^4.2.1
     form-data-encoder: 1.7.2
     formdata-node: ^4.3.2
     node-fetch: ^2.6.7
-    qs: ^6.10.3
   peerDependencies:
     zod: ^3.23.8
   peerDependenciesMeta:
@@ -9234,7 +9212,7 @@ __metadata:
       optional: true
   bin:
     openai: bin/cli
-  checksum: 4a2459e567b5dde00d5a46ec9207a4f7cce6d4385240c625d27b33a09dbfbc59f1576077766aa584a4d5deb339d7455530788ca14bfa0b660acc8de8de5a898c
+  checksum: ab803ce0efa3107fcc9329f3d30ced3313b9499e7d78541de1e573f726ac0d109cec6c598b0a8082e22f5f83d6ec444c3eff352e61d736331a27556929fe7fdd
   languageName: node
   linkType: hard
 
