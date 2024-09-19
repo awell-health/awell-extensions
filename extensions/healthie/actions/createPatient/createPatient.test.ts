@@ -1,49 +1,60 @@
 import { generateTestPayload } from '../../../../src/tests'
-import { getSdk } from '../../lib/sdk/graphql-codegen/generated/sdk'
-import {
-  mockGetSdk,
-  mockGetSdkReturn,
-} from '../../lib/sdk/graphql-codegen/generated/__mocks__/sdk'
-import { createPatient } from '../createPatient'
+import { HealthieSdk } from '@extensions/healthie/lib/sdk/genql'
+import { createPatient as actionInterface } from '../createPatient'
+import { TestHelpers } from '@awell-health/extensions-core'
 
-jest.mock('../../lib/sdk/graphql-codegen/generated/sdk')
-jest.mock('../../lib/sdk/graphql-codegen/graphqlClient')
+jest.mock('@extensions/healthie/lib/sdk/genql', () => ({
+  HealthieSdk: jest.fn().mockImplementation(() => ({
+    client: {
+      mutation: jest.fn().mockResolvedValue({
+        createClient: {
+          user: {
+            id: 'patient-1',
+          },
+        },
+      }),
+    },
+  })),
+}))
 
-describe('createPatient action', () => {
-  const onComplete = jest.fn()
+const mockedHealthieSdk = jest.mocked(HealthieSdk)
 
-  beforeAll(() => {
-    const mockSdk = getSdk as jest.Mock
-    mockSdk.mockImplementation(mockGetSdk)
-  })
+describe('Healthie - createPatient', () => {
+  const {
+    extensionAction: action,
+    onComplete,
+    onError,
+    helpers,
+    clearMocks,
+  } = TestHelpers.fromAction(actionInterface)
 
   beforeEach(() => {
     jest.clearAllMocks()
   })
 
   test('Should create a new patient', async () => {
-    await createPatient.onActivityCreated!(
-      generateTestPayload({
+    await action.onEvent({
+      payload: generateTestPayload({
         fields: {
-          first_name: 'test',
-          last_name: 'test',
+          first_name: 'Test',
+          last_name: 'Test',
           legal_name: undefined,
-          email: 'test@test.com',
+          email: 'test14@test.com',
           phone_number: undefined,
           provider_id: undefined,
           skipped_email: undefined,
-          send_invite: undefined,
         },
         settings: {
+          apiUrl: 'https://staging-api.gethealthie.com/graphql',
           apiKey: 'apiKey',
-          apiUrl: 'test-url',
         },
       }),
       onComplete,
-      jest.fn()
-    )
+      onError,
+      helpers,
+    })
 
-    expect(mockGetSdkReturn.createPatient).toHaveBeenCalled()
+    expect(mockedHealthieSdk).toHaveBeenCalled()
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
         healthiePatientId: 'patient-1',

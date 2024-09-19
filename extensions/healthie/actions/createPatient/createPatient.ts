@@ -1,25 +1,17 @@
-import { isNil } from 'lodash'
-import {
-  type DataPointDefinition,
-  type Action,
-} from '@awell-health/extensions-core'
+import { isEmpty } from 'lodash'
+import { type Action } from '@awell-health/extensions-core'
 import { Category } from '@awell-health/extensions-core'
-import { getSdk } from '../../lib/sdk/graphql-codegen/generated/sdk'
-import { initialiseClient } from '../../lib/sdk/graphql-codegen/graphqlClient'
 import { type settings } from '../../settings'
 import {
   HealthieError,
   mapHealthieToActivityError,
 } from '../../lib/sdk/graphql-codegen/errors'
-import { fields } from './config'
-
-const dataPoints = {
-  healthiePatientId: {
-    key: 'healthiePatientId',
-    valueType: 'string',
-  },
-} satisfies Record<string, DataPointDefinition>
-
+import { fields, FieldsValidationSchema, dataPoints } from './config'
+import { validatePayloadAndCreateSdk } from '../../lib/sdk/validatePayloadAndCreateSdk'
+import {
+  HealthiePatientNotCreated,
+  parseHealthiePatientNotCreatedError,
+} from './lib/errors'
 export const createPatient: Action<
   typeof fields,
   typeof settings,
@@ -32,92 +24,60 @@ export const createPatient: Action<
   fields,
   dataPoints,
   previewable: true,
-  onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
-    const { fields, settings } = payload
-    const {
-      first_name,
-      last_name,
-      email,
-      phone_number,
-      provider_id,
-      legal_name,
-      send_invite,
-      skipped_email,
-    } = fields
+  onEvent: async ({ payload, onComplete, onError, helpers }) => {
+    const { fields, healthieSdk } = await validatePayloadAndCreateSdk({
+      fieldsSchema: FieldsValidationSchema,
+      payload,
+    })
+
+    const dont_send_welcome = fields.send_invite !== true
+
     try {
-      if (isNil(first_name) || isNil(last_name)) {
-        await onError({
-          events: [
-            {
-              date: new Date().toISOString(),
-              text: { en: 'Fields are missing' },
-              error: {
-                category: 'MISSING_FIELDS',
-                message: '`first_name` or `last_name` is missing',
-              },
+      const res = await healthieSdk.client.mutation({
+        createClient: {
+          __args: {
+            input: {
+              first_name: fields.first_name,
+              last_name: fields.last_name,
+              legal_name: fields.legal_name,
+              email: fields.email,
+              phone_number: fields.phone_number,
+              dietitian_id:
+                fields.provider_id === '' ? undefined : fields.provider_id,
+              skipped_email: fields.skipped_email,
+              dont_send_welcome,
             },
-          ],
-        })
-        return
-      }
-      const dont_send_welcome = send_invite !== true
-      const client = initialiseClient(settings)
-      if (client !== undefined) {
-        const sdk = getSdk(client)
-        const { data } = await sdk.createPatient({
-          input: {
-            first_name,
-            last_name,
-            legal_name,
-            email,
-            phone_number,
-            dietitian_id: provider_id === '' ? undefined : provider_id,
-            skipped_email,
-            dont_send_welcome,
           },
-        })
-
-        const healthiePatientId = data.createClient?.user?.id
-
-        await onComplete({
-          data_points: {
-            healthiePatientId,
+          user: {
+            id: true,
+            set_password_link: true, // for testing
           },
-        })
-      } else {
+          messages: {
+            __scalar: true,
+          },
+        },
+      })
+
+      if (isEmpty(res?.createClient?.user?.id))
+        throw new HealthiePatientNotCreated(res)
+
+      await onComplete({
+        data_points: {
+          healthiePatientId: res.createClient?.user?.id,
+        },
+      })
+    } catch (error) {
+      if (error instanceof HealthiePatientNotCreated) {
         await onError({
-          events: [
-            {
-              date: new Date().toISOString(),
-              text: { en: 'API client requires an API url and API key' },
-              error: {
-                category: 'MISSING_SETTINGS',
-                message: 'Missing api url or api key',
-              },
-            },
-          ],
+          events: [parseHealthiePatientNotCreatedError(error.errors)],
         })
-      }
-    } catch (err) {
-      if (err instanceof HealthieError) {
-        const errors = mapHealthieToActivityError(err.errors)
+      } else if (error instanceof HealthieError) {
+        const errors = mapHealthieToActivityError(error.errors)
         await onError({
           events: errors,
         })
       } else {
-        const error = err as Error
-        await onError({
-          events: [
-            {
-              date: new Date().toISOString(),
-              text: { en: 'Healthie API reported an error' },
-              error: {
-                category: 'SERVER_ERROR',
-                message: error.message,
-              },
-            },
-          ],
-        })
+        throw error
       }
     }
   },
