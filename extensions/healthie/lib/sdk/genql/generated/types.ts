@@ -10531,19 +10531,27 @@ export default {
                     ]
                 }
             ],
-            "dummyUser": [
-                932,
+            "dosespotImport": [
+                930,
                 {
                     "input": [
-                        931
+                        929
                     ]
                 }
             ],
-            "editAvailability": [
+            "dummyUser": [
                 934,
                 {
                     "input": [
                         933
+                    ]
+                }
+            ],
+            "editAvailability": [
+                936,
+                {
+                    "input": [
+                        935
                     ]
                 }
             ],
@@ -10555,7 +10563,7 @@ export default {
                     ]
                 }
             ],
-            "enableDosespotSelfSignup": [
+            "enableAutoscoring": [
                 938,
                 {
                     "input": [
@@ -10563,11 +10571,19 @@ export default {
                     ]
                 }
             ],
-            "enableGoogleIntegrations": [
-                936,
+            "enableDosespotSelfSignup": [
+                942,
                 {
                     "input": [
-                        935
+                        941
+                    ]
+                }
+            ],
+            "enableGoogleIntegrations": [
+                940,
+                {
+                    "input": [
+                        939
                     ]
                 }
             ],
@@ -10596,14 +10612,6 @@ export default {
                 }
             ],
             "expireWebhookSignature": [
-                940,
-                {
-                    "input": [
-                        939
-                    ]
-                }
-            ],
-            "exportCarePlanToTemplate": [
                 944,
                 {
                     "input": [
@@ -10611,11 +10619,19 @@ export default {
                     ]
                 }
             ],
-            "exportClientEhi": [
-                942,
+            "exportCarePlanToTemplate": [
+                948,
                 {
                     "input": [
-                        941
+                        947
+                    ]
+                }
+            ],
+            "exportClientEhi": [
+                946,
+                {
+                    "input": [
+                        945
                     ]
                 }
             ],
@@ -10628,18 +10644,18 @@ export default {
                 }
             ],
             "generateChartingPdf": [
-                947,
+                951,
                 {
                     "input": [
-                        946
+                        950
                     ]
                 }
             ],
             "generateDosespotSingleSignOn": [
-                930,
+                932,
                 {
                     "input": [
-                        929
+                        931
                     ]
                 }
             ],
@@ -10660,10 +10676,10 @@ export default {
                 }
             ],
             "mergeClients": [
-                949,
+                953,
                 {
                     "input": [
-                        948
+                        952
                     ]
                 }
             ],
@@ -10676,10 +10692,10 @@ export default {
                 }
             ],
             "parseCcdaDocument": [
-                951,
+                955,
                 {
                     "input": [
-                        950
+                        954
                     ]
                 }
             ],
@@ -10700,10 +10716,10 @@ export default {
                 }
             ],
             "removeAppliedTag": [
-                953,
+                957,
                 {
                     "input": [
-                        952
+                        956
                     ]
                 }
             ],
@@ -10716,22 +10732,6 @@ export default {
                 }
             ],
             "removeDraft": [
-                955,
-                {
-                    "input": [
-                        954
-                    ]
-                }
-            ],
-            "removeUserFromGroupCarePlan": [
-                957,
-                {
-                    "input": [
-                        956
-                    ]
-                }
-            ],
-            "resendSentFax": [
                 959,
                 {
                     "input": [
@@ -10739,7 +10739,7 @@ export default {
                     ]
                 }
             ],
-            "resetPassword": [
+            "removeUserFromGroupCarePlan": [
                 961,
                 {
                     "input": [
@@ -10747,7 +10747,7 @@ export default {
                     ]
                 }
             ],
-            "restoreVersion": [
+            "resendSentFax": [
                 963,
                 {
                     "input": [
@@ -10755,7 +10755,7 @@ export default {
                     ]
                 }
             ],
-            "resyncRupaLabOrders": [
+            "resetPassword": [
                 965,
                 {
                     "input": [
@@ -10763,7 +10763,7 @@ export default {
                     ]
                 }
             ],
-            "revokeToken": [
+            "restoreVersion": [
                 967,
                 {
                     "input": [
@@ -10771,7 +10771,7 @@ export default {
                     ]
                 }
             ],
-            "runEligibilityCheck": [
+            "resyncRupaLabOrders": [
                 969,
                 {
                     "input": [
@@ -10779,11 +10779,27 @@ export default {
                     ]
                 }
             ],
-            "sendCarePlanEmail": [
+            "revokeToken": [
                 971,
                 {
                     "input": [
                         970
+                    ]
+                }
+            ],
+            "runEligibilityCheck": [
+                973,
+                {
+                    "input": [
+                        972
+                    ]
+                }
+            ],
+            "sendCarePlanEmail": [
+                975,
+                {
+                    "input": [
+                        974
                     ]
                 }
             ],
@@ -10804,22 +10820,6 @@ export default {
                 }
             ],
             "shareAnswersAsDocument": [
-                973,
-                {
-                    "input": [
-                        972
-                    ]
-                }
-            ],
-            "shareCourse": [
-                975,
-                {
-                    "input": [
-                        974
-                    ]
-                }
-            ],
-            "shareCustomModuleForm": [
                 977,
                 {
                     "input": [
@@ -10827,7 +10827,7 @@ export default {
                     ]
                 }
             ],
-            "signIn": [
+            "shareCourse": [
                 979,
                 {
                     "input": [
@@ -10835,11 +10835,27 @@ export default {
                     ]
                 }
             ],
-            "signUp": [
+            "shareCustomModuleForm": [
                 981,
                 {
                     "input": [
                         980
+                    ]
+                }
+            ],
+            "signIn": [
+                983,
+                {
+                    "input": [
+                        982
+                    ]
+                }
+            ],
+            "signUp": [
+                985,
+                {
+                    "input": [
+                        984
                     ]
                 }
             ],
@@ -10876,10 +10892,10 @@ export default {
                 }
             ],
             "toggleCarePlanStatusForSpecificUser": [
-                983,
+                987,
                 {
                     "input": [
-                        982
+                        986
                     ]
                 }
             ],
@@ -10900,22 +10916,6 @@ export default {
                 }
             ],
             "unblockIpAddress": [
-                985,
-                {
-                    "input": [
-                        984
-                    ]
-                }
-            ],
-            "unlockChartingNote": [
-                987,
-                {
-                    "input": [
-                        986
-                    ]
-                }
-            ],
-            "unsubscribeFromNotification": [
                 989,
                 {
                     "input": [
@@ -10923,7 +10923,7 @@ export default {
                     ]
                 }
             ],
-            "updateAddendum": [
+            "unlockChartingNote": [
                 991,
                 {
                     "input": [
@@ -10931,7 +10931,7 @@ export default {
                     ]
                 }
             ],
-            "updateAllergySensitivity": [
+            "unsubscribeFromNotification": [
                 993,
                 {
                     "input": [
@@ -10939,7 +10939,7 @@ export default {
                     ]
                 }
             ],
-            "updateAnnouncement": [
+            "updateAddendum": [
                 995,
                 {
                     "input": [
@@ -10947,7 +10947,7 @@ export default {
                     ]
                 }
             ],
-            "updateAppleHealth": [
+            "updateAllergySensitivity": [
                 997,
                 {
                     "input": [
@@ -10955,15 +10955,7 @@ export default {
                     ]
                 }
             ],
-            "updateAppointment": [
-                1001,
-                {
-                    "input": [
-                        1000
-                    ]
-                }
-            ],
-            "updateAppointmentInclusion": [
+            "updateAnnouncement": [
                 999,
                 {
                     "input": [
@@ -10971,23 +10963,15 @@ export default {
                     ]
                 }
             ],
-            "updateAppointmentSetting": [
-                1003,
+            "updateAppleHealth": [
+                1001,
                 {
                     "input": [
-                        1002
+                        1000
                     ]
                 }
             ],
-            "updateAppointmentType": [
-                1007,
-                {
-                    "input": [
-                        1006
-                    ]
-                }
-            ],
-            "updateAppointmentTypeCptCode": [
+            "updateAppointment": [
                 1005,
                 {
                     "input": [
@@ -10995,15 +10979,23 @@ export default {
                     ]
                 }
             ],
-            "updateAutoTaskGenerator": [
-                1009,
+            "updateAppointmentInclusion": [
+                1003,
                 {
                     "input": [
-                        1008
+                        1002
                     ]
                 }
             ],
-            "updateAutomatedInsuranceBillingSetting": [
+            "updateAppointmentSetting": [
+                1007,
+                {
+                    "input": [
+                        1006
+                    ]
+                }
+            ],
+            "updateAppointmentType": [
                 1011,
                 {
                     "input": [
@@ -11011,7 +11003,15 @@ export default {
                     ]
                 }
             ],
-            "updateBillingItem": [
+            "updateAppointmentTypeCptCode": [
+                1009,
+                {
+                    "input": [
+                        1008
+                    ]
+                }
+            ],
+            "updateAutoTaskGenerator": [
                 1013,
                 {
                     "input": [
@@ -11019,7 +11019,7 @@ export default {
                     ]
                 }
             ],
-            "updateBrand": [
+            "updateAutomatedInsuranceBillingSetting": [
                 1015,
                 {
                     "input": [
@@ -11027,7 +11027,7 @@ export default {
                     ]
                 }
             ],
-            "updateByTemplate": [
+            "updateBillingItem": [
                 1017,
                 {
                     "input": [
@@ -11035,11 +11035,27 @@ export default {
                     ]
                 }
             ],
-            "updateCalendarViewSetting": [
+            "updateBrand": [
                 1019,
                 {
                     "input": [
                         1018
+                    ]
+                }
+            ],
+            "updateByTemplate": [
+                1021,
+                {
+                    "input": [
+                        1020
+                    ]
+                }
+            ],
+            "updateCalendarViewSetting": [
+                1023,
+                {
+                    "input": [
+                        1022
                     ]
                 }
             ],
@@ -11052,22 +11068,6 @@ export default {
                 }
             ],
             "updateCampaign": [
-                1021,
-                {
-                    "input": [
-                        1020
-                    ]
-                }
-            ],
-            "updateCarePlan": [
-                1023,
-                {
-                    "input": [
-                        1022
-                    ]
-                }
-            ],
-            "updateChangeHealthAccount": [
                 1025,
                 {
                     "input": [
@@ -11075,7 +11075,7 @@ export default {
                     ]
                 }
             ],
-            "updateChargeBack": [
+            "updateCarePlan": [
                 1027,
                 {
                     "input": [
@@ -11083,11 +11083,27 @@ export default {
                     ]
                 }
             ],
-            "updateChatSetting": [
+            "updateChangeHealthAccount": [
                 1029,
                 {
                     "input": [
                         1028
+                    ]
+                }
+            ],
+            "updateChargeBack": [
+                1031,
+                {
+                    "input": [
+                        1030
+                    ]
+                }
+            ],
+            "updateChatSetting": [
+                1033,
+                {
+                    "input": [
+                        1032
                     ]
                 }
             ],
@@ -11100,22 +11116,6 @@ export default {
                 }
             ],
             "updateClient": [
-                1031,
-                {
-                    "input": [
-                        1030
-                    ]
-                }
-            ],
-            "updateCms1500": [
-                1033,
-                {
-                    "input": [
-                        1032
-                    ]
-                }
-            ],
-            "updateCognitiveStatus": [
                 1035,
                 {
                     "input": [
@@ -11123,51 +11123,67 @@ export default {
                     ]
                 }
             ],
-            "updateConversation": [
-                1039,
+            "updateCms1500": [
+                1037,
                 {
                     "input": [
                         1036
                     ]
                 }
             ],
-            "updateConversationMembership": [
-                1038,
+            "updateCognitiveStatus": [
+                1039,
                 {
                     "input": [
-                        1037
+                        1038
                     ]
                 }
             ],
-            "updateCourse": [
-                1047,
-                {
-                    "input": [
-                        1042
-                    ]
-                }
-            ],
-            "updateCourseGroup": [
-                1041,
+            "updateConversation": [
+                1043,
                 {
                     "input": [
                         1040
                     ]
                 }
             ],
-            "updateCourseItem": [
-                1044,
+            "updateConversationMembership": [
+                1042,
                 {
                     "input": [
-                        1043
+                        1041
+                    ]
+                }
+            ],
+            "updateCourse": [
+                1051,
+                {
+                    "input": [
+                        1046
+                    ]
+                }
+            ],
+            "updateCourseGroup": [
+                1045,
+                {
+                    "input": [
+                        1044
+                    ]
+                }
+            ],
+            "updateCourseItem": [
+                1048,
+                {
+                    "input": [
+                        1047
                     ]
                 }
             ],
             "updateCourseMembership": [
-                1046,
+                1050,
                 {
                     "input": [
-                        1045
+                        1049
                     ]
                 }
             ],
@@ -11180,30 +11196,6 @@ export default {
                 }
             ],
             "updateCustomEmail": [
-                1049,
-                {
-                    "input": [
-                        1048
-                    ]
-                }
-            ],
-            "updateCustomFood": [
-                1051,
-                {
-                    "input": [
-                        1050
-                    ]
-                }
-            ],
-            "updateCustomModule": [
-                1055,
-                {
-                    "input": [
-                        1054
-                    ]
-                }
-            ],
-            "updateCustomModuleForm": [
                 1053,
                 {
                     "input": [
@@ -11211,15 +11203,15 @@ export default {
                     ]
                 }
             ],
-            "updateDocument": [
-                1057,
+            "updateCustomFood": [
+                1055,
                 {
                     "input": [
-                        1056
+                        1054
                     ]
                 }
             ],
-            "updateEntry": [
+            "updateCustomModule": [
                 1059,
                 {
                     "input": [
@@ -11227,7 +11219,15 @@ export default {
                     ]
                 }
             ],
-            "updateExternalCalendar": [
+            "updateCustomModuleForm": [
+                1057,
+                {
+                    "input": [
+                        1056
+                    ]
+                }
+            ],
+            "updateDocument": [
                 1061,
                 {
                     "input": [
@@ -11235,7 +11235,7 @@ export default {
                     ]
                 }
             ],
-            "updateFamilyHistory": [
+            "updateEntry": [
                 1063,
                 {
                     "input": [
@@ -11243,7 +11243,7 @@ export default {
                     ]
                 }
             ],
-            "updateFaxAcctInfo": [
+            "updateExternalCalendar": [
                 1065,
                 {
                     "input": [
@@ -11251,7 +11251,7 @@ export default {
                     ]
                 }
             ],
-            "updateFeatureToggle": [
+            "updateFamilyHistory": [
                 1067,
                 {
                     "input": [
@@ -11259,7 +11259,7 @@ export default {
                     ]
                 }
             ],
-            "updateFitbit": [
+            "updateFaxAcctInfo": [
                 1069,
                 {
                     "input": [
@@ -11267,7 +11267,7 @@ export default {
                     ]
                 }
             ],
-            "updateFolder": [
+            "updateFeatureToggle": [
                 1071,
                 {
                     "input": [
@@ -11275,7 +11275,7 @@ export default {
                     ]
                 }
             ],
-            "updateFormAnswerGroup": [
+            "updateFitbit": [
                 1073,
                 {
                     "input": [
@@ -11283,7 +11283,7 @@ export default {
                     ]
                 }
             ],
-            "updateFunctionalStatus": [
+            "updateFolder": [
                 1075,
                 {
                     "input": [
@@ -11291,7 +11291,7 @@ export default {
                     ]
                 }
             ],
-            "updateGoal": [
+            "updateFormAnswerGroup": [
                 1077,
                 {
                     "input": [
@@ -11299,7 +11299,7 @@ export default {
                     ]
                 }
             ],
-            "updateGoogleFit": [
+            "updateFunctionalStatus": [
                 1079,
                 {
                     "input": [
@@ -11307,7 +11307,7 @@ export default {
                     ]
                 }
             ],
-            "updateGroupCarePlan": [
+            "updateGoal": [
                 1081,
                 {
                     "input": [
@@ -11315,11 +11315,27 @@ export default {
                     ]
                 }
             ],
-            "updateHealthConcern": [
+            "updateGoogleFit": [
                 1083,
                 {
                     "input": [
                         1082
+                    ]
+                }
+            ],
+            "updateGroupCarePlan": [
+                1085,
+                {
+                    "input": [
+                        1084
+                    ]
+                }
+            ],
+            "updateHealthConcern": [
+                1087,
+                {
+                    "input": [
+                        1086
                     ]
                 }
             ],
@@ -11332,22 +11348,6 @@ export default {
                 }
             ],
             "updateHuman": [
-                1085,
-                {
-                    "input": [
-                        1084
-                    ]
-                }
-            ],
-            "updateImmunization": [
-                1087,
-                {
-                    "input": [
-                        1086
-                    ]
-                }
-            ],
-            "updateImplantableDeviceUser": [
                 1089,
                 {
                     "input": [
@@ -11355,7 +11355,7 @@ export default {
                     ]
                 }
             ],
-            "updateInsuranceAuthorization": [
+            "updateImmunization": [
                 1091,
                 {
                     "input": [
@@ -11363,7 +11363,7 @@ export default {
                     ]
                 }
             ],
-            "updateInsurancePlan": [
+            "updateImplantableDeviceUser": [
                 1093,
                 {
                     "input": [
@@ -11371,7 +11371,7 @@ export default {
                     ]
                 }
             ],
-            "updateLabOrder": [
+            "updateInsuranceAuthorization": [
                 1095,
                 {
                     "input": [
@@ -11379,11 +11379,27 @@ export default {
                     ]
                 }
             ],
-            "updateLocation": [
+            "updateInsurancePlan": [
                 1097,
                 {
                     "input": [
                         1096
+                    ]
+                }
+            ],
+            "updateLabOrder": [
+                1099,
+                {
+                    "input": [
+                        1098
+                    ]
+                }
+            ],
+            "updateLocation": [
+                1101,
+                {
+                    "input": [
+                        1100
                     ]
                 }
             ],
@@ -11396,22 +11412,6 @@ export default {
                 }
             ],
             "updateMeal": [
-                1099,
-                {
-                    "input": [
-                        1098
-                    ]
-                }
-            ],
-            "updateMedication": [
-                1101,
-                {
-                    "input": [
-                        1100
-                    ]
-                }
-            ],
-            "updateNote": [
                 1103,
                 {
                     "input": [
@@ -11419,7 +11419,7 @@ export default {
                     ]
                 }
             ],
-            "updateNoteScheduler": [
+            "updateMedication": [
                 1105,
                 {
                     "input": [
@@ -11427,7 +11427,15 @@ export default {
                     ]
                 }
             ],
-            "updateNotification": [
+            "updateNote": [
+                1107,
+                {
+                    "input": [
+                        1106
+                    ]
+                }
+            ],
+            "updateNoteScheduler": [
                 1109,
                 {
                     "input": [
@@ -11435,11 +11443,19 @@ export default {
                     ]
                 }
             ],
-            "updateNotificationContact": [
-                1107,
+            "updateNotification": [
+                1113,
                 {
                     "input": [
-                        1106
+                        1112
+                    ]
+                }
+            ],
+            "updateNotificationContact": [
+                1111,
+                {
+                    "input": [
+                        1110
                     ]
                 }
             ],
@@ -11452,10 +11468,10 @@ export default {
                 }
             ],
             "updateNotificationSetting": [
-                1111,
+                1115,
                 {
                     "input": [
-                        1110
+                        1114
                     ]
                 }
             ],
@@ -11468,22 +11484,6 @@ export default {
                 }
             ],
             "updateOffering": [
-                1113,
-                {
-                    "input": [
-                        1112
-                    ]
-                }
-            ],
-            "updateOfficeallySftpAccount": [
-                1115,
-                {
-                    "input": [
-                        1114
-                    ]
-                }
-            ],
-            "updateOnboardingFlow": [
                 1117,
                 {
                     "input": [
@@ -11491,7 +11491,7 @@ export default {
                     ]
                 }
             ],
-            "updateOnboardingItem": [
+            "updateOfficeallySftpAccount": [
                 1119,
                 {
                     "input": [
@@ -11499,7 +11499,7 @@ export default {
                     ]
                 }
             ],
-            "updateOrgOwner": [
+            "updateOnboardingFlow": [
                 1121,
                 {
                     "input": [
@@ -11507,15 +11507,7 @@ export default {
                     ]
                 }
             ],
-            "updateOrganization": [
-                1129,
-                {
-                    "input": [
-                        1124
-                    ]
-                }
-            ],
-            "updateOrganizationCptCode": [
+            "updateOnboardingItem": [
                 1123,
                 {
                     "input": [
@@ -11523,19 +11515,43 @@ export default {
                     ]
                 }
             ],
-            "updateOrganizationMember": [
-                1126,
+            "updateOrgOwner": [
+                1125,
                 {
                     "input": [
-                        1125
+                        1124
+                    ]
+                }
+            ],
+            "updateOrganization": [
+                1133,
+                {
+                    "input": [
+                        1128
+                    ]
+                }
+            ],
+            "updateOrganizationCptCode": [
+                1127,
+                {
+                    "input": [
+                        1126
+                    ]
+                }
+            ],
+            "updateOrganizationMember": [
+                1130,
+                {
+                    "input": [
+                        1129
                     ]
                 }
             ],
             "updateOrganizationMembership": [
-                1128,
+                1132,
                 {
                     "input": [
-                        1127
+                        1131
                     ]
                 }
             ],
@@ -11548,22 +11564,6 @@ export default {
                 }
             ],
             "updatePermissionTemplate": [
-                1131,
-                {
-                    "input": [
-                        1130
-                    ]
-                }
-            ],
-            "updatePolicy": [
-                1133,
-                {
-                    "input": [
-                        1132
-                    ]
-                }
-            ],
-            "updateProcedure": [
                 1135,
                 {
                     "input": [
@@ -11571,7 +11571,7 @@ export default {
                     ]
                 }
             ],
-            "updateProduct": [
+            "updatePolicy": [
                 1137,
                 {
                     "input": [
@@ -11579,7 +11579,7 @@ export default {
                     ]
                 }
             ],
-            "updateProviderCptCodes": [
+            "updateProcedure": [
                 1139,
                 {
                     "input": [
@@ -11587,7 +11587,7 @@ export default {
                     ]
                 }
             ],
-            "updateReceivedFax": [
+            "updateProduct": [
                 1141,
                 {
                     "input": [
@@ -11595,7 +11595,7 @@ export default {
                     ]
                 }
             ],
-            "updateRecommendation": [
+            "updateProviderCptCodes": [
                 1143,
                 {
                     "input": [
@@ -11603,7 +11603,7 @@ export default {
                     ]
                 }
             ],
-            "updateRecurringForm": [
+            "updateReceivedFax": [
                 1145,
                 {
                     "input": [
@@ -11611,7 +11611,7 @@ export default {
                     ]
                 }
             ],
-            "updateReferral": [
+            "updateRecommendation": [
                 1147,
                 {
                     "input": [
@@ -11619,11 +11619,27 @@ export default {
                     ]
                 }
             ],
-            "updateReferringPhysician": [
+            "updateRecurringForm": [
                 1149,
                 {
                     "input": [
                         1148
+                    ]
+                }
+            ],
+            "updateReferral": [
+                1151,
+                {
+                    "input": [
+                        1150
+                    ]
+                }
+            ],
+            "updateReferringPhysician": [
+                1153,
+                {
+                    "input": [
+                        1152
                     ]
                 }
             ],
@@ -11636,22 +11652,6 @@ export default {
                 }
             ],
             "updateRequestedPayment": [
-                1151,
-                {
-                    "input": [
-                        1150
-                    ]
-                }
-            ],
-            "updateSavedFilter": [
-                1153,
-                {
-                    "input": [
-                        1152
-                    ]
-                }
-            ],
-            "updateSmartPhrase": [
                 1155,
                 {
                     "input": [
@@ -11659,7 +11659,7 @@ export default {
                     ]
                 }
             ],
-            "updateSmokingStatus": [
+            "updateSavedFilter": [
                 1157,
                 {
                     "input": [
@@ -11667,7 +11667,7 @@ export default {
                     ]
                 }
             ],
-            "updateState": [
+            "updateSmartPhrase": [
                 1159,
                 {
                     "input": [
@@ -11675,7 +11675,7 @@ export default {
                     ]
                 }
             ],
-            "updateStripeCustomerDetail": [
+            "updateSmokingStatus": [
                 1161,
                 {
                     "input": [
@@ -11683,7 +11683,7 @@ export default {
                     ]
                 }
             ],
-            "updateStripeVerificationDetails": [
+            "updateState": [
                 1163,
                 {
                     "input": [
@@ -11691,7 +11691,7 @@ export default {
                     ]
                 }
             ],
-            "updateSubscription": [
+            "updateStripeCustomerDetail": [
                 1165,
                 {
                     "input": [
@@ -11699,7 +11699,7 @@ export default {
                     ]
                 }
             ],
-            "updateSuperBill": [
+            "updateStripeVerificationDetails": [
                 1167,
                 {
                     "input": [
@@ -11707,7 +11707,7 @@ export default {
                     ]
                 }
             ],
-            "updateTag": [
+            "updateSubscription": [
                 1169,
                 {
                     "input": [
@@ -11715,11 +11715,27 @@ export default {
                     ]
                 }
             ],
-            "updateTask": [
+            "updateSuperBill": [
                 1171,
                 {
                     "input": [
                         1170
+                    ]
+                }
+            ],
+            "updateTag": [
+                1173,
+                {
+                    "input": [
+                        1172
+                    ]
+                }
+            ],
+            "updateTask": [
+                1175,
+                {
+                    "input": [
+                        1174
                     ]
                 }
             ],
@@ -11732,26 +11748,26 @@ export default {
                 }
             ],
             "updateUniqueDeviceIdentifier": [
-                1173,
+                1177,
                 {
                     "input": [
-                        1172
+                        1176
                     ]
                 }
             ],
             "updateUser": [
-                1179,
+                1183,
                 {
                     "input": [
-                        1178
+                        1182
                     ]
                 }
             ],
             "updateUserAppointmentPricing": [
-                1175,
+                1179,
                 {
                     "input": [
-                        1174
+                        1178
                     ]
                 }
             ],
@@ -11764,18 +11780,18 @@ export default {
                 }
             ],
             "updateUserGroup": [
-                1177,
-                {
-                    "input": [
-                        1176
-                    ]
-                }
-            ],
-            "updateWebhook": [
                 1181,
                 {
                     "input": [
                         1180
+                    ]
+                }
+            ],
+            "updateWebhook": [
+                1185,
+                {
+                    "input": [
+                        1184
                     ]
                 }
             ],
@@ -11788,22 +11804,6 @@ export default {
                 }
             ],
             "uploadBatchToCandidHealth": [
-                1183,
-                {
-                    "input": [
-                        1182
-                    ]
-                }
-            ],
-            "uploadBatchToChangeHealth": [
-                1185,
-                {
-                    "input": [
-                        1184
-                    ]
-                }
-            ],
-            "uploadBatchToOfficeally": [
                 1187,
                 {
                     "input": [
@@ -11811,7 +11811,7 @@ export default {
                     ]
                 }
             ],
-            "uploadCms1500sToIntegrations": [
+            "uploadBatchToChangeHealth": [
                 1189,
                 {
                     "input": [
@@ -11819,11 +11819,27 @@ export default {
                     ]
                 }
             ],
-            "validateVerificationToken": [
+            "uploadBatchToOfficeally": [
                 1191,
                 {
                     "input": [
                         1190
+                    ]
+                }
+            ],
+            "uploadCms1500sToIntegrations": [
+                1193,
+                {
+                    "input": [
+                        1192
+                    ]
+                }
+            ],
+            "validateVerificationToken": [
+                1195,
+                {
+                    "input": [
+                        1194
                     ]
                 }
             ],
@@ -13323,6 +13339,9 @@ export default {
             "can_charge_clients": [
                 61
             ],
+            "can_create_tags": [
+                61
+            ],
             "can_delete_charting_notes": [
                 61
             ],
@@ -13748,6 +13767,9 @@ export default {
                 61
             ],
             "can_charge_clients": [
+                61
+            ],
+            "can_create_tags": [
                 61
             ],
             "can_delete_charting_notes": [
@@ -23485,7 +23507,7 @@ export default {
                 437
             ],
             "fullscript": [
-                945
+                949
             ],
             "fullscript_practitioner_id": [
                 437
@@ -29676,6 +29698,9 @@ export default {
             "can_remove_client": [
                 61
             ],
+            "can_create_tags": [
+                61
+            ],
             "can_rename_and_delete_tags": [
                 61
             ],
@@ -30808,9 +30833,6 @@ export default {
             ]
         },
         "createZusInput": {
-            "user_id": [
-                241
-            ],
             "organization_id": [
                 241
             ],
@@ -32717,6 +32739,34 @@ export default {
                 437
             ]
         },
+        "dosespotImportInput": {
+            "reviewer_id": [
+                241
+            ],
+            "ticket": [
+                437
+            ],
+            "doc_id": [
+                437
+            ],
+            "__typename": [
+                437
+            ]
+        },
+        "dosespotImportPayload": {
+            "clientMutationId": [
+                437
+            ],
+            "messages": [
+                197
+            ],
+            "success_string": [
+                437
+            ],
+            "__typename": [
+                437
+            ]
+        },
         "dosespotSSOInput": {
             "patient_id": [
                 241
@@ -32820,6 +32870,34 @@ export default {
             ],
             "messages": [
                 197
+            ],
+            "__typename": [
+                437
+            ]
+        },
+        "enableAutoscoringInput": {
+            "item_id": [
+                241
+            ],
+            "module_ids": [
+                241
+            ],
+            "subtotal_label": [
+                437
+            ],
+            "__typename": [
+                437
+            ]
+        },
+        "enableAutoscoringPayload": {
+            "clientMutationId": [
+                437
+            ],
+            "messages": [
+                197
+            ],
+            "success_string": [
+                437
             ],
             "__typename": [
                 437
@@ -37360,6 +37438,12 @@ export default {
             "org_member_id": [
                 241
             ],
+            "current_owner_id": [
+                241
+            ],
+            "org_id": [
+                241
+            ],
             "__typename": [
                 437
             ]
@@ -37585,6 +37669,9 @@ export default {
                 61
             ],
             "can_remove_client": [
+                61
+            ],
+            "can_create_tags": [
                 61
             ],
             "can_rename_and_delete_tags": [
@@ -37924,6 +38011,9 @@ export default {
                 61
             ],
             "can_remove_client": [
+                61
+            ],
+            "can_create_tags": [
                 61
             ],
             "can_rename_and_delete_tags": [
