@@ -3,6 +3,7 @@ import {
   FieldType,
   StringType,
 } from '@awell-health/extensions-core'
+import { z, type ZodTypeAny } from 'zod'
 
 export const fields = {
   first_name: {
@@ -62,3 +63,14 @@ export const fields = {
     type: FieldType.STRING,
   },
 } satisfies Record<string, Field>
+
+export const FieldsValidationSchema = z.object({
+  first_name: z.string().min(1),
+  last_name: z.string().min(1),
+  legal_name: z.string().optional(),
+  skipped_email: z.boolean().optional(),
+  email: z.string().min(1).email(),
+  phone_number: z.string().optional(),
+  send_invite: z.boolean().optional(),
+  provider_id: z.string().optional(),
+} satisfies Record<keyof typeof fields, ZodTypeAny>)
