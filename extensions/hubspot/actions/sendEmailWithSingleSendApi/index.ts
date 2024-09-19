@@ -1,0 +1,1 @@
+export { sendEmailWithSingleSendApi } from './sendEmailWithSingleSendApi'

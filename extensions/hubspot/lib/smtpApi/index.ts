@@ -1,0 +1,1 @@
+export { HubSpotSMTPClient } from './smtpClient'
