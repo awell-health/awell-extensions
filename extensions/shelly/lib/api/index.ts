@@ -1,0 +1,1 @@
+export { MedicationExtractorApi } from './medicationExtractorApi'

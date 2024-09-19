@@ -1,8 +1,9 @@
-// import { AwellSdk } from '@awell-health/awell-sdk'
 import { Category, type Action } from '@awell-health/extensions-core'
 import { validatePayloadAndCreateSdk } from '../../lib'
 import { type settings } from '../../settings'
 import { fields, dataPoints, FieldsValidationSchema } from './config'
+import { MedicationExtractorApi } from '../../lib/api'
+import { FetchError } from '../../lib/api/medicationExtractorApi'
 
 export const medicationFromImage: Action<
   typeof fields,
@@ -19,35 +20,49 @@ export const medicationFromImage: Action<
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
     const {
       fields: { imageUrl },
+      pathway: { id: pathwayId },
+      activity: { id: activityId },
     } = await validatePayloadAndCreateSdk({
       fieldsSchema: FieldsValidationSchema,
       payload,
     })
 
-    console.log(imageUrl)
+    try {
+      const medicationExtractorApi = new MedicationExtractorApi()
 
-    // Call whatever API with the file URL and get back JSON (ideally in the following format)
-    const data = await Promise.resolve({
-      medications: [
-        {
-          product_rxcui: '809854',
-          product_name:
-            'hydrochlorothiazide 12.5 MG / quinapril 10 MG Oral Tablet [Accuretic]', // Full medication name
-          brand_name: 'Accuretic', // Brand name
-          dose_form_name: 'Oral Tablet', // Dose form, such as tablet, capsule, etc.
-          prescribable_name: 'Accuretic 10 MG / 12.5 MG Oral Tablet', // Name used for prescribing
-          extracted_medication_name: 'Accuretic', // Extracted name from image
-          extracted_brand_name: 'Accuretic', // Extracted brand name from image
-          extracted_dosage: '10 mg / 12.5 mg', // Extracted dosage information
-          extracted_ndcg: '0006-0711-31', // National Drug Code (optional)
+      const data = await medicationExtractorApi.extractMedicationFromImage({
+        imageUrl,
+        context: { pathwayId, activityId },
+      })
+
+      await onComplete({
+        data_points: {
+          data: JSON.stringify({
+            medications: data.medications,
+          }),
         },
-      ],
-    })
+      })
+    } catch (error) {
+      if (error instanceof FetchError) {
+        await onError({
+          events: [
+            {
+              date: new Date().toISOString(),
+              text: {
+                en: `${error.statusCode} (${error.statusText}): ${error.responseBody}`,
+              },
+              error: {
+                category: 'SERVER_ERROR',
+                message: `${error.statusCode} (${error.statusText}): ${error.responseBody}`,
+              },
+            },
+          ],
+        })
+        return
+      }
 
-    await onComplete({
-      data_points: {
-        data: JSON.stringify(data),
-      },
-    })
+      // Other errors are handled in extensions-server
+      throw error
+    }
   },
 }
