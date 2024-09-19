@@ -1,23 +1,19 @@
 import { TestHelpers } from '@awell-health/extensions-core'
 import { generateTestPayload } from '@/tests'
 import { medicationFromImage } from '.'
-import { MedicationExtractorApi } from '../../medicationExtractorApi'
 import { ExtractMedicationResponse } from '../../types'
-
-// Mock the MedicationExtractorApi
-jest.mock('../../medicationExtractorApi')
 
 describe('Medication From Image', () => {
   const { onComplete, onError, helpers, extensionAction, clearMocks } =
     TestHelpers.fromAction(medicationFromImage)
 
-  const mockMedicationExtractorApi = MedicationExtractorApi as jest.MockedClass<
-    typeof MedicationExtractorApi
-  >
-
   beforeEach(() => {
     clearMocks()
-    mockMedicationExtractorApi.mockClear()
+    jest.spyOn(global, 'fetch')
+  })
+
+  afterEach(() => {
+    jest.restoreAllMocks()
   })
 
   test('Should handle successful medication extraction', async () => {
@@ -39,9 +35,12 @@ describe('Medication From Image', () => {
       ],
     }
 
-    mockMedicationExtractorApi.prototype.extractMedicationFromImage.mockResolvedValue(
-      mockResponse
-    )
+    ;(global.fetch as jest.Mock).mockResolvedValue({
+      status: 200,
+      statusText: 'Ok',
+      ok: true,
+      json: jest.fn().mockResolvedValue(mockResponse),
+    } satisfies Partial<Response>)
 
     await extensionAction.onEvent({
       payload: generateTestPayload({
@@ -57,6 +56,15 @@ describe('Medication From Image', () => {
       onError,
       helpers,
     })
+
+    expect(global.fetch).toHaveBeenCalledWith(
+      'https://medication-extractor-390819626634.us-central1.run.app/medication_extractor/',
+      expect.objectContaining({
+        method: 'POST',
+        headers: expect.any(Object),
+        body: expect.any(String),
+      })
+    )
 
     expect(onError).not.toHaveBeenCalled()
     expect(onComplete).toHaveBeenCalledWith({
@@ -75,9 +83,12 @@ describe('Medication From Image', () => {
       error_explanation: 'Invalid image URL',
     }
 
-    mockMedicationExtractorApi.prototype.extractMedicationFromImage.mockResolvedValue(
-      mockErrorResponse
-    )
+    ;(global.fetch as jest.Mock).mockResolvedValue({
+      status: 200,
+      statusText: 'Ok',
+      ok: true,
+      json: jest.fn().mockResolvedValue(mockErrorResponse),
+    } satisfies Partial<Response>)
 
     await extensionAction.onEvent({
       payload: generateTestPayload({
@@ -94,16 +105,74 @@ describe('Medication From Image', () => {
       helpers,
     })
 
+    expect(global.fetch).toHaveBeenCalledWith(
+      'https://medication-extractor-390819626634.us-central1.run.app/medication_extractor/',
+      expect.objectContaining({
+        method: 'POST',
+        headers: expect.any(Object),
+        body: expect.any(String),
+      })
+    )
+
     expect(onError).toHaveBeenCalledWith({
       events: [
         {
           date: expect.any(String),
           text: {
-            en: 'Invalid image URL',
+            en: '500 (ERROR): {"status":"ERROR","medications":[],"error_explanation":"Invalid image URL"}',
           },
           error: {
-            category: 'BAD_REQUEST',
-            message: 'Invalid image URL',
+            category: 'SERVER_ERROR',
+            message:
+              '500 (ERROR): {"status":"ERROR","medications":[],"error_explanation":"Invalid image URL"}',
+          },
+        },
+      ],
+    })
+    expect(onComplete).not.toHaveBeenCalled()
+  })
+
+  test('Should handle native fetch errors', async () => {
+    ;(global.fetch as jest.Mock).mockResolvedValue({
+      status: 404,
+      statusText: 'Not found',
+      ok: false,
+    } satisfies Partial<Response>)
+
+    await extensionAction.onEvent({
+      payload: generateTestPayload({
+        fields: {
+          imageUrl:
+            'https://res.cloudinary.com/da7x4rzl4/image/upload/v1726601981/hackathon-sep-2024/invalid-url.png',
+        },
+        settings: {
+          openAiApiKey: 'a',
+        },
+      }),
+      onComplete,
+      onError,
+      helpers,
+    })
+
+    expect(global.fetch).toHaveBeenCalledWith(
+      'https://medication-extractor-390819626634.us-central1.run.app/medication_extractor/',
+      expect.objectContaining({
+        method: 'POST',
+        headers: expect.any(Object),
+        body: expect.any(String),
+      })
+    )
+
+    expect(onError).toHaveBeenCalledWith({
+      events: [
+        {
+          date: expect.any(String),
+          text: {
+            en: '404 (Not found): ',
+          },
+          error: {
+            category: 'SERVER_ERROR',
+            message: '404 (Not found): ',
           },
         },
       ],

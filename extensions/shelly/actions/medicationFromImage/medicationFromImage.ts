@@ -2,7 +2,8 @@ import { Category, type Action } from '@awell-health/extensions-core'
 import { validatePayloadAndCreateSdk } from '../../lib'
 import { type settings } from '../../settings'
 import { fields, dataPoints, FieldsValidationSchema } from './config'
-import { MedicationExtractorApi } from '../../medicationExtractorApi'
+import { MedicationExtractorApi } from '../../lib/api'
+import { FetchError } from '../../lib/api/medicationExtractorApi'
 
 export const medicationFromImage: Action<
   typeof fields,
@@ -26,31 +27,14 @@ export const medicationFromImage: Action<
       payload,
     })
 
-    const medicationExtractorApi = new MedicationExtractorApi()
-    const data = await medicationExtractorApi.extractMedicationFromImage(
-      imageUrl,
-      { pathwayId, activityId }
-    )
+    try {
+      const medicationExtractorApi = new MedicationExtractorApi()
 
-    if (data?.status !== 'OK') {
-      const error_explanation =
-        data?.error_explanation ??
-        'Error while executing Medication Extractor API'
-      await onError({
-        events: [
-          {
-            date: new Date().toISOString(),
-            text: {
-              en: error_explanation,
-            },
-            error: {
-              category: 'BAD_REQUEST',
-              message: error_explanation,
-            },
-          },
-        ],
+      const data = await medicationExtractorApi.extractMedicationFromImage({
+        imageUrl,
+        context: { pathwayId, activityId },
       })
-    } else {
+
       await onComplete({
         data_points: {
           data: JSON.stringify({
@@ -58,6 +42,27 @@ export const medicationFromImage: Action<
           }),
         },
       })
+    } catch (error) {
+      if (error instanceof FetchError) {
+        await onError({
+          events: [
+            {
+              date: new Date().toISOString(),
+              text: {
+                en: `${error.statusCode} (${error.statusText}): ${error.responseBody}`,
+              },
+              error: {
+                category: 'SERVER_ERROR',
+                message: `${error.statusCode} (${error.statusText}): ${error.responseBody}`,
+              },
+            },
+          ],
+        })
+        return
+      }
+
+      // Other errors are handled in extensions-server
+      throw error
     }
   },
 }
