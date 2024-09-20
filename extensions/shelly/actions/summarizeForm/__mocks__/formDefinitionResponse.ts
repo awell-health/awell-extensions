@@ -1,5 +1,6 @@
 export const mockFormDefinitionResponse = {
   form: {
+    title: 'General Dummy Form',
     questions: [
       {
         id: 'description',
