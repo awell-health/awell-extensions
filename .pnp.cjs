@@ -95,6 +95,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["lint-staged", "npm:14.0.1"],\
             ["lodash", "npm:4.17.21"],\
             ["mailgun.js", "npm:8.2.2"],\
+            ["marked", "npm:14.1.2"],\
             ["messagebird", "npm:4.0.1"],\
             ["node-fetch", "virtual:67a4556f0ed6123f505a64afe957c4b01723f4071e8c26bf643cd1a06641bc0b5f76dd835419691dcbce85729d487b8bcfc7faf79afef587517fb21a0b33abd6#npm:2.7.0"],\
             ["nodemailer", "npm:6.9.15"],\
@@ -257,6 +258,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["lint-staged", "npm:14.0.1"],\
             ["lodash", "npm:4.17.21"],\
             ["mailgun.js", "npm:8.2.2"],\
+            ["marked", "npm:14.1.2"],\
             ["messagebird", "npm:4.0.1"],\
             ["node-fetch", "virtual:67a4556f0ed6123f505a64afe957c4b01723f4071e8c26bf643cd1a06641bc0b5f76dd835419691dcbce85729d487b8bcfc7faf79afef587517fb21a0b33abd6#npm:2.7.0"],\
             ["nodemailer", "npm:6.9.15"],\
@@ -11169,6 +11171,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["marked", [\
+        ["npm:14.1.2", {\
+          "packageLocation": "./.yarn/cache/marked-npm-14.1.2-9af20f3731-47636a6c4e.zip/node_modules/marked/",\
+          "packageDependencies": [\
+            ["marked", "npm:14.1.2"]\
+          ],\
+          "linkType": "HARD"\
+        }],\
         ["npm:4.3.0", {\
           "packageLocation": "./.yarn/cache/marked-npm-4.3.0-e7ef9e874f-0db6817893.zip/node_modules/marked/",\
           "packageDependencies": [\

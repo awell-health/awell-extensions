@@ -106,6 +106,7 @@
     "libphonenumber-js": "^1.10.26",
     "lodash": "^4.17.21",
     "mailgun.js": "^8.2.1",
+    "marked": "^14.1.2",
     "messagebird": "^4.0.1",
     "node-fetch": "2",
     "nodemailer": "^6.9.15",

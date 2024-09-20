@@ -131,6 +131,7 @@ __metadata:
     lint-staged: ^14.0.1
     lodash: ^4.17.21
     mailgun.js: ^8.2.1
+    marked: ^14.1.2
     messagebird: ^4.0.1
     node-fetch: 2
     nodemailer: ^6.9.15
@@ -8427,6 +8428,15 @@ __metadata:
   version: 0.2.2
   resolution: "map-cache@npm:0.2.2"
   checksum: 3067cea54285c43848bb4539f978a15dedc63c03022abeec6ef05c8cb6829f920f13b94bcaf04142fc6a088318e564c4785704072910d120d55dbc2e0c421969
+  languageName: node
+  linkType: hard
+
+"marked@npm:^14.1.2":
+  version: 14.1.2
+  resolution: "marked@npm:14.1.2"
+  bin:
+    marked: bin/marked.js
+  checksum: 47636a6c4edd2ccfa682826ff139292900a9e179812a4ed8a8007fcb34cab662659e5c27565f5250c82409ee0f8cd3c0c1c23b448bb453c5f3d71d510a75b437
   languageName: node
   linkType: hard
 

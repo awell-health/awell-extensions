@@ -3,6 +3,7 @@ import { categorizeMessageWithLLM } from './lib/categorizeMessageWithLLM'
 import { validatePayloadAndCreateSdk } from '../../lib'
 import { type settings } from '../../settings'
 import { fields, dataPoints, FieldsValidationSchema } from './config'
+import { markdownToHtml } from '@/utils'
 
 export const categorizeMessage: Action<
   typeof fields,
@@ -33,14 +34,17 @@ export const categorizeMessage: Action<
         categories,
       })
 
-      console.log(categorization_result)
       const category = categorization_result.category
-      const explanation = categorization_result.explanation
+      const explanationHtml = await markdownToHtml(
+        categorization_result.explanation
+      )
+      console.log(category)
+      console.log(explanationHtml)
 
       await onComplete({
         data_points: {
           category,
-          explanation,
+          explanation: explanationHtml.trim(),
         },
       })
     } catch (error) {

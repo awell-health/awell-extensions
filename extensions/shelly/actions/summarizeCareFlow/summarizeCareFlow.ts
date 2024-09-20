@@ -4,6 +4,7 @@ import { type settings } from '../../settings'
 import { fields, dataPoints, FieldsValidationSchema } from './config'
 import { DISCLAIMER_MSG } from '../../lib/constants'
 import { summarizeCareFlowWithLLM } from './lib/summarizeCareFlowWithLLM'
+import { markdownToHtml } from '@/utils'
 export const summarizeCareFlow: Action<
   typeof fields,
   typeof settings,
@@ -77,12 +78,14 @@ export const summarizeCareFlow: Action<
         additionalInstructions,
       })
 
-      const finalSummary = `${DISCLAIMER_MSG}\n\n${summary}`
-      console.log(finalSummary)
+      const htmlSummary = await markdownToHtml(
+        `${DISCLAIMER_MSG}\n\n${summary}`
+      )
+      console.log(htmlSummary)
 
       await onComplete({
         data_points: {
-          summary: finalSummary,
+          summary: htmlSummary.trim(),
         },
       })
     } catch (error) {

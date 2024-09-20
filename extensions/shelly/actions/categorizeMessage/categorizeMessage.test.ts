@@ -75,7 +75,7 @@ describe('categorizeMessage - Mocked LLM calls', () => {
       data_points: {
         category: 'Appointment Scheduling',
         explanation:
-          'The message contains a request for scheduling an appointment.',
+          '<p>The message contains a request for scheduling an appointment.</p>',
       },
     })
 
