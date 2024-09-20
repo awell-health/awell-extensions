@@ -23,8 +23,7 @@ describe.skip('summarizeCareFlow - Real LLM calls with mocked Awell SDK', () => 
       },
       fields: {
         stakeholder: 'Clinician',
-        additionalInstructions:
-          '',
+        additionalInstructions: '',
       },
       settings: {
         openAiApiKey: process.env.OPENAI_TEST_KEY, // Use your actual OpenAI API key here
@@ -57,7 +56,7 @@ describe.skip('summarizeCareFlow - Real LLM calls with mocked Awell SDK', () => 
     // Ensure that the model has actually been called (real call to ChatOpenAI)
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
-        summary: expect.stringContaining('plugin'),
+        summary: expect.stringContaining('step'),
       },
     })
 

@@ -25,7 +25,8 @@ export const systemPrompt = ChatPromptTemplate.fromTemplate(`
   - Reflect the care flow structure: tracks, steps, and actions (e.g., "Patient submitted a form in Step X").
   - Provide the summary as a clear, digestible paragraph unless instructed otherwise.
   - Always include track, step, and action names where applicable.
-  - Do not use markdown or any formatting like bold or italics unless explicitly requested.
+  - It is apsolutely critical to return proper markdown formatting, especially for new lines and paragraphs.
+
 
   Additional Instructions:
   {additionalInstructions}

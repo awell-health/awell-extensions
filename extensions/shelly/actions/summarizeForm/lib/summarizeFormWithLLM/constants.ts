@@ -26,6 +26,7 @@ export const systemPrompt = ChatPromptTemplate.fromTemplate(`
   - Provide quick insights of key points in an easy-to-read format for the stakeholder.
   - Do not include anything that is not present in form (such as the assumption that the patient visited clinic).
   - Do not add titles like Summary:, just provide the summary.
+  - It is apsolutely critical to return proper markdown formatting, especially for new lines and paragraphs.
 
 
   Additional Instructions:
