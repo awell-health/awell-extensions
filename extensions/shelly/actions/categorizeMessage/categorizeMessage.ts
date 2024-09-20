@@ -44,7 +44,7 @@ export const categorizeMessage: Action<
       await onComplete({
         data_points: {
           category,
-          explanation: explanationHtml.trim(),
+          explanation: explanationHtml,
         },
       })
     } catch (error) {

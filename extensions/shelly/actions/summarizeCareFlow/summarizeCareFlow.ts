@@ -85,7 +85,7 @@ export const summarizeCareFlow: Action<
 
       await onComplete({
         data_points: {
-          summary: htmlSummary.trim(),
+          summary: htmlSummary,
         },
       })
     } catch (error) {
