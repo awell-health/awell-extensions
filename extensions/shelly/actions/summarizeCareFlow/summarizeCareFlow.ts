@@ -4,7 +4,8 @@ import { type settings } from '../../settings'
 import { fields, dataPoints, FieldsValidationSchema } from './config'
 import { DISCLAIMER_MSG } from '../../lib/constants'
 import { summarizeCareFlowWithLLM } from './lib/summarizeCareFlowWithLLM'
-import { markdownToHtml } from '@/utils'
+import { markdownToHtml } from '../../../../src/utils'
+
 export const summarizeCareFlow: Action<
   typeof fields,
   typeof settings,

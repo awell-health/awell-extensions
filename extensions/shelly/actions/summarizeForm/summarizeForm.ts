@@ -6,7 +6,7 @@ import { getResponseText } from './lib/getResponseText'
 import { summarizeFormWithLLM } from './lib/summarizeFormWithLLM'
 import { DISCLAIMER_MSG } from '../../lib/constants'
 import { getLatestFormInCurrentStep } from '../../../../src/lib/awell'
-import { markdownToHtml } from '@/utils'
+import { markdownToHtml } from '../../../../src/utils'
 
 // TODO get rid of console logs eventually
 // TODO: Please check stakeholders aand whether I can get them lioke this - it is needed for the LLM call.

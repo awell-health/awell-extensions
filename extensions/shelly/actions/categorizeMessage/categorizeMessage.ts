@@ -3,7 +3,7 @@ import { categorizeMessageWithLLM } from './lib/categorizeMessageWithLLM'
 import { validatePayloadAndCreateSdk } from '../../lib'
 import { type settings } from '../../settings'
 import { fields, dataPoints, FieldsValidationSchema } from './config'
-import { markdownToHtml } from '@/utils'
+import { markdownToHtml } from '../../../../src/utils'
 
 export const categorizeMessage: Action<
   typeof fields,
