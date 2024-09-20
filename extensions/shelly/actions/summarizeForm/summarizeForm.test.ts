@@ -97,9 +97,12 @@ describe('summarizeForm - Mocked LLM calls', () => {
       additionalInstructions: 'Please focus on key symptoms.',
     })
 
+    const expected = `<p>Important Notice: The content provided is an AI-generated summary</p>
+<p>Mocked summary from LLM</p>`
+
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
-        summary: `${DISCLAIMER_MSG}\n\n${'Mocked summary from LLM'}`,
+        summary: expected,
       },
     })
 

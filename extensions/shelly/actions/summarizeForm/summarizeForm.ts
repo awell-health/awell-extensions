@@ -6,6 +6,7 @@ import { getResponseText } from './lib/getResponseText'
 import { summarizeFormWithLLM } from './lib/summarizeFormWithLLM'
 import { DISCLAIMER_MSG } from '../../lib/constants'
 import { getLatestFormInCurrentStep } from '../../../../src/lib/awell'
+import { markdownToHtml } from '@/utils'
 
 // TODO get rid of console logs eventually
 // TODO: Please check stakeholders aand whether I can get them lioke this - it is needed for the LLM call.
@@ -53,11 +54,14 @@ export const summarizeForm: Action<
         additionalInstructions,
       })
 
-      console.log(`${DISCLAIMER_MSG}\n\n${summary}`)
+      const htmlSummary = await markdownToHtml(
+        `${DISCLAIMER_MSG}\n\n${summary}`
+      )
+      console.log(htmlSummary)
 
       await onComplete({
         data_points: {
-          summary: `${DISCLAIMER_MSG}\n\n${summary}`,
+          summary: htmlSummary,
         },
       })
     } catch (error) {
