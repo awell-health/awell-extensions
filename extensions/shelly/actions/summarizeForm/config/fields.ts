@@ -13,7 +13,7 @@ export const fields = {
   stakeholder: {
     id: 'stakeholder',
     label: 'Stakeholder',
-    description: 'Defaults to "Clinician"',
+    description: 'Indicates who the summarization is intended for. Defaults to "Clinician"',
     type: FieldType.STRING,
     required: false,
   },

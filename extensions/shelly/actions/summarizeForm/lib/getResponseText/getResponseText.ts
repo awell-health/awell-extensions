@@ -108,6 +108,12 @@ export interface OmittedFormAnswer {
   reason: string
 }
 
+export const getFormTitle = (opts: {
+  formDefinition: Form
+}): string => {
+  return opts.formDefinition.title
+}
+
 export const getResponseText = (opts: {
   formDefinition: Form
   formResponse: FormResponse
@@ -147,8 +153,9 @@ export const getResponseText = (opts: {
     }
   })
 
+  const formTitle = getFormTitle({ formDefinition: opts.formDefinition });
   return {
-    result: formAnswers.join('\n\n----------------\n\n'),
+    result: `Form Title: ${formTitle}\n\n${formAnswers.join('\n\n----------------\n\n')}`,
     omittedFormAnswers,
   }
 }
