@@ -86,12 +86,22 @@ export const sendSmsDuringBusinessHours: Action<
         sendAt,
       })
 
+      const messageSidLog = `Message SID: ${res.sid}`
+
       await onComplete({
         data_points: {
           messageSid: res.sid,
           scheduled,
           sendAt: sendAt != null ? formatISO(sendAt) : formatISO(now),
         },
+        events: [
+          {
+            date: new Date().toISOString(),
+            text: {
+              en: messageSidLog,
+            },
+          },
+        ],
       })
     } catch (error) {
       if (isTwilioErrorResponse(error)) {

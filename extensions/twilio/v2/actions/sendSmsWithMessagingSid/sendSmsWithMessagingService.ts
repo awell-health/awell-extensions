@@ -69,10 +69,20 @@ export const sendSmsWithMessagingService: Action<
         to: recipient,
       })
 
+      const messageSidLog = `Message SID: ${sid}`
+
       await onComplete({
         data_points: {
           messageSid: sid,
         },
+        events: [
+          {
+            date: new Date().toISOString(),
+            text: {
+              en: messageSidLog,
+            },
+          },
+        ],
       })
     } catch (error) {
       if (isTwilioErrorResponse(error)) {
