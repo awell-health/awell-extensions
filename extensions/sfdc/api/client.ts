@@ -14,6 +14,8 @@ import {
   type UpdateRecordResponseType,
   type CreateRecordInputType,
   type CreateRecordResponseType,
+  type GetRecordInputType,
+  type GetRecordResponseType,
 } from './schema'
 
 export class SalesforceDataWrapper extends DataWrapper {
@@ -44,10 +46,8 @@ export class SalesforceDataWrapper extends DataWrapper {
     })
   }
 
-  public async updateRecord(
-    input: UpdateRecordInputType
-  ): Promise<UpdateRecordResponseType> {
-    return await this.Request<UpdateRecordResponseType>({
+  public async updateRecord(input: UpdateRecordInputType): Promise<void> {
+    await this.Request<UpdateRecordResponseType>({
       method: 'PATCH',
       url: `/services/data/${this.apiVersion}/sobjects/${input.sObject}/${input.sObjectId}`,
       headers: {
@@ -61,6 +61,18 @@ export class SalesforceDataWrapper extends DataWrapper {
     return await this.Request<unknown>({
       method: 'GET',
       url: `/services/data/${this.apiVersion}/sobjects/${sObject}/describe`,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+  }
+
+  public async getRecord(
+    input: GetRecordInputType
+  ): Promise<GetRecordResponseType> {
+    return await this.Request<GetRecordResponseType>({
+      method: 'GET',
+      url: `/services/data/${this.apiVersion}/sobjects/${input.sObject}/${input.sObjectId}`,
       headers: {
         'Content-Type': 'application/json',
       },
@@ -128,13 +140,19 @@ export class SalesforceRestAPIClient extends APIClient<SalesforceDataWrapper> {
     return await this.FetchData(async (dw) => await dw.createRecord(input))
   }
 
-  public async updateRecord(
-    input: UpdateRecordInputType
-  ): Promise<UpdateRecordResponseType> {
-    return await this.FetchData(async (dw) => await dw.updateRecord(input))
+  public async updateRecord(input: UpdateRecordInputType): Promise<void> {
+    await this.FetchData(async (dw) => {
+      await dw.updateRecord(input)
+    })
   }
 
   public async getRecordShape(sObject: string): Promise<unknown> {
     return await this.FetchData(async (dw) => await dw.getRecordShape(sObject))
+  }
+
+  public async getRecord(
+    input: GetRecordInputType
+  ): Promise<GetRecordResponseType> {
+    return await this.FetchData(async (dw) => await dw.getRecord(input))
   }
 }

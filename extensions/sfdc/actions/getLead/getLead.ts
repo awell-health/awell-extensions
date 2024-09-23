@@ -3,29 +3,34 @@ import { type settings } from '../../settings'
 import { fields, dataPoints, FieldsValidationSchema } from './config'
 import { validatePayloadAndCreateClient } from '../../lib'
 
-export const testAction: Action<
+export const getLead: Action<
   typeof fields,
   typeof settings,
   keyof typeof dataPoints
 > = {
-  key: 'testAction',
+  key: 'getLead',
   category: Category.CUSTOMER_SUPPORT,
-  title: 'Test action',
-  description: 'Test connection with SFDC',
+  title: 'Get lead',
+  description: 'Retrieve a Lead from Salesforce',
   fields,
   previewable: false,
   dataPoints,
-  onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
+  onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
     const { fields, salesforceClient } = await validatePayloadAndCreateClient({
       fieldsSchema: FieldsValidationSchema,
       payload,
     })
 
-    const res = await salesforceClient.getRecordShape(fields.sObject)
+    const res = await salesforceClient.getRecord({
+      sObject: 'Lead',
+      sObjectId: fields.leadId,
+    })
+
+    console.log(res)
 
     await onComplete({
       data_points: {
-        res: JSON.stringify(res),
+        leadData: JSON.stringify(res),
       },
     })
   },
