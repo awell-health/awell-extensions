@@ -2,6 +2,7 @@ import { Category, type Action } from '@awell-health/extensions-core'
 import { type settings } from '../../settings'
 import { fields, dataPoints, FieldsValidationSchema } from './config'
 import { validatePayloadAndCreateClient } from '../../lib'
+import { isSalesforceError, parseSalesforceError } from '../../lib/errors'
 
 export const getLead: Action<
   typeof fields,
@@ -21,15 +22,26 @@ export const getLead: Action<
       payload,
     })
 
-    const res = await salesforceClient.getRecord({
-      sObject: 'Lead',
-      sObjectId: fields.leadId,
-    })
+    try {
+      const res = await salesforceClient.getRecord({
+        sObject: 'Lead',
+        sObjectId: fields.leadId,
+      })
 
-    await onComplete({
-      data_points: {
-        leadData: JSON.stringify(res),
-      },
-    })
+      await onComplete({
+        data_points: {
+          leadData: JSON.stringify(res),
+        },
+      })
+    } catch (error) {
+      if (isSalesforceError(error)) {
+        await onError({
+          events: [parseSalesforceError(error)],
+        })
+      } else {
+        // we handle ZodError and unknown errors in extension-server directly
+        throw error
+      }
+    }
   },
 }
