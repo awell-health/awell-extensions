@@ -2,9 +2,9 @@ import { FieldType, type Field } from '@awell-health/extensions-core'
 import z, { type ZodTypeAny } from 'zod'
 
 export const fields = {
-  sObject: {
-    id: 'sObject',
-    label: 'sObject',
+  leadId: {
+    id: 'leadId',
+    label: 'Lead ID',
     description: '',
     type: FieldType.STRING,
     required: true,
@@ -12,5 +12,5 @@ export const fields = {
 } satisfies Record<string, Field>
 
 export const FieldsValidationSchema = z.object({
-  sObject: z.string().min(1),
+  leadId: z.string().min(1),
 } satisfies Record<keyof typeof fields, ZodTypeAny>)

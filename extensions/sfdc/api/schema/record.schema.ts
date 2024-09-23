@@ -38,3 +38,18 @@ export const UpdateRecordResponseSchema = z.undefined()
 export type UpdateRecordResponseType = z.infer<
   typeof UpdateRecordResponseSchema
 >
+
+/**
+ * Get a record
+ */
+
+export const GetRecordInputSchema = z.object({
+  sObject: z.string().min(1),
+  sObjectId: z.string().min(1),
+})
+
+export type GetRecordInputType = z.infer<typeof GetRecordInputSchema>
+
+export const GetRecordResponseSchema = z.record(z.string(), z.unknown())
+
+export type GetRecordResponseType = z.infer<typeof GetRecordResponseSchema>

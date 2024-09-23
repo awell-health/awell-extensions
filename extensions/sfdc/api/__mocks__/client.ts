@@ -6,7 +6,7 @@ import {
   type UpdateRecordInputType,
   type UpdateRecordResponseType,
 } from '../schema'
-import { mockCreateRecordResponse } from './mockRecord'
+import { mockCreateRecordResponse, mockGetRecordResponse } from './mockRecord'
 
 export class SalesforceRestAPIClient {
   createRecord = jest.fn(
@@ -26,5 +26,9 @@ export class SalesforceRestAPIClient {
     return {
       label: 'Lead',
     }
+  })
+
+  getRecord = jest.fn(() => {
+    return mockGetRecordResponse
   })
 }
