@@ -100,7 +100,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["messagebird", "npm:4.0.1"],\
             ["node-fetch", "virtual:67a4556f0ed6123f505a64afe957c4b01723f4071e8c26bf643cd1a06641bc0b5f76dd835419691dcbce85729d487b8bcfc7faf79afef587517fb21a0b33abd6#npm:2.7.0"],\
             ["nodemailer", "npm:6.9.15"],\
-            ["openai", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:4.62.1"],\
+            ["openai", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:4.63.0"],\
             ["prettier", "npm:2.8.4"],\
             ["rimraf", "npm:4.4.1"],\
             ["sanitize-html", "npm:2.13.0"],\
@@ -265,7 +265,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["messagebird", "npm:4.0.1"],\
             ["node-fetch", "virtual:67a4556f0ed6123f505a64afe957c4b01723f4071e8c26bf643cd1a06641bc0b5f76dd835419691dcbce85729d487b8bcfc7faf79afef587517fb21a0b33abd6#npm:2.7.0"],\
             ["nodemailer", "npm:6.9.15"],\
-            ["openai", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:4.62.1"],\
+            ["openai", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:4.63.0"],\
             ["prettier", "npm:2.8.4"],\
             ["rimraf", "npm:4.4.1"],\
             ["sanitize-html", "npm:2.13.0"],\
@@ -3469,7 +3469,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@langchain/core", "npm:0.3.3"],\
             ["@types/langchain__core", null],\
             ["js-tiktoken", "npm:1.0.14"],\
-            ["openai", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:4.62.1"],\
+            ["openai", "virtual:0aa3f78922acdd4883de27858810e2c70743f06a61cce4d6c61c2a5bcc891693f50b5f3805bcfc157c1ac6920dfb5068a9da7054047e72a033962f473db4a46c#npm:4.62.1"],\
             ["zod", "npm:3.23.8"],\
             ["zod-to-json-schema", "virtual:1a04ce6427bc5f793ddd295df41f2d75cd9fe4b01c8b66bf3259ba655e1b3f6bb21315a5008e827d1e31de466288548d8af2f85cc04cf596f8dc2f8c4d80a1d8#npm:3.23.3"]\
           ],\
@@ -12088,10 +12088,37 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:4.62.1", {\
-          "packageLocation": "./.yarn/__virtual__/openai-virtual-d53074ae3c/0/cache/openai-npm-4.62.1-d81838da5a-ab803ce0ef.zip/node_modules/openai/",\
+        ["npm:4.63.0", {\
+          "packageLocation": "./.yarn/cache/openai-npm-4.63.0-1dde7531a2-4956282062.zip/node_modules/openai/",\
           "packageDependencies": [\
-            ["openai", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:4.62.1"],\
+            ["openai", "npm:4.63.0"]\
+          ],\
+          "linkType": "SOFT"\
+        }],\
+        ["virtual:0aa3f78922acdd4883de27858810e2c70743f06a61cce4d6c61c2a5bcc891693f50b5f3805bcfc157c1ac6920dfb5068a9da7054047e72a033962f473db4a46c#npm:4.62.1", {\
+          "packageLocation": "./.yarn/__virtual__/openai-virtual-a9b0c9733e/0/cache/openai-npm-4.62.1-d81838da5a-ab803ce0ef.zip/node_modules/openai/",\
+          "packageDependencies": [\
+            ["openai", "virtual:0aa3f78922acdd4883de27858810e2c70743f06a61cce4d6c61c2a5bcc891693f50b5f3805bcfc157c1ac6920dfb5068a9da7054047e72a033962f473db4a46c#npm:4.62.1"],\
+            ["@types/node", "npm:18.19.50"],\
+            ["@types/node-fetch", "npm:2.6.11"],\
+            ["@types/zod", null],\
+            ["abort-controller", "npm:3.0.0"],\
+            ["agentkeepalive", "npm:4.5.0"],\
+            ["form-data-encoder", "npm:1.7.2"],\
+            ["formdata-node", "npm:4.4.1"],\
+            ["node-fetch", "virtual:67a4556f0ed6123f505a64afe957c4b01723f4071e8c26bf643cd1a06641bc0b5f76dd835419691dcbce85729d487b8bcfc7faf79afef587517fb21a0b33abd6#npm:2.7.0"],\
+            ["zod", "npm:3.23.8"]\
+          ],\
+          "packagePeers": [\
+            "@types/zod",\
+            "zod"\
+          ],\
+          "linkType": "HARD"\
+        }],\
+        ["virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:4.63.0", {\
+          "packageLocation": "./.yarn/__virtual__/openai-virtual-1e2454788f/0/cache/openai-npm-4.63.0-1dde7531a2-4956282062.zip/node_modules/openai/",\
+          "packageDependencies": [\
+            ["openai", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:4.63.0"],\
             ["@types/node", "npm:18.19.50"],\
             ["@types/node-fetch", "npm:2.6.11"],\
             ["@types/zod", null],\
