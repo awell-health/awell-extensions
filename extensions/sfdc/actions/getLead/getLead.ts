@@ -26,8 +26,6 @@ export const getLead: Action<
       sObjectId: fields.leadId,
     })
 
-    console.log(res)
-
     await onComplete({
       data_points: {
         leadData: JSON.stringify(res),
