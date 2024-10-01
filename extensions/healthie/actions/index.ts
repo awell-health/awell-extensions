@@ -26,7 +26,10 @@ import { getFormAnswers } from './getFormAnswers'
 import { createGoal } from './createGoal'
 import { deleteGoal } from './deleteGoal'
 import { getSetPasswordLink } from './getSetPasswordLink'
-import { pushFormResponseToHealthie } from './pushFormResponseToHealthie'
+import {
+  pushFormResponseToHealthie,
+  pushFormResponsesToHealthie,
+} from './dataExchange'
 
 export const actions = {
   deleteGoal,
@@ -67,4 +70,5 @@ export const actions = {
   checkScheduledAppointments,
   getFormAnswers,
   pushFormResponseToHealthie,
+  pushFormResponsesToHealthie,
 }
