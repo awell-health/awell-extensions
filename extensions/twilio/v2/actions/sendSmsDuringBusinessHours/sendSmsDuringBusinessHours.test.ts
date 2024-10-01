@@ -50,6 +50,7 @@ describe('Send SMS during business hours', () => {
         sendAt: mockDate,
         messageSid: '123',
       },
+      events: expect.any(Array),
     })
     expect(onError).not.toHaveBeenCalled()
   })
@@ -85,6 +86,7 @@ describe('Send SMS during business hours', () => {
         sendAt: '2024-01-01T09:00:00Z', // scheduled for 9 AM the same day
         messageSid: '123',
       },
+      events: expect.any(Array),
     })
     expect(onError).not.toHaveBeenCalled()
   })
@@ -120,6 +122,7 @@ describe('Send SMS during business hours', () => {
         sendAt: '2024-01-02T09:00:00Z', // scheduled for 9 AM the next day
         messageSid: '123',
       },
+      events: expect.any(Array),
     })
     expect(onError).not.toHaveBeenCalled()
   })
