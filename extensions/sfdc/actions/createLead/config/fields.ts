@@ -9,6 +9,14 @@ export const fields = {
     type: FieldType.JSON,
     required: true,
   },
+  careFlowIdField: {
+    id: 'careFlowIdField',
+    label: 'Care Flow ID Field',
+    description:
+      'The field name in Salesforce that contains the Care Flow ID. If left blank, the Care Flow ID will not be included in the update.',
+    type: FieldType.STRING,
+    required: false,
+  },
 } satisfies Record<string, Field>
 
 export const FieldsValidationSchema = z.object({
@@ -44,4 +52,5 @@ export const FieldsValidationSchema = z.object({
       }
     )
     .pipe(z.record(z.unknown())),
+  careFlowIdField: z.string().optional(),
 } satisfies Record<keyof typeof fields, ZodTypeAny>)
