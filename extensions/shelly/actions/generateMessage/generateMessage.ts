@@ -35,8 +35,7 @@ export const generateMessage: Action<
         stakeholder,
         language,
       })
-      console.log('Hereeee')
-      console.log(generated_message)
+
       const { subject, message } = generated_message
       console.log(subject)
       console.log(message)
