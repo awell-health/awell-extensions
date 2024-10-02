@@ -13,18 +13,17 @@ export const parser = StructuredOutputParser.fromZodSchema(
   messageCategoriesSchema
 )
 
-// TODO: move prompt to LangSmith + further tune
 export const systemPrompt = ChatPromptTemplate.fromTemplate(`
-      You are an expert in categorizing messages different messages in a clinical context.
-      Use your expertise to solve the critical task:
-      1. Match the provided message to one of the following categories: {categories}.
-      2. Provide a one-sentence explanation of why the message fits the chosen category.
+      You are an expert in categorizing different patient messages in a clinical context.
+      Use your expertise to solve the message categorization task:
+      1. Categorize the input message into **one of the provided categories**: {categories}. If no category fits, return "None".
+      2. Provide a concise explanation of why the message belongs to the selected category.
       
-      Instructions for categorization:
-      - The message may be in different languages.
-      - It is crucial that you only select a category from the provided list.
-      - If no match is found, or if the match is ambiguous, return "None".
-      It is critical to double-check your work before returning the final result.
+      Important Instructions:
+      - The message may be in multiple languages.
+      - **Only** choose from the provided list of categories. **Do not create new categories** or alter the given ones.
+      - If no category fits perfectly, or if the match is unclear, return "None" without guessing.
+      - Carefully verify your selection before submitting your answer.
       
       Respond exclusively with a valid JSON object containing the following keys:
       - matched_category: The most suitable category. Must be from the following list: {categories} - None if no category fits. Absolutely refrain from creating new categories or altering existent one. Output should be one of the provided categories in the list.
