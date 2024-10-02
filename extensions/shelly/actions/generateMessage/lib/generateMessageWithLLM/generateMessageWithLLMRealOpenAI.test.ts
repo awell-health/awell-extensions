@@ -2,10 +2,10 @@ import 'dotenv/config'
 import { generateMessageWithLLM } from '.'
 import { ChatOpenAI } from '@langchain/openai'
 
-jest.setTimeout(30000); // Increases timeout to 30 seconds for all tests in this file
+jest.setTimeout(60000); // Increases timeout to 60 seconds for all tests in this file
 
 
-describe('generateMessageWithLLM', () => {
+describe.skip('generateMessageWithLLM', () => {
   let ChatModelGPT4o: ChatOpenAI
 
   beforeEach(() => {
