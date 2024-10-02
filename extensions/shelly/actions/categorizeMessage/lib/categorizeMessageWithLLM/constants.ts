@@ -27,8 +27,8 @@ export const systemPrompt = ChatPromptTemplate.fromTemplate(`
       It is critical to double-check your work before returning the final result.
       
       Respond exclusively with a valid JSON object containing the following keys:
-      - matched_category: The selected category or "None".
-      - match_explanation: A one-sentence explanation of the match. Make sure to provide clear and concise explanation to justify your decision.
+      - matched_category: The most suitable category. Must be from the following list: {categories} - None if no category fits. Absolutely refrain from creating new categories or altering existent one. Output should be one of the provided categories in the list.
+      - match_explanation: A brief explanation supporting your decision.
   
       Input:
       {input}
