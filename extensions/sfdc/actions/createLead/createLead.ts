@@ -3,6 +3,7 @@ import { type settings } from '../../settings'
 import { fields, dataPoints, FieldsValidationSchema } from './config'
 import { validatePayloadAndCreateClient } from '../../lib'
 import { isSalesforceError, parseSalesforceError } from '../../lib/errors'
+import { isNil } from 'lodash'
 
 export const createLead: Action<
   typeof fields,
@@ -17,15 +18,23 @@ export const createLead: Action<
   previewable: false,
   dataPoints,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
+    const careFlowId = payload.pathway.id
     const { fields, salesforceClient } = await validatePayloadAndCreateClient({
       fieldsSchema: FieldsValidationSchema,
       payload,
     })
 
+    const data = {
+      ...fields.data,
+      ...(!isNil(fields.careFlowIdField) && {
+        [fields.careFlowIdField]: careFlowId,
+      }),
+    }
+
     try {
       const res = await salesforceClient.createRecord({
         sObject: 'Lead',
-        data: fields.data,
+        data,
       })
 
       await onComplete({

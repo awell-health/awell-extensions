@@ -24,7 +24,7 @@ describe('Salesforce - Create Lead', () => {
           Phone: '123-456-7890',
           Status: 'New',
         }),
-      },
+      } as any,
       settings: mockSettings,
     })
 
