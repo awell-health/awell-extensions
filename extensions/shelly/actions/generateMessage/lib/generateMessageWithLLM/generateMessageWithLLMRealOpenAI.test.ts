@@ -1,0 +1,72 @@
+import 'dotenv/config'
+import { generateMessageWithLLM } from '.'
+import { ChatOpenAI } from '@langchain/openai'
+
+jest.setTimeout(30000); // Increases timeout to 30 seconds for all tests in this file
+
+
+describe('generateMessageWithLLM', () => {
+  let ChatModelGPT4o: ChatOpenAI
+
+  beforeEach(() => {
+    ChatModelGPT4o = new ChatOpenAI({
+      modelName: 'gpt-4',
+      temperature: 0,
+      timeout: 10000,
+    })
+  })
+
+  it('should generate a message for a patient appointment reminder', async () => {
+    const result = await generateMessageWithLLM({
+      ChatModelGPT4o,
+      communicationObjective: 'Remind patient of upcoming appointment. Ask patient to arrive 15 minutes early',
+      personalizationInput: 'Patient Name: John, Appointment Time: 2:00 PM tomorrow',
+      additionalInstructions: '',
+      stakeholder: 'Patient',
+      language: 'English'
+    })
+
+    expect(result).toHaveProperty('subject')
+    expect(result).toHaveProperty('message')
+    expect(result.subject).toContain('Appointment')
+    expect(result.message).toContain('John')
+    expect(result.message).toContain('2:00 PM')
+    expect(result.message).toContain('15 minutes early')
+  })
+
+  it('should generate a message for medication instructions', async () => {
+    const result = await generateMessageWithLLM({
+      ChatModelGPT4o,
+      communicationObjective: 'Provide medication instructions',
+      personalizationInput: 'Patient Name: Sarah, Medication: Lisinopril',
+      additionalInstructions: 'Emphasize the importance of blood pressure monitoring',
+      stakeholder: 'Patient',
+      language: 'English'
+    })
+
+    expect(result).toHaveProperty('subject')
+    expect(result).toHaveProperty('message')
+    expect(result.subject).toContain('Medication')
+    expect(result.message).toContain('Sarah')
+    expect(result.message).toContain('Lisinopril')
+    expect(result.message).toContain('blood pressure')
+  })
+
+  it('should generate a message in a different language', async () => {
+    const result = await generateMessageWithLLM({
+      ChatModelGPT4o,
+      communicationObjective: 'Remind patient of upcoming appointment',
+      personalizationInput: 'Patient Name: Carlos, Appointment Time: 10:00 AM tomorrow',
+      additionalInstructions: 'Ask patient to arrive 15 minutes early',
+      stakeholder: 'Patient',
+      language: 'Spanish'
+    })
+
+    expect(result).toHaveProperty('subject')
+    expect(result).toHaveProperty('message')
+    expect(result.subject).toContain('cita')
+    expect(result.message).toContain('Carlos')
+    expect(result.message).toContain('10:00 AM')
+    expect(result.message).toContain('15 minutos')
+  })
+})

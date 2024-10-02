@@ -1,0 +1,1 @@
+export { generateMessage } from './generateMessage'
