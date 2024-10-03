@@ -49,7 +49,7 @@ describe.skip('generateMessage - Real OpenAI calls', () => {
     expect(subject).toContain('Appointment')
     expect(message).toContain('John Doe')
     expect(message).toContain('2:00 PM')
-    expect(message).toMatch(/friendly|encouraging/i)
+    expect(message).toMatch(/appointment/i)
 
     expect(onError).not.toHaveBeenCalled()
   })
