@@ -7,7 +7,7 @@ import { mockFormResponseResponse } from './__mocks__/formResponseResponse'
 import { mockPathwayActivitiesResponse } from './__mocks__/pathwayActivitiesResponse'
 import { DISCLAIMER_MSG_FORM } from '../../lib/constants'
 
-describe.skip('summarizeForm - Real LLM calls with mocked Awell SDK', () => {
+describe('summarizeForm - Real LLM calls with mocked Awell SDK', () => {
   const { onComplete, onError, helpers, extensionAction, clearMocks } =
     TestHelpers.fromAction(summarizeForm)
 

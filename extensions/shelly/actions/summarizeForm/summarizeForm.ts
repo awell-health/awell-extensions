@@ -3,7 +3,7 @@ import { validatePayloadAndCreateSdk } from '../../lib'
 import { type settings } from '../../settings'
 import { fields, dataPoints, FieldsValidationSchema } from './config'
 import { getFormResponseText } from '../../lib/getFormResponseText'
-import { summarizeFormWithLLM } from './lib/summarizeFormWithLLM'
+import { summarizeFormWithLLM } from '../../lib/summarizeFormWithLLM'
 import { DISCLAIMER_MSG_FORM } from '../../lib/constants'
 import { getLatestFormInCurrentStep } from '../../../../src/lib/awell'
 
@@ -16,7 +16,7 @@ export const summarizeForm: Action<
   key: 'summarizeForm',
   category: Category.WORKFLOW,
   title: 'Summarize form',
-  description: 'Summarize the response of a form with AI.',
+  description: 'Summarize the response of a last form in a step with AI.',
   fields,
   previewable: false,
   dataPoints,

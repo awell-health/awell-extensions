@@ -37,7 +37,7 @@ describe('summarizeForm - Mocked LLM calls', () => {
 
   it('Should summarize form with LLM', async () => {
     const summarizeFormWithLLMSpy = jest.spyOn(
-      require('./lib/summarizeFormWithLLM/summarizeFormWithLLM'),
+      require('../../lib/summarizeFormWithLLM/summarizeFormWithLLM'),
       'summarizeFormWithLLM'
     )
 
