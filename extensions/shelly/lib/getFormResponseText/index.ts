@@ -1,1 +1,1 @@
-export { getFormResponseText } from './getFormResponseText'
+export { getFormResponseText, getResponsesForAllForms } from './getFormResponseText'
