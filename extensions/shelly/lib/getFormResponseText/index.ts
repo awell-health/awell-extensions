@@ -1,0 +1,1 @@
+export { getFormResponseText } from './getFormResponseText'
