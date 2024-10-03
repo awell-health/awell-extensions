@@ -34,6 +34,8 @@ export const systemPromptBulletPoints = ChatPromptTemplate.fromTemplate(`
         - **After**: "Side effects from current treatment in the last 3 months"
     - **Avoid omitting any key information** that might alter the meaning. It is critical to preserve all time frames (e.g., "last week," "yesterday") and specific details (e.g., "right leg," "morning").
 
+  5. **If there are multiple forms provided, add a new line and proceed with the next form.**
+
   **Important Notes:**
 
   - Absolutely refrain from making any suggestions, interpretations, or provide additional comments.
@@ -79,6 +81,8 @@ Please follow these step-by-step instructions:
    - Ensure the summary is **concise** and **to the point** while preserving all essential information.
    - **Write everything in one paragraph**, maintaining a logical flow of information.
    - For multiple-choice questions where the raw answer may be a code (e.g., 0, 1) that lacks meaning on its own, use the associated **answer label** instead. 
+
+
 **Important Notes:**
 
 - Do not make any conclusions, suggestions, interpretations, or provide additional comments. Only summarize the information provided in the form.

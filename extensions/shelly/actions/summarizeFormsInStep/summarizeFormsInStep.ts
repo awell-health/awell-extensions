@@ -2,21 +2,21 @@ import { Category, type Action } from '@awell-health/extensions-core'
 import { validatePayloadAndCreateSdk } from '../../lib'
 import { type settings } from '../../settings'
 import { fields, dataPoints, FieldsValidationSchema } from './config'
-import { getFormResponseText } from '../../lib/getFormResponseText'
+import { getResponsesForAllForms } from '../../lib/getFormResponseText'
 import { summarizeFormWithLLM } from '../../lib/summarizeFormWithLLM'
 import { DISCLAIMER_MSG_FORM } from '../../lib/constants'
-import { getLatestFormInCurrentStep } from '../../../../src/lib/awell'
+import { getAllFormsInCurrentStep } from '../../../../src/lib/awell'
 
 // TODO: get rid of the console logs eventually
-export const summarizeForm: Action<
+export const summarizeFormsInStep: Action<
   typeof fields,
   typeof settings,
   keyof typeof dataPoints
 > = {
   key: 'summarizeForm',
   category: Category.WORKFLOW,
-  title: 'Summarize form',
-  description: 'Summarize the response of a last form in a step with AI.',
+  title: 'Summarize all forms in the step',
+  description: 'Summarize the responses of all forms in the step with AI.',
   fields,
   previewable: false,
   dataPoints,
@@ -30,27 +30,31 @@ export const summarizeForm: Action<
       fieldsSchema: FieldsValidationSchema,
       payload,
     })
-
-    const { formDefinition, formResponse } = await getLatestFormInCurrentStep({
+    
+   
+    // Fetch all forms in the current step
+    const formsData = await getAllFormsInCurrentStep({
       awellSdk: await helpers.awellSdk(),
       pathwayId: pathway.id,
       activityId: activity.id,
     })
 
-    const { result: responseText } = getFormResponseText({
-      formDefinition,
-      formResponse,
+
+    // Get responses for all forms
+    const { result: allFormsResponseText } = getResponsesForAllForms({
+      formsData,
     })
 
     try {
+      // Summarize all forms' responses
       const summary = await summarizeFormWithLLM({
         ChatModelGPT4o,
-        formData: responseText,
+        formData: allFormsResponseText, // Use the concatenated form responses
         summaryFormat, 
         language,
       })
       
-      // TODO think aboutn format
+      // Add disclaimer to the summary
       const summary_with_disclaimer = `${DISCLAIMER_MSG_FORM}\n\n${summary}`
     
       console.log(summary_with_disclaimer)
@@ -61,8 +65,8 @@ export const summarizeForm: Action<
         },
       })
     } catch (error) {
-      console.error('Error summarizing form:', error)
-      throw new Error('Error summarizing form')
+      console.error('Error summarizing forms:', error)
+      throw new Error('Error summarizing forms')
     }
   },
 }

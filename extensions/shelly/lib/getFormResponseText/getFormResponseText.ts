@@ -123,7 +123,7 @@ export const getFormResponseText = (opts: {
 } => {
   const formAnswers: string[] = []
   const omittedFormAnswers: OmittedFormAnswer[] = []
-
+  console.log(opts.formResponse)
   opts.formResponse.answers.forEach((questionResponse) => {
     const questionDefinition = opts.formDefinition.questions.find(
       (q) => q.id === questionResponse.question_id
@@ -162,32 +162,40 @@ export const getFormResponseText = (opts: {
 
 
 export const getResponsesForAllForms = (opts: {
-  formsData: Array<{ formDefinition: Form; formResponse: FormResponse }>
+  formsData: Array<{
+    formActivityId: string
+    formId: string
+    formDefinition: Form
+    formResponse: FormResponse
+  }>
 }): {
   result: string
   omittedFormAnswers: OmittedFormAnswer[]
 } => {
-  const allFormAnswers: string[] = []
-  let allOmittedFormAnswers: OmittedFormAnswer[] = []
-
-  opts.formsData.forEach((formData, index) => {
-    // Reusing the existing `getFormResponseText` for each form
-    const { result, omittedFormAnswers } = getFormResponseText({
+  console.log('hereeee')
+  console.log(opts.formsData)
+  const allFormResponses = opts.formsData.map((formData) => {
+    const formResponseText = getFormResponseText({
       formDefinition: formData.formDefinition,
       formResponse: formData.formResponse,
-    })
+    });
+    return {
+      formActivityId: formData.formActivityId,
+      formId: formData.formId,
+      ...formResponseText
+    };
+  });
 
-    allFormAnswers.push(result)
-    allOmittedFormAnswers = allOmittedFormAnswers.concat(omittedFormAnswers)
+  const concatenatedResponses = allFormResponses
+    .map((response) => `Form Activity ID: ${response.formActivityId}\nForm ID: ${response.formId}\n${response.result}`)
+    .join('\n\n==========Next Form==========\n\n');
 
-    // Add delimiter between forms (except for the last one)
-    if (index < opts.formsData.length - 1) {
-      allFormAnswers.push('\n\n========= Next Form =========\n\n')
-    }
-  })
+  const allOmittedAnswers = allFormResponses.flatMap(
+    (response) => response.omittedFormAnswers
+  );
 
   return {
-    result: allFormAnswers.join(''), // Concatenate all form results
-    omittedFormAnswers: allOmittedFormAnswers, // Combine omitted answers
-  }
-}
+    result: concatenatedResponses,
+    omittedFormAnswers: allOmittedAnswers,
+  };
+};
