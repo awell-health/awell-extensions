@@ -6,6 +6,7 @@ import { getFormResponseText } from '../../lib/getFormResponseText'
 import { summarizeFormWithLLM } from '../../lib/summarizeFormWithLLM'
 import { DISCLAIMER_MSG_FORM } from '../../lib/constants'
 import { getLatestFormInCurrentStep } from '../../../../src/lib/awell'
+import { markdownToHtml } from '../../../../src/utils'
 
 // TODO: get rid of the console logs eventually
 export const summarizeForm: Action<
@@ -49,15 +50,16 @@ export const summarizeForm: Action<
         summaryFormat, 
         language,
       })
-      
-      // TODO think aboutn format
-      const summary_with_disclaimer = `${DISCLAIMER_MSG_FORM}\n\n${summary}`
+
+      const htmlSummary = await markdownToHtml(
+        `${DISCLAIMER_MSG_FORM}\n\n${summary}`
+      )
     
-      console.log(summary_with_disclaimer)
+      console.log(htmlSummary)
 
       await onComplete({
         data_points: {
-          summary: summary_with_disclaimer,
+          summary: htmlSummary,
         },
       })
     } catch (error) {

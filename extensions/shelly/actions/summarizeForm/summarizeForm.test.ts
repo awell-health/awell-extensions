@@ -7,6 +7,7 @@ import { mockPathwayActivitiesResponse } from './__mocks__/pathwayActivitiesResp
 import { mockFormDefinitionResponse } from './__mocks__/formDefinitionResponse'
 import { mockFormResponseResponse } from './__mocks__/formResponseResponse'
 import { DISCLAIMER_MSG_FORM } from '../../lib/constants'
+import { markdownToHtml } from '../../../../src/utils'
 
 // Import ChatOpenAI after mocking
 import { ChatOpenAI } from '@langchain/openai'
@@ -92,7 +93,7 @@ describe('summarizeForm - Mocked LLM calls', () => {
       language: 'Default',
     })
 
-    const expected = `${DISCLAIMER_MSG_FORM}\n\nMocked summary from LLM`
+    const expected = await markdownToHtml(`${DISCLAIMER_MSG_FORM}\n\nMocked summary from LLM`)
 
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
