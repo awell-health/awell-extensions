@@ -123,7 +123,7 @@ export const getFormResponseText = (opts: {
 } => {
   const formAnswers: string[] = []
   const omittedFormAnswers: OmittedFormAnswer[] = []
-  console.log(opts.formResponse)
+ 
   opts.formResponse.answers.forEach((questionResponse) => {
     const questionDefinition = opts.formDefinition.questions.find(
       (q) => q.id === questionResponse.question_id
