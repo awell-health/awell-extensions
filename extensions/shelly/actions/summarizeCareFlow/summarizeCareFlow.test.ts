@@ -83,7 +83,7 @@ describe('summarizeCareFlow - Mocked LLM calls', () => {
       additionalInstructions: 'Summarize key activities.',
     })
 
-    const expected = `<p>Important Notice: The content provided is an AI-generated summary</p>
+    const expected = `<p>Important Notice: The content provided is an AI-generated summary.</p>
 <p>Mocked care flow summary from LLM</p>`
 
     expect(onComplete).toHaveBeenCalledWith({

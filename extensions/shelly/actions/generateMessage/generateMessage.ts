@@ -3,6 +3,7 @@ import { generateMessageWithLLM } from './lib/generateMessageWithLLM'
 import { validatePayloadAndCreateSdk } from '../../lib'
 import { type settings } from '../../settings'
 import { fields, dataPoints, FieldsValidationSchema } from './config'
+import { markdownToHtml } from '../../../../src/utils'
 
 export const generateMessage: Action<
   typeof fields,
@@ -40,10 +41,12 @@ export const generateMessage: Action<
       console.log(subject)
       console.log(message)
 
+      const htmlMessage = await markdownToHtml(message)
+
       await onComplete({
         data_points: {
           subject,
-          message,
+          message: htmlMessage,
         },
       })
     } catch (error) {

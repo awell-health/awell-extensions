@@ -76,7 +76,7 @@ describe('generateMessage - Mocked LLM calls', () => {
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
         subject: 'Test Subject',
-        message: 'This is a test message',
+        message: '<p>This is a test message</p>',
       },
     })
 
@@ -119,7 +119,7 @@ describe('generateMessage - Mocked LLM calls', () => {
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
         subject: 'Test Subject',
-        message: 'This is a test message',
+        message: '<p>This is a test message</p>',
       },
     })
 

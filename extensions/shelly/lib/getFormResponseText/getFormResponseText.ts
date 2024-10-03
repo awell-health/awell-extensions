@@ -114,7 +114,7 @@ export const getFormTitle = (opts: {
   return opts.formDefinition.title
 }
 
-export const getResponseText = (opts: {
+export const getFormResponseText = (opts: {
   formDefinition: Form
   formResponse: FormResponse
 }): {
@@ -123,7 +123,7 @@ export const getResponseText = (opts: {
 } => {
   const formAnswers: string[] = []
   const omittedFormAnswers: OmittedFormAnswer[] = []
-
+ 
   opts.formResponse.answers.forEach((questionResponse) => {
     const questionDefinition = opts.formDefinition.questions.find(
       (q) => q.id === questionResponse.question_id
@@ -159,3 +159,43 @@ export const getResponseText = (opts: {
     omittedFormAnswers,
   }
 }
+
+
+export const getResponsesForAllForms = (opts: {
+  formsData: Array<{
+    formActivityId: string
+    formId: string
+    formDefinition: Form
+    formResponse: FormResponse
+  }>
+}): {
+  result: string
+  omittedFormAnswers: OmittedFormAnswer[]
+} => {
+  console.log('hereeee')
+  console.log(opts.formsData)
+  const allFormResponses = opts.formsData.map((formData) => {
+    const formResponseText = getFormResponseText({
+      formDefinition: formData.formDefinition,
+      formResponse: formData.formResponse,
+    });
+    return {
+      formActivityId: formData.formActivityId,
+      formId: formData.formId,
+      ...formResponseText
+    };
+  });
+
+  const concatenatedResponses = allFormResponses
+    .map((response) => `Form Activity ID: ${response.formActivityId}\nForm ID: ${response.formId}\n${response.result}`)
+    .join('\n\n==========Next Form==========\n\n');
+
+  const allOmittedAnswers = allFormResponses.flatMap(
+    (response) => response.omittedFormAnswers
+  );
+
+  return {
+    result: concatenatedResponses,
+    omittedFormAnswers: allOmittedAnswers,
+  };
+};

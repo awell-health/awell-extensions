@@ -2,10 +2,10 @@
 
 import { TestHelpers } from '@awell-health/extensions-core'
 import { generateTestPayload } from '@/tests'
-import { summarizeForm } from '.'
-import { mockPathwayActivitiesResponse } from './__mocks__/pathwayActivitiesResponse'
-import { mockFormDefinitionResponse } from './__mocks__/formDefinitionResponse'
-import { mockFormResponseResponse } from './__mocks__/formResponseResponse'
+import { summarizeFormsInStep } from '.'
+import { mockMultipleFormsPathwayActivitiesResponse } from './__mocks__/multipleFormsPathwayActivitiesResponse'
+import { mockMultipleFormsDefinitionResponse1, mockMultipleFormsDefinitionResponse2 } from './__mocks__/multipleFormsDefinitionResponse'
+import { mockMultipleFormsResponseResponse1, mockMultipleFormsResponseResponse2 } from './__mocks__/multipleFormsResponsesResponse'
 import { DISCLAIMER_MSG_FORM } from '../../lib/constants'
 import { markdownToHtml } from '../../../../src/utils'
 
@@ -27,16 +27,16 @@ jest.mock('@langchain/openai', () => {
   }
 })
 
-describe('summarizeForm - Mocked LLM calls', () => {
+describe('summarizeFormsInStep - Mocked LLM calls', () => {
   const { onComplete, onError, helpers, extensionAction, clearMocks } =
-    TestHelpers.fromAction(summarizeForm)
+    TestHelpers.fromAction(summarizeFormsInStep)
 
   beforeEach(() => {
     clearMocks()
     jest.clearAllMocks()
   })
 
-  it('Should summarize form with LLM', async () => {
+  it('Should summarize multiple forms with LLM', async () => {
     const summarizeFormWithLLMSpy = jest.spyOn(
       require('../../lib/summarizeFormWithLLM/summarizeFormWithLLM'),
       'summarizeFormWithLLM'
@@ -58,24 +58,29 @@ describe('summarizeForm - Mocked LLM calls', () => {
       },
     })
 
-    // Mock the Awell SDK
-    const awellSdkMock = {
-      orchestration: {
-        mutation: jest.fn().mockResolvedValue({}),
-        query: jest
-          .fn()
-          .mockResolvedValueOnce({
-            pathwayActivities: mockPathwayActivitiesResponse,
-          })
-          .mockResolvedValueOnce({
-            form: mockFormDefinitionResponse,
-          })
-          .mockResolvedValueOnce({
-            formResponse: mockFormResponseResponse,
-          }),
-      },
-    }
-
+   // Mock the Awell SDK
+   const awellSdkMock = {
+    orchestration: {
+      mutation: jest.fn().mockResolvedValue({}),
+      query: jest
+        .fn()
+        .mockResolvedValueOnce({
+          pathwayActivities: mockMultipleFormsPathwayActivitiesResponse,
+        })
+        .mockResolvedValueOnce({
+          form: mockMultipleFormsDefinitionResponse1,
+        })
+        .mockResolvedValueOnce({
+          form: mockMultipleFormsDefinitionResponse2,
+      })
+        .mockResolvedValueOnce({
+            formResponse: mockMultipleFormsResponseResponse1,
+        })
+        .mockResolvedValueOnce({
+          formResponse: mockMultipleFormsResponseResponse2}),
+    },
+  }
+    
     helpers.awellSdk = jest.fn().mockResolvedValue(awellSdkMock)
 
     await extensionAction.onEvent({
@@ -93,7 +98,8 @@ describe('summarizeForm - Mocked LLM calls', () => {
       language: 'Default',
     })
 
-    const expected = await markdownToHtml(`${DISCLAIMER_MSG_FORM}\n\nMocked summary from LLM`)
+    const expected = await markdownToHtml(
+        `${DISCLAIMER_MSG_FORM}\n\nMocked summary from LLM`)
 
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {

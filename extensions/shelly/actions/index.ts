@@ -1,4 +1,5 @@
 import { summarizeForm } from './summarizeForm'
+import { summarizeFormsInStep } from './summarizeFormsInStep'
 import { categorizeMessage } from './categorizeMessage'
 import { summarizeCareFlow } from './summarizeCareFlow'
 import { medicationFromImage } from './medicationFromImage'
@@ -7,6 +8,7 @@ import { generateMessage } from './generateMessage'
 
 const actions = {
   summarizeForm,
+  summarizeFormsInStep,
   summarizeCareFlow,
   categorizeMessage,
   generateMessage,
