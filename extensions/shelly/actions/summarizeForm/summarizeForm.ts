@@ -4,12 +4,10 @@ import { type settings } from '../../settings'
 import { fields, dataPoints, FieldsValidationSchema } from './config'
 import { getResponseText } from './lib/getResponseText'
 import { summarizeFormWithLLM } from './lib/summarizeFormWithLLM'
-import { DISCLAIMER_MSG } from '../../lib/constants'
+import { DISCLAIMER_MSG_FORM } from '../../lib/constants'
 import { getLatestFormInCurrentStep } from '../../../../src/lib/awell'
-import { markdownToHtml } from '../../../../src/utils'
 
-// TODO get rid of console logs eventually
-// TODO: Please check stakeholders aand whether I can get them lioke this - it is needed for the LLM call.
+// TODO: get rid of the console logs eventually
 export const summarizeForm: Action<
   typeof fields,
   typeof settings,
@@ -25,7 +23,7 @@ export const summarizeForm: Action<
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
     const {
       ChatModelGPT4o,
-      fields: { additionalInstructions, stakeholder },
+      fields: { summaryFormat, language },
       pathway,
       activity,
     } = await validatePayloadAndCreateSdk({
@@ -50,18 +48,18 @@ export const summarizeForm: Action<
       const summary = await summarizeFormWithLLM({
         ChatModelGPT4o,
         formData: responseText,
-        stakeholder,
-        additionalInstructions,
+        summaryFormat, 
+        language,
       })
-
-      const htmlSummary = await markdownToHtml(
-        `${DISCLAIMER_MSG}\n\n${summary}`
-      )
-      console.log(htmlSummary)
+      
+      // TODO think aboutn format
+      const summary_with_disclaimer = `${DISCLAIMER_MSG_FORM}\n\n${summary}`
+    
+      console.log(summary_with_disclaimer)
 
       await onComplete({
         data_points: {
-          summary: htmlSummary,
+          summary: summary_with_disclaimer,
         },
       })
     } catch (error) {

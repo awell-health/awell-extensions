@@ -1,30 +1,29 @@
-import { systemPrompt } from './constants'
+import { systemPromptBulletPoints, systemPromptTextParagraph } from './constants'
 import { type ChatOpenAI } from '@langchain/openai'
-
-// TODO: remove console logs eventually
 export const summarizeFormWithLLM = async ({
   ChatModelGPT4o,
   formData,
-  stakeholder,
-  additionalInstructions,
+  summaryFormat,
+  language,
 }: {
   ChatModelGPT4o: ChatOpenAI
   formData: string
-  stakeholder: string
-  additionalInstructions: string
+  summaryFormat: string
+  language: string
 }): Promise<string> => {
+  console.log('summaryFormat', summaryFormat)
+  const systemPrompt = summaryFormat === 'Bullet-points' ? systemPromptBulletPoints : 
+                       summaryFormat === 'Text paragraph' ? systemPromptTextParagraph :
+                       systemPromptBulletPoints; // Default to bullet points if unknown format
   const prompt = await systemPrompt.format({
-    stakeholder,
-    additionalInstructions,
+    language,
     input: formData,
   })
   console.log('Prompt', prompt)
   const summaryMessage = await ChatModelGPT4o.invoke(prompt)
 
-  console.log('Type', typeof summaryMessage.content)
   // TODO: for some reason compiler doesn't know that content is a string
   const summary = summaryMessage.content as string
-  console.log('Type', typeof summary)
   console.log('Summary', summary)
   return summary
 }

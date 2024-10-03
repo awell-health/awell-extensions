@@ -1,20 +1,22 @@
-// Import necessary modules and functions
+/* eslint-disable @typescript-eslint/no-var-requires */
+
 import { TestHelpers } from '@awell-health/extensions-core'
 import { generateTestPayload } from '@/tests'
 import { summarizeForm } from '.'
 import { mockPathwayActivitiesResponse } from './__mocks__/pathwayActivitiesResponse'
 import { mockFormDefinitionResponse } from './__mocks__/formDefinitionResponse'
 import { mockFormResponseResponse } from './__mocks__/formResponseResponse'
-import { DISCLAIMER_MSG } from '../../lib/constants'
+import { DISCLAIMER_MSG_FORM } from '../../lib/constants'
+
+// Import ChatOpenAI after mocking
+import { ChatOpenAI } from '@langchain/openai'
 
 // Mock the '@langchain/openai' module
 jest.mock('@langchain/openai', () => {
-  // Mock the 'invoke' method to return a resolved value
   const mockInvoke = jest.fn().mockResolvedValue({
     content: 'Mocked summary from LLM',
   })
 
-  // Mock the ChatOpenAI class
   const mockChatOpenAI = jest.fn().mockImplementation(() => ({
     invoke: mockInvoke,
   }))
@@ -23,9 +25,6 @@ jest.mock('@langchain/openai', () => {
     ChatOpenAI: mockChatOpenAI,
   }
 })
-
-// Import ChatOpenAI after mocking
-import { ChatOpenAI } from '@langchain/openai'
 
 describe('summarizeForm - Mocked LLM calls', () => {
   const { onComplete, onError, helpers, extensionAction, clearMocks } =
@@ -36,14 +35,12 @@ describe('summarizeForm - Mocked LLM calls', () => {
     jest.clearAllMocks()
   })
 
-  it('Should work', async () => {
-    // Spy on the 'summarizeFormWithLLM' function
+  it('Should summarize form with LLM', async () => {
     const summarizeFormWithLLMSpy = jest.spyOn(
-      require('./lib/summarizeFormWithLLM'),
+      require('./lib/summarizeFormWithLLM/summarizeFormWithLLM'),
       'summarizeFormWithLLM'
     )
 
-    // Create the test payload
     const payload = generateTestPayload({
       pathway: {
         id: 'ai4rZaYEocjB',
@@ -52,8 +49,8 @@ describe('summarizeForm - Mocked LLM calls', () => {
       activity: { id: 'X74HeDQ4N0gtdaSEuzF8s' },
       patient: { id: 'whatever' },
       fields: {
-        stakeholder: 'Clinician',
-        additionalInstructions: 'Please focus on key symptoms.',
+        summaryFormat: 'Bullet-points',
+        language: 'Default',
       },
       settings: {
         openAiApiKey: 'a',
@@ -80,7 +77,6 @@ describe('summarizeForm - Mocked LLM calls', () => {
 
     helpers.awellSdk = jest.fn().mockResolvedValue(awellSdkMock)
 
-    // Execute the action
     await extensionAction.onEvent({
       payload,
       onComplete,
@@ -88,17 +84,15 @@ describe('summarizeForm - Mocked LLM calls', () => {
       helpers,
     })
 
-    // Assertions
     expect(ChatOpenAI).toHaveBeenCalled()
     expect(summarizeFormWithLLMSpy).toHaveBeenCalledWith({
       ChatModelGPT4o: expect.any(Object),
       formData: expect.any(String),
-      stakeholder: 'Clinician',
-      additionalInstructions: 'Please focus on key symptoms.',
+      summaryFormat: 'Bullet-points',
+      language: 'Default',
     })
 
-    const expected = `<p>Important Notice: The content provided is an AI-generated summary</p>
-<p>Mocked summary from LLM</p>`
+    const expected = `${DISCLAIMER_MSG_FORM}\n\nMocked summary from LLM`
 
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {

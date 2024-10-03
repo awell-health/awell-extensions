@@ -2,11 +2,11 @@ import 'dotenv/config'
 import { TestHelpers } from '@awell-health/extensions-core'
 import { generateTestPayload } from '@/tests'
 import { summarizeForm } from '.'
-import { mockPathwayActivitiesResponse } from './__mocks__/pathwayActivitiesResponse'
 import { mockFormDefinitionResponse } from './__mocks__/formDefinitionResponse'
 import { mockFormResponseResponse } from './__mocks__/formResponseResponse'
+import { mockPathwayActivitiesResponse } from './__mocks__/pathwayActivitiesResponse'
+import { DISCLAIMER_MSG_FORM } from '../../lib/constants'
 
-// remove skip to run this test
 describe.skip('summarizeForm - Real LLM calls with mocked Awell SDK', () => {
   const { onComplete, onError, helpers, extensionAction, clearMocks } =
     TestHelpers.fromAction(summarizeForm)
@@ -16,8 +16,7 @@ describe.skip('summarizeForm - Real LLM calls with mocked Awell SDK', () => {
     jest.clearAllMocks()
   })
 
-  it('Should call the real model and use mocked form data', async () => {
-    // Set up payload
+  it('Should call the real model and use mocked form data with Bullet-points format', async () => {
     const payload = generateTestPayload({
       pathway: {
         id: 'ai4rZaYEocjB',
@@ -26,15 +25,14 @@ describe.skip('summarizeForm - Real LLM calls with mocked Awell SDK', () => {
       activity: { id: 'X74HeDQ4N0gtdaSEuzF8s' },
       patient: { id: 'whatever' },
       fields: {
-        stakeholder: 'Clinician',
-        additionalInstructions: 'Report only contact information',
+        summaryFormat: 'Bullet-points',
+        language: 'Default',
       },
       settings: {
-        openAiApiKey: process.env.OPENAI_TEST_KEY, // Use your actual OpenAI API key here
+        openAiApiKey: process.env.OPENAI_TEST_KEY,
       },
     })
 
-    // Mock the Awell SDK
     const awellSdkMock = {
       orchestration: {
         mutation: jest.fn().mockResolvedValue({}),
@@ -54,7 +52,6 @@ describe.skip('summarizeForm - Real LLM calls with mocked Awell SDK', () => {
 
     helpers.awellSdk = jest.fn().mockResolvedValue(awellSdkMock)
 
-    // Execute the action without mocking ChatOpenAI
     await extensionAction.onEvent({
       payload,
       onComplete,
@@ -62,22 +59,24 @@ describe.skip('summarizeForm - Real LLM calls with mocked Awell SDK', () => {
       helpers,
     })
 
-    // Assertions for the Awell SDK mock
     expect(helpers.awellSdk).toHaveBeenCalled()
     expect(awellSdkMock.orchestration.query).toHaveBeenCalledTimes(3)
 
-    // Ensure that the model has actually been called (real call to ChatOpenAI)
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
-        summary: expect.stringContaining('32476581696'),
+        summary: expect.stringMatching(new RegExp(`${DISCLAIMER_MSG_FORM}.*General Dummy Form.*-`, 's')),
       },
     })
+
+    const summary = onComplete.mock.calls[0][0].data_points.summary
+    expect(summary).toMatch(/General Dummy Form/)
+    expect(summary).toMatch(/-/)
+    expect(summary.split('\n').filter((line: string) => line.trim().startsWith('')).length).toBeGreaterThan(1)
 
     expect(onError).not.toHaveBeenCalled()
   })
 
-  it('Should call the real model and use mocked form data without additional instructions', async () => {
-    // Set up payload
+  it('Should call the real model and use mocked form data with Text paragraph format', async () => {
     const payload = generateTestPayload({
       pathway: {
         id: 'ai4rZaYEocjB',
@@ -86,15 +85,14 @@ describe.skip('summarizeForm - Real LLM calls with mocked Awell SDK', () => {
       activity: { id: 'X74HeDQ4N0gtdaSEuzF8s' },
       patient: { id: 'whatever' },
       fields: {
-        stakeholder: 'Clinician',
-        additionalInstructions: '',
+        summaryFormat: 'Text paragraph',
+        language: 'Default',
       },
       settings: {
-        openAiApiKey: process.env.OPENAI_TEST_KEY, // Use your actual OpenAI API key here
+        openAiApiKey: process.env.OPENAI_TEST_KEY,
       },
     })
 
-    // Mock the Awell SDK
     const awellSdkMock = {
       orchestration: {
         mutation: jest.fn().mockResolvedValue({}),
@@ -114,7 +112,6 @@ describe.skip('summarizeForm - Real LLM calls with mocked Awell SDK', () => {
 
     helpers.awellSdk = jest.fn().mockResolvedValue(awellSdkMock)
 
-    // Execute the action without mocking ChatOpenAI
     await extensionAction.onEvent({
       payload,
       onComplete,
@@ -122,16 +119,18 @@ describe.skip('summarizeForm - Real LLM calls with mocked Awell SDK', () => {
       helpers,
     })
 
-    // Assertions for the Awell SDK mock
     expect(helpers.awellSdk).toHaveBeenCalled()
     expect(awellSdkMock.orchestration.query).toHaveBeenCalledTimes(3)
 
-    // Ensure that the model has actually been called (real call to ChatOpenAI)
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
-        summary: expect.stringContaining('General Dummy Form'),
+        summary: expect.stringMatching(new RegExp(`${DISCLAIMER_MSG_FORM}.*General Dummy Form.*`, 's')),
       },
     })
+
+    const summary = onComplete.mock.calls[0][0].data_points.summary
+    expect(summary).toMatch(/General Dummy Form/)
+    expect(summary.split('\n').length).toBeLessThan(10)  // Assuming a paragraph is typically less than 5 lines and givign summe buffer for the title and disclaimer
 
     expect(onError).not.toHaveBeenCalled()
   })
