@@ -2,7 +2,7 @@ import { Category, type Action } from '@awell-health/extensions-core'
 import { validatePayloadAndCreateSdk } from '../../lib'
 import { type settings } from '../../settings'
 import { fields, dataPoints, FieldsValidationSchema } from './config'
-import { getResponseText } from './lib/getResponseText'
+import { getFormResponseText } from '../../lib/getFormResponseText'
 import { summarizeFormWithLLM } from './lib/summarizeFormWithLLM'
 import { DISCLAIMER_MSG_FORM } from '../../lib/constants'
 import { getLatestFormInCurrentStep } from '../../../../src/lib/awell'
@@ -37,7 +37,7 @@ export const summarizeForm: Action<
       activityId: activity.id,
     })
 
-    const { result: responseText } = getResponseText({
+    const { result: responseText } = getFormResponseText({
       formDefinition,
       formResponse,
     })
