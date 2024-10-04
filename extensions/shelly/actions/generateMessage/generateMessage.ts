@@ -37,8 +37,6 @@ export const generateMessage: Action<
       })
 
       const { subject, message } = generated_message
-      console.log(subject)
-      console.log(message)
 
       const htmlMessage = await markdownToHtml(message)
 

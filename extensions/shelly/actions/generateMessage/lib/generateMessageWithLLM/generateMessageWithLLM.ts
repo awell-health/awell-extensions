@@ -20,7 +20,7 @@ export const generateMessageWithLLM = async ({
     stakeholder,
     language,
   })
-  console.log('Prompt', prompt)
+
   const structured_output_chain = ChatModelGPT4o.pipe(parser)
 
   const MAX_RETRIES = 3;
@@ -72,8 +72,6 @@ export const generateMessageWithLLM = async ({
       }
     }
   }
-  // TODO: remove this eventually
-  console.log('Subject', subject);
-  console.log('Message', message);
+
   return { subject, message };
 }

@@ -59,7 +59,6 @@ export const summarizeFormsInStep: Action<
       // Disclaimer is now handled within summarizeFormWithLLM
       const htmlSummary = await markdownToHtml(summary)
     
-      console.log(htmlSummary)
 
       await onComplete({
         data_points: {

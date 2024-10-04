@@ -38,8 +38,6 @@ export const categorizeMessage: Action<
       const explanationHtml = await markdownToHtml(
         categorization_result.explanation
       )
-      console.log(category)
-      console.log(explanationHtml)
 
       await onComplete({
         data_points: {

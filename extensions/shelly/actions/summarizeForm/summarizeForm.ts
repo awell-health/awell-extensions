@@ -54,7 +54,6 @@ export const summarizeForm: Action<
 
       const htmlSummary = await markdownToHtml(summary)
     
-      console.log(htmlSummary)
 
       await onComplete({
         data_points: {

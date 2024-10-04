@@ -62,7 +62,6 @@ describe('summarizeFormWithLLM', () => {
       disclaimerMessage
     })
 
-    console.log('Summary', summary)
 
     expect(summary).toBe(mockedSummary)
     expect(ChatModelGPT4oMock.invoke).toHaveBeenCalledTimes(1)
@@ -97,7 +96,6 @@ describe('summarizeFormWithLLM', () => {
       disclaimerMessage
     })
 
-    console.log('Summary', summary)
 
     expect(summary).toBe(mockedSummary)
     expect(ChatModelGPT4oMock.invoke).toHaveBeenCalledTimes(1)
@@ -131,7 +129,6 @@ describe('summarizeFormWithLLM', () => {
       disclaimerMessage
     })
 
-    console.log('Summary', summary)
 
     expect(summary).toBe(mockedSummary)
     expect(ChatModelGPT4oMock.invoke).toHaveBeenCalledTimes(1)

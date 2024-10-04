@@ -82,7 +82,6 @@ export const summarizeCareFlow: Action<
       const htmlSummary = await markdownToHtml(
         `${DISCLAIMER_MSG}\n\n${summary}`
       )
-      console.log(htmlSummary)
 
       await onComplete({
         data_points: {

@@ -17,7 +17,7 @@ export const categorizeMessageWithLLM = async ({
   })
 
   const chain = ChatModelGPT4oMini.pipe(parser)
-  console.log('Prompt:', prompt)
+
   let result
   try {
     result = await chain.invoke(prompt)
@@ -28,14 +28,10 @@ export const categorizeMessageWithLLM = async ({
     )
   }
 
-  console.log('Result', typeof result)
-
   const matchedCategory = result.matched_category ?? 'None'
   let category: string
   let explanation: string = result.match_explanation ?? ''
 
-  console.log('Matched Category:', matchedCategory)
-  console.log('Explanation:', explanation)
   // Check if the matched category is valid
   if (categories.includes(matchedCategory)) {
     category = matchedCategory

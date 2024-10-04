@@ -9,7 +9,7 @@ import { mockMultipleFormsDefinitionResponse1, mockMultipleFormsDefinitionRespon
 import { mockMultipleFormsResponseResponse1, mockMultipleFormsResponseResponse2 } from './__mocks__/multipleFormsResponsesResponse'
 import { DISCLAIMER_MSG_FORM } from '../../lib/constants'
 
-describe('summarizeFormsInStep - Real OpenAI calls', () => {
+describe.skip('summarizeFormsInStep - Real OpenAI calls', () => {
   const { onComplete, onError, helpers, extensionAction, clearMocks } =
     TestHelpers.fromAction(summarizeFormsInStep)
 
