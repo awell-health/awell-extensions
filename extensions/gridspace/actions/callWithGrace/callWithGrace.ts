@@ -18,7 +18,7 @@ export const callWithGrace = {
       settings: { basicAuthorization },
     } = validate({
       schema: z.object({ fields: FieldsSchema, settings: SettingsSchema }),
-      payload: { fields, settings },
+      payload,
     })
     const client = new GridspaceClient(basicAuthorization)
     const allData = {

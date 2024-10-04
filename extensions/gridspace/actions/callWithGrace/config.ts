@@ -36,6 +36,6 @@ export const dataPoints = {} satisfies Record<string, DataPointDefinition>
 export const FieldsSchema = z.object({
   flowId: z.string(),
   phoneNumber: z.string(),
-  data: z.record(z.unknown()),
+  data: z.record(z.any()),
 })
 export type ActionFields = z.infer<typeof FieldsSchema>
