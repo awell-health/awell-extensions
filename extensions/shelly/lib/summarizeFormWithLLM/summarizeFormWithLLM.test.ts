@@ -52,12 +52,14 @@ describe('summarizeFormWithLLM', () => {
 
     const summaryFormat = 'Bullet-points'
     const language = 'Default'
+    const disclaimerMessage = 'This is a test disclaimer message.'
 
     const summary = await summarizeFormWithLLM({
       ChatModelGPT4o: ChatModelGPT4oMock,
       formData: formData,
       summaryFormat,
       language,
+      disclaimerMessage
     })
 
     console.log('Summary', summary)
@@ -85,12 +87,14 @@ describe('summarizeFormWithLLM', () => {
 
     const summaryFormat = 'Text paragraph'
     const language = 'Default'
+    const disclaimerMessage = 'This is a test disclaimer message.'
 
     const summary = await summarizeFormWithLLM({
       ChatModelGPT4o: ChatModelGPT4oMock,
       formData: formData,
       summaryFormat,
       language,
+      disclaimerMessage
     })
 
     console.log('Summary', summary)
@@ -117,12 +121,14 @@ describe('summarizeFormWithLLM', () => {
       .join('\n')
 
     const language = 'Default'
+    const disclaimerMessage = 'This is a test disclaimer message.'
 
     const summary = await summarizeFormWithLLM({
       ChatModelGPT4o: ChatModelGPT4oMock,
       formData: formData,
       summaryFormat: 'undefined',
       language,
+      disclaimerMessage
     })
 
     console.log('Summary', summary)

@@ -86,14 +86,17 @@ describe('summarizeForm - Mocked LLM calls', () => {
     })
 
     expect(ChatOpenAI).toHaveBeenCalled()
-    expect(summarizeFormWithLLMSpy).toHaveBeenCalledWith({
-      ChatModelGPT4o: expect.any(Object),
-      formData: expect.any(String),
-      summaryFormat: 'Bullet-points',
-      language: 'Default',
-    })
+    expect(summarizeFormWithLLMSpy).toHaveBeenCalledWith(
+      expect.objectContaining({
+        ChatModelGPT4o: expect.any(Object),
+        formData: expect.any(String),
+        summaryFormat: 'Bullet-points',
+        language: 'Default',
+        disclaimerMessage: expect.any(String),
+      })
+    )
 
-    const expected = await markdownToHtml(`${DISCLAIMER_MSG_FORM}\n\nMocked summary from LLM`)
+    const expected = await markdownToHtml('Mocked summary from LLM')
 
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {

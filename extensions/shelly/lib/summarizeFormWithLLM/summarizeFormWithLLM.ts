@@ -5,11 +5,13 @@ export const summarizeFormWithLLM = async ({
   formData,
   summaryFormat,
   language,
+  disclaimerMessage,
 }: {
   ChatModelGPT4o: ChatOpenAI
   formData: string
   summaryFormat: string
   language: string
+  disclaimerMessage: string
 }): Promise<string> => {
   console.log('summaryFormat', summaryFormat)
   const systemPrompt = summaryFormat === 'Bullet-points' ? systemPromptBulletPoints : 
@@ -18,6 +20,7 @@ export const summarizeFormWithLLM = async ({
   const prompt = await systemPrompt.format({
     language,
     input: formData,
+    disclaimerMessage,
   })
   console.log('Prompt', prompt)
   const summaryMessage = await ChatModelGPT4o.invoke(prompt)

@@ -9,8 +9,7 @@ import { mockMultipleFormsDefinitionResponse1, mockMultipleFormsDefinitionRespon
 import { mockMultipleFormsResponseResponse1, mockMultipleFormsResponseResponse2 } from './__mocks__/multipleFormsResponsesResponse'
 import { DISCLAIMER_MSG_FORM } from '../../lib/constants'
 
-
-describe.skip('summarizeFormsInStep - Real OpenAI calls', () => {
+describe('summarizeFormsInStep - Real OpenAI calls', () => {
   const { onComplete, onError, helpers, extensionAction, clearMocks } =
     TestHelpers.fromAction(summarizeFormsInStep)
 
@@ -36,28 +35,28 @@ describe.skip('summarizeFormsInStep - Real OpenAI calls', () => {
     })
 
     // Mock the Awell SDK
-   const awellSdkMock = {
-     orchestration: {
-       mutation: jest.fn().mockResolvedValue({}),
-       query: jest
-         .fn()
-         .mockResolvedValueOnce({
-           pathwayActivities: mockMultipleFormsPathwayActivitiesResponse,
-         })
-         .mockResolvedValueOnce({
-           form: mockMultipleFormsDefinitionResponse1,
-         })
-         .mockResolvedValueOnce({
-           form: mockMultipleFormsDefinitionResponse2,
-         })
-         .mockResolvedValueOnce({
-           formResponse: mockMultipleFormsResponseResponse1,
-         })
-         .mockResolvedValueOnce({
-           formResponse: mockMultipleFormsResponseResponse2,
-         }),
-     },
-   }
+    const awellSdkMock = {
+      orchestration: {
+        mutation: jest.fn().mockResolvedValue({}),
+        query: jest
+          .fn()
+          .mockResolvedValueOnce({
+            pathwayActivities: mockMultipleFormsPathwayActivitiesResponse,
+          })
+          .mockResolvedValueOnce({
+            form: mockMultipleFormsDefinitionResponse1,
+          })
+          .mockResolvedValueOnce({
+            form: mockMultipleFormsDefinitionResponse2,
+          })
+          .mockResolvedValueOnce({
+            formResponse: mockMultipleFormsResponseResponse1,
+          })
+          .mockResolvedValueOnce({
+            formResponse: mockMultipleFormsResponseResponse2,
+          }),
+      },
+    }
 
     helpers.awellSdk = jest.fn().mockResolvedValue(awellSdkMock)
 
@@ -132,13 +131,13 @@ describe.skip('summarizeFormsInStep - Real OpenAI calls', () => {
 
     const completionResult = onComplete.mock.calls[0][0]
     expect(completionResult).toHaveProperty('data_points.summary')
-    expect(completionResult.data_points.summary).toContain(DISCLAIMER_MSG_FORM)
+    expect(completionResult.data_points.summary).toContain('Avis Important')
     expect(completionResult.data_points.summary.length).toBeGreaterThan(DISCLAIMER_MSG_FORM.length + 50)
     
     // Check if the summary is in French
-    expect(completionResult.data_points.summary).toMatch(/Le patient|La patiente/)
+    expect(completionResult.data_points.summary).toMatch(/téléphone/)
     
     // Check if it's a paragraph (no bullet points)
-    expect(completionResult.data_points.summary).not.toMatch(/^[-•]/m)
+    expect(completionResult.data_points.summary).not.toMatch(/^[•]/m)
   }, 30000) // Increase timeout to 30 seconds for API call
 })

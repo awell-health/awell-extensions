@@ -13,7 +13,7 @@ export const summarizeCareFlow: Action<
 > = {
   key: 'summarizeCareFlow',
   category: Category.WORKFLOW,
-  title: 'Summarize care flow',
+  title: 'Summarize Care Flow',
   description: 'Summarize the care flow up until now',
   fields,
   previewable: false,
