@@ -13,6 +13,7 @@ import { Elation } from './elation'
 import { Experimental } from './experimental'
 import { ExternalServer } from './external-server'
 import { Formsort } from './formsort'
+import { Gridspace } from './gridspace'
 import { Healthie } from './healthie'
 import { HelloWorld } from './hello-world'
 import { hubspot } from './hubspot'
@@ -61,6 +62,7 @@ export const extensions = [
   Experimental,
   ExternalServer,
   Formsort,
+  Gridspace,
   Healthie,
   HelloWorld,
   hubspot,
