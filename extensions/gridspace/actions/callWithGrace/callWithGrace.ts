@@ -1,7 +1,7 @@
 import { Category, validate, type Action } from '@awell-health/extensions-core'
 import { fields, dataPoints, FieldsSchema } from './config'
 import { settings, SettingsSchema } from '../../settings'
-import { GridspaceClient } from '@extensions/gridspace/lib'
+import { GridspaceClient } from '../../lib'
 import { z } from 'zod'
 export const callWithGrace = {
   key: 'callWithGrace',
@@ -28,6 +28,7 @@ export const callWithGrace = {
       ...(patient.profile && { ...patient.profile }),
       pathway_id: pathway.id,
       pathway_definition_id: pathway.definition_id,
+      activity_id: payload.activity.id,
     }
     const resp = await client.callWithGrace(flowId, allData)
     await onComplete({

@@ -33,6 +33,7 @@ describe('callWithGrace', () => {
       patient_id: 'test-patient',
       name: 'John Doe',
       pathway_id: 'pathway-id',
+      activity_id: 'activity-id',
       pathway_definition_id: 'pathway-definition-id',
     })
   })
