@@ -14,7 +14,7 @@ export const summarizeFormsInStep: Action<
   typeof settings,
   keyof typeof dataPoints
 > = {
-  key: 'summarizeForm',
+  key: 'summarizeFormsInStep',
   category: Category.WORKFLOW,
   title: 'Summarize Forms in Step',
   description: 'Summarize the responses of all forms in the step with AI.',
