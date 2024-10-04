@@ -16,7 +16,7 @@ export const summarizeForm: Action<
 > = {
   key: 'summarizeForm',
   category: Category.WORKFLOW,
-  title: 'Summarize form',
+  title: 'Summarize Form',
   description: 'Summarize the response of a last form in a step with AI.',
   fields,
   previewable: false,
@@ -49,13 +49,11 @@ export const summarizeForm: Action<
         formData: responseText,
         summaryFormat, 
         language,
+        disclaimerMessage: DISCLAIMER_MSG_FORM,
       })
 
-      const htmlSummary = await markdownToHtml(
-        `${DISCLAIMER_MSG_FORM}\n\n${summary}`
-      )
+      const htmlSummary = await markdownToHtml(summary)
     
-      console.log(htmlSummary)
 
       await onComplete({
         data_points: {

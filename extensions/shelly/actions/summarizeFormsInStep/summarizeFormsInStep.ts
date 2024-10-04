@@ -14,9 +14,9 @@ export const summarizeFormsInStep: Action<
   typeof settings,
   keyof typeof dataPoints
 > = {
-  key: 'summarizeForm',
+  key: 'summarizeFormsInStep',
   category: Category.WORKFLOW,
-  title: 'Summarize all forms in the step',
+  title: 'Summarize Forms in Step',
   description: 'Summarize the responses of all forms in the step with AI.',
   fields,
   previewable: false,
@@ -53,14 +53,12 @@ export const summarizeFormsInStep: Action<
         formData: allFormsResponseText, // Use the concatenated form responses
         summaryFormat, 
         language,
+        disclaimerMessage: DISCLAIMER_MSG_FORM, // Add disclaimer message
       })
       
-      // Add disclaimer to the summary
-      const htmlSummary = await markdownToHtml(
-        `${DISCLAIMER_MSG_FORM}\n\n${summary}`
-      )
+      // Disclaimer is now handled within summarizeFormWithLLM
+      const htmlSummary = await markdownToHtml(summary)
     
-      console.log(htmlSummary)
 
       await onComplete({
         data_points: {

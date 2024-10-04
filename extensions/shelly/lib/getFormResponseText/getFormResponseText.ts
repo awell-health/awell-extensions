@@ -172,8 +172,7 @@ export const getResponsesForAllForms = (opts: {
   result: string
   omittedFormAnswers: OmittedFormAnswer[]
 } => {
-  console.log('hereeee')
-  console.log(opts.formsData)
+
   const allFormResponses = opts.formsData.map((formData) => {
     const formResponseText = getFormResponseText({
       formDefinition: formData.formDefinition,

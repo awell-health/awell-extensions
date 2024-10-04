@@ -12,14 +12,14 @@ export const fields = {
   summaryFormat: {
     id: 'summaryFormat',
     label: 'Summary Format',
-    description: 'Specify the format of the summary. Acceptable values are "Bullet-points" and "Text paragraph". Defaults to Bullet-points.',
+    description: 'Format of the summary. Acceptable values are "Bullet-points" and "Text paragraph". Defaults to Bullet-points.',
     type: FieldType.STRING,
     required: false,
   },
   language: {
     id: 'language',
     label: 'Language',
-    description: '[Optional] Indicates the language of the summarization. Defaults to the language of the form.',
+    description: '[Optional] Language of the summarization. Defaults to the language of the form.',
     type: FieldType.STRING,
     required: false,
   },

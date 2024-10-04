@@ -18,11 +18,10 @@ export const summarizeCareFlowWithLLM = async ({
     additionalInstructions,
     input: careFlowActivities,
   })
-  console.log('Prompt', prompt)
   const summaryMessage = await ChatModelGPT4o.invoke(prompt)
 
   // TODO: for some reason compiler doesn't know that content is a string
   const summary = summaryMessage.content as string
-  console.log('Summary', summary)
+
   return summary
 }

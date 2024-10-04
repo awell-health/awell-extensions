@@ -13,7 +13,7 @@ export const summarizeCareFlow: Action<
 > = {
   key: 'summarizeCareFlow',
   category: Category.WORKFLOW,
-  title: 'Summarize care flow',
+  title: 'Summarize Care Flow',
   description: 'Summarize the care flow up until now',
   fields,
   previewable: false,
@@ -82,7 +82,6 @@ export const summarizeCareFlow: Action<
       const htmlSummary = await markdownToHtml(
         `${DISCLAIMER_MSG}\n\n${summary}`
       )
-      console.log(htmlSummary)
 
       await onComplete({
         data_points: {

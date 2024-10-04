@@ -21,7 +21,7 @@ export const generateMessage: Action<
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
     const {
       ChatModelGPT4o,
-      fields: { communicationObjective, personalizationInput, additionalInstructions, stakeholder, language },
+      fields: { communicationObjective, personalizationInput, stakeholder, language },
     } = await validatePayloadAndCreateSdk({
       fieldsSchema: FieldsValidationSchema,
       payload,
@@ -32,14 +32,11 @@ export const generateMessage: Action<
         ChatModelGPT4o,
         communicationObjective,
         personalizationInput,
-        additionalInstructions,
         stakeholder,
         language,
       })
 
       const { subject, message } = generated_message
-      console.log(subject)
-      console.log(message)
 
       const htmlMessage = await markdownToHtml(message)
 

@@ -5,25 +5,22 @@ export const generateMessageWithLLM = async ({
   ChatModelGPT4o,
   communicationObjective,
   personalizationInput,
-  additionalInstructions,
   stakeholder,
   language,
 }: {
   ChatModelGPT4o: ChatOpenAI
   communicationObjective: string
   personalizationInput: string
-  additionalInstructions: string
   stakeholder: string
   language: string
 }): Promise<{ subject: string; message: string }> => {
   const prompt = await systemPrompt.format({
     communicationObjective,
     personalizationInput,
-    additionalInstructions,
     stakeholder,
     language,
   })
-  console.log('Prompt', prompt)
+
   const structured_output_chain = ChatModelGPT4o.pipe(parser)
 
   const MAX_RETRIES = 3;
@@ -75,8 +72,6 @@ export const generateMessageWithLLM = async ({
       }
     }
   }
-  // TODO: remove this eventually
-  console.log('Subject', subject);
-  console.log('Message', message);
+
   return { subject, message };
 }

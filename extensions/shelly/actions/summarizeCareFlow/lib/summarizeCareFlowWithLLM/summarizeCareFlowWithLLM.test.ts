@@ -45,7 +45,7 @@ describe('summarizeCareFlowWithLLM', () => {
       additionalInstructions,
     })
 
-    console.log('Summary', summary)
+
 
     // Check that the returned summary is as expected
     expect(summary).toBe(mockedSummary)
