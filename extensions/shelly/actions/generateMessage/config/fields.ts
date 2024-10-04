@@ -21,14 +21,6 @@ export const fields = {
     type: FieldType.STRING,
     required: false,
   },
-  additionalInstructions: {
-    id: 'additionalInstructions',
-    label: 'Additional Instructions',
-    description:
-      '[Optional] Specify any important additional instructions for the message (style, tone, etc). If not specified, default instructions will be used.',
-    type: FieldType.STRING,
-    required: false,
-  },
   stakeholder: {
     id: 'stakeholder',
     label: 'Stakeholder',
@@ -51,7 +43,6 @@ export const fields = {
  */
 const fieldSchemas = {
   communicationObjective: z.string().min(1, 'Communication objective is required'),
-  additionalInstructions: z.string().optional().default(''),
   personalizationInput: z.string().optional().default(''),
   stakeholder: z
     .string()

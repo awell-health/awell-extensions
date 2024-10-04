@@ -21,7 +21,6 @@ describe.skip('generateMessageWithLLM', () => {
       ChatModelGPT4o,
       communicationObjective: 'Remind patient of upcoming appointment. Ask patient to arrive 15 minutes early',
       personalizationInput: 'Patient Name: John, Appointment Time: 2:00 PM tomorrow',
-      additionalInstructions: '',
       stakeholder: 'Patient',
       language: 'English'
     })
@@ -37,9 +36,8 @@ describe.skip('generateMessageWithLLM', () => {
   it('should generate a message for medication instructions', async () => {
     const result = await generateMessageWithLLM({
       ChatModelGPT4o,
-      communicationObjective: 'Provide medication instructions',
+      communicationObjective: 'Provide medication instructions. Emphasize the importance of blood pressure monitoring',
       personalizationInput: 'Patient Name: Sarah, Medication: Lisinopril',
-      additionalInstructions: 'Emphasize the importance of blood pressure monitoring',
       stakeholder: 'Patient',
       language: 'English'
     })
@@ -55,9 +53,8 @@ describe.skip('generateMessageWithLLM', () => {
   it('should generate a message in a different language', async () => {
     const result = await generateMessageWithLLM({
       ChatModelGPT4o,
-      communicationObjective: 'Remind patient of upcoming appointment',
+      communicationObjective: 'Remind patient of upcoming appointment. Ask patient to arrive 15 minutes early',
       personalizationInput: 'Patient Name: Carlos, Appointment Time: 10:00 AM tomorrow',
-      additionalInstructions: 'Ask patient to arrive 15 minutes early',
       stakeholder: 'Patient',
       language: 'Spanish'
     })

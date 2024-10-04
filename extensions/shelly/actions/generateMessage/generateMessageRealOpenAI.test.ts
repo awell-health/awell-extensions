@@ -14,12 +14,11 @@ describe.skip('generateMessage - Real OpenAI calls', () => {
     clearMocks()
   })
 
-  it('should generate a message with additional instructions', async () => {
+  it('should generate a message for a patient appointment reminder', async () => {
     const payload = generateTestPayload({
       fields: {
         communicationObjective: 'Remind patient of upcoming appointment',
         stakeholder: 'Patient',
-        additionalInstructions: 'Be friendly and encouraging',
         language: 'English',
         personalizationInput: 'Patient Name: John Doe, Appointment Time: 2:00 PM tomorrow',
       },
@@ -54,12 +53,11 @@ describe.skip('generateMessage - Real OpenAI calls', () => {
     expect(onError).not.toHaveBeenCalled()
   })
 
-  it('should generate a message without additional instructions', async () => {
+  it('should generate a message for a clinician update', async () => {
     const payload = generateTestPayload({
       fields: {
         communicationObjective: 'Update clinician on patient progress',
         stakeholder: 'Clinician',
-        additionalInstructions: '',
         language: 'English',
         personalizationInput: 'Patient: Jane Smith, Last Visit: 2 weeks ago, Condition: Hypertension',
       },

@@ -37,7 +37,7 @@ describe('generateMessage - Mocked LLM calls', () => {
     jest.clearAllMocks()
   })
 
-  it('should generate a message with additional instructions', async () => {
+  it('should generate a message', async () => {
     const generateMessageWithLLMSpy = jest.spyOn(
       require('./lib/generateMessageWithLLM'),
       'generateMessageWithLLM'
@@ -46,7 +46,6 @@ describe('generateMessage - Mocked LLM calls', () => {
       fields: {
         communicationObjective: 'Reminder',
         stakeholder: 'Patient',
-        additionalInstructions: 'Be friendly and encouraging',
         language: 'English',
         personalizationInput: 'John Doe',
       },
@@ -68,7 +67,6 @@ describe('generateMessage - Mocked LLM calls', () => {
       ChatModelGPT4o: expect.any(Object),
       communicationObjective: 'Reminder',
       stakeholder: 'Patient',
-      additionalInstructions: 'Be friendly and encouraging',
       language: 'English',
       personalizationInput: 'John Doe',
     })
@@ -83,7 +81,7 @@ describe('generateMessage - Mocked LLM calls', () => {
     expect(onError).not.toHaveBeenCalled()
   })
 
-  it('should generate a message without additional instructions', async () => {
+  it('should generate a message with default values', async () => {
     const generateMessageWithLLMSpy = jest.spyOn(
       require('./lib/generateMessageWithLLM'),
       'generateMessageWithLLM'
@@ -91,8 +89,6 @@ describe('generateMessage - Mocked LLM calls', () => {
     const payload = generateTestPayload({
       fields: {
         communicationObjective: 'Update clinician on their patient',
-        stakeholder: 'Clinician',
-        language: 'Bosnian',
       },
       settings: {
         openAiApiKey: 'test_key',
@@ -110,9 +106,8 @@ describe('generateMessage - Mocked LLM calls', () => {
     expect(generateMessageWithLLMSpy).toHaveBeenCalledWith({
       ChatModelGPT4o: expect.any(Object),
       communicationObjective: 'Update clinician on their patient',
-      stakeholder: 'Clinician',
-      additionalInstructions: '',
-      language: 'Bosnian',
+      stakeholder: 'Patient',
+      language: 'English',
       personalizationInput: '',
     })
 
