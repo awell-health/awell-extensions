@@ -111,7 +111,7 @@
     "messagebird": "^4.0.1",
     "node-fetch": "2",
     "nodemailer": "^6.9.15",
-    "openai": "^4.59.0",
+    "openai": "^4.67.1",
     "sanitize-html": "^2.13.0",
     "showdown": "^2.1.0",
     "stripe": "^15.5.0",
