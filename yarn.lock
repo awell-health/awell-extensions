@@ -136,7 +136,7 @@ __metadata:
     messagebird: ^4.0.1
     node-fetch: 2
     nodemailer: ^6.9.15
-    openai: ^4.59.0
+    openai: ^4.67.1
     prettier: 2.8.4
     rimraf: ^4.1.2
     sanitize-html: ^2.13.0
@@ -9243,7 +9243,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"openai@npm:^4.57.3, openai@npm:^4.59.0":
+"openai@npm:^4.57.3":
   version: 4.62.1
   resolution: "openai@npm:4.62.1"
   dependencies:
@@ -9262,6 +9262,28 @@ __metadata:
   bin:
     openai: bin/cli
   checksum: ab803ce0efa3107fcc9329f3d30ced3313b9499e7d78541de1e573f726ac0d109cec6c598b0a8082e22f5f83d6ec444c3eff352e61d736331a27556929fe7fdd
+  languageName: node
+  linkType: hard
+
+"openai@npm:^4.67.1":
+  version: 4.67.1
+  resolution: "openai@npm:4.67.1"
+  dependencies:
+    "@types/node": ^18.11.18
+    "@types/node-fetch": ^2.6.4
+    abort-controller: ^3.0.0
+    agentkeepalive: ^4.2.1
+    form-data-encoder: 1.7.2
+    formdata-node: ^4.3.2
+    node-fetch: ^2.6.7
+  peerDependencies:
+    zod: ^3.23.8
+  peerDependenciesMeta:
+    zod:
+      optional: true
+  bin:
+    openai: bin/cli
+  checksum: 2329ced31d7602e72f1be174efbe8d74fbd6174b231b42e223614c74bc375206e28b3dbacafc0745a1eb46badc7ad6876361e9392fc5d801e688003c73498406
   languageName: node
   linkType: hard
 
