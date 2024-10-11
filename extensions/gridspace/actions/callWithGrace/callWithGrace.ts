@@ -16,12 +16,12 @@ export const callWithGrace = {
     const { pathway, patient } = payload
     const {
       fields: { flowId, data, phoneNumber },
-      settings: { basicAuthorization },
+      settings: { accountId, clientSecret },
     } = validate({
       schema: z.object({ fields: FieldsSchema, settings: SettingsSchema }),
       payload,
     })
-    const client = new GridspaceClient(basicAuthorization)
+    const client = new GridspaceClient({ accountId, clientSecret })
     const allData = {
       ...data,
       phone_number: phoneNumber,

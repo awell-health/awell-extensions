@@ -1,12 +1,22 @@
 import axios, { type AxiosInstance } from 'axios'
 export class GridspaceClient {
   private readonly client: AxiosInstance
-  constructor(basicAuthorization: string) {
+
+  constructor({
+    accountId,
+    clientSecret,
+  }: {
+    accountId: string
+    clientSecret: string
+  }) {
+    // base 64 encode the accountId and clientSecret in Basic Authentication format
+    const token = Buffer.from(`${accountId}:${clientSecret}`).toString('base64')
     this.client = axios.create({
-      baseURL: 'https://app.getinlet.ai',
+      baseURL: 'https://api.gridspace.com/v1',
       headers: {
-        Authorization: `Basic ${basicAuthorization}`,
+        Authorization: `Basic ${token}`,
         'Content-Type': 'application/json',
+        Accept: 'application/json',
       },
     })
   }

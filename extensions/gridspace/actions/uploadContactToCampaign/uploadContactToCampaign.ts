@@ -17,13 +17,13 @@ export const uploadContactToCampaign = {
     const { pathway, patient, activity } = payload
     const {
       fields: { campaignId, data, phoneNumber },
-      settings: { basicAuthorization },
+      settings: { accountId, clientSecret },
     } = validate({
       schema: z.object({ fields: FieldsSchema, settings: SettingsSchema }),
       payload,
     })
 
-    const client = new GridspaceClient(basicAuthorization)
+    const client = new GridspaceClient({ accountId, clientSecret })
 
     const contactData = {
       phone_number: phoneNumber,
