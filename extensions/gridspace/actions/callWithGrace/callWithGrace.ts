@@ -1,8 +1,9 @@
 import { Category, validate, type Action } from '@awell-health/extensions-core'
 import { fields, dataPoints, FieldsSchema } from './config'
-import { settings, SettingsSchema } from '../../settings'
+import { type settings, SettingsSchema } from '../../settings'
 import { GridspaceClient } from '../../lib'
 import { z } from 'zod'
+import { isNil } from 'lodash'
 export const callWithGrace = {
   key: 'callWithGrace',
   title: 'Call with Grace',
@@ -25,7 +26,7 @@ export const callWithGrace = {
       ...data,
       phone_number: phoneNumber,
       patient_id: patient.id,
-      ...(patient.profile && { ...patient.profile }),
+      ...(!isNil(patient.profile) && { ...patient.profile }),
       pathway_id: pathway.id,
       pathway_definition_id: pathway.definition_id,
       activity_id: payload.activity.id,
