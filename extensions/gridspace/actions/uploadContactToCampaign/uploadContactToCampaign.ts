@@ -3,6 +3,7 @@ import { fields, dataPoints, FieldsSchema } from './config'
 import { type settings, SettingsSchema } from '../../settings'
 import { GridspaceClient } from '../../lib'
 import { z } from 'zod'
+import { keys, values } from 'lodash'
 
 export const uploadContactToCampaign = {
   key: 'uploadContactToCampaign',
@@ -33,10 +34,8 @@ export const uploadContactToCampaign = {
       patient_id: patient.id,
     }
 
-    const columnNames = Object.keys(contactData)
-
-    // @ts-expect-error TS can't infer type based on string index
-    const contactRow = columnNames.map((col) => contactData[col] as string)
+    const columnNames = keys(contactData)
+    const contactRow = values(contactData)
 
     const requestBody = {
       column_names: columnNames,
