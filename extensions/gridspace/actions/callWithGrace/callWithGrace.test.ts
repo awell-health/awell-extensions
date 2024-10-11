@@ -21,7 +21,10 @@ describe('callWithGrace', () => {
           data: { foo: 'bar', name: 'John Doe' } as any,
           phoneNumber: '1234567890',
         },
-        settings: { basicAuthorization: 'basicAuthorization' },
+        settings: {
+          accountId: 'someAccountId',
+          clientSecret: 'someClientSecret',
+        },
       }),
       onComplete,
       onError,

@@ -24,7 +24,10 @@ describe('uploadContactToCampaign', () => {
           data: JSON.stringify({ first_name: 'John', last_name: 'Doe' }),
           phoneNumber: '15552223333',
         },
-        settings: { basicAuthorization: 'basicAuthorization' },
+        settings: {
+          accountId: 'someAccountId',
+          clientSecret: 'someClientSecret',
+        },
       }),
       onComplete,
       onError,
