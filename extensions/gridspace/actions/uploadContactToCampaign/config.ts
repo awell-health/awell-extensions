@@ -33,7 +33,12 @@ export const fields = {
   },
 } satisfies Fields
 
-export const dataPoints = {} satisfies Record<string, DataPointDefinition>
+export const dataPoints = {
+  data: {
+    key: 'data',
+    valueType: 'json',
+  },
+} satisfies Record<string, DataPointDefinition>
 
 export const FieldsSchema = z.object({
   campaignId: z.string(),
