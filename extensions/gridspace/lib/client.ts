@@ -1,18 +1,39 @@
-import axios, { AxiosInstance } from 'axios'
+import axios, { type AxiosInstance } from 'axios'
 export class GridspaceClient {
-  private client: AxiosInstance
-  constructor(basicAuthorization: string) {
+  private readonly client: AxiosInstance
+
+  constructor({
+    accountId,
+    clientSecret,
+  }: {
+    accountId: string
+    clientSecret: string
+  }) {
+    // base 64 encode the accountId and clientSecret in Basic Authentication format
+    const token = Buffer.from(`${accountId}:${clientSecret}`).toString('base64')
     this.client = axios.create({
-      baseURL: 'https://app.getinlet.ai',
+      baseURL: 'https://api.gridspace.com/v1',
       headers: {
-        Authorization: `Basic ${basicAuthorization}`,
+        Authorization: `Basic ${token}`,
         'Content-Type': 'application/json',
+        Accept: 'application/json',
       },
     })
   }
 
-  async callWithGrace(workflowId: string, data: Record<string, any>) {
+  async callWithGrace(
+    workflowId: string,
+    data: Record<string, any>
+  ): Promise<unknown> {
     const resp = await this.client.post(`/v0/workflows/${workflowId}/run`, data)
     return resp.data
+  }
+
+  async uploadContactsToCampaign(campaignId: string, data: any): Promise<any> {
+    const response = await this.client.post(
+      `/autodialer/${campaignId}/dialees`,
+      data
+    )
+    return response.data
   }
 }

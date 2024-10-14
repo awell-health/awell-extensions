@@ -1,16 +1,26 @@
-import z from 'zod'
+import { z } from 'zod'
 import type { Settings } from '@awell-health/extensions-core'
+
 export const settings = {
-  basicAuthorization: {
-    label: 'Basic Authorization',
-    key: 'basicAuthorization',
+  accountId: {
+    label: 'Account ID',
+    key: 'accountId',
+    obfuscated: false,
+    required: true,
+    description: 'Your Gridspace account ID.',
+  },
+  clientSecret: {
+    label: 'Client Secret',
+    key: 'clientSecret',
     obfuscated: true,
     required: true,
-    description: 'The basic authorization token for Gridspace.',
+    description: 'Your Gridspace client secret.',
   },
 } satisfies Settings
 
 export const SettingsSchema = z.object({
-  basicAuthorization: z.string(),
+  accountId: z.string(),
+  clientSecret: z.string(),
 })
+
 export type ExtensionSettings = z.infer<typeof SettingsSchema>
