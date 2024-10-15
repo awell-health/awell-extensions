@@ -9,7 +9,7 @@ export const mockFormDefinitionOneResponse = {
         title: "What's the patient's first name?",
         dataPointValueType: 'STRING',
         questionType: 'INPUT',
-        userQuestionType: 'SHORT_TEXT',
+        userQuestionType: 'LONG_TEXT',
         metadata: '{"healthieCustomModuleId": "14460375"}',
         __typename: 'Question',
       },

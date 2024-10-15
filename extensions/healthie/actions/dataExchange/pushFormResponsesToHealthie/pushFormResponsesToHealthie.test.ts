@@ -22,7 +22,7 @@ jest.mock('@extensions/healthie/lib/sdk/genql', () => ({
 
 const mockedHealthieSdk = jest.mocked(HealthieSdk)
 
-describe('pushFormResponseToHealthie', () => {
+describe('pushFormResponsesToHealthie', () => {
   const {
     extensionAction: action,
     onComplete,
@@ -105,7 +105,7 @@ describe('pushFormResponseToHealthie', () => {
     expect(awellSdkMock.orchestration.query).toHaveBeenCalledTimes(5)
 
     expect(formResponseToHealthieSpy).toHaveNthReturnedWith(1, {
-      formAnswers: [{ answer: 'Nick', custom_module_id: '14460375' }],
+      formAnswers: [{ answer: '<p>Nick</p>', custom_module_id: '14460375' }],
       omittedFormAnswers: [],
     })
 
