@@ -1,3 +1,3 @@
 export * from './formDefinitionResponse'
-export * from './formResponseResponse'
+export * from './formResponsesResponse'
 export * from './pathwayActivitiesResponse'
