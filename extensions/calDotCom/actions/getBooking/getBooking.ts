@@ -44,6 +44,7 @@ export const getBooking: Action<typeof fields, typeof settings> = {
           firstAttendeeTimezone: booking.attendees[0].timeZone,
           firstAttendeeName: booking.attendees[0].name,
           userEmail: booking.user.email,
+          location: booking.responses?.location?.value,
         },
       })
     } catch (error) {

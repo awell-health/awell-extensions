@@ -95,6 +95,7 @@ describe('Cal.com GetBooking action', () => {
     let metadata: Booking['metadata']
     let user: User
     let attendees: User[]
+    let responses: Booking['responses']
 
     beforeEach(() => {
       eventTypeId = faker.number.int()
@@ -103,6 +104,11 @@ describe('Cal.com GetBooking action', () => {
       startTime = faker.date.anytime().toISOString()
       endTime = faker.date.anytime().toISOString()
       status = faker.string.sample()
+      responses = {
+        location: {
+          value: 'inPerson',
+        },
+      }
       id = faker.number.int()
       uid = faker.string.uuid()
       metadata = {
@@ -136,6 +142,7 @@ describe('Cal.com GetBooking action', () => {
           metadata,
           user,
           attendees,
+          responses,
         })
     })
 
@@ -168,6 +175,7 @@ describe('Cal.com GetBooking action', () => {
           videoCallUrl: metadata.videoCallUrl,
           firstAttendeeEmail: attendees[0].email,
           firstAttendeeTimezone: attendees[0].timeZone,
+          location: 'inPerson',
           firstAttendeeName: attendees[0].name,
           userEmail: user.email,
         },
