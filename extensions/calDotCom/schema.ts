@@ -26,7 +26,18 @@ export const BookingSchema = z.object({
   user: UserSchema,
   attendees: z.array(UserSchema),
   metadata: z.object({ videoCallUrl: z.string().optional() }),
-  location: z.string(),
+  responses: z
+    .object({
+      email: z.string().optional(),
+      name: z.string().optional(),
+      location: z
+        .object({
+          optionValue: z.string().optional(),
+          value: z.string().optional(),
+        })
+        .optional(),
+    })
+    .optional(),
 })
 
 export const GetBookingResponseSchema = z.object({
