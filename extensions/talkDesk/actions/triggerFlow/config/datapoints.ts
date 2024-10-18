@@ -9,12 +9,24 @@ export const dataPoints = {
     key: 'flowVersionId',
     valueType: 'string',
   },
+  call_start_time: {
+    key: 'call_start_time',
+    valueType: 'date',
+  },
+  call_end_time: {
+    key: 'call_end_time',
+    valueType: 'date',
+  },
   call_duration_ms: {
     key: 'call_duration_ms',
     valueType: 'number',
   },
-  call_disposition: {
-    key: 'call_disposition',
+  call_status: {
+    key: 'call_status',
+    valueType: 'string',
+  },
+  disposition: {
+    key: 'disposition',
     valueType: 'string',
   },
   agent: {
