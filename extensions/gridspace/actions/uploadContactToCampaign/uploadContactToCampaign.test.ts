@@ -58,6 +58,6 @@ describe('uploadContactToCampaign', () => {
       ],
     })
 
-    expect(onComplete).not.toHaveBeenCalled()
+    expect(onComplete).toHaveBeenCalled()
   })
 })
