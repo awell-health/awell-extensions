@@ -13,7 +13,7 @@ export const uploadContactToCampaign = {
   fields,
   dataPoints,
   previewable: false,
-  onEvent: async ({ payload }) => {
+  onEvent: async ({ payload, onComplete }) => {
     const { pathway, patient, activity } = payload
     const {
       fields: { campaignId, data, phoneNumber },
@@ -45,6 +45,14 @@ export const uploadContactToCampaign = {
 
     await client.uploadContactsToCampaign(campaignId, requestBody)
 
-    // No need to call onComplete since Gridspace will complete the activity later
+    await onComplete({
+      events: [
+        {
+          date: new Date().toISOString(),
+          text: { en: `Contact uploaded to campaign ${campaignId}` },
+        },
+      ],
+      data_points: {},
+    })
   },
 } satisfies Action<typeof fields, typeof settings>
