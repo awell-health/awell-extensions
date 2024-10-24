@@ -43,7 +43,24 @@ export const uploadContactToCampaign = {
       contact_rows: [contactRow],
     }
 
-    await client.uploadContactsToCampaign(campaignId, requestBody)
+    const { num_uploaded_contacts = 0 } = await client.uploadContactsToCampaign(
+      campaignId,
+      requestBody
+    )
+
+    if (num_uploaded_contacts === 0) {
+      await onComplete({
+        events: [
+          {
+            date: new Date().toISOString(),
+            text: { en: `Contact was NOT uploaded to campaign ${campaignId}` },
+          },
+        ],
+        data_points: {
+          num_uploaded_contacts: String(num_uploaded_contacts),
+        },
+      })
+    }
 
     await onComplete({
       events: [
@@ -52,7 +69,9 @@ export const uploadContactToCampaign = {
           text: { en: `Contact uploaded to campaign ${campaignId}` },
         },
       ],
-      data_points: {},
+      data_points: {
+        num_uploaded_contacts: String(num_uploaded_contacts),
+      },
     })
   },
 } satisfies Action<typeof fields, typeof settings>

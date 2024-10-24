@@ -14,9 +14,12 @@ describe('uploadContactToCampaign', () => {
   const { extensionAction, onComplete, onError, helpers, clearMocks } =
     TestHelpers.fromAction(uploadContactToCampaign)
 
-  beforeEach(clearMocks)
+  beforeEach(() => {
+    clearMocks()
+    mockUploadContactsToCampaign.mockClear()
+  })
 
-  it('should upload contact to the Gridspace autodialer campaign', async () => {
+  it('should upload contact to the Gridspace autodialer campaign and complete the activity', async () => {
     await extensionAction.onEvent({
       payload: generateTestPayload({
         fields: {
@@ -58,6 +61,78 @@ describe('uploadContactToCampaign', () => {
       ],
     })
 
-    expect(onComplete).toHaveBeenCalled()
+    expect(onComplete).toHaveBeenCalledWith({
+      events: [
+        {
+          date: expect.any(String),
+          text: { en: 'Contact uploaded to campaign campaign123' },
+        },
+      ],
+      data_points: {
+        num_uploaded_contacts: '1',
+      },
+    })
+  })
+
+  it('should complete the activity with a failure message if no contacts were uploaded', async () => {
+    mockUploadContactsToCampaign.mockResolvedValueOnce({
+      num_uploaded_contacts: 0,
+    })
+
+    await extensionAction.onEvent({
+      payload: generateTestPayload({
+        fields: {
+          campaignId: 'campaign123',
+          data: JSON.stringify({ first_name: 'John', last_name: 'Doe' }),
+          phoneNumber: '15552223333',
+        },
+        settings: {
+          accountId: 'someAccountId',
+          clientSecret: 'someClientSecret',
+        },
+      }),
+      onComplete,
+      onError,
+      helpers,
+    })
+
+    expect(onComplete).toHaveBeenCalledWith({
+      events: [
+        {
+          date: expect.any(String),
+          text: { en: 'Contact was NOT uploaded to campaign campaign123' },
+        },
+      ],
+      data_points: {
+        num_uploaded_contacts: '0',
+      },
+    })
+  })
+
+  it('should throw an error if API call fails', async () => {
+    mockUploadContactsToCampaign.mockRejectedValueOnce(new Error('API error'))
+
+    await expect(
+      extensionAction.onEvent({
+        payload: generateTestPayload({
+          fields: {
+            campaignId: 'campaign123',
+            data: JSON.stringify({ first_name: 'John', last_name: 'Doe' }),
+            phoneNumber: '15552223333',
+          },
+          settings: {
+            accountId: 'someAccountId',
+            clientSecret: 'someClientSecret',
+          },
+        }),
+        onComplete,
+        onError,
+        helpers,
+      })
+    ).rejects.toThrow('API error')
+
+    expect(mockUploadContactsToCampaign).toHaveBeenCalled()
+    expect(onComplete).not.toHaveBeenCalled()
+    expect(onError).not.toHaveBeenCalled()
   })
 })

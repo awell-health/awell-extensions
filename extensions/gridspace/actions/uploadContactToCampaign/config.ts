@@ -38,6 +38,10 @@ export const dataPoints = {
     key: 'data',
     valueType: 'json',
   },
+  num_uploaded_contacts: {
+    key: 'num_uploaded_contacts',
+    valueType: 'number',
+  },
 } satisfies Record<string, DataPointDefinition>
 
 export const FieldsSchema = z.object({
