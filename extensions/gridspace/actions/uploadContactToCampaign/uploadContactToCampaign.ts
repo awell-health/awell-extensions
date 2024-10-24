@@ -48,25 +48,16 @@ export const uploadContactToCampaign = {
       requestBody
     )
 
-    if (num_uploaded_contacts === 0) {
-      await onComplete({
-        events: [
-          {
-            date: new Date().toISOString(),
-            text: { en: `Contact was NOT uploaded to campaign ${campaignId}` },
-          },
-        ],
-        data_points: {
-          num_uploaded_contacts: String(num_uploaded_contacts),
-        },
-      })
-    }
+    const event_text =
+      num_uploaded_contacts === 0
+        ? { en: `Contact was NOT uploaded to campaign ${campaignId}` }
+        : { en: `Contact uploaded to campaign ${campaignId}` }
 
     await onComplete({
       events: [
         {
           date: new Date().toISOString(),
-          text: { en: `Contact uploaded to campaign ${campaignId}` },
+          text: event_text,
         },
       ],
       data_points: {
