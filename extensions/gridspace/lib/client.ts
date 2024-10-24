@@ -1,4 +1,9 @@
 import axios, { type AxiosInstance } from 'axios'
+
+interface UploadContactToCampaignResponse {
+  num_uploaded_contacts: number
+}
+
 export class GridspaceClient {
   private readonly client: AxiosInstance
 
@@ -29,7 +34,10 @@ export class GridspaceClient {
     return resp.data
   }
 
-  async uploadContactsToCampaign(campaignId: string, data: any): Promise<any> {
+  async uploadContactsToCampaign(
+    campaignId: string,
+    data: any
+  ): Promise<UploadContactToCampaignResponse> {
     const response = await this.client.post(
       `/autodialer/${campaignId}/dialees`,
       data
