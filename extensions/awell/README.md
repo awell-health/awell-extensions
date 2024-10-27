@@ -74,7 +74,9 @@ This action lets you check if a patient with a specific identifier already exist
 
 ### Add identifier to patient
 
-This action adds a unique identifier to the current patient's profile. It first checks if this identifier is already linked to another patient. If it's safe to add (no other patient has this identifier), it updates the current patient's profile. However, if the identifier is already in use by another patient, the action will stop and let you know to avoid duplicates. For best results, use the "Get patient by identifier" action first to check for any matches before adding a new identifier.
+This action allows you to add a unique identifier to the current patient's profile. If the patient already has an identifier with the same system but a different value, this action will update the existing identifier with the new value provided. 
+
+First, it checks if this identifier (system and value) is already associated with another patient. If it's safe to proceed, it will add or update the identifier as needed. However, if another patient already has this identifier, the action will stop and notify you, preventing duplicates. To avoid conflicts, we recommend first running the "Get patient by identifier" action to check for any existing matches.
 
 ## Webhooks
 
