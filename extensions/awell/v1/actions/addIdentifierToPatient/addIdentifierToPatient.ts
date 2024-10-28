@@ -73,6 +73,20 @@ export const addIdentifierToPatient: Action<typeof fields, typeof settings> = {
     )
     const isUpdatingIdentifier = Boolean(previousIdentifier)
 
+    if (isUpdatingIdentifier && previousIdentifier?.value === value) {
+      await onComplete({
+        events: [
+          {
+            date: new Date().toISOString(),
+            text: {
+              en: 'Patient already had an identifier of the same value and system. No changes were made.',
+            },
+          },
+        ],
+      })
+      return
+    }
+
     // Perform update or add the new identifier
     await sdk.orchestration.mutation({
       updatePatient: {
