@@ -7,9 +7,7 @@ import {
   FieldsValidationSchema,
   PatientValidationSchema,
 } from './config'
-import { fromZodError } from 'zod-validation-error'
-import { z, ZodError } from 'zod'
-import { isNil } from 'lodash'
+import { z } from 'zod'
 
 export const addIdentifierToPatient: Action<typeof fields, typeof settings> = {
   key: 'addIdentifierToPatient',
@@ -33,51 +31,90 @@ export const addIdentifierToPatient: Action<typeof fields, typeof settings> = {
 
     const sdk = await helpers.awellSdk()
 
-    const patient = await sdk.orchestration.query({
+    const {
+      patientByIdentifier: { patient: existingPatient },
+    } = await sdk.orchestration.query({
       patientByIdentifier: {
-        __args: {
-          system,
-          value,
-        },
+        __args: { system, value },
         patient: {
           id: true,
+          profile: { identifier: { system: true, value: true } },
         },
       },
     })
 
-    const patientAlreadyExists = !isNil(patient.patientByIdentifier.patient?.id)
+    const patientExists = Boolean(existingPatient?.id)
+    const isCurrentPatient = patientExists && existingPatient?.id === patientId
 
-    const isCurrentPatient = patientAlreadyExists
-      ? patient.patientByIdentifier.patient?.id === patientId
-      : false
-
-    /**
-     * If a patient with the identifier already exists and it's the current patient,
-     * do nothing. The identifier is already in place, trying to add it again will
-     * throw an error
-     */
-    if (patientAlreadyExists && isCurrentPatient) {
-      await onComplete()
+    if (patientExists && !isCurrentPatient) {
+      await onError({
+        events: [
+          {
+            date: new Date().toISOString(),
+            text: {
+              en: `Another patient (${String(
+                existingPatient?.id
+              )}) already has an identifier with system ${system} and value ${value}. Adding this identifier to the current patient is not possible.`,
+            },
+          },
+        ],
+      })
       return
     }
 
+    // Filter identifiers, excluding any with the current system
+    const existingIdentifiers = existingPatient?.profile?.identifier ?? []
+    const otherIdentifiers = existingIdentifiers.filter(
+      (id) => id.system !== system
+    )
+
+    const previousIdentifier = existingIdentifiers.find(
+      (id) => id.system === system
+    )
+    const isUpdatingIdentifier = Boolean(previousIdentifier)
+
+    if (isUpdatingIdentifier && previousIdentifier?.value === value) {
+      await onComplete({
+        events: [
+          {
+            date: new Date().toISOString(),
+            text: {
+              en: 'Patient already had an identifier of the same value and system. No changes were made.',
+            },
+          },
+        ],
+      })
+      return
+    }
+
+    // Perform update or add the new identifier
     await sdk.orchestration.mutation({
-      addIdentifierToPatient: {
+      updatePatient: {
         __args: {
           input: {
             patient_id: patientId,
-            identifier: {
-              system,
-              value,
+            profile: {
+              identifier: [...otherIdentifiers, { system, value }],
             },
           },
         },
-        patient: {
-          id: true,
-        },
+        patient: { id: true },
       },
     })
 
-    await onComplete()
+    await onComplete({
+      events: [
+        {
+          date: new Date().toISOString(),
+          text: {
+            en: isUpdatingIdentifier
+              ? `The patient already had an identifier with system ${system} and value ${String(
+                  previousIdentifier?.value
+                )}. The identifier value has been updated to ${value}.`
+              : `The identifier with system ${system} and value ${value} has been added to the patient.`,
+          },
+        },
+      ],
+    })
   },
 }
