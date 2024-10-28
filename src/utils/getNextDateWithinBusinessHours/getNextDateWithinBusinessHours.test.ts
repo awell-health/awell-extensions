@@ -101,7 +101,7 @@ describe('getNextDateWithinBusinessHours', () => {
     })
 
     it('returns the next day at 9 AM in ISO format when the date is after working hours', () => {
-      const mockDate = setHours(startOfDay(new Date()), 16) // 4 PM UTC is 5 PM in Belgium and is after working hours
+      const mockDate = setHours(startOfDay(new Date('2024-10-01')), 16) // 4 PM UTC is 5 PM in Belgium and is after working hours
       const expectedDate = setHours(startOfDay(addDays(mockDate, 1)), 7) // should return 8 AM of the next day in UTC (which is 9 AM Belgium time)
 
       expect(getNextDateWithinBusinessHours(mockDate, timeZone)).toEqual(
@@ -110,7 +110,7 @@ describe('getNextDateWithinBusinessHours', () => {
     })
 
     it('returns today at 9 AM in ISO format when the date is before working hours', () => {
-      const mockDate = setHours(startOfDay(new Date()), 7) // 7 AM UTC is 8 AM in Belgum and is before working hours
+      const mockDate = setHours(startOfDay(new Date('2024-10-01')), 7) // 7 AM UTC is 8 AM in Belgum and is before working hours
       const expectedDate = setHours(startOfDay(mockDate), 7) // should return 8 AM of the same day in UTC (which is 9 AM Belgium time)
 
       expect(getNextDateWithinBusinessHours(mockDate, timeZone)).toEqual(
