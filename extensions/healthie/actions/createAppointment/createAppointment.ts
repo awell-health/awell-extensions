@@ -1,8 +1,16 @@
 import { type Action } from '@awell-health/extensions-core'
 import { Category } from '@awell-health/extensions-core'
+import {
+  HealthieError,
+  mapHealthieToActivityError,
+} from '@extensions/healthie/lib/sdk/graphql-codegen/errors'
 import { validatePayloadAndCreateSdk } from '../../lib/sdk/validatePayloadAndCreateSdk'
 import { type settings } from '../../settings'
 import { dataPoints, fields, FieldsValidationSchema } from './config'
+import {
+  HealthieAppointmentNotCreated,
+  parseHealthieAppointmentNotCreatedError,
+} from './lib/errors'
 
 export const createAppointment: Action<
   typeof fields,
@@ -16,35 +24,57 @@ export const createAppointment: Action<
   fields,
   dataPoints,
   previewable: false,
-  onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
-    const {
-      fields: {
-        patientId,
-        appointmentTypeId,
-        datetime,
-        contactTypeId,
-        otherPartyId,
-        metadata,
-      },
-      sdk,
-    } = await validatePayloadAndCreateSdk({
+  onEvent: async ({ payload, onComplete, onError, helpers }) => {
+    const { fields, healthieSdk } = await validatePayloadAndCreateSdk({
       fieldsSchema: FieldsValidationSchema,
       payload,
     })
 
-    const { data } = await sdk.createAppointment({
-      appointment_type_id: appointmentTypeId,
-      contact_type: contactTypeId,
-      other_party_id: otherPartyId,
-      datetime,
-      user_id: patientId,
-      metadata: JSON.stringify(metadata),
-    })
+    try {
+      const res = await healthieSdk.client.mutation({
+        createAppointment: {
+          __args: {
+            input: {
+              appointment_type_id: fields.appointmentTypeId,
+              contact_type: fields.contactTypeId,
+              other_party_id: fields.otherPartyId,
+              datetime: fields.datetime,
+              user_id: fields.patientId,
+              metadata: JSON.stringify(fields.metadata),
+              notes: fields.notes,
+              external_videochat_url: fields.externalVideochatUrl,
+            },
+          },
+          appointment: {
+            id: true,
+          },
+        },
+      })
 
-    await onComplete({
-      data_points: {
-        appointmentId: data.createAppointment?.appointment?.id,
-      },
-    })
+      const appointmentId = res.createAppointment?.appointment?.id
+
+      if (appointmentId === undefined)
+        throw new HealthieAppointmentNotCreated(res)
+
+      await onComplete({
+        data_points: {
+          appointmentId,
+        },
+      })
+    } catch (error) {
+      if (error instanceof HealthieAppointmentNotCreated) {
+        await onError({
+          events: [parseHealthieAppointmentNotCreatedError(error.errors)],
+        })
+      } else if (error instanceof HealthieError) {
+        const errors = mapHealthieToActivityError(error.errors)
+        await onError({
+          events: errors,
+        })
+      } else {
+        // Handles Zod and other unknown errors
+        throw error
+      }
+    }
   },
 }

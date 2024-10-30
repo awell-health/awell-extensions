@@ -42,6 +42,21 @@ export const fields = {
     type: FieldType.DATE,
     required: true,
   },
+  notes: {
+    id: 'notes',
+    label: 'Notes',
+    description: 'Any notes you want to add to the appointment.',
+    type: FieldType.TEXT,
+    required: false,
+  },
+  externalVideochatUrl: {
+    id: 'externalVideochatUrl',
+    label: 'External video chat URL',
+    description:
+      'When passed in, this video chat URL will be used instead of built-in Video Chat or Zoom.',
+    type: FieldType.STRING,
+    required: false,
+  },
   metadata: {
     id: 'metadata',
     label: 'Metadata',
@@ -57,6 +72,14 @@ export const FieldsValidationSchema = z.object({
   contactTypeId: z.string().min(1),
   appointmentTypeId: z.string().min(1),
   datetime: DateTimeSchema,
+  notes: z.string().optional(),
+  externalVideochatUrl: z
+    .string()
+    .optional()
+    .transform((val) => {
+      if (isEmpty(val)) return undefined
+      return val
+    }),
   metadata: z
     .string()
     .optional()
