@@ -1,5 +1,5 @@
 import { getPatient } from '.'
-import { generateTestPayload } from '../../../../src/tests'
+import { generateTestPayload } from '@/tests'
 import { mockGetPatientResponse, mockSettings } from '../../api/__mocks__'
 
 jest.mock('../../api/client')

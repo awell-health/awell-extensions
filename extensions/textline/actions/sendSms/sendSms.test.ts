@@ -1,5 +1,5 @@
 import { sendSms } from './sendSms'
-import { generateTestPayload } from '../../../../src/tests'
+import { generateTestPayload } from '@/tests'
 import { mockReturnValue } from '../../client/__mocks__/textLineApi'
 
 jest.mock('../../client/textLineApi', () => jest.fn(() => mockReturnValue))

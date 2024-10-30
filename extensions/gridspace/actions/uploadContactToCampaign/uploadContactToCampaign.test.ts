@@ -1,7 +1,7 @@
 import { TestHelpers } from '@awell-health/extensions-core'
 import { uploadContactToCampaign } from './uploadContactToCampaign'
 import { GridspaceClient } from '../../lib'
-import { generateTestPayload } from '../../../../../src/tests'
+import { generateTestPayload } from '@/tests'
 
 jest.mock('../../lib/client')
 const mockUploadContactsToCampaign = jest

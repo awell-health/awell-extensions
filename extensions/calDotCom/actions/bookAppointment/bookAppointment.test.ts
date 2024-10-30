@@ -1,5 +1,5 @@
 import { bookAppointment } from './bookAppointment'
-import { generateTestPayload } from '../../../../src/tests'
+import { generateTestPayload } from '@/tests'
 
 describe('Simple book appointment action', () => {
   const onComplete = jest.fn()

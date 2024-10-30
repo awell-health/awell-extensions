@@ -1,5 +1,5 @@
 import { ZodError } from 'zod'
-import { generateTestPayload } from '../../../../src/tests'
+import { generateTestPayload } from '@/tests'
 import { makeAPIClient } from '../../client'
 import { type FindAppointmentFields } from '../../types/appointment'
 import { makeAPIClientMockFunc } from '../../__mocks__/client'

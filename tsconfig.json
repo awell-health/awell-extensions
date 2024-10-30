@@ -10,6 +10,9 @@
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "baseUrl": "./",
+    "paths": {
+      "@/tests": ["tests"]
+    }
   },
   "include": [
     "lib/**/*.ts",
@@ -18,6 +21,9 @@
     "examples/**/*.ts"
   ],
   "exclude": [
-    "**/scripts/*.ts"
+    "**/scripts/*.ts",
+    "**/*.test.ts",
+    "**/__tests__/**/*.ts",
+    "**/__mocks__/**/*.ts"
   ]
 }

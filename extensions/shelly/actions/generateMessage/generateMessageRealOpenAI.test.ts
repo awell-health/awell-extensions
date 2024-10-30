@@ -1,6 +1,6 @@
 import 'dotenv/config'
 import { TestHelpers } from '@awell-health/extensions-core'
-import { generateTestPayload } from '../../../../../src/tests'
+import { generateTestPayload } from '@/tests'
 import { generateMessage } from '.'
 
 jest.setTimeout(60000) // Increase timeout to 60 seconds for all tests in this file

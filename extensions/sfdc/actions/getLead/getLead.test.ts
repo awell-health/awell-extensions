@@ -1,6 +1,6 @@
 import { TestHelpers } from '@awell-health/extensions-core'
 import { getLead as actionInterface } from '.'
-import { generateTestPayload } from '../../../../src/tests'
+import { generateTestPayload } from '@/tests'
 import { mockSettings } from '../../api/__mocks__'
 
 jest.mock('../../api/client')

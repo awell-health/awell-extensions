@@ -1,5 +1,5 @@
 import { ZodError } from 'zod'
-import { generateTestPayload } from '../../../../../src/tests'
+import { generateTestPayload } from '@/tests'
 import { divide } from './divide'
 
 describe('Divide', () => {

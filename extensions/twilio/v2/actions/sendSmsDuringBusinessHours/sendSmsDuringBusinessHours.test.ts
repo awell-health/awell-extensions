@@ -1,6 +1,6 @@
 import { sendSmsDuringBusinessHours } from './sendSmsDuringBusinessHours'
 import twilioSdk from '../../../common/sdk/twilio'
-import { generateTestPayload } from '../../../../../src/tests'
+import { generateTestPayload } from '@/tests'
 import { ZodError } from 'zod'
 
 describe('Send SMS during business hours', () => {

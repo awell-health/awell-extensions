@@ -1,7 +1,7 @@
 import DropboxSignSdk from '../../../common/sdk/dropboxSignSdk'
 
 import { sendSignatureRequestWithTemplate } from '..'
-import { generateTestPayload } from '../../../../../src/tests'
+import { generateTestPayload } from '@/tests'
 
 jest.mock('../../../common/sdk/dropboxSignSdk')
 

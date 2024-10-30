@@ -1,7 +1,7 @@
 import { AwellSdk } from '@awell-health/awell-sdk'
 import { TestHelpers } from '@awell-health/extensions-core'
 import { pushFormResponsesToHealthie as actionInterface } from '.'
-import { HealthieSdk } from '../../lib/sdk/genql'
+import { HealthieSdk } from '../../../lib/sdk/genql'
 import {
   mockFormDefinitionOneResponse,
   mockFormDefinitionTwoResponse,
@@ -10,7 +10,7 @@ import {
   mockPathwayActivitiesResponse,
 } from './__mocks__'
 
-jest.mock('../../lib/sdk/genql', () => ({
+jest.mock('../../../lib/sdk/genql', () => ({
   HealthieSdk: jest.fn().mockImplementation(() => ({
     client: {
       mutation: jest.fn().mockResolvedValue({

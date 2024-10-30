@@ -1,4 +1,4 @@
-import { generateTestPayload } from '../../../../src/tests'
+import { generateTestPayload } from '@/tests'
 import { HealthieSdk } from '../../lib/sdk/genql'
 import { createAppointment as actionInterface } from '.'
 import { TestHelpers } from '@awell-health/extensions-core'

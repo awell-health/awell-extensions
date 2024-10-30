@@ -1,5 +1,5 @@
 import { createTask } from '.'
-import { generateTestPayload } from '../../../../src/tests'
+import { generateTestPayload } from '@/tests'
 import { mockSettings } from '../../api/__mocks__'
 import { mockCreateTaskResponse } from '../../api/__mocks__/mockTask'
 

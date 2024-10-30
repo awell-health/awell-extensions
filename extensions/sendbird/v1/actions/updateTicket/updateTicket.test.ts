@@ -3,7 +3,7 @@ import {
   mockedTicketData,
   SendbirdClientMockImplementation,
 } from '../../client/__mocks__'
-import { generateTestPayload } from '../../../../../src/tests'
+import { generateTestPayload } from '@/tests'
 import { updateTicket } from './updateTicket'
 
 jest.mock('../../client')

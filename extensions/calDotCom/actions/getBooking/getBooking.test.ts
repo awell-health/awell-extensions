@@ -1,7 +1,7 @@
 import { getBooking } from './getBooking'
 import { faker } from '@faker-js/faker'
 import CalComApi from '../../calComApi'
-import { generateTestPayload } from '../../../../src/tests'
+import { generateTestPayload } from '@/tests'
 import type { User, Booking } from '../../schema'
 
 describe('Cal.com GetBooking action', () => {

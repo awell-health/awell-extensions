@@ -1,5 +1,5 @@
 import { sendMessage } from '.'
-import { generateTestPayload } from '../../../../../src/tests'
+import { generateTestPayload } from '@/tests'
 
 describe('Send message', () => {
   const onComplete = jest.fn()

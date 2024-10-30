@@ -1,6 +1,6 @@
 import { type AxiosError } from 'axios'
 import { addClinicalDocument } from '.'
-import { generateTestPayload } from '../../../../src/tests'
+import { generateTestPayload } from '@/tests'
 import { mockSettings } from '../../api/__mocks__/mockData'
 import * as helpers from '../../helpers'
 

@@ -1,5 +1,5 @@
 import { parseUnixTimestampToDate } from '.'
-import { generateTestPayload } from '../../../../../src/tests'
+import { generateTestPayload } from '@/tests'
 
 describe('Transform - Parse unix timestamp to date', () => {
   const onComplete = jest.fn()

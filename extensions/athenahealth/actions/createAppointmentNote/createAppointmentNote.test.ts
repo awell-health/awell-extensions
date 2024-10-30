@@ -1,6 +1,6 @@
 import { type AxiosError } from 'axios'
 import { createAppointmentNote } from '.'
-import { generateTestPayload } from '../../../../src/tests'
+import { generateTestPayload } from '@/tests'
 import { mockSettings } from '../../api/__mocks__/mockData'
 
 jest.mock('../../api/client')

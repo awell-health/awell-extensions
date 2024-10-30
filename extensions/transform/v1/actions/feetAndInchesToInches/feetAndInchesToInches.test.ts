@@ -1,5 +1,5 @@
 import { feetAndInchesToInches } from '.'
-import { generateTestPayload } from '../../../../../src/tests'
+import { generateTestPayload } from '@/tests'
 
 describe('Transform - Feet and inches to inches', () => {
   const onComplete = jest.fn()

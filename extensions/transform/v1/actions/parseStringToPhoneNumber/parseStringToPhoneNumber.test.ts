@@ -1,5 +1,5 @@
 import { parseStringToPhoneNumber } from '.'
-import { generateTestPayload } from '../../../../../src/tests'
+import { generateTestPayload } from '@/tests'
 
 describe('Transform - Parse text to phone number', () => {
   const onComplete = jest.fn()

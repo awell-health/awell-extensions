@@ -1,4 +1,4 @@
-import { generateTestPayload } from '../../../../src/tests'
+import { generateTestPayload } from '@/tests'
 import { uploadFiles } from './uploadFiles'
 
 describe('Cloudinary - Upload files', () => {

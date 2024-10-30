@@ -3,7 +3,7 @@ import {
   type NewActivityPayload,
   type Fields,
 } from '@awell-health/extensions-core'
-import { generateTestPayload } from '../../../../src/tests'
+import { generateTestPayload } from '@/tests'
 
 // type Payload = Parameters<Action<any, typeof settings>['onActivityCreated']>[0]
 
@@ -12,7 +12,7 @@ export const SendgridClientMockImplementation = {
   marketing: {
     contacts: {
       addOrUpdate: jest.fn(),
-      importStatus: jest.fn()
+      importStatus: jest.fn(),
     },
   },
   groups: {

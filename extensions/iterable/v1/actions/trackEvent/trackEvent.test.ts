@@ -3,7 +3,7 @@ import {
   mockTrackEventActionFields,
 } from '../../client/__mocks__'
 import { trackEvent } from '..'
-import { generateTestPayload } from '../../../../../src/tests'
+import { generateTestPayload } from '@/tests'
 
 jest.mock('../../client')
 

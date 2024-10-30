@@ -3,7 +3,7 @@ import {
   ZendeskClientMockImplementation,
 } from '../../client/__mocks__'
 import { completeTask } from '..'
-import { generateTestPayload } from '../../../../../src/tests'
+import { generateTestPayload } from '@/tests'
 
 jest.mock('../../client')
 

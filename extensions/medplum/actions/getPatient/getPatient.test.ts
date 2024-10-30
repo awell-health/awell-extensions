@@ -1,5 +1,5 @@
 import { getPatient } from '.'
-import { generateTestPayload } from '../../../../src/tests'
+import { generateTestPayload } from '@/tests'
 import { mockSettings, mockGetPatientResponse } from '../../__mocks__'
 
 jest.mock('@medplum/core', () => {

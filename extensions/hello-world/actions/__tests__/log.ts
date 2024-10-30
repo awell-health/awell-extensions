@@ -1,5 +1,5 @@
 import { log } from '../'
-import { generateTestPayload } from '../../../../src/tests'
+import { generateTestPayload } from '@/tests'
 
 describe('HelloWorld - log', () => {
   test('Should call onComplete', async () => {

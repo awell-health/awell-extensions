@@ -3,7 +3,7 @@ import {
   IterableClientMockImplementation,
 } from '../../client/__mocks__'
 import { sendEmail } from '..'
-import { generateTestPayload } from '../../../../../src/tests'
+import { generateTestPayload } from '@/tests'
 
 jest.mock('../../client')
 

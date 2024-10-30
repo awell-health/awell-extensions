@@ -1,5 +1,5 @@
 import { createLead } from '.'
-import { generateTestPayload } from '../../../../src/tests'
+import { generateTestPayload } from '@/tests'
 import { mockSettings, mockCreateRecordResponse } from '../../api/__mocks__'
 
 jest.mock('../../api/client')
