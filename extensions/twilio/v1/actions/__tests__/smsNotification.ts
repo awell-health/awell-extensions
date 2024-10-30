@@ -1,5 +1,5 @@
 import { smsNotification } from '../'
-import { generateTestPayload } from '../../../../../src/tests'
+import { generateTestPayload } from '@/tests'
 
 describe('Simple sms notification action', () => {
   const onComplete = jest.fn()

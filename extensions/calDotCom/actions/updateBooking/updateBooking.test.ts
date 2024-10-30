@@ -1,5 +1,5 @@
 import { updateBooking } from './updateBooking'
-import { generateTestPayload } from '../../../../src/tests'
+import { generateTestPayload } from '@/tests'
 import { mockReturnValue, sampleBooking } from '../../__mocks__/calComApi'
 
 jest.mock('../../calComApi', () => jest.fn(() => mockReturnValue))

@@ -3,7 +3,7 @@ import {
   SendbirdClientMockImplementation,
 } from '../../client/__mocks__'
 import { createUser } from '..'
-import { generateTestPayload } from '../../../../../src/tests'
+import { generateTestPayload } from '@/tests'
 
 jest.mock('../../client')
 

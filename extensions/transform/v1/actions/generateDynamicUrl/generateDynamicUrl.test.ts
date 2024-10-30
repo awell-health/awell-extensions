@@ -1,5 +1,5 @@
 import { generateDynamicUrl } from '.'
-import { generateTestPayload } from '../../../../../src/tests'
+import { generateTestPayload } from '@/tests'
 
 describe('Transform - Generate dynamic URL', () => {
   const onComplete = jest.fn()

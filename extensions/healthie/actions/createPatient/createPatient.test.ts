@@ -1,10 +1,10 @@
-import { generateTestPayload } from '../../../../src/tests'
-import { HealthieSdk } from '@extensions/healthie/lib/sdk/genql'
+import { generateTestPayload } from '@/tests'
+import { HealthieSdk } from '../../lib/sdk/genql'
 import { createPatient as actionInterface } from '../createPatient'
 import { TestHelpers } from '@awell-health/extensions-core'
 import { FieldsValidationSchema } from './config'
 
-jest.mock('@extensions/healthie/lib/sdk/genql', () => ({
+jest.mock('../../lib/sdk/genql', () => ({
   HealthieSdk: jest.fn().mockImplementation(() => ({
     client: {
       mutation: jest.fn().mockResolvedValue({

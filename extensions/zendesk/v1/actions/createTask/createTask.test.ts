@@ -4,7 +4,7 @@ import {
   ZendeskClientMockImplementation,
 } from '../../client/__mocks__'
 import { createTask } from '..'
-import { generateTestPayload } from '../../../../../src/tests'
+import { generateTestPayload } from '@/tests'
 
 jest.mock('../../client')
 

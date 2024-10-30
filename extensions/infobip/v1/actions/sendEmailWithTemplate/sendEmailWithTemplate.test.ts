@@ -3,7 +3,7 @@ import {
   mockedEmailWithTemplateData,
 } from '../../client/__mocks__'
 import { sendEmailWithTemplate } from '..'
-import { generateTestPayload } from '../../../../../src/tests'
+import { generateTestPayload } from '@/tests'
 
 jest.mock('../../client')
 

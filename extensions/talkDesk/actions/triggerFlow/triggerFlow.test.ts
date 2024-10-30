@@ -1,5 +1,5 @@
 import { triggerFlow } from '.'
-import { generateTestPayload } from '../../../../src/tests'
+import { generateTestPayload } from '@/tests'
 import {
   mockFlowTriggeredResponse,
   mockSettings,

@@ -4,7 +4,7 @@ import {
   InfobipClientMockImplementation,
 } from '../../client/__mocks__'
 import { sendSms } from '..'
-import { generateTestPayload } from '../../../../../src/tests'
+import { generateTestPayload } from '@/tests'
 
 jest.mock('../../client')
 

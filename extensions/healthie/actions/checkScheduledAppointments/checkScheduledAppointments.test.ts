@@ -1,4 +1,4 @@
-import { generateTestPayload } from '../../../../src/tests'
+import { generateTestPayload } from '@/tests'
 import { getSdk } from '../../lib/sdk/graphql-codegen/generated/sdk'
 import { mockGetSdk } from '../../lib/sdk/graphql-codegen/generated/__mocks__/sdk'
 import { checkScheduledAppointments } from '../checkScheduledAppointments'

@@ -1,5 +1,5 @@
 import { collectMedication } from '.'
-import { generateTestPayload } from '../../../../../src/tests'
+import { generateTestPayload } from '@/tests'
 
 describe('Advanced data collection - Collect medication', () => {
   const onComplete = jest.fn()

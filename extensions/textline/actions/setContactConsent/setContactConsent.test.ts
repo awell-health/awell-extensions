@@ -1,4 +1,4 @@
-import { generateTestPayload } from '../../../../src/tests'
+import { generateTestPayload } from '@/tests'
 import { mockReturnValue } from '../../client/__mocks__/textLineApi'
 import { setContactConsent } from './setContactConsent'
 

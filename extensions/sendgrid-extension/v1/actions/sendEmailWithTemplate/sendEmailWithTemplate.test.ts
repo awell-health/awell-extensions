@@ -3,7 +3,7 @@ import {
   SendgridClientMockImplementation,
 } from '../../../__mocks__/client'
 import { sendEmailWithTemplate } from '..'
-import { generateTestPayload } from '../../../../../src/tests'
+import { generateTestPayload } from '@/tests'
 
 jest.mock('../../../client', () => ({ SendgridClient }))
 

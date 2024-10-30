@@ -1,5 +1,5 @@
 import { getMessages } from './getMessages'
-import { generateTestPayload } from '../../../../../src/tests'
+import { generateTestPayload } from '@/tests'
 
 describe('Get messages action', () => {
   const onComplete = jest.fn()

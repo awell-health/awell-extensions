@@ -1,4 +1,4 @@
-import { generateTestPayload } from '../../../../../src/tests'
+import { generateTestPayload } from '@/tests'
 import { completeFlow } from './completeFlow'
 
 describe('Complete flow action', () => {

@@ -1,5 +1,5 @@
 import { requestVideoVisit } from '.'
-import { generateTestPayload } from '../../../../../src/tests'
+import { generateTestPayload } from '@/tests'
 
 describe('Experimental - Request video visit', () => {
   const onComplete = jest.fn()

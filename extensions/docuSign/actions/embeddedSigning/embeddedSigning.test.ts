@@ -1,4 +1,4 @@
-import { generateTestPayload } from '../../../../src/tests'
+import { generateTestPayload } from '@/tests'
 import { embeddedSigning } from './embeddedSigning'
 
 describe('Complete flow action', () => {

@@ -1,5 +1,5 @@
 import { sendVoiceMessage } from '..'
-import { generateTestPayload } from '../../../../../src/tests'
+import { generateTestPayload } from '@/tests'
 
 jest.mock('../../../common/sdk/messagebirdSdk')
 

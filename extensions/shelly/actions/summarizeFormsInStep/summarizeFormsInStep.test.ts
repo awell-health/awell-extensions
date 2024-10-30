@@ -4,8 +4,14 @@ import { TestHelpers } from '@awell-health/extensions-core'
 import { generateTestPayload } from '@/tests'
 import { summarizeFormsInStep } from '.'
 import { mockMultipleFormsPathwayActivitiesResponse } from './__mocks__/multipleFormsPathwayActivitiesResponse'
-import { mockMultipleFormsDefinitionResponse1, mockMultipleFormsDefinitionResponse2 } from './__mocks__/multipleFormsDefinitionResponse'
-import { mockMultipleFormsResponseResponse1, mockMultipleFormsResponseResponse2 } from './__mocks__/multipleFormsResponsesResponse'
+import {
+  mockMultipleFormsDefinitionResponse1,
+  mockMultipleFormsDefinitionResponse2,
+} from './__mocks__/multipleFormsDefinitionResponse'
+import {
+  mockMultipleFormsResponseResponse1,
+  mockMultipleFormsResponseResponse2,
+} from './__mocks__/multipleFormsResponsesResponse'
 import { DISCLAIMER_MSG_FORM } from '../../lib/constants'
 import { markdownToHtml } from '../../../../src/utils'
 
@@ -58,29 +64,30 @@ describe('summarizeFormsInStep - Mocked LLM calls', () => {
       },
     })
 
-   // Mock the Awell SDK
-   const awellSdkMock = {
-    orchestration: {
-      mutation: jest.fn().mockResolvedValue({}),
-      query: jest
-        .fn()
-        .mockResolvedValueOnce({
-          pathwayActivities: mockMultipleFormsPathwayActivitiesResponse,
-        })
-        .mockResolvedValueOnce({
-          form: mockMultipleFormsDefinitionResponse1,
-        })
-        .mockResolvedValueOnce({
-          form: mockMultipleFormsDefinitionResponse2,
-      })
-        .mockResolvedValueOnce({
+    // Mock the Awell SDK
+    const awellSdkMock = {
+      orchestration: {
+        mutation: jest.fn().mockResolvedValue({}),
+        query: jest
+          .fn()
+          .mockResolvedValueOnce({
+            pathwayActivities: mockMultipleFormsPathwayActivitiesResponse,
+          })
+          .mockResolvedValueOnce({
+            form: mockMultipleFormsDefinitionResponse1,
+          })
+          .mockResolvedValueOnce({
+            form: mockMultipleFormsDefinitionResponse2,
+          })
+          .mockResolvedValueOnce({
             formResponse: mockMultipleFormsResponseResponse1,
-        })
-        .mockResolvedValueOnce({
-          formResponse: mockMultipleFormsResponseResponse2}),
-    },
-  }
-    
+          })
+          .mockResolvedValueOnce({
+            formResponse: mockMultipleFormsResponseResponse2,
+          }),
+      },
+    }
+
     helpers.awellSdk = jest.fn().mockResolvedValue(awellSdkMock)
 
     await extensionAction.onEvent({

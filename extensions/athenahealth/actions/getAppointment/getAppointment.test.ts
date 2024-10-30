@@ -1,7 +1,7 @@
 import { type AxiosError } from 'axios'
 import { formatISO } from 'date-fns'
 import { getAppointment } from '.'
-import { generateTestPayload } from '../../../../src/tests'
+import { generateTestPayload } from '@/tests'
 import {
   mockGetAppointmentResponse,
   mockSettings,

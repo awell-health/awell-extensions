@@ -1,4 +1,4 @@
-import { generateTestPayload } from '../../../../../src/tests'
+import { generateTestPayload } from '@/tests'
 import { calculateDateDifference } from './calculateDateDifference'
 
 describe('Calculate date difference', () => {

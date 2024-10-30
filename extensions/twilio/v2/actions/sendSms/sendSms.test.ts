@@ -1,6 +1,6 @@
 import { sendSms } from './sendSms'
 import twilioSdk from '../../../common/sdk/twilio'
-import { generateTestPayload } from '../../../../../src/tests'
+import { generateTestPayload } from '@/tests'
 import { ZodError } from 'zod'
 
 describe('Send SMS (with from number) action', () => {

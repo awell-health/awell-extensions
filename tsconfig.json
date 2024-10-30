@@ -11,8 +11,7 @@
     "skipLibCheck": true,
     "baseUrl": "./",
     "paths": {
-      "@/*": ["src/*"],
-      "@extensions/*": ["extensions/*"]
+      "@/tests": ["tests"]
     }
   },
   "include": [
@@ -22,6 +21,9 @@
     "examples/**/*.ts"
   ],
   "exclude": [
-    "**/scripts/*.ts"
+    "**/scripts/*.ts",
+    "**/*.test.ts",
+    "**/__tests__/**/*.ts",
+    "**/__mocks__/**/*.ts"
   ]
 }

@@ -5,8 +5,14 @@ import { TestHelpers } from '@awell-health/extensions-core'
 import { generateTestPayload } from '@/tests'
 import { summarizeFormsInStep } from '.'
 import { mockMultipleFormsPathwayActivitiesResponse } from './__mocks__/multipleFormsPathwayActivitiesResponse'
-import { mockMultipleFormsDefinitionResponse1, mockMultipleFormsDefinitionResponse2 } from './__mocks__/multipleFormsDefinitionResponse'
-import { mockMultipleFormsResponseResponse1, mockMultipleFormsResponseResponse2 } from './__mocks__/multipleFormsResponsesResponse'
+import {
+  mockMultipleFormsDefinitionResponse1,
+  mockMultipleFormsDefinitionResponse2,
+} from './__mocks__/multipleFormsDefinitionResponse'
+import {
+  mockMultipleFormsResponseResponse1,
+  mockMultipleFormsResponseResponse2,
+} from './__mocks__/multipleFormsResponsesResponse'
 import { DISCLAIMER_MSG_FORM } from '../../lib/constants'
 
 describe.skip('summarizeFormsInStep - Real OpenAI calls', () => {
@@ -73,7 +79,9 @@ describe.skip('summarizeFormsInStep - Real OpenAI calls', () => {
     const completionResult = onComplete.mock.calls[0][0]
     expect(completionResult).toHaveProperty('data_points.summary')
     expect(completionResult.data_points.summary).toContain(DISCLAIMER_MSG_FORM)
-    expect(completionResult.data_points.summary.length).toBeGreaterThan(DISCLAIMER_MSG_FORM.length + 50)
+    expect(completionResult.data_points.summary.length).toBeGreaterThan(
+      DISCLAIMER_MSG_FORM.length + 50
+    )
   }, 30000) // Increase timeout to 30 seconds for API call
 
   it('Should summarize multiple forms with real OpenAI using Text Paragraph format in French', async () => {
@@ -132,11 +140,13 @@ describe.skip('summarizeFormsInStep - Real OpenAI calls', () => {
     const completionResult = onComplete.mock.calls[0][0]
     expect(completionResult).toHaveProperty('data_points.summary')
     expect(completionResult.data_points.summary).toContain('Avis Important')
-    expect(completionResult.data_points.summary.length).toBeGreaterThan(DISCLAIMER_MSG_FORM.length + 50)
-    
+    expect(completionResult.data_points.summary.length).toBeGreaterThan(
+      DISCLAIMER_MSG_FORM.length + 50
+    )
+
     // Check if the summary is in French
     expect(completionResult.data_points.summary).toMatch(/téléphone/)
-    
+
     // Check if it's a paragraph (no bullet points)
     expect(completionResult.data_points.summary).not.toMatch(/^[•]/m)
   }, 30000) // Increase timeout to 30 seconds for API call

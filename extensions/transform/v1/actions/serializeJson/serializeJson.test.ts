@@ -1,5 +1,5 @@
 import { serializeJson } from '.'
-import { generateTestPayload } from '../../../../../src/tests'
+import { generateTestPayload } from '@/tests'
 
 describe('Transform - Serialize JSON', () => {
   const onComplete = jest.fn()
