@@ -3,7 +3,7 @@ import { Category } from '@awell-health/extensions-core'
 import {
   HealthieError,
   mapHealthieToActivityError,
-} from '@extensions/healthie/lib/sdk/graphql-codegen/errors'
+} from '../../lib/sdk/graphql-codegen/errors'
 import { validatePayloadAndCreateSdk } from '../../lib/sdk/validatePayloadAndCreateSdk'
 import { type settings } from '../../settings'
 import { dataPoints, fields, FieldsValidationSchema } from './config'

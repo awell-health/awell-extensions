@@ -1,7 +1,8 @@
 import { TestHelpers } from '@awell-health/extensions-core'
 import { callWithGrace } from './callWithGrace'
-import { GridspaceClient } from '@extensions/gridspace/lib'
-import { generateTestPayload } from '@/tests'
+import { GridspaceClient } from '../../lib'
+import { generateTestPayload } from '../../../../src/tests'
+
 jest.mock('../../lib/client')
 const mockCallWithGrace = jest
   .spyOn(GridspaceClient.prototype, 'callWithGrace')

@@ -10,10 +10,6 @@
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "baseUrl": "./",
-    "paths": {
-      "@/*": ["src/*"],
-      "@extensions/*": ["extensions/*"]
-    }
   },
   "include": [
     "lib/**/*.ts",
