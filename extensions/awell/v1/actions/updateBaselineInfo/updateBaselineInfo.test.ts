@@ -1,6 +1,6 @@
 import { TestHelpers } from '@awell-health/extensions-core'
 import { ZodError } from 'zod'
-import { generateTestPayload } from '@/tests'
+import { generateTestPayload } from '../../../../../src/tests'
 import { updateBaselineInfo } from './updateBaselineInfo'
 
 jest.mock('../../sdk/awellSdk')

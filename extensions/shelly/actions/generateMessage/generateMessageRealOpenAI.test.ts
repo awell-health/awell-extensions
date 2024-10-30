@@ -1,8 +1,7 @@
 import 'dotenv/config'
 import { TestHelpers } from '@awell-health/extensions-core'
-import { generateTestPayload } from '@/tests'
+import { generateTestPayload } from '../../../../../src/tests'
 import { generateMessage } from '.'
-
 
 jest.setTimeout(60000) // Increase timeout to 60 seconds for all tests in this file
 
@@ -20,7 +19,8 @@ describe.skip('generateMessage - Real OpenAI calls', () => {
         communicationObjective: 'Remind patient of upcoming appointment',
         stakeholder: 'Patient',
         language: 'English',
-        personalizationInput: 'Patient Name: John Doe, Appointment Time: 2:00 PM tomorrow',
+        personalizationInput:
+          'Patient Name: John Doe, Appointment Time: 2:00 PM tomorrow',
       },
       settings: {
         openAiApiKey: process.env.OPENAI_API_KEY,
@@ -59,7 +59,8 @@ describe.skip('generateMessage - Real OpenAI calls', () => {
         communicationObjective: 'Update clinician on patient progress',
         stakeholder: 'Clinician',
         language: 'English',
-        personalizationInput: 'Patient: Jane Smith, Last Visit: 2 weeks ago, Condition: Hypertension',
+        personalizationInput:
+          'Patient: Jane Smith, Last Visit: 2 weeks ago, Condition: Hypertension',
       },
       settings: {
         openAiApiKey: process.env.OPENAI_API_KEY,

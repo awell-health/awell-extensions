@@ -1,5 +1,5 @@
 import { TestHelpers } from '@awell-health/extensions-core'
-import { generateTestPayload } from '@/tests'
+import { generateTestPayload } from '../../../../../src/tests'
 import { medicationFromImage } from '.'
 import { ExtractMedicationResponse } from '../../types'
 

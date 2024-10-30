@@ -1,4 +1,4 @@
-import { testPayload } from '@/tests'
+import { testPayload } from '../../../../../src/tests'
 import { TestHelpers } from '@awell-health/extensions-core'
 import { HealthieSdk } from '../../lib/sdk/genql'
 import { deleteGoal as actionInterface } from '.'

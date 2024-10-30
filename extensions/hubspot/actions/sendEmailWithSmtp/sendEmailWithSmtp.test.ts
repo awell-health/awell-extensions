@@ -1,5 +1,5 @@
 import { TestHelpers } from '@awell-health/extensions-core'
-import { generateTestPayload } from '@/tests'
+import { generateTestPayload } from '../../../../../src/tests'
 import { sendEmailWithSmtp } from '.'
 import { HubSpotSMTPClient } from '../../lib/smtpApi/smtpClient'
 

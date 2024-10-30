@@ -1,10 +1,9 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 
 import { TestHelpers } from '@awell-health/extensions-core'
-import { generateTestPayload } from '@/tests'
+import { generateTestPayload } from '../../../../../src/tests'
 import { generateMessage } from '.'
 import { ChatOpenAI } from '@langchain/openai'
-
 
 jest.mock('@langchain/openai', () => {
   const mockInvoke = jest.fn().mockResolvedValue({
@@ -26,7 +25,6 @@ jest.mock('@langchain/openai', () => {
     ChatOpenAI: mockChatOpenAI,
   }
 })
-
 
 describe('generateMessage - Mocked LLM calls', () => {
   const { onComplete, onError, helpers, extensionAction, clearMocks } =
@@ -62,7 +60,7 @@ describe('generateMessage - Mocked LLM calls', () => {
     })
 
     expect(ChatOpenAI).toHaveBeenCalled()
-    
+
     expect(generateMessageWithLLMSpy).toHaveBeenCalledWith({
       ChatModelGPT4o: expect.any(Object),
       communicationObjective: 'Reminder',

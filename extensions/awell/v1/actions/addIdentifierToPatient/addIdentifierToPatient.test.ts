@@ -1,5 +1,5 @@
 import { AwellSdk } from '@awell-health/awell-sdk'
-import { generateTestPayload } from '@/tests'
+import { generateTestPayload } from '../../../../../src/tests'
 import { addIdentifierToPatient } from './addIdentifierToPatient'
 import { TestHelpers } from '@awell-health/extensions-core'
 

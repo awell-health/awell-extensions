@@ -1,12 +1,11 @@
 import 'dotenv/config'
 import { TestHelpers } from '@awell-health/extensions-core'
-import { generateTestPayload } from '@/tests'
+import { generateTestPayload } from '../../../../../src/tests'
 import { summarizeForm } from '.'
 import { mockFormDefinitionResponse } from './__mocks__/formDefinitionResponse'
 import { mockFormResponseResponse } from './__mocks__/formResponseResponse'
 import { mockPathwayActivitiesResponse } from './__mocks__/pathwayActivitiesResponse'
 import { DISCLAIMER_MSG_FORM } from '../../lib/constants'
-
 
 jest.setTimeout(30000) // Increase timeout to 60 seconds for all tests in this file
 
@@ -67,14 +66,19 @@ describe.skip('summarizeForm - Real LLM calls with mocked Awell SDK', () => {
 
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
-        summary: expect.stringMatching(new RegExp(`${DISCLAIMER_MSG_FORM}.*General Dummy Form.*-`, 's')),
+        summary: expect.stringMatching(
+          new RegExp(`${DISCLAIMER_MSG_FORM}.*General Dummy Form.*-`, 's')
+        ),
       },
     })
 
     const summary = onComplete.mock.calls[0][0].data_points.summary
     expect(summary).toMatch(/General Dummy Form/)
     expect(summary).toMatch(/-/)
-    expect(summary.split('\n').filter((line: string) => line.trim().startsWith('')).length).toBeGreaterThan(1)
+    expect(
+      summary.split('\n').filter((line: string) => line.trim().startsWith(''))
+        .length
+    ).toBeGreaterThan(1)
 
     expect(onError).not.toHaveBeenCalled()
   })
@@ -127,13 +131,15 @@ describe.skip('summarizeForm - Real LLM calls with mocked Awell SDK', () => {
 
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
-        summary: expect.stringMatching(new RegExp(`${DISCLAIMER_MSG_FORM}.*General Dummy Form.*`, 's')),
+        summary: expect.stringMatching(
+          new RegExp(`${DISCLAIMER_MSG_FORM}.*General Dummy Form.*`, 's')
+        ),
       },
     })
 
     const summary = onComplete.mock.calls[0][0].data_points.summary
     expect(summary).toMatch(/General Dummy Form/)
-    expect(summary.split('\n').length).toBeLessThan(10)  // Assuming a paragraph is typically less than 5 lines and givign summe buffer for the title and disclaimer
+    expect(summary.split('\n').length).toBeLessThan(10) // Assuming a paragraph is typically less than 5 lines and givign summe buffer for the title and disclaimer
 
     expect(onError).not.toHaveBeenCalled()
   })
@@ -186,12 +192,12 @@ describe.skip('summarizeForm - Real LLM calls with mocked Awell SDK', () => {
 
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
-        summary: expect.stringMatching(/Avis Important*/)
+        summary: expect.stringMatching(/Avis Important*/),
       },
     })
 
     const summary = onComplete.mock.calls[0][0].data_points.summary
-    expect(summary.split('\n').length).toBeLessThan(10)  // Assuming a paragraph is typically less than 5 lines and giving some buffer for the title and disclaimer
+    expect(summary.split('\n').length).toBeLessThan(10) // Assuming a paragraph is typically less than 5 lines and giving some buffer for the title and disclaimer
 
     // Check if the summary is in French
     expect(summary).toMatch(/Le patient|La patiente/)
@@ -247,7 +253,7 @@ describe.skip('summarizeForm - Real LLM calls with mocked Awell SDK', () => {
 
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
-        summary: expect.stringMatching(/Aviso Importante*/)
+        summary: expect.stringMatching(/Aviso Importante*/),
       },
     })
 
