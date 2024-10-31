@@ -16,21 +16,33 @@ describe('Add identifier to patient', () => {
     /**
      * Patient lookup yields no results, meaning no existing patient has the identifier with the specified system and value
      */
-    const awellSdkMock = {
-      orchestration: {
-        mutation: jest.fn().mockResolvedValue({}),
-        query: jest.fn().mockResolvedValue({
-          patientByIdentifier: {
-            patient: {
-              id: null,
-            },
-          },
-        }),
-      },
-    }
-
     describe('If the current patient already has an identifier with the same system but a different value', () => {
-      test('Should update the existing identifier with the new value', async () => {
+      test('Updates the existing identifier with the new value', async () => {
+        const awellSdkMock = {
+          orchestration: {
+            mutation: jest.fn().mockResolvedValue({}),
+            query: jest.fn().mockResolvedValue({
+              patientByIdentifier: {
+                patient: {
+                  id: null, // No patient found with this identifier
+                },
+              },
+              patient: {
+                patient: {
+                  profile: {
+                    identifier: [
+                      {
+                        system: 'https://www.system.com/',
+                        value: 'existingIdentifierValue', // Existing identifier on current patient
+                      },
+                    ],
+                  },
+                },
+              },
+            }),
+          },
+        }
+
         helpers.awellSdk = jest.fn().mockResolvedValue(awellSdkMock)
 
         // Simulate updating an existing identifier value for a given system
@@ -43,14 +55,6 @@ describe('Add identifier to patient', () => {
             settings: {},
             patient: {
               id: 'some-patient-id',
-              profile: {
-                identifier: [
-                  {
-                    system: 'https://www.system.com/',
-                    value: 'existingIdentifierValue',
-                  },
-                ],
-              },
             },
           }),
           onComplete,
@@ -59,21 +63,41 @@ describe('Add identifier to patient', () => {
         })
 
         expect(onComplete).toHaveBeenCalledWith({
-          events: [
+          events: expect.arrayContaining([
             {
               date: expect.any(String),
               text: {
                 en: 'The patient already had an identifier with system https://www.system.com/ and value existingIdentifierValue. The identifier value has been updated to newIdentifierValue.',
               },
             },
-          ],
+          ]),
         })
         expect(onError).not.toHaveBeenCalled()
       })
     })
 
     describe('If the current patient does not have an identifier with the same system', () => {
-      test('Should add the new identifier with system and value to the patient', async () => {
+      test('Adds the new identifier to the patient', async () => {
+        const awellSdkMock = {
+          orchestration: {
+            mutation: jest.fn().mockResolvedValue({}),
+            query: jest.fn().mockResolvedValue({
+              patientByIdentifier: {
+                patient: {
+                  id: null, // No patient found with this identifier
+                },
+              },
+              patient: {
+                patient: {
+                  profile: {
+                    identifier: [], // No existing identifiers for this patient
+                  },
+                },
+              },
+            }),
+          },
+        }
+
         helpers.awellSdk = jest.fn().mockResolvedValue(awellSdkMock)
 
         // Simulate adding a new identifier system and value
@@ -97,14 +121,14 @@ describe('Add identifier to patient', () => {
         })
 
         expect(onComplete).toHaveBeenCalledWith({
-          events: [
+          events: expect.arrayContaining([
             {
               date: expect.any(String),
               text: {
                 en: 'The identifier with system https://www.system.com/ and value identifierValue has been added to the patient.',
               },
             },
-          ],
+          ]),
         })
         expect(onError).not.toHaveBeenCalled()
       })
@@ -113,24 +137,36 @@ describe('Add identifier to patient', () => {
 
   describe('When a patient with the provided identifier system and value already exists', () => {
     describe('If the existing patient is the current patient', () => {
-      /**
-       * Mocks SDK response to simulate an existing identifier for the current patient
-       */
-      const awellSdkMock = {
-        orchestration: {
-          mutation: jest.fn().mockResolvedValue({}),
-          query: jest.fn().mockResolvedValue({
-            patientByIdentifier: {
-              patient: {
-                id: 'some-patient-id',
-              },
-            },
-          }),
-        },
-      }
-
       describe('If the new identifier value is the same as the existing value', () => {
-        test('Should not make any updates', async () => {
+        test('Makes no updates if the identifier value is unchanged', async () => {
+          /**
+           * Mocks SDK response to simulate an existing identifier for the current patient
+           */
+          const awellSdkMock = {
+            orchestration: {
+              mutation: jest.fn().mockResolvedValue({}),
+              query: jest.fn().mockResolvedValue({
+                patientByIdentifier: {
+                  patient: {
+                    id: 'some-patient-id', // Current patient already has the identifier
+                  },
+                },
+                patient: {
+                  patient: {
+                    profile: {
+                      identifier: [
+                        {
+                          system: 'https://www.system.com/',
+                          value: 'existingIdentifierValue', // Same value as provided
+                        },
+                      ],
+                    },
+                  },
+                },
+              }),
+            },
+          }
+
           helpers.awellSdk = jest.fn().mockResolvedValue(awellSdkMock)
 
           // Simulate no change in identifier value
@@ -143,14 +179,6 @@ describe('Add identifier to patient', () => {
               settings: {},
               patient: {
                 id: 'some-patient-id',
-                profile: {
-                  identifier: [
-                    {
-                      system: 'https://www.system.com/',
-                      value: 'existingIdentifierValue',
-                    },
-                  ],
-                },
               },
             }),
             onComplete,
@@ -159,21 +187,46 @@ describe('Add identifier to patient', () => {
           })
 
           expect(onComplete).toHaveBeenCalledWith({
-            events: [
+            events: expect.arrayContaining([
               {
                 date: expect.any(String),
                 text: {
                   en: 'Patient already had an identifier of the same value and system. No changes were made.',
                 },
               },
-            ],
+            ]),
           })
           expect(onError).not.toHaveBeenCalled()
         })
       })
 
       describe('If the new identifier value is different from the existing value', () => {
-        test('Should update the identifier to the new value', async () => {
+        test('Updates the identifier to the new value', async () => {
+          const awellSdkMock = {
+            orchestration: {
+              mutation: jest.fn().mockResolvedValue({}),
+              query: jest.fn().mockResolvedValue({
+                patientByIdentifier: {
+                  patient: {
+                    id: 'some-patient-id', // Current patient
+                  },
+                },
+                patient: {
+                  patient: {
+                    profile: {
+                      identifier: [
+                        {
+                          system: 'https://www.system.com/',
+                          value: 'existingIdentifierValue', // Old value to be updated
+                        },
+                      ],
+                    },
+                  },
+                },
+              }),
+            },
+          }
+
           helpers.awellSdk = jest.fn().mockResolvedValue(awellSdkMock)
 
           // Simulate updating identifier to a different value
@@ -181,19 +234,11 @@ describe('Add identifier to patient', () => {
             payload: generateTestPayload({
               fields: {
                 system: 'https://www.system.com/',
-                value: 'newIdentifierValue', // Different from current value
+                value: 'newIdentifierValue', // New value for identifier
               },
               settings: {},
               patient: {
                 id: 'some-patient-id',
-                profile: {
-                  identifier: [
-                    {
-                      system: 'https://www.system.com/',
-                      value: 'existingIdentifierValue',
-                    },
-                  ],
-                },
               },
             }),
             onComplete,
@@ -202,14 +247,14 @@ describe('Add identifier to patient', () => {
           })
 
           expect(onComplete).toHaveBeenCalledWith({
-            events: [
+            events: expect.arrayContaining([
               {
                 date: expect.any(String),
                 text: {
                   en: 'The patient already had an identifier with system https://www.system.com/ and value existingIdentifierValue. The identifier value has been updated to newIdentifierValue.',
                 },
               },
-            ],
+            ]),
           })
           expect(onError).not.toHaveBeenCalled()
         })
@@ -217,7 +262,7 @@ describe('Add identifier to patient', () => {
     })
 
     describe('If the existing patient is different from the current patient', () => {
-      test('Should throw an error', async () => {
+      test('Returns an error if another patient has the identifier', async () => {
         /**
          * Mocks SDK response to simulate an identifier conflict with another patient
          */
@@ -227,7 +272,7 @@ describe('Add identifier to patient', () => {
             query: jest.fn().mockResolvedValue({
               patientByIdentifier: {
                 patient: {
-                  id: 'some-patient-id',
+                  id: 'some-patient-id', // Different patient already has this identifier
                 },
               },
             }),
@@ -269,7 +314,7 @@ describe('Add identifier to patient', () => {
   })
 
   describe('When handling multiple identifiers for the patient', () => {
-    test('Should update an existing identifier without removing others', async () => {
+    test('Updates an existing identifier while retaining others', async () => {
       // Mock SDK response for a patient with multiple identifiers
       const awellSdkMock = {
         orchestration: {
@@ -278,6 +323,26 @@ describe('Add identifier to patient', () => {
             patientByIdentifier: {
               patient: {
                 id: 'some-patient-id',
+              },
+            },
+            patient: {
+              patient: {
+                profile: {
+                  identifier: [
+                    {
+                      system: 'https://www.system-1.com/',
+                      value: 'value-1', // Retained identifier
+                    },
+                    {
+                      system: 'https://www.system-2.com/',
+                      value: 'value-2', // Identifier to be updated
+                    },
+                    {
+                      system: 'https://www.system-3.com/',
+                      value: 'value-3', // Retained identifier
+                    },
+                  ],
+                },
               },
             },
           }),
@@ -296,22 +361,6 @@ describe('Add identifier to patient', () => {
           settings: {},
           patient: {
             id: 'some-patient-id',
-            profile: {
-              identifier: [
-                {
-                  system: 'https://www.system-1.com/',
-                  value: 'value-1',
-                },
-                {
-                  system: 'https://www.system-2.com/',
-                  value: 'value-2', // Identifier to update
-                },
-                {
-                  system: 'https://www.system-3.com/',
-                  value: 'value-3',
-                },
-              ],
-            },
           },
         }),
         onComplete,
@@ -347,7 +396,7 @@ describe('Add identifier to patient', () => {
       })
     })
 
-    test('Should add a new identifier without removing others', async () => {
+    test('Adds a new identifier while retaining existing ones', async () => {
       // Mock SDK response for adding an identifier
       const awellSdkMock = {
         orchestration: {
@@ -356,6 +405,18 @@ describe('Add identifier to patient', () => {
             patientByIdentifier: {
               patient: {
                 id: 'some-patient-id',
+              },
+            },
+            patient: {
+              patient: {
+                profile: {
+                  identifier: [
+                    {
+                      system: 'https://www.system-1.com/',
+                      value: 'value-1', // Retained identifier
+                    },
+                  ],
+                },
               },
             },
           }),
@@ -374,14 +435,6 @@ describe('Add identifier to patient', () => {
           settings: {},
           patient: {
             id: 'some-patient-id',
-            profile: {
-              identifier: [
-                {
-                  system: 'https://www.system-1.com/',
-                  value: 'value-1',
-                },
-              ],
-            },
           },
         }),
         onComplete,

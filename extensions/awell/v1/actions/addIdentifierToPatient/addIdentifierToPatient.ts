@@ -58,8 +58,26 @@ export const addIdentifierToPatient: Action<typeof fields, typeof settings> = {
       return
     }
 
+    // Fetch from the API, had inconsitent results with using patient.payload (e.g. missing identifiers)
+    const currentPatientData = await sdk.orchestration.query({
+      patient: {
+        __args: {
+          id: currentPatient.id,
+        },
+        patient: {
+          profile: {
+            identifier: {
+              system: true,
+              value: true,
+            },
+          },
+        },
+      },
+    })
+
     // Filter identifiers, excluding any with the current system
-    const existingIdentifiers = currentPatient?.profile?.identifier ?? []
+    const existingIdentifiers =
+      currentPatientData?.patient?.patient?.profile?.identifier ?? []
     const otherIdentifiers = existingIdentifiers.filter(
       (id) => id.system !== system
     )
@@ -83,22 +101,33 @@ export const addIdentifierToPatient: Action<typeof fields, typeof settings> = {
       return
     }
 
+    const newIdentifiers = [...otherIdentifiers, { system, value }]
+
     // Perform update or add the new identifier
-    await sdk.orchestration.mutation({
+    const result = await sdk.orchestration.mutation({
       updatePatient: {
         __args: {
           input: {
             patient_id: currentPatient.id,
             profile: {
-              identifier: [...otherIdentifiers, { system, value }],
+              identifier: newIdentifiers,
             },
           },
         },
         patient: {
           id: true,
+          profile: {
+            identifier: {
+              system: true,
+              value: true,
+            },
+          },
         },
       },
     })
+
+    const updatedIdentifiers =
+      result?.updatePatient?.patient?.profile?.identifier ?? []
 
     await onComplete({
       events: [
@@ -110,6 +139,26 @@ export const addIdentifierToPatient: Action<typeof fields, typeof settings> = {
                   previousIdentifier?.value
                 )}. The identifier value has been updated to ${value}.`
               : `The identifier with system ${system} and value ${value} has been added to the patient.`,
+          },
+        },
+        {
+          date: new Date().toISOString(),
+          text: {
+            en: `Old list of identifiers: ${
+              existingIdentifiers.length === 0
+                ? 'None'
+                : `${existingIdentifiers
+                    .map((id) => `${id.system}|${id.value}`)
+                    .join(';')}`
+            }`,
+          },
+        },
+        {
+          date: new Date().toISOString(),
+          text: {
+            en: `Updated list of identifiers: ${updatedIdentifiers
+              .map((id) => `${id.system}|${id.value}`)
+              .join(';')}`,
           },
         },
       ],
