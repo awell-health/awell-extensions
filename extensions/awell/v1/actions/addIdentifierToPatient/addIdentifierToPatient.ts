@@ -1,7 +1,12 @@
 import { type Action } from '@awell-health/extensions-core'
 import { type settings } from '../../../settings'
 import { Category, validate } from '@awell-health/extensions-core'
-import { fields, dataPoints, FieldsValidationSchema } from './config'
+import {
+  fields,
+  dataPoints,
+  FieldsValidationSchema,
+  PatientValidationSchema,
+} from './config'
 import { z } from 'zod'
 import { isEmpty } from 'lodash'
 
@@ -12,21 +17,26 @@ export const addIdentifierToPatient: Action<typeof fields, typeof settings> = {
   description: "Add a new identifier to the patient's profile",
   fields,
   dataPoints,
-  previewable: false, // We don't have patients in Preview, only cases.
+  previewable: false, // Patients are not available in Preview; only cases.
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
+    // Validate and extract the `system` and `value` fields and `currentPatientId` from the payload
     const {
       fields: { system, value },
+      patient: { id: currentPatientId },
     } = validate({
       schema: z.object({
         fields: FieldsValidationSchema,
+        patient: PatientValidationSchema,
       }),
       payload,
     })
 
-    const currentPatient = payload.patient
-
     const sdk = await helpers.awellSdk()
 
+    /**
+     * Check if a patient with the same identifier system and value already exists.
+     * This is necessary because identifier system-value pairs must be unique across all patients.
+     */
     const {
       patientByIdentifier: { patient: existingPatient },
     } = await sdk.orchestration.query({
@@ -40,8 +50,12 @@ export const addIdentifierToPatient: Action<typeof fields, typeof settings> = {
 
     const patientExists = !isEmpty(existingPatient?.id)
     const patientLookUpIsCurrentPatient =
-      existingPatient?.id === currentPatient.id
+      existingPatient?.id === currentPatientId
 
+    /**
+     * If a different patient already has the provided identifier, we cannot assign this identifier
+     * to the current patient, as each identifier system-value pair must be unique.
+     */
     if (patientExists && !patientLookUpIsCurrentPatient) {
       await onError({
         events: [
@@ -58,11 +72,15 @@ export const addIdentifierToPatient: Action<typeof fields, typeof settings> = {
       return
     }
 
-    // Fetch from the API, had inconsitent results with using patient.payload (e.g. missing identifiers)
+    /**
+     * Although TypeScript indicates that `payload.patient.profile.identifier` should be accessible within `onEvent`,
+     * tests in the Dev environment show that `identifier` data is not reliably available on the extension server.
+     * To ensure accurate data, we directly query the API to retrieve the patient's current identifiers.
+     */
     const currentPatientData = await sdk.orchestration.query({
       patient: {
         __args: {
-          id: currentPatient.id,
+          id: currentPatientId,
         },
         patient: {
           profile: {
@@ -75,18 +93,20 @@ export const addIdentifierToPatient: Action<typeof fields, typeof settings> = {
       },
     })
 
-    // Filter identifiers, excluding any with the current system
+    // Retrieve existing identifiers, excluding any with the specified system.
     const existingIdentifiers =
       currentPatientData?.patient?.patient?.profile?.identifier ?? []
-    const otherIdentifiers = existingIdentifiers.filter(
-      (id) => id.system !== system
-    )
+    const existingIdentifierExcludingTheOneToUpdate =
+      existingIdentifiers.filter((id) => id.system !== system)
 
     const previousIdentifier = existingIdentifiers.find(
       (id) => id.system === system
     )
-    const isUpdatingIdentifier = Boolean(previousIdentifier)
+    const isUpdatingIdentifier = !isEmpty(previousIdentifier)
 
+    /**
+     * If the patient already has this identifier system with the same value, we skip the update to avoid redundancy.
+     */
     if (isUpdatingIdentifier && previousIdentifier?.value === value) {
       await onComplete({
         events: [
@@ -101,14 +121,21 @@ export const addIdentifierToPatient: Action<typeof fields, typeof settings> = {
       return
     }
 
-    const newIdentifiers = [...otherIdentifiers, { system, value }]
+    // Prepare the updated list of identifiers, including the new or updated identifier.
+    const newIdentifiers = [
+      ...existingIdentifierExcludingTheOneToUpdate,
+      { system, value },
+    ]
 
-    // Perform update or add the new identifier
+    /**
+     * Perform the update to add or update the identifier on the patient's profile.
+     * We retrieve the updated identifiers from the API response to ensure we log the final state.
+     */
     const result = await sdk.orchestration.mutation({
       updatePatient: {
         __args: {
           input: {
-            patient_id: currentPatient.id,
+            patient_id: currentPatientId,
             profile: {
               identifier: newIdentifiers,
             },
@@ -129,6 +156,7 @@ export const addIdentifierToPatient: Action<typeof fields, typeof settings> = {
     const updatedIdentifiers =
       result?.updatePatient?.patient?.profile?.identifier ?? []
 
+    // Log the result, including the old and new lists of identifiers.
     await onComplete({
       events: [
         {
