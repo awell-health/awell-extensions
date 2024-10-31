@@ -1,13 +1,9 @@
 import { type Action } from '@awell-health/extensions-core'
 import { type settings } from '../../../settings'
 import { Category, validate } from '@awell-health/extensions-core'
-import {
-  fields,
-  dataPoints,
-  FieldsValidationSchema,
-  PatientValidationSchema,
-} from './config'
+import { fields, dataPoints, FieldsValidationSchema } from './config'
 import { z } from 'zod'
+import { isEmpty } from 'lodash'
 
 export const addIdentifierToPatient: Action<typeof fields, typeof settings> = {
   key: 'addIdentifierToPatient',
@@ -20,14 +16,14 @@ export const addIdentifierToPatient: Action<typeof fields, typeof settings> = {
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
     const {
       fields: { system, value },
-      patient: { id: patientId },
     } = validate({
       schema: z.object({
         fields: FieldsValidationSchema,
-        patient: PatientValidationSchema,
       }),
       payload,
     })
+
+    const currentPatient = payload.patient
 
     const sdk = await helpers.awellSdk()
 
@@ -38,15 +34,15 @@ export const addIdentifierToPatient: Action<typeof fields, typeof settings> = {
         __args: { system, value },
         patient: {
           id: true,
-          profile: { identifier: { system: true, value: true } },
         },
       },
     })
 
-    const patientExists = Boolean(existingPatient?.id)
-    const isCurrentPatient = patientExists && existingPatient?.id === patientId
+    const patientExists = !isEmpty(existingPatient?.id)
+    const patientLookUpIsCurrentPatient =
+      existingPatient?.id === currentPatient.id
 
-    if (patientExists && !isCurrentPatient) {
+    if (patientExists && !patientLookUpIsCurrentPatient) {
       await onError({
         events: [
           {
@@ -63,7 +59,7 @@ export const addIdentifierToPatient: Action<typeof fields, typeof settings> = {
     }
 
     // Filter identifiers, excluding any with the current system
-    const existingIdentifiers = existingPatient?.profile?.identifier ?? []
+    const existingIdentifiers = currentPatient?.profile?.identifier ?? []
     const otherIdentifiers = existingIdentifiers.filter(
       (id) => id.system !== system
     )
@@ -92,13 +88,15 @@ export const addIdentifierToPatient: Action<typeof fields, typeof settings> = {
       updatePatient: {
         __args: {
           input: {
-            patient_id: patientId,
+            patient_id: currentPatient.id,
             profile: {
               identifier: [...otherIdentifiers, { system, value }],
             },
           },
         },
-        patient: { id: true },
+        patient: {
+          id: true,
+        },
       },
     })
 
