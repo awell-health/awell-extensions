@@ -101,4 +101,38 @@ describe('pushFormResponseToHealthie', () => {
       events: [],
     })
   })
+
+  test('Should call onComplete with frozen set', async () => {
+    await action.onEvent({
+      payload: {
+        pathway: {
+          id: '5eN4qWbxZGSA',
+          definition_id: 'whatever',
+        },
+        activity: { id: 'X74HeDQ4N0gtdaSEuzF8s' },
+        patient: { id: 'whatever' },
+        fields: {
+          healthiePatientId: '357883',
+          healthieFormId: '1686361',
+          freezeResponse: true,
+        },
+        settings: {
+          apiUrl: 'https://staging-api.gethealthie.com/graphql',
+          apiKey: 'apiKey',
+        },
+      },
+      onComplete,
+      onError,
+      helpers,
+    })
+
+    expect(mockedHealthieSdk).toHaveBeenCalled()
+    expect(helpers.awellSdk).toHaveBeenCalledTimes(1)
+    expect(onComplete).toHaveBeenCalledWith({
+      data_points: {
+        formAnswerGroupId: '99999',
+      },
+      events: [],
+    })
+  })
 })

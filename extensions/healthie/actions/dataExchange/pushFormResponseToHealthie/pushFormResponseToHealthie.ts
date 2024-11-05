@@ -4,7 +4,7 @@ import { validatePayloadAndCreateSdk } from '../../../lib/sdk/validatePayloadAnd
 import { type settings } from '../../../settings'
 import { datapoints, fields, FieldsValidationSchema } from './config'
 import { getSubActivityLogs } from './logs'
-import { isEmpty } from 'lodash'
+import { defaultTo, isEmpty } from 'lodash'
 import {
   HealthieFormResponseNotCreated,
   parseHealthieFormResponseNotCreatedError,
@@ -60,12 +60,16 @@ export const pushFormResponseToHealthie: Action<
         awellFormResponse: formResponse,
       })
 
+    // indicates whether to make form values editable in Healthie
+    const frozen = defaultTo(fields.freezeResponse, false)
+
     try {
       const res = await healthieSdk.client.mutation({
         createFormAnswerGroup: {
           __args: {
             input: {
               finished: true,
+              frozen,
               custom_module_form_id: fields.healthieFormId,
               user_id: fields.healthiePatientId,
               form_answers: healthieFormAnswerInputs.map((input) => ({
