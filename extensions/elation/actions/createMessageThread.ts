@@ -9,22 +9,49 @@ import { Category } from '@awell-health/extensions-core'
 import { type settings } from '../settings'
 import { makeAPIClient } from '../client'
 import { fromZodError } from 'zod-validation-error'
-import { AxiosError } from 'axios'
 import { messageThreadSchema } from '../validation/messageThread.zod'
 
-export const fields = {
+const fields = {
   patientId: {
     id: 'patientId',
     label: 'Patient ID',
-    description: 'The patient associated with this message thread',
+    description: 'The patient chart for which the thread is about',
+    type: FieldType.NUMERIC,
+    required: true,
+  },
+  senderId: {
+    id: 'senderId',
+    label: 'Sender ID',
+    description: 'The ID of the user initiating the message thread',
     type: FieldType.NUMERIC,
     required: true,
   },
   practiceId: {
     id: 'practiceId',
     label: 'Practice ID',
-    description: 'The practice associated with this message thread',
+    description: 'The practice associated with the patient chart',
     type: FieldType.NUMERIC,
+    required: true,
+  },
+  documentDate: {
+    id: 'documentDate',
+    label: 'Document Date',
+    description: 'Date associated with the document (ISO format)',
+    type: FieldType.DATE,
+    required: true,
+  },
+  chartDate: {
+    id: 'chartDate',
+    label: 'Chart Date',
+    description: 'Date of the patient’s chart (ISO format)',
+    type: FieldType.DATE,
+    required: true,
+  },
+  messageBody: {
+    id: 'messageBody',
+    label: 'Message Body',
+    description: 'The content of the initial message in the thread',
+    type: FieldType.STRING,
     required: true,
   },
   isUrgent: {
@@ -32,13 +59,6 @@ export const fields = {
     label: 'Urgent',
     description: 'Marks the message thread as urgent if true',
     type: FieldType.BOOLEAN,
-    required: false,
-  },
-  messageBody: {
-    id: 'messageBody',
-    label: 'Message Body',
-    description: 'The content of the initial message in the thread',
-    type: FieldType.STRING,
     required: true,
   },
 } satisfies Record<string, Field>
@@ -64,13 +84,30 @@ export const createMessageThread: Action<
   dataPoints,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
     try {
-      const { patientId, practiceId, isUrgent, messageBody } = payload.fields
+      const {
+        patientId,
+        senderId,
+        practiceId,
+        documentDate,
+        chartDate,
+        messageBody,
+        isUrgent,
+      } = payload.fields
 
       const messageThread = messageThreadSchema.parse({
         patient: patientId,
+        sender: senderId,
         practice: practiceId,
+        document_date: documentDate,
+        chart_date: chartDate,
         is_urgent: isUrgent,
-        messages: [{ body: messageBody }],
+        messages: [
+          {
+            body: messageBody,
+            send_date: new Date().toISOString(),
+            sender: senderId,
+          },
+        ],
       })
 
       const api = makeAPIClient(payload.settings)
@@ -92,23 +129,6 @@ export const createMessageThread: Action<
               error: {
                 category: 'SERVER_ERROR',
                 message: error.message,
-              },
-            },
-          ],
-        })
-      } else if (err instanceof AxiosError) {
-        await onError({
-          events: [
-            {
-              date: new Date().toISOString(),
-              text: {
-                en: `${err.status ?? '(no status code)'} Error: ${err.message}`,
-              },
-              error: {
-                category: 'BAD_REQUEST',
-                message: `${err.status ?? '(no status code)'} Error: ${
-                  err.message
-                }`,
               },
             },
           ],

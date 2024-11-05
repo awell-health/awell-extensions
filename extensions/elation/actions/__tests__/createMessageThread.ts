@@ -26,6 +26,8 @@ describe('createMessageThread action', () => {
 
   const VALID_PATIENT_ID = 123456
   const VALID_PRACTICE_ID = 654321
+  const VALID_SENDER_ID = 7891011
+  const VALID_DATE = '2024-11-05' // Example date for required fields
 
   beforeEach(() => {
     onComplete.mockClear()
@@ -36,6 +38,9 @@ describe('createMessageThread action', () => {
     const payload = withFields({
       patientId: VALID_PATIENT_ID,
       practiceId: VALID_PRACTICE_ID,
+      senderId: VALID_SENDER_ID,
+      documentDate: VALID_DATE,
+      chartDate: VALID_DATE,
       isUrgent: true,
       messageBody: 'Initial message in the thread',
     })
@@ -54,6 +59,9 @@ describe('createMessageThread action', () => {
     const payload = withFields({
       patientId: 'invalid_id' as unknown as number,
       practiceId: VALID_PRACTICE_ID,
+      senderId: VALID_SENDER_ID,
+      documentDate: VALID_DATE,
+      chartDate: VALID_DATE,
       isUrgent: true,
       messageBody: 'Initial message in the thread',
     })
@@ -73,6 +81,9 @@ describe('createMessageThread action', () => {
     const payload = withFields({
       patientId: VALID_PATIENT_ID,
       practiceId: VALID_PRACTICE_ID,
+      senderId: VALID_SENDER_ID,
+      documentDate: VALID_DATE,
+      chartDate: VALID_DATE,
       isUrgent: true,
       messageBody: undefined as unknown as string,
     })
@@ -88,23 +99,6 @@ describe('createMessageThread action', () => {
     )
   })
 
-  it('should create a non-urgent message thread if isUrgent is missing', async () => {
-    const payload = withFields({
-      patientId: VALID_PATIENT_ID,
-      practiceId: VALID_PRACTICE_ID,
-      messageBody: 'Initial message in the thread',
-    })
-
-    await createMessageThread.onActivityCreated!(payload, onComplete, onError)
-
-    expect(onComplete).toHaveBeenCalledWith({
-      data_points: {
-        messageThreadId: '1',
-      },
-    })
-    expect(onError).not.toHaveBeenCalled()
-  })
-
   it('should handle API error gracefully', async () => {
     mockAPIClient.mockImplementationOnce(() => ({
       createMessageThread: jest.fn(async () => {
@@ -115,6 +109,9 @@ describe('createMessageThread action', () => {
     const payload = withFields({
       patientId: VALID_PATIENT_ID,
       practiceId: VALID_PRACTICE_ID,
+      senderId: VALID_SENDER_ID,
+      documentDate: VALID_DATE,
+      chartDate: VALID_DATE,
       isUrgent: true,
       messageBody: 'Initial message in the thread',
     })
