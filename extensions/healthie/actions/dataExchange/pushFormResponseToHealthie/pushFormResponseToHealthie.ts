@@ -66,6 +66,7 @@ export const pushFormResponseToHealthie: Action<
           __args: {
             input: {
               finished: true,
+              frozen: fields.freezeResponse,
               custom_module_form_id: fields.healthieFormId,
               user_id: fields.healthiePatientId,
               form_answers: healthieFormAnswerInputs.map((input) => ({
