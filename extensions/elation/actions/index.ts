@@ -12,6 +12,7 @@ import { deleteNonVisitNote } from './deleteNonVisitNote'
 import { getPhysician } from './getPhysician'
 import { postLetter } from './postLetter'
 import { createLabOrder } from './createLabOrder'
+import { createMessageThread } from './createMessageThread'
 
 export const actions = {
   getPatient,
@@ -28,4 +29,5 @@ export const actions = {
   deleteNonVisitNote,
   postLetter,
   createLabOrder,
+  createMessageThread,
 }
