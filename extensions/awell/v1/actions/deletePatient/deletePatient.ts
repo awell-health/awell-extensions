@@ -4,6 +4,7 @@ import { Category, validate } from '@awell-health/extensions-core'
 import { fields, PatientValidationSchema } from './config'
 import { z } from 'zod'
 import AwellSdk from '../../sdk/awellSdk'
+import { addActivityEventLog } from '../../../../../src/lib/awell/addEventLog'
 
 export const deletePatient: Action<typeof fields, typeof settings> = {
   key: 'deletePatient',
@@ -34,6 +35,12 @@ export const deletePatient: Action<typeof fields, typeof settings> = {
       patient_id: patientId,
     })
 
-    await onComplete()
+    await onComplete({
+      events: [
+        addActivityEventLog({
+          message: `Patient with id ${patientId} was deleted.`,
+        }),
+      ],
+    })
   },
 }

@@ -4,6 +4,7 @@ import { Category, validate } from '@awell-health/extensions-core'
 import { fields, PatientValidationSchema, dataPoints } from './config'
 import { z } from 'zod'
 import AwellSdk from '../../sdk/awellSdk'
+import { addActivityEventLog } from '../../../../../src/lib/awell/addEventLog'
 
 export const searchPatientsByPatientCode: Action<
   typeof fields,
@@ -31,6 +32,7 @@ export const searchPatientsByPatientCode: Action<
     })
     const awellSdk = await helpers.awellSdk()
     const sdk = new AwellSdk({
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       apiUrl: awellSdk.apiUrl!,
       apiKey: awellSdk.apiKey,
     })
@@ -60,6 +62,13 @@ export const searchPatientsByPatientCode: Action<
         numberOfPatientsFound: String(numberOfPatientsFound),
         awellPatientIds,
       },
+      events: [
+        addActivityEventLog({
+          message: patientAlreadyExists
+            ? `Patient with patient code ${patient_code} already exists. Patient IDs: ${awellPatientIds}`
+            : `Patient with patient code ${patient_code} does not exists yet.`,
+        }),
+      ],
     })
   },
 }

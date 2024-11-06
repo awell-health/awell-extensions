@@ -38,6 +38,7 @@ describe('Salesforce - Create Lead', () => {
       data_points: {
         createdLeadId: String(mockCreateRecordResponse.id),
       },
+      events: expect.any(Array),
     })
   })
 })

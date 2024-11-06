@@ -2,6 +2,7 @@ import { Category, type Action } from '@awell-health/extensions-core'
 import { type settings } from '../../settings'
 import { fields, dataPoints, FieldsValidationSchema } from './config'
 import { validatePayloadAndCreateClient } from '../../helpers'
+import { addActivityEventLog } from '../../../../src/lib/awell/addEventLog'
 
 export const triggerFlow: Action<
   typeof fields,
@@ -34,6 +35,11 @@ export const triggerFlow: Action<
           interactionId: res.interaction_id,
           flowVersionId: res.flow_version_id,
         },
+        events: [
+          addActivityEventLog({
+            message: `Flow started in TalkDesk. Interaction ID: ${res.interaction_id}, Flow version ID: ${res.flow_version_id}.`,
+          }),
+        ],
       })
     }
   },

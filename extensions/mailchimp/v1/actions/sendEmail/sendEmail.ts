@@ -1,6 +1,6 @@
 import { type Action } from '@awell-health/extensions-core'
 import { fields } from './config'
-import { Category , validate } from '@awell-health/extensions-core'
+import { Category, validate } from '@awell-health/extensions-core'
 import { SettingsValidationSchema, type settings } from '../../../settings'
 import { FieldsValidationSchema } from './config/fields'
 import { fromZodError } from 'zod-validation-error'

@@ -8,6 +8,7 @@ import {
   dataPoints,
 } from './config'
 import { z } from 'zod'
+import { addActivityEventLog } from '../../../../../src/lib/awell/addEventLog'
 
 export const startCareFlow: Action<typeof fields, typeof settings> = {
   key: 'startCareFlow',
@@ -49,6 +50,11 @@ export const startCareFlow: Action<typeof fields, typeof settings> = {
       data_points: {
         careFlowId,
       },
+      events: [
+        addActivityEventLog({
+          message: `Care flow started, instance ID: ${careFlowId}.`,
+        }),
+      ],
     })
   },
 }

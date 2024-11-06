@@ -34,6 +34,7 @@ describe('send fax action', () => {
       data_points: {
         faxId: 'asdf',
       },
+      events: expect.any(Array),
     })
     expect(onError).not.toHaveBeenCalled()
   })

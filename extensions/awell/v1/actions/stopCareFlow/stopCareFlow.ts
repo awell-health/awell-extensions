@@ -7,6 +7,7 @@ import {
   FieldsValidationSchema,
 } from './config'
 import { z } from 'zod'
+import { addActivityEventLog } from '../../../../../src/lib/awell/addEventLog'
 
 export const stopCareFlow: Action<typeof fields, typeof settings> = {
   key: 'stopCareFlow',
@@ -37,10 +38,16 @@ export const stopCareFlow: Action<typeof fields, typeof settings> = {
           },
         },
         code: true,
-        success: true
+        success: true,
       },
     })
 
-    await onComplete()
+    await onComplete({
+      events: [
+        addActivityEventLog({
+          message: `Care flow successfully stopped.`,
+        }),
+      ],
+    })
   },
 }
