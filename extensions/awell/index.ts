@@ -7,6 +7,7 @@ import {
   updateBaselineInfo,
   addIdentifierToPatient,
   getPatientByIdentifier,
+  startHostedPagesSession,
 } from './v1/actions'
 import { type Extension } from '@awell-health/extensions-core'
 import { settings } from './settings'
@@ -33,6 +34,7 @@ export const Awell: Extension = {
     searchPatientsByPatientCode,
     isPatientEnrolledInCareFlow,
     updateBaselineInfo,
+    startHostedPagesSession,
     // deletePatient, Deleting the patient who is currently enrolled in the pathway seems dangerous
   },
   webhooks,
