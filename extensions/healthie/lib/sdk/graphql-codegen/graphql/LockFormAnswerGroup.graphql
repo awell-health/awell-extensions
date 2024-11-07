@@ -1,0 +1,12 @@
+mutation lockFormAnswerGroup($input: lockFormAnswerGroupInput!) {
+  lockFormAnswerGroup(input: $input) {
+    form_answer_group {
+      id
+      locked_at
+    }
+    messages {
+      field
+      message
+    }
+  }
+}
