@@ -83,7 +83,6 @@ describe('pushFormResponsesToHealthie', () => {
         fields: {
           healthiePatientId: '357883',
           healthieFormId: '1686361',
-          freezeResponse: false,
         },
         settings: {
           apiUrl: 'https://staging-api.gethealthie.com/graphql',
