@@ -4,7 +4,6 @@ import { Category, validate } from '@awell-health/extensions-core'
 import { fields, dataPoints, FieldsValidationSchema } from './config'
 import { z } from 'zod'
 import { addActivityEventLog } from '../../../../../src/lib/awell/addEventLog'
-import { AwellSdk } from '@awell-health/awell-sdk'
 
 const delay = async (ms: number): Promise<void> => {
   await new Promise<void>((resolve) => setTimeout(resolve, ms))
@@ -33,11 +32,7 @@ export const startHostedPagesSession: Action<typeof fields, typeof settings> = {
 
     const normalizedStakeholder = stakeholder.toLowerCase()
 
-    const sdk = new AwellSdk({
-      environment: 'development',
-      apiKey: 'az0XnXmB75kX9XfP9ZTyehtVIpXhqFQt',
-    })
-    // const sdk = await helpers.awellSdk()
+    const sdk = await helpers.awellSdk()
 
     const pathwayRes = await sdk.orchestration.query({
       pathway: {
