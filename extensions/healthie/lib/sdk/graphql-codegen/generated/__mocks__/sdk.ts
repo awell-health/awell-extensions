@@ -123,6 +123,11 @@ export const mockGetSdkReturn = {
       data: {},
     }
   }),
+  lockFormAnswerGroup: jest.fn((args) => {
+    return {
+      data: {},
+    }
+  }),
   createFormCompletionRequest: jest.fn((args) => {
     return {
       data: {},
