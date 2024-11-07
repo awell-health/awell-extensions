@@ -4,6 +4,7 @@ import { Category, validate } from '@awell-health/extensions-core'
 import { fields, dataPoints, FieldsValidationSchema } from './config'
 import { z } from 'zod'
 import { addActivityEventLog } from '../../../../../src/lib/awell/addEventLog'
+import { AwellSdk } from '@awell-health/awell-sdk'
 
 const delay = async (ms: number): Promise<void> => {
   await new Promise<void>((resolve) => setTimeout(resolve, ms))
@@ -16,7 +17,7 @@ export const startHostedPagesSession: Action<typeof fields, typeof settings> = {
   description: 'Start a new Hosted Pages session for a given stakeholder',
   fields,
   dataPoints,
-  previewable: false, // Patients are not available in Preview; only cases.
+  previewable: false,
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
     const {
       fields: { careFlowId, stakeholder },
@@ -32,12 +33,16 @@ export const startHostedPagesSession: Action<typeof fields, typeof settings> = {
 
     const normalizedStakeholder = stakeholder.toLowerCase()
 
-    const sdk = await helpers.awellSdk()
+    const sdk = new AwellSdk({
+      environment: 'development',
+      apiKey: 'az0XnXmB75kX9XfP9ZTyehtVIpXhqFQt',
+    })
+    // const sdk = await helpers.awellSdk()
 
     const pathwayRes = await sdk.orchestration.query({
       pathway: {
         __args: {
-          id: payload.pathway.id,
+          id: careFlowId,
         },
         pathway: {
           release_id: true,
@@ -47,14 +52,14 @@ export const startHostedPagesSession: Action<typeof fields, typeof settings> = {
 
     const releaseId = pathwayRes?.pathway.pathway?.release_id
 
-    const getStakeholderId = async (): Promise<string> => {
-      if (releaseId === undefined)
-        throw new Error('Could not retrieve the release ID for this care flow.')
+    if (releaseId === undefined)
+      throw new Error('Could not retrieve the release ID for this care flow.')
 
+    const getStakeholderId = async (releaseId: string): Promise<string> => {
       const stakeholdersInRelease = await sdk.orchestration.query({
         stakeholdersByReleaseIds: {
           __args: {
-            release_ids: [],
+            release_ids: [releaseId],
           },
           success: true,
           stakeholders: {
@@ -66,6 +71,8 @@ export const startHostedPagesSession: Action<typeof fields, typeof settings> = {
           },
         },
       })
+
+      console.log(stakeholdersInRelease)
 
       const stakeholderMatchId =
         stakeholdersInRelease.stakeholdersByReleaseIds.stakeholders.find(
@@ -81,7 +88,7 @@ export const startHostedPagesSession: Action<typeof fields, typeof settings> = {
       return stakeholderMatchId
     }
 
-    const stakeholderId = await getStakeholderId()
+    const stakeholderId = await getStakeholderId(releaseId)
 
     const res = await sdk.orchestration.mutation({
       startHostedActivitySession: {
