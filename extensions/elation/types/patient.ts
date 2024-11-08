@@ -29,6 +29,7 @@ export interface PatientResponse extends PatientInput {
   created_date: string
   deleted_date?: string | null
   merged_into_chart?: number | null
+  tags: string[] | null
 }
 
 interface Phone extends z.infer<typeof phoneSchema> {

@@ -10,7 +10,7 @@ import { Category } from '@awell-health/extensions-core'
 import { type settings } from '../settings'
 import { makeAPIClient } from '../client'
 import { updatePatientSchema } from '../validation/patient.zod'
-import { isEmpty, isNil } from 'lodash'
+import { isEmpty, isNil, union } from 'lodash'
 
 const fields = {
   patientId: {
@@ -152,6 +152,13 @@ const fields = {
       'The status of the patient (active, deceased, inactive, prospect)',
     type: FieldType.STRING,
   },
+  tags: {
+    id: 'tags',
+    label: 'Tags',
+    description:
+      'The tags associated with the patient. Separate multiple tags with a comma.',
+    type: FieldType.STRING,
+  },
 } satisfies Record<string, Field>
 
 const dataPoints = {} satisfies Record<string, DataPointDefinition>
@@ -184,6 +191,7 @@ export const updatePatient: Action<
       primaryPhysicianId,
       sexualOrientation,
       status,
+      tags,
       ...fields
     } = payload.fields
 
@@ -223,10 +231,23 @@ export const updatePatient: Action<
         }
         return acc
       },
-      {},
+      {}
     )
 
     const api = makeAPIClient(payload.settings)
+    if (!isNil(tags)) {
+      const formattedTags = fields.tags.split(',').map((tag) => tag.trim())
+      // we need to fetch current information because we do not want to override existing tags
+      const currentPatientInfo = await api.getPatient(id)
+
+      const currentTags = !isNil(currentPatientInfo.tags)
+        ? currentPatientInfo.tags
+        : []
+
+      // get a unique list of tags
+      updatedPatientFields.tags = union(currentTags, formattedTags)
+    }
+
     await api.updatePatient(id, updatedPatientFields)
     await onComplete()
   },
