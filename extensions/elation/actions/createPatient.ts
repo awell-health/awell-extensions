@@ -156,6 +156,13 @@ const fields = {
     description: 'The previous last name of the patient',
     type: FieldType.STRING,
   },
+  tags: {
+    id: 'tags',
+    label: 'Tags',
+    description:
+      'The tags associated with the patient. Separate multiple tags with a comma (max 10 per patient).',
+    type: FieldType.STRING,
+  },
 } satisfies Record<string, Field>
 
 const dataPoints = {
@@ -201,6 +208,7 @@ export const createPatient: Action<
         ethnicity,
         race,
         notes,
+        tags,
       } = payload.fields
 
       const patientEmail =
@@ -209,6 +217,10 @@ export const createPatient: Action<
         isNil(mobilePhone) || isEmpty(mobilePhone)
           ? undefined
           : [{ phone: mobilePhone, phone_type: 'Mobile' }]
+      const patientTags =
+        isNil(tags) || isEmpty(tags)
+          ? undefined
+          : tags.split(',').map((tag) => tag.trim())
 
       const patient = patientSchema.parse({
         first_name: firstName,
@@ -232,6 +244,7 @@ export const createPatient: Action<
         ethnicity,
         race,
         notes,
+        tags: patientTags,
       })
 
       // API Call should produce AuthError or something dif.
