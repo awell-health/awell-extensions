@@ -160,7 +160,7 @@ const fields = {
     id: 'tags',
     label: 'Tags',
     description:
-      'The tags associated with the patient. Separate multiple tags with a comma.',
+      'The tags associated with the patient. Separate multiple tags with a comma (max 10 per patient).',
     type: FieldType.STRING,
   },
 } satisfies Record<string, Field>

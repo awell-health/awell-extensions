@@ -156,7 +156,7 @@ const fields = {
     id: 'tags',
     label: 'Tags',
     description:
-      'The tags associated with the patient. Separate multiple tags with a comma.',
+      'The tags associated with the patient. Separate multiple tags with a comma (max 10 per patient).',
     type: FieldType.STRING,
   },
 } satisfies Record<string, Field>
@@ -236,7 +236,7 @@ export const updatePatient: Action<
 
     const api = makeAPIClient(payload.settings)
     if (!isNil(tags)) {
-      const formattedTags = fields.tags.split(',').map((tag) => tag.trim())
+      const formattedTags = tags.split(',').map((tag) => tag.trim())
       // we need to fetch current information because we do not want to override existing tags
       const currentPatientInfo = await api.getPatient(id)
 
