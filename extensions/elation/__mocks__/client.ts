@@ -92,7 +92,7 @@ export const mockClientReturn = {
   searchContactsByNpi: jest.fn(() => {
     return findContactResponseExample
   }),
-  createAllergy: jest.fn((params) => {
+  addAllergy: jest.fn((params) => {
     return {
       id: 1,
       ...allergyExample,

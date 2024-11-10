@@ -2,6 +2,7 @@ import { TestHelpers } from '@awell-health/extensions-core'
 
 import { addAllergy as action } from './addAllergy'
 import { ZodError } from 'zod'
+import { allergyExample } from '../../__mocks__/constants'
 
 jest.mock('../../client')
 
@@ -25,6 +26,25 @@ describe('Elation - Add allergy', () => {
 
   beforeEach(() => {
     clearMocks()
+  })
+
+  test('Should call onComplete when successful', async () => {
+    await addAllergy.onEvent({
+      payload: {
+        fields: allergyExample,
+        settings,
+      } as any,
+      onComplete,
+      onError,
+      helpers,
+    })
+
+    expect(onComplete).toHaveBeenCalledWith({
+      data_points: {
+        allergyId: '1',
+      },
+    })
+    expect(onError).not.toHaveBeenCalled()
   })
 
   test('Should call onError when required fields are missing', async () => {
