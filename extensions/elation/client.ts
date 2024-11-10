@@ -38,6 +38,7 @@ import type {
   MessageThreadInput,
   MessageThreadResponse,
 } from './types/messageThread'
+import type { CreateAllergyInput, CreateAllergyResponse } from './types/allergy'
 
 export class ElationDataWrapper extends DataWrapper {
   public async findAppointments(
@@ -235,6 +236,18 @@ export class ElationDataWrapper extends DataWrapper {
     const res = await req
     return res
   }
+
+  public async createAllergy(
+    obj: CreateAllergyInput
+  ): Promise<CreateAllergyResponse> {
+    const req = this.Request<CreateAllergyResponse>({
+      method: 'POST',
+      url: `/allergies`,
+      data: obj,
+    })
+    const res = await req
+    return res
+  }
 }
 
 interface ElationAPIClientConstructorProps {
@@ -379,6 +392,12 @@ export class ElationAPIClient extends APIClient<ElationDataWrapper> {
     obj: MessageThreadInput
   ): Promise<MessageThreadResponse> {
     return await this.FetchData(async (dw) => await dw.createMessageThread(obj))
+  }
+
+  public async createAllergy(
+    obj: CreateAllergyInput
+  ): Promise<CreateAllergyResponse> {
+    return await this.FetchData(async (dw) => await dw.createAllergy(obj))
   }
 }
 

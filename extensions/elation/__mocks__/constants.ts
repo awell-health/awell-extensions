@@ -145,3 +145,11 @@ export const labOrderResponseExample: CreateLabOrderResponse = {
   printable_view:
     'https://sandbox.elationemr.com/api/2.0/lab_orders/142256002957345/printable',
 }
+
+export const allergyExample = {
+  patientId: 123,
+  name: 'Penicillin',
+  startDate: '2023-01-01T00:00:00Z',
+  reaction: 'Hives',
+  severity: 'High',
+}
