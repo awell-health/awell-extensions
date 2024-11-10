@@ -38,7 +38,7 @@ export const sendCall: Action<
        *
        * [!!]
        * Currently only works with the sandbox environment but that's good enough for Workit bootcamp.
-       * We need to ensure we grab the right base URL, depending on the environment.
+       * Todo: We need to ensure we grab the right base URL, depending on the environment.
        */
       webhook: `https://api.sandbox.awellhealth.com/rest/v2/extension_activities/${payload.activity.id}/complete?dp_in_body=call_id`,
       request_data: fields.requestData,
