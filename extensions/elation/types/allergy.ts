@@ -1,8 +1,18 @@
-import { type z } from 'zod'
-import { type allergySchema } from '../validation/allergy.zod'
+import { DateTimeSchema, NumericIdSchema } from '@awell-health/extensions-core'
+import * as z from 'zod'
 
-export type CreateAllergyInput = z.infer<typeof allergySchema>
+export const AddAllergyInputSchema = z
+  .object({
+    patient: NumericIdSchema,
+    name: z.string(),
+    start_date: DateTimeSchema.optional(),
+    reaction: z.string().optional(),
+    severity: z.string().optional(),
+  })
+  .strict()
 
-export interface CreateAllergyResponse extends CreateAllergyInput {
+export type AddAllergyInputType = z.infer<typeof AddAllergyInputSchema>
+
+export interface AddAllergyResponseType extends AddAllergyInputType {
   id: number
 }

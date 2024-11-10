@@ -38,7 +38,10 @@ import type {
   MessageThreadInput,
   MessageThreadResponse,
 } from './types/messageThread'
-import type { CreateAllergyInput, CreateAllergyResponse } from './types/allergy'
+import type {
+  AddAllergyInputType,
+  AddAllergyResponseType,
+} from './types/allergy'
 
 export class ElationDataWrapper extends DataWrapper {
   public async findAppointments(
@@ -237,10 +240,10 @@ export class ElationDataWrapper extends DataWrapper {
     return res
   }
 
-  public async createAllergy(
-    obj: CreateAllergyInput
-  ): Promise<CreateAllergyResponse> {
-    const req = this.Request<CreateAllergyResponse>({
+  public async addAllergy(
+    obj: AddAllergyInputType
+  ): Promise<AddAllergyResponseType> {
+    const req = this.Request<AddAllergyResponseType>({
       method: 'POST',
       url: `/allergies`,
       data: obj,
@@ -394,10 +397,10 @@ export class ElationAPIClient extends APIClient<ElationDataWrapper> {
     return await this.FetchData(async (dw) => await dw.createMessageThread(obj))
   }
 
-  public async createAllergy(
-    obj: CreateAllergyInput
-  ): Promise<CreateAllergyResponse> {
-    return await this.FetchData(async (dw) => await dw.createAllergy(obj))
+  public async addAllergy(
+    obj: AddAllergyInputType
+  ): Promise<AddAllergyResponseType> {
+    return await this.FetchData(async (dw) => await dw.addAllergy(obj))
   }
 }
 
