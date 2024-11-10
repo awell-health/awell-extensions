@@ -49,6 +49,7 @@ export type SendCallInputType = z.infer<typeof SendCallInputSchema>
 export const SendCallResponseSchema = z.object({
   status: z.string(),
   call_id: z.string().uuid(),
+  message: z.string(),
 })
 
 export type SendCallResponseType = z.infer<typeof SendCallResponseSchema>
