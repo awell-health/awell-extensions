@@ -13,7 +13,7 @@ import { getPhysician } from './getPhysician'
 import { postLetter } from './postLetter'
 import { createLabOrder } from './createLabOrder'
 import { createMessageThread } from './createMessageThread'
-import { addHistories } from './addHistories/addHistories'
+import { addHistory } from './addHistory/addHistory'
 import { addAllergy } from './addAllergy/addAllergy'
 
 export const actions = {
@@ -32,6 +32,6 @@ export const actions = {
   postLetter,
   createLabOrder,
   createMessageThread,
-  addHistories,
+  addHistory,
   addAllergy,
 }

@@ -156,9 +156,8 @@ export const allergyExample = {
 
 export const historyExample = {
   patientId: 123,
-  past: 'Test Past',
-  family: 'Test Family',
-  social: 'Test Social',
+  type: 'Past',
+  text: 'Test Past',
 }
 
 export const historyResponseExample = {

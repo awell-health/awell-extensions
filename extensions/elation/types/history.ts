@@ -1,7 +1,7 @@
 import { NumericIdSchema } from '@awell-health/extensions-core'
 import * as z from 'zod'
 
-export const HistoryTypeSchema = z.enum([
+export const HistoryTypes = z.enum([
   'Past',
   'Family',
   'Social',
@@ -19,18 +19,16 @@ export const HistoryTypeSchema = z.enum([
 
 export const historySchema = z
   .object({
-    type: HistoryTypeSchema,
+    type: HistoryTypes,
     patient: NumericIdSchema,
     text: z.string(),
   })
   .strict()
 
-export const historyArraySchema = z.array(historySchema)
-
 export type addHistoryInput = z.infer<typeof historySchema>
 export interface addHistoryResponse {
   id: number
-  type: typeof HistoryTypeSchema
+  type: typeof HistoryTypes
   rank: number
   text: string
   patient: number
