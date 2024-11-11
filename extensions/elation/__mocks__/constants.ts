@@ -188,3 +188,19 @@ export const createVisitNoteExample = {
   text: 'This is a test note',
   category: 'ROS',
 }
+
+export const historyExample = {
+  patientId: 123,
+  type: 'Past',
+  text: 'Test Past',
+}
+
+export const historyResponseExample = {
+  id: 64073957420,
+  type: 'Diet',
+  rank: 1,
+  text: 'Yogurt daily',
+  patient: 64072843265,
+  created_date: '2016-10-13T15:00:38Z',
+  deleted_date: null,
+}
