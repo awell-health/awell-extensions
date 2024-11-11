@@ -30,7 +30,7 @@ export const sendCallWithPathway: Action<
       awell_activity_id: payload.activity.id,
     }
 
-    await blandSdk.sendCall({
+    const { data } = await blandSdk.sendCall({
       phone_number: fields.phoneNumber,
       pathway_id: fields.pathwayId,
       task: '',
@@ -45,6 +45,11 @@ export const sendCallWithPathway: Action<
       request_data: fields.requestData,
       metadata: metaData,
       analysis_schema: fields.analysisSchema,
+    })
+
+    console.log('Bland call details', {
+      awell_activity_id: metaData.awell_activity_id,
+      ...data,
     })
 
     /**
