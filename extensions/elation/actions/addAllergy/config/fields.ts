@@ -48,7 +48,7 @@ export const fields = {
 export const FieldsValidationSchema = z.object({
   patientId: NumericIdSchema,
   name: z.string().min(1),
-  startDate: DateTimeOptionalSchema,
+  startDate: DateTimeOptionalSchema.optional(),
   reaction: z.string().optional(),
   severity: z.string().optional(),
 } satisfies Record<keyof typeof fields, ZodTypeAny>)
