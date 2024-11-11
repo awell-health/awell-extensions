@@ -153,3 +153,38 @@ export const allergyExample = {
   reaction: 'Hives',
   severity: 'High',
 }
+
+export const visitNoteExample = {
+  patient: 123,
+  chart_date: '2010-06-10T17:57:35Z',
+  document_date: '2010-06-10T17:57:35Z',
+  type: 'Office Visit Note',
+  confidential: false,
+  template: 'Complete H&P (1 col)',
+  physician: 131074,
+  bullets: {
+    ROS: [
+      {
+        name: 'General',
+        value: 'Denies fever',
+        sequence: 0,
+      },
+      {
+        name: 'Eyes',
+        value: 'Denies visual abnormalities',
+        sequence: 1,
+      },
+    ],
+  },
+}
+
+export const createVisitNoteExample = {
+  patientId: 123,
+  type: 'Office Visit Note',
+  confidential: false,
+  template: 'Complete H&P (1 col)',
+  physicianId: 131074,
+  authorId: 111222,
+  text: 'This is a test note',
+  category: 'ROS',
+}

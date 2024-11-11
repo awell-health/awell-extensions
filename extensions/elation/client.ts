@@ -42,6 +42,10 @@ import type {
   AddAllergyInputType,
   AddAllergyResponseType,
 } from './types/allergy'
+import type {
+  CreateVisitNoteInputType,
+  CreateVisitNoteResponseType,
+} from './types/createVisitNote'
 
 export class ElationDataWrapper extends DataWrapper {
   public async findAppointments(
@@ -251,6 +255,18 @@ export class ElationDataWrapper extends DataWrapper {
     const res = await req
     return res
   }
+
+  public async createVisitNote(
+    obj: CreateVisitNoteInputType
+  ): Promise<CreateVisitNoteResponseType> {
+    const req = this.Request<CreateVisitNoteResponseType>({
+      method: 'POST',
+      url: `/visit_notes`,
+      data: obj,
+    })
+    const res = await req
+    return res
+  }
 }
 
 interface ElationAPIClientConstructorProps {
@@ -401,6 +417,12 @@ export class ElationAPIClient extends APIClient<ElationDataWrapper> {
     obj: AddAllergyInputType
   ): Promise<AddAllergyResponseType> {
     return await this.FetchData(async (dw) => await dw.addAllergy(obj))
+  }
+
+  public async createVisitNote(
+    obj: CreateVisitNoteInputType
+  ): Promise<CreateVisitNoteResponseType> {
+    return await this.FetchData(async (dw) => await dw.createVisitNote(obj))
   }
 }
 

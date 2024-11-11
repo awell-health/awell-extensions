@@ -14,6 +14,7 @@ import { postLetter } from './postLetter'
 import { createLabOrder } from './createLabOrder'
 import { createMessageThread } from './createMessageThread'
 import { addAllergy } from './addAllergy/addAllergy'
+import { createVisitNote } from './createVisitNote/createVisitNote'
 
 export const actions = {
   getPatient,
@@ -32,4 +33,5 @@ export const actions = {
   createLabOrder,
   createMessageThread,
   addAllergy,
+  createVisitNote,
 }
