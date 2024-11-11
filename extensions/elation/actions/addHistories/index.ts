@@ -1,1 +1,0 @@
-export { addHistories } from './addHistories'
