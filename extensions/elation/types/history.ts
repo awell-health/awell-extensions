@@ -28,7 +28,7 @@ export const historySchema = z
 export const historyArraySchema = z.array(historySchema)
 
 export type addHistoryInput = z.infer<typeof historySchema>
-export interface addHistoryResponse extends addHistoryInput {
+export interface addHistoryResponse {
   id: number
   type: typeof HistoryTypeSchema
   rank: number
