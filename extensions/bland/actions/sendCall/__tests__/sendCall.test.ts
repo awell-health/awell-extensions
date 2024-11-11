@@ -34,6 +34,22 @@ describe('Bland.ai - Send call', () => {
         fields: {
           phoneNumber: '1234567890',
           task: 'Some task',
+          requestData: JSON.stringify({
+            name: 'John Doe',
+          }),
+          analysisSchema: JSON.stringify({
+            name: 'string',
+          }),
+        },
+        patient: {
+          id: 'patient-id',
+        },
+        pathway: {
+          id: 'pathway-id',
+          definition_id: 'pathway-definition-id',
+        },
+        activity: {
+          id: 'activity-id',
         },
         settings: {
           apiKey: 'api-key',
@@ -46,21 +62,23 @@ describe('Bland.ai - Send call', () => {
 
     expect(mockedSdk).toHaveBeenCalled()
 
-    expect(onComplete).toHaveBeenCalledWith(
-      expect.objectContaining({
-        data_points: expect.objectContaining({
-          callId: '9d404c1b-6a23-4426-953a-a52c392ff8f1',
-          status: 'success',
-        }),
-        events: expect.arrayContaining([
-          expect.objectContaining({
-            date: expect.any(String),
-            text: {
-              en: 'Call sent to Bland. Status: success, Call ID: 9d404c1b-6a23-4426-953a-a52c392ff8f1',
-            },
-          }),
-        ]),
-      })
-    )
+    // Completion happens async via a Webhook from Bland
+    expect(onComplete).not.toHaveBeenCalled()
+    // expect(onComplete).toHaveBeenCalledWith(
+    //   expect.objectContaining({
+    //     data_points: expect.objectContaining({
+    //       callId: '9d404c1b-6a23-4426-953a-a52c392ff8f1',
+    //       status: 'success',
+    //     }),
+    //     events: expect.arrayContaining([
+    //       expect.objectContaining({
+    //         date: expect.any(String),
+    //         text: {
+    //           en: 'Call sent to Bland. Status: success, Call ID: 9d404c1b-6a23-4426-953a-a52c392ff8f1',
+    //         },
+    //       }),
+    //     ]),
+    //   })
+    // )
   })
 })
