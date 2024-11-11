@@ -38,6 +38,7 @@ import type {
   MessageThreadInput,
   MessageThreadResponse,
 } from './types/messageThread'
+import type { addHistoryInput, addHistoryResponse } from './types/history'
 import type {
   AddAllergyInputType,
   AddAllergyResponseType,
@@ -240,6 +241,16 @@ export class ElationDataWrapper extends DataWrapper {
     return res
   }
 
+  public async addHistory(obj: addHistoryInput): Promise<addHistoryResponse> {
+    const req = this.Request<addHistoryResponse>({
+      method: 'POST',
+      url: `/histories`,
+      data: obj,
+    })
+    const res = await req
+    return res
+  }
+
   public async addAllergy(
     obj: AddAllergyInputType
   ): Promise<AddAllergyResponseType> {
@@ -389,6 +400,10 @@ export class ElationAPIClient extends APIClient<ElationDataWrapper> {
     obj: CreateLabOrderInput
   ): Promise<CreateLabOrderResponse> {
     return await this.FetchData(async (dw) => await dw.createLabOrder(obj))
+  }
+
+  public async addHistory(obj: addHistoryInput): Promise<addHistoryResponse> {
+    return await this.FetchData(async (dw) => await dw.addHistory(obj))
   }
 
   public async createMessageThread(

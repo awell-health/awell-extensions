@@ -7,6 +7,7 @@ import {
   allergyExample,
   appointmentExample,
   findContactResponseExample,
+  historyResponseExample,
   labOrderResponseExample,
   nonVisitNoteResponseExample,
   patientExample,
@@ -97,6 +98,9 @@ export const mockClientReturn = {
       id: 1,
       ...allergyExample,
     }
+  }),
+  addHistory: jest.fn(() => {
+    return historyResponseExample
   }),
 }
 const ElationAPIClientMock = jest.fn((params) => {

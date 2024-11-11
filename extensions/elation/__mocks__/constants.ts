@@ -153,3 +153,20 @@ export const allergyExample = {
   reaction: 'Hives',
   severity: 'High',
 }
+
+export const historyExample = {
+  patientId: 123,
+  past: 'Test Past',
+  family: 'Test Family',
+  social: 'Test Social',
+}
+
+export const historyResponseExample = {
+  id: 64073957420,
+  type: 'Diet',
+  rank: 1,
+  text: 'Yogurt daily',
+  patient: 64072843265,
+  created_date: '2016-10-13T15:00:38Z',
+  deleted_date: null,
+}
