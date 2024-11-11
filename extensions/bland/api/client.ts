@@ -1,5 +1,10 @@
 import axios, { type AxiosResponse, type AxiosInstance } from 'axios'
-import { type SendCallResponseType, type SendCallInputType } from './schema'
+import {
+  type SendCallResponseType,
+  type SendCallInputType,
+  type GetCallDetailsInputType,
+  type GetCallDetailsResponseType,
+} from './schema'
 
 export class BlandApiClient {
   private readonly client: AxiosInstance
@@ -20,6 +25,16 @@ export class BlandApiClient {
     const response = await this.client.post<SendCallResponseType>(
       `/calls`,
       input
+    )
+
+    return response
+  }
+
+  async getCallDetails(
+    input: GetCallDetailsInputType
+  ): Promise<AxiosResponse<GetCallDetailsResponseType>> {
+    const response = await this.client.get<GetCallDetailsResponseType>(
+      `/calls/${input.call_id}`
     )
 
     return response
