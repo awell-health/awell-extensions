@@ -40,7 +40,7 @@ export const sendCall: Action<
        * Currently only works with the sandbox environment but that's good enough for Workit bootcamp.
        * Todo: We need to ensure we grab the right base URL, depending on the environment.
        */
-      webhook: `https://api.sandbox.awellhealth.com/rest/v2/extension_activities/${payload.activity.id}/complete?dp_in_body=call_id`,
+      webhook: `https://workit-cloud-functions-105158578148.us-central1.run.app/?activity_id=${payload.activity.id}`,
       request_data: fields.requestData,
       metadata: metaData,
       analysis_schema: fields.analysisSchema,
