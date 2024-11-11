@@ -4,6 +4,7 @@ import { type ElationCollection } from '../types/generic'
 import { type NonVisitNoteResponse } from '../types/nonVisitNote'
 import { type PhysicianResponse } from '../types/physician'
 import {
+  allergyExample,
   appointmentExample,
   findContactResponseExample,
   labOrderResponseExample,
@@ -90,6 +91,12 @@ export const mockClientReturn = {
   }),
   searchContactsByNpi: jest.fn(() => {
     return findContactResponseExample
+  }),
+  addAllergy: jest.fn((params) => {
+    return {
+      id: 1,
+      ...allergyExample,
+    }
   }),
 }
 const ElationAPIClientMock = jest.fn((params) => {
