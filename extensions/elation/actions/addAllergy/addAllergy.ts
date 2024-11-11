@@ -2,7 +2,6 @@ import { z } from 'zod'
 import { type Action, Category, validate } from '@awell-health/extensions-core'
 import { SettingsValidationSchema, type settings } from '../../settings'
 import { makeAPIClient } from '../../client'
-import { AxiosError } from 'axios'
 import { fields, FieldsValidationSchema, dataPoints } from './config'
 
 export const addAllergy: Action<
@@ -18,7 +17,7 @@ export const addAllergy: Action<
   fields,
   previewable: true,
   dataPoints,
-  onEvent: async ({ payload, onComplete, onError }): Promise<void> => {
+  onEvent: async ({ payload, onComplete }): Promise<void> => {
     const { fields, settings } = validate({
       schema: z.object({
         fields: FieldsValidationSchema,
@@ -29,42 +28,18 @@ export const addAllergy: Action<
 
     const api = makeAPIClient(settings)
 
-    try {
-      const { id } = await api.addAllergy({
-        patient: fields.patientId,
-        name: fields.name,
-        start_date: fields.startDate,
-        reaction: fields.reaction,
-        severity: fields.severity,
-      })
+    const { id } = await api.addAllergy({
+      patient: fields.patientId,
+      name: fields.name,
+      start_date: fields.startDate,
+      reaction: fields.reaction,
+      severity: fields.severity,
+    })
 
-      await onComplete({
-        data_points: {
-          allergyId: String(id),
-        },
-      })
-    } catch (err) {
-      if (err instanceof AxiosError) {
-        await onError({
-          events: [
-            {
-              date: new Date().toISOString(),
-              text: {
-                en: `${err.status ?? '(no status code)'} Error: ${err.message}`,
-              },
-              error: {
-                category: 'SERVER_ERROR',
-                message: `${err.status ?? '(no status code)'} Error: ${
-                  err.message
-                }`,
-              },
-            },
-          ],
-        })
-      } else {
-        // Handles Zod and other unknown errors
-        throw err
-      }
-    }
+    await onComplete({
+      data_points: {
+        allergyId: String(id),
+      },
+    })
   },
 }
