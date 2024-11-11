@@ -30,7 +30,7 @@ export const historyArraySchema = z.array(historySchema)
 export type addHistoryInput = z.infer<typeof historySchema>
 export interface addHistoryResponse extends addHistoryInput {
   id: number
-  type: string
+  type: typeof HistoryTypeSchema
   rank: number
   text: string
   patient: number
