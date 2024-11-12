@@ -40,7 +40,7 @@ export const patientCreatedOrUpdated: Webhook<
       await onSuccess({
         data_points: {
           patientId: String(data.id),
-          patient: JSON.stringify(resource),
+          patient: JSON.stringify(data),
         },
         // Review the system used for elation identifiers
         patient_identifier: {
