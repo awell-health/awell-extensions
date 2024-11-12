@@ -46,7 +46,7 @@ import type {
 import type {
   CreateVisitNoteInputType,
   CreateVisitNoteResponseType,
-} from './types/createVisitNote'
+} from './types/visitNote'
 
 export class ElationDataWrapper extends DataWrapper {
   public async findAppointments(

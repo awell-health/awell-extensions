@@ -1,5 +1,8 @@
 import { DateTimeSchema, NumericIdSchema } from '@awell-health/extensions-core'
-import { templateType, bulletCategory } from './fields'
+import {
+  templateType,
+  bulletCategory,
+} from '../actions/createVisitNote/config/fields'
 import * as z from 'zod'
 
 export const CreateVisitNoteInputSchema = z
