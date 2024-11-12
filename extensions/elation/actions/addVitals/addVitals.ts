@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { omitBy, isEmpty } from 'lodash'
+import { isEmpty } from 'lodash'
 import { type Action, Category, validate } from '@awell-health/extensions-core'
 import { SettingsValidationSchema, type settings } from '../../settings'
 import { makeAPIClient } from '../../client'
@@ -17,7 +17,7 @@ import {
 const createMeasurement = (
   value?: number,
   note?: string
-): Array<z.infer<typeof measurementInputSchema>> | undefined => {
+): Array<z.infer<typeof measurementInputSchema>> => {
   // the undefined check is stupid but otherwise the build is failing
   if (value !== undefined && !isEmpty(value)) {
     return isEmpty(note)
@@ -32,7 +32,7 @@ const createMeasurement = (
           >,
         ]
   }
-  return undefined
+  return []
 }
 
 export const addVitals: Action<
@@ -58,7 +58,12 @@ export const addVitals: Action<
 
     const api = makeAPIClient(settings)
 
-    const measurements = {
+    const body: AddVitalsInputType = {
+      patient: fields.patientId,
+      practice: fields.practiceId,
+      visit_note: fields?.visitNoteId,
+      non_visit_note: fields?.nonVisitNoteId,
+      bmi: fields.bmi,
       height: createMeasurement(fields.height, fields.heightNote),
       weight: createMeasurement(fields.weight, fields.weightNote),
       oxygen: createMeasurement(fields.oxygen, fields.oxygenNote),
@@ -74,17 +79,6 @@ export const addVitals: Action<
       dlm: createMeasurement(fields.dlm, fields.dlmNote),
       bfm: createMeasurement(fields.bfm, fields.bfmNote),
       wc: createMeasurement(fields.wc, fields.wcNote),
-    }
-    // remove empty measurements
-    const validMeasurements = omitBy(measurements, isEmpty)
-
-    const body: AddVitalsInputType = {
-      patient: fields.patientId,
-      practice: fields.practiceId,
-      visit_note: fields?.visitNoteId,
-      non_visit_note: fields?.nonVisitNoteId,
-      bmi: fields.bmi,
-      ...validMeasurements,
     }
 
     const { id } = await api.addVitals(body)

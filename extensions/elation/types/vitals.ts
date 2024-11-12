@@ -23,37 +23,30 @@ export const AddVitalsInputSchema = z
     bmi: z.number().optional(),
     height: z
       .array(measurementInputSchema)
-      .length(1)
       .optional()
       .describe('Height; only one item allowed'),
     weight: z
       .array(measurementInputSchema)
-      .length(1)
       .optional()
       .describe('Weight; only one item allowed'),
     oxygen: z
       .array(measurementInputSchema)
-      .length(1)
       .optional()
       .describe('Oxygen; only one item allowed'),
     rr: z
       .array(measurementInputSchema)
-      .length(1)
       .optional()
       .describe('Respiratory rate; only one item allowed'),
     hr: z
       .array(measurementInputSchema)
-      .length(1)
       .optional()
       .describe('Heart rate; only one item allowed'),
     hc: z
       .array(measurementInputSchema)
-      .length(1)
       .optional()
       .describe('Head circumference; only one item allowed'),
     temperature: z
       .array(measurementInputSchema)
-      .length(1)
       .optional()
       .describe('Temperature; only one item allowed'),
     bp: z
@@ -64,22 +57,18 @@ export const AddVitalsInputSchema = z
     // ketone: z.array(measurementInputSchema).optional().describe("Optional ketone; see Vital Object Definition for supported observations"),
     bodyfat: z
       .array(measurementInputSchema)
-      .length(1)
       .optional()
       .describe('Optional body fat; only one item allowed'),
     dlm: z
       .array(measurementInputSchema)
-      .length(1)
       .optional()
       .describe('Optional DLM; only one item allowed'),
     bfm: z
       .array(measurementInputSchema)
-      .length(1)
       .optional()
       .describe('Optional BFM; only one item allowed'),
     wc: z
       .array(measurementInputSchema)
-      .length(1)
       .optional()
       .describe('Optional WC; only one item allowed'),
   })
