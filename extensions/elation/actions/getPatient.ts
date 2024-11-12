@@ -46,6 +46,10 @@ const dataPoints = {
     key: 'caregiverPracticeId',
     valueType: 'number',
   },
+  mainPhone: {
+    key: 'mainPhone',
+    valueType: 'telephone',
+  },
   mobilePhone: {
     key: 'mobilePhone',
     valueType: 'telephone',
@@ -110,6 +114,10 @@ const dataPoints = {
     key: 'status',
     valueType: 'string',
   },
+  patientObject: {
+    key: 'patientObject',
+    valueType: 'json',
+  },
 } satisfies Record<string, DataPointDefinition>
 
 export const getPatient: Action<
@@ -139,8 +147,11 @@ export const getPatient: Action<
         sex: patientInfo.sex,
         primaryPhysicianId: String(patientInfo.primary_physician),
         caregiverPracticeId: String(patientInfo.caregiver_practice),
+        mainPhone: elationMobilePhoneToE164(
+          patientInfo.phones?.find((p) => p.phone_type === 'Main')?.phone
+        ),
         mobilePhone: elationMobilePhoneToE164(
-          patientInfo.phones?.find((p) => p.phone_type === 'Mobile')?.phone,
+          patientInfo.phones?.find((p) => p.phone_type === 'Mobile')?.phone
         ),
         email: getLastEmail(patientInfo.emails),
         middleName: patientInfo.middle_name,
@@ -157,6 +168,7 @@ export const getPatient: Action<
         previousFirstName: patientInfo.previous_first_name,
         previousLastName: patientInfo.previous_last_name,
         status: patientInfo.patient_status.status,
+        patientObject: JSON.stringify(patientInfo),
       },
     })
   },
