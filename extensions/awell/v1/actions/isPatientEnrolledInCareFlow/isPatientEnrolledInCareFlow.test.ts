@@ -68,6 +68,7 @@ describe('Is patient already enrolled in care flow action', () => {
         nbrOfResults: '1',
         careFlowIds: 'pathway-instance-id-2',
       },
+      events: expect.any(Array),
     })
     expect(onError).not.toHaveBeenCalled()
   })
@@ -108,6 +109,7 @@ describe('Is patient already enrolled in care flow action', () => {
         nbrOfResults: '0',
         careFlowIds: '',
       },
+      events: expect.any(Array),
     })
     expect(onError).not.toHaveBeenCalled()
   })
@@ -155,6 +157,7 @@ describe('Is patient already enrolled in care flow action', () => {
         nbrOfResults: '1',
         careFlowIds: 'pathway-instance-id-2',
       },
+      events: expect.any(Array),
     })
     expect(onError).not.toHaveBeenCalled()
   })
@@ -202,6 +205,7 @@ describe('Is patient already enrolled in care flow action', () => {
         nbrOfResults: '1',
         careFlowIds: 'pathway-instance-id-2',
       },
+      events: expect.any(Array),
     })
     expect(onError).not.toHaveBeenCalled()
   })
@@ -256,6 +260,7 @@ describe('Is patient already enrolled in care flow action', () => {
         nbrOfResults: '2',
         careFlowIds: 'pathway-instance-id-2,pathway-instance-id-3',
       },
+      events: expect.any(Array),
     })
     expect(onError).not.toHaveBeenCalled()
   })

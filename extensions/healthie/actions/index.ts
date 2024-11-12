@@ -30,6 +30,7 @@ import {
   pushFormResponseToHealthie,
   pushFormResponsesToHealthie,
 } from './dataExchange'
+import { lockFormAnswerGroup } from './lockFormAnswer'
 
 export const actions = {
   deleteGoal,
@@ -71,4 +72,5 @@ export const actions = {
   getFormAnswers,
   pushFormResponseToHealthie,
   pushFormResponsesToHealthie,
+  lockFormAnswerGroup,
 }

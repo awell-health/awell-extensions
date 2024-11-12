@@ -44,6 +44,7 @@ describe('Get patient by identifier', () => {
         patientAlreadyExists: 'true',
         patientId: 'F-Pkm3fFMYW-F2o7lSCgU',
       },
+      events: expect.any(Array),
     })
     expect(onError).not.toHaveBeenCalled()
   })

@@ -58,6 +58,7 @@ describe('Search patients by patient code', () => {
         numberOfPatientsFound: '1',
         awellPatientIds: 'patient-id-2',
       },
+      events: expect.any(Array),
     })
     expect(onError).not.toHaveBeenCalled()
   })

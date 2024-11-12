@@ -33,6 +33,7 @@ describe('Send SMS action', () => {
         conversationId: '30cded5d-90b7-4aae-9f51-b6b143376bb2',
         messageId: '7d3d9cbc-c053-4e7c-b837-cb2e38202117',
       },
+      events: expect.any(Array),
     })
     expect(onError).not.toHaveBeenCalled()
   }, 20000)

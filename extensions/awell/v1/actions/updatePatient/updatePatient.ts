@@ -46,6 +46,7 @@ export const updatePatient: Action<typeof fields, typeof settings> = {
 
     const awellSdk = await helpers.awellSdk()
     const sdk = new AwellSdk({
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       apiUrl: awellSdk.apiUrl!,
       apiKey: awellSdk.apiKey,
     })

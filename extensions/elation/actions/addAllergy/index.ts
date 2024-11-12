@@ -1,0 +1,1 @@
+export { addAllergy } from './addAllergy'

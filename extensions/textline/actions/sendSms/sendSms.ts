@@ -6,6 +6,7 @@ import { Category, validate } from '@awell-health/extensions-core'
 import { FieldsValidationSchema, dataPoints, fields } from './config'
 import TextLineApi from '../../client/textLineApi'
 import { type SendMessageResponse } from '../../client/schema'
+import { addActivityEventLog } from '../../../../src/lib/awell/addEventLog'
 
 export const sendSms: Action<typeof fields, typeof settings> = {
   key: 'sendSms',
@@ -36,11 +37,19 @@ export const sendSms: Action<typeof fields, typeof settings> = {
         departmentId
       )
 
+      const conversationId = response.post.conversation_uuid
+      const messageId = response.post.uuid
+
       await onComplete({
         data_points: {
-          conversationId: response.post.conversation_uuid,
-          messageId: response.post.uuid,
+          conversationId,
+          messageId,
         },
+        events: [
+          addActivityEventLog({
+            message: `TextLine accepted the request to send the message. Conversation ID: ${conversationId}, Message ID: ${messageId}.`,
+          }),
+        ],
       })
     } catch (err) {
       if (err instanceof ZodError) {
