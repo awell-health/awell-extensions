@@ -5,12 +5,24 @@ import {
 } from '@awell-health/extensions-core'
 import z, { type ZodTypeAny } from 'zod'
 
-// Available templates: "Simple", "SOAP", "Complete H&P (1 col)", "Complete H&P (2 col)", "Complete H&P (2 col A/P)", "Pre-Op"
-// but for now we only want to support Complete H&P (1 col)
+/**
+ * Available Templates
+ *
+ * The action currently supports only the "Complete H&P (1 col)" template.
+ *
+ * For a complete list of available templates and their descriptions, refer to the external documentation:
+ * https://docs.elationhealth.com/reference/the-visit-note-object#allowed-values
+ */
 export const templateType = z.enum(['Complete H&P (1 col)'])
 
-// Available buttle categories: "Problem", "Past", "Family", "Social", "Instr", "PE", "ROS", "Med", "Data", "Assessment", "Test", "Tx", "Narrative", "Followup", "Reason", "Plan", "Objective", "Hpi", "Allergies", "Habits", "Assessplan", "Consultant", "Attending", "Dateprocedure", "Surgical", "Orders", "Referenced", "Procedure"
-// we only need to support ROSS for now
+/**
+ * Available Bullet Categories
+ *
+ * The action currently supports only the "ROS" (Review of Systems) bullet category.
+ *
+ * For a complete list of bullet categories and their descriptions, refer to the external documentation:
+ * https://docs.elationhealth.com/reference/the-visit-note-object#allowed-values
+ */
 export const bulletCategory = z.enum(['ROS'])
 
 export const fields = {
