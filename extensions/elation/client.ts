@@ -43,6 +43,7 @@ import type {
   AddAllergyInputType,
   AddAllergyResponseType,
 } from './types/allergy'
+import type { AddVitalsInputType, AddVitalsResponseType } from './types/vitals'
 import type {
   CreateVisitNoteInputType,
   CreateVisitNoteResponseType,
@@ -278,6 +279,18 @@ export class ElationDataWrapper extends DataWrapper {
     const res = await req
     return res
   }
+
+  public async addVitals(
+    obj: AddVitalsInputType
+  ): Promise<AddVitalsResponseType> {
+    const req = this.Request<AddVitalsResponseType>({
+      method: 'POST',
+      url: `/vitals`,
+      data: obj,
+    })
+    const res = await req
+    return res
+  }
 }
 
 interface ElationAPIClientConstructorProps {
@@ -438,6 +451,12 @@ export class ElationAPIClient extends APIClient<ElationDataWrapper> {
     obj: CreateVisitNoteInputType
   ): Promise<CreateVisitNoteResponseType> {
     return await this.FetchData(async (dw) => await dw.createVisitNote(obj))
+  }
+
+  public async addVitals(
+    obj: AddVitalsInputType
+  ): Promise<AddVitalsResponseType> {
+    return await this.FetchData(async (dw) => await dw.addVitals(obj))
   }
 }
 
