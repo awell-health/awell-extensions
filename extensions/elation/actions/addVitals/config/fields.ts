@@ -89,7 +89,7 @@ export const fields = {
   },
   rr: {
     id: 'rr',
-    label: 'Respiratory Rate',
+    label: 'Respiratory Rate (rr)',
     description: 'Respiratory rate',
     type: FieldType.NUMERIC,
     required: false,
@@ -103,7 +103,7 @@ export const fields = {
   },
   hr: {
     id: 'hr',
-    label: 'Heart Rate',
+    label: 'Heart Rate (hr)',
     description: 'Heart rate',
     type: FieldType.NUMERIC,
     required: false,
@@ -117,7 +117,7 @@ export const fields = {
   },
   hc: {
     id: 'hc',
-    label: 'Head Circumference',
+    label: 'Head Circumference (hc)',
     description: 'Head circumference',
     type: FieldType.NUMERIC,
     required: false,
@@ -145,7 +145,7 @@ export const fields = {
   },
   bp: {
     id: 'bp',
-    label: 'Blood Pressure',
+    label: 'Blood Pressure (bp)',
     description: 'Blood pressure',
     type: FieldType.NUMERIC,
     required: false,
@@ -173,7 +173,7 @@ export const fields = {
   },
   dlm: {
     id: 'dlm',
-    label: 'Dry Lean Mass',
+    label: 'Dry Lean Mass (dlm)',
     description: 'Dry lean mass',
     type: FieldType.NUMERIC,
     required: false,
@@ -187,7 +187,7 @@ export const fields = {
   },
   bfm: {
     id: 'bfm',
-    label: 'Body Fat Mass',
+    label: 'Body Fat Mass (bfm)',
     description: 'Body fat mass',
     type: FieldType.NUMERIC,
     required: false,
@@ -201,7 +201,7 @@ export const fields = {
   },
   wc: {
     id: 'wc',
-    label: 'Waist Circumference',
+    label: 'Waist Circumference (wc)',
     description: 'Waist circumference',
     type: FieldType.NUMERIC,
     required: false,
