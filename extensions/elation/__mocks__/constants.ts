@@ -210,11 +210,11 @@ export const vitalsExample = {
   practiceId: 67890,
   visitNoteId: 11111,
   bmi: 25.5,
-  height: '175',
-  weight: '70',
-  oxygen: '98',
-  rr: '18',
-  temperature: '37',
+  height: 175,
+  weight: 70,
+  oxygen: 98,
+  rr: 18,
+  temperature: 37,
 }
 
 export const vitalsResponseExample = {

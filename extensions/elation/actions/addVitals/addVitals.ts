@@ -1,11 +1,11 @@
 import { z } from 'zod'
-import { isNil, omitBy, isEmpty } from 'lodash'
+import { omitBy, isEmpty } from 'lodash'
 import { type Action, Category, validate } from '@awell-health/extensions-core'
 import { SettingsValidationSchema, type settings } from '../../settings'
 import { makeAPIClient } from '../../client'
 import type {
   measurementInputSchema,
-  AddVitalsInputSchema,
+  AddVitalsInputType,
 } from '../../types/vitals'
 import {
   FieldsValidationSchema,
@@ -15,15 +15,24 @@ import {
 
 // Helper function to create measurement objects with optional notes
 const createMeasurement = (
-  value?: string,
+  value?: number,
   note?: string
 ): Array<z.infer<typeof measurementInputSchema>> | undefined => {
-  if (isNil(value)) {
-    return undefined
+  // the undefined check is stupid but otherwise the build is failing
+  if (value !== undefined && !isEmpty(value)) {
+    return isEmpty(note)
+      ? [
+          { value: value.toString() } satisfies z.infer<
+            typeof measurementInputSchema
+          >,
+        ]
+      : [
+          { value: value.toString(), note } satisfies z.infer<
+            typeof measurementInputSchema
+          >,
+        ]
   }
-  return isNil(note)
-    ? [{ value } satisfies z.infer<typeof measurementInputSchema>]
-    : [{ value, note } satisfies z.infer<typeof measurementInputSchema>]
+  return undefined
 }
 
 export const addVitals: Action<
@@ -69,7 +78,7 @@ export const addVitals: Action<
     // remove empty measurements
     const validMeasurements = omitBy(measurements, isEmpty)
 
-    const body: z.infer<typeof AddVitalsInputSchema> = {
+    const body: AddVitalsInputType = {
       patient: fields.patientId,
       practice: fields.practiceId,
       visit_node: fields?.visitNoteId,
