@@ -18,8 +18,8 @@ export const AddVitalsInputSchema = z
   .object({
     patient: NumericIdSchema,
     practice: NumericIdSchema,
-    visit_node: NumericIdSchema.optional(),
-    non_visit_node: NumericIdSchema.optional(),
+    visit_note: NumericIdSchema.optional(),
+    non_visit_note: NumericIdSchema.optional(),
     bmi: z.number().optional(),
     height: z
       .array(measurementInputSchema)
