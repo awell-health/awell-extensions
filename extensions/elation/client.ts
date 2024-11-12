@@ -48,6 +48,7 @@ import type {
   CreateVisitNoteInputType,
   CreateVisitNoteResponseType,
 } from './types/visitNote'
+import { PharmacyResponse, PharmacySchema } from './types/pharmacy'
 
 export class ElationDataWrapper extends DataWrapper {
   public async findAppointments(
@@ -291,6 +292,15 @@ export class ElationDataWrapper extends DataWrapper {
     const res = await req
     return res
   }
+
+  public async getPharmacy(ncpdpId: string): Promise<PharmacyResponse> {
+    return PharmacySchema.parse(
+      await this.Request<PharmacyResponse>({
+        method: 'GET',
+        url: `/pharmacies/${ncpdpId}`,
+      })
+    )
+  }
 }
 
 interface ElationAPIClientConstructorProps {
@@ -457,6 +467,10 @@ export class ElationAPIClient extends APIClient<ElationDataWrapper> {
     obj: AddVitalsInputType
   ): Promise<AddVitalsResponseType> {
     return await this.FetchData(async (dw) => await dw.addVitals(obj))
+  }
+
+  public async getPharmacy(ncpdpId: string): Promise<PharmacyResponse> {
+    return await this.FetchData(async (dw) => await dw.getPharmacy(ncpdpId))
   }
 }
 
