@@ -16,6 +16,7 @@ import { createMessageThread } from './createMessageThread'
 import { addHistory } from './addHistory/addHistory'
 import { addAllergy } from './addAllergy/addAllergy'
 import { createVisitNote } from './createVisitNote/createVisitNote'
+import { addVitals } from './addVitals/addVitals'
 
 export const actions = {
   getPatient,
@@ -30,10 +31,11 @@ export const actions = {
   updateNonVisitNote,
   getNonVisitNote,
   deleteNonVisitNote,
+  createVisitNote,
+  addVitals,
+  addHistory,
+  addAllergy,
   postLetter,
   createLabOrder,
   createMessageThread,
-  addHistory,
-  addAllergy,
-  createVisitNote,
 }
