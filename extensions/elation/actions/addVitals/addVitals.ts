@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { isEmpty } from 'lodash'
+import { isNil, isEmpty } from 'lodash'
 import { type Action, Category, validate } from '@awell-health/extensions-core'
 import { SettingsValidationSchema, type settings } from '../../settings'
 import { makeAPIClient } from '../../client'
@@ -19,7 +19,7 @@ const createMeasurement = (
   note?: string
 ): Array<z.infer<typeof measurementInputSchema>> => {
   // the undefined check is stupid but otherwise the build is failing
-  if (value !== undefined && !isEmpty(value)) {
+  if (value !== undefined && !isNil(value)) {
     return isEmpty(note)
       ? [
           { value: value.toString() } satisfies z.infer<
