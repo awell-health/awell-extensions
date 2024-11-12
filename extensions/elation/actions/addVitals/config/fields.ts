@@ -53,7 +53,7 @@ export const fields = {
     required: false,
   },
   heightNote: {
-    id: 'height note',
+    id: 'heightNote',
     label: 'Height Note',
     description: '',
     type: FieldType.STRING,
