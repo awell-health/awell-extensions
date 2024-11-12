@@ -81,8 +81,8 @@ export const addVitals: Action<
     const body: AddVitalsInputType = {
       patient: fields.patientId,
       practice: fields.practiceId,
-      visit_node: fields?.visitNoteId,
-      non_visit_node: fields?.nonVisitNoteId,
+      visit_note: fields?.visitNoteId,
+      non_visit_note: fields?.nonVisitNoteId,
       bmi: fields.bmi,
       ...validMeasurements,
     }
