@@ -36,6 +36,10 @@ export const patientExample: PatientInput = {
       phone: '(213) 373 42 53',
       phone_type: 'Mobile',
     },
+    {
+      phone: '2485311234',
+      phone_type: 'Main',
+    },
   ],
   patient_status: {
     status: 'active',

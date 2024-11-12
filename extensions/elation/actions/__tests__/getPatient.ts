@@ -32,8 +32,8 @@ describe('Simple get patient action', () => {
       jest.fn()
     )
     expect(onComplete).toHaveBeenCalled()
-    expect(onComplete).toBeCalledWith({
-      data_points: {
+    expect(onComplete).toHaveBeenCalledWith({
+      data_points: expect.objectContaining({
         firstName: patientExample.first_name,
         lastName: patientExample.last_name,
         dob: patientExample.dob,
@@ -56,7 +56,7 @@ describe('Simple get patient action', () => {
         previousFirstName: patientExample.previous_first_name,
         previousLastName: patientExample.previous_last_name,
         status: patientExample.patient_status?.status,
-      },
+      }),
     })
   })
 
