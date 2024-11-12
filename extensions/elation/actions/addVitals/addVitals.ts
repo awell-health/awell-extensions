@@ -1,0 +1,89 @@
+import { z } from 'zod'
+import { isNil, omitBy, isEmpty } from 'lodash'
+import { type Action, Category, validate } from '@awell-health/extensions-core'
+import { SettingsValidationSchema, type settings } from '../../settings'
+import { makeAPIClient } from '../../client'
+import type {
+  measurementInputSchema,
+  AddVitalsInputSchema,
+} from '../../types/vitals'
+import {
+  FieldsValidationSchema,
+  fields as elationFields,
+  dataPoints,
+} from './config'
+
+// Helper function to create measurement objects with optional notes
+const createMeasurement = (
+  value?: string,
+  note?: string
+): Array<z.infer<typeof measurementInputSchema>> | undefined => {
+  if (isNil(value)) {
+    return undefined
+  }
+  return isNil(note)
+    ? [{ value } satisfies z.infer<typeof measurementInputSchema>]
+    : [{ value, note } satisfies z.infer<typeof measurementInputSchema>]
+}
+
+export const addVitals: Action<
+  typeof elationFields,
+  typeof settings,
+  keyof typeof dataPoints
+> = {
+  key: 'addVitals',
+  category: Category.EHR_INTEGRATIONS,
+  title: 'Add Vitals',
+  description: 'Add vitals for the patient',
+  fields: elationFields,
+  previewable: true,
+  dataPoints,
+  onEvent: async ({ payload, onComplete }): Promise<void> => {
+    const { fields, settings } = validate({
+      schema: z.object({
+        fields: FieldsValidationSchema,
+        settings: SettingsValidationSchema,
+      }),
+      payload,
+    })
+
+    const api = makeAPIClient(settings)
+
+    const measurements = {
+      height: createMeasurement(fields.height, fields.heightNote),
+      weight: createMeasurement(fields.weight, fields.weightNote),
+      oxygen: createMeasurement(fields.oxygen, fields.oxygenNote),
+      rr: createMeasurement(fields.rr, fields.rrNote),
+      hr: createMeasurement(fields.hr, fields.hrNote),
+      hc: createMeasurement(fields.hc, fields.hcNote),
+      temperature: createMeasurement(
+        fields.temperature,
+        fields.temperatureNote
+      ),
+      bp: createMeasurement(fields.bp, fields.bpNote),
+      bodyfat: createMeasurement(fields.bodyfat, fields.bodyfatNote),
+      dlm: createMeasurement(fields.dlm, fields.dlmNote),
+      bfm: createMeasurement(fields.bfm, fields.bfmNote),
+      wc: createMeasurement(fields.wc, fields.wcNote),
+    }
+    // remove empty measurements
+    const validMeasurements = omitBy(measurements, isEmpty)
+
+    const body: z.infer<typeof AddVitalsInputSchema> = {
+      patient: fields.patientId,
+      practice: fields.practiceId,
+      visit_node: fields?.visitNoteId,
+      non_visit_node: fields?.nonVisitNoteId,
+      bmi: fields.bmi,
+      ...validMeasurements,
+    }
+
+    const { id } = await api.addVitals(body)
+
+    await onComplete({
+      data_points: {
+        vitalsId: String(id),
+      },
+    })
+  },
+}

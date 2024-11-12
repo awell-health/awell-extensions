@@ -43,6 +43,7 @@ import type {
   AddAllergyInputType,
   AddAllergyResponseType,
 } from './types/allergy'
+import type { AddVitalsInputType, AddVitalsResponseType } from './types/vitals'
 
 export class ElationDataWrapper extends DataWrapper {
   public async findAppointments(
@@ -262,6 +263,18 @@ export class ElationDataWrapper extends DataWrapper {
     const res = await req
     return res
   }
+
+  public async addVitals(
+    obj: AddVitalsInputType
+  ): Promise<AddVitalsResponseType> {
+    const req = this.Request<AddVitalsResponseType>({
+      method: 'POST',
+      url: `/vitals`,
+      data: obj,
+    })
+    const res = await req
+    return res
+  }
 }
 
 interface ElationAPIClientConstructorProps {
@@ -416,6 +429,12 @@ export class ElationAPIClient extends APIClient<ElationDataWrapper> {
     obj: AddAllergyInputType
   ): Promise<AddAllergyResponseType> {
     return await this.FetchData(async (dw) => await dw.addAllergy(obj))
+  }
+
+  public async addVitals(
+    obj: AddVitalsInputType
+  ): Promise<AddVitalsResponseType> {
+    return await this.FetchData(async (dw) => await dw.addVitals(obj))
   }
 }
 

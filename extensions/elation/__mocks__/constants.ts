@@ -169,3 +169,74 @@ export const historyResponseExample = {
   created_date: '2016-10-13T15:00:38Z',
   deleted_date: null,
 }
+
+export const vitalsExample = {
+  patientId: 12345,
+  practiceId: 67890,
+  visitNoteId: 11111,
+  bmi: 25.5,
+  height: '175',
+  weight: '70',
+  oxygen: '98',
+  rr: '18',
+  temperature: '37',
+}
+
+export const vitalsResponseExample = {
+  id: 65098023184,
+  bmi: 21.52,
+  height: [
+    {
+      value: '70',
+      units: 'inches',
+      note: 'no shoes',
+    },
+  ],
+  weight: [
+    {
+      value: '150',
+      units: 'lbs',
+      note: 'in shorts',
+    },
+  ],
+  oxygen: [
+    {
+      value: '98',
+      units: '%',
+      note: 'good',
+    },
+  ],
+  rr: [
+    {
+      value: '20',
+      units: 'bpm',
+      note: 'deep',
+    },
+  ],
+  hr: [
+    {
+      value: '60',
+      units: 'bpm',
+      note: 'calm',
+    },
+  ],
+  hc: [
+    {
+      value: '30',
+      units: 'cm',
+      note: 'big',
+    },
+  ],
+  bmi_percentile: '12',
+  length_for_weight_percentile: '20',
+  patient: 64072843265,
+  practice: 65540,
+  visit_note: 99024920,
+  non_visit_note: null,
+  document_date: '2014-01-19T16:00:29Z',
+  chart_date: '2014-01-19T16:00:29Z',
+  signed_date: '2014-01-19T16:00:29Z',
+  signed_by: 131074,
+  created_date: '2016-05-02T13:30:07Z',
+  deleted_date: null,
+}
