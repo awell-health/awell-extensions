@@ -1,5 +1,6 @@
 import { athenahealth } from './athenahealth'
 import { Awell } from './awell'
+import { bland } from './bland'
 import { CalDotCom } from './calDotCom'
 import { Calendly } from './calendly'
 import { CanvasMedical } from './canvasMedical'
@@ -47,6 +48,7 @@ export type Markdown = Record<string, { readme: string; changelog: string }>
 export const markdown: Markdown = json
 
 export const extensions = [
+  bland,
   athenahealth,
   Awell,
   CalDotCom,

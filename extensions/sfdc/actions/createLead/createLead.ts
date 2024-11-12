@@ -4,6 +4,7 @@ import { fields, dataPoints, FieldsValidationSchema } from './config'
 import { validatePayloadAndCreateClient } from '../../lib'
 import { isSalesforceError, parseSalesforceError } from '../../lib/errors'
 import { isNil } from 'lodash'
+import { addActivityEventLog } from '../../../../src/lib/awell/addEventLog'
 
 export const createLead: Action<
   typeof fields,
@@ -41,6 +42,11 @@ export const createLead: Action<
         data_points: {
           createdLeadId: String(res.id),
         },
+        events: [
+          addActivityEventLog({
+            message: `Lead with ID ${String(res.id)} created in Saleforce.`,
+          }),
+        ],
       })
     } catch (error) {
       if (isSalesforceError(error)) {

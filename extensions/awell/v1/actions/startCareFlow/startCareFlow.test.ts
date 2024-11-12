@@ -46,6 +46,7 @@ describe('Start care flow', () => {
       data_points: {
         careFlowId: 'a-care-flow-id',
       },
+      events: expect.any(Array),
     })
     expect(helpers.awellSdk).toHaveBeenCalledTimes(1)
     expect(sdkMock.orchestration.mutation).toHaveBeenCalledTimes(1)

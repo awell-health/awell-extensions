@@ -32,6 +32,10 @@ export const getAllFormsInCurrentStep: GetAllFormsInCurrentStep = async ({
     pathwayActivities: {
       __args: {
         pathway_id: pathwayId,
+        pagination: {
+          offset: 0,
+          count: 500,
+        },
       },
       success: true,
       activities: {

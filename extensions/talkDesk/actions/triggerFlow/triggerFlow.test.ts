@@ -36,6 +36,7 @@ describe('Talkdesk - Trigger flow', () => {
         interactionId: mockFlowTriggeredResponse.interaction_id,
         flowVersionId: mockFlowTriggeredResponse.flow_version_id,
       },
+      events: expect.any(Array),
     })
   })
 })

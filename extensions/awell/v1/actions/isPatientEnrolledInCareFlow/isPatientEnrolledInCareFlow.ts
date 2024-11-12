@@ -8,11 +8,11 @@ import {
   FieldsValidationSchema,
   PathwayValidationSchema,
 } from './config'
-import { fromZodError } from 'zod-validation-error'
-import { z, ZodError } from 'zod'
+import { z } from 'zod'
 import AwellSdk from '../../sdk/awellSdk'
 import { PathwayStatus, type PatientPathway } from '../../gql/graphql'
 import { isEmpty, isNil } from 'lodash'
+import { addActivityEventLog } from '../../../../../src/lib/awell/addEventLog'
 
 export const isPatientEnrolledInCareFlow: Action<
   typeof fields,
@@ -41,6 +41,7 @@ export const isPatientEnrolledInCareFlow: Action<
     })
     const awellSdk = await helpers.awellSdk()
     const sdk = new AwellSdk({
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       apiUrl: awellSdk.apiUrl!,
       apiKey: awellSdk.apiKey,
     })
@@ -72,14 +73,24 @@ export const isPatientEnrolledInCareFlow: Action<
         })
 
     const careFlows = getCareFlowsThatMatchFilters()
-    const isPatientEnrolledInCareFlowResult = careFlows.length > 0
+    const nbrOFResults = careFlows.length
+    const isPatientEnrolledInCareFlowResult = nbrOFResults > 0
 
     await onComplete({
       data_points: {
         result: String(isPatientEnrolledInCareFlowResult),
-        nbrOfResults: String(careFlows.length),
+        nbrOfResults: String(nbrOFResults),
         careFlowIds: careFlows.map((careFlow) => careFlow.id).join(','),
       },
+      events: [
+        addActivityEventLog({
+          message: isPatientEnrolledInCareFlowResult
+            ? `Patient was already enrolled in this care flow. Care flow IDs: ${careFlows
+                .map((careFlow) => careFlow.id)
+                .join(',')}`
+            : `Patient was not previously enrolled in this care flow.`,
+        }),
+      ],
     })
   },
 }

@@ -11,6 +11,10 @@ const dataPoints = {
     key: 'appointmentId',
     valueType: 'number',
   },
+  appointment: {
+    key: 'appointment',
+    valueType: 'json',
+  },
 } satisfies Record<string, DataPointDefinition>
 
 export const appointmentCreatedOrUpdated: Webhook<
@@ -40,7 +44,10 @@ export const appointmentCreatedOrUpdated: Webhook<
       })
     } else {
       await onSuccess({
-        data_points: { appointmentId: String(appointmentId) },
+        data_points: {
+          appointmentId: String(appointmentId),
+          appointment: JSON.stringify(resource),
+        },
         patient_identifier: {
           system: ELATION_SYSTEM,
           value: String(patientId),

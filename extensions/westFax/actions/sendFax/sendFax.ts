@@ -7,6 +7,7 @@ import { fields } from './config'
 import { dataPoints } from './config/dataPoints'
 import { FieldsValidationSchema } from './config/fields'
 import { getFaceSheet } from './facesheets/getFaceSheet'
+import { addActivityEventLog } from '../../../../src/lib/awell/addEventLog'
 
 export const sendFax: Action<typeof fields, typeof settings> = {
   key: 'sendFax',
@@ -73,6 +74,13 @@ export const sendFax: Action<typeof fields, typeof settings> = {
           data_points: {
             faxId,
           },
+          events: [
+            addActivityEventLog({
+              message: `WestFax accepted the Fax, the ID of the fax is ${String(
+                faxId
+              )}`,
+            }),
+          ],
         })
       } else {
         if (!isNil(jsonResponse.Success) && jsonResponse.Success === false) {

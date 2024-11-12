@@ -2,10 +2,10 @@ import { type Action } from '@awell-health/extensions-core'
 import { type settings } from '../../../settings'
 import { Category, validate } from '@awell-health/extensions-core'
 import { fields, dataPoints, FieldsValidationSchema } from './config'
-import { fromZodError } from 'zod-validation-error'
-import { z, ZodError } from 'zod'
+import { z } from 'zod'
 import AwellSdk from '../../sdk/awellSdk'
 import { isNil } from 'lodash'
+import { addActivityEventLog } from '../../../../../src/lib/awell/addEventLog'
 
 export const getPatientByIdentifier: Action<typeof fields, typeof settings> = {
   key: 'getPatientByIdentifier',
@@ -43,6 +43,11 @@ export const getPatientByIdentifier: Action<typeof fields, typeof settings> = {
           patientAlreadyExists: String(false),
           patientId: undefined,
         },
+        events: [
+          addActivityEventLog({
+            message: `No patient with identifier system ${system} and value ${value} exists.`,
+          }),
+        ],
       })
       return
     }
@@ -52,6 +57,11 @@ export const getPatientByIdentifier: Action<typeof fields, typeof settings> = {
         patientAlreadyExists: String(true),
         patientId: patient.id,
       },
+      events: [
+        addActivityEventLog({
+          message: `Patient with identifier system ${system} and value ${value} was found. The Awell ID of the patient is ${patient.id}.`,
+        }),
+      ],
     })
   },
 }
