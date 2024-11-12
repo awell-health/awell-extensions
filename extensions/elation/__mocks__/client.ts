@@ -14,6 +14,7 @@ import {
   physicianResponseExample,
   postLetterResponseExample,
   vitalsResponseExample,
+  visitNoteExample,
 } from './constants'
 const { makeAPIClient: makeAPIClientActual } = jest.requireActual('../client')
 
@@ -102,6 +103,12 @@ export const mockClientReturn = {
   }),
   addHistory: jest.fn(() => {
     return historyResponseExample
+  }),
+  createVisitNote: jest.fn((params) => {
+    return {
+      id: 1,
+      ...visitNoteExample,
+    }
   }),
   addVitals: jest.fn((params) => {
     return {
