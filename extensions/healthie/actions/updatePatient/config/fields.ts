@@ -31,17 +31,11 @@ export const fields = {
       "The patient's legal name which will be used in CMS 1500 Claims, Invoices, and Superbills.",
     type: FieldType.STRING,
   },
-  skipped_email: {
-    id: 'skipped_email',
-    label: 'Skipped email',
-    type: FieldType.BOOLEAN,
-  },
   email: {
     id: 'email',
     label: 'Email',
     description: 'The email address of the patient.',
     type: FieldType.STRING,
-    // stringType: StringType.EMAIL,
   },
   dob: {
     id: 'dob',
