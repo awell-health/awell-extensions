@@ -38,7 +38,6 @@ describe('updatePatient action', () => {
           user_group_id: undefined,
           active: true,
           dob: '1990-01-01',
-          skipped_email: false,
         },
         settings: {
           apiKey: 'apiKey',

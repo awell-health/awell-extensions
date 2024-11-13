@@ -43,7 +43,6 @@ describe('Healthie - createPatient', () => {
       email: 'test+lol11@test.com',
       phone_number: undefined,
       provider_id: undefined,
-      skipped_email: undefined,
       send_invite: false,
     }
 
@@ -75,7 +74,6 @@ describe('Healthie - createPatient', () => {
           email: 'test+lol142@test.com',
           phone_number: '+1234567890',
           provider_id: undefined,
-          skipped_email: undefined,
           send_invite: false,
         },
         settings: {

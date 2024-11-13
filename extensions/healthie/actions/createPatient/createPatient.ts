@@ -44,7 +44,7 @@ export const createPatient: Action<
               phone_number: fields.phone_number,
               dietitian_id:
                 fields.provider_id === '' ? undefined : fields.provider_id,
-              skipped_email: fields.skipped_email,
+              skipped_email: isEmpty(fields.email), // if email is empty we still want to create the patient
               dont_send_welcome,
             },
           },

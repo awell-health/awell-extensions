@@ -27,19 +27,13 @@ export const fields = {
       "The patient's legal name which will be used in CMS 1500 Claims, Invoices, and Superbills.",
     type: FieldType.STRING,
   },
-  skipped_email: {
-    id: 'skipped_email',
-    label: 'Skipped email.',
-    description:
-      'When disabled, an email is not required to create the patient.',
-    type: FieldType.BOOLEAN,
-  },
   email: {
     id: 'email',
     label: 'Email',
-    description: 'The email address of the patient.',
+    description:
+      'The email address of the patient. If email is NOT provided, we will still create the patient in Healthie but without the email.',
     type: FieldType.STRING,
-    required: true, // required until conditional field validation is implemented (based on `skipped_email`)
+    required: false,
   },
   phone_number: {
     id: 'phone_number',
@@ -68,7 +62,6 @@ export const FieldsValidationSchema = z.object({
   first_name: z.string().min(1),
   last_name: z.string().min(1),
   legal_name: z.string().optional(),
-  skipped_email: z.boolean().optional(),
   email: z.string().min(1).email(),
   phone_number: z.string().optional(),
   send_invite: z.boolean().optional(),
