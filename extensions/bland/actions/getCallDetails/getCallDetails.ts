@@ -1,6 +1,7 @@
 import { type Action } from '@awell-health/extensions-core'
 import { Category } from '@awell-health/extensions-core'
-import { isEmpty } from 'lodash'
+import { isEmpty, isNil } from 'lodash'
+import { addActivityEventLog } from '../../../../src/lib/awell/addEventLog'
 import { validatePayloadAndCreateSdk } from '../../lib/validatePayloadAndCreateSdk'
 import { type settings } from '../../settings'
 import { fields, FieldsValidationSchema, dataPoints } from './config'
@@ -30,10 +31,14 @@ export const getCallDetails: Action<
 
     await onComplete({
       data_points: {
-        callData: isEmpty(data.analysis)
-          ? undefined
-          : JSON.stringify(data.analysis),
+        callData:
+          isEmpty(data) || isNil(data) ? undefined : JSON.stringify(data),
       },
+      events: [
+        addActivityEventLog({
+          message: 'Call details:\n' + JSON.stringify(data, null, 2),
+        }),
+      ],
     })
   },
 }
