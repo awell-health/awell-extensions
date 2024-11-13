@@ -4,7 +4,7 @@ import { validatePayloadAndCreateSdk } from '../../../lib/sdk/validatePayloadAnd
 import { type settings } from '../../../settings'
 import { datapoints, fields, FieldsValidationSchema } from './config'
 import { getSubActivityLogs } from './logs'
-import { isEmpty } from 'lodash'
+import { isEmpty, defaultTo } from 'lodash'
 import {
   HealthieFormResponseNotCreated,
   parseHealthieFormResponseNotCreatedError,
@@ -60,6 +60,9 @@ export const pushFormResponseToHealthie: Action<
         awellFormResponse: formResponse,
       })
 
+    // indicates whether to make form values editable in Healthie
+    const lock = defaultTo(fields.lockFormAnswerGroup, false)
+
     try {
       const res = await healthieSdk.client.mutation({
         createFormAnswerGroup: {
@@ -82,6 +85,22 @@ export const pushFormResponseToHealthie: Action<
 
       if (isEmpty(res?.createFormAnswerGroup?.form_answer_group?.id))
         throw new HealthieFormResponseNotCreated(res)
+
+      // separate call to lock the form if needed
+      if (lock) {
+        await healthieSdk.client.mutation({
+          lockFormAnswerGroup: {
+            __args: {
+              input: {
+                id: fields.healthieFormId,
+              },
+            },
+            form_answer_group: {
+              id: true,
+            },
+          },
+        })
+      }
 
       await onComplete({
         data_points: {
