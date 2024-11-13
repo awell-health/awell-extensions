@@ -82,17 +82,19 @@ export const pushFormResponseToHealthie: Action<
           },
         },
       })
+      const formAnswerGroupId =
+        res?.createFormAnswerGroup?.form_answer_group?.id
 
-      if (isEmpty(res?.createFormAnswerGroup?.form_answer_group?.id))
+      if (isEmpty(formAnswerGroupId))
         throw new HealthieFormResponseNotCreated(res)
 
       // separate call to lock the form if needed
-      if (lock) {
+      if (lock && formAnswerGroupId !== undefined) {
         await healthieSdk.client.mutation({
           lockFormAnswerGroup: {
             __args: {
               input: {
-                id: fields.healthieFormId,
+                id: formAnswerGroupId,
               },
             },
             form_answer_group: {
@@ -104,9 +106,7 @@ export const pushFormResponseToHealthie: Action<
 
       await onComplete({
         data_points: {
-          formAnswerGroupId: String(
-            res.createFormAnswerGroup?.form_answer_group?.id
-          ),
+          formAnswerGroupId: String(formAnswerGroupId),
         },
         events: getSubActivityLogs(omittedFormAnswers),
       })
