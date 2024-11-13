@@ -3,6 +3,7 @@ import { updatePatient } from './updatePatient'
 import { createPatient } from './createPatient'
 import { createAppointment } from './createAppointment'
 import { getAppointment } from './getAppointment'
+import { getPharmacy } from './getPharmacy'
 import { findAppointments } from './findAppointments'
 import { findPhysician } from './findPhysician'
 import { createNonVisitNote } from './createNonVisitNote'
@@ -13,7 +14,10 @@ import { getPhysician } from './getPhysician'
 import { postLetter } from './postLetter'
 import { createLabOrder } from './createLabOrder'
 import { createMessageThread } from './createMessageThread'
+import { addHistory } from './addHistory/addHistory'
 import { addAllergy } from './addAllergy/addAllergy'
+import { createVisitNote } from './createVisitNote/createVisitNote'
+import { addVitals } from './addVitals/addVitals'
 
 export const actions = {
   getPatient,
@@ -22,14 +26,18 @@ export const actions = {
   createAppointment,
   getAppointment,
   findAppointments,
+  getPharmacy,
   getPhysician,
   findPhysician,
   createNonVisitNote,
   updateNonVisitNote,
   getNonVisitNote,
   deleteNonVisitNote,
+  createVisitNote,
+  addVitals,
+  addHistory,
+  addAllergy,
   postLetter,
   createLabOrder,
   createMessageThread,
-  addAllergy,
 }

@@ -9,6 +9,10 @@ const dataPoints = {
     key: 'patientId',
     valueType: 'number',
   },
+  patient: {
+    key: 'patient',
+    valueType: 'json',
+  },
 } satisfies Record<string, DataPointDefinition>
 
 export const patientCreatedOrUpdated: Webhook<
@@ -34,7 +38,10 @@ export const patientCreatedOrUpdated: Webhook<
       })
     } else {
       await onSuccess({
-        data_points: { patientId: String(data.id) },
+        data_points: {
+          patientId: String(data.id),
+          patient: JSON.stringify(data),
+        },
         // Review the system used for elation identifiers
         patient_identifier: {
           system: 'https://www.elationhealth.com/',

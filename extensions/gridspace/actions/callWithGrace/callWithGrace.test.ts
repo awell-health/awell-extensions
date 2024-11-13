@@ -19,7 +19,7 @@ describe('callWithGrace', () => {
       payload: generateTestPayload({
         fields: {
           flowId: 'flowId',
-          data: { foo: 'bar', name: 'John Doe' } as any,
+          data: JSON.stringify({ first_name: 'John', last_name: 'Doe' }),
           phoneNumber: '1234567890',
         },
         settings: {
@@ -32,10 +32,10 @@ describe('callWithGrace', () => {
       helpers,
     })
     expect(mockCallWithGrace).toHaveBeenCalledWith('flowId', {
-      foo: 'bar',
+      first_name: 'John',
+      last_name: 'Doe',
       phone_number: '1234567890',
       patient_id: 'test-patient',
-      name: 'John Doe',
       pathway_id: 'pathway-id',
       activity_id: 'activity-id',
       pathway_definition_id: 'pathway-definition-id',

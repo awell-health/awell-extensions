@@ -4,7 +4,7 @@ import { validatePayloadAndCreateSdk } from '../../../lib/sdk/validatePayloadAnd
 import { type settings } from '../../../settings'
 import { datapoints, fields, FieldsValidationSchema } from './config'
 import { getSubActivityLogs } from './logs'
-import { isEmpty } from 'lodash'
+import { isEmpty, defaultTo } from 'lodash'
 import {
   HealthieFormResponseNotCreated,
   parseHealthieFormResponseNotCreatedError,
@@ -67,6 +67,9 @@ export const pushFormResponsesToHealthie: Action<
       ({ omittedFormAnswers }) => omittedFormAnswers
     )
 
+    // indicates whether to make form values editable in Healthie
+    const lock = defaultTo(fields.lockFormAnswerGroup, false)
+
     try {
       const res = await healthieSdk.client.mutation({
         createFormAnswerGroup: {
@@ -86,15 +89,30 @@ export const pushFormResponsesToHealthie: Action<
           },
         },
       })
+      const formAnswerGroupId =
+        res?.createFormAnswerGroup?.form_answer_group?.id
 
-      if (isEmpty(res?.createFormAnswerGroup?.form_answer_group?.id))
+      if (isEmpty(formAnswerGroupId))
         throw new HealthieFormResponseNotCreated(res)
 
+      // separate call to lock the form if needed
+      if (lock && formAnswerGroupId !== undefined) {
+        await healthieSdk.client.mutation({
+          lockFormAnswerGroup: {
+            __args: {
+              input: {
+                id: formAnswerGroupId,
+              },
+            },
+            form_answer_group: {
+              id: true,
+            },
+          },
+        })
+      }
       await onComplete({
         data_points: {
-          formAnswerGroupId: String(
-            res.createFormAnswerGroup?.form_answer_group?.id
-          ),
+          formAnswerGroupId: String(formAnswerGroupId),
         },
         events: getSubActivityLogs(mergedOmittedFormAnswers),
       })

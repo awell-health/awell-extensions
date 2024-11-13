@@ -10,6 +10,7 @@ import { type settings } from '../settings'
 import { makeAPIClient } from '../client'
 import { fromZodError } from 'zod-validation-error'
 import { messageThreadSchema } from '../validation/messageThread.zod'
+import { isNil } from 'lodash'
 
 const fields = {
   patientId: {
@@ -54,6 +55,13 @@ const fields = {
     type: FieldType.STRING,
     required: true,
   },
+  groupId: {
+    id: 'groupId',
+    label: 'Group ID',
+    description: 'The ID of the group to which the thread member belongs',
+    type: FieldType.NUMERIC,
+    required: false,
+  },
   isUrgent: {
     id: 'isUrgent',
     label: 'Urgent',
@@ -83,71 +91,48 @@ export const createMessageThread: Action<
   previewable: true,
   dataPoints,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
-    try {
-      const {
-        patientId,
-        senderId,
-        practiceId,
-        documentDate,
-        chartDate,
-        messageBody,
-        isUrgent,
-      } = payload.fields
+    const {
+      patientId,
+      senderId,
+      practiceId,
+      documentDate,
+      chartDate,
+      messageBody,
+      isUrgent,
+      groupId,
+    } = payload.fields
 
-      const messageThread = messageThreadSchema.parse({
-        patient: patientId,
-        sender: senderId,
-        practice: practiceId,
-        document_date: documentDate,
-        chart_date: chartDate,
-        is_urgent: isUrgent,
-        messages: [
-          {
-            body: messageBody,
-            send_date: new Date().toISOString(),
-            sender: senderId,
-          },
-        ],
-      })
-
-      const api = makeAPIClient(payload.settings)
-      const { id } = await api.createMessageThread(messageThread)
-
-      await onComplete({
-        data_points: {
-          messageThreadId: String(id),
+    const messageThread = messageThreadSchema.parse({
+      patient: patientId,
+      sender: senderId,
+      practice: practiceId,
+      document_date: documentDate,
+      chart_date: chartDate,
+      is_urgent: isUrgent,
+      messages: [
+        {
+          body: messageBody,
+          send_date: new Date().toISOString(),
+          sender: senderId,
         },
-      })
-    } catch (err) {
-      if (err instanceof ZodError) {
-        const error = fromZodError(err)
-        await onError({
-          events: [
+      ],
+      members: !isNil(groupId)
+        ? [
             {
-              date: new Date().toISOString(),
-              text: { en: error.message },
-              error: {
-                category: 'SERVER_ERROR',
-                message: error.message,
-              },
+              group: groupId,
+              status: 'Requiring Action',
             },
-          ],
-        })
-      } else {
-        const message = (err as Error).message
-        await onError({
-          events: [
-            {
-              date: new Date().toISOString(),
-              text: { en: message },
-              error: {
-                category: 'SERVER_ERROR',
-                message,
-              },
-            },
-          ],
-        })
-      }
-    }
+          ]
+        : [],
+    })
+
+    const api = makeAPIClient(payload.settings)
+    const { id } = await api.createMessageThread(messageThread)
+
+    await onComplete({
+      data_points: {
+        messageThreadId: String(id),
+      },
+    })
   },
 }

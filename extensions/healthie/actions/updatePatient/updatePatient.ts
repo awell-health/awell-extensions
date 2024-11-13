@@ -1,4 +1,4 @@
-import { isNil } from 'lodash'
+import { isNil, isEmpty } from 'lodash'
 import { type Action } from '@awell-health/extensions-core'
 import { Category } from '@awell-health/extensions-core'
 import { getSdk } from '../../lib/sdk/graphql-codegen/generated/sdk'
@@ -34,7 +34,6 @@ export const updatePatient: Action<typeof fields, typeof settings> = {
       user_group_id,
       active,
       dob,
-      skipped_email,
     } = fields
     try {
       if (isNil(id)) {
@@ -72,7 +71,7 @@ export const updatePatient: Action<typeof fields, typeof settings> = {
             user_group_id,
             active,
             dob,
-            skipped_email,
+            skipped_email: isEmpty(email),
           },
         })
 

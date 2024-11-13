@@ -1,4 +1,5 @@
 import { generateTestPayload } from '@/tests'
+import { ZodError } from 'zod'
 import { makeAPIClient } from '../../client'
 import { createMessageThread } from '../createMessageThread'
 
@@ -66,15 +67,12 @@ describe('createMessageThread action', () => {
       messageBody: 'Initial message in the thread',
     })
 
-    await createMessageThread.onActivityCreated!(payload, onComplete, onError)
-
-    expect(onError).toHaveBeenCalled()
-    expect(onError.mock.calls[0][0].events[0].error).toEqual(
-      expect.objectContaining({
-        category: 'SERVER_ERROR',
-        message: expect.stringContaining('Validation error'),
-      })
+    const response = createMessageThread.onActivityCreated!(
+      payload,
+      onComplete,
+      onError
     )
+    await expect(response).rejects.toThrow(ZodError)
   })
 
   it('should fail with missing required messageBody', async () => {
@@ -88,15 +86,12 @@ describe('createMessageThread action', () => {
       messageBody: undefined as unknown as string,
     })
 
-    await createMessageThread.onActivityCreated!(payload, onComplete, onError)
-
-    expect(onError).toHaveBeenCalled()
-    expect(onError.mock.calls[0][0].events[0].error).toEqual(
-      expect.objectContaining({
-        category: 'SERVER_ERROR',
-        message: expect.stringContaining('Validation error'),
-      })
+    const response = createMessageThread.onActivityCreated!(
+      payload,
+      onComplete,
+      onError
     )
+    await expect(response).rejects.toThrow(ZodError)
   })
 
   it('should handle API error gracefully', async () => {
@@ -116,19 +111,12 @@ describe('createMessageThread action', () => {
       messageBody: 'Initial message in the thread',
     })
 
-    await createMessageThread.onActivityCreated!(payload, onComplete, onError)
-
+    const response = createMessageThread.onActivityCreated!(
+      payload,
+      onComplete,
+      onError
+    )
+    await expect(response).rejects.toThrowError(new Error('API error'))
     expect(onComplete).not.toHaveBeenCalled()
-    expect(onError).toHaveBeenCalledWith({
-      events: expect.arrayContaining([
-        expect.objectContaining({
-          text: { en: 'API error' },
-          error: expect.objectContaining({
-            category: 'SERVER_ERROR',
-            message: 'API error',
-          }),
-        }),
-      ]),
-    })
   })
 })

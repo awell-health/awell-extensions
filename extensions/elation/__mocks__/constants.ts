@@ -36,6 +36,10 @@ export const patientExample: PatientInput = {
       phone: '(213) 373 42 53',
       phone_type: 'Mobile',
     },
+    {
+      phone: '2485311234',
+      phone_type: 'Main',
+    },
   ],
   patient_status: {
     status: 'active',
@@ -152,4 +156,128 @@ export const allergyExample = {
   startDate: '2023-01-01T00:00:00Z',
   reaction: 'Hives',
   severity: 'High',
+}
+
+export const visitNoteExample = {
+  patient: 123,
+  chart_date: '2010-06-10T17:57:35Z',
+  document_date: '2010-06-10T17:57:35Z',
+  type: 'Office Visit Note',
+  confidential: false,
+  template: 'Complete H&P (1 col)',
+  physician: 131074,
+  bullets: {
+    ROS: [
+      {
+        name: 'General',
+        value: 'Denies fever',
+        sequence: 0,
+      },
+      {
+        name: 'Eyes',
+        value: 'Denies visual abnormalities',
+        sequence: 1,
+      },
+    ],
+  },
+}
+
+export const createVisitNoteExample = {
+  patientId: 123,
+  type: 'Office Visit Note',
+  confidential: false,
+  template: 'Complete H&P (1 col)',
+  physicianId: 131074,
+  authorId: 111222,
+  text: 'This is a test note',
+  category: 'ROS',
+}
+
+export const historyExample = {
+  patientId: 123,
+  type: 'Past',
+  text: 'Test Past',
+}
+
+export const historyResponseExample = {
+  id: 64073957420,
+  type: 'Diet',
+  rank: 1,
+  text: 'Yogurt daily',
+  patient: 64072843265,
+  created_date: '2016-10-13T15:00:38Z',
+  deleted_date: null,
+}
+
+export const vitalsExample = {
+  patientId: 12345,
+  practiceId: 67890,
+  visitNoteId: 11111,
+  bmi: 25.5,
+  height: 175,
+  heightNote: 'no shoes',
+  weight: 70,
+  weightNote: 'in shorts',
+  oxygen: 98,
+  rr: 18,
+  temperature: 37,
+}
+
+export const vitalsResponseExample = {
+  id: 65098023184,
+  bmi: 21.52,
+  height: [
+    {
+      value: '70',
+      units: 'inches',
+      note: 'no shoes',
+    },
+  ],
+  weight: [
+    {
+      value: '150',
+      units: 'lbs',
+      note: 'in shorts',
+    },
+  ],
+  oxygen: [
+    {
+      value: '98',
+      units: '%',
+      note: 'good',
+    },
+  ],
+  rr: [
+    {
+      value: '20',
+      units: 'bpm',
+      note: 'deep',
+    },
+  ],
+  hr: [
+    {
+      value: '60',
+      units: 'bpm',
+      note: 'calm',
+    },
+  ],
+  hc: [
+    {
+      value: '30',
+      units: 'cm',
+      note: 'big',
+    },
+  ],
+  bmi_percentile: '12',
+  length_for_weight_percentile: '20',
+  patient: 64072843265,
+  practice: 65540,
+  visit_note: 99024920,
+  non_visit_note: null,
+  document_date: '2014-01-19T16:00:29Z',
+  chart_date: '2014-01-19T16:00:29Z',
+  signed_date: '2014-01-19T16:00:29Z',
+  signed_by: 131074,
+  created_date: '2016-05-02T13:30:07Z',
+  deleted_date: null,
 }

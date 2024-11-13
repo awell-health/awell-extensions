@@ -30,7 +30,7 @@ export class GridspaceClient {
     workflowId: string,
     data: Record<string, any>
   ): Promise<unknown> {
-    const resp = await this.client.post(`/v0/workflows/${workflowId}/run`, data)
+    const resp = await this.client.post(`/workflows/${workflowId}/run`, data)
     return resp.data
   }
 

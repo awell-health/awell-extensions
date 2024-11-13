@@ -38,10 +38,17 @@ import type {
   MessageThreadInput,
   MessageThreadResponse,
 } from './types/messageThread'
+import type { addHistoryInput, addHistoryResponse } from './types/history'
 import type {
   AddAllergyInputType,
   AddAllergyResponseType,
 } from './types/allergy'
+import type { AddVitalsInputType, AddVitalsResponseType } from './types/vitals'
+import type {
+  CreateVisitNoteInputType,
+  CreateVisitNoteResponseType,
+} from './types/visitNote'
+import { PharmacyResponse, PharmacySchema } from './types/pharmacy'
 
 export class ElationDataWrapper extends DataWrapper {
   public async findAppointments(
@@ -240,6 +247,16 @@ export class ElationDataWrapper extends DataWrapper {
     return res
   }
 
+  public async addHistory(obj: addHistoryInput): Promise<addHistoryResponse> {
+    const req = this.Request<addHistoryResponse>({
+      method: 'POST',
+      url: `/histories`,
+      data: obj,
+    })
+    const res = await req
+    return res
+  }
+
   public async addAllergy(
     obj: AddAllergyInputType
   ): Promise<AddAllergyResponseType> {
@@ -250,6 +267,39 @@ export class ElationDataWrapper extends DataWrapper {
     })
     const res = await req
     return res
+  }
+
+  public async createVisitNote(
+    obj: CreateVisitNoteInputType
+  ): Promise<CreateVisitNoteResponseType> {
+    const req = this.Request<CreateVisitNoteResponseType>({
+      method: 'POST',
+      url: `/visit_notes`,
+      data: obj,
+    })
+    const res = await req
+    return res
+  }
+
+  public async addVitals(
+    obj: AddVitalsInputType
+  ): Promise<AddVitalsResponseType> {
+    const req = this.Request<AddVitalsResponseType>({
+      method: 'POST',
+      url: `/vitals`,
+      data: obj,
+    })
+    const res = await req
+    return res
+  }
+
+  public async getPharmacy(ncpdpId: string): Promise<PharmacyResponse> {
+    return PharmacySchema.parse(
+      await this.Request<PharmacyResponse>({
+        method: 'GET',
+        url: `/pharmacies/${ncpdpId}`,
+      })
+    )
   }
 }
 
@@ -391,6 +441,10 @@ export class ElationAPIClient extends APIClient<ElationDataWrapper> {
     return await this.FetchData(async (dw) => await dw.createLabOrder(obj))
   }
 
+  public async addHistory(obj: addHistoryInput): Promise<addHistoryResponse> {
+    return await this.FetchData(async (dw) => await dw.addHistory(obj))
+  }
+
   public async createMessageThread(
     obj: MessageThreadInput
   ): Promise<MessageThreadResponse> {
@@ -401,6 +455,22 @@ export class ElationAPIClient extends APIClient<ElationDataWrapper> {
     obj: AddAllergyInputType
   ): Promise<AddAllergyResponseType> {
     return await this.FetchData(async (dw) => await dw.addAllergy(obj))
+  }
+
+  public async createVisitNote(
+    obj: CreateVisitNoteInputType
+  ): Promise<CreateVisitNoteResponseType> {
+    return await this.FetchData(async (dw) => await dw.createVisitNote(obj))
+  }
+
+  public async addVitals(
+    obj: AddVitalsInputType
+  ): Promise<AddVitalsResponseType> {
+    return await this.FetchData(async (dw) => await dw.addVitals(obj))
+  }
+
+  public async getPharmacy(ncpdpId: string): Promise<PharmacyResponse> {
+    return await this.FetchData(async (dw) => await dw.getPharmacy(ncpdpId))
   }
 }
 
