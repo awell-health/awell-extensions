@@ -95,3 +95,21 @@ export const fields = {
     type: FieldType.STRING,
   },
 } satisfies Record<string, Field>
+
+export interface UpdatePatientPayload {
+  id?: string
+  first_name?: string
+  last_name?: string
+  legal_name?: string
+  email?: string
+  skipped_email?: boolean
+  dob?: string
+  phone_number?: string
+  provider_id?: string
+  user_group_id?: string
+  active?: boolean
+  height?: string
+  gender?: string
+  gender_identity?: string
+  sex?: string
+}

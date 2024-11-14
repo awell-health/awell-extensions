@@ -67,3 +67,15 @@ export const FieldsValidationSchema = z.object({
   send_invite: z.boolean().optional(),
   provider_id: z.string().optional(),
 } satisfies Record<keyof typeof fields, ZodTypeAny>)
+
+export interface CreatePatientPayload {
+  first_name: string
+  last_name: string
+  legal_name?: string
+  email?: string
+  skipped_email?: boolean
+  phone_number?: string
+  dietitian_id?: string
+  user_group_id?: string
+  dont_send_welcome?: boolean
+}

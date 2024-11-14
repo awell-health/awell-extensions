@@ -1,1 +1,1 @@
-export { fields } from './fields'
+export { fields, type UpdatePatientPayload } from './fields'
