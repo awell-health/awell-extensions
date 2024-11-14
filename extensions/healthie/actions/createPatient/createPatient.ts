@@ -31,6 +31,10 @@ export const createPatient: Action<
     })
 
     const dont_send_welcome = fields.send_invite !== true
+    const dietitian_id =
+      fields.provider_id === undefined || fields.provider_id === ''
+        ? undefined
+        : fields.provider_id
     const skipped_email = fields.email === undefined || fields.email === '' // if email is empty we still want to create the patient
     try {
       const res = await healthieSdk.client.mutation({
@@ -42,8 +46,7 @@ export const createPatient: Action<
               legal_name: fields.legal_name,
               email: fields.email,
               phone_number: fields.phone_number,
-              dietitian_id:
-                fields.provider_id === '' ? undefined : fields.provider_id,
+              dietitian_id,
               skipped_email,
               dont_send_welcome,
             },

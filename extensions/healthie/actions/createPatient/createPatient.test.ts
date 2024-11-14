@@ -93,4 +93,64 @@ describe('Healthie - createPatient', () => {
       },
     })
   })
+
+  test('Should create a new patient with skipeed email false when email is empty string', async () => {
+    await action.onEvent({
+      payload: generateTestPayload({
+        fields: {
+          first_name: 'Test',
+          last_name: 'Test',
+          legal_name: 'Official Test Name',
+          email: '',
+          phone_number: '+1234567890',
+          provider_id: undefined,
+          send_invite: false,
+        },
+        settings: {
+          apiUrl: 'https://staging-api.gethealthie.com/graphql',
+          apiKey: 'apiKey',
+        },
+      }),
+      onComplete,
+      onError,
+      helpers,
+    })
+
+    expect(mockedHealthieSdk).toHaveBeenCalled()
+    expect(onComplete).toHaveBeenCalledWith({
+      data_points: {
+        healthiePatientId: 'patient-1',
+      },
+    })
+  })
+
+  test('Should create a new patient with skipeed email false when email is undefined', async () => {
+    await action.onEvent({
+      payload: generateTestPayload({
+        fields: {
+          first_name: 'Test',
+          last_name: 'Test',
+          legal_name: 'Official Test Name',
+          email: undefined,
+          phone_number: '+1234567890',
+          provider_id: undefined,
+          send_invite: false,
+        },
+        settings: {
+          apiUrl: 'https://staging-api.gethealthie.com/graphql',
+          apiKey: 'apiKey',
+        },
+      }),
+      onComplete,
+      onError,
+      helpers,
+    })
+
+    expect(mockedHealthieSdk).toHaveBeenCalled()
+    expect(onComplete).toHaveBeenCalledWith({
+      data_points: {
+        healthiePatientId: 'patient-1',
+      },
+    })
+  })
 })
