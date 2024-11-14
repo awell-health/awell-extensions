@@ -62,7 +62,7 @@ export const FieldsValidationSchema = z.object({
   first_name: z.string().min(1),
   last_name: z.string().min(1),
   legal_name: z.string().optional(),
-  email: z.string().email().optional(),
+  email: z.string().optional(),
   phone_number: z.string().optional(),
   send_invite: z.boolean().optional(),
   provider_id: z.string().optional(),
