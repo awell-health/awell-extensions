@@ -105,7 +105,7 @@ export interface UpdatePatientPayload {
   skipped_email?: boolean
   dob?: string
   phone_number?: string
-  provider_id?: string
+  dietitian_id?: string
   user_group_id?: string
   active?: boolean
   height?: string

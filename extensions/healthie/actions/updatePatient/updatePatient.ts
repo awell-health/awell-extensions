@@ -19,6 +19,22 @@ export const updatePatient: Action<typeof fields, typeof settings> = {
   previewable: true,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
     const { fields, settings } = payload
+    const {
+      id,
+      first_name,
+      last_name,
+      legal_name,
+      email,
+      phone_number,
+      provider_id,
+      gender,
+      gender_identity,
+      height,
+      sex,
+      user_group_id,
+      active,
+      dob,
+    } = fields
     try {
       if (isNil(fields.id)) {
         await onError({
@@ -39,10 +55,27 @@ export const updatePatient: Action<typeof fields, typeof settings> = {
       const client = initialiseClient(settings)
       if (client !== undefined) {
         const sdk = getSdk(client)
-        const input: UpdatePatientPayload = fields
+
+        const input: UpdatePatientPayload = {
+          id,
+          first_name,
+          last_name,
+          legal_name,
+          email,
+          phone_number,
+          dietitian_id: provider_id === '' ? undefined : provider_id,
+          gender,
+          gender_identity,
+          height,
+          sex,
+          user_group_id,
+          active,
+          dob,
+        }
         if (input.email === undefined || input.email === '') {
           input.skipped_email = true
         }
+
         await sdk.updatePatient({
           input,
         })
