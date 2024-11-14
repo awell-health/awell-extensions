@@ -1,4 +1,4 @@
-import { isNil, isEmpty } from 'lodash'
+import { isNil } from 'lodash'
 import { type Action } from '@awell-health/extensions-core'
 import { Category } from '@awell-health/extensions-core'
 import { getSdk } from '../../lib/sdk/graphql-codegen/generated/sdk'
@@ -8,7 +8,7 @@ import {
   HealthieError,
   mapHealthieToActivityError,
 } from '../../lib/sdk/graphql-codegen/errors'
-import { fields } from './config'
+import { fields, type UpdatePatientPayload } from './config'
 
 export const updatePatient: Action<typeof fields, typeof settings> = {
   key: 'updatePatient',
@@ -36,7 +36,7 @@ export const updatePatient: Action<typeof fields, typeof settings> = {
       dob,
     } = fields
     try {
-      if (isNil(id)) {
+      if (isNil(fields.id)) {
         await onError({
           events: [
             {
@@ -55,24 +55,29 @@ export const updatePatient: Action<typeof fields, typeof settings> = {
       const client = initialiseClient(settings)
       if (client !== undefined) {
         const sdk = getSdk(client)
+
+        const input: UpdatePatientPayload = {
+          id,
+          first_name,
+          last_name,
+          legal_name,
+          email,
+          phone_number,
+          dietitian_id: provider_id === '' ? undefined : provider_id,
+          gender,
+          gender_identity,
+          height,
+          sex,
+          user_group_id,
+          active,
+          dob,
+        }
+        if (input.email === undefined || input.email === '') {
+          input.skipped_email = true
+        }
+
         await sdk.updatePatient({
-          input: {
-            id,
-            first_name,
-            last_name,
-            legal_name,
-            email,
-            phone_number,
-            dietitian_id: provider_id === '' ? undefined : provider_id,
-            gender,
-            gender_identity,
-            height,
-            sex,
-            user_group_id,
-            active,
-            dob,
-            skipped_email: isEmpty(email),
-          },
+          input,
         })
 
         await onComplete()
