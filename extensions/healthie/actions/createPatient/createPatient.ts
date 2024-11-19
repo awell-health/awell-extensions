@@ -17,6 +17,7 @@ import {
   HealthiePatientNotCreated,
   parseHealthiePatientNotCreatedError,
 } from './lib/errors'
+
 export const createPatient: Action<
   typeof fields,
   typeof settings,
@@ -41,6 +42,7 @@ export const createPatient: Action<
         ? undefined
         : fields.provider_id
     const skipped_email = fields.email === undefined || fields.email === '' // if email is empty we still want to create the patient
+
     try {
       const input: CreatePatientPayload = {
         first_name: fields.first_name,
@@ -48,6 +50,7 @@ export const createPatient: Action<
         legal_name: fields.legal_name,
         email: fields.email,
         phone_number: fields.phone_number,
+        dob: fields.dob,
         dietitian_id,
         dont_send_welcome,
       }

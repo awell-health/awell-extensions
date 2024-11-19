@@ -27,6 +27,13 @@ export const fields = {
       "The patient's legal name which will be used in CMS 1500 Claims, Invoices, and Superbills.",
     type: FieldType.STRING,
   },
+  dob: {
+    id: 'dob',
+    label: 'Date of birth',
+    description: 'Date of birth of the patient',
+    type: FieldType.DATE,
+    required: false,
+  },
   email: {
     id: 'email',
     label: 'Email',
@@ -63,6 +70,7 @@ export const FieldsValidationSchema = z.object({
   last_name: z.string().min(1),
   legal_name: z.string().optional(),
   email: z.string().optional(),
+  dob: z.string().optional(),
   phone_number: z.string().optional(),
   send_invite: z.boolean().optional(),
   provider_id: z.string().optional(),
@@ -73,6 +81,7 @@ export interface CreatePatientPayload {
   last_name: string
   legal_name?: string
   email?: string
+  dob?: string
   skipped_email?: boolean
   phone_number?: string
   dietitian_id?: string
