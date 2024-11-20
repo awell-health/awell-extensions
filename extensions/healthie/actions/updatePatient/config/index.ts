@@ -1,1 +1,5 @@
-export { fields, type UpdatePatientPayload } from './fields'
+export {
+  fields,
+  FieldsValidationSchema,
+  type UpdatePatientPayload,
+} from './fields'

@@ -32,7 +32,7 @@ describe('Healthie - createPatient', () => {
   } = TestHelpers.fromAction(actionInterface)
 
   beforeEach(() => {
-    jest.clearAllMocks()
+    clearMocks()
   })
 
   test('Field validation', async () => {
@@ -94,7 +94,7 @@ describe('Healthie - createPatient', () => {
     })
   })
 
-  test('Should create a new patient with skipeed email false when email is empty string', async () => {
+  test('Should create a new patient with skipped email false when email is empty string', async () => {
     await action.onEvent({
       payload: generateTestPayload({
         fields: {
@@ -124,7 +124,7 @@ describe('Healthie - createPatient', () => {
     })
   })
 
-  test('Should create a new patient with skipeed email false when email is undefined', async () => {
+  test('Should create a new patient with skipped email false when email is undefined', async () => {
     await action.onEvent({
       payload: generateTestPayload({
         fields: {
