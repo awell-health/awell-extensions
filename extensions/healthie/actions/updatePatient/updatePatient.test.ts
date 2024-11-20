@@ -26,10 +26,11 @@ describe('Healthie - updatePatient', () => {
     onComplete,
     onError,
     helpers,
+    clearMocks,
   } = TestHelpers.fromAction(actionInterface)
 
   beforeEach(() => {
-    jest.clearAllMocks()
+    clearMocks()
   })
 
   test('Field validation success', async () => {

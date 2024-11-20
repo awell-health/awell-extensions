@@ -32,7 +32,7 @@ describe('Healthie - createPatient', () => {
   } = TestHelpers.fromAction(actionInterface)
 
   beforeEach(() => {
-    jest.clearAllMocks()
+    clearMocks()
   })
 
   test('Field validation', async () => {
