@@ -10,45 +10,37 @@ import {
   type FindAppointmentsParams,
   type AppointmentInput,
   type AppointmentResponse,
-} from './types/appointment'
-import { type ElationCollection } from './types/generic'
-import {
+  type ElationCollection,
   type PatientInput,
   type PatientResponse,
   type UpdatePatientInput,
-} from './types/patient'
-import {
   type Subscription,
   type SubscriptionRequest,
-} from './types/subscription'
-import { settingsSchema } from './validation/settings.zod'
-import { elationCacheService } from './cache'
-import { type PhysicianResponse } from './types/physician'
-import {
+  type PhysicianResponse,
   type NonVisitNoteInput,
   type NonVisitNoteResponse,
-} from './types/nonVisitNote'
-import { type PostLetterInput, type PostLetterResponse } from './types/letter'
-import type {
-  CreateLabOrderInput,
-  CreateLabOrderResponse,
-} from './types/labOrder'
-import { type FindContactsResponse } from './types/contact'
-import type {
-  MessageThreadInput,
-  MessageThreadResponse,
-} from './types/messageThread'
-import type { addHistoryInput, addHistoryResponse } from './types/history'
-import type {
-  AddAllergyInputType,
-  AddAllergyResponseType,
-} from './types/allergy'
-import type { AddVitalsInputType, AddVitalsResponseType } from './types/vitals'
-import type {
-  CreateVisitNoteInputType,
-  CreateVisitNoteResponseType,
-} from './types/visitNote'
-import { PharmacyResponse, PharmacySchema } from './types/pharmacy'
+  type GetLetterInputType,
+  type GetLetterResponseType,
+  type PostLetterInput,
+  type PostLetterResponse,
+  type CreateLabOrderInput,
+  type CreateLabOrderResponse,
+  type FindContactsResponse,
+  type MessageThreadInput,
+  type MessageThreadResponse,
+  type addHistoryInput,
+  type addHistoryResponse,
+  type AddAllergyInputType,
+  type AddAllergyResponseType,
+  type CreateVisitNoteInputType,
+  type CreateVisitNoteResponseType,
+  type PharmacyResponse,
+  type AddVitalsInputType,
+  type AddVitalsResponseType,
+  PharmacySchema,
+} from './types'
+import { settingsSchema } from './validation/settings.zod'
+import { elationCacheService } from './cache'
 
 export class ElationDataWrapper extends DataWrapper {
   public async findAppointments(
@@ -151,6 +143,15 @@ export class ElationDataWrapper extends DataWrapper {
     const req = this.Request<PhysicianResponse>({
       method: 'GET',
       url: `/physicians/${id}`,
+    })
+    const res = await req
+    return res
+  }
+
+  public async getLetter(id: number): Promise<GetLetterResponseType> {
+    const req = this.Request<GetLetterResponseType>({
+      method: 'GET',
+      url: `/letters/${id}`,
     })
     const res = await req
     return res
@@ -382,6 +383,12 @@ export class ElationAPIClient extends APIClient<ElationDataWrapper> {
 
   public async getPhysician(id: number): Promise<PhysicianResponse> {
     return await this.FetchData(async (dw) => await dw.getPhysician(id))
+  }
+
+  public async getLetter(
+    id: GetLetterInputType
+  ): Promise<GetLetterResponseType> {
+    return await this.FetchData(async (dw) => await dw.getLetter(id))
   }
 
   public async findPhysicians({

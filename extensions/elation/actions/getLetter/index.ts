@@ -1,0 +1,1 @@
+export { getLetter } from './getLetter'

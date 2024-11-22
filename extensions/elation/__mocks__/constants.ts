@@ -1,10 +1,13 @@
-import { type AppointmentInput } from '../types/appointment'
-import { type FindContactsResponse } from '../types/contact'
-import { type CreateLabOrderResponse } from '../types/labOrder'
-import { type PostLetterResponse } from '../types/letter'
-import { type NonVisitNoteResponse } from '../types/nonVisitNote'
-import { type PatientInput } from '../types/patient'
-import { type PhysicianResponse } from '../types/physician'
+import {
+  type AppointmentInput,
+  type FindContactsResponse,
+  type CreateLabOrderResponse,
+  type GetLetterResponseType,
+  type PostLetterResponse,
+  type NonVisitNoteResponse,
+  type PatientInput,
+  type PhysicianResponse,
+} from '../types'
 
 export const patientExample: PatientInput = {
   first_name: 'Test',
@@ -280,4 +283,46 @@ export const vitalsResponseExample = {
   signed_by: 131074,
   created_date: '2016-05-02T13:30:07Z',
   deleted_date: null,
+}
+
+export const getLetterResponseExample: GetLetterResponseType = {
+  id: 140754680348890,
+  send_to_contact: {
+    id: 64062029826,
+    first_name: 'First',
+    last_name: 'Last',
+    org_name: 'Org Name',
+    specialties: [{ id: 1335, name: 'Cardiology' }],
+    npi: 'NPI2222',
+  },
+  send_to_name: 'Test Name',
+  fax_to: '5555555555',
+  display_to: 'Test Name',
+  to_number: '5555555555',
+  subject: 'Test Subject',
+  body: 'Test Body Message',
+  fax_status: 'success',
+  fax_attachments: true,
+  delivery_method: 'printed',
+  failure_unacknowledged: false,
+  direct_message_to: 'Test',
+  email_to: 'test@email.me',
+  viewed_at: '2021-05-11T21: 16: 23Z',
+  send_to_elation_user: 1234,
+  delivery_date: '2021-05-11T21: 16: 23Z',
+  with_archive: false,
+  is_processed: true,
+  letter_type: 'provider',
+  attachments: [
+    {
+      id: 64414089501,
+      document_type: 'MedsList',
+    },
+  ],
+  sign_date: '2021-05-11T21: 16: 23Z',
+  signed_by: 12323455,
+  tags: [],
+  document_date: '2021-05-11T21: 16: 23Z',
+  patient: 140754680086529,
+  practice: 140754674450436,
 }
