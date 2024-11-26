@@ -1,4 +1,4 @@
-import { getPatient } from './getPatient'
+import { getPatient } from './getPatient/getPatient'
 import { updatePatient } from './updatePatient'
 import { createPatient } from './createPatient'
 import { createAppointment } from './createAppointment'

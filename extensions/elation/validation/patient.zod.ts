@@ -202,6 +202,7 @@ export const patientSchema = z
     sexual_orientation: sexualOrientationEnum.nullish(),
     primary_physician: NumericIdSchema, // required for POST and PUT
     caregiver_practice: NumericIdSchema, // required for POST and PUT
+    preferred_service_location: NumericIdSchema.optional().nullish(),
     dob: DateOnlySchema, // required for POST and PUT
     ssn: z.string().length(9).nullish(),
     race: raceEnum.nullish(),
