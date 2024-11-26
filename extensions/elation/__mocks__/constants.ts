@@ -21,6 +21,7 @@ export const patientExample: PatientInput = {
   sexual_orientation: 'unknown',
   primary_physician: 141127177601026,
   caregiver_practice: 141127173275652,
+  preferred_service_location: 141127173275555,
   dob: '1940-08-29',
   ssn: '123456789',
   race: 'Asian',
