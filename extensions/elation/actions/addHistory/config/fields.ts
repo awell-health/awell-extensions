@@ -21,6 +21,12 @@ export const fields = {
       'The type of history being created. Supported values: Past, Family, Social, Habits, Diet, Exercise, Immunization, Legal, Consultation, Health Maintenance, Past Surgical, Cognitive Status, Functional Status',
     type: FieldType.STRING,
     required: true,
+    options: {
+      dropdownOptions: Object.values(HistoryTypes.enum).map((type) => ({
+        label: type,
+        value: type,
+      })),
+    },
   },
   text: {
     id: 'text',
