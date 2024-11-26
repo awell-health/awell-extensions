@@ -3,7 +3,7 @@ import { type ZodObject, type ZodTypeAny } from 'zod'
 import { CreateServiceRequestSchema } from '../../../fhir/schemas/resources/serviceRequest.schema'
 import { ServiceRequestStatusSchema } from '../../../fhir/schemas/atoms/StatusSchema'
 import { ServiceRequestIntentSchema } from '../../../fhir/schemas/atoms/IntentSchema'
-import { PrioritySchema } from 'extensions/medplum/fhir/schemas/atoms/PrioritySchema'
+import { PrioritySchema } from '../../../fhir/schemas/atoms/PrioritySchema'
 
 export const fields = {
   patientId: {

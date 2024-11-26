@@ -1,7 +1,7 @@
 import { FieldType, type Field } from '@awell-health/extensions-core'
-import { TaskIntentSchema } from 'extensions/medplum/fhir/schemas/atoms/IntentSchema'
-import { PrioritySchema } from 'extensions/medplum/fhir/schemas/atoms/PrioritySchema'
-import { TaskStatusSchema } from 'extensions/medplum/fhir/schemas/atoms/StatusSchema'
+import { TaskIntentSchema } from '../../../fhir/schemas/atoms/IntentSchema'
+import { PrioritySchema } from '../../../fhir/schemas/atoms/PrioritySchema'
+import { TaskStatusSchema } from '../../../fhir/schemas/atoms/StatusSchema'
 import { type ZodObject, type ZodTypeAny } from 'zod'
 import { CreateTaskSchema } from '../../../fhir/schemas/resources'
 
