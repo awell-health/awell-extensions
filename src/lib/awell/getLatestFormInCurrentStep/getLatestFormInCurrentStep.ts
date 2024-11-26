@@ -74,6 +74,7 @@ export const getLatestFormInCurrentStep: GetLatestFormInCurrentStepType =
       form: {
         __args: {
           id: formActivity.object.id,
+          pathway_id: pathwayId,
         },
         form: {
           __scalar: true,
