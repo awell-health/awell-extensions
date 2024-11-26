@@ -23,5 +23,4 @@ export const TaskStatusSchema = z.enum([
   'failed',
   'completed',
   'entered-in-error',
-  'unknown',
 ])

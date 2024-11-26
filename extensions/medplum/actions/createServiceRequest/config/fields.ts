@@ -16,8 +16,7 @@ export const fields = {
   status: {
     id: 'status',
     label: 'Status',
-    description:
-      'The status of the order. Allowed values: draft | active | on-hold | revoked | completed | entered-in-error | unknown',
+    description: 'The status of the order',
     type: FieldType.STRING,
     required: true,
     options: {
@@ -33,7 +32,7 @@ export const fields = {
     id: 'intent',
     label: 'Mobile phone',
     description:
-      'Whether the request is a proposal, plan, an original order or a reflex order. Allowed values: proposal | plan | directive | order | original-order | reflex-order | filler-order | instance-order | option',
+      'Whether the request is a proposal, plan, an original order or a reflex order.',
     type: FieldType.STRING,
     required: true,
     options: {
@@ -48,7 +47,7 @@ export const fields = {
   priority: {
     id: 'priority',
     label: 'Priority',
-    description: 'Allowed values: routine | urgent | asap | stat',
+    description: 'The priority of the order',
     type: FieldType.STRING,
     required: false,
     options: {
