@@ -301,7 +301,7 @@ export const getLetterResponseExample: GetLetterResponseType = {
   display_to: 'Test Name',
   to_number: '5555555555',
   subject: 'Test Subject',
-  body: 'Test Body Message',
+  body: 'Diagnosis:\nLength of Time needed:\n\nAmbulatory Devices:\n[x] Wheelchair\n[] Cane\n[] Walker\n[] Walker with Wheels and Seat (Rollator)\n[] Power Wheel Chair',
   fax_status: 'success',
   fax_attachments: true,
   delivery_method: 'printed',

@@ -46,7 +46,7 @@ describe('Elation - Get letter', () => {
 
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
-        body: 'Test Body Message',
+        body: 'Diagnosis:\nLength of Time needed:\n\nAmbulatory Devices:\n[x] Wheelchair\n[] Cane\n[] Walker\n[] Walker with Wheels and Seat (Rollator)\n[] Power Wheel Chair',
       },
     })
   })
