@@ -1,6 +1,15 @@
 import { z, type ZodTypeAny } from 'zod'
 import { type Field, FieldType } from '@awell-health/extensions-core'
 
+const UnitEnum = z.enum([
+  'seconds',
+  'minutes',
+  'hours',
+  'days',
+  'weeks',
+  'months',
+  'years',
+])
 export const fields = {
   dateLeft: {
     id: 'dateLeft',
@@ -19,24 +28,21 @@ export const fields = {
   },
   unit: {
     id: 'unit',
-    label: 'The unit you would like to calculate the difference in',
-    description:
-      'Choose one of "seconds", "minutes", "hours", "days", "weeks", "months", "years".',
+    label: 'Duration unit',
+    description: 'The unit of duration',
     required: true,
     type: FieldType.STRING,
+    options: {
+      dropdownOptions: Object.values(UnitEnum.enum).map((unit) => ({
+        label: unit,
+        value: unit,
+      })),
+    },
   },
 } satisfies Record<string, Field>
 
 export const FieldsValidationSchema = z.object({
   dateLeft: z.coerce.date(),
   dateRight: z.coerce.date(),
-  unit: z.enum([
-    'seconds',
-    'minutes',
-    'hours',
-    'days',
-    'weeks',
-    'months',
-    'years',
-  ]),
+  unit: UnitEnum,
 } satisfies Record<keyof typeof fields, ZodTypeAny>)

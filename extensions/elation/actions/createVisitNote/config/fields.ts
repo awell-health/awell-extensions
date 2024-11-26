@@ -40,6 +40,12 @@ export const fields = {
       'Visit note template. Currently we only support Complete H&P (1 col).',
     type: FieldType.STRING,
     required: true,
+    options: {
+      dropdownOptions: Object.values(templateType.enum).map((template) => ({
+        label: template,
+        value: template,
+      })),
+    },
   },
   category: {
     id: 'category',
@@ -47,6 +53,12 @@ export const fields = {
     description: 'Bullet category. Currently we only support ROS.',
     type: FieldType.STRING,
     required: true,
+    options: {
+      dropdownOptions: Object.values(bulletCategory.enum).map((category) => ({
+        label: category,
+        value: category,
+      })),
+    },
   },
   physicianId: {
     id: 'physicianId',

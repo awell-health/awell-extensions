@@ -8,6 +8,8 @@ import { formatISO } from 'date-fns'
 import { Sex } from '../../../gql/graphql'
 import { E164PhoneValidationOptionalSchema } from '@awell-health/extensions-core'
 
+const SexEnum = z.enum([Sex.Female, Sex.Male, Sex.NotKnown])
+
 export const fields = {
   patientCode: {
     id: 'patientCode',
@@ -67,10 +69,15 @@ export const fields = {
   sex: {
     id: 'sex',
     label: 'Sex',
-    description:
-      'Sex code as defined by ISO standard IEC_5218: "NOT_KNOWN", "MALE" or "FEMALE"',
+    description: 'Sex code as defined by ISO standard IEC_5218',
     type: FieldType.STRING,
     required: false,
+    options: {
+      dropdownOptions: Object.values(SexEnum.enum).map((sex) => ({
+        label: sex,
+        value: sex,
+      })),
+    },
   },
   city: {
     id: 'city',
@@ -116,7 +123,7 @@ export const FieldsValidationSchema = z.object({
   lastName: z.optional(z.string().trim()),
   birthDate: z.optional(z.coerce.date().transform((date) => formatISO(date))),
   email: z.optional(
-    z.string().trim().email('Value passed is not an email address'),
+    z.string().trim().email('Value passed is not an email address')
   ),
   phone: E164PhoneValidationOptionalSchema,
   mobilePhone: E164PhoneValidationOptionalSchema,
@@ -126,11 +133,6 @@ export const FieldsValidationSchema = z.object({
   city: z.optional(z.string().trim()),
   zip: z.optional(z.string().trim()),
   preferredLanguage: z.optional(z.string().trim()),
-  sex: z.optional(
-    z.preprocess(
-      (v) => String(v).toUpperCase(),
-      z.enum([Sex.Female, Sex.Male, Sex.NotKnown]),
-    ),
-  ),
+  sex: z.optional(z.preprocess((v) => String(v).toUpperCase(), SexEnum)),
   nationalRegistryNumber: z.string().trim().optional(),
 } satisfies Record<keyof typeof fields, ZodTypeAny>)

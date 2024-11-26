@@ -1,4 +1,7 @@
 import { FieldType, type Field } from '@awell-health/extensions-core'
+import { TaskIntentSchema } from '../../../fhir/schemas/atoms/IntentSchema'
+import { PrioritySchema } from '../../../fhir/schemas/atoms/PrioritySchema'
+import { TaskStatusSchema } from '../../../fhir/schemas/atoms/StatusSchema'
 import { type ZodObject, type ZodTypeAny } from 'zod'
 import { CreateTaskSchema } from '../../../fhir/schemas/resources'
 
@@ -27,25 +30,42 @@ export const fields = {
   status: {
     id: 'status',
     label: 'Status',
-    description:
-      'The status of the task. Allowed values: draft | requested | received | accepted | rejected | ready | cancelled | in-progress | on-hold | failed | completed | entered-in-error',
+    description: 'The status of the task',
     type: FieldType.STRING,
     required: true,
+    options: {
+      dropdownOptions: Object.values(TaskStatusSchema.enum).map((status) => ({
+        label: status,
+        value: status,
+      })),
+    },
   },
   intent: {
     id: 'intent',
     label: 'Intent',
     description:
-      'Indicates the "level" of actionability associated with the Task. Allowed values: unknown | proposal | plan | order | original-order | reflex-order | filler-order | instance-order | option',
+      'Indicates the "level" of actionability associated with the Task.',
     type: FieldType.STRING,
     required: true,
+    options: {
+      dropdownOptions: Object.values(TaskIntentSchema.enum).map((intent) => ({
+        label: intent,
+        value: intent,
+      })),
+    },
   },
   priority: {
     id: 'priority',
     label: 'Priority',
-    description: 'Allowed values: routine | urgent | asap | stat',
+    description: 'The priority of the task',
     type: FieldType.STRING,
     required: false,
+    options: {
+      dropdownOptions: Object.values(PrioritySchema.enum).map((priority) => ({
+        label: priority,
+        value: priority,
+      })),
+    },
   },
   dueDate: {
     id: 'dueDate',
