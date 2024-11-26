@@ -9,6 +9,8 @@ import {
 } from '@awell-health/extensions-core'
 import { isEmpty, isNil } from 'lodash'
 
+const statusEnum = z.enum(['ACCEPTED', 'PENDING', 'CANCELLED', 'REJECTED'])
+
 export const fields = {
   eventTypeId: {
     label: 'Event Type ID',
@@ -91,6 +93,12 @@ export const fields = {
     required: false,
     description:
       'Status of the meeting to be set. Possible values: "ACCEPTED", "PENDING", "CANCELLED", "REJECTED".',
+    options: {
+      dropdownOptions: Object.values(statusEnum.enum).map((status) => ({
+        label: status,
+        value: status,
+      })),
+    },
   },
 } satisfies Record<string, Field>
 
@@ -149,8 +157,6 @@ export const ResponsesValidationSchema = JsonStringValidationSchema.transform(
     }
   }
 )
-
-const statusEnum = z.enum(['ACCEPTED', 'PENDING', 'CANCELLED', 'REJECTED'])
 
 export const FieldsValidationSchema = z.object({
   eventTypeId: NumericIdSchema,
