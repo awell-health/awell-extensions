@@ -1,4 +1,4 @@
-import { isEmpty, isNil } from 'lodash'
+import { isEmpty, isNil, capitalize } from 'lodash'
 import { z, type ZodTypeAny } from 'zod'
 import { FieldType, type Field } from '@awell-health/extensions-core'
 import { PathwayStatus } from '../../../gql/graphql'
@@ -8,9 +8,15 @@ export const fields = {
     id: 'pathwayStatus',
     label: 'Pathway status',
     description:
-      'A comma-separated string of care flow statuses that will be used when looking for care flows the patient is already enrolled in. By default, we only look at active care flows. Options: "active" "completed", "missing_baseline_info", "starting", and "stopped".',
+      'A comma-separated string of care flow statuses that will be used when looking for care flows the patient is already enrolled in. By default, we only look at active care flows.',
     type: FieldType.STRING,
     required: false,
+    options: {
+      dropdownOptions: Object.values(PathwayStatus).map((status) => ({
+        label: capitalize(status.replace('_', ' ')),
+        value: status,
+      })),
+    },
   },
   careFlowDefinitionIds: {
     id: 'careFlowDefinitionIds',
