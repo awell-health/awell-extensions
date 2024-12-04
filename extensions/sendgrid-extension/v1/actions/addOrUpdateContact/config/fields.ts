@@ -1,6 +1,7 @@
 import { z, type ZodTypeAny } from 'zod'
 import { type Field, FieldType } from '@awell-health/extensions-core'
 import { isEmpty, isNil } from 'lodash'
+import { getEmailValidation } from '../../../../../../src/lib/awell'
 
 export const fields = {
   listIds: {
@@ -60,7 +61,7 @@ export const FieldsValidationSchema = z.object({
         return true
       })
     ),
-  email: z.string().email(),
+  email: getEmailValidation(),
   // max 50 chars - API limit
   firstName: z.string().max(50),
   lastName: z.string().max(50),

@@ -5,6 +5,7 @@ import {
   NumericIdSchema,
   validateCommaSeparatedList,
 } from '@awell-health/extensions-core'
+import { getEmailValidation } from '../../../../../../src/lib/awell'
 
 export const fields = {
   email: {
@@ -24,7 +25,7 @@ export const fields = {
 } satisfies Record<string, Field>
 
 export const FieldsValidationSchema = z.object({
-  email: z.string().email(),
+  email: getEmailValidation(),
   groups: validateCommaSeparatedList(
     (value) => NumericIdSchema.safeParse(value).success,
     true
