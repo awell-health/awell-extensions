@@ -1,5 +1,6 @@
 import { z, type ZodTypeAny } from 'zod'
 import { type Setting } from '@awell-health/extensions-core'
+import { getEmailValidation } from '../../src/lib/awell'
 
 export const settings = {
   apiKey: {
@@ -29,5 +30,5 @@ export const settings = {
 export const SettingsValidationSchema = z.object({
   apiKey: z.string(),
   fromName: z.string().optional(),
-  fromEmail: z.string().email().optional(),
+  fromEmail:  getEmailValidation().optional(),
 } satisfies Record<keyof typeof settings, ZodTypeAny>)

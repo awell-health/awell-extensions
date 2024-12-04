@@ -1,6 +1,7 @@
 import { lowerCase } from 'lodash'
 import { z, type ZodTypeAny } from 'zod'
 import { type Setting } from '@awell-health/extensions-core'
+import { getEmailValidation } from '../../src/lib/awell'
 
 export const settings = {
   apiKey: {
@@ -58,7 +59,7 @@ export const SettingsValidationSchema = z.object({
   apiKey: z.string(),
   domain: z.string(),
   fromName: z.string(),
-  fromEmail: z.string().email(),
+  fromEmail: getEmailValidation(),
   region: RegionValidationSchema,
   testMode: z.optional(z.enum(['Yes', 'yes', 'No', 'no'])).transform((val) => {
     const serializedVal = lowerCase(val)
