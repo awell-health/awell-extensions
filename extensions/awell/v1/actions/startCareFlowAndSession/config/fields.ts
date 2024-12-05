@@ -13,10 +13,21 @@ export const fields = {
   },
   stakeholderDefinitionId: {
     id: 'stakeholderDefinitionId',
-    label: 'Stakeholder definition ID',
-    description:
-      'The definition ID of the stakeholder to start the session for',
+    label: 'Stakeholder ',
+    description: 'The stakeholder to start the session for',
     type: FieldType.STRING,
+    options: {
+      dropdownOptions: [
+        {
+          value: 'LGH3v741vUqm',
+          label: 'Physician',
+        },
+        {
+          value: 'patient',
+          label: 'Patient',
+        },
+      ],
+    },
     required: true,
   },
   baselineInfo: {

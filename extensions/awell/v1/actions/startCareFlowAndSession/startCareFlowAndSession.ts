@@ -31,7 +31,11 @@ export const startCareFlowAndSession: Action<typeof fields, typeof settings> = {
           input: {
             patient_id: payload.patient.id,
             pathway_definition_id: careFlowDefinitionId,
-            stakeholder_definition_id: stakeholderDefinitionId,
+            // If the stakeholder is the patient, we don't need to specify a stakeholder definition id
+            stakeholder_definition_id:
+              stakeholderDefinitionId === 'patient'
+                ? undefined
+                : stakeholderDefinitionId,
             data_points: baselineInfo,
           },
         },
