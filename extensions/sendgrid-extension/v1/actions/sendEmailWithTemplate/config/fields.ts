@@ -1,6 +1,7 @@
 import { isNil, isEmpty } from 'lodash'
 import { z, type ZodTypeAny } from 'zod'
 import { type Field, FieldType } from '@awell-health/extensions-core'
+import { getEmailValidation } from '../../../../../../src/lib/awell'
 
 export const fields = {
   fromName: {
@@ -61,7 +62,7 @@ type JSONValue =
 type TemplateData = Record<string, JSONValue>
 
 export const FieldsValidationSchema = z.object({
-  to: z.string().email(),
+  to: getEmailValidation(),
   subject: z.optional(
     z.string().transform((str) => (isEmpty(str) ? undefined : str))
   ),
@@ -93,5 +94,5 @@ export const FieldsValidationSchema = z.object({
       }
     }),
   fromName: z.string().optional(),
-  fromEmail: z.string().email().optional(),
+  fromEmail: getEmailValidation().optional(),
 } satisfies Record<keyof typeof fields, ZodTypeAny>)
