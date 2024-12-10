@@ -48,12 +48,16 @@ export const getAllFormsInCurrentStep: GetAllFormsInCurrentStep = async ({
         },
       },
     },
+  }).catch((error) => {
+    console.error(`Failed to fetch activity ${activityId}`, error)
+    throw new Error(`Failed to fetch activity ${activityId}`);
   })
-  const currentActivity = activity_response.activity.activity
 
-  if (isNil(currentActivity))
-    throw new Error('Cannot find the current activity')
+  const currentActivity = activity_response?.activity?.activity
 
+  if (isNil(currentActivity) || !activity_response.activity.success) 
+    throw new Error(`Failed to fetch activity ${activityId}`);
+  
   const currentStepId = currentActivity.context?.step_id
 
   if (isNil(currentStepId))
