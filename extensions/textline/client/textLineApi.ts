@@ -1,6 +1,6 @@
 import { fetchTyped } from '@awell-health/extensions-core'
 import { isNil, omitBy } from 'lodash'
-import fetch from 'node-fetch'
+import fetch, { type Response } from 'node-fetch'
 import {
   type SendMessageResponse,
   GetMessagesSchema,
@@ -14,6 +14,31 @@ class TextLineApi {
 
   constructor(accessToken: string) {
     this.accessToken = accessToken
+  }
+
+  private async validateResponse<T = unknown>(response: Response): Promise<T> {
+    const result = await response.json()
+    const {status: code} = response
+
+    if (code >= 400) {
+      const { errors, message } = result || {};
+      let errorContent;
+      
+      if (!isNil(errors)) {
+          errorContent = { errors, code };
+      } else if (!isNil(message)) {
+          errorContent = { message, code };
+      } else {
+          errorContent = { 
+              message: 'Unknown error in TextLine API has occurred',
+              status_code: code
+          };
+      }
+      
+      throw new Error(JSON.stringify(errorContent));
+    }
+
+    return result
   }
 
   private constructUrl(
@@ -36,7 +61,7 @@ class TextLineApi {
     departmentId?: string,
 
     page?: number,
-    pageSize?: number,
+    pageSize?: number
   ): Promise<GetMessagesResponse> {
     const url = this.constructUrl(`/api/conversations.json`, {
       phone_number: phoneNumber,
@@ -67,7 +92,6 @@ class TextLineApi {
         Accept: 'application/json',
         'Content-Type': 'application/json',
         'X-TGP-ACCESS-TOKEN': this.accessToken,
-
       },
       body: JSON.stringify({
         phone_number: recipient,
@@ -77,17 +101,7 @@ class TextLineApi {
         group_uuid: departmentId,
       }),
     })
-    const result = await response.json()
-
-    if (response.status >= 400) {
-      throw new Error(
-        !isNil(result?.errors)
-          ? JSON.stringify(result?.errors)
-          : 'Unknown error in TextLine API has occurred'
-      )
-    }
-
-    return result
+    return await this.validateResponse(response)
   }
 
   async setContactConsent(
@@ -107,16 +121,8 @@ class TextLineApi {
         consent: consentStatus ? 1 : 0,
       }),
     })
-    const result = await response.json()
-
-    if (response.status >= 400) {
-      throw new Error(
-        !isNil(result?.errors)
-          ? JSON.stringify(result?.errors)
-          : 'Unknown error in TextLine API has occurred'
-      )
-    }
-
+    // returns void, so we check for errors here
+    await this.validateResponse(response)
   }
 }
 
