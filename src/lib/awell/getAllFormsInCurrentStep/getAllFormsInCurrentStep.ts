@@ -28,14 +28,43 @@ export const getAllFormsInCurrentStep: GetAllFormsInCurrentStep = async ({
   pathwayId,
   activityId,
 }) => {
+
+  const activity_response = await awellSdk.orchestration.query({
+    activity: {
+      __args: {
+        id: activityId,
+      },
+      success: true,
+      activity: {
+        id: true,
+        status: true,
+        date: true,
+        object: {
+          id: true,
+          type: true,
+        },
+        context: {
+          step_id: true,
+        },
+      },
+    },
+  })
+  const currentActivity = activity_response.activity.activity
+
+  if (isNil(currentActivity))
+    throw new Error('Cannot find the current activity')
+
+  const currentStepId = currentActivity.context?.step_id
+
+  if (isNil(currentStepId))
+    throw new Error('Could not find step ID of the current activity')
+
+
   const activities = await awellSdk.orchestration.query({
-    pathwayActivities: {
+    pathwayStepActivities: {
       __args: {
         pathway_id: pathwayId,
-        pagination: {
-          offset: 0,
-          count: 500,
-        },
+        step_id: currentStepId,
       },
       success: true,
       activities: {
@@ -53,22 +82,9 @@ export const getAllFormsInCurrentStep: GetAllFormsInCurrentStep = async ({
     },
   })
 
-  const currentActivity = activities.pathwayActivities.activities.find(
-    (a) => a.id === activityId
-  )
-
-  if (isNil(currentActivity))
-    throw new Error('Cannot find the current activity')
-
-  const currentStepId = currentActivity.context?.step_id
-
-  if (isNil(currentStepId))
-    throw new Error('Could not find step ID of the current activity')
-
   const formActivitiesInCurrentStep =
-    activities.pathwayActivities.activities.filter(
+    activities.pathwayStepActivities.activities.filter(
       (a) =>
-        a.context?.step_id === currentStepId &&
         a.object.type === 'FORM' &&
         a.status === 'DONE' &&
         a.date <= currentActivity.date

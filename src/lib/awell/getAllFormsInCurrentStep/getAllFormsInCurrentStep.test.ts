@@ -33,7 +33,13 @@ describe('getAllFormsInCurrentStep', () => {
     // Mock the query results for each call
     mockQuery
       .mockResolvedValueOnce({
-        pathwayActivities: mockPathwayActivitiesResponse,
+        activity: {
+          activity: mockPathwayActivitiesResponse.activities[0],
+          success: true,
+        },
+      })
+      .mockResolvedValueOnce({
+        pathwayStepActivities: mockPathwayActivitiesResponse,
       })
       .mockResolvedValueOnce({ form: mockFormDefinitionOneResponse })
       .mockResolvedValueOnce({ form: mockFormDefinitionTwoResponse })
@@ -48,10 +54,11 @@ describe('getAllFormsInCurrentStep', () => {
       activityId: 'X74HeDQ4N0gtdaSEuzF8s',
     })
 
+    // on call to get activity
     // one call to GetPathwayActivities
     // two calls to GetFormResponse because the step of interest has 2 form definitions
     // two calls to GetFormResponse each form has a response
-    expect(awellSdkMock.orchestration.query).toHaveBeenCalledTimes(5)
+    expect(awellSdkMock.orchestration.query).toHaveBeenCalledTimes(6)
 
     expect(result).toEqual([
       {
