@@ -1,7 +1,6 @@
 import { DateTimeSchema, NumericIdSchema } from '@awell-health/extensions-core'
 import { isNil } from 'lodash'
 import * as z from 'zod'
-import { settingsSchema } from './settings.zod'
 
 const statusEnum = z.enum([
   'Scheduled',
@@ -61,7 +60,3 @@ export const FindAppointmentFieldSchema = z
       ...(!isNil(data.event_type) && { event_type: 'appointment' }),
     }
   })
-export const FindAppointmentSchema = z.object({
-  fields: FindAppointmentFieldSchema,
-  settings: settingsSchema,
-})

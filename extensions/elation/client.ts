@@ -1,11 +1,14 @@
 import {
   APIClient,
   DataWrapper,
+  OAuthClientCredentials,
+  type OAuthGrantClientCredentialsRequest,
+  type OAuthGrantRequest,
   OAuthPassword,
   type DataWrapperCtor,
   type OAuthGrantPasswordRequest,
 } from '@awell-health/extensions-core'
-import { type settings } from './settings'
+import { SettingsValidationSchema } from './settings'
 import {
   type FindAppointmentsParams,
   type AppointmentInput,
@@ -39,8 +42,9 @@ import {
   type AddVitalsResponseType,
   PharmacySchema,
 } from './types'
-import { settingsSchema } from './validation/settings.zod'
 import { elationCacheService } from './cache'
+import { isEmpty } from 'lodash'
+import { type z } from 'zod'
 
 export class ElationDataWrapper extends DataWrapper {
   public async findAppointments(
@@ -306,7 +310,7 @@ export class ElationDataWrapper extends DataWrapper {
 
 interface ElationAPIClientConstructorProps {
   authUrl: string
-  requestConfig: Omit<OAuthGrantPasswordRequest, 'grant_type'>
+  requestConfig: Omit<OAuthGrantRequest, 'grant_type'>
   baseUrl: string
 }
 
@@ -321,14 +325,32 @@ export class ElationAPIClient extends APIClient<ElationDataWrapper> {
     requestConfig,
     ...opts
   }: ElationAPIClientConstructorProps) {
+    const getAuth = (): OAuthPassword | OAuthClientCredentials => {
+      if ('username' in requestConfig && 'password' in requestConfig) {
+        return new OAuthPassword({
+          auth_url: authUrl,
+          request_config: requestConfig as Omit<
+            OAuthGrantPasswordRequest,
+            'grant_type'
+          >,
+          cacheService: elationCacheService,
+          useHeaderInAuthorization: true,
+        })
+      }
+
+      return new OAuthClientCredentials({
+        auth_url: authUrl,
+        request_config: requestConfig satisfies Omit<
+          OAuthGrantClientCredentialsRequest,
+          'grant_type'
+        >,
+        cacheService: elationCacheService,
+      })
+    }
+
     super({
       ...opts,
-      auth: new OAuthPassword({
-        auth_url: authUrl,
-        request_config: requestConfig,
-        cacheService: elationCacheService,
-        useHeaderInAuthorization: true,
-      }),
+      auth: getAuth(),
     })
   }
 
@@ -482,14 +504,55 @@ export class ElationAPIClient extends APIClient<ElationDataWrapper> {
 }
 
 export const makeAPIClient = (
-  payloadSettings: Record<keyof typeof settings, string | undefined>
+  settings: Record<string, unknown>
 ): ElationAPIClient => {
   const { base_url, auth_url, ...auth_request_settings } =
-    settingsSchema.parse(payloadSettings)
+    SettingsValidationSchema.parse(settings)
+
+  /**
+   * Determines the OAuth grant type based on the provided settings.
+   * Currently, we support both the "password" and "client_credentials" grant types for backward compatibility.
+   * - "password" grant is still supported to avoid breaking existing care flows that rely on it.
+   * - "client_credentials" grant is the preferred method for authentication as per the latest Elation API guidance.
+   * Once all existing care flows are migrated, support for the "password" grant can be deprecated.
+   */
+  const getGrantType = (): 'password' | 'client_credentials' => {
+    if (
+      isEmpty(auth_request_settings.username) ||
+      isEmpty(auth_request_settings.password)
+    )
+      return 'client_credentials'
+
+    return 'password'
+  }
+
+  const grantType = getGrantType()
+
+  /**
+   * Builds the appropriate request configuration based on the selected grant type.
+   * - For "client_credentials", only the client ID and client secret are required.
+   * - For "password", username and password are included for compatibility with older flows.
+   */
+  const getRequestConfig = ():
+    | Omit<OAuthGrantClientCredentialsRequest, 'grant_type'>
+    | Omit<OAuthGrantPasswordRequest, 'grant_type'> => {
+    if (grantType === 'client_credentials')
+      return {
+        client_id: auth_request_settings.client_id,
+        client_secret: auth_request_settings.client_secret,
+      } satisfies Omit<OAuthGrantClientCredentialsRequest, 'grant_type'>
+
+    return {
+      client_id: auth_request_settings.client_id,
+      client_secret: auth_request_settings.client_secret,
+      username: auth_request_settings.username as string,
+      password: auth_request_settings.password as string,
+    } satisfies Omit<OAuthGrantPasswordRequest, 'grant_type'>
+  }
 
   return new ElationAPIClient({
     authUrl: auth_url,
-    requestConfig: auth_request_settings,
     baseUrl: base_url,
+    requestConfig: getRequestConfig(),
   })
 }
