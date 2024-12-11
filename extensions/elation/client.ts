@@ -44,7 +44,6 @@ import {
 } from './types'
 import { elationCacheService } from './cache'
 import { isEmpty } from 'lodash'
-import { type z } from 'zod'
 
 export class ElationDataWrapper extends DataWrapper {
   public async findAppointments(
