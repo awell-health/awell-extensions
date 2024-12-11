@@ -37,7 +37,13 @@ describe('pushFormResponsesToHealthie', () => {
       query: jest
         .fn()
         .mockResolvedValueOnce({
-          pathwayActivities: mockPathwayActivitiesResponse,
+          activity: {
+            activity: mockPathwayActivitiesResponse.activities[0],
+            success: true,
+          },
+        })
+        .mockResolvedValueOnce({
+          pathwayStepActivities: mockPathwayActivitiesResponse,
         })
         .mockResolvedValueOnce({
           form: mockFormDefinitionOneResponse,
@@ -98,11 +104,12 @@ describe('pushFormResponsesToHealthie', () => {
     expect(helpers.awellSdk).toHaveBeenCalledTimes(1)
 
     /**
-     * one call to GetPathwayActivities
+     * one call to get activity
+     * one call to get pathway step activities
      * two calls to GetFormResponse because the step of interest has 2 form definitions
      * two calls to GetFormResponse each form has a response
      */
-    expect(awellSdkMock.orchestration.query).toHaveBeenCalledTimes(5)
+    expect(awellSdkMock.orchestration.query).toHaveBeenCalledTimes(6)
 
     expect(formResponseToHealthieSpy).toHaveNthReturnedWith(1, {
       formAnswers: [{ answer: '<p>Nick</p>', custom_module_id: '14460375' }],

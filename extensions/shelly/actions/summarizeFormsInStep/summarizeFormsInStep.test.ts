@@ -71,7 +71,14 @@ describe('summarizeFormsInStep - Mocked LLM calls', () => {
         query: jest
           .fn()
           .mockResolvedValueOnce({
-            pathwayActivities: mockMultipleFormsPathwayActivitiesResponse,
+            activity: {
+              activity:
+                mockMultipleFormsPathwayActivitiesResponse.activities[0],
+              success: true,
+            },
+          })
+          .mockResolvedValueOnce({
+            pathwayStepActivities: mockMultipleFormsPathwayActivitiesResponse,
           })
           .mockResolvedValueOnce({
             form: mockMultipleFormsDefinitionResponse1,
