@@ -115,7 +115,16 @@ export const findContactResponseExample: FindContactsResponse = {
       npi: '2047990827',
       practice: 141127173275652,
       user: 4067,
+      specialties: [],
     },
+  ],
+}
+
+export const searchContactsResponseExample: FindContactsResponse = {
+  count: 2,
+  results: [
+    { id: 1, first_name: 'Contact 1', last_name: 'Contact 1', middle_name: '', npi: '1234567890', practice: 1, user: 1, specialties: [] },
+    { id: 2, first_name: 'Contact 2', last_name: 'Contact 2', middle_name: '', npi: '1234567890', practice: 1, user: 1, specialties: [] },
   ],
 }
 
@@ -326,4 +335,13 @@ export const getLetterResponseExample: GetLetterResponseType = {
   document_date: '2021-05-11T21: 16: 23Z',
   patient: 140754680086529,
   practice: 140754674450436,
+}
+
+export const referralOrderExample = {
+  id: 1234567890,
+  authorization_for: 'Referral For Treatment, includes Consult Visit.',
+  auth_number: '1234567890',
+  consultant_name: 'Dr Testing Mc Testerson',
+  short_consultant_name: 'TEST',
+  icd10_codes: ['A01', 'B02'],
 }
