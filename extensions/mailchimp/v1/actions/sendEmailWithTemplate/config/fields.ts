@@ -1,6 +1,7 @@
 import { isNil, isEmpty } from 'lodash'
 import { z, type ZodTypeAny } from 'zod'
 import { type Field, FieldType } from '@awell-health/extensions-core'
+import { getEmailValidation } from '../../../../../../src/lib/awell'
 
 export const fields = {
   to: {
@@ -46,7 +47,7 @@ interface TemplateContent {
 }
 
 export const FieldsValidationSchema = z.object({
-  to: z.string().email(),
+  to: getEmailValidation(),
   subject: z.string(),
   templateName: z.string(),
   templateContent: z
