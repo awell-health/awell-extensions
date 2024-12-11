@@ -34,15 +34,17 @@ export const settings = {
     key: 'username',
     label: 'Username',
     obfuscated: false,
-    description: 'The API username for OAuth2 password authentication.',
-    required: true,
+    description:
+      '⚠️ Deprecated: Elation now uses client credentials authentication. This setting is no longer required and should be removed from your settings.',
+    required: false,
   },
   password: {
     key: 'password',
     label: 'Password',
     obfuscated: true,
-    description: 'The API password for OAuth2 password authentication.',
-    required: true,
+    description:
+      '⚠️ Deprecated: Elation now uses client credentials authentication. This setting is no longer required and should be removed from your settings.',
+    required: false,
   },
 } satisfies Record<string, Setting>
 
@@ -51,6 +53,11 @@ export const SettingsValidationSchema = z.object({
   auth_url: z.string().min(1),
   client_id: z.string().min(1),
   client_secret: z.string().min(1),
-  username: z.string().min(1),
-  password: z.string().min(1),
+  /**
+   * Elation now uses client credentials authentication.
+   * We don't remove the settings just yet for backward compatibility for existing care flows.
+   * See https://linear.app/awell/issue/ET-577/elation-extension-make-username-and-password-optional-in-auth
+   */
+  username: z.string().optional(),
+  password: z.string().optional(),
 } satisfies Record<keyof typeof settings, ZodTypeAny>)

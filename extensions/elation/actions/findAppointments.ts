@@ -4,10 +4,12 @@ import {
   type DataPointDefinition,
   type Field,
   Category,
+  validate,
 } from '@awell-health/extensions-core'
-import { type settings } from '../settings'
+import { SettingsValidationSchema, type settings } from '../settings'
 import { makeAPIClient } from '../client'
-import { FindAppointmentSchema } from '../validation/appointment.zod'
+import { FindAppointmentFieldSchema } from '../validation/appointment.zod'
+import { z } from 'zod'
 
 const fields = {
   patientId: {
@@ -77,9 +79,17 @@ export const findAppointments: Action<
   previewable: true,
   dataPoints,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
-    const { fields, settings } = FindAppointmentSchema.parse(payload)
+    const { fields, settings } = validate({
+      schema: z.object({
+        fields: FindAppointmentFieldSchema,
+        settings: SettingsValidationSchema,
+      }),
+      payload,
+    })
+
     const client = makeAPIClient(settings)
     const resp = await client.findAppointments(fields)
+
     await onComplete({
       data_points: {
         appointments: JSON.stringify(resp),
