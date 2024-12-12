@@ -43,8 +43,8 @@ export interface GetLetterResponseType {
   practice: number
 }
 
-export type PostLetterInput = z.infer<typeof letterSchema>
+export type PostLetterInput = Pick<z.infer<typeof letterSchema>, 'patient' | 'practice' | 'body' | 'subject' | 'referral_order' | 'letter_type' | 'send_to_contact'>
 
-export interface PostLetterResponse extends PostLetterInput {
+export interface PostLetterResponse extends z.infer<typeof letterSchema> {
   id: number
 }

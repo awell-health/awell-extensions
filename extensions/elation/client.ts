@@ -44,6 +44,7 @@ import {
 } from './types'
 import { elationCacheService } from './cache'
 import { isEmpty } from 'lodash'
+import { PostReferralOrderInput, PostReferralOrderResponse } from './types/referralOrder'
 
 export class ElationDataWrapper extends DataWrapper {
   public async findAppointments(
@@ -220,12 +221,21 @@ export class ElationDataWrapper extends DataWrapper {
     })
   }
 
-  public async findContacts(obj: {
+  public async listContacts(obj: {
     npi: string
   }): Promise<FindContactsResponse> {
     return await this.Request({
       method: 'GET',
       url: `/contacts?npi=${obj.npi}`,
+    })
+  }
+
+  public async searchContacts(obj: {
+    name: string
+  }): Promise<FindContactsResponse> {
+    return await this.Request({
+      method: 'GET',
+      url: `/contacts?name=${obj.name}`,
     })
   }
 
@@ -304,6 +314,21 @@ export class ElationDataWrapper extends DataWrapper {
         url: `/pharmacies/${ncpdpId}`,
       })
     )
+  }
+
+  public async createReferralOrder(obj: PostReferralOrderInput): Promise<PostReferralOrderResponse> {
+    return await this.Request({
+      method: 'POST',
+      url: '/referral_orders',
+      data: obj,
+    })
+  }
+
+  public async findPractices(): Promise<ElationCollection<any>> {
+    return await this.Request({
+      method: 'GET',
+      url: '/practices',
+    })
   }
 }
 
@@ -460,7 +485,13 @@ export class ElationAPIClient extends APIClient<ElationDataWrapper> {
   public async searchContactsByNpi(obj: {
     npi: string
   }): Promise<FindContactsResponse> {
-    return await this.FetchData(async (dw) => await dw.findContacts(obj))
+    return await this.FetchData(async (dw) => await dw.listContacts(obj))
+  }
+
+  public async searchContactsByName(obj: {
+    name: string
+  }): Promise<FindContactsResponse> {
+    return await this.FetchData(async (dw) => await dw.searchContacts(obj))
   }
 
   public async createLabOrder(
@@ -499,6 +530,14 @@ export class ElationAPIClient extends APIClient<ElationDataWrapper> {
 
   public async getPharmacy(ncpdpId: string): Promise<PharmacyResponse> {
     return await this.FetchData(async (dw) => await dw.getPharmacy(ncpdpId))
+  }
+
+  public async createReferralOrder(obj: PostReferralOrderInput): Promise<PostReferralOrderResponse> {
+    return await this.FetchData(async (dw) => await dw.createReferralOrder(obj))
+  }
+
+  public async findPractices(): Promise<ElationCollection<any>> {
+    return await this.FetchData(async (dw) => await dw.findPractices())
   }
 }
 

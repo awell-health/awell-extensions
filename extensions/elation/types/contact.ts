@@ -1,3 +1,5 @@
+import { ElationSpecialty } from "./specialty"
+
 export interface ElationContact {
   first_name: string
   id: number
@@ -6,6 +8,7 @@ export interface ElationContact {
   npi: string
   practice: number
   user: number
+  specialties: ElationSpecialty[]
 }
 
 export interface FindContactsResponse {

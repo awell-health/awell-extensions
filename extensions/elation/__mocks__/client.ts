@@ -16,6 +16,7 @@ import {
   vitalsResponseExample,
   visitNoteExample,
   getLetterResponseExample,
+  referralOrderExample,
 } from './constants'
 const { makeAPIClient: makeAPIClientActual } = jest.requireActual('../client')
 
@@ -119,12 +120,15 @@ export const mockClientReturn = {
       ...vitalsResponseExample,
     }
   }),
+  createReferralOrder: jest.fn(() => {
+    return referralOrderExample
+  }),
 }
 const ElationAPIClientMock = jest.fn((params) => {
   return mockClientReturn
 })
 
-export const makeAPIClientMockFunc = (args: any): any => {
+export const makeAPIClientMockFunc = (args: any) => {
   makeAPIClientActual(args)
 
   return new ElationAPIClientMock(args)
