@@ -22,9 +22,6 @@ describe('Elation - Create referral order', () => {
   const onComplete = jest.fn()
   const onError = jest.fn()
 
-  beforeAll(() => {
-  })
-
   beforeEach(() => {
     jest.clearAllMocks()
     onComplete.mockClear()
