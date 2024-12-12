@@ -1,1 +1,1 @@
-export { createReferralOrder as getLetter } from './createReferralOrder'
+export { createReferralOrder } from './createReferralOrder'

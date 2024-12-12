@@ -19,6 +19,7 @@ import { addAllergy } from './addAllergy/addAllergy'
 import { createVisitNote } from './createVisitNote/createVisitNote'
 import { addVitals } from './addVitals/addVitals'
 import { getLetter } from './getLetter'
+import { createReferralOrder } from './createReferralOrder'
 
 export const actions = {
   getPatient,
@@ -41,5 +42,6 @@ export const actions = {
   postLetter,
   createLabOrder,
   createMessageThread,
-  getLetter
+  getLetter,
+  createReferralOrder,
 }
