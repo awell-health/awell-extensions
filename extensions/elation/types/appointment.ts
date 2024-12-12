@@ -3,12 +3,10 @@ import {
   type statusSchema,
   type appointmentSchema,
   type FindAppointmentFieldSchema,
-  type FindAppointmentSchema,
 } from '../validation/appointment.zod'
 
 export type AppointmentInput = z.infer<typeof appointmentSchema>
 export type FindAppointmentFields = z.input<typeof FindAppointmentFieldSchema>
-export type FindAppointment = z.infer<typeof FindAppointmentSchema>
 /**
  * There is a difference between `input` and `output` objects in Elation,
  * some fields are readonly (not in input), some have different structure.
