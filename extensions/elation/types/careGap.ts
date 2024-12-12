@@ -14,3 +14,8 @@ export type PostCareGapInput = Pick<CareGap,
   | 'created_date'
   | 'status'
 >
+
+export type CloseCareGapInput = Pick<CareGap, 'quality_program'> & {
+  caregap_id: string
+  status: 'closed'
+}

@@ -1,12 +1,13 @@
-import { createCareGap } from './createCareGap'
+import { closeCareGap } from './closeCareGap'
 
 const careGapExample = {
   id: 'CARE_GAP_ID',
+  status: 'closed',
 }
 
 // Add mock API client
 const mockElationAPIClient = {
-  createCareGap: jest.fn().mockResolvedValue(careGapExample)
+  closeCareGap: jest.fn().mockResolvedValue(careGapExample)
 }
 
 // Mock the makeAPIClient function
@@ -14,7 +15,7 @@ jest.mock('../../client', () => ({
   makeAPIClient: jest.fn().mockImplementation(() => mockElationAPIClient)
 }))
 
-describe('Elation - Create care gap', () => {
+describe('Elation - Close care gap', () => {
   const onComplete = jest.fn()
   const onError = jest.fn()
 
@@ -22,7 +23,7 @@ describe('Elation - Create care gap', () => {
     jest.clearAllMocks()
     onComplete.mockClear()
     onError.mockClear()
-    mockElationAPIClient.createCareGap.mockResolvedValue(careGapExample)
+    mockElationAPIClient.closeCareGap.mockResolvedValue(careGapExample)
   })
 
   const payload = {
@@ -36,12 +37,7 @@ describe('Elation - Create care gap', () => {
     },
     fields: {
       quality_program: 'quality_program',
-      definition_id: 'definition_id',
-      patient_id: 'patient_id',
-      practice_id: 'practice_id',
-      created_date: '2023-12-12T15:32:38.239Z',
-      status: 'open',
-      detail: 'detail',
+      caregap_id: 'caregap_id',
     },
     activity: {
       id: '123',
@@ -55,9 +51,9 @@ describe('Elation - Create care gap', () => {
     },
   }
 
-  test('should create care gap', async () => {
-    await createCareGap.onActivityCreated!(payload, onComplete, onError)
+  test('should close care gap', async () => {
+    await closeCareGap.onActivityCreated!(payload, onComplete, onError)
 
-    expect(onComplete).toHaveBeenCalledWith({ data_points: { id: String(careGapExample.id) } })
+    expect(onComplete).toHaveBeenCalled()
   })
 })
