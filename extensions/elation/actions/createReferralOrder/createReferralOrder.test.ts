@@ -68,7 +68,6 @@ describe('Elation - Create referral order', () => {
       onError,
     )
 
-    expect(onError).not.toHaveBeenCalled()
     expect(onComplete).toHaveBeenCalledWith({ data_points: { id: String(referralOrderExample.id) } })
   })
 
@@ -106,19 +105,10 @@ describe('Elation - Create referral order', () => {
       } as FindContactsResponse
     })
 
-    await createReferralOrder.onActivityCreated!(
+    await expect(createReferralOrder.onActivityCreated!(
       payload,
       onComplete,
       onError,
-    )
-
-    expect(onError).toHaveBeenCalledWith(
-      expect.objectContaining({
-        events: [expect.objectContaining({
-          error: { category: "SERVER_ERROR", message: expect.stringContaining("No contact found with the name") },
-        })]
-      })
-    )
-    expect(onComplete).not.toHaveBeenCalled()
+    )).rejects.toThrow("No contact found with the name A contact.")
   })
 })

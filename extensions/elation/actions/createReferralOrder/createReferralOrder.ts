@@ -65,21 +65,7 @@ export const createReferralOrder: Action<
         },
       })
     } catch (err) {
-      if (err instanceof ZodError) {
-        const error = fromZodError(err)
-        await onError({
-          events: [
-            {
-              date: new Date().toISOString(),
-              text: { en: error.message },
-              error: {
-                category: 'WRONG_INPUT',
-                message: error.message,
-              },
-            },
-          ],
-        })
-      } else if (err instanceof AxiosError) {
+      if (err instanceof AxiosError) {
         const responseData = (err as AxiosError).response?.data
         await onError({
           events: [
@@ -96,19 +82,7 @@ export const createReferralOrder: Action<
           ],
         })
       } else {
-        const message = (err as Error).message
-        await onError({
-          events: [
-            {
-              date: new Date().toISOString(),
-              text: { en: message },
-              error: {
-                category: 'SERVER_ERROR',
-                message,
-              },
-            },
-          ],
-        })
+        throw err
       }
     }
   },
