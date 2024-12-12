@@ -14,8 +14,7 @@ export const getPatient: Action<
   key: 'getPatient',
   category: Category.EHR_INTEGRATIONS,
   title: 'Get Patient',
-  description:
-    'Retrieve a patient profile using Elation`s patient API.',
+  description: 'Retrieve a patient profile using Elation`s patient API.',
   fields,
   previewable: true,
   dataPoints,
@@ -31,7 +30,6 @@ export const getPatient: Action<
     const api = makeAPIClient(settings)
 
     const patientInfo = await api.getPatient(fields.patientId)
-
 
     await onComplete({
       data_points: {
@@ -62,8 +60,9 @@ export const getPatient: Action<
         previousFirstName: patientInfo.previous_first_name,
         previousLastName: patientInfo.previous_last_name,
         status: patientInfo.patient_status.status,
-        preferredServiceLocationId:
-          String(patientInfo.preferred_service_location),
+        preferredServiceLocationId: String(
+          patientInfo.preferred_service_location
+        ),
         patientObject: JSON.stringify(patientInfo),
       },
     })
