@@ -3,6 +3,8 @@ import { generateTestPayload } from '@/tests'
 import { PathwayStatus } from '../../gql/graphql'
 import AwellSdk from '../../sdk/awellSdk'
 import { isPatientEnrolledInCareFlow as actionInterface } from './isPatientEnrolledInCareFlow'
+import { FieldsValidationSchema } from './config'
+import { ZodError } from 'zod'
 
 jest.mock('../../sdk/awellSdk')
 
@@ -22,6 +24,80 @@ describe('Is patient already enrolled in care flow action', () => {
 
   beforeEach(() => {
     clearMocks()
+  })
+
+  describe('Field validation', () => {
+    describe('Pathway status', () => {
+      test('Single pathway status', () => {
+        expect(() => {
+          const res = FieldsValidationSchema.safeParse({
+            pathwayStatus: 'active',
+          })
+
+          if (!res.success) {
+            console.log(JSON.stringify(res.error, null, 2))
+            throw new Error()
+          }
+
+          expect(res.data.pathwayStatus).toEqual([PathwayStatus.Active])
+        }).not.toThrow(ZodError)
+      })
+
+      test('Multiple pathway statuses', () => {
+        expect(() => {
+          const res = FieldsValidationSchema.safeParse({
+            pathwayStatus: 'active,completed',
+          })
+
+          if (!res.success) {
+            console.log(JSON.stringify(res.error, null, 2))
+            throw new Error()
+          }
+
+          expect(res.data.pathwayStatus).toEqual([
+            PathwayStatus.Active,
+            PathwayStatus.Completed,
+          ])
+        }).not.toThrow(ZodError)
+      })
+
+      test('Multiple pathway statuses with whitespaces', () => {
+        expect(() => {
+          const res = FieldsValidationSchema.safeParse({
+            pathwayStatus: 'active,      completed        , stopped',
+          })
+
+          if (!res.success) {
+            console.log(JSON.stringify(res.error, null, 2))
+            throw new Error()
+          }
+
+          expect(res.data.pathwayStatus).toEqual([
+            PathwayStatus.Active,
+            PathwayStatus.Completed,
+            PathwayStatus.Stopped,
+          ])
+        }).not.toThrow(ZodError)
+      })
+
+      test('Invalid pathway statuses get ignored', () => {
+        expect(() => {
+          const res = FieldsValidationSchema.safeParse({
+            pathwayStatus: 'active,completed,invalid',
+          })
+
+          if (!res.success) {
+            console.log(JSON.stringify(res.error, null, 2))
+            throw new Error()
+          }
+
+          expect(res.data.pathwayStatus).toEqual([
+            PathwayStatus.Active,
+            PathwayStatus.Completed,
+          ])
+        }).not.toThrow(ZodError)
+      })
+    })
   })
 
   test('Should call the onComplete callback and return true if patient is already enrolled in the care flow', async () => {
