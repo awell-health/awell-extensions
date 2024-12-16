@@ -41,6 +41,9 @@ import {
   type AddVitalsInputType,
   type AddVitalsResponseType,
   PharmacySchema,
+  PostCareGapInput,
+  CareGapResponse,
+  CloseCareGapInput,
 } from './types'
 import { elationCacheService } from './cache'
 import { isEmpty } from 'lodash'
@@ -330,6 +333,26 @@ export class ElationDataWrapper extends DataWrapper {
       url: '/practices',
     })
   }
+
+  public async createCareGap(obj: PostCareGapInput): Promise<CareGapResponse> {
+    const { quality_program, ...data } = obj
+    return await this.Request({
+      method: 'POST',
+      url: `/${quality_program}/caregap/`,
+      data,
+    })
+  }
+
+  public async closeCareGap(obj: CloseCareGapInput): Promise<CareGapResponse> {
+    const { quality_program, caregap_id, status } = obj
+    return await this.Request({
+      method: 'POST',
+      url: `/${quality_program}/caregap/${caregap_id}/`,
+      data: {
+        status,
+      },
+    })
+  }
 }
 
 interface ElationAPIClientConstructorProps {
@@ -538,6 +561,14 @@ export class ElationAPIClient extends APIClient<ElationDataWrapper> {
 
   public async findPractices(): Promise<ElationCollection<any>> {
     return await this.FetchData(async (dw) => await dw.findPractices())
+  }
+
+  public async createCareGap(obj: PostCareGapInput): Promise<CareGapResponse> {
+    return await this.FetchData(async (dw) => await dw.createCareGap(obj))
+  }
+
+  public async closeCareGap(obj: CloseCareGapInput): Promise<CareGapResponse> {
+    return await this.FetchData(async (dw) => await dw.closeCareGap(obj))
   }
 }
 
