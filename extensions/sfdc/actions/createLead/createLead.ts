@@ -19,16 +19,16 @@ export const createLead: Action<
   previewable: false,
   dataPoints,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
-    const careFlowId = payload.pathway.id
-    const { fields, salesforceClient } = await validatePayloadAndCreateClient({
-      fieldsSchema: FieldsValidationSchema,
-      payload,
-    })
+    const { fields, pathwayId, salesforceClient } =
+      await validatePayloadAndCreateClient({
+        fieldsSchema: FieldsValidationSchema,
+        payload,
+      })
 
     const data = {
       ...fields.data,
       ...(!isNil(fields.careFlowIdField) && {
-        [fields.careFlowIdField]: careFlowId,
+        [fields.careFlowIdField]: pathwayId,
       }),
     }
 
