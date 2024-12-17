@@ -3,6 +3,7 @@ import { type settings } from '../../settings'
 import { fields, dataPoints, FieldsValidationSchema } from './config'
 import { validatePayloadAndCreateClient } from '../../lib'
 import { isSalesforceError, parseSalesforceError } from '../../lib/errors'
+import { addActivityEventLog } from '../../../../src/lib/awell/addEventLog'
 
 export const updateLead: Action<
   typeof fields,
@@ -28,7 +29,17 @@ export const updateLead: Action<
         data: fields.data,
       })
 
-      await onComplete()
+      await onComplete({
+        events: [
+          addActivityEventLog({
+            message: `Lead updated. Data passed:\n\n ${JSON.stringify(
+              fields.data,
+              null,
+              2
+            )}`,
+          }),
+        ],
+      })
     } catch (error) {
       if (isSalesforceError(error)) {
         await onError({
