@@ -44,7 +44,13 @@ export const createLead: Action<
         },
         events: [
           addActivityEventLog({
-            message: `Lead with ID ${String(res.id)} created in Saleforce.`,
+            message: `Lead with ID ${String(
+              res.id
+            )} created in Saleforce. Data passed:\n\n ${JSON.stringify(
+              data,
+              null,
+              2
+            )}`,
           }),
         ],
       })
