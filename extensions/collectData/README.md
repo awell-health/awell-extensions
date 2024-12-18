@@ -15,14 +15,39 @@ In order to set up this extension, no settings are required.
 
 Standard select questions in Awell forms have a discrete set of choices to select from that are defined at the time that the form is created. If the list of choices to present to your responders isn't known at the time the form is being built, or changes often, this action allows you to load choices dynamically from a remote data source.
 
-Dynamically-loaded choices must adhere to the following format in a list form (i.e. an array):
+Dynamically-loaded choices must minimally adhere to the following format in a list form (i.e. an array):
 
 ```json
-{
-  "id": "unique-id",
-  "label": "Choice label",
-  "value": "Choice value"
-}
+[
+  {
+    "id": "unique-id-1",
+    "label": "Choice label 1",
+    "value": "Choice value 1"
+  },
+  {
+    "id": "unique-id-2",
+    "label": "Choice label 2",
+    "value": "Choice value 2"
+  }
+]
+```
+
+The `id`, `label`, and `value` fields are required. However, additional fields can be added to the object. Besides the `label` and `value`, which are available as distinct data points, the additional data of the selected choice will also be returned as a data point.
+
+Example:
+
+```json
+[
+  {
+    "id": "unique-id-1",
+    "label": "Choice label 1",
+    "value": "Choice value 1",
+    "additionalData": "Additional data",
+    "nestedData": {
+      "nested": "value"
+    }
+  }
+]
 ```
 
 Additionally, you can specify a free text search field (`Options - Search query param` field) to allow users to search through the choices. This is optional but highly recommended. If not specified, the choices will be fetched on question load and presented in a static list that cannot be filtered.
