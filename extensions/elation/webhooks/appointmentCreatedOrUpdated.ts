@@ -4,7 +4,6 @@ import {
 } from '@awell-health/extensions-core'
 import { ELATION_SYSTEM } from '../constants'
 import { type SubscriptionEvent } from '../types/subscription'
-import { AppointmentsPayloadSchema } from '../types/webhooks/appointments'
 
 const dataPoints = {
   appointmentId: {
@@ -24,8 +23,9 @@ export const appointmentCreatedOrUpdated: Webhook<
   key: 'appointmentCreatedOrUpdated',
   dataPoints,
   onWebhookReceived: async ({ payload, settings }, onSuccess, onError) => {
-    const { action, resource, data } = AppointmentsPayloadSchema.parse(payload)
+    const { action, resource, data } = payload
     const { id: appointmentId, patient: patientId } = data
+
     // skip non 'saved'  actions for that webhook
     if (action !== 'saved') {
       return
