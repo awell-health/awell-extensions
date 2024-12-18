@@ -20,6 +20,8 @@ import { createVisitNote } from './createVisitNote/createVisitNote'
 import { addVitals } from './addVitals/addVitals'
 import { getLetter } from './getLetter'
 import { createReferralOrder } from './createReferralOrder'
+import { createCareGap } from './createCareGap'
+import { closeCareGap } from './closeCareGap'
 
 export const actions = {
   getPatient,
@@ -44,4 +46,6 @@ export const actions = {
   createMessageThread,
   getLetter,
   createReferralOrder,
+  createCareGap,
+  closeCareGap,
 }
