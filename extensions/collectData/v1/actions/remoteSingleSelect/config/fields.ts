@@ -49,7 +49,7 @@ export const fields = {
 } satisfies Record<string, Field>
 
 export const FieldsValidationSchema = z.object({
-  label: z.string().nonempty(),
+  label: z.string().min(1),
   url: z.string().url(),
   headers: makeStringOptional(JsonStringValidationSchema),
   queryParam: makeStringOptional(z.string()),
