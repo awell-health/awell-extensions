@@ -9,4 +9,8 @@ export const dataPoints = {
     key: 'label',
     valueType: 'string',
   },
+  selectedOption: {
+    key: 'selectedOption',
+    valueType: 'json',
+  },
 } satisfies Record<string, DataPointDefinition>
