@@ -101,7 +101,6 @@
     "graphql": "^16.8.1",
     "graphql-request": "5.1.0",
     "graphql-tag": "^2.12.6",
-    "json-schema-faker": "^0.5.8",
     "jsonpath": "^1.1.1",
     "langchain": "^0.3.2",
     "libphonenumber-js": "^1.10.26",
@@ -122,7 +121,6 @@
     "zod-validation-error": "^3.2.0"
   },
   "resolutions": {
-    "oas": "^25.2.0",
-    "@readme/oas-to-har": "^24.0.4"
+    "jsonpath-plus": "^10.2.0"
   }
 }
