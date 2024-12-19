@@ -9,7 +9,7 @@ import {
   mapHealthieToActivityError,
 } from '../../lib/sdk/graphql-codegen/errors'
 import { fields } from './config'
-import { addActivityEventLog } from 'src/lib/awell/addEventLog'
+import { addActivityEventLog } from '../../../../src/lib/awell/addEventLog'
 
 export const createChartingNote: Action<typeof fields, typeof settings> = {
   key: 'createChartingNote',
