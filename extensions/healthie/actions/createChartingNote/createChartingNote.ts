@@ -27,6 +27,7 @@ export const createChartingNote: Action<typeof fields, typeof settings> = {
       marked_locked,
       appointment_id,
     } = fields
+
     try {
       if (isNil(healthie_patient_id) || isNil(form_id) || isNil(note_content)) {
         await onError({
@@ -57,6 +58,9 @@ export const createChartingNote: Action<typeof fields, typeof settings> = {
         if (isNil(moduleForm)) {
           await onError({
             events: [
+              addActivityEventLog({
+                message: `Note content: ${note_content}`,
+              }),
               {
                 date: new Date().toISOString(),
                 text: { en: "Form doesn't exist" },
