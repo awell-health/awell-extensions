@@ -30,7 +30,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["@awell-health/awell-sdk", "npm:0.1.20"],\
             ["@awell-health/extensions-core", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:1.0.11"],\
-            ["@dropbox/sign", "npm:1.6.2"],\
+            ["@dropbox/sign", "npm:1.8.0"],\
             ["@faker-js/faker", "npm:8.4.1"],\
             ["@genql/cli", "npm:6.3.3"],\
             ["@graphql-codegen/cli", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:3.3.1"],\
@@ -89,7 +89,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["husky", "npm:8.0.3"],\
             ["jest", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:29.7.0"],\
             ["jest-fetch-mock", "npm:3.0.3"],\
-            ["json-schema-faker", "npm:0.5.6"],\
             ["jsonpath", "npm:1.1.1"],\
             ["langchain", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:0.3.2"],\
             ["libphonenumber-js", "npm:1.11.8"],\
@@ -195,7 +194,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@awell-health/awell-extensions", "workspace:."],\
             ["@awell-health/awell-sdk", "npm:0.1.20"],\
             ["@awell-health/extensions-core", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:1.0.11"],\
-            ["@dropbox/sign", "npm:1.6.2"],\
+            ["@dropbox/sign", "npm:1.8.0"],\
             ["@faker-js/faker", "npm:8.4.1"],\
             ["@genql/cli", "npm:6.3.3"],\
             ["@graphql-codegen/cli", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:3.3.1"],\
@@ -254,7 +253,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["husky", "npm:8.0.3"],\
             ["jest", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:29.7.0"],\
             ["jest-fetch-mock", "npm:3.0.3"],\
-            ["json-schema-faker", "npm:0.5.6"],\
             ["jsonpath", "npm:1.1.1"],\
             ["langchain", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:0.3.2"],\
             ["libphonenumber-js", "npm:1.11.8"],\
@@ -1867,10 +1865,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@dropbox/sign", [\
-        ["npm:1.6.2", {\
-          "packageLocation": "./.yarn/cache/@dropbox-sign-npm-1.6.2-921db6a185-3d5323b896.zip/node_modules/@dropbox/sign/",\
+        ["npm:1.8.0", {\
+          "packageLocation": "./.yarn/cache/@dropbox-sign-npm-1.8.0-c9ff134e80-879e8d984c.zip/node_modules/@dropbox/sign/",\
           "packageDependencies": [\
-            ["@dropbox/sign", "npm:1.6.2"],\
+            ["@dropbox/sign", "npm:1.8.0"],\
             ["axios", "npm:1.7.7"],\
             ["bluebird", "npm:3.7.2"],\
             ["form-data", "npm:4.0.0"],\
@@ -3434,6 +3432,50 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
+      ["@jsep-plugin/assignment", [\
+        ["npm:1.3.0", {\
+          "packageLocation": "./.yarn/cache/@jsep-plugin-assignment-npm-1.3.0-f9e321f4bc-5549497d40.zip/node_modules/@jsep-plugin/assignment/",\
+          "packageDependencies": [\
+            ["@jsep-plugin/assignment", "npm:1.3.0"]\
+          ],\
+          "linkType": "SOFT"\
+        }],\
+        ["virtual:bda1ecf81df11499fcd1ddd40cc812a3e4b081dc84c8b25520448834a9497e0d56ed4bae514abe6885604884511f25f9a65ce5433e214fd004212f0208493c15#npm:1.3.0", {\
+          "packageLocation": "./.yarn/__virtual__/@jsep-plugin-assignment-virtual-4ba551d6cf/0/cache/@jsep-plugin-assignment-npm-1.3.0-f9e321f4bc-5549497d40.zip/node_modules/@jsep-plugin/assignment/",\
+          "packageDependencies": [\
+            ["@jsep-plugin/assignment", "virtual:bda1ecf81df11499fcd1ddd40cc812a3e4b081dc84c8b25520448834a9497e0d56ed4bae514abe6885604884511f25f9a65ce5433e214fd004212f0208493c15#npm:1.3.0"],\
+            ["@types/jsep", null],\
+            ["jsep", "npm:1.4.0"]\
+          ],\
+          "packagePeers": [\
+            "@types/jsep",\
+            "jsep"\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["@jsep-plugin/regex", [\
+        ["npm:1.0.4", {\
+          "packageLocation": "./.yarn/cache/@jsep-plugin-regex-npm-1.0.4-f812d16845-78ef015545.zip/node_modules/@jsep-plugin/regex/",\
+          "packageDependencies": [\
+            ["@jsep-plugin/regex", "npm:1.0.4"]\
+          ],\
+          "linkType": "SOFT"\
+        }],\
+        ["virtual:bda1ecf81df11499fcd1ddd40cc812a3e4b081dc84c8b25520448834a9497e0d56ed4bae514abe6885604884511f25f9a65ce5433e214fd004212f0208493c15#npm:1.0.4", {\
+          "packageLocation": "./.yarn/__virtual__/@jsep-plugin-regex-virtual-162d15f8fb/0/cache/@jsep-plugin-regex-npm-1.0.4-f812d16845-78ef015545.zip/node_modules/@jsep-plugin/regex/",\
+          "packageDependencies": [\
+            ["@jsep-plugin/regex", "virtual:bda1ecf81df11499fcd1ddd40cc812a3e4b081dc84c8b25520448834a9497e0d56ed4bae514abe6885604884511f25f9a65ce5433e214fd004212f0208493c15#npm:1.0.4"],\
+            ["@types/jsep", null],\
+            ["jsep", "npm:1.4.0"]\
+          ],\
+          "packagePeers": [\
+            "@types/jsep",\
+            "jsep"\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
       ["@langchain/core", [\
         ["npm:0.3.3", {\
           "packageLocation": "./.yarn/cache/@langchain-core-npm-0.3.3-1a04ce6427-7f803d7855.zip/node_modules/@langchain/core/",\
@@ -3880,7 +3922,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@readme/data-urls", "npm:1.0.1"],\
             ["@readme/oas-extensions", "virtual:52e970399a02085bede4e49f0f160582ee54c4c3a26d0ca93edd25adadec47bf5bdc5cc6a74a884c318ffb398e3755414a885edbf5d54ee3904ecbfba3cb0537#npm:17.0.1"],\
             ["oas", "npm:20.10.3"],\
-            ["qs", "npm:6.13.0"],\
+            ["qs", "npm:6.13.1"],\
             ["remove-undefined-objects", "npm:2.0.2"]\
           ],\
           "linkType": "HARD"\
@@ -8364,15 +8406,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
-      ["format-util", [\
-        ["npm:1.0.5", {\
-          "packageLocation": "./.yarn/cache/format-util-npm-1.0.5-a524ca953a-0c8622e54a.zip/node_modules/format-util/",\
-          "packageDependencies": [\
-            ["format-util", "npm:1.0.5"]\
-          ],\
-          "linkType": "HARD"\
-        }]\
-      ]],\
       ["formdata-node", [\
         ["npm:4.4.1", {\
           "packageLocation": "./.yarn/cache/formdata-node-npm-4.4.1-1fb15d9b89-d91d4f667c.zip/node_modules/formdata-node/",\
@@ -10373,6 +10406,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
+      ["jsep", [\
+        ["npm:1.4.0", {\
+          "packageLocation": "./.yarn/cache/jsep-npm-1.4.0-ef20d4922d-8e7af5ecb9.zip/node_modules/jsep/",\
+          "packageDependencies": [\
+            ["jsep", "npm:1.4.0"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
       ["jsesc", [\
         ["npm:2.5.2", {\
           "packageLocation": "./.yarn/cache/jsesc-npm-2.5.2-c5acb78804-4dc1907711.zip/node_modules/jsesc/",\
@@ -10410,17 +10452,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
-      ["json-schema-faker", [\
-        ["npm:0.5.6", {\
-          "packageLocation": "./.yarn/cache/json-schema-faker-npm-0.5.6-71e8ea75c8-06f8c2308a.zip/node_modules/json-schema-faker/",\
-          "packageDependencies": [\
-            ["json-schema-faker", "npm:0.5.6"],\
-            ["json-schema-ref-parser", "npm:6.1.0"],\
-            ["jsonpath-plus", "npm:7.2.0"]\
-          ],\
-          "linkType": "HARD"\
-        }]\
-      ]],\
       ["json-schema-merge-allof", [\
         ["npm:0.8.1", {\
           "packageLocation": "./.yarn/cache/json-schema-merge-allof-npm-0.8.1-411cd922f3-82700f6ac7.zip/node_modules/json-schema-merge-allof/",\
@@ -10429,18 +10460,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["compute-lcm", "npm:1.1.2"],\
             ["json-schema-compare", "npm:0.2.2"],\
             ["lodash", "npm:4.17.21"]\
-          ],\
-          "linkType": "HARD"\
-        }]\
-      ]],\
-      ["json-schema-ref-parser", [\
-        ["npm:6.1.0", {\
-          "packageLocation": "./.yarn/cache/json-schema-ref-parser-npm-6.1.0-04a76bb0c0-03944fcb5b.zip/node_modules/json-schema-ref-parser/",\
-          "packageDependencies": [\
-            ["json-schema-ref-parser", "npm:6.1.0"],\
-            ["call-me-maybe", "npm:1.0.2"],\
-            ["js-yaml", "npm:3.14.1"],\
-            ["ono", "npm:4.0.11"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -10576,10 +10595,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["jsonpath-plus", [\
-        ["npm:7.2.0", {\
-          "packageLocation": "./.yarn/cache/jsonpath-plus-npm-7.2.0-c2ddc144a1-05f447339d.zip/node_modules/jsonpath-plus/",\
+        ["npm:10.2.0", {\
+          "packageLocation": "./.yarn/cache/jsonpath-plus-npm-10.2.0-bda1ecf81d-862a96a017.zip/node_modules/jsonpath-plus/",\
           "packageDependencies": [\
-            ["jsonpath-plus", "npm:7.2.0"]\
+            ["jsonpath-plus", "npm:10.2.0"],\
+            ["@jsep-plugin/assignment", "virtual:bda1ecf81df11499fcd1ddd40cc812a3e4b081dc84c8b25520448834a9497e0d56ed4bae514abe6885604884511f25f9a65ce5433e214fd004212f0208493c15#npm:1.3.0"],\
+            ["@jsep-plugin/regex", "virtual:bda1ecf81df11499fcd1ddd40cc812a3e4b081dc84c8b25520448834a9497e0d56ed4bae514abe6885604884511f25f9a65ce5433e214fd004212f0208493c15#npm:1.0.4"],\
+            ["jsep", "npm:1.4.0"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -11858,7 +11880,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@readme/json-schema-ref-parser", "npm:1.2.1"],\
             ["@types/json-schema", "npm:7.0.15"],\
             ["json-schema-merge-allof", "npm:0.8.1"],\
-            ["jsonpath-plus", "npm:7.2.0"],\
+            ["jsonpath-plus", "npm:10.2.0"],\
             ["jsonpointer", "npm:5.0.1"],\
             ["memoizee", "npm:0.4.17"],\
             ["oas-normalize", "npm:8.4.1"],\
@@ -12066,16 +12088,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["onetime", "npm:6.0.0"],\
             ["mimic-fn", "npm:4.0.0"]\
-          ],\
-          "linkType": "HARD"\
-        }]\
-      ]],\
-      ["ono", [\
-        ["npm:4.0.11", {\
-          "packageLocation": "./.yarn/cache/ono-npm-4.0.11-862123fce8-fabfdddb2e.zip/node_modules/ono/",\
-          "packageDependencies": [\
-            ["ono", "npm:4.0.11"],\
-            ["format-util", "npm:1.0.5"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -12755,6 +12767,14 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/qs-npm-6.13.0-53676ddc84-e9404dc0fc.zip/node_modules/qs/",\
           "packageDependencies": [\
             ["qs", "npm:6.13.0"],\
+            ["side-channel", "npm:1.0.6"]\
+          ],\
+          "linkType": "HARD"\
+        }],\
+        ["npm:6.13.1", {\
+          "packageLocation": "./.yarn/cache/qs-npm-6.13.1-84fb125e32-86c5059146.zip/node_modules/qs/",\
+          "packageDependencies": [\
+            ["qs", "npm:6.13.1"],\
             ["side-channel", "npm:1.0.6"]\
           ],\
           "linkType": "HARD"\
