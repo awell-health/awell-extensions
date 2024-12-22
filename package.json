@@ -1,7 +1,7 @@
 {
   "name": "@awell-health/awell-extensions",
   "version": "2.0.123",
-  "packageManager": "yarn@3.4.1",
+  "packageManager": "yarn@4.5.3",
   "main": "dist/src/index.js",
   "repository": {
     "type": "git",
@@ -13,6 +13,7 @@
   "homepage": "https://github.com/awell-health/awell-extensions#readme",
   "scripts": {
     "clean": "rimraf dist/* && echo 'Cleaned dist/'",
+    "compile": "tsc",
     "build": "tsc && echo 'Built new dist/' && yarn copy-markdown",
     "copy-markdown": "node copy-markdown.js && echo 'Copied markdown files to dist/'",
     "start": "node dist/src/index.js",
@@ -54,6 +55,7 @@
     "@types/uuid": "^10.0.0",
     "@types/xml2js": "^0.4.12",
     "@typescript-eslint/eslint-plugin": "^5.52.0",
+    "@yarnpkg/sdks": "^3.2.0",
     "dotenv": "^16.4.5",
     "eslint": "^8.50.0",
     "eslint-config-prettier": "^8.6.0",
@@ -70,7 +72,7 @@
     "ts-jest": "29.2",
     "ts-node": "^10.9.2",
     "ts-node-dev": "^2.0.0",
-    "typescript": "4.9.5"
+    "typescript": "5.0.4"
   },
   "dependencies": {
     "@awell-health/awell-sdk": "^0.1.20",
