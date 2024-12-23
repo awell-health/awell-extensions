@@ -26,7 +26,13 @@ export const CommaSeparatedEmailsValidationSchema = z
     if (isEmpty(value) || value === undefined) return []
 
     const emails = value.split(',')
-    return emails.map((email) => email.trim())
+    return emails
+      .map((email) => {
+        const trimmedEmail = email.trim()
+        if (isEmpty(trimmedEmail)) return undefined
+        return trimmedEmail
+      })
+      .filter((email) => email !== undefined) as string[]
   })
   /**
    * Validate each email address

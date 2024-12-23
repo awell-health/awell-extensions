@@ -2,17 +2,6 @@ import { ZodError } from 'zod'
 import { CommaSeparatedEmailsValidationSchema } from './getEmailValidation'
 
 describe('CommaSeparatedEmailsValidationSchema', () => {
-  test('should throw a ZodError when no email address is provided', async () => {
-    expect(() => {
-      const res = CommaSeparatedEmailsValidationSchema.safeParse('')
-
-      if (!res.success) {
-        console.log(JSON.stringify(res.error, null, 2))
-        throw new ZodError(res.error.issues)
-      }
-    }).not.toThrow(ZodError)
-  })
-
   test('should throw a ZodError when email address is invalid', async () => {
     expect(() => {
       const res = CommaSeparatedEmailsValidationSchema.safeParse(
@@ -27,72 +16,43 @@ describe('CommaSeparatedEmailsValidationSchema', () => {
   })
 
   test('should work with undefined', async () => {
-    expect(() => {
-      const res = CommaSeparatedEmailsValidationSchema.safeParse(undefined)
-
-      if (!res.success) {
-        console.log(JSON.stringify(res.error, null, 2))
-        throw new ZodError(res.error.issues)
-      }
-
-      expect(res.data).toEqual([])
-    }).not.toThrow(ZodError)
+    const res = CommaSeparatedEmailsValidationSchema.safeParse(undefined)
+    expect(res.data).toEqual([])
   })
 
   test('should work with an empty string', async () => {
-    expect(() => {
-      const res = CommaSeparatedEmailsValidationSchema.safeParse('')
+    const res = CommaSeparatedEmailsValidationSchema.safeParse('')
+    expect(res.data).toEqual([])
+  })
 
-      if (!res.success) {
-        console.log(JSON.stringify(res.error, null, 2))
-        throw new ZodError(res.error.issues)
-      }
+  test('should work with multiple empty strings', async () => {
+    const res = CommaSeparatedEmailsValidationSchema.safeParse(',')
+    expect(res.data).toEqual([])
+  })
 
-      expect(res.data).toEqual([])
-    }).not.toThrow(ZodError)
+  test('should work with valid and empty strings', async () => {
+    const res = CommaSeparatedEmailsValidationSchema.safeParse(
+      'hello@world.com,   , hello-2@world.com'
+    )
+    expect(res.data).toEqual(['hello@world.com', 'hello-2@world.com'])
   })
 
   test('should work with a single email address', async () => {
-    expect(() => {
-      const res =
-        CommaSeparatedEmailsValidationSchema.safeParse('hello@world.com')
-
-      if (!res.success) {
-        console.log(JSON.stringify(res.error, null, 2))
-        throw new ZodError(res.error.issues)
-      }
-
-      expect(res.data).toEqual(['hello@world.com'])
-    }).not.toThrow(ZodError)
+    const res = CommaSeparatedEmailsValidationSchema.parse('hello@world.com')
+    expect(res).toEqual(['hello@world.com'])
   })
 
   test('should work with multiple email addresses', async () => {
-    expect(() => {
-      const res = CommaSeparatedEmailsValidationSchema.safeParse(
-        'hello-1@world.com, hello-2@world.com'
-      )
-
-      if (!res.success) {
-        console.log(JSON.stringify(res.error, null, 2))
-        throw new ZodError(res.error.issues)
-      }
-
-      expect(res.data).toEqual(['hello-1@world.com', 'hello-2@world.com'])
-    }).not.toThrow(ZodError)
+    const res = CommaSeparatedEmailsValidationSchema.safeParse(
+      'hello-1@world.com, hello-2@world.com'
+    )
+    expect(res.data).toEqual(['hello-1@world.com', 'hello-2@world.com'])
   })
 
   test('should work with multiple email addresses and various whitespaces', async () => {
-    expect(() => {
-      const res = CommaSeparatedEmailsValidationSchema.safeParse(
-        '   hello-1@world.com    ,      hello-2@world.com     '
-      )
-
-      if (!res.success) {
-        console.log(JSON.stringify(res.error, null, 2))
-        throw new ZodError(res.error.issues)
-      }
-
-      expect(res.data).toEqual(['hello-1@world.com', 'hello-2@world.com'])
-    }).not.toThrow(ZodError)
+    const res = CommaSeparatedEmailsValidationSchema.safeParse(
+      '   hello-1@world.com    ,      hello-2@world.com     '
+    )
+    expect(res.data).toEqual(['hello-1@world.com', 'hello-2@world.com'])
   })
 })
