@@ -66,9 +66,9 @@ __metadata:
   dependencies:
     "@awell-health/awell-sdk": ^0.1.20
     "@awell-health/extensions-core": 1.0.11
+    "@awell-health/healthie-sdk": ^0.1.1
     "@dropbox/sign": ^1.8.0
     "@faker-js/faker": ^8.0.2
-    "@genql/cli": ^6.3.3
     "@graphql-codegen/cli": ^3.2.2
     "@graphql-codegen/typescript": ^3.0.2
     "@graphql-codegen/typescript-graphql-request": ^4.5.8
@@ -180,6 +180,16 @@ __metadata:
   peerDependencies:
     "@awell-health/awell-sdk": "*"
   checksum: 69075b675830d74f8e2994e8ba1fda88a2e9c874918e90b580e7d3bdbb5578800e06a6a1be90889d6fb42265596335ef73e6b5c810e94ac40311faab9689431d
+  languageName: node
+  linkType: hard
+
+"@awell-health/healthie-sdk@npm:^0.1.1":
+  version: 0.1.1
+  resolution: "@awell-health/healthie-sdk@npm:0.1.1"
+  dependencies:
+    "@genql/cli": ^6.3.3
+    lodash: ^4.17.21
+  checksum: 31ac37a940cda24273c22b17f61e29b975e70f3d015e66fbe84ad9b58a6d823377e0093e6d54d6cfc2f66b5be517602394917c793e1a049dda6d70723c5452cb
   languageName: node
   linkType: hard
 

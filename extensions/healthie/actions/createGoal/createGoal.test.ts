@@ -1,11 +1,11 @@
 import { testPayload } from '@/tests'
 import { TestHelpers } from '@awell-health/extensions-core'
-import { HealthieSdk } from '../../lib/sdk/genql'
+import { HealthieSdk } from '@awell-health/healthie-sdk'
 import { addDays, format } from 'date-fns'
 import { createGoal as actionInterface } from '.'
 import { FieldsValidationSchema } from './config'
 
-jest.mock('../../lib/sdk/genql', () => ({
+jest.mock('@awell-health/healthie-sdk', () => ({
   HealthieSdk: jest.fn().mockImplementation(() => ({
     client: {
       mutation: jest.fn().mockResolvedValue({

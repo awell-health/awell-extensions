@@ -30,9 +30,9 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["@awell-health/awell-sdk", "npm:0.1.20"],\
             ["@awell-health/extensions-core", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:1.0.11"],\
+            ["@awell-health/healthie-sdk", "npm:0.1.1"],\
             ["@dropbox/sign", "npm:1.8.0"],\
             ["@faker-js/faker", "npm:8.4.1"],\
-            ["@genql/cli", "npm:6.3.3"],\
             ["@graphql-codegen/cli", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:3.3.1"],\
             ["@graphql-codegen/typescript", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:3.0.4"],\
             ["@graphql-codegen/typescript-graphql-request", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:4.5.9"],\
@@ -194,9 +194,9 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@awell-health/awell-extensions", "workspace:."],\
             ["@awell-health/awell-sdk", "npm:0.1.20"],\
             ["@awell-health/extensions-core", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:1.0.11"],\
+            ["@awell-health/healthie-sdk", "npm:0.1.1"],\
             ["@dropbox/sign", "npm:1.8.0"],\
             ["@faker-js/faker", "npm:8.4.1"],\
-            ["@genql/cli", "npm:6.3.3"],\
             ["@graphql-codegen/cli", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:3.3.1"],\
             ["@graphql-codegen/typescript", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:3.0.4"],\
             ["@graphql-codegen/typescript-graphql-request", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:4.5.9"],\
@@ -321,6 +321,17 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packagePeers": [\
             "@awell-health/awell-sdk",\
             "@types/awell-health__awell-sdk"\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["@awell-health/healthie-sdk", [\
+        ["npm:0.1.1", {\
+          "packageLocation": "./.yarn/cache/@awell-health-healthie-sdk-npm-0.1.1-07daa17318-31ac37a940.zip/node_modules/@awell-health/healthie-sdk/",\
+          "packageDependencies": [\
+            ["@awell-health/healthie-sdk", "npm:0.1.1"],\
+            ["@genql/cli", "npm:6.3.3"],\
+            ["lodash", "npm:4.17.21"]\
           ],\
           "linkType": "HARD"\
         }]\
