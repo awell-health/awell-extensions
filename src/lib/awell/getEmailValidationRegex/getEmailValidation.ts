@@ -1,3 +1,4 @@
+import { isEmpty } from 'lodash'
 import { z } from 'zod'
 
 /**
@@ -16,12 +17,14 @@ export const getEmailValidation = (): z.ZodTypeAny => {
  */
 export const CommaSeparatedEmailsValidationSchema = z
   .string()
-  .trim()
+  .optional()
   /**
    * Transform the value to an array of email addresses
    * and trim each email address
    */
   .transform((value) => {
+    if (isEmpty(value) || value === undefined) return []
+
     const emails = value.split(',')
     return emails.map((email) => email.trim())
   })
