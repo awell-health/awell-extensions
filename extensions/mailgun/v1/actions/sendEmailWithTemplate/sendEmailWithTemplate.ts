@@ -31,7 +31,7 @@ export const sendEmailWithTemplate: Action<typeof fields, typeof settings> = {
 
       const res = await mg.messages.create(domain, {
         from: `${fromName} <${fromEmail}>`,
-        to: [to],
+        to,
         subject,
         template,
         'h:X-Mailgun-Variables': JSON.stringify(variables),
