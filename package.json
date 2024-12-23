@@ -20,8 +20,7 @@
     "postinstall": "husky install",
     "test": "jest --verbose",
     "prepack": "yarn build",
-    "test-server": "ts-node-dev --respawn --transpile-only ./src/test-server.ts",
-    "generate-healthie-sdk": "ts-node ./extensions/healthie/lib/sdk/genql/generateSdk.ts"
+    "test-server": "ts-node-dev --respawn --transpile-only ./src/test-server.ts"
   },
   "types": "dist/src/index.d.ts",
   "files": [
@@ -76,8 +75,8 @@
   "dependencies": {
     "@awell-health/awell-sdk": "^0.1.20",
     "@awell-health/extensions-core": "1.0.11",
+    "@awell-health/healthie-sdk": "^0.1.1",
     "@dropbox/sign": "^1.8.0",
-    "@genql/cli": "^6.3.3",
     "@hubspot/api-client": "^11.2.0",
     "@langchain/core": "^0.3.1",
     "@langchain/openai": "^0.3.0",

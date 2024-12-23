@@ -6,7 +6,7 @@ import {
 } from '@awell-health/extensions-core'
 import z from 'zod'
 import { SettingsValidationSchema } from '../../settings'
-import { HealthieSdk } from './genql'
+import { HealthieSdk } from '@awell-health/healthie-sdk'
 import { getSdk } from './graphql-codegen/generated/sdk'
 import { initialiseClient } from './graphql-codegen/graphqlClient'
 import { type Activity } from '@awell-health/extensions-core/dist/types/Activity'

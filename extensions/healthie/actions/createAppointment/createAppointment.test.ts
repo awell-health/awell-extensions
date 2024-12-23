@@ -1,5 +1,5 @@
 import { generateTestPayload } from '@/tests'
-import { HealthieSdk } from '../../lib/sdk/genql'
+import { HealthieSdk } from '@awell-health/healthie-sdk'
 import { createAppointment as actionInterface } from '.'
 import { TestHelpers } from '@awell-health/extensions-core'
 
@@ -11,7 +11,7 @@ const mockedMutationResponse = jest.fn().mockResolvedValue({
   },
 })
 
-jest.mock('../../lib/sdk/genql', () => ({
+jest.mock('@awell-health/healthie-sdk', () => ({
   HealthieSdk: jest.fn().mockImplementation(() => ({
     client: {
       mutation: mockedMutationResponse,
