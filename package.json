@@ -18,7 +18,6 @@
     "copy-markdown": "node copy-markdown.js && echo 'Copied markdown files to dist/'",
     "start": "node dist/src/index.js",
     "lint": "eslint \"**/*.ts\"",
-    "postinstall": "husky install",
     "test": "jest --verbose",
     "prepack": "yarn build",
     "test-server": "ts-node-dev --respawn --transpile-only ./src/test-server.ts",
