@@ -4,6 +4,7 @@ import { bland } from './bland'
 import { CalDotCom } from './calDotCom'
 import { Calendly } from './calendly'
 import { CanvasMedical } from './canvasMedical'
+import { cerner } from './cerner'
 import { Cloudinary } from './cloudinary'
 import { CmDotCom } from './cmDotCom'
 import { CollectData } from './collectData'
@@ -11,6 +12,7 @@ import { dockHealth } from './dockHealth'
 import { DocuSign } from './docuSign'
 import { DropboxSign } from './dropboxSign'
 import { Elation } from './elation'
+import { epic} from './epic'
 import { Experimental } from './experimental'
 import { ExternalServer } from './external-server'
 import { Formsort } from './formsort'
@@ -54,6 +56,7 @@ export const extensions = [
   CalDotCom,
   Calendly,
   CanvasMedical,
+  cerner,
   Cloudinary,
   CmDotCom,
   CollectData,
@@ -61,6 +64,7 @@ export const extensions = [
   DocuSign,
   DropboxSign,
   Elation,
+  epic,
   Experimental,
   ExternalServer,
   Formsort,
