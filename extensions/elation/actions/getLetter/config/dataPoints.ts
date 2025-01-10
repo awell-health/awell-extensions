@@ -5,4 +5,8 @@ export const dataPoints = {
     key: 'body',
     valueType: 'string',
   },
+  signedBy: {
+    key: 'signedBy',
+    valueType: 'number',
+  },
 } satisfies Record<string, DataPointDefinition>

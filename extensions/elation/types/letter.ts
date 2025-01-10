@@ -35,15 +35,24 @@ export interface GetLetterResponseType {
     id: number
     document_type: string
   }>
-  sign_date: string
-  signed_by: number
+  sign_date?: string
+  signed_by?: number
   tags: string[]
   document_date: string
   patient: number
   practice: number
 }
 
-export type PostLetterInput = Pick<z.infer<typeof letterSchema>, 'patient' | 'practice' | 'body' | 'subject' | 'referral_order' | 'letter_type' | 'send_to_contact'>
+export type PostLetterInput = Pick<
+  z.infer<typeof letterSchema>,
+  | 'patient'
+  | 'practice'
+  | 'body'
+  | 'subject'
+  | 'referral_order'
+  | 'letter_type'
+  | 'send_to_contact'
+>
 
 export interface PostLetterResponse extends z.infer<typeof letterSchema> {
   id: number

@@ -24,6 +24,10 @@ export const getLetter: Action<
     await onComplete({
       data_points: {
         body: res.body,
+        signedBy:
+          typeof res?.signed_by === 'number'
+            ? String(res.signed_by)
+            : undefined,
       },
     })
   },
