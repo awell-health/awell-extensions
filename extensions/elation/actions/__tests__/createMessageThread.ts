@@ -21,6 +21,7 @@ describe('createMessageThread action', () => {
     client_secret: 'client_secret',
     username: 'username',
     password: 'password',
+    openAiApiKey: 'some_key',
   }
 
   const withFields = (fields: any) => generateTestPayload({ fields, settings })
@@ -70,7 +71,7 @@ describe('createMessageThread action', () => {
     const response = createMessageThread.onActivityCreated!(
       payload,
       onComplete,
-      onError
+      onError,
     )
     await expect(response).rejects.toThrow(ZodError)
   })
@@ -89,7 +90,7 @@ describe('createMessageThread action', () => {
     const response = createMessageThread.onActivityCreated!(
       payload,
       onComplete,
-      onError
+      onError,
     )
     await expect(response).rejects.toThrow(ZodError)
   })
@@ -114,7 +115,7 @@ describe('createMessageThread action', () => {
     const response = createMessageThread.onActivityCreated!(
       payload,
       onComplete,
-      onError
+      onError,
     )
     await expect(response).rejects.toThrowError(new Error('API error'))
     expect(onComplete).not.toHaveBeenCalled()

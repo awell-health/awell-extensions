@@ -7,12 +7,12 @@ const careGapExample = {
 
 // Add mock API client
 const mockElationAPIClient = {
-  closeCareGap: jest.fn().mockResolvedValue(careGapExample)
+  closeCareGap: jest.fn().mockResolvedValue(careGapExample),
 }
 
 // Mock the makeAPIClient function
 jest.mock('../../client', () => ({
-  makeAPIClient: jest.fn().mockImplementation(() => mockElationAPIClient)
+  makeAPIClient: jest.fn().mockImplementation(() => mockElationAPIClient),
 }))
 
 describe('Elation - Close care gap', () => {
@@ -34,6 +34,7 @@ describe('Elation - Close care gap', () => {
       password: 'password',
       auth_url: 'authUrl',
       base_url: 'baseUrl',
+      openAiApiKey: 'some_key',
     },
     fields: {
       quality_program: 'quality_program',
