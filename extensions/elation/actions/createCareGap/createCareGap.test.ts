@@ -6,12 +6,12 @@ const careGapExample = {
 
 // Add mock API client
 const mockElationAPIClient = {
-  createCareGap: jest.fn().mockResolvedValue(careGapExample)
+  createCareGap: jest.fn().mockResolvedValue(careGapExample),
 }
 
 // Mock the makeAPIClient function
 jest.mock('../../client', () => ({
-  makeAPIClient: jest.fn().mockImplementation(() => mockElationAPIClient)
+  makeAPIClient: jest.fn().mockImplementation(() => mockElationAPIClient),
 }))
 
 describe('Elation - Create care gap', () => {
@@ -33,6 +33,7 @@ describe('Elation - Create care gap', () => {
       password: 'password',
       auth_url: 'authUrl',
       base_url: 'baseUrl',
+      openAiApiKey: 'some_key',
     },
     fields: {
       quality_program: 'quality_program',
@@ -58,6 +59,8 @@ describe('Elation - Create care gap', () => {
   test('should create care gap', async () => {
     await createCareGap.onActivityCreated!(payload, onComplete, onError)
 
-    expect(onComplete).toHaveBeenCalledWith({ data_points: { id: String(careGapExample.id) } })
+    expect(onComplete).toHaveBeenCalledWith({
+      data_points: { id: String(careGapExample.id) },
+    })
   })
 })
