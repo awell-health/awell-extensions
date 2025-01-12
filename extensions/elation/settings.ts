@@ -46,6 +46,13 @@ export const settings = {
       '⚠️ Deprecated: Elation now uses client credentials authentication. This setting is no longer required and should be removed from your settings.',
     required: false,
   },
+  openAiApiKey: {
+    key: 'openAiApiKey',
+    label: 'OpenAI API key ',
+    obfuscated: true,
+    required: false,
+    description: 'Required for some actions only.',
+  },
 } satisfies Record<string, Setting>
 
 export const SettingsValidationSchema = z.object({
@@ -53,6 +60,7 @@ export const SettingsValidationSchema = z.object({
   auth_url: z.string().min(1),
   client_id: z.string().min(1),
   client_secret: z.string().min(1),
+  openAiApiKey: z.string().optional(),
   /**
    * Elation now uses client credentials authentication.
    * We don't remove the settings just yet for backward compatibility for existing care flows.

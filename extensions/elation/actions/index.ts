@@ -22,6 +22,7 @@ import { getLetter } from './getLetter'
 import { createReferralOrder } from './createReferralOrder'
 import { createCareGap } from './createCareGap'
 import { closeCareGap } from './closeCareGap'
+import { updatePatientTags } from './updatePatientTags'
 
 export const actions = {
   getPatient,
@@ -48,4 +49,5 @@ export const actions = {
   createReferralOrder,
   createCareGap,
   closeCareGap,
+  updatePatientTags,
 }
