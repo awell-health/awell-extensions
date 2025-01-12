@@ -1,0 +1,1 @@
+export { updatePatientTags } from './updatePatientTags'
