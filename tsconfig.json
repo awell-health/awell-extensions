@@ -18,7 +18,8 @@
     "lib/**/*.ts",
     "extensions/**/*.ts",
     "src/**/*.ts",
-    "examples/**/*.ts"
+    "examples/**/*.ts",
+    "**/__tests__/**/*.mock.ts"
   ],
   "exclude": [
     "**/scripts/*.ts",
