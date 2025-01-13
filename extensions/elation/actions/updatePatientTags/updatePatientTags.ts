@@ -14,7 +14,7 @@ export const updatePatientTags: Action<
 > = {
   key: 'updatePatientTags',
   category: Category.EHR_INTEGRATIONS,
-  title: 'Update patient tags',
+  title: '🪄 Update patient tags',
   description: 'Update patient tags in Elation.',
   fields,
   previewable: false,
@@ -41,21 +41,20 @@ export const updatePatientTags: Action<
       return
     }
 
-    try {
-      const { tags } = await api.getPatient(patientId)
-      const existingTags = tags ?? []
+    const { tags } = await api.getPatient(patientId)
+    const existingTags = tags ?? []
 
-      const ChatModelGPT4o = new ChatOpenAI({
-        modelName: 'gpt-4o',
-        openAIApiKey: openAiApiKey,
-        temperature: 0,
-        maxRetries: 3,
-        timeout: 10000,
-      })
+    const ChatModelGPT4o = new ChatOpenAI({
+      modelName: 'gpt-4o-2024-08-06',
+      openAIApiKey: openAiApiKey,
+      temperature: 0,
+      maxRetries: 3,
+      timeout: 10000,
+    })
 
-      const systemPrompt = `You are a helpful assistant. You will receive a list of patient tags and an instruction in natural language about which tags to add, update, or remove. Your output should always be the updated list of tags (as an array). An empty array is also a valid output.
-
-      Important Instructions:
+    const systemPrompt = `You are a clinical data manager. You will receive a list (array) of patient tags for a single patient and instructions about which tags to add, update, or remove. These tags are used to assign particular attributes to patients which can help with patient care, like grouping of patients, categorizing patients for reporting, or identifying patients for care.
+      
+      Important instructions:
       - The maximum number of tags is 10.
       - The max length of a single tag is 100 characters.
       - Ensure tags are unique.
@@ -64,47 +63,57 @@ Input array: ${JSON.stringify(existingTags)}
 Instruction: ${prompt}
 
 Output a JSON object with two keys:
-1. updatedTags: The updated array of tags
+1. updatedTags: The updated array of tags. If the input array is empty, the output should be an empty array.
 2. explanation: A readable explanation of the changes made to the tags and why`
 
-      const parser = StructuredOutputParser.fromZodSchema(
-        z.object({
-          updatedTags: z.array(z.string()),
-          explanation: z.string(),
-        }),
-      )
+    const SingleTagSchema = z.string().max(100).describe('A single tag')
+    const TagsSchema = z
+      .array(SingleTagSchema)
+      .max(10)
+      .refine((items) => new Set(items).size === items.length, {
+        message: 'All items must be unique, no duplicate values allowed',
+      })
+      .describe('The updated array of tags')
 
+    const parser = StructuredOutputParser.fromZodSchema(
+      z.object({
+        updatedTags: TagsSchema,
+        explanation: z
+          .string()
+          .describe(
+            'A readable explanation of the changes made to the tags and why',
+          ),
+      }),
+    )
+
+    let result: z.infer<typeof parser.schema>
+
+    try {
       const chain = ChatModelGPT4o.pipe(parser)
-      const result = await chain.invoke(systemPrompt)
-
-      await api.updatePatient(patientId, {
-        tags: result.updatedTags,
-      })
-
-      await onComplete({
-        data_points: {
-          updatedTags: result.updatedTags.join(', '),
-        },
-        events: [
-          addActivityEventLog({
-            message: `Previous patient tags: ${existingTags?.length > 0 ? existingTags?.join(', ') : 'No tags'}\nUpdated patient tags: ${result.updatedTags.join(', ')}\nExplanation: ${result.explanation}`,
-          }),
-        ],
-      })
-    } catch (error) {
-      console.error(error)
-      await onError({
-        events: [
-          {
-            date: new Date().toISOString(),
-            text: { en: 'Unable to update patient tags' },
-            error: {
-              category: 'SERVER_ERROR',
-              message: 'Unable to update patient tags',
-            },
-          },
-        ],
-      })
+      result = await chain.invoke(systemPrompt)
+    } catch (invokeError) {
+      console.error(
+        'Error invoking ChatModelGPT4o for updatePatientTags:',
+        invokeError,
+      )
+      throw new Error('Failed to update patient tags.')
     }
+
+    const validatedTags = TagsSchema.parse(result.updatedTags)
+
+    await api.updatePatient(patientId, {
+      tags: validatedTags,
+    })
+
+    await onComplete({
+      data_points: {
+        updatedTags: validatedTags.join(', '),
+      },
+      events: [
+        addActivityEventLog({
+          message: `Previous patient tags: ${existingTags?.length > 0 ? existingTags?.join(', ') : 'No tags'}\nUpdated patient tags: ${validatedTags.join(', ')}\nExplanation: ${result.explanation}`,
+        }),
+      ],
+    })
   },
 }
