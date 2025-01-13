@@ -1,5 +1,6 @@
 import { athenahealth } from './athenahealth'
 import { Awell } from './awell'
+import { awellTasks } from './awellTasks'
 import { bland } from './bland'
 import { CalDotCom } from './calDotCom'
 import { Calendly } from './calendly'
@@ -12,7 +13,7 @@ import { dockHealth } from './dockHealth'
 import { DocuSign } from './docuSign'
 import { DropboxSign } from './dropboxSign'
 import { Elation } from './elation'
-import { epic} from './epic'
+import { epic } from './epic'
 import { Experimental } from './experimental'
 import { ExternalServer } from './external-server'
 import { Formsort } from './formsort'
@@ -53,6 +54,7 @@ export const extensions = [
   bland,
   athenahealth,
   Awell,
+  awellTasks,
   CalDotCom,
   Calendly,
   CanvasMedical,
