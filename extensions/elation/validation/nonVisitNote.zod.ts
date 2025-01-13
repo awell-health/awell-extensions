@@ -8,7 +8,7 @@ import {
 const nonVisitNoteTypeEnum = z.enum(['email', 'nonvisit', 'phone'])
 
 // All values taken from Elation's API
-const bulletCategoryEnum = z.enum([
+export const bulletCategoryEnum = z.enum([
   'Problem',
   'Past',
   'Family',
@@ -41,9 +41,14 @@ const bulletCategoryEnum = z.enum([
 
 export const bulletSchema = z.object({
   id: NumericIdSchema.optional(),
-  text: z.string().nonempty(),
+  text: z.string().min(1),
   author: NumericIdSchema,
-  category: bulletCategoryEnum.default(bulletCategoryEnum.enum.Problem),
+  /**
+   * Hotfix, see https://awellhealth.slack.com/archives/C074XR57N0G/p1736802124866829
+   * TODO: Remove this once we have a proper solution for the category field
+   */
+  // category: bulletCategoryEnum.default(bulletCategoryEnum.enum.Problem),
+  category: z.string().optional(),
 })
 
 export const nonVisitNoteSchema = z.object({
@@ -55,7 +60,7 @@ export const nonVisitNoteSchema = z.object({
   chart_date: DateTimeSchema,
   tags: validateCommaSeparatedList(
     (value) => NumericIdSchema.safeParse(value).success,
-    true
+    true,
   ).optional(),
   signed_by: NumericIdSchema.optional(),
   sign_date: DateTimeSchema.optional(),
