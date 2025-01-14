@@ -4,6 +4,7 @@ import { makeAPIClient } from '../../client'
 import { type FindAppointmentFields } from '../../types/appointment'
 import { makeAPIClientMockFunc } from '../../__mocks__/client'
 import { findAppointments } from '../findAppointments'
+import { mockFindAppointmentsResponse } from '../../__mocks__/constants'
 
 jest.mock('../../client')
 describe('find appointments', () => {
@@ -36,7 +37,7 @@ describe('find appointments', () => {
     await findAppointments.onActivityCreated!(payload, onComplete, onError)
     expect(onComplete).toHaveBeenCalledWith({
       data_points: expect.objectContaining({
-        appointments: JSON.stringify([{ id: 1 }, { id: 2 }]),
+        appointments: JSON.stringify(mockFindAppointmentsResponse),
         appointment_exists: 'true',
       }),
     })

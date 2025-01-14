@@ -75,9 +75,8 @@ describe('Elation - Find appointment by type', () => {
         appointment: JSON.stringify(        {
             id: 123,
             scheduled_date: '2025-01-15',
-            status: 'scheduled',
+            status: { status: 'Scheduled' },
             reason: 'follow-up',
-            description: 'Follow-up appointment',
           }),
         explanation: 'Test explanation',
         appointmentExists: 'true',
@@ -86,7 +85,7 @@ describe('Elation - Find appointment by type', () => {
         {
           date: expect.any(String),
           text: {
-            en: 'Number of future appointments for patient 12345: 3\nFound appointment: 123\nExplanation: Test explanation',
+            en: 'Number of future scheduled or confirmed appointments for patient 12345: 3\nFound appointment: 123\nExplanation: Test explanation',
           },
         },
       ],

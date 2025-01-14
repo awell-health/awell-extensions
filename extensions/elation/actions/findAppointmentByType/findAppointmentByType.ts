@@ -24,8 +24,8 @@ export const findAppointmentByType: Action<
     const api = makeAPIClient(payload.settings)
 
     const appointments = await api.findAppointments({ patient: patientId, from_date: new Date().toISOString() })
-
-    if (appointments.length === 0) {
+    const scheduledOrConfirmedAppointments = appointments.filter(appointment => appointment.status.status === 'Scheduled' || appointment.status.status === 'Confirmed')
+    if (scheduledOrConfirmedAppointments.length === 0) {
       await onComplete({
         data_points: {
           appointmentExists: 'false',
@@ -34,12 +34,10 @@ export const findAppointmentByType: Action<
       return
     }
 
-    const promptAppointments = appointments.map((appointment) => {
+    const promptAppointments = scheduledOrConfirmedAppointments.map((appointment) => {
       const relevantInfo = {
         id: appointment.id,
-        status: appointment.status,
         reason: appointment.reason,
-        description: appointment.description,
         scheduled_date: appointment.scheduled_date,
       }
       return JSON.stringify(relevantInfo)
@@ -56,6 +54,7 @@ export const findAppointmentByType: Action<
     const systemPrompt = `You are a clinical data manager. You will receive a list (array) of appointments for a single patient and instructions about which type of appointment to find. You're to use the information in the list to find an appointment that matches, if one exists. If no appointment exists that obviously matches the instructions, that's a perfectly acceptable outcome.
       
       Important instructions:
+      - The appointment "reason" is the appointment type.
       - Pay close attention to the instructions. THey are intended to have been written by a clinician, for a clinician.
       - Think like a clinician. In other words, "Rx" should match a prescription appointment or follow-up related to a prescription.
 
@@ -97,7 +96,7 @@ Output a JSON object with two keys:
 
     const validatedAppointment = SingleAppointmentSchema.parse(result.appointmentId)
 
-    const foundAppointment = appointments.find(appointment => appointment.id === Number(validatedAppointment))
+    const foundAppointment = scheduledOrConfirmedAppointments.find(appointment => appointment.id === Number(validatedAppointment))
 
     await onComplete({
       data_points: {
@@ -107,7 +106,7 @@ Output a JSON object with two keys:
       },
       events: [
         addActivityEventLog({
-          message: `Number of future appointments for patient ${patientId}: ${appointments.length}\nFound appointment: ${foundAppointment?.id}\nExplanation: ${result.explanation}`,
+          message: `Number of future scheduled or confirmed appointments for patient ${patientId}: ${scheduledOrConfirmedAppointments.length}\nFound appointment: ${foundAppointment?.id}\nExplanation: ${result.explanation}`,
         }),
       ],
     })

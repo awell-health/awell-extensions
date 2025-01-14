@@ -345,3 +345,24 @@ export const referralOrderExample = {
   short_consultant_name: 'TEST',
   icd10_codes: ['A01', 'B02'],
 }
+
+export const mockFindAppointmentsResponse = [
+  {
+    id: 1,
+    scheduled_date: '2025-01-15',
+    status: { status: 'Scheduled' },
+    reason: 'type 1',
+  },
+  {
+    id: 2,
+    scheduled_date: '2025-01-15',
+    status: { status: 'Scheduled' },
+    reason: 'type 2',
+  },
+  {
+    id: 123,
+    scheduled_date: '2025-01-15',
+    status: { status: 'Scheduled' },
+    reason: 'follow-up',
+  },
+]
