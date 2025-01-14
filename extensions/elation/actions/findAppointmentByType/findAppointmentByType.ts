@@ -105,11 +105,13 @@ Output a JSON object with two keys:
 1. appointmentId: The id of the appointment that matches the instructions, if one exists. If no appointment exists that obviously matches, you should return an empty string.
 2. explanation: A readable explanation of how the appointment was found and why. Or, if no appointment exists that matches the instructions, an explanation of why.`
 
-    const SingleAppointmentSchema = z.string().describe('A single appointment')
+    const AppointmentIdSchema = z.coerce
+      .number()
+      .describe('A single appointment')
 
     const parser = StructuredOutputParser.fromZodSchema(
       z.object({
-        appointmentId: SingleAppointmentSchema,
+        appointmentId: AppointmentIdSchema,
         explanation: z
           .string()
           .describe(
@@ -131,9 +133,7 @@ Output a JSON object with two keys:
       throw new Error('Failed to find appointment by type.')
     }
 
-    const validatedAppointment = SingleAppointmentSchema.parse(
-      result.appointmentId,
-    )
+    const validatedAppointment = AppointmentIdSchema.parse(result.appointmentId)
 
     const foundAppointment = scheduledOrConfirmedAppointments.find(
       (appointment) => appointment.id === Number(validatedAppointment),

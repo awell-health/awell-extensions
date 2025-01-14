@@ -14,7 +14,7 @@ const mockedSdk = jest.mocked(makeAPIClient)
 
 jest.mock('@langchain/openai', () => {
   const mockInvoke = jest.fn().mockResolvedValue({
-    appointmentId: '123',
+    appointmentId: appointmentsMock[0].id,
     explanation: 'Test explanation',
   })
 
@@ -81,7 +81,7 @@ describe('Elation - Find appointment by type', () => {
         {
           date: expect.any(String),
           text: {
-            en: 'Number of future scheduled or confirmed appointments for patient 12345: 3\nFound appointment: 123\nExplanation: Test explanation',
+            en: 'Number of future scheduled or confirmed appointments for patient 12345: 2\nFound appointment: 123\nExplanation: Test explanation',
           },
         },
       ],
