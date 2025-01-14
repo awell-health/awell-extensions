@@ -3,7 +3,7 @@ import { Category } from '@awell-health/extensions-core'
 import { validatePayloadAndCreateSdk } from '../../lib/validatePayloadAndCreateSdk'
 import { type settings } from '../../settings'
 import { fields, FieldsValidationSchema, dataPoints } from './config'
-import { get } from 'lodash'
+import { get, first, isNil } from 'lodash'
 
 export const getLastTaskPerformer: Action<
   typeof fields,
@@ -17,7 +17,7 @@ export const getLastTaskPerformer: Action<
   fields,
   previewable: true,
   dataPoints,
-  onEvent: async ({ payload, onComplete }): Promise<void> => {
+  onEvent: async ({ payload, onComplete, onError }): Promise<void> => {
     const { taskSdk, pathway } = await validatePayloadAndCreateSdk({
       fieldsSchema: FieldsValidationSchema,
       payload,
@@ -36,7 +36,25 @@ export const getLastTaskPerformer: Action<
       activity_object_type: 'form', // only form tasks are completed in the worklist
     })
 
-    const lastTask = data.tasks.length > 0 ? data.tasks[0] : null
+    const lastTask = first(data.tasks)
+    
+    if (isNil(lastTask)) {
+      await onError({
+        events: [
+          {
+            date: new Date().toISOString(),
+            text: {
+              en: `No last task found`,
+          },  
+          error: {
+            category: 'SERVER_ERROR',
+              message: `No last task found`,
+            },
+          },
+        ],
+      })
+      return
+    }
 
     await onComplete({
       data_points: {
