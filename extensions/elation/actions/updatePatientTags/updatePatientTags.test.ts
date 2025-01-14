@@ -3,7 +3,9 @@ import { makeAPIClient } from '../../client'
 import { updatePatientTags as action } from './updatePatientTags'
 import { TestHelpers } from '@awell-health/extensions-core'
 import { ChatOpenAI } from '@langchain/openai'
-
+import { config } from 'dotenv'
+import path from 'path'
+config({ path: path.resolve(__dirname, './fake.env') })
 jest.mock('../../client')
 
 // Mock the module
@@ -61,7 +63,6 @@ describe('Elation - Update patient tags', () => {
           password: 'password',
           auth_url: 'authUrl',
           base_url: 'baseUrl',
-          openAiApiKey: 'openaiApiKey',
         },
       } as any,
       onComplete,

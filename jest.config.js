@@ -4,7 +4,7 @@ const { compilerOptions } = require('./tsconfig.json')
 
 // Make sure jest runs with UTC TZ (to avoid failed tests locally)
 process.env.TZ = 'UTC'
-
+require('dotenv').config({ path: './fake.env'})
 module.exports = {
   preset: 'ts-jest',
   testEnvironment: 'node',

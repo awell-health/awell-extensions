@@ -25,7 +25,6 @@ export const updatePatientTags: Action<
     const api = makeAPIClient(payload.settings)
 
     const openAiApiKey = process.env.OPENAI_API_KEY
-
     if (isNil(openAiApiKey)) {
       await onError({
         events: [
