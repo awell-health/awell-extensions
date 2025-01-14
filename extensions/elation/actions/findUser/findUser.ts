@@ -69,7 +69,6 @@ export const findUser: Action<
         },
       })
     } catch (error) {
-      console.error(error)
       const err = error as Error
       await onError({
         events: [
