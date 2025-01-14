@@ -24,15 +24,35 @@ export const findFutureAppointment: Action<
     const { prompt, patientId } = FieldsValidationSchema.parse(payload.fields)
     const api = makeAPIClient(payload.settings)
 
+    const openAiApiKey = payload.settings.openAiApiKey
+
+    if (openAiApiKey === undefined || openAiApiKey === '') {
+      await onError({
+        events: [
+          {
+            date: new Date().toISOString(),
+            text: { en: 'OpenAI API key is required for this action.' },
+            error: {
+              category: 'SERVER_ERROR',
+              message: 'OpenAI API key is required for this action.',
+            },
+          },
+        ],
+      })
+      return
+    }
+
     const appointments = await api.findAppointments({
       patient: patientId,
       from_date: new Date().toISOString(),
     })
+
     const scheduledOrConfirmedAppointments = appointments.filter(
       (appointment) =>
         appointment.status.status === 'Scheduled' ||
         appointment.status.status === 'Confirmed',
     )
+
     if (scheduledOrConfirmedAppointments.length === 0) {
       await onComplete({
         data_points: {
@@ -62,7 +82,7 @@ export const findFutureAppointment: Action<
       timeout: 10000,
     })
 
-    const systemPrompt = `You are a help medical assistant. You will receive a list (array) of future appointments for a single patient and instructions about which appointment to find. You're supposed to use the information in the list to find an appointment that matches, if one exists. If no appointment exists that obviously matches the instructions, that's a perfectly acceptable outcome. If multiple appointments exist that match the instructions, you should return the first one. In any case, there can only be one appointment returned.
+    const systemPrompt = `You are a helpful medical assistant. You will receive a list (array) of future appointments for a single patient and instructions about which appointment to find. You're supposed to use the information in the list to find an appointment that matches, if one exists. If no appointment exists that obviously matches the instructions, that's a perfectly acceptable outcome. If multiple appointments exist that match the instructions, you should return the first one. In any case, there can only be one appointment returned.
       
       Important instructions:
       - The appointment "reason" is the appointment type.
