@@ -44,7 +44,7 @@ export const getLastTaskPerformer: Action<
           {
             date: new Date().toISOString(),
             text: {
-              en: `No last task found`,
+              en: `No completed task found in this care flow`,
           },  
           error: {
             category: 'SERVER_ERROR',
