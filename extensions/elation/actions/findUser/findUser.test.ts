@@ -1,11 +1,24 @@
 import { makeAPIClient } from '../../client'
 import { findUser as action } from './findUser'
 import { TestHelpers } from '@awell-health/extensions-core'
-import { usersMockResponse } from './__testdata__/users.mock'
+import {
+  usersMockResponsePageOne,
+  usersMockResponsePageTwo,
+} from './__testdata__/users.mock'
 
 jest.mock('../../client', () => ({
   makeAPIClient: jest.fn().mockImplementation(() => ({
-    getAllUsers: jest.fn().mockResolvedValue(usersMockResponse),
+    /**
+     * Mock the getAllUsers method to return different responses based on the offset
+     * This is to simulate the pagination of the users
+     */
+    getAllUsers: jest.fn().mockImplementation(({ offset }) => {
+      if (offset === 0) {
+        return usersMockResponsePageOne
+      }
+
+      return usersMockResponsePageTwo
+    }),
   })),
 }))
 
@@ -29,50 +42,77 @@ describe('Elation - Find user', () => {
     jest.clearAllMocks()
   })
 
-  test('Should return the correct user id', async () => {
-    await extensionAction.onEvent({
-      payload: {
-        fields: {
-          userEmail: 'melanie.smith@example.com',
-        },
-        settings,
-      } as any,
-      onComplete,
-      onError,
-      helpers,
-    })
+  describe('When the user is found on the first page', () => {
+    test('Should return the correct user id', async () => {
+      await extensionAction.onEvent({
+        payload: {
+          fields: {
+            userEmail: 'melanie.smith@example.com',
+          },
+          settings,
+        } as any,
+        onComplete,
+        onError,
+        helpers,
+      })
 
-    expect(mockedSdk).toHaveBeenCalled()
-    expect(onComplete).toHaveBeenCalledWith({
-      data_points: {
-        userId: '2',
-      },
+      expect(mockedSdk).toHaveBeenCalled()
+      expect(onComplete).toHaveBeenCalledWith({
+        data_points: {
+          userId: '2',
+        },
+      })
     })
   })
 
-  test('Should return an error if the user is not found', async () => {
-    await extensionAction.onEvent({
-      payload: {
-        fields: {
-          userEmail: 'helloworld@example.com',
-        },
-        settings,
-      } as any,
-      onComplete,
-      onError,
-      helpers,
-    })
-
-    expect(mockedSdk).toHaveBeenCalled()
-    expect(onError).toHaveBeenCalledWith({
-      events: [
-        {
-          date: expect.any(String),
-          text: {
-            en: 'No user found with the provided email',
+  describe('When the user is found on the second page', () => {
+    test('Should return the correct user id', async () => {
+      await extensionAction.onEvent({
+        payload: {
+          fields: {
+            userEmail: 'awell.doe@example.com',
           },
+          settings,
+        } as any,
+        onComplete,
+        onError,
+        helpers,
+      })
+
+      expect(mockedSdk).toHaveBeenCalled()
+      expect(onComplete).toHaveBeenCalledWith({
+        data_points: {
+          userId: '4',
         },
-      ],
+      })
+    })
+  })
+
+  describe('When the user is not found', () => {
+    test('Should return an error if the user is not found', async () => {
+      await extensionAction.onEvent({
+        payload: {
+          fields: {
+            userEmail: 'helloworld@example.com',
+          },
+          settings,
+        } as any,
+        onComplete,
+        onError,
+        helpers,
+      })
+
+      expect(mockedSdk).toHaveBeenCalled()
+      expect(onError).toHaveBeenCalledWith({
+        events: [
+          {
+            date: expect.any(String),
+            text: {
+              en: 'No user found with the provided email',
+            },
+          },
+        ],
+      })
     })
   })
 })

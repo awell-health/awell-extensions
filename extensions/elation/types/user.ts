@@ -1,5 +1,12 @@
 import { z } from 'zod'
 
+export const GetAllUsersInputSchema = z.object({
+  limit: z.number().optional(),
+  offset: z.number().optional(),
+})
+
+export type GetAllUsersInputType = z.infer<typeof GetAllUsersInputSchema>
+
 export const UserSchema = z.object({
   id: z.number(),
   email: z.string().email(),
@@ -24,7 +31,7 @@ export const UserSchema = z.object({
 
 export interface GetAllUsersResponseType {
   count: number
-  next: unknown
-  previous: unknown
+  next: string | null // Url to the next page of results
+  previous: string | null // Url to the previous page of results
   results: Array<z.infer<typeof UserSchema>>
 }

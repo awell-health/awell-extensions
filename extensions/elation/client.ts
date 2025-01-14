@@ -49,9 +49,10 @@ import {
   type GetReferralOrderInputType,
   type GetReferralOrderResponseType,
   type GetAllUsersResponseType,
+  type GetAllUsersInputType,
 } from './types'
 import { elationCacheService } from './cache'
-import { isEmpty } from 'lodash'
+import { isEmpty, isNil } from 'lodash'
 
 export class ElationDataWrapper extends DataWrapper {
   public async findAppointments(
@@ -179,13 +180,23 @@ export class ElationDataWrapper extends DataWrapper {
     return res
   }
 
-  public async getAllUsers(): Promise<GetAllUsersResponseType> {
-    const req = this.Request<GetAllUsersResponseType>({
+  public async getAllUsers(
+    params: GetAllUsersInputType,
+  ): Promise<GetAllUsersResponseType> {
+    const queryParams = new URLSearchParams()
+
+    if (!isNil(params.limit)) {
+      queryParams.set('limit', params.limit.toString())
+    }
+
+    if (!isNil(params.offset)) {
+      queryParams.set('offset', params.offset.toString())
+    }
+
+    return await this.Request<GetAllUsersResponseType>({
       method: 'GET',
-      url: `/users/`,
+      url: `/users/?${queryParams.toString()}`,
     })
-    const res = await req
-    return res
   }
 
   public async findPhysicians({
@@ -492,8 +503,10 @@ export class ElationAPIClient extends APIClient<ElationDataWrapper> {
     return await this.FetchData(async (dw) => await dw.getReferralOrder(id))
   }
 
-  public async getAllUsers(): Promise<GetAllUsersResponseType> {
-    return await this.FetchData(async (dw) => await dw.getAllUsers())
+  public async getAllUsers(
+    params: GetAllUsersInputType,
+  ): Promise<GetAllUsersResponseType> {
+    return await this.FetchData(async (dw) => await dw.getAllUsers(params))
   }
 
   public async findPhysicians({

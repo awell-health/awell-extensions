@@ -25,24 +25,59 @@ export const findUser: Action<
      * Elation doesn't have server-side support for searching users by email.
      * We need to get all users and then search by email in the action.
      */
-    const res = await api.getAllUsers()
-    const user = res.results.find((user) => user.email === userEmail)
+    const limit = 100 // Number of results per page
+    let offset = 0 // Start at the first page
+    let user = null // Initialize user as null
 
-    if (isNil(user)) {
+    try {
+      while (true) {
+        const res = await api.getAllUsers({ limit, offset })
+
+        // Search for the user in the current page
+        user = res.results.find((user) => user.email === userEmail)
+
+        if (!isNil(user)) {
+          // User found, exit the loop
+          break
+        }
+
+        // If no more results, exit the loop
+        if (res.next === null) {
+          break
+        }
+
+        // Increment the offset for the next page
+        offset += limit
+      }
+
+      if (isNil(user)) {
+        // User not found after checking all pages
+        await onError({
+          events: [
+            addActivityEventLog({
+              message: 'No user found with the provided email',
+            }),
+          ],
+        })
+        return
+      }
+
+      // User found, return the user ID
+      await onComplete({
+        data_points: {
+          userId: String(user.id),
+        },
+      })
+    } catch (error) {
+      console.error(error)
+      const err = error as Error
       await onError({
         events: [
           addActivityEventLog({
-            message: 'No user found with the provided email',
+            message: `Error occurred while searching for user: ${err.message}`,
           }),
         ],
       })
-      return
     }
-
-    await onComplete({
-      data_points: {
-        userId: String(user.id),
-      },
-    })
   },
 }
