@@ -17,6 +17,7 @@ import {
   visitNoteExample,
   getLetterResponseExample,
   referralOrderExample,
+  mockFindAppointmentsResponse,
 } from './constants'
 const { makeAPIClient: makeAPIClientActual } = jest.requireActual('../client')
 
@@ -53,21 +54,7 @@ export const mockClientReturn = {
   }),
   findAppointments: jest.fn((params) => {
     if (params.patient === 12345) {
-      return [
-        {
-          id: 1,
-        },
-        {
-          id: 2,
-        },
-        {
-          id: 123,
-          scheduled_date: '2025-01-15',
-          status: 'scheduled',
-          reason: 'follow-up',
-          description: 'Follow-up appointment',
-        },
-      ]
+      return mockFindAppointmentsResponse
     } else {
       return []
     }

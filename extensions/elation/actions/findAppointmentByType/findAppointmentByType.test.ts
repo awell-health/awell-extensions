@@ -81,7 +81,7 @@ describe('Elation - Find appointment by type', () => {
         {
           date: expect.any(String),
           text: {
-            en: 'Number of future appointments for patient 12345: 1\nFound appointment: 123\nExplanation: Test explanation',
+            en: 'Number of future scheduled or confirmed appointments for patient 12345: 3\nFound appointment: 123\nExplanation: Test explanation',
           },
         },
       ],
