@@ -2,7 +2,10 @@ import axios, { type AxiosResponse, type AxiosInstance } from 'axios'
 import {
   type GetCareflowCommentsInputType,
   type GetCareflowCommentsResponseType,
+  type GetTasksInputType,
+  type GetTasksResponseType,
 } from './schema'
+import { isNil } from 'lodash';
 
 export class TasksApiClient {
   private readonly client: AxiosInstance
@@ -33,6 +36,24 @@ export class TasksApiClient {
 
     const response = await this.client.get<GetCareflowCommentsResponseType>(
       `/comments?${queryParams.toString()}`,
+    )
+
+    return response
+  }
+
+  async getTasks(
+    input: GetTasksInputType,
+  ): Promise<AxiosResponse<GetTasksResponseType>> {
+    const queryParams = new URLSearchParams()
+
+    Object.entries(input).forEach(([key, value]) => {
+      if (!isNil(value)) {
+        queryParams.set(key, value.toString())
+      }
+    })
+
+    const response = await this.client.get<GetTasksResponseType>(
+      `/tasks?${queryParams.toString()}`,
     )
 
     return response
