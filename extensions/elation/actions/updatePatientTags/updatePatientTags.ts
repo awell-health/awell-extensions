@@ -6,6 +6,7 @@ import { StructuredOutputParser } from '@langchain/core/output_parsers'
 import { z } from 'zod'
 import { ChatOpenAI } from '@langchain/openai'
 import { addActivityEventLog } from '../../../../src/lib/awell/addEventLog'
+import { isNil } from 'lodash'
 
 export const updatePatientTags: Action<
   typeof fields,
@@ -23,9 +24,9 @@ export const updatePatientTags: Action<
     const { prompt, patientId } = FieldsValidationSchema.parse(payload.fields)
     const api = makeAPIClient(payload.settings)
 
-    const openAiApiKey = payload.settings.openAiApiKey
+    const openAiApiKey = process.env.OPENAI_API_KEY
 
-    if (openAiApiKey === undefined || openAiApiKey === '') {
+    if (isNil(openAiApiKey)) {
       await onError({
         events: [
           {
