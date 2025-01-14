@@ -28,10 +28,11 @@ export const getLastTaskPerformer: Action<
     const { data } = await taskSdk.getTasks({
       status: 'completed',
       careflow_id: pathway.id, // We only want to get the last task performed in the current care flow.
-      // sort_by: 'completed_at',
-      // order_by: 'desc',
+      sort_by: 'completed_at',
+      order_by: 'desc',
       limit: 1, // Given we sort by completed_at, we only need to get the last task so a limit of 1 is enough.
       offset: 0,
+      activity_object_type: 'form', // only form tasks are completed in the worklist
     })
 
     const lastTask = data.tasks.length > 0 ? data.tasks[0] : null
