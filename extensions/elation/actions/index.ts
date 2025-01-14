@@ -23,6 +23,7 @@ import { createReferralOrder } from './createReferralOrder'
 import { createCareGap } from './createCareGap'
 import { closeCareGap } from './closeCareGap'
 import { updatePatientTags } from './updatePatientTags'
+import { findUser } from './findUser'
 import { getReferralOrder } from './getReferralOrder'
 
 export const actions = {
@@ -52,4 +53,5 @@ export const actions = {
   closeCareGap,
   updatePatientTags,
   getReferralOrder,
+  findUser,
 }

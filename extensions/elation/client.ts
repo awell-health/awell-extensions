@@ -48,6 +48,7 @@ import {
   type PostReferralOrderResponse,
   type GetReferralOrderInputType,
   type GetReferralOrderResponseType,
+  type GetAllUsersResponseType,
 } from './types'
 import { elationCacheService } from './cache'
 import { isEmpty } from 'lodash'
@@ -173,6 +174,15 @@ export class ElationDataWrapper extends DataWrapper {
     const req = this.Request<GetReferralOrderResponseType>({
       method: 'GET',
       url: `/referral_orders/${id}`,
+    })
+    const res = await req
+    return res
+  }
+
+  public async getAllUsers(): Promise<GetAllUsersResponseType> {
+    const req = this.Request<GetAllUsersResponseType>({
+      method: 'GET',
+      url: `/users/`,
     })
     const res = await req
     return res
@@ -480,6 +490,10 @@ export class ElationAPIClient extends APIClient<ElationDataWrapper> {
     id: GetReferralOrderInputType,
   ): Promise<GetReferralOrderResponseType> {
     return await this.FetchData(async (dw) => await dw.getReferralOrder(id))
+  }
+
+  public async getAllUsers(): Promise<GetAllUsersResponseType> {
+    return await this.FetchData(async (dw) => await dw.getAllUsers())
   }
 
   public async findPhysicians({
