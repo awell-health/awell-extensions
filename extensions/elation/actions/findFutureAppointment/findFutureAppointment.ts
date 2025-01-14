@@ -24,40 +24,15 @@ export const findFutureAppointment: Action<
     const { prompt, patientId } = FieldsValidationSchema.parse(payload.fields)
     const api = makeAPIClient(payload.settings)
 
-    const openAiApiKey = payload.settings.openAiApiKey
-
-    if (openAiApiKey === undefined || openAiApiKey === '') {
-      await onError({
-        events: [
-          {
-            date: new Date().toISOString(),
-            text: { en: 'OpenAI API key is required for this action.' },
-            error: {
-              category: 'SERVER_ERROR',
-              message: 'OpenAI API key is required for this action.',
-            },
-          },
-        ],
-      })
-      return
-    }
-
-    /**
-     * This API is paginated but we can assume there are no more than
-     * 100 upcoming appointments for a patient.
-     */
-    const today = new Date().toISOString()
     const appointments = await api.findAppointments({
       patient: patientId,
-      from_date: today, // Future appointments only
+      from_date: new Date().toISOString(),
     })
-
     const scheduledOrConfirmedAppointments = appointments.filter(
       (appointment) =>
         appointment.status.status === 'Scheduled' ||
         appointment.status.status === 'Confirmed',
     )
-
     if (scheduledOrConfirmedAppointments.length === 0) {
       await onComplete({
         data_points: {
