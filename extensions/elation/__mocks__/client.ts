@@ -60,6 +60,13 @@ export const mockClientReturn = {
         {
           id: 2,
         },
+        {
+          id: 123,
+          scheduled_date: '2025-01-15',
+          status: 'scheduled',
+          reason: 'follow-up',
+          description: 'Follow-up appointment',
+        },
       ]
     } else {
       return []
