@@ -48,7 +48,7 @@ export const getLastTaskPerformer: Action<
           },  
           error: {
             category: 'SERVER_ERROR',
-              message: `No last task found`,
+              message: `No completed task found in this care flow`,
             },
           },
         ],
