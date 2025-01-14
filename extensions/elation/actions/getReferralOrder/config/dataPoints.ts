@@ -18,7 +18,7 @@ export const dataPoints = {
     valueType: 'number',
   },
   diagnosisCodes: {
-    key: 'practice',
+    key: 'diagnosisCodes',
     valueType: 'strings_array',
   },
   diagnosisLabels: {
