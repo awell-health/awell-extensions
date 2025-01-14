@@ -1,12 +1,17 @@
-import { makeAPIClientMockFunc } from '../../__mocks__/client'
 import { makeAPIClient } from '../../client'
+import { appointmentsMock } from './__testdata__/GetAppointments.mock'
 import { findAppointmentByType as action } from './findAppointmentByType'
 import { TestHelpers } from '@awell-health/extensions-core'
 import { ChatOpenAI } from '@langchain/openai'
 
-jest.mock('../../client')
+jest.mock('../../client', () => ({
+  makeAPIClient: jest.fn().mockImplementation(() => ({
+    findAppointments: jest.fn().mockResolvedValue(appointmentsMock),
+  })),
+}))
 
-// Mock the module
+const mockedSdk = jest.mocked(makeAPIClient)
+
 jest.mock('@langchain/openai', () => {
   const mockInvoke = jest.fn().mockResolvedValue({
     appointmentId: '123',
@@ -37,11 +42,6 @@ describe('Elation - Find appointment by type', () => {
     clearMocks,
   } = TestHelpers.fromAction(action)
 
-  beforeAll(() => {
-    const mockAPIClient = makeAPIClient as jest.Mock
-    mockAPIClient.mockImplementation(makeAPIClientMockFunc)
-  })
-
   beforeEach(() => {
     clearMocks()
     jest.clearAllMocks()
@@ -70,15 +70,10 @@ describe('Elation - Find appointment by type', () => {
     })
 
     expect(ChatOpenAI).toHaveBeenCalled()
+    expect(mockedSdk).toHaveBeenCalled()
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
-        appointment: JSON.stringify(        {
-            id: 123,
-            scheduled_date: '2025-01-15',
-            status: 'scheduled',
-            reason: 'follow-up',
-            description: 'Follow-up appointment',
-          }),
+        appointment: JSON.stringify(appointmentsMock[0]),
         explanation: 'Test explanation',
         appointmentExists: 'true',
       },
@@ -86,7 +81,7 @@ describe('Elation - Find appointment by type', () => {
         {
           date: expect.any(String),
           text: {
-            en: 'Number of future appointments for patient 12345: 3\nFound appointment: 123\nExplanation: Test explanation',
+            en: 'Number of future appointments for patient 12345: 1\nFound appointment: 123\nExplanation: Test explanation',
           },
         },
       ],

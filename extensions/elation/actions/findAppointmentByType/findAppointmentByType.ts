@@ -6,6 +6,7 @@ import { StructuredOutputParser } from '@langchain/core/output_parsers'
 import { z } from 'zod'
 import { ChatOpenAI } from '@langchain/openai'
 import { addActivityEventLog } from '../../../../src/lib/awell/addEventLog'
+import { isNil } from 'lodash'
 
 export const findAppointmentByType: Action<
   typeof fields,
@@ -23,7 +24,33 @@ export const findAppointmentByType: Action<
     const { prompt, patientId } = FieldsValidationSchema.parse(payload.fields)
     const api = makeAPIClient(payload.settings)
 
-    const appointments = await api.findAppointments({ patient: patientId, from_date: new Date().toISOString() })
+    const openAiApiKey = payload.settings.openAiApiKey
+
+    if (openAiApiKey === undefined || openAiApiKey === '') {
+      await onError({
+        events: [
+          {
+            date: new Date().toISOString(),
+            text: { en: 'OpenAI API key is required for this action.' },
+            error: {
+              category: 'SERVER_ERROR',
+              message: 'OpenAI API key is required for this action.',
+            },
+          },
+        ],
+      })
+      return
+    }
+
+    /**
+     * This API is paginated but we can assume there are no more than
+     * 100 upcoming appointments for a patient.
+     */
+    const today = new Date().toISOString()
+    const appointments = await api.findAppointments({
+      patient: patientId,
+      from_date: today, // Future appointments only
+    })
 
     if (appointments.length === 0) {
       await onComplete({
@@ -34,35 +61,44 @@ export const findAppointmentByType: Action<
       return
     }
 
-    const promptAppointments = appointments.map((appointment) => {
-      const relevantInfo = {
-        id: appointment.id,
-        status: appointment.status,
-        reason: appointment.reason,
-        description: appointment.description,
-        scheduled_date: appointment.scheduled_date,
-      }
-      return JSON.stringify(relevantInfo)
-    }).join('\n\n')
+    /**
+     * We don't want to send the entire appointment object to the LLM
+     * because it's too much (and sensitive) information. We only want to send
+     * relevant information needed to find the appointment.
+     */
+    const promptAppointments = appointments
+      .map((appointment) => {
+        const relevantInfo = {
+          id: appointment.id,
+          status: appointment.status,
+          reason: appointment.reason,
+          description: appointment.description,
+          scheduled_date: appointment.scheduled_date,
+        }
+        return JSON.stringify(relevantInfo)
+      })
+      .join('\n\n')
 
     const ChatModelGPT4o = new ChatOpenAI({
       modelName: 'gpt-4o',
-      openAIApiKey: process.env.OPENAI_API_KEY,
+      openAIApiKey: openAiApiKey,
       temperature: 0,
       maxRetries: 3,
       timeout: 10000,
     })
 
-    const systemPrompt = `You are a clinical data manager. You will receive a list (array) of appointments for a single patient and instructions about which type of appointment to find. You're to use the information in the list to find an appointment that matches, if one exists. If no appointment exists that obviously matches the instructions, that's a perfectly acceptable outcome.
+    const systemPrompt = `You are a clinical data manager. You will receive a list (array) of appointments for a single patient and instructions about which type of appointment to find. You're supposed to use the information in the list to find an appointment that matches, if one exists. If no appointment exists that obviously matches the instructions, that's a perfectly acceptable outcome.
       
       Important instructions:
       - Pay close attention to the instructions. THey are intended to have been written by a clinician, for a clinician.
       - Think like a clinician. In other words, "Rx" should match a prescription appointment or follow-up related to a prescription.
 
 ----------
-Input array: ${promptAppointments}
+Input array: 
+${promptAppointments}
 ----------
-Instruction: ${prompt}
+Instruction: 
+${prompt}
 ----------
 
 Output a JSON object with two keys:
@@ -89,25 +125,29 @@ Output a JSON object with two keys:
       result = await chain.invoke(systemPrompt)
     } catch (invokeError) {
       console.error(
-        'Error invoking ChatModelGPT4o for updatePatientTags:',
+        'Error invoking ChatModelGPT4o for findAppointmentByType:',
         invokeError,
       )
-      throw new Error('Failed to update patient tags.')
+      throw new Error('Failed to find appointment by type.')
     }
 
-    const validatedAppointment = SingleAppointmentSchema.parse(result.appointmentId)
+    const validatedAppointment = SingleAppointmentSchema.parse(
+      result.appointmentId,
+    )
 
-    const foundAppointment = appointments.find(appointment => appointment.id === Number(validatedAppointment))
+    const foundAppointment = appointments.find(
+      (appointment) => appointment.id === Number(validatedAppointment),
+    )
 
     await onComplete({
       data_points: {
         appointment: JSON.stringify(foundAppointment),
         explanation: result.explanation,
-        appointmentExists: foundAppointment ? 'true' : 'false',
+        appointmentExists: !isNil(foundAppointment) ? 'true' : 'false',
       },
       events: [
         addActivityEventLog({
-          message: `Number of future appointments for patient ${patientId}: ${appointments.length}\nFound appointment: ${foundAppointment?.id}\nExplanation: ${result.explanation}`,
+          message: `Number of future appointments for patient ${patientId}: ${appointments.length}\nFound appointment: ${isNil(foundAppointment) ? 'none' : foundAppointment?.id}\nExplanation: ${result.explanation}`,
         }),
       ],
     })
