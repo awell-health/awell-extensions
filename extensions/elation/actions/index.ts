@@ -24,7 +24,7 @@ import { createCareGap } from './createCareGap'
 import { closeCareGap } from './closeCareGap'
 import { updatePatientTags } from './updatePatientTags'
 import { getReferralOrder } from './getReferralOrder'
-import { findAppointmentByType } from './findAppointmentByType'
+import { findFutureAppointment } from './findFutureAppointment'
 
 export const actions = {
   getPatient,
@@ -53,5 +53,5 @@ export const actions = {
   closeCareGap,
   updatePatientTags,
   getReferralOrder,
-  findAppointmentByType,
+  findFutureAppointment,
 }

@@ -8,15 +8,15 @@ import { ChatOpenAI } from '@langchain/openai'
 import { addActivityEventLog } from '../../../../src/lib/awell/addEventLog'
 import { isNil } from 'lodash'
 
-export const findAppointmentByType: Action<
+export const findFutureAppointment: Action<
   typeof fields,
   typeof settings,
   keyof typeof dataPoints
 > = {
-  key: 'findAppointmentByType',
+  key: 'findFutureAppointment',
   category: Category.EHR_INTEGRATIONS,
-  title: '🪄 Find appointment by type',
-  description: 'Find a future appointment by type in Elation.',
+  title: '🪄 Find future appointment',
+  description: 'Find a future appointment in Elation.',
   fields,
   previewable: false,
   dataPoints,
@@ -72,6 +72,7 @@ export const findAppointmentByType: Action<
         const relevantInfo = {
           id: appointment.id,
           reason: appointment.reason,
+          duration: appointment.duration,
           scheduled_date: appointment.scheduled_date,
         }
         return JSON.stringify(relevantInfo)
@@ -79,18 +80,18 @@ export const findAppointmentByType: Action<
       .join('\n\n')
 
     const ChatModelGPT4o = new ChatOpenAI({
-      modelName: 'gpt-4o',
+      modelName: 'gpt-4o-2024-08-06',
       openAIApiKey: openAiApiKey,
       temperature: 0,
       maxRetries: 3,
       timeout: 10000,
     })
 
-    const systemPrompt = `You are a clinical data manager. You will receive a list (array) of appointments for a single patient and instructions about which type of appointment to find. You're supposed to use the information in the list to find an appointment that matches, if one exists. If no appointment exists that obviously matches the instructions, that's a perfectly acceptable outcome.
+    const systemPrompt = `You are a help medical assistant. You will receive a list (array) of future appointments for a single patient and instructions about which appointment to find. You're supposed to use the information in the list to find an appointment that matches, if one exists. If no appointment exists that obviously matches the instructions, that's a perfectly acceptable outcome. If multiple appointments exist that match the instructions, you should return the first one. In any case, there can only be one appointment returned.
       
       Important instructions:
       - The appointment "reason" is the appointment type.
-      - Pay close attention to the instructions. THey are intended to have been written by a clinician, for a clinician.
+      - Pay close attention to the instructions. They are intended to have been written by a clinician, for a clinician.
       - Think like a clinician. In other words, "Rx" should match a prescription appointment or follow-up related to a prescription.
 
 ----------
@@ -102,11 +103,12 @@ ${prompt}
 ----------
 
 Output a JSON object with two keys:
-1. appointmentId: The id of the appointment that matches the instructions, if one exists. If no appointment exists that obviously matches, you should return an empty string.
+1. appointmentId: The id of the appointment that matches the instructions, if one exists. If no appointment exists that obviously matches, you should return null.
 2. explanation: A readable explanation of how the appointment was found and why. Or, if no appointment exists that matches the instructions, an explanation of why.`
 
     const AppointmentIdSchema = z.coerce
       .number()
+      .nullable()
       .describe('A single appointment')
 
     const parser = StructuredOutputParser.fromZodSchema(
@@ -127,23 +129,24 @@ Output a JSON object with two keys:
       result = await chain.invoke(systemPrompt)
     } catch (invokeError) {
       console.error(
-        'Error invoking ChatModelGPT4o for findAppointmentByType:',
+        'Error invoking ChatModelGPT4o for findFutureAppointment:',
         invokeError,
       )
-      throw new Error('Failed to find appointment by type.')
+      throw new Error('Failed to find future appointment.')
     }
 
-    const validatedAppointment = AppointmentIdSchema.parse(result.appointmentId)
-
+    const matchedAppointmentId = AppointmentIdSchema.parse(result.appointmentId)
     const foundAppointment = scheduledOrConfirmedAppointments.find(
-      (appointment) => appointment.id === Number(validatedAppointment),
+      (appointment) => appointment.id === Number(matchedAppointmentId),
     )
 
     await onComplete({
       data_points: {
-        appointment: JSON.stringify(foundAppointment),
+        appointment: !isNil(matchedAppointmentId)
+          ? JSON.stringify(foundAppointment)
+          : undefined,
         explanation: result.explanation,
-        appointmentExists: !isNil(foundAppointment) ? 'true' : 'false',
+        appointmentExists: !isNil(matchedAppointmentId) ? 'true' : 'false',
       },
       events: [
         addActivityEventLog({

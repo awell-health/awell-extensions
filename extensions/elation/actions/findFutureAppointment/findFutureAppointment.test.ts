@@ -1,6 +1,6 @@
 import { makeAPIClient } from '../../client'
 import { appointmentsMock } from './__testdata__/GetAppointments.mock'
-import { findAppointmentByType as action } from './findAppointmentByType'
+import { findFutureAppointment as action } from './findFutureAppointment'
 import { TestHelpers } from '@awell-health/extensions-core'
 import { ChatOpenAI } from '@langchain/openai'
 

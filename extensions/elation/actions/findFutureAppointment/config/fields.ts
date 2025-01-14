@@ -15,7 +15,7 @@ export const fields = {
   },
   prompt: {
     id: 'prompt',
-    label: 'Describe what tags you would like to add, update, or remove',
+    label: 'Describe what appointment you would like to find',
     type: FieldType.TEXT,
     required: true,
     description: '',
