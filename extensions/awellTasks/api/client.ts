@@ -5,6 +5,7 @@ import {
   type GetTasksInputType,
   type GetTasksResponseType,
 } from './schema'
+import { isNil } from 'lodash';
 
 export class TasksApiClient {
   private readonly client: AxiosInstance
@@ -46,7 +47,7 @@ export class TasksApiClient {
     const queryParams = new URLSearchParams()
 
     Object.entries(input).forEach(([key, value]) => {
-      if (value !== undefined) {
+      if (!isNil(value)) {
         queryParams.set(key, value.toString())
       }
     })

@@ -3,6 +3,7 @@ import { Category } from '@awell-health/extensions-core'
 import { validatePayloadAndCreateSdk } from '../../lib/validatePayloadAndCreateSdk'
 import { type settings } from '../../settings'
 import { fields, FieldsValidationSchema, dataPoints } from './config'
+import { get } from 'lodash'
 
 export const getLastTaskPerformer: Action<
   typeof fields,
@@ -39,8 +40,8 @@ export const getLastTaskPerformer: Action<
 
     await onComplete({
       data_points: {
-        stytchUserId: lastTask?.performer?.stytch_user_id,
-        email: lastTask?.performer?.email,
+        stytchUserId: get(lastTask, 'performer.stytch_user_id') ?? undefined,
+        email: get(lastTask, 'performer.email') ?? undefined,
       },
     })
   },
