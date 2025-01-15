@@ -3,9 +3,12 @@ import { type settings } from '../../settings'
 import { fields, dataPoints, FieldsValidationSchema } from './config'
 import { validateAndCreateSdkClient } from '../../utils'
 import { isEmpty, isNil } from 'lodash'
-import AwellSdk from '../../../awell/v1/sdk/awellSdk'
 import { type Reference, type QuestionnaireResponse } from '@medplum/fhirtypes'
 import { extractResourceId } from '../../utils/extractResourceId/extractResourceId'
+import {
+  getLastCalculationResultsInCurrentStep,
+  addActivityEventLog,
+} from '../../../../src/lib/awell'
 
 export const createCalculationObservation: Action<
   typeof fields,
@@ -19,82 +22,77 @@ export const createCalculationObservation: Action<
   fields,
   previewable: false,
   dataPoints,
-  onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
+  onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
     const {
       fields: input,
       medplumSdk,
       pathway,
       activity,
-      settings: { awellApiKey, awellApiUrl },
     } = await validateAndCreateSdkClient({
       fieldsSchema: FieldsValidationSchema,
       payload,
     })
 
-    if (isEmpty(awellApiKey) || isEmpty(awellApiUrl))
-      throw new Error(
-        'Please provide the Awell API key and Awell API URL in the settings of the Medplum extension to use this action.'
-      )
+    const awellSdk = await helpers.awellSdk()
 
-    const awellSdk = new AwellSdk({
-      apiUrl: awellApiUrl ?? '',
-      apiKey: awellApiKey ?? '',
-    })
+    const latestCalculationActivity =
+      await getLastCalculationResultsInCurrentStep({
+        awellSdk,
+        pathwayId: pathway.id,
+        currentActivityId: activity.id,
+      })
 
-    const activities = await awellSdk.getPathwayActivities({
-      pathway_id: pathway.id,
-    })
+    if (isNil(latestCalculationActivity)) {
+      await onError({
+        events: [
+          addActivityEventLog({
+            message: 'No calculation activity found in the current step',
+          }),
+        ],
+      })
+      return
+    }
 
-    const currentActivity = activities.find((a) => a.id === activity.id)
-
-    if (isNil(currentActivity))
-      throw new Error('Cannot find the current activity')
-
-    const currentStepId = currentActivity.context?.step_id
-
-    if (isNil(currentStepId))
-      throw new Error('Could not find step ID of the current activity')
-
-    const activitiesInCurrentStep = activities.filter(
-      (a) =>
-        a.context?.step_id === currentStepId &&
-        a.status === 'DONE' &&
-        a.date <= currentActivity.date
-    )
-
-    // Grab the most recent calculation activity
-    const calculationActivityToPushToMedplum = activitiesInCurrentStep.filter(
-      (a) => a.object.type === 'CALCULATION'
-    )[0]
-
-    if (isNil(calculationActivityToPushToMedplum))
-      throw new Error(
-        'No calculation action found in the current step to push to Medplum'
-      )
-
-    const calculationResults = await awellSdk.getCalculationResults({
-      pathway_id: pathway.id,
-      activity_id: calculationActivityToPushToMedplum.id,
+    const calculationResultsResponse = await awellSdk.orchestration.query({
+      calculationResults: {
+        __args: {
+          pathway_id: pathway.id,
+          activity_id: latestCalculationActivity.id,
+        },
+        success: true,
+        result: {
+          __scalar: true,
+        },
+      },
     })
 
     const derivedFrom: Reference<QuestionnaireResponse> | null = !isEmpty(
-      input.questionnaireResponseId
+      input.questionnaireResponseId,
     )
       ? {
           reference: `QuestionnaireResponse/${
             extractResourceId(
               input.questionnaireResponseId ?? '',
-              'QuestionnaireResponse'
+              'QuestionnaireResponse',
             ) ?? 'undefined'
           }`,
         }
       : null
 
+    /**
+     * We currently only support one result per calculation activity so
+     * we use an imperfect heuristic to just get the first result of the calculation
+     */
+    const score =
+      calculationResultsResponse.calculationResults?.result[0]?.value
+    const isValidScore =
+      !isNil(score) && !isNaN(Number(score)) && !isEmpty(score)
+
     const res = await medplumSdk.createResource({
       resourceType: 'Observation',
       status: 'final',
       code: {
-        text: calculationActivityToPushToMedplum.object.name,
+        text: latestCalculationActivity?.object?.name ?? 'Unknown',
       },
       category: [
         {
@@ -106,7 +104,7 @@ export const createCalculationObservation: Action<
               display: 'Survey',
             },
           ],
-          text: calculationActivityToPushToMedplum.object.name,
+          text: latestCalculationActivity?.object?.name ?? 'Unknown',
         },
       ],
       subject: {
@@ -124,9 +122,26 @@ export const createCalculationObservation: Action<
         },
       ],
       derivedFrom: [...(derivedFrom != null ? [derivedFrom] : [])],
-      valueQuantity: {
-        value: Number(calculationResults[0].value),
-      },
+      ...(isValidScore
+        ? {
+            valueQuantity: {
+              value: Number(score),
+            },
+          }
+        : {}),
+      ...(!isValidScore
+        ? {
+            dataAbsentReason: {
+              coding: [
+                {
+                  system: 'http://hl7.org/fhir/data-absent-reason',
+                  code: 'not-performed',
+                  display: 'Not Performed',
+                },
+              ],
+            },
+          }
+        : {}),
     })
 
     await onComplete({

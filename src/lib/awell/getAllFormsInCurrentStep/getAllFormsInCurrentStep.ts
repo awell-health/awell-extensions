@@ -28,41 +28,41 @@ export const getAllFormsInCurrentStep: GetAllFormsInCurrentStep = async ({
   pathwayId,
   activityId,
 }) => {
-
-  const activity_response = await awellSdk.orchestration.query({
-    activity: {
-      __args: {
-        id: activityId,
-      },
-      success: true,
+  const activity_response = await awellSdk.orchestration
+    .query({
       activity: {
-        id: true,
-        status: true,
-        date: true,
-        object: {
-          id: true,
-          type: true,
+        __args: {
+          id: activityId,
         },
-        context: {
-          step_id: true,
+        success: true,
+        activity: {
+          id: true,
+          status: true,
+          date: true,
+          object: {
+            id: true,
+            type: true,
+          },
+          context: {
+            step_id: true,
+          },
         },
       },
-    },
-  }).catch((error) => {
-    console.error(`Failed to fetch activity ${activityId}`, error)
-    throw new Error(`Failed to fetch activity ${activityId}`);
-  })
+    })
+    .catch((error) => {
+      console.error(`Failed to fetch activity ${activityId}`, error)
+      throw new Error(`Failed to fetch activity ${activityId}`)
+    })
 
   const currentActivity = activity_response?.activity?.activity
 
-  if (isNil(currentActivity) || !activity_response.activity.success) 
-    throw new Error(`Failed to fetch activity ${activityId}`);
-  
+  if (isNil(currentActivity) || !activity_response.activity.success)
+    throw new Error(`Failed to fetch activity ${activityId}`)
+
   const currentStepId = currentActivity.context?.step_id
 
   if (isNil(currentStepId))
     throw new Error('Could not find step ID of the current activity')
-
 
   const activities = await awellSdk.orchestration.query({
     pathwayStepActivities: {
@@ -91,13 +91,13 @@ export const getAllFormsInCurrentStep: GetAllFormsInCurrentStep = async ({
       (a) =>
         a.object.type === 'FORM' &&
         a.status === 'DONE' &&
-        a.date <= currentActivity.date
+        a.date <= currentActivity.date,
     )
 
   if (isEmpty(formActivitiesInCurrentStep)) return []
 
   const getFormDefinitionAndFormResponse = async (
-    formActivity: Activity
+    formActivity: Activity,
   ): Promise<{ formDefinition: Form; formResponse: FormResponse }> => {
     const formDefinition = await awellSdk.orchestration.query({
       form: {
@@ -147,6 +147,6 @@ export const getAllFormsInCurrentStep: GetAllFormsInCurrentStep = async ({
         formDefinition,
         formResponse,
       }
-    })
+    }),
   )
 }
