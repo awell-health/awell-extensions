@@ -97,6 +97,20 @@ export const createCalculationObservation: Action<
     const isValidScore =
       !isNil(score) && !isNaN(Number(score)) && !isEmpty(score)
 
+    const scoreResult = isValidScore
+      ? { valueQuantity: { value: Number(score) } }
+      : {
+          dataAbsentReason: {
+            coding: [
+              {
+                system: 'http://hl7.org/fhir/data-absent-reason',
+                code: 'not-performed',
+                display: 'Not Performed',
+              },
+            ],
+          },
+        }
+
     const res = await medplumSdk.createResource({
       resourceType: 'Observation',
       status: 'final',
@@ -131,26 +145,7 @@ export const createCalculationObservation: Action<
         },
       ],
       derivedFrom: [...(derivedFrom != null ? [derivedFrom] : [])],
-      ...(isValidScore
-        ? {
-            valueQuantity: {
-              value: Number(score),
-            },
-          }
-        : {}),
-      ...(!isValidScore
-        ? {
-            dataAbsentReason: {
-              coding: [
-                {
-                  system: 'http://hl7.org/fhir/data-absent-reason',
-                  code: 'not-performed',
-                  display: 'Not Performed',
-                },
-              ],
-            },
-          }
-        : {}),
+      ...scoreResult,
     })
 
     await onComplete({
