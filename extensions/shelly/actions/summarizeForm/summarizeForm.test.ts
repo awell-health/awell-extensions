@@ -39,7 +39,7 @@ describe('summarizeForm - Mocked LLM calls', () => {
   it('Should summarize form with LLM', async () => {
     const summarizeFormWithLLMSpy = jest.spyOn(
       require('../../lib/summarizeFormWithLLM/summarizeFormWithLLM'),
-      'summarizeFormWithLLM'
+      'summarizeFormWithLLM',
     )
 
     const payload = generateTestPayload({
@@ -65,7 +65,17 @@ describe('summarizeForm - Mocked LLM calls', () => {
         query: jest
           .fn()
           .mockResolvedValueOnce({
-            pathwayActivities: mockPathwayActivitiesResponse,
+            activity: {
+              activity: {
+                date: new Date().toISOString(),
+                context: {
+                  step_id: 'step-id',
+                },
+              },
+            },
+          })
+          .mockResolvedValueOnce({
+            pathwayStepActivities: mockPathwayActivitiesResponse,
           })
           .mockResolvedValueOnce({
             form: mockFormDefinitionResponse,
@@ -93,7 +103,7 @@ describe('summarizeForm - Mocked LLM calls', () => {
         summaryFormat: 'Bullet-points',
         language: 'Default',
         disclaimerMessage: expect.any(String),
-      })
+      }),
     )
 
     const expected = await markdownToHtml('Mocked summary from LLM')
