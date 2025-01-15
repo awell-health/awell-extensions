@@ -22,10 +22,36 @@ type GetLatestFormInCurrentStepType = ({
 
 export const getLatestFormInCurrentStep: GetLatestFormInCurrentStepType =
   async ({ awellSdk, pathwayId, activityId }) => {
-    const activities = await awellSdk.orchestration.query({
-      pathwayActivities: {
+    const activityResponse = await awellSdk.orchestration.query({
+      activity: {
+        __args: {
+          id: activityId,
+        },
+        success: true,
+        activity: {
+          date: true,
+          context: {
+            step_id: true,
+          },
+        },
+      },
+    })
+
+    const currentActivity = activityResponse.activity?.activity
+
+    if (isNil(currentActivity))
+      throw new Error('Cannot find the current activity')
+
+    const currentStepId = activityResponse.activity?.activity?.context?.step_id
+
+    if (isNil(currentStepId))
+      throw new Error('Could not find step ID of the current activity')
+
+    const activitiesInCurrentStepResponse = await awellSdk.orchestration.query({
+      pathwayStepActivities: {
         __args: {
           pathway_id: pathwayId,
+          step_id: currentStepId,
         },
         success: true,
         activities: {
@@ -34,6 +60,7 @@ export const getLatestFormInCurrentStep: GetLatestFormInCurrentStepType =
           date: true,
           object: {
             id: true,
+            name: true,
             type: true,
           },
           context: {
@@ -43,25 +70,12 @@ export const getLatestFormInCurrentStep: GetLatestFormInCurrentStepType =
       },
     })
 
-    const currentActivity = activities.pathwayActivities.activities.find(
-      (a) => a.id === activityId
-    )
-
-    if (isNil(currentActivity))
-      throw new Error('Cannot find the current activity')
-
-    const currentStepId = currentActivity.context?.step_id
-
-    if (isNil(currentStepId))
-      throw new Error('Could not find step ID of the current activity')
-
     const formActivitiesInCurrentStep =
-      activities.pathwayActivities.activities.filter(
+      activitiesInCurrentStepResponse.pathwayStepActivities.activities.filter(
         (a) =>
-          a.context?.step_id === currentStepId &&
           a.object.type === 'FORM' &&
           a.status === 'DONE' &&
-          a.date <= currentActivity.date
+          a.date <= currentActivity.date,
       )
 
     // Grab the most recent form activity

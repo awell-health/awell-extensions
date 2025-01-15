@@ -1,10 +1,8 @@
-import { getLatestFormInCurrentStep } from '.'
+import { getLastCalculationResultsInCurrentStep } from '.'
 import { AwellSdk } from '@awell-health/awell-sdk'
 import {
-  mockFormResponseResponse,
-  mockFormDefinitionResponse,
-  mockPathwayStepActivitiesResponse,
   mockCurrentActivityResponse,
+  mockPathwayStepActivitiesResponse,
 } from './__testdata__'
 
 jest.mock('@awell-health/awell-sdk', () => {
@@ -37,23 +35,27 @@ describe('getLatestFormInCurrentStep', () => {
       .mockResolvedValueOnce({
         pathwayStepActivities: mockPathwayStepActivitiesResponse,
       })
-      .mockResolvedValueOnce({ form: mockFormDefinitionResponse })
-      .mockResolvedValueOnce({ formResponse: mockFormResponseResponse })
   })
 
-  test('Should return the latest form in the current step', async () => {
-    const result = await getLatestFormInCurrentStep({
+  test('Should return the expected calculation results form in the current step', async () => {
+    const result = await getLastCalculationResultsInCurrentStep({
       awellSdk: awellSdkMock,
-      pathwayId: 'whatever',
-      activityId: 'X74HeDQ4N0gtdaSEuzF8s',
+      pathwayId: 'some-pathway-id',
+      currentActivityId: 'some-activity-id',
     })
 
-    expect(awellSdkMock.orchestration.query).toHaveBeenCalledTimes(4)
+    expect(awellSdkMock.orchestration.query).toHaveBeenCalledTimes(2)
     expect(result).toEqual({
-      formActivityId: 'RhRQqdbrnSptV3twx7QtV',
-      formId: 'OGhjJKF5LRmo',
-      formDefinition: mockFormDefinitionResponse.form,
-      formResponse: mockFormResponseResponse.response,
+      id: 'calculation_two',
+      status: 'DONE',
+      date: expect.any(String),
+      object: {
+        id: 'calculation_two',
+        type: 'CALCULATION',
+      },
+      context: {
+        step_id: 'step_a',
+      },
     })
   })
 })

@@ -2,13 +2,12 @@ import { Category, type Action } from '@awell-health/extensions-core'
 import { type settings } from '../../settings'
 import { fields, dataPoints, FieldsValidationSchema } from './config'
 import { validateAndCreateSdkClient } from '../../utils'
-import { isEmpty, isNil } from 'lodash'
-import AwellSdk from '../../../awell/v1/sdk/awellSdk'
-import {
-  AwellFormResponseToFhirQuestionnaireResponseItems,
-  AwellFormToFhirQuestionnaire,
-} from '../../../../src/lib/fhir/transformers'
 import { extractResourceId } from '../../utils/extractResourceId/extractResourceId'
+import {
+  addActivityEventLog,
+  getLatestFormInCurrentStep,
+} from '../../../../src/lib/awell'
+import { type Form, type FormResponse } from '@awell-health/awell-sdk'
 
 export const submitQuestionnaireResponse: Action<
   typeof fields,
@@ -23,72 +22,50 @@ export const submitQuestionnaireResponse: Action<
   fields,
   previewable: false,
   dataPoints,
-  onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
+  onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
     const {
       fields: input,
       medplumSdk,
       pathway,
       activity,
-      settings: { awellApiKey, awellApiUrl },
     } = await validateAndCreateSdkClient({
       fieldsSchema: FieldsValidationSchema,
       payload,
     })
 
-    if (isEmpty(awellApiKey) || isEmpty(awellApiUrl))
-      throw new Error(
-        'Please provide the Awell API key and Awell API URL in the settings of the Medplum extension to use this action.'
-      )
+    const awellSdk = await helpers.awellSdk()
 
-    const awellSdk = new AwellSdk({
-      apiUrl: awellApiUrl ?? '',
-      apiKey: awellApiKey ?? '',
-    })
+    let formDefinition: Form
+    let formResponse: FormResponse
 
-    const activities = await awellSdk.getPathwayActivities({
-      pathway_id: pathway.id,
-    })
+    try {
+      const formRes = await getLatestFormInCurrentStep({
+        awellSdk,
+        pathwayId: pathway.id,
+        activityId: activity.id,
+      })
 
-    const currentActivity = activities.find((a) => a.id === activity.id)
+      formDefinition = formRes.formDefinition
+      formResponse = formRes.formResponse
+    } catch (error) {
+      const err = error as Error
+      await onError({
+        events: [addActivityEventLog({ message: err.message })],
+      })
+      return
+    }
 
-    if (isNil(currentActivity))
-      throw new Error('Cannot find the current activity')
-
-    const currentStepId = currentActivity.context?.step_id
-
-    if (isNil(currentStepId))
-      throw new Error('Could not find step ID of the current activity')
-
-    const filteredFormActivities = activities.filter(
-      (a) =>
-        a.context?.step_id === currentStepId &&
-        a.object.type === 'FORM' &&
-        a.status === 'DONE' &&
-        a.date <= currentActivity.date
-    )
-
-    // Grab the most recent form activity
-    const formActivityToPushToMedplum = filteredFormActivities[0]
-
-    if (isNil(formActivityToPushToMedplum))
-      throw new Error(
-        'No form action found in the current step to push to Medplum'
-      )
-
-    const formDefinition = await awellSdk.getForm({
-      id: formActivityToPushToMedplum.object.id,
-    })
-
-    const formResponse = await awellSdk.getFormResponse({
-      pathway_id: pathway.id,
-      activity_id: formActivityToPushToMedplum.id,
-    })
-
-    const FhirQuestionnaire = AwellFormToFhirQuestionnaire(formDefinition)
+    const FhirQuestionnaire =
+      awellSdk.utils.fhir.AwellFormToFhirQuestionnaire(formDefinition)
+    const FhirQuestionnaireResponse =
+      awellSdk.utils.fhir.AwellFormResponseToFhirQuestionnaireResponseItems({
+        awellFormDefinition: formDefinition,
+        awellFormResponse: formResponse,
+      })
 
     const QuestionnaireResource = await medplumSdk.createResourceIfNoneExist(
       FhirQuestionnaire,
-      `identifier=${formDefinition.definition_id}/published/${formDefinition.id}`
+      `identifier=${formDefinition.definition_id}/published/${formDefinition.id}`,
     )
 
     const res = await medplumSdk.createResource({
@@ -100,10 +77,7 @@ export const submitQuestionnaireResponse: Action<
           extractResourceId(input.patientId, 'Patient') ?? 'undefined'
         }`,
       },
-      item: AwellFormResponseToFhirQuestionnaireResponseItems({
-        awellFormDefinition: formDefinition,
-        awellFormResponse: formResponse,
-      }),
+      item: FhirQuestionnaireResponse,
     })
 
     await onComplete({

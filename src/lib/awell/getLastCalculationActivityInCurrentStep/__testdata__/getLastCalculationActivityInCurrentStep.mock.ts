@@ -2,20 +2,18 @@ import {
   type ActivityPayload,
   type ActivitiesPayload,
 } from '@awell-health/awell-sdk'
-import { type DeepPartial } from '../../../types'
 import { subDays } from 'date-fns'
+import { type DeepPartial } from '../../../types'
 
 const today = new Date()
-const stepId = 'Xkn5dkyPA5uW'
+const stepId = 'step_a'
 
 export const mockCurrentActivityResponse = {
   success: true,
   activity: {
-    id: 'X74HeDQ4N0gtdaSEuzF8s',
     status: 'ACTIVE',
     date: today.toISOString(),
     object: {
-      id: 'w1EgLnVu5ApP',
       type: 'PLUGIN_ACTION',
     },
     context: {
@@ -29,36 +27,35 @@ export const mockPathwayStepActivitiesResponse = {
   activities: [
     { ...mockCurrentActivityResponse.activity },
     {
-      id: 'RhRQqdbrnSptV3twx7QtV',
+      id: 'calculation_two',
       status: 'DONE',
       date: subDays(today, 1).toISOString(),
       object: {
-        id: 'OGhjJKF5LRmo',
-        type: 'FORM',
+        id: 'calculation_two',
+        type: 'CALCULATION',
       },
       context: {
-        step_id: stepId,
+        step_id: 'step_a',
       },
     },
     {
-      id: 'shkMEWqOzHQMsYrGS6yId',
+      id: 'calculation_one',
       status: 'DONE',
       date: subDays(today, 2).toISOString(),
       object: {
-        id: 'Q3KUacz4qEmn',
-        type: 'STEP',
+        id: 'calculation_one',
+        type: 'CALCULATION',
       },
       context: {
         step_id: stepId,
       },
     },
     {
-      id: 'f2IjXGjg7YoHZ7lEF0l5j',
+      id: 'form',
       status: 'DONE',
       date: subDays(today, 3).toISOString(),
       object: {
-        id: 'Q3KUacz4qEmn',
-        type: 'STEP',
+        type: 'FORM',
       },
       context: {
         step_id: stepId,

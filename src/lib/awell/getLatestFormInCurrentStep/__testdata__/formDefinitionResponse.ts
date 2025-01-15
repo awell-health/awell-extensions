@@ -1,4 +1,8 @@
+import { type FormPayload } from '@awell-health/awell-sdk'
+import { type DeepPartial } from '../../../types'
+
 export const mockFormDefinitionResponse = {
+  success: true,
   form: {
     questions: [
       {
@@ -282,4 +286,4 @@ export const mockFormDefinitionResponse = {
       },
     ],
   },
-}
+} satisfies DeepPartial<FormPayload>
