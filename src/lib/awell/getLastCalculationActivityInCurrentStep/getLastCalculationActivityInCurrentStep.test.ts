@@ -1,4 +1,4 @@
-import { getLastCalculationResultsInCurrentStep } from '.'
+import { getLastCalculationActivityInCurrentStep } from '.'
 import { AwellSdk } from '@awell-health/awell-sdk'
 import {
   mockCurrentActivityResponse,
@@ -38,7 +38,7 @@ describe('getLatestFormInCurrentStep', () => {
   })
 
   test('Should return the expected calculation results form in the current step', async () => {
-    const result = await getLastCalculationResultsInCurrentStep({
+    const result = await getLastCalculationActivityInCurrentStep({
       awellSdk: awellSdkMock,
       pathwayId: 'some-pathway-id',
       currentActivityId: 'some-activity-id',
