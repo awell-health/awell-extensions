@@ -6,7 +6,7 @@ import { isEmpty, isNil } from 'lodash'
 import { type Reference, type QuestionnaireResponse } from '@medplum/fhirtypes'
 import { extractResourceId } from '../../utils/extractResourceId/extractResourceId'
 import {
-  getLastCalculationResultsInCurrentStep,
+  getLastCalculationActivityInCurrentStep,
   addActivityEventLog,
 } from '../../../../src/lib/awell'
 
@@ -36,7 +36,7 @@ export const createCalculationObservation: Action<
     const awellSdk = await helpers.awellSdk()
 
     const latestCalculationActivity =
-      await getLastCalculationResultsInCurrentStep({
+      await getLastCalculationActivityInCurrentStep({
         awellSdk,
         pathwayId: pathway.id,
         currentActivityId: activity.id,
