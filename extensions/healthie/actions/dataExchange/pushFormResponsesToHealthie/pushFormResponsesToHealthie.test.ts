@@ -75,7 +75,7 @@ describe('pushFormResponsesToHealthie', () => {
   test('Should call onComplete', async () => {
     const formResponseToHealthieSpy = jest.spyOn(
       awellSdkMock.utils.healthie,
-      'awellFormResponseToHealthieFormAnswers'
+      'awellFormResponseToHealthieFormAnswers',
     )
 
     await action.onEvent({

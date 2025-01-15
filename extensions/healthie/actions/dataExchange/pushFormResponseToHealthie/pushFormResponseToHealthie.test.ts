@@ -33,7 +33,15 @@ describe('pushFormResponseToHealthie', () => {
     orchestration: {
       mutation: jest.fn().mockResolvedValue({}),
       query: jest.fn().mockResolvedValue({
-        pathwayActivities: mockPathwayActivitiesResponse,
+        activity: {
+          activity: {
+            date: new Date().toISOString(),
+            context: {
+              step_id: 'step-id',
+            },
+          },
+        },
+        pathwayStepActivities: mockPathwayActivitiesResponse,
         form: mockFormDefinitionResponse,
         formResponse: mockFormResponseResponse,
       }),
@@ -55,7 +63,7 @@ describe('pushFormResponseToHealthie', () => {
   test('Should call onComplete', async () => {
     const formResponseToHealthieSpy = jest.spyOn(
       awellSdkMock.utils.healthie,
-      'awellFormResponseToHealthieFormAnswers'
+      'awellFormResponseToHealthieFormAnswers',
     )
 
     await action.onEvent({
@@ -82,7 +90,7 @@ describe('pushFormResponseToHealthie', () => {
 
     expect(mockedHealthieSdk).toHaveBeenCalled()
     expect(helpers.awellSdk).toHaveBeenCalledTimes(1)
-    expect(awellSdkMock.orchestration.query).toHaveBeenCalledTimes(3)
+    expect(awellSdkMock.orchestration.query).toHaveBeenCalledTimes(4)
 
     expect(formResponseToHealthieSpy).toHaveReturnedWith({
       formAnswers: [
