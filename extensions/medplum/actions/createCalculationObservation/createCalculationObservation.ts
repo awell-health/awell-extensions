@@ -9,6 +9,7 @@ import {
   getLastCalculationActivityInCurrentStep,
   addActivityEventLog,
 } from '../../../../src/lib/awell'
+import { type Activity } from '@awell-health/awell-sdk'
 
 export const createCalculationObservation: Action<
   typeof fields,
@@ -35,18 +36,26 @@ export const createCalculationObservation: Action<
 
     const awellSdk = await helpers.awellSdk()
 
-    const latestCalculationActivity =
-      await getLastCalculationActivityInCurrentStep({
+    let latestCalculationActivity: Activity
+
+    try {
+      const res = await getLastCalculationActivityInCurrentStep({
         awellSdk,
         pathwayId: pathway.id,
         currentActivityId: activity.id,
       })
 
-    if (isNil(latestCalculationActivity)) {
+      if (isNil(res)) {
+        throw new Error('No calculation activity found in the current step')
+      }
+
+      latestCalculationActivity = res
+    } catch (error) {
+      const err = error as Error
       await onError({
         events: [
           addActivityEventLog({
-            message: 'No calculation activity found in the current step',
+            message: err.message,
           }),
         ],
       })
