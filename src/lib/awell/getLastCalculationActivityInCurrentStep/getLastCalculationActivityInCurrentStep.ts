@@ -1,7 +1,7 @@
 import { type AwellSdk, type Activity } from '@awell-health/awell-sdk'
 import { isNil } from 'lodash'
 
-type GetLastCalculationResultsInCurrentStep = ({
+type GetLastCalculationActivityInCurrentStep = ({
   awellSdk,
   pathwayId,
   currentActivityId,
@@ -11,7 +11,7 @@ type GetLastCalculationResultsInCurrentStep = ({
   currentActivityId: string
 }) => Promise<Activity | null>
 
-export const getLastCalculationResultsInCurrentStep: GetLastCalculationResultsInCurrentStep =
+export const getLastCalculationActivityInCurrentStep: GetLastCalculationActivityInCurrentStep =
   async ({ awellSdk, pathwayId, currentActivityId }) => {
     const activityResponse = await awellSdk.orchestration.query({
       activity: {
