@@ -1,0 +1,1 @@
+export { findAppointmentsByPrompt } from './findAppointmentsByPrompt'

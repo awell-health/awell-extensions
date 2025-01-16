@@ -2,7 +2,7 @@ import { DateTimeSchema, NumericIdSchema } from '@awell-health/extensions-core'
 import { isNil } from 'lodash'
 import * as z from 'zod'
 
-const statusEnum = z.enum([
+export const statusEnum = z.enum([
   'Scheduled',
   'Confirmed',
   'Checked Out',

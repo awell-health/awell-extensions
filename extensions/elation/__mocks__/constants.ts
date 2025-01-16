@@ -123,8 +123,26 @@ export const findContactResponseExample: FindContactsResponse = {
 export const searchContactsResponseExample: FindContactsResponse = {
   count: 2,
   results: [
-    { id: 1, first_name: 'Contact 1', last_name: 'Contact 1', middle_name: '', npi: '1234567890', practice: 1, user: 1, specialties: [] },
-    { id: 2, first_name: 'Contact 2', last_name: 'Contact 2', middle_name: '', npi: '1234567890', practice: 1, user: 1, specialties: [] },
+    {
+      id: 1,
+      first_name: 'Contact 1',
+      last_name: 'Contact 1',
+      middle_name: '',
+      npi: '1234567890',
+      practice: 1,
+      user: 1,
+      specialties: [],
+    },
+    {
+      id: 2,
+      first_name: 'Contact 2',
+      last_name: 'Contact 2',
+      middle_name: '',
+      npi: '1234567890',
+      practice: 1,
+      user: 1,
+      specialties: [],
+    },
   ],
 }
 
