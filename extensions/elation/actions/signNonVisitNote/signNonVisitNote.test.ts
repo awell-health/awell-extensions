@@ -12,7 +12,6 @@ describe('Elation - Sign non-visit note', () => {
   const { extensionAction, onComplete, onError, helpers, clearMocks } =
     TestHelpers.fromAction(action)
 
-  const mockGetPhysician = jest.fn()
   const mockUpdateNonVisitNote = jest.fn()
 
   beforeAll(() => {
@@ -23,7 +22,6 @@ describe('Elation - Sign non-visit note', () => {
   beforeAll(() => {
     const mockAPIClient = makeAPIClient as jest.Mock
     mockAPIClient.mockImplementation(() => ({
-      getPhysician: mockGetPhysician,
       updateNonVisitNote: mockUpdateNonVisitNote,
     }))
   })
@@ -34,18 +32,19 @@ describe('Elation - Sign non-visit note', () => {
   })
 
   describe('Exceptions', () => {
-    describe('When the signedBy field is not a valid physician', () => {
+    describe('When the signedBy field is not a valid physician or office staff', () => {
       beforeEach(() => {
-        mockGetPhysician.mockRejectedValue(
+        mockUpdateNonVisitNote.mockRejectedValue(
           createAxiosError(
-            404,
-            'Not Found',
+            400,
+            'Bad Request',
             JSON.stringify({
-              detail: 'No PhysicianProxy matches the given query.',
+              signed_by: [
+                'Invalid pk "1425910919331837" - object does not exist.',
+              ],
             }),
           ),
         )
-        mockUpdateNonVisitNote.mockResolvedValue({})
       })
 
       test('Should return an error', async () => {
@@ -74,7 +73,7 @@ describe('Elation - Sign non-visit note', () => {
             {
               date: expect.any(String),
               text: {
-                en: 'Failed to retrieve the physician (141402084933634) to sign the note. Non-visit notes have to be signed by a physician.',
+                en: 'The signedBy field is not a valid physician or office staff.',
               },
             },
           ],
@@ -84,9 +83,6 @@ describe('Elation - Sign non-visit note', () => {
 
     describe('When the non-visit note does not exist', () => {
       beforeEach(() => {
-        mockGetPhysician.mockResolvedValue({
-          id: 141402084933634,
-        })
         mockUpdateNonVisitNote.mockRejectedValue(
           createAxiosError(
             404,
@@ -134,9 +130,6 @@ describe('Elation - Sign non-visit note', () => {
 
     describe('When the non-visit note is already signed', () => {
       beforeEach(() => {
-        mockGetPhysician.mockResolvedValue({
-          id: 141402084933634,
-        })
         mockUpdateNonVisitNote.mockRejectedValue(
           createAxiosError(
             400,
@@ -183,9 +176,6 @@ describe('Elation - Sign non-visit note', () => {
 
   describe('Happy path', () => {
     beforeEach(() => {
-      mockGetPhysician.mockResolvedValue({
-        id: 141402084933634,
-      })
       mockUpdateNonVisitNote.mockResolvedValue({})
     })
 

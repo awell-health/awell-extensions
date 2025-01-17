@@ -23,23 +23,6 @@ export const signNonVisitNote: Action<
     )
     const api = makeAPIClient(payload.settings)
 
-    /**
-     * A non-visit note can only be signed by a physician.
-     * We will validate if the signedBy is a physician and throw a readable error if not.
-     */
-    try {
-      await api.getPhysician(signedBy)
-    } catch (error) {
-      await onError({
-        events: [
-          addActivityEventLog({
-            message: `Failed to retrieve the physician (${signedBy}) to sign the note. Non-visit notes have to be signed by a physician.`,
-          }),
-        ],
-      })
-      return
-    }
-
     try {
       await api.updateNonVisitNote(nonVisitNoteId, {
         signed_by: signedBy,
@@ -65,6 +48,23 @@ export const signNonVisitNote: Action<
             events: [
               addActivityEventLog({
                 message: `Non-visit note was already signed and cannot be signed again.`,
+              }),
+            ],
+          })
+          return
+        }
+
+        /**
+         * A non-visit note can be signed by a Physician or an Office Staff.
+         * You cannot sign a non-visit note using a User ID.
+         * If you pass an invalid ID, you will get a 400 error with a message like:
+         * "Invalid pk \"1425910919331837\" - object does not exist."
+         */
+        if (reason.includes('Invalid pk')) {
+          await onError({
+            events: [
+              addActivityEventLog({
+                message: `The signedBy field is not a valid physician or office staff.`,
               }),
             ],
           })

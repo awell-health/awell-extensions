@@ -17,7 +17,7 @@ export const fields = {
     id: 'signedBy',
     label: 'Signed by',
     description:
-      'The ID of the physician who signs the note. Note: it has to be a physician ID, not a user ID.',
+      'The ID of a physician or office staff who signs the note. Note: it has to be a physician ID, or an office staff ID, not a user ID.',
     type: FieldType.NUMERIC,
     required: true,
   },
