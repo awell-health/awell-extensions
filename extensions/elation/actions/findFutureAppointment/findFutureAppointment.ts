@@ -46,7 +46,6 @@ export const findFutureAppointment: Action<
       patient: patientId,
       from_date: new Date().toISOString(),
     })
-
     const scheduledOrConfirmedAppointments = appointments.filter(
       (appointment) =>
         appointment.status.status === 'Scheduled' ||
@@ -134,7 +133,6 @@ Output a JSON object with two keys:
     const foundAppointment = scheduledOrConfirmedAppointments.find(
       (appointment) => appointment.id === Number(matchedAppointmentId),
     )
-
     await onComplete({
       data_points: {
         appointment: !isNil(matchedAppointmentId)
