@@ -3,6 +3,7 @@ import { type settings } from '../../settings'
 import { makeAPIClient } from '../../client'
 import { FieldsValidationSchema, fields, dataPoints } from './config'
 import { addActivityEventLog } from '../../../../src/lib/awell/addEventLog'
+import { type AxiosError } from 'axios'
 
 export const signNonVisitNote: Action<
   typeof fields,
@@ -39,9 +40,41 @@ export const signNonVisitNote: Action<
       return
     }
 
-    await api.updateNonVisitNote(nonVisitNoteId, {
-      signed_by: signedBy,
-    })
+    try {
+      await api.updateNonVisitNote(nonVisitNoteId, {
+        signed_by: signedBy,
+      })
+    } catch (error) {
+      const err = error as AxiosError
+
+      if (err.status === 404) {
+        await onError({
+          events: [
+            addActivityEventLog({
+              message: `The non-visit note (${nonVisitNoteId}) does not exist.`,
+            }),
+          ],
+        })
+        return
+      }
+
+      if (err.status === 400) {
+        const reason = JSON.stringify(err.response?.data)
+        if (reason.includes('signed non visit notes are not editable')) {
+          await onError({
+            events: [
+              addActivityEventLog({
+                message: `Non-visit note was already signed and cannot be signed again.`,
+              }),
+            ],
+          })
+          return
+        }
+      }
+
+      // All other errors we didn't handle explicitly we will throw
+      throw error
+    }
 
     await onComplete()
   },
