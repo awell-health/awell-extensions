@@ -26,6 +26,7 @@ import { updatePatientTags } from './updatePatientTags'
 import { getReferralOrder } from './getReferralOrder'
 import { findFutureAppointment } from './findFutureAppointment'
 import { findAppointmentsByPrompt } from './findAppointmentsByPrompt'
+import { signNonVisitNote } from './signNonVisitNote/signNonVisitNote'
 
 export const actions = {
   getPatient,
@@ -56,4 +57,5 @@ export const actions = {
   getReferralOrder,
   findFutureAppointment,
   findAppointmentsByPrompt,
+  signNonVisitNote,
 }

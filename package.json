@@ -19,6 +19,7 @@
     "start": "node dist/src/index.js",
     "lint": "eslint \"**/*.ts\"",
     "test": "jest --verbose --testPathIgnorePatterns '.*\\.local\\.test\\.ts$'",
+    "test-local": "jest --verbose",
     "prepack": "yarn build",
     "test-server": "ts-node-dev --respawn --transpile-only ./src/test-server.ts",
     "prepare": "husky"
