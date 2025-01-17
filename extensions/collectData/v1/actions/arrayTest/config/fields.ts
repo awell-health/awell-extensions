@@ -67,11 +67,14 @@ export const fields = {
   },
 } satisfies Record<string, Field>
 
+// the string array is received as a string, so we need to parse it to an array
+// the numeric array is received as a string, so we need to parse it to an array
+
 export const FieldsValidationSchema = z.object({
-  stringArray: z.string().array().nonempty(),
-  numericArray: z.number().array().nonempty(),
-  anotherStringArray: z.string().array().nonempty(),
-  anotherNumericArray: z.number().array().nonempty(),
+  stringArray: z.string().transform((str) => str.split(',').map((s) => s.trim())),
+  numericArray: z.string().transform((str) => str.split(',').map((s) => Number(s.trim()))),
+  anotherStringArray: z.string().transform((str) => str.split(',').map((s) => s.trim())),
+  anotherNumericArray: z.string().transform((str) => str.split(',').map((s) => Number(s.trim()))),
 } satisfies Record<keyof typeof fields, ZodTypeAny>)
 
 export const validateActionFields = (
