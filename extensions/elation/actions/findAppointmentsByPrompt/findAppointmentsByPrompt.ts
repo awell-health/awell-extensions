@@ -46,6 +46,17 @@ export const findAppointmentsByPrompt: Action<
       patient: patientId,
     })
 
+    if (appointments.length === 0) {
+      await onComplete({
+        data_points: {
+          explanation: 'No appointments found',
+          appointments: JSON.stringify(appointments),
+          appointmentCountsByStatus: JSON.stringify({}),
+        },
+      })
+      return
+    }
+
     const promptAppointments = appointments
       .map((appointment) => {
         const relevantInfo = {
@@ -169,7 +180,7 @@ const createSystemPrompt = ({
       
       Important instructions:
       - The appointment "reason" is the appointment type.
-      - Only include appointment ids that exist in the input array.
+      - Only include appointment ids that exist in the input array. If no appointments exist that match the instructions, return an empty array.
       - Pay close attention to the instructions. They are intended to have been written by a clinician, for a clinician.
       - Think like a clinician. In other words, "Rx" should match a prescription appointment or follow-up related to a prescription, and "PT" would matchphysical therapy.
       - The current date is ${currentYear}.
@@ -182,6 +193,6 @@ ${prompt}
 ----------
 
 Output a JSON object with the following keys:
-1. appointmentIds: array of strings where each string is an appointment_id that matches the instructions.
+1. appointmentIds: array of strings where each string is an appointment_id that matches the instructions (or an empty array if no appointments exist that match the instructions).
 2. explanation: A readable explanation of how the appointments were found and why. Or, if no appointments exist that match the instructions, an explanation of why.`
 }

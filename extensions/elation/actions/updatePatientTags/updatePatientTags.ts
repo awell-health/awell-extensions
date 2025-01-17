@@ -101,9 +101,16 @@ Output a JSON object with two keys:
 
     const validatedTags = TagsSchema.parse(result.updatedTags)
 
-    await api.updatePatient(patientId, {
-      tags: validatedTags,
-    })
+    if (validatedTags.length === 0) {
+      await api.updatePatient(patientId, {
+        // @ts-expect-error - elation api does not clear tags on an empty array
+        tags: ' ',
+      })
+    } else {
+      await api.updatePatient(patientId, {
+        tags: validatedTags,
+      })
+    }
 
     await onComplete({
       data_points: {
