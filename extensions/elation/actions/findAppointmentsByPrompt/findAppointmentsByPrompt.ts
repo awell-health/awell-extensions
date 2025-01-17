@@ -7,6 +7,7 @@ import { z } from 'zod'
 import { ChatOpenAI } from '@langchain/openai'
 import { addActivityEventLog } from '../../../../src/lib/awell/addEventLog'
 import { statusEnum } from '../../validation/appointment.zod'
+import { isNil } from 'lodash'
 
 export const findAppointmentsByPrompt: Action<
   typeof fields,
@@ -46,7 +47,7 @@ export const findAppointmentsByPrompt: Action<
       patient: patientId,
     })
 
-    if (appointments.length === 0) {
+    if (isNil(appointments) || appointments.length === 0) {
       await onComplete({
         data_points: {
           explanation: 'No appointments found',
@@ -69,7 +70,7 @@ export const findAppointmentsByPrompt: Action<
       .join('\n\n')
 
     const ChatModelGPT4o = new ChatOpenAI({
-      modelName: 'gpt-4o-2024-08-06',
+      modelName: 'gpt-4o',
       openAIApiKey: openAiApiKey,
       temperature: 0,
       maxRetries: 3,
@@ -175,7 +176,7 @@ const createSystemPrompt = ({
   prompt: string
   appointments: string
 }) => {
-  const currentYear = new Date().getDate()
+  const currentDate = new Date().getDate()
   return `You are a helpful medical assistant. You will receive a list (array) of appointments for a single patient and instructions about which types of appointments to find. You're supposed to use the information in the list to find appointments that match, if any exist. If no appointments exists that obviously match the instructions, that's a perfectly acceptable outcome. If multiple appointments exist that match the instructions, you should return all of them.
       
       Important instructions:
@@ -183,7 +184,7 @@ const createSystemPrompt = ({
       - Only include appointment ids that exist in the input array. If no appointments exist that match the instructions, return an empty array.
       - Pay close attention to the instructions. They are intended to have been written by a clinician, for a clinician.
       - Think like a clinician. In other words, "Rx" should match a prescription appointment or follow-up related to a prescription, and "PT" would matchphysical therapy.
-      - The current date is ${currentYear}.
+      - The current date is ${currentDate}.
 ----------
 Input array: 
 ${appointments}
