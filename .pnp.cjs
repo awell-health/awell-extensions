@@ -55,6 +55,7 @@ const RAW_RUNTIME_STATE =
           ["@types/jsdom", "npm:21.1.7"],\
           ["@types/json-schema", "npm:7.0.15"],\
           ["@types/jsonpath", "npm:0.2.4"],\
+          ["@types/jsonwebtoken", "npm:9.0.7"],\
           ["@types/lodash", "npm:4.17.7"],\
           ["@types/mailchimp__mailchimp_transactional", "npm:1.0.10"],\
           ["@types/node", "npm:18.19.50"],\
@@ -92,6 +93,7 @@ const RAW_RUNTIME_STATE =
           ["jest-fetch-mock", "npm:3.0.3"],\
           ["jsdom", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:26.0.0"],\
           ["jsonpath", "npm:1.1.1"],\
+          ["jsonwebtoken", "npm:9.0.2"],\
           ["langchain", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:0.3.2"],\
           ["libphonenumber-js", "npm:1.11.8"],\
           ["lint-staged", "npm:15.2.11"],\
@@ -246,6 +248,7 @@ const RAW_RUNTIME_STATE =
           ["@types/jsdom", "npm:21.1.7"],\
           ["@types/json-schema", "npm:7.0.15"],\
           ["@types/jsonpath", "npm:0.2.4"],\
+          ["@types/jsonwebtoken", "npm:9.0.7"],\
           ["@types/lodash", "npm:4.17.7"],\
           ["@types/mailchimp__mailchimp_transactional", "npm:1.0.10"],\
           ["@types/node", "npm:18.19.50"],\
@@ -283,6 +286,7 @@ const RAW_RUNTIME_STATE =
           ["jest-fetch-mock", "npm:3.0.3"],\
           ["jsdom", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:26.0.0"],\
           ["jsonpath", "npm:1.1.1"],\
+          ["jsonwebtoken", "npm:9.0.2"],\
           ["langchain", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:0.3.2"],\
           ["libphonenumber-js", "npm:1.11.8"],\
           ["lint-staged", "npm:15.2.11"],\
@@ -4545,6 +4549,16 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./.yarn/cache/@types-jsonpath-npm-0.2.4-9d28ca8478-401c59dd26.zip/node_modules/@types/jsonpath/",\
         "packageDependencies": [\
           ["@types/jsonpath", "npm:0.2.4"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["@types/jsonwebtoken", [\
+      ["npm:9.0.7", {\
+        "packageLocation": "./.yarn/cache/@types-jsonwebtoken-npm-9.0.7-da827cdc0b-4c0cffc488.zip/node_modules/@types/jsonwebtoken/",\
+        "packageDependencies": [\
+          ["@types/jsonwebtoken", "npm:9.0.7"],\
+          ["@types/node", "npm:22.5.5"]\
         ],\
         "linkType": "HARD"\
       }]\
