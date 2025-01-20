@@ -1,6 +1,62 @@
-import { type Field } from '@awell-health/extensions-core'
+import { FieldType, type Field } from '@awell-health/extensions-core'
+import {
+  StatusSchema,
+  TypeSchema,
+} from '../../../lib/api/schemas/DocumentReference'
+import { startCase } from 'lodash'
 import z, { type ZodTypeAny } from 'zod'
 
-export const fields = {} satisfies Record<string, Field>
+export const fields = {
+  patientResourceId: {
+    id: 'patientResourceId',
+    label: 'Patient resource ID',
+    type: FieldType.STRING,
+    description: 'The patient’s FHIR resource ID.',
+    required: true,
+  },
+  encounterResourceId: {
+    id: 'encounterResourceId',
+    label: 'Encounter resource ID',
+    description: 'The FHIR resource ID of the related encounter.',
+    type: FieldType.STRING,
+    required: true,
+  },
+  status: {
+    id: 'status',
+    label: 'Document status',
+    type: FieldType.STRING,
+    required: true,
+    options: {
+      dropdownOptions: StatusSchema._def.values.map((value) => ({
+        value,
+        label: startCase(value),
+      })),
+    },
+  },
+  type: {
+    id: 'type',
+    label: 'Document type',
+    type: FieldType.STRING,
+    required: true,
+    options: {
+      dropdownOptions: TypeSchema._def.values.map((value) => ({
+        value,
+        label: startCase(value),
+      })),
+    },
+  },
+  note: {
+    id: 'note',
+    label: 'Note',
+    type: FieldType.TEXT,
+    required: true,
+  },
+} satisfies Record<string, Field>
 
-export const FieldsValidationSchema = z.object({} satisfies Record<keyof typeof fields, ZodTypeAny>)
+export const FieldsValidationSchema = z.object({
+  patientResourceId: z.string().min(1),
+  encounterResourceId: z.string().min(1),
+  status: StatusSchema,
+  type: TypeSchema,
+  note: z.string().min(1),
+} satisfies Record<keyof typeof fields, ZodTypeAny>)
