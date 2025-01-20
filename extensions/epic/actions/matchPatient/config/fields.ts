@@ -4,13 +4,6 @@ import { GenderSchema } from '../../../lib/api/schemas/Patient'
 import { startCase } from 'lodash'
 
 export const fields = {
-  ssn: {
-    id: 'ssn',
-    label: 'SSN',
-    type: FieldType.STRING,
-    description: 'The patient’s Social Security Number.',
-    required: true,
-  },
   familyName: {
     id: 'familyName',
     label: 'Family name',
@@ -48,18 +41,11 @@ export const fields = {
     id: 'email',
     label: 'Email',
     type: FieldType.STRING,
-    required: false,
+    required: true,
   },
 } satisfies Record<string, Field>
 
 export const FieldsValidationSchema = z.object({
-  ssn: z
-    .string()
-    .min(1)
-    .regex(
-      /^\d{3}-\d{2}-\d{4}$/,
-      'Invalid SSN format. Must be in the format xxx-xx-xxxx',
-    ),
   familyName: z.string().min(1),
   givenName: z.string().min(1),
   birthDate: z.coerce.date(),
