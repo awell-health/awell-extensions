@@ -1,5 +1,6 @@
 import { type Setting } from '@awell-health/extensions-core'
 import { z, type ZodTypeAny } from 'zod'
+import { constructPrivateKey } from './lib/api/auth/constructPrivateKey'
 
 export const settings = {
   baseUrl: {
@@ -38,5 +39,10 @@ export const SettingsValidationSchema = z.object({
   baseUrl: z.string().min(1),
   authUrl: z.string().min(1),
   clientId: z.string().min(1),
-  privateKey: z.string().min(1),
+  /**
+   * Private keys turn out to be sensitive to formatting (newlines, etc.)
+   * But in Studio, a user can only enter the value of a setting in a single line.
+   * So we need to transform the value to the correct format here.
+   */
+  privateKey: z.string().min(1).transform(constructPrivateKey),
 } satisfies Record<keyof typeof settings, ZodTypeAny>)
