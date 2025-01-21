@@ -29,7 +29,7 @@ export const GetTasksInputSchema = z.object({
     .optional()
     .describe('Comma-separated list of careflow definition IDs'),
   sort_by: z.enum(['completed_at', 'created_at', 'due_at']).optional(),
-  order_by: z.enum(['asc', 'desc']).optional(),
+  direction: z.enum(['asc', 'desc']).optional(),
   limit: z.number().optional(),
   offset: z.number().optional(),
 })
