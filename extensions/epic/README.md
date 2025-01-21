@@ -92,3 +92,7 @@ Create a clinical document in Epic. Required fields include:
 
 The action will return the FHIR resource ID of the created document.
 
+### Find patient by MRN (R4)
+
+Leverages the `Patient.search` (R4) operation to find a patient by their MRN. The action will return the FHIR resource ID of the patient.
+

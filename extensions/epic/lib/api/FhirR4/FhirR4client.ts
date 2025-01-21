@@ -15,8 +15,10 @@ import {
   type DocumentReferenceCreateResponseType,
   type AppointmentReadResponseType,
   type AppointmentReadInputType,
+  type PatientSearchInputType,
+  type PatientSearchResponseType,
 } from './schema'
-import { isNil } from 'lodash'
+import { endsWith, isNil } from 'lodash'
 import { generateJWT } from '../auth/generateJWT'
 
 /**
@@ -47,7 +49,10 @@ export class EpicFhirR4Client {
     this.privateKey = privateKey
 
     this.client = axios.create({
-      baseURL: new URL('FHIR/R4/', baseUrl).toString(),
+      baseURL: new URL(
+        'FHIR/R4/',
+        endsWith(baseUrl, '/') ? baseUrl : `${baseUrl}/`,
+      ).toString(),
       headers: new AxiosHeaders({
         'Content-Type': 'application/json',
       }),
@@ -146,6 +151,18 @@ export class EpicFhirR4Client {
     const response = await this.client.post<PatientMatchResponseType>(
       url.toString(),
       data,
+    )
+
+    return response
+  }
+
+  async searchPatient(
+    data: PatientSearchInputType,
+  ): Promise<AxiosResponse<PatientSearchResponseType>> {
+    const url = new URL(`Patient`, this.client.defaults.baseURL)
+
+    const response = await this.client.get<PatientSearchResponseType>(
+      `${url.toString()}?identifier=MRN|${data.MRN}`,
     )
 
     return response
