@@ -51,6 +51,7 @@ import {
 } from './types'
 import { elationCacheService } from './cache'
 import { isEmpty } from 'lodash'
+import { type DeepPartial } from '../../src/lib/types'
 
 export class ElationDataWrapper extends DataWrapper {
   public async findAppointments(
@@ -219,6 +220,18 @@ export class ElationDataWrapper extends DataWrapper {
       // PATCH - makes all fields optional in Elation (PUT requires all fields)
       method: 'PATCH',
       url: `/non_visit_notes/${id}`,
+      data: obj,
+    })
+  }
+
+  public async updateReferralOrder(
+    id: number,
+    obj: DeepPartial<PostReferralOrderInput>,
+  ): Promise<PostReferralOrderResponse> {
+    return await this.Request({
+      // PATCH - makes all fields optional in Elation (PUT requires all fields)
+      method: 'PATCH',
+      url: `/referral_orders/${id}`,
       data: obj,
     })
   }
@@ -512,6 +525,15 @@ export class ElationAPIClient extends APIClient<ElationDataWrapper> {
   ): Promise<NonVisitNoteResponse> {
     return await this.FetchData(
       async (dw) => await dw.updateNonVisitNote(id, obj),
+    )
+  }
+
+  public async updateReferralOrder(
+    id: number,
+    obj: DeepPartial<PostReferralOrderInput>,
+  ): Promise<PostReferralOrderResponse> {
+    return await this.FetchData(
+      async (dw) => await dw.updateReferralOrder(id, obj),
     )
   }
 

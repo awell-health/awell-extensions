@@ -20,6 +20,7 @@ export type PostReferralOrderInput = Pick<
   | 'patient'
   | 'icd10_codes'
   | 'specialty'
+  | 'resolution'
 >
 
 export interface PostReferralOrderResponse extends PostReferralOrderInput {

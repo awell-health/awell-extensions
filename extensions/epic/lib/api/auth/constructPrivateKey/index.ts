@@ -1,0 +1,1 @@
+export { constructPrivateKey } from './constructPrivateKey'

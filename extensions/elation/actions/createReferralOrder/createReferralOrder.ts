@@ -2,8 +2,6 @@ import { type Action, Category } from '@awell-health/extensions-core'
 import { type settings } from '../../settings'
 import { makeAPIClient } from '../../client'
 import { FieldsValidationSchema, fields, dataPoints } from './config'
-import { ZodError } from 'zod'
-import { fromZodError } from 'zod-validation-error'
 import { AxiosError } from 'axios'
 
 /**
@@ -24,12 +22,22 @@ export const createReferralOrder: Action<
   fields,
   previewable: true,
   dataPoints,
-  onActivityCreated: async (payload, onComplete, onError): Promise<void> => {    
+  onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
     try {
-      const { patient, practice, contact_name, body, authorization_for, consultant_name, specialty } = FieldsValidationSchema.parse(payload.fields)
+      const {
+        patient,
+        practice,
+        contact_name,
+        body,
+        authorization_for,
+        consultant_name,
+        specialty,
+      } = FieldsValidationSchema.parse(payload.fields)
       const api = makeAPIClient(payload.settings)
 
-      const contactsResponse = await api.searchContactsByName({ name: contact_name })
+      const contactsResponse = await api.searchContactsByName({
+        name: contact_name,
+      })
 
       if (contactsResponse.count === 0) {
         throw new Error(`No contact found with the name ${contact_name}.`)
@@ -48,8 +56,9 @@ export const createReferralOrder: Action<
         // If needed we can add them to the action fields.
         auth_number: null,
         date_for_reEval: null,
+        resolution: null,
       })
-  
+
       await api.postNewLetter({
         patient,
         practice,

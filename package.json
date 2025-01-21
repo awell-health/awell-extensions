@@ -1,6 +1,6 @@
 {
   "name": "@awell-health/awell-extensions",
-  "version": "2.0.138",
+  "version": "2.0.148",
   "packageManager": "yarn@4.5.3",
   "main": "dist/src/index.js",
   "repository": {
@@ -18,7 +18,8 @@
     "copy-markdown": "node copy-markdown.js && echo 'Copied markdown files to dist/'",
     "start": "node dist/src/index.js",
     "lint": "eslint \"**/*.ts\"",
-    "test": "jest --verbose",
+    "test": "jest --verbose --testPathIgnorePatterns '.*\\.local\\.test\\.ts$'",
+    "test-local": "jest --verbose",
     "prepack": "yarn build",
     "test-server": "ts-node-dev --respawn --transpile-only ./src/test-server.ts",
     "prepare": "husky"
@@ -45,6 +46,7 @@
     "@types/jest": "^29.5.14",
     "@types/jsdom": "^21.1.7",
     "@types/jsonpath": "^0.2.4",
+    "@types/jsonwebtoken": "^9",
     "@types/lodash": "^4.17.7",
     "@types/mailchimp__mailchimp_transactional": "^1.0.5",
     "@types/node": "^18.13.0",
@@ -105,6 +107,7 @@
     "graphql-tag": "^2.12.6",
     "jsdom": "^26.0.0",
     "jsonpath": "^1.1.1",
+    "jsonwebtoken": "^9.0.2",
     "langchain": "^0.3.2",
     "libphonenumber-js": "^1.10.26",
     "lodash": "^4.17.21",

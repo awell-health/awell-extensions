@@ -1,7 +1,7 @@
 import { type ResourceType } from '@medplum/fhirtypes'
 export const extractResourceId = (
   input: string,
-  resource: ResourceType
+  resource: ResourceType,
 ): string | null => {
   const match = input.match(/(?:Patient\/)?([a-zA-Z0-9-]+)$/)
 

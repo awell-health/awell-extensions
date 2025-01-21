@@ -91,7 +91,8 @@ const fields = {
   signed_by: {
     id: 'signed_by',
     label: 'Signed by (user ID)',
-    description: 'ID of a user who signed the note.',
+    description:
+      '⚠️ DEPRECATED - Please use the "Sign non-visit note" action to sign a non-visit note instead.',
     type: FieldType.NUMERIC,
     required: false,
   },
