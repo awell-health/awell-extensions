@@ -70,7 +70,7 @@ export const findAppointmentsByPrompt: Action<
       .join('\n\n')
 
     const ChatModelGPT4o = new ChatOpenAI({
-      modelName: 'gpt-4o',
+      modelName: 'gpt-4o-2024-08-06',
       openAIApiKey: openAiApiKey,
       temperature: 0,
       maxRetries: 3,
