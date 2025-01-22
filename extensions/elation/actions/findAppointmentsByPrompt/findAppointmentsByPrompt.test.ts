@@ -14,7 +14,7 @@ const mockedSdk = jest.mocked(makeAPIClient)
 
 jest.mock('@langchain/openai', () => {
   const mockInvoke = jest.fn().mockResolvedValue({
-    appointmentIds: appointmentsMock.map((appointment) => appointment.id),
+    appointmentIds: appointmentsMock.map((appointment) => String(appointment.id)),
     explanation: 'Test explanation',
   })
 
