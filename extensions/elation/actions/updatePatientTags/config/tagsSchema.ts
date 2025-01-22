@@ -1,0 +1,20 @@
+import { z } from 'zod'
+
+export const SingleTagSchema = z.string().max(100).describe('A single tag')
+
+export const TagsSchema = z
+  .array(SingleTagSchema)
+  .max(10)
+  .refine((items) => new Set(items).size === items.length, {
+    message: 'All items must be unique, no duplicate values allowed',
+  })
+  .describe('The updated array of tags')
+
+export const TagsOutputSchema = z.object({
+    updatedTags: TagsSchema,
+    explanation: z
+      .string()
+      .describe('A readable explanation of the changes made to the tags and why'),
+})
+
+export type TagsOutput = z.infer<typeof TagsOutputSchema>

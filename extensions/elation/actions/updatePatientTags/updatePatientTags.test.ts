@@ -84,4 +84,41 @@ describe('Elation - Update patient tags', () => {
       ],
     })
   })
+
+  test('Should use awell Open AI API key', async () => {
+    await updatePatientTags.onEvent({
+      payload: {
+        fields: {
+          patientId: 123,
+          prompt: 'Add the tags "test" and "test2"',
+        },
+        settings: {
+          client_id: 'clientId',
+          client_secret: 'clientSecret',
+          username: 'username',
+          password: 'password',
+          auth_url: 'authUrl',
+          base_url: 'baseUrl',
+        },
+      } as any,
+      onComplete,
+      onError,
+      helpers,
+    })
+
+    expect(ChatOpenAI).toHaveBeenCalled()
+    expect(onComplete).toHaveBeenCalledWith({
+      data_points: {
+        updatedTags: 'test, test2',
+      },
+      events: [
+        {
+          date: expect.any(String),
+          text: {
+            en: 'Previous patient tags: No tags\nUpdated patient tags: test, test2\nExplanation: Test explanation',
+          },
+        },
+      ],
+    })
+  })
 })
