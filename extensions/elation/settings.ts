@@ -69,3 +69,5 @@ export const SettingsValidationSchema = z.object({
   username: z.string().optional(),
   password: z.string().optional(),
 } satisfies Record<keyof typeof settings, ZodTypeAny>)
+
+export type SettingsType = z.infer<typeof SettingsValidationSchema>
