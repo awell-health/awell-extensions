@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { StructuredOutputParser } from '@langchain/core/output_parsers'
 
 export const SingleTagSchema = z.string().max(100).describe('A single tag')
 
@@ -17,4 +18,11 @@ export const TagsOutputSchema = z.object({
       .describe('A readable explanation of the changes made to the tags and why'),
 })
 
+export const parser = StructuredOutputParser.fromZodSchema(TagsOutputSchema)
+
 export type TagsOutput = z.infer<typeof TagsOutputSchema>
+
+export interface TagsFromAI {
+  validatedTags: string[]
+  explanation: string
+}
