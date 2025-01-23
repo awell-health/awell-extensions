@@ -6,8 +6,8 @@ export const settings = {
     key: 'openAiApiKey',
     label: 'OpenAI API key ',
     obfuscated: true,
-    required: true,
-    description: '',
+    required: false,
+    description: 'If not provided, the default Awell OpenAI API key will be used.',
   },
 } satisfies Record<string, Setting>
 
