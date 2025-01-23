@@ -28,13 +28,20 @@ export interface CreateOpenAIModelConfig {
   modelType?: OpenAIModelType
 }
 
+/**
+ * Standard metadata structure for AI actions tracking
+ * Used for LangSmith tracing and analytics
+ */
+export interface AIActionMetadata {
+  care_flow_definition_id: string
+  care_flow_id: string
+  activity_id: string
+  [key: string]: unknown
+}
+
 export interface OpenAIModelConfig {
   /** Configured LangChain ChatOpenAI instance */
   model: ChatOpenAI
   /** Tracing metadata for LangChain calls */
-  metadata: {
-    care_flow_definition_id: string
-    care_flow_id: string
-    activity_id: string
-  }
+  metadata: AIActionMetadata
 }

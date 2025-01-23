@@ -6,6 +6,15 @@ import { type settings } from '../../settings'
 import { fields, dataPoints, FieldsValidationSchema } from './config'
 import { markdownToHtml } from '../../../../src/utils'
 
+/**
+ * Awell Action: Message Categorization
+ * 
+ * Takes a message and predefined categories as input, uses LLM to:
+ * 1. Determine the most appropriate category
+ * 2. Provide explanation for the categorization
+ * 
+ * @returns category and HTML-formatted explanation
+ */
 export const categorizeMessage: Action<
   typeof fields,
   typeof settings,
@@ -14,42 +23,44 @@ export const categorizeMessage: Action<
   key: 'categorizeMessage',
   category: Category.WORKFLOW,
   title: 'Categorize Message',
-  description:
-    'Categorize the input message into set of predefined categories and provides explanation.',
+  description: 'Categorizes messages into predefined categories with explanation.',
   fields,
   previewable: false,
   dataPoints,
+
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
     try {
+      // 1. Validate input fields
       const { message, categories } = FieldsValidationSchema.parse(payload.fields)
 
+      // 2. Initialize OpenAI model with metadata
       const { model, metadata } = await createOpenAIModel({
         settings: payload.settings,
         helpers,
         payload,
-        modelType: OPENAI_MODELS.GPT4oMini
+        modelType: OPENAI_MODELS.GPT4oMini // task is simple and we don't need a more powerful model
       })
 
-      const categorization_result = await categorizeMessageWithLLM({
+      // 3. Perform categorization
+      const { category, explanation } = await categorizeMessageWithLLM({
         model,
         message,
         categories,
         metadata
       })
 
-      const explanationHtml = await markdownToHtml(
-        categorization_result.explanation
-      )
-
+      // 4. Format and return results
+      const explanationHtml = await markdownToHtml(explanation)
       await onComplete({
-        data_points: {
-          category: categorization_result.category,
-          explanation: explanationHtml,
-        },
+        data_points: { category, explanation: explanationHtml }
       })
     } catch (error) {
-      console.error('Error categorizing message:', error)
-      throw new Error('Error categorizing message')
+      console.error('Error in categorizeMessage action:', error)
+      throw new Error(
+        error instanceof Error 
+          ? error.message 
+          : 'Failed to categorize message'
+      )
     }
   },
 }
