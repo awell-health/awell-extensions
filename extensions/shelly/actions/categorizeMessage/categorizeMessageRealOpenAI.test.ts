@@ -7,17 +7,12 @@ describe.skip('categorizeMessage - Real LLM calls', () => {
   const { onComplete, onError, helpers, extensionAction, clearMocks } =
     TestHelpers.fromAction(categorizeMessage)
 
-  // Ensure API key exists
-  const apiKey = process.env.OPENAI_API_KEY
-  if (!apiKey) {
-    throw new Error('OPENAI_API_KEY environment variable is required for tests')
-  }
 
   // Setup helpers with complete OpenAI config
   const mockHelpers = {
     ...helpers,
     getOpenAIConfig: () => ({
-      apiKey,  // Now TypeScript knows this is definitely a string
+      apiKey: process.env.OPENAI_API_KEY,
       temperature: 0,
       maxRetries: 3,
       timeout: 10000

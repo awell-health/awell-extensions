@@ -15,9 +15,6 @@ describe.skip('summarizeCareFlow - Real LLM calls with mocked Awell SDK', () => 
 
   // Ensure API key exists
   const apiKey = process.env.OPENAI_API_KEY
-  if (!apiKey) {
-    throw new Error('OPENAI_API_KEY environment variable is required for tests')
-  }
 
   // Setup helpers with complete OpenAI config
   const mockHelpers = {

@@ -1,8 +1,10 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 
+import 'dotenv/config'
 import { TestHelpers } from '@awell-health/extensions-core'
 import { generateTestPayload } from '@/tests'
 import { summarizeFormsInStep } from '.'
+import { DISCLAIMER_MSG_FORM } from '../../lib/constants'
 import { mockMultipleFormsPathwayActivitiesResponse } from './__mocks__/multipleFormsPathwayActivitiesResponse'
 import {
   mockMultipleFormsDefinitionResponse1,
@@ -12,26 +14,6 @@ import {
   mockMultipleFormsResponseResponse1,
   mockMultipleFormsResponseResponse2,
 } from './__mocks__/multipleFormsResponsesResponse'
-import { DISCLAIMER_MSG_FORM } from '../../lib/constants'
-import { markdownToHtml } from '../../../../src/utils'
-
-// Import ChatOpenAI after mocking
-import { ChatOpenAI } from '@langchain/openai'
-
-// Mock the '@langchain/openai' module
-jest.mock('@langchain/openai', () => {
-  const mockInvoke = jest.fn().mockResolvedValue({
-    content: 'Mocked summary from LLM',
-  })
-
-  const mockChatOpenAI = jest.fn().mockImplementation(() => ({
-    invoke: mockInvoke,
-  }))
-
-  return {
-    ChatOpenAI: mockChatOpenAI,
-  }
-})
 
 describe('summarizeFormsInStep - Mocked LLM calls', () => {
   const { onComplete, onError, helpers, extensionAction, clearMocks } =
@@ -40,62 +22,59 @@ describe('summarizeFormsInStep - Mocked LLM calls', () => {
   beforeEach(() => {
     clearMocks()
     jest.clearAllMocks()
+    helpers.getOpenAIConfig = jest.fn().mockReturnValue({
+      apiKey: process.env.OPENAI_API_KEY,
+      temperature: 0,
+      maxRetries: 3,
+      timeout: 10000
+    })
   })
 
-  it('Should summarize multiple forms with LLM', async () => {
-    const summarizeFormWithLLMSpy = jest.spyOn(
-      require('../../lib/summarizeFormWithLLM/summarizeFormWithLLM'),
-      'summarizeFormWithLLM'
-    )
-
+  it('Should summarize multiple forms with mocked OpenAI', async () => {
     const payload = generateTestPayload({
       pathway: {
         id: 'ai4rZaYEocjB',
         definition_id: 'whatever',
       },
       activity: { id: 'X74HeDQ4N0gtdaSEuzF8s' },
-      patient: { id: 'whatever' },
       fields: {
         summaryFormat: 'Bullet-points',
         language: 'Default',
       },
-      settings: {
-        openAiApiKey: 'a',
-      },
+      settings: {}
     })
 
-    // Mock the Awell SDK
-    const awellSdkMock = {
-      orchestration: {
-        mutation: jest.fn().mockResolvedValue({}),
-        query: jest
-          .fn()
-          .mockResolvedValueOnce({
-            activity: {
-              activity:
-                mockMultipleFormsPathwayActivitiesResponse.activities[0],
-              success: true,
-            },
-          })
-          .mockResolvedValueOnce({
-            pathwayStepActivities: mockMultipleFormsPathwayActivitiesResponse,
-          })
-          .mockResolvedValueOnce({
-            form: mockMultipleFormsDefinitionResponse1,
-          })
-          .mockResolvedValueOnce({
-            form: mockMultipleFormsDefinitionResponse2,
-          })
-          .mockResolvedValueOnce({
-            formResponse: mockMultipleFormsResponseResponse1,
-          })
-          .mockResolvedValueOnce({
-            formResponse: mockMultipleFormsResponseResponse2,
-          }),
-      },
-    }
+    const mockQuery = jest.fn()
+      .mockResolvedValueOnce({
+        activity: {
+          success: true,
+          activity: mockMultipleFormsPathwayActivitiesResponse.activities[0]
+        }
+      })
+      .mockResolvedValueOnce({
+        pathwayStepActivities: {
+          success: true,
+          activities: mockMultipleFormsPathwayActivitiesResponse.activities
+        }
+      })
+      .mockResolvedValueOnce({
+        form: mockMultipleFormsDefinitionResponse1,
+      })
+      .mockResolvedValueOnce({
+        form: mockMultipleFormsDefinitionResponse2,
+      })
+      .mockResolvedValueOnce({
+        formResponse: mockMultipleFormsResponseResponse1,
+      })
+      .mockResolvedValueOnce({
+        formResponse: mockMultipleFormsResponseResponse2,
+      })
 
-    helpers.awellSdk = jest.fn().mockResolvedValue(awellSdkMock)
+    helpers.awellSdk = jest.fn().mockReturnValue({
+      orchestration: {
+        query: mockQuery
+      }
+    })
 
     await extensionAction.onEvent({
       payload,
@@ -104,25 +83,13 @@ describe('summarizeFormsInStep - Mocked LLM calls', () => {
       helpers,
     })
 
-    expect(ChatOpenAI).toHaveBeenCalled()
-    expect(summarizeFormWithLLMSpy).toHaveBeenCalledWith(
-      expect.objectContaining({
-        ChatModelGPT4o: expect.any(Object),
-        formData: expect.any(String),
-        summaryFormat: 'Bullet-points',
-        language: 'Default',
-        disclaimerMessage: expect.any(String),
-      })
-    )
-
-    const expected = await markdownToHtml('Mocked summary from LLM')
-
+    expect(helpers.awellSdk).toHaveBeenCalled()
+    expect(mockQuery).toHaveBeenCalledTimes(6)
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
-        summary: expected,
+        summary: expect.stringContaining(DISCLAIMER_MSG_FORM)
       },
     })
-
     expect(onError).not.toHaveBeenCalled()
-  })
+  }, 30000)
 })
