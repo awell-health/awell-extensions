@@ -7,24 +7,37 @@ const settings = {
   openAiApiKey: process.env.OPENAI_API_KEY,
 }
 
-// Remove skip to run the test
-describe.skip('categorizeMessage - Real LLM calls', () => {
+describe('categorizeMessage - Real LLM calls', () => {
   const { onComplete, onError, helpers, extensionAction, clearMocks } =
     TestHelpers.fromAction(categorizeMessage)
 
   beforeEach(() => {
-    clearMocks() // Reset mocks before each test
-    jest.clearAllMocks() // Reset any mock functions
+    clearMocks()
+    jest.clearAllMocks()
+  })
+
+  afterEach(async () => {
+    await new Promise(resolve => setTimeout(resolve, 0))
+  })
+
+  afterAll(async () => {
+    await new Promise(resolve => setTimeout(resolve, 1000))
   })
 
   it('should successfully categorize a message about scheduling an appointment using real LLM', async () => {
     const payload = generateTestPayload({
       fields: {
         message: 'I would like to schedule an appointment for next week.',
-        categories:
-          'Appointment Scheduling,Medication Questions,Administrative Assistance,Feedback or Complaints',
+        categories: 'Appointment Scheduling,Medication Questions,Administrative Assistance,Feedback or Complaints',
       },
       settings,
+      pathway: {
+        id: 'test-pathway-id',
+        definition_id: 'test-def-id'
+      },
+      activity: {
+        id: 'test-activity-id'
+      }
     })
 
     await extensionAction.onEvent({
@@ -38,8 +51,7 @@ describe.skip('categorizeMessage - Real LLM calls', () => {
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
         category: 'Appointment Scheduling',
-        explanation:
-          'The message explicitly states a desire to schedule an appointment, which directly aligns with the Appointment Scheduling category.',
+        explanation: expect.stringMatching(/^<p>.*appointment.*<\/p>$/),
       },
     })
 
@@ -54,6 +66,13 @@ describe.skip('categorizeMessage - Real LLM calls', () => {
           'Appointment Scheduling,Medication Questions,Administrative Assistance,Feedback or Complaints',
       },
       settings,
+      pathway: {
+        id: 'test-pathway-id',
+        definition_id: 'test-def-id',
+      },
+      activity: {
+        id: 'test-activity-id',
+      },
     })
 
     await extensionAction.onEvent({
@@ -67,8 +86,7 @@ describe.skip('categorizeMessage - Real LLM calls', () => {
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
         category: 'None',
-        explanation:
-          'Categorization was ambiguous; we could not find a proper category.',
+        explanation: expect.stringMatching(/^<p>.*<\/p>$/),
       },
     })
 

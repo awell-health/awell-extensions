@@ -22,16 +22,25 @@ export const categorizeMessage: Action<
     const {
       ChatModelGPT4oMini,
       fields: { categories, message },
+      pathway,
+      activity,
     } = await validatePayloadAndCreateSdk({
       fieldsSchema: FieldsValidationSchema,
       payload,
     })
 
     try {
+      const metadata = {
+        care_flow_definition_id: pathway.definition_id,
+        care_flow_id: pathway.id,
+        activity_id: activity.id,
+      }
+
       const categorization_result = await categorizeMessageWithLLM({
         ChatModelGPT4oMini,
         message,
         categories,
+        metadata,
       })
 
       const category = categorization_result.category

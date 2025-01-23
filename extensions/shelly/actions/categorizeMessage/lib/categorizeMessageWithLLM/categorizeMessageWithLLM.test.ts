@@ -32,6 +32,11 @@ describe('categorizeMessageWithLLM', () => {
       ChatModelGPT4oMini: ChatModelGPT4oMiniMock,
       message,
       categories,
+      metadata: {
+        care_flow_definition_id: 'test-def-id',
+        care_flow_id: 'test-pathway-id',
+        activity_id: 'test-activity-id'
+      }
     })
 
     expect(result.category).toBe('Appointment Scheduling')
@@ -57,6 +62,11 @@ describe('categorizeMessageWithLLM', () => {
       ChatModelGPT4oMini: ChatModelGPT4oMiniMock,
       message,
       categories,
+      metadata: {
+        care_flow_definition_id: 'test-def-id',
+        care_flow_id: 'test-pathway-id',
+        activity_id: 'test-activity-id'
+      }
     })
 
     expect(result.category).toBe('Medication Questions')
@@ -82,6 +92,11 @@ describe('categorizeMessageWithLLM', () => {
       ChatModelGPT4oMini: ChatModelGPT4oMiniMock,
       message,
       categories,
+      metadata: {
+        care_flow_definition_id: 'test-def-id',
+        care_flow_id: 'test-pathway-id',
+        activity_id: 'test-activity-id'
+      }
     })
 
     expect(result.category).toBe('None')

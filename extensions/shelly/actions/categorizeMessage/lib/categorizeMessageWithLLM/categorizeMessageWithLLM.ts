@@ -6,10 +6,16 @@ export const categorizeMessageWithLLM = async ({
   ChatModelGPT4oMini,
   message,
   categories,
+  metadata,
 }: {
   ChatModelGPT4oMini: ChatOpenAI
   message: string
   categories: string[]
+  metadata: {
+    care_flow_definition_id: string
+    care_flow_id: string
+    activity_id: string
+  }
 }): Promise<{ category: string; explanation: string }> => {
   const prompt = await systemPrompt.format({
     categories: categories.concat('None').join(', '),
@@ -20,7 +26,11 @@ export const categorizeMessageWithLLM = async ({
 
   let result
   try {
-    result = await chain.invoke(prompt)
+    result = await chain.invoke(
+      prompt,
+      // the following is used in LangSmith tracing
+      { metadata, runName: 'ShellyCategorizeMessage' }
+    )
   } catch (error) {
     console.error('Error invoking the chain:', error)
     throw new Error(

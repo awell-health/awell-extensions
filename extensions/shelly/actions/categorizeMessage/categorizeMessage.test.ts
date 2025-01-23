@@ -6,9 +6,8 @@ import { ChatOpenAI } from '@langchain/openai'
 // Mock the module
 jest.mock('@langchain/openai', () => {
   const mockInvoke = jest.fn().mockResolvedValue({
-    matched_category: 'Appointment Scheduling',
-    match_explanation:
-      'The message contains a request for scheduling an appointment.',
+    matched_category: 'None',
+    match_explanation: 'Categorization was ambiguous; we could not find a proper category.'
   })
 
   const mockChain = {
@@ -43,13 +42,19 @@ describe('categorizeMessage - Mocked LLM calls', () => {
 
     const payload = generateTestPayload({
       fields: {
-        message: 'I would like to schedule an appointment for next week.',
-        categories:
-          'Appointment Scheduling,Medication Questions,Administrative Assistance,Feedback or Complaints',
+        message: 'test message',
+        categories: 'category1,category2'
       },
       settings: {
-        openAiApiKey: 'a',
+        openAiApiKey: 'test-key'
       },
+      pathway: {
+        id: 'test-pathway-id',
+        definition_id: 'test-def-id'
+      },
+      activity: {
+        id: 'test-activity-id'
+      }
     })
 
     await extensionAction.onEvent({
@@ -62,20 +67,19 @@ describe('categorizeMessage - Mocked LLM calls', () => {
     expect(ChatOpenAI).toHaveBeenCalled()
     expect(categorizeMessageWithLLMSpy).toHaveBeenCalledWith({
       ChatModelGPT4oMini: expect.any(Object),
-      message: 'I would like to schedule an appointment for next week.',
-      categories: [
-        'Appointment Scheduling',
-        'Medication Questions',
-        'Administrative Assistance',
-        'Feedback or Complaints',
-      ],
+      message: 'test message',
+      categories: ['category1', 'category2'],
+      metadata: {
+        care_flow_definition_id: 'test-def-id',
+        care_flow_id: 'test-pathway-id',
+        activity_id: 'test-activity-id'
+      },
     })
 
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
-        category: 'Appointment Scheduling',
-        explanation:
-          '<p>The message contains a request for scheduling an appointment.</p>',
+        category: 'None',
+        explanation: '<p>Categorization was ambiguous; we could not find a proper category.</p>',
       },
     })
 

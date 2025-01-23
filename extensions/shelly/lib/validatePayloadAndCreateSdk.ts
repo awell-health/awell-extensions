@@ -33,7 +33,10 @@ export const validatePayloadAndCreateSdk: ValidatePayloadAndCreateSdk = async ({
     schema: z.object({
       fields: fieldsSchema,
       settings: SettingsValidationSchema,
-      pathway: z.object({ id: z.string() }),
+      pathway: z.object({
+        id: z.string(),
+        definition_id: z.string(),
+      }),
       activity: z.object({ id: z.string() }),
       patient: z.object({ id: z.string() }),
     }),
