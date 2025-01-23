@@ -3,7 +3,7 @@ import { generateTestPayload } from '@/tests'
 import { categorizeMessage } from '.'
 import 'dotenv/config'
 
-describe('categorizeMessage - Real LLM calls', () => {
+describe.skip('categorizeMessage - Real LLM calls', () => {
   const { onComplete, onError, helpers, extensionAction, clearMocks } =
     TestHelpers.fromAction(categorizeMessage)
 
