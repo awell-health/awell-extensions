@@ -2,10 +2,12 @@ import 'dotenv/config'
 import { TestHelpers } from '@awell-health/extensions-core'
 import { generateTestPayload } from '@/tests'
 import { generateMessage } from '.'
+import { createOpenAIModel } from '../../../../src/lib/llm/openai/createOpenAIModel'
+import { OPENAI_MODELS } from '../../../../src/lib/llm/openai/constants'
 
 jest.setTimeout(60000) // Increase timeout to 60 seconds for all tests in this file
 
-describe.skip('generateMessage - Real OpenAI calls', () => {
+describe('generateMessage - Real OpenAI calls', () => {
   const { onComplete, onError, helpers, extensionAction, clearMocks } =
     TestHelpers.fromAction(generateMessage)
 
@@ -25,6 +27,13 @@ describe.skip('generateMessage - Real OpenAI calls', () => {
       settings: {
         openAiApiKey: process.env.OPENAI_API_KEY,
       },
+    })
+
+    const { model, metadata } = await createOpenAIModel({
+      settings: payload.settings,
+      helpers,
+      payload,
+      modelType: OPENAI_MODELS.GPT4o
     })
 
     await extensionAction.onEvent({
@@ -65,6 +74,13 @@ describe.skip('generateMessage - Real OpenAI calls', () => {
       settings: {
         openAiApiKey: process.env.OPENAI_API_KEY,
       },
+    })
+
+    const { model, metadata } = await createOpenAIModel({
+      settings: payload.settings,
+      helpers,
+      payload,
+      modelType: OPENAI_MODELS.GPT4o
     })
 
     await extensionAction.onEvent({
