@@ -31,7 +31,7 @@ describe.skip('summarizeForm - Real LLM calls with mocked Awell SDK', () => {
         language: 'Default',
       },
       settings: {
-        openAiApiKey: process.env.OPENAI_TEST_KEY,
+        openAiApiKey: process.env.OPENAI_API_KEY,
       },
     })
 
@@ -96,7 +96,7 @@ describe.skip('summarizeForm - Real LLM calls with mocked Awell SDK', () => {
         language: 'Default',
       },
       settings: {
-        openAiApiKey: process.env.OPENAI_TEST_KEY,
+        openAiApiKey: process.env.OPENAI_API_KEY,
       },
     })
 
@@ -157,7 +157,7 @@ describe.skip('summarizeForm - Real LLM calls with mocked Awell SDK', () => {
         language: 'French',
       },
       settings: {
-        openAiApiKey: process.env.OPENAI_TEST_KEY,
+        openAiApiKey: process.env.OPENAI_API_KEY,
       },
     })
 
@@ -218,7 +218,7 @@ describe.skip('summarizeForm - Real LLM calls with mocked Awell SDK', () => {
         language: 'Spanish',
       },
       settings: {
-        openAiApiKey: process.env.OPENAI_TEST_KEY,
+        openAiApiKey: process.env.OPENAI_API_KEY,
       },
     })
 
