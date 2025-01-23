@@ -66,7 +66,7 @@ describe('categorizeMessage - Mocked LLM calls', () => {
 
     expect(ChatOpenAI).toHaveBeenCalled()
     expect(categorizeMessageWithLLMSpy).toHaveBeenCalledWith({
-      ChatModelGPT4oMini: expect.any(Object),
+      model: expect.any(Object),
       message: 'test message',
       categories: ['category1', 'category2'],
       metadata: {

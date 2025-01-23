@@ -3,12 +3,12 @@ import { type ChatOpenAI } from '@langchain/openai'
 
 // TODO: remove console logs eventually
 export const categorizeMessageWithLLM = async ({
-  ChatModelGPT4oMini,
+  model,
   message,
   categories,
   metadata,
 }: {
-  ChatModelGPT4oMini: ChatOpenAI
+  model: ChatOpenAI
   message: string
   categories: string[]
   metadata: {
@@ -22,7 +22,7 @@ export const categorizeMessageWithLLM = async ({
     input: message,
   })
 
-  const chain = ChatModelGPT4oMini.pipe(parser)
+  const chain = model.pipe(parser)
 
   let result
   try {

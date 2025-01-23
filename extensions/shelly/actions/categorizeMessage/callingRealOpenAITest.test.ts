@@ -3,13 +3,26 @@ import { generateTestPayload } from '@/tests'
 import { categorizeMessage } from '.'
 import 'dotenv/config'
 
-const settings = {
-  openAiApiKey: process.env.OPENAI_API_KEY,
-}
-
 describe('categorizeMessage - Real LLM calls', () => {
   const { onComplete, onError, helpers, extensionAction, clearMocks } =
     TestHelpers.fromAction(categorizeMessage)
+
+  // Ensure API key exists
+  const apiKey = process.env.OPENAI_API_KEY
+  if (!apiKey) {
+    throw new Error('OPENAI_API_KEY environment variable is required for tests')
+  }
+
+  // Setup helpers with complete OpenAI config
+  const mockHelpers = {
+    ...helpers,
+    getOpenAIConfig: () => ({
+      apiKey,  // Now TypeScript knows this is definitely a string
+      temperature: 0,
+      maxRetries: 3,
+      timeout: 10000
+    })
+  }
 
   beforeEach(() => {
     clearMocks()
@@ -30,7 +43,7 @@ describe('categorizeMessage - Real LLM calls', () => {
         message: 'I would like to schedule an appointment for next week.',
         categories: 'Appointment Scheduling,Medication Questions,Administrative Assistance,Feedback or Complaints',
       },
-      settings,
+      settings: {}, // Remove openAiApiKey from settings to use default
       pathway: {
         id: 'test-pathway-id',
         definition_id: 'test-def-id'
@@ -44,7 +57,7 @@ describe('categorizeMessage - Real LLM calls', () => {
       payload,
       onComplete,
       onError,
-      helpers,
+      helpers: mockHelpers // Use our mocked helpers
     })
 
     // Real LangChain function is called
@@ -65,7 +78,7 @@ describe('categorizeMessage - Real LLM calls', () => {
         categories:
           'Appointment Scheduling,Medication Questions,Administrative Assistance,Feedback or Complaints',
       },
-      settings,
+      settings: {}, // Remove openAiApiKey from settings to use default
       pathway: {
         id: 'test-pathway-id',
         definition_id: 'test-def-id',
@@ -79,7 +92,7 @@ describe('categorizeMessage - Real LLM calls', () => {
       payload,
       onComplete,
       onError,
-      helpers,
+      helpers: mockHelpers // Use our mocked helpers
     })
 
     // Real LangChain function is called and returns "None"
