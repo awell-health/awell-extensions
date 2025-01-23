@@ -3,33 +3,32 @@ import { generateTestPayload } from '@/tests'
 import { categorizeMessage } from '.'
 import 'dotenv/config'
 
-describe.skip('categorizeMessage - Real LLM calls', () => {
+describe.skip('categorizeMessage - Real OpenAI calls', () => {
   const { onComplete, onError, helpers, extensionAction, clearMocks } =
     TestHelpers.fromAction(categorizeMessage)
-
-
-  // Setup helpers with complete OpenAI config
-  const mockHelpers = {
-    ...helpers,
-    getOpenAIConfig: () => ({
-      apiKey: process.env.OPENAI_API_KEY,
-      temperature: 0,
-      maxRetries: 3,
-      timeout: 10000
-    })
-  }
 
   beforeEach(() => {
     clearMocks()
     jest.clearAllMocks()
+    
+    // Ensure API key is always defined in test environment
+    process.env.OPENAI_API_KEY = process.env.OPENAI_API_KEY || 'test-api-key'
+    
+    helpers.getOpenAIConfig = jest.fn().mockReturnValue({
+      apiKey: process.env.OPENAI_API_KEY as string,  // Type assertion
+      temperature: 0,
+      maxRetries: 3,
+      timeout: 10000
+    })
   })
 
-  afterEach(async () => {
-    await new Promise(resolve => setTimeout(resolve, 0))
+  afterEach(() => {
+    jest.clearAllTimers()
   })
 
   afterAll(async () => {
-    await new Promise(resolve => setTimeout(resolve, 1000))
+    // Clean up any remaining promises
+    await new Promise(resolve => setTimeout(resolve, 100))
   })
 
   it('should successfully categorize a message about scheduling an appointment using real LLM', async () => {
@@ -52,7 +51,7 @@ describe.skip('categorizeMessage - Real LLM calls', () => {
       payload,
       onComplete,
       onError,
-      helpers: mockHelpers // Use our mocked helpers
+      helpers: helpers // Use our mocked helpers
     })
 
     // Real LangChain function is called
@@ -87,7 +86,7 @@ describe.skip('categorizeMessage - Real LLM calls', () => {
       payload,
       onComplete,
       onError,
-      helpers: mockHelpers // Use our mocked helpers
+      helpers: helpers // Use our mocked helpers
     })
 
     // Real LangChain function is called and returns "None"

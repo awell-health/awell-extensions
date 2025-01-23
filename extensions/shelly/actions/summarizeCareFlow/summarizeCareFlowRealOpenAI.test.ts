@@ -8,43 +8,57 @@ import { DISCLAIMER_MSG } from '../../lib/constants'
 
 jest.setTimeout(60000)
 
-// remove skip to run this test
-describe.skip('summarizeCareFlow - Real LLM calls with mocked Awell SDK', () => {
+describe.skip('summarizeCareFlow - Real OpenAI calls', () => {
   const { onComplete, onError, helpers, extensionAction, clearMocks } =
     TestHelpers.fromAction(summarizeCareFlow)
-
-  // Ensure API key exists
-  const apiKey = process.env.OPENAI_API_KEY
-
-  // Setup helpers with complete OpenAI config
-  const mockHelpers = {
-    ...helpers,
-    getOpenAIConfig: () => ({
-      apiKey,
-      temperature: 0,
-      maxRetries: 3,
-      timeout: 10000
-    }),
-    awellSdk: jest.fn().mockResolvedValue({
-      orchestration: {
-        query: jest.fn().mockResolvedValue({
-          pathwayActivities: mockPathwayActivitiesResponse,
-        }),
-      },
-    })
-  }
 
   beforeEach(() => {
     clearMocks()
     jest.clearAllMocks()
+    
+    // Ensure API key is always defined
+    process.env.OPENAI_API_KEY = process.env.OPENAI_API_KEY || 'test-api-key'
+    
+    helpers.getOpenAIConfig = jest.fn().mockReturnValue({
+      apiKey: process.env.OPENAI_API_KEY as string,
+      temperature: 0,
+      maxRetries: 3,
+      timeout: 10000
+    })
+
+    // Mock the SDK query to return activities
+    const mockQuery = jest.fn()
+      .mockResolvedValueOnce({
+        pathwayActivities: {
+          success: true,
+          activities: [{
+            id: 'test-activity-id',
+            status: 'DONE',
+            date: '2024-01-01T00:00:00Z',
+            object: {
+              id: 'test-object-id',
+              name: 'Test Activity',
+              type: 'FORM'
+            }
+          }]
+        }
+      })
+
+    helpers.awellSdk = jest.fn().mockReturnValue({
+      orchestration: {
+        query: mockQuery
+      }
+    })
   })
 
-  afterEach(async () => {
-    await new Promise(resolve => setTimeout(resolve, 0))
+  afterEach(() => {
+    jest.clearAllTimers()
+    jest.clearAllMocks()
   })
 
   afterAll(async () => {
-    await new Promise(resolve => setTimeout(resolve, 1000))
+    // Clean up any remaining promises
+    await new Promise(resolve => setTimeout(resolve, 100))
   })
 
   it('Should call the real model using default config', async () => {
@@ -67,7 +81,7 @@ describe.skip('summarizeCareFlow - Real LLM calls with mocked Awell SDK', () => 
       payload,
       onComplete,
       onError,
-      helpers: mockHelpers 
+      helpers: helpers 
     })
 
     expect(onComplete).toHaveBeenCalledWith({
@@ -98,7 +112,7 @@ describe.skip('summarizeCareFlow - Real LLM calls with mocked Awell SDK', () => 
       payload,
       onComplete,
       onError,
-      helpers: mockHelpers
+      helpers: helpers
     })
 
     expect(onComplete).toHaveBeenCalledWith({

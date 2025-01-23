@@ -9,7 +9,7 @@ import { DISCLAIMER_MSG_FORM } from '../../lib/constants'
 
 jest.setTimeout(30000) // Increase timeout if needed for real LLM calls
 
-describe('summarizeForm - Real LLM calls with mocked Awell SDK', () => {
+describe.skip('summarizeForm - Real LLM calls with mocked Awell SDK', () => {
   const { onComplete, onError, helpers, extensionAction, clearMocks } =
     TestHelpers.fromAction(summarizeForm)
 
