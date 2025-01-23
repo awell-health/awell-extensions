@@ -4,7 +4,7 @@ import { categorizeMessage } from '.'
 import 'dotenv/config'
 
 const settings = {
-  openAiApiKey: process.env.OPENAI_TEST_KEY,
+  openAiApiKey: process.env.OPENAI_API_KEY,
 }
 
 // Remove skip to run the test
