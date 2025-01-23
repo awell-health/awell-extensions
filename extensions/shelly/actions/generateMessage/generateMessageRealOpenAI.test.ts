@@ -7,7 +7,7 @@ import { OPENAI_MODELS } from '../../../../src/lib/llm/openai/constants'
 
 jest.setTimeout(60000) // Increase timeout to 60 seconds for all tests in this file
 
-describe('generateMessage - Real OpenAI calls', () => {
+describe.skip('generateMessage - Real OpenAI calls', () => {
   const { onComplete, onError, helpers, extensionAction, clearMocks } =
     TestHelpers.fromAction(generateMessage)
 
