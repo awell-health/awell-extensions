@@ -55,7 +55,6 @@ export const categorizeMessage: Action<
         data_points: { category, explanation: explanationHtml }
       })
     } catch (error) {
-      console.error('Error in categorizeMessage action:', error)
       throw new Error(
         error instanceof Error 
           ? error.message 

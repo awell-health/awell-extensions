@@ -43,7 +43,6 @@ export const findAppointmentsByPromptWithLLM = async ({
       explanation: result.explanation
     }
   } catch (error) {
-    console.error('Error in findAppointmentsByPromptWithLLM:', error, metadata)
     throw new Error('Failed to find matching appointments.')
   }
 }

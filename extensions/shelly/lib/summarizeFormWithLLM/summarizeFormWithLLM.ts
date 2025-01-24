@@ -52,7 +52,6 @@ export const summarizeFormWithLLM = async ({
 
     return result.content as string
   } catch (error) {
-    console.error('Error in summarizeFormWithLLM:', error)
     throw new Error('Failed to generate form summary')
   }
 }

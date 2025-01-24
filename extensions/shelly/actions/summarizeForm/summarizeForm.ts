@@ -74,7 +74,6 @@ export const summarizeForm: Action<
         },
       })
     } catch (error) {
-      console.error('Error summarizing form:', error)
       throw new Error('Error summarizing form')
     }
   },

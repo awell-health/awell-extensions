@@ -26,11 +26,6 @@ export const getTagsFromLLM = async (props: GetTagsFromLLMProps): Promise<TagsFr
       explanation: result.explanation
     }
   } catch (error) {
-    console.error(
-      'Error in getTagsFromLLM:',
-      error,
-      metadata
-    )
     throw new Error('Failed to update patient tags.')
   }
 } 

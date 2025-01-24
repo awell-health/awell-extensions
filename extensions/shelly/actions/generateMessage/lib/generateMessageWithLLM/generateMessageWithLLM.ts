@@ -57,8 +57,6 @@ export const generateMessageWithLLM = async ({
 
       // If subject or message are not directly available, try parsing AIMessageChunk
       if (subject.trim() === '' || message.trim() === '') {
-        console.log('Attempting to parse AIMessageChunk...')
-
         // Attempt to get content from AIMessageChunk
         if ('content' in generated_message) {
           try {
@@ -72,7 +70,7 @@ export const generateMessageWithLLM = async ({
               }
             }
           } catch (error) {
-            console.error('Error parsing AIMessageChunk content:', error)
+            throw new Error('Error parsing message content')
           }
         }
       }
@@ -85,7 +83,6 @@ export const generateMessageWithLLM = async ({
       // If we reach here, it means we didn't get valid subject and message
       throw new Error('Failed to generate valid subject and message')
     } catch (error) {
-      console.error(`Attempt ${retries + 1} failed:`, error)
       retries++
       if (retries >= MAX_RETRIES) {
         throw new Error('Failed to generate the message after multiple attempts')

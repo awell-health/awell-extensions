@@ -72,7 +72,6 @@ export const findAppointmentsByPrompt: Action<
         ],
       })
     } catch (error) {
-      console.error('Error in findAppointmentsByPrompt:', error)
       await onError({
         events: [
           {

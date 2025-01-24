@@ -58,7 +58,6 @@ export const generateMessage: Action<
         data_points: { subject, message: htmlMessage }
       })
     } catch (error) {
-      console.error('Error in generateMessage action:', error)
       throw new Error('Error generating message')
     }
   },

@@ -33,11 +33,6 @@ export const createOpenAIModel = async ({
     throw new Error('No OpenAI API key available')
   }
 
-  // Log which API key is being used
-  console.info(
-    `Using ${!isNil(settings.openAiApiKey) ? 'client custom' : 'Awell'} Open AI API key for ${modelType}`
-  )
-
   // Create model instance with standard configuration
   const model = new ChatOpenAI({
     modelName: MODEL_VERSIONS[modelType], // Maps 'gpt-4o-mini' to 'gpt-4o-mini-2024-07-18'

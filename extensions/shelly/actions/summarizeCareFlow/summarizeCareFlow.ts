@@ -72,7 +72,6 @@ export const summarizeCareFlow: Action<
           },
         },
       }).catch(error => {
-        console.error('SDK Query failed with:', error)
         throw error
       })
 
@@ -98,7 +97,6 @@ export const summarizeCareFlow: Action<
         },
       })
     } catch (error) {
-      console.error('Error in summarizeCareFlow action:', error)
       throw new Error(
         error instanceof Error 
           ? error.message 

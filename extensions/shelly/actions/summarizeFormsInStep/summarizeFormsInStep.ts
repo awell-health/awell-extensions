@@ -9,7 +9,7 @@ import { markdownToHtml } from '../../../../src/utils'
 import { createOpenAIModel } from '../../../../src/lib/llm/openai'
 import { OPENAI_MODELS } from '../../../../src/lib/llm/openai/constants'
 
-// TODO: get rid of the console logs eventually
+
 export const summarizeFormsInStep: Action<
   typeof fields,
   typeof settings,
@@ -67,7 +67,6 @@ export const summarizeFormsInStep: Action<
         },
       })
     } catch (error) {
-      console.error('Error summarizing forms:', error)
       throw new Error('Error summarizing forms')
     }
   },
