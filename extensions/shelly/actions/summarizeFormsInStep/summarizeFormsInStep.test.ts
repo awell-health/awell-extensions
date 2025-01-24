@@ -54,7 +54,9 @@ describe('summarizeFormsInStep - Mocked LLM calls', () => {
       .mockResolvedValueOnce({
         pathwayStepActivities: {
           success: true,
-          activities: mockMultipleFormsPathwayActivitiesResponse.activities
+          activities: mockMultipleFormsPathwayActivitiesResponse.activities.filter(
+            activity => activity.object.type === 'FORM'
+          )
         }
       })
       .mockResolvedValueOnce({
