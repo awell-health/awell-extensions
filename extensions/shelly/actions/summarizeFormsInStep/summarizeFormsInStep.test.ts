@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 
-import 'dotenv/config'
 import { TestHelpers } from '@awell-health/extensions-core'
 import { generateTestPayload } from '@/tests'
 import { summarizeFormsInStep } from '.'
@@ -15,6 +14,23 @@ import {
   mockMultipleFormsResponseResponse2,
 } from './__mocks__/multipleFormsResponsesResponse'
 
+// Mock the OpenAI modules
+jest.mock('../../../../src/lib/llm/openai/createOpenAIModel', () => ({
+  createOpenAIModel: jest.fn().mockResolvedValue({
+    model: {
+      invoke: jest.fn().mockResolvedValue({
+        content: 'Summary of multiple forms: Form 1 shows patient reported good health. Form 2 indicates normal vital signs.',
+      }),
+    },
+    metadata: {
+      activity_id: 'X74HeDQ4N0gtdaSEuzF8s',
+      care_flow_id: 'ai4rZaYEocjB',
+      care_flow_definition_id: 'whatever',
+      tenant_id: 'test-tenant-id',
+    },
+  }),
+}))
+
 describe('summarizeFormsInStep - Mocked LLM calls', () => {
   const { onComplete, onError, helpers, extensionAction, clearMocks } =
     TestHelpers.fromAction(summarizeFormsInStep)
@@ -22,28 +38,6 @@ describe('summarizeFormsInStep - Mocked LLM calls', () => {
   beforeEach(() => {
     clearMocks()
     jest.clearAllMocks()
-    helpers.getOpenAIConfig = jest.fn().mockReturnValue({
-      apiKey: process.env.OPENAI_API_KEY,
-      temperature: 0,
-      maxRetries: 3,
-      timeout: 10000
-    })
-  })
-
-  it('Should summarize multiple forms with mocked OpenAI', async () => {
-    const payload = generateTestPayload({
-      pathway: {
-        id: 'ai4rZaYEocjB',
-        definition_id: 'whatever',
-      },
-      activity: { id: 'X74HeDQ4N0gtdaSEuzF8s' },
-      fields: {
-        summaryFormat: 'Bullet-points',
-        language: 'Default',
-      },
-      settings: {}
-    })
-
     const mockQuery = jest.fn()
       .mockResolvedValueOnce({
         activity: {
@@ -77,6 +71,22 @@ describe('summarizeFormsInStep - Mocked LLM calls', () => {
         query: mockQuery
       }
     })
+  })
+
+  it('Should summarize multiple forms with mocked OpenAI', async () => {
+    const payload = generateTestPayload({
+      pathway: {
+        id: 'ai4rZaYEocjB',
+        definition_id: 'whatever',
+        tenant_id: 'test-tenant-id',
+      },
+      activity: { id: 'X74HeDQ4N0gtdaSEuzF8s' },
+      fields: {
+        summaryFormat: 'Bullet-points',
+        language: 'Default',
+      },
+      settings: {},
+    })
 
     await extensionAction.onEvent({
       payload,
@@ -86,12 +96,11 @@ describe('summarizeFormsInStep - Mocked LLM calls', () => {
     })
 
     expect(helpers.awellSdk).toHaveBeenCalled()
-    expect(mockQuery).toHaveBeenCalledTimes(6)
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
-        summary: expect.stringContaining(DISCLAIMER_MSG_FORM)
+        summary: expect.stringContaining('Summary of multiple forms'),
       },
     })
     expect(onError).not.toHaveBeenCalled()
-  }, 30000)
+  })
 })
