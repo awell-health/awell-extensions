@@ -71,6 +71,7 @@ describe('pushFormResponseToHealthie', () => {
         pathway: {
           id: '5eN4qWbxZGSA',
           definition_id: 'whatever',
+          tenant_id: '123',
         },
         activity: { id: 'X74HeDQ4N0gtdaSEuzF8s' },
         patient: { id: 'whatever' },
@@ -116,6 +117,7 @@ describe('pushFormResponseToHealthie', () => {
         pathway: {
           id: '5eN4qWbxZGSA',
           definition_id: 'whatever',
+          tenant_id: '123',
         },
         activity: { id: 'X74HeDQ4N0gtdaSEuzF8s' },
         patient: { id: 'whatever' },

@@ -50,7 +50,8 @@ describe('categorizeMessage - Mocked LLM calls', () => {
       },
       pathway: {
         id: 'test-pathway-id',
-        definition_id: 'test-def-id'
+        definition_id: 'test-def-id',
+        tenant_id: 'test-tenant-id',
       },
       activity: {
         id: 'test-activity-id'
@@ -72,7 +73,8 @@ describe('categorizeMessage - Mocked LLM calls', () => {
       metadata: {
         care_flow_definition_id: 'test-def-id',
         care_flow_id: 'test-pathway-id',
-        activity_id: 'test-activity-id'
+        activity_id: 'test-activity-id',
+        tenant_id: 'test-tenant-id'
       },
     })
 

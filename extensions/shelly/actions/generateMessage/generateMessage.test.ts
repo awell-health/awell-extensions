@@ -113,6 +113,6 @@ describe('generateMessage', () => {
         onError,
         helpers,
       })
-    ).rejects.toThrow('Error generating message')
+    ).rejects.toThrow('Failed to create model')
   })
 })

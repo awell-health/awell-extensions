@@ -50,6 +50,7 @@ describe('Elation - Create care gap', () => {
     pathway: {
       definition_id: '123',
       id: '123',
+      tenant_id: '123',
     },
     patient: {
       id: '123',

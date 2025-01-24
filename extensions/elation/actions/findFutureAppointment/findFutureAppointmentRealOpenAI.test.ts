@@ -76,7 +76,8 @@ describe.skip('findFutureAppointment - Real OpenAI calls', () => {
           },
           pathway: {
             id: 'test-flow-id',
-            definition_id: 'whatever'
+            definition_id: '123',
+            tenant_id: '123',
           },
           activity: {
             id: 'test-activity-id'

@@ -5,6 +5,7 @@ export const testPayload: NewActivityPayload<any, any> = {
   pathway: {
     id: 'pathway-id',
     definition_id: 'pathway-definition-id',
+    tenant_id: 'tenant-id',
   },
   activity: {
     id: 'activity-id',

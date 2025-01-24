@@ -78,7 +78,8 @@ describe.skip('findAppointmentsByPrompt - Real OpenAI calls', () => {
           },
           pathway: {
             id: 'test-flow-id',
-            definition_id: 'whatever'
+            definition_id: 'whatever',
+            tenant_id: '123',
           },
           activity: {
             id: 'test-activity-id'

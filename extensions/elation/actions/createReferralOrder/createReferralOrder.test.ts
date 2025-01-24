@@ -53,6 +53,7 @@ describe('Elation - Create referral order', () => {
     pathway: {
       definition_id: '123',
       id: '123',
+      tenant_id: '123',
     },
     patient: {
       id: '123',
