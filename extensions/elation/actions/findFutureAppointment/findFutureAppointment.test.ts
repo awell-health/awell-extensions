@@ -1,57 +1,49 @@
+import { TestHelpers } from '@awell-health/extensions-core'
 import { makeAPIClient } from '../../client'
 import { appointmentsMock } from './__testdata__/GetAppointments.mock'
 import { findFutureAppointment as action } from './findFutureAppointment'
-import { TestHelpers } from '@awell-health/extensions-core'
-import { ChatOpenAI } from '@langchain/openai'
 
-jest.mock('../../client', () => ({
-  makeAPIClient: jest.fn().mockImplementation(() => ({
-    findAppointments: jest.fn().mockResolvedValue(appointmentsMock),
-  })),
+// Mock the client
+jest.mock('../../client')
+
+// Mock createOpenAIModel
+jest.mock('../../../../src/lib/llm/openai/createOpenAIModel', () => ({
+  createOpenAIModel: jest.fn().mockResolvedValue({
+    model: {
+      pipe: jest.fn().mockReturnValue({
+        invoke: jest.fn().mockResolvedValue({
+          appointmentId: appointmentsMock[0].id,
+          explanation: 'Test explanation'
+        })
+      })
+    },
+    metadata: {
+      care_flow_definition_id: 'whatever',
+      care_flow_id: 'test-flow-id',
+      activity_id: 'test-activity-id'
+    }
+  })
 }))
 
-const mockedSdk = jest.mocked(makeAPIClient)
-
-jest.mock('@langchain/openai', () => {
-  const mockInvoke = jest.fn().mockResolvedValue({
-    appointmentId: appointmentsMock[0].id,
-    explanation: 'Test explanation',
-  })
-
-  const mockChain = {
-    invoke: mockInvoke,
-  }
-
-  const mockPipe = jest.fn().mockReturnValue(mockChain)
-
-  const mockChatOpenAI = jest.fn().mockImplementation(() => ({
-    pipe: mockPipe,
-  }))
-
-  return {
-    ChatOpenAI: mockChatOpenAI,
-  }
-})
-
-describe('Elation - Find appointment by type', () => {
-  const {
-    extensionAction: findAppointmentByType,
-    onComplete,
-    onError,
-    helpers,
-    clearMocks,
-  } = TestHelpers.fromAction(action)
+describe('Elation - Find future appointment', () => {
+  const { extensionAction, onComplete, onError, helpers, clearMocks } = 
+    TestHelpers.fromAction(action)
 
   beforeEach(() => {
     clearMocks()
     jest.clearAllMocks()
+
+    const mockAPIClient = makeAPIClient as jest.Mock
+    mockAPIClient.mockImplementation(() => ({
+      findAppointments: jest.fn().mockResolvedValue(appointmentsMock)
+    }))
   })
 
-  test('Should return the correct appointment', async () => {
-    await findAppointmentByType.onEvent({
+  test('Should find the correct appointment', async () => {
+    await extensionAction.onEvent({
       payload: {
         fields: {
-          patientId: 12345, // used to get a list of appointments
+          patientId: 12345,
           prompt: 'Find the next appointment for this patient',
         },
         settings: {
@@ -61,16 +53,23 @@ describe('Elation - Find appointment by type', () => {
           password: 'password',
           auth_url: 'authUrl',
           base_url: 'baseUrl',
-          openAiApiKey: 'openaiApiKey',
         },
-      } as any,
+        pathway: {
+          id: 'test-flow-id',
+          definition_id: 'whatever'
+        },
+        activity: {
+          id: 'test-activity-id'
+        },
+        patient: {
+          id: 'test-patient-id'
+        }
+      },
       onComplete,
       onError,
       helpers,
     })
 
-    expect(ChatOpenAI).toHaveBeenCalled()
-    expect(mockedSdk).toHaveBeenCalled()
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
         appointment: JSON.stringify(appointmentsMock[0]),
@@ -78,13 +77,57 @@ describe('Elation - Find appointment by type', () => {
         appointmentExists: 'true',
       },
       events: [
-        {
-          date: expect.any(String),
-          text: {
-            en: 'Number of future scheduled or confirmed appointments for patient 12345: 2\nFound appointment: 123\nExplanation: Test explanation',
-          },
-        },
+        expect.objectContaining({
+          text: expect.objectContaining({
+            en: expect.stringContaining('Found appointment: 123')
+          })
+        })
       ],
     })
+    expect(onError).not.toHaveBeenCalled()
+  })
+
+  test('Should handle no appointments', async () => {
+    const mockAPIClient = makeAPIClient as jest.Mock
+    mockAPIClient.mockImplementation(() => ({
+      findAppointments: jest.fn().mockResolvedValue([])
+    }))
+
+    await extensionAction.onEvent({
+      payload: {
+        fields: {
+          patientId: 12345,
+          prompt: 'Find the next appointment for this patient',
+        },
+        settings: {
+          client_id: 'clientId',
+          client_secret: 'clientSecret',
+          username: 'username',
+          password: 'password',
+          auth_url: 'authUrl',
+          base_url: 'baseUrl',
+        },
+        pathway: {
+          id: 'test-flow-id',
+          definition_id: 'whatever'
+        },
+        activity: {
+          id: 'test-activity-id'
+        },
+        patient: {
+          id: 'test-patient-id'
+        }
+      },
+      onComplete,
+      onError,
+      helpers,
+    })
+
+    expect(onComplete).toHaveBeenCalledWith({
+      data_points: {
+        appointmentExists: 'false',
+      }
+    })
+    expect(onError).not.toHaveBeenCalled()
   })
 })

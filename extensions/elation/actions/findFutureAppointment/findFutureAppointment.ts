@@ -5,8 +5,10 @@ import { addActivityEventLog } from '../../../../src/lib/awell/addEventLog'
 import type { settings, SettingsType } from '../../settings'
 import { FieldsValidationSchema, fields, dataPoints } from './config'
 import { getFutureAppointments } from './getFutureAppoitnments'
-import { AppointmentIdSchema } from './config/types'
-import { findMatchingAppointment } from './findAppoitnmentsWithAi'
+import { AppointmentIdSchema } from './lib/findAppointmentWithLLM/parser'
+import { findAppointmentWithLLM } from './lib/findAppointmentWithLLM/findAppointmentWithLLM'
+import { createOpenAIModel } from '../../../../src/lib/llm/openai/createOpenAIModel'
+import { OPENAI_MODELS } from '../../../../src/lib/llm/openai/constants'
 
 export const findFutureAppointment: Action<
   typeof fields,
@@ -15,65 +17,82 @@ export const findFutureAppointment: Action<
 > = {
   key: 'findFutureAppointment',
   category: Category.EHR_INTEGRATIONS,
-  title: '🪄 Find future appointment',
+  title: '🪄 Find future appointment (Beta)',
   description: 'Find a future appointment in Elation.',
   fields,
   previewable: false,
   dataPoints,
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
-    const { prompt, patientId } = FieldsValidationSchema.parse(payload.fields)
+    try {
+      // 1. Validate input
+      const { prompt, patientId } = FieldsValidationSchema.parse(payload.fields)
 
-    const openAiConfig = helpers.getOpenAIConfig()
+      // 2. Get future appointments
+      const appointments = await getFutureAppointments(
+        payload.settings as SettingsType,
+        patientId,
+      )
 
-    const apiKey = !isNil(payload.settings.openAiApiKey)
-      ? payload.settings.openAiApiKey
-      : openAiConfig.apiKey
+      if (appointments.length === 0) {
+        await onComplete({
+          data_points: {
+            appointmentExists: 'false',
+          },
+        })
+        return
+      }
 
-    // log which api key is being used
-    console.info(
-      `Using ${!isNil(payload.settings.openAiApiKey) ? 'client custom' : 'Awell'} Open AI API key for findFutureAppointment action ${patientId}`,
-    )
+      // 3. Initialize OpenAI model with metadata
+      const { model, metadata } = await createOpenAIModel({
+        settings: payload.settings,
+        helpers,
+        payload,
+        modelType: OPENAI_MODELS.GPT4o
+      })
 
-    const appointments = await getFutureAppointments(
-      payload.settings as SettingsType,
-      patientId,
-    )
+      // 4. Find matching appointment
+      const { appointmentId, explanation } = await findAppointmentWithLLM({
+        model,
+        appointments,
+        prompt,
+        metadata
+      })
 
-    if (appointments.length === 0) {
+      const matchedAppointmentId = AppointmentIdSchema.parse(appointmentId)
+      const foundAppointment = appointments.find(
+        (appointment) => appointment.id === Number(matchedAppointmentId),
+      )
+
+      // 5. Complete action with results
       await onComplete({
         data_points: {
-          appointmentExists: 'false',
+          appointment: !isNil(matchedAppointmentId)
+            ? JSON.stringify(foundAppointment)
+            : undefined,
+          explanation,
+          appointmentExists: !isNil(matchedAppointmentId) ? 'true' : 'false',
         },
+        events: [
+          addActivityEventLog({
+            message: `Number of future scheduled or confirmed appointments for patient ${patientId}: ${appointments.length}\nFound appointment: ${isNil(foundAppointment) ? 'none' : foundAppointment?.id}\nExplanation: ${explanation}`,
+          }),
+        ],
       })
-      return
+    } catch (error) {
+      if (error instanceof Error) {
+        await onError({
+          events: [{
+            date: new Date().toISOString(),
+            text: { en: error.message },
+            error: {
+              category: 'SERVER_ERROR',
+              message: error.message
+            }
+          }]
+        })
+        return
+      }
+      throw error
     }
-
-    const { appointmentId, explanation } = await findMatchingAppointment({
-      apiKey,
-      openAiConfig,
-      prompt,
-      appointments,
-    })
-
-    const matchedAppointmentId = AppointmentIdSchema.parse(appointmentId)
-
-    const foundAppointment = appointments.find(
-      (appointment) => appointment.id === Number(matchedAppointmentId),
-    )
-
-    await onComplete({
-      data_points: {
-        appointment: !isNil(matchedAppointmentId)
-          ? JSON.stringify(foundAppointment)
-          : undefined,
-        explanation,
-        appointmentExists: !isNil(matchedAppointmentId) ? 'true' : 'false',
-      },
-      events: [
-        addActivityEventLog({
-          message: `Number of future scheduled or confirmed appointments for patient ${patientId}: ${appointments.length}\nFound appointment: ${isNil(foundAppointment) ? 'none' : foundAppointment?.id}\nExplanation: ${explanation}`,
-        }),
-      ],
-    })
   },
 }
