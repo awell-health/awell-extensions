@@ -3,10 +3,10 @@ import {
   PrioritySchema,
   ServiceRequestIntentSchema,
   ServiceRequestStatusSchema,
-} from '../atoms'
+} from '../../../../../src/lib/fhir/schemas/ServiceRequest'
 
 export const CreateServiceRequestSchema = z.object({
-  patientId: z.string().nonempty('Missing Medplum patient ID'),
+  patientId: z.string().min(1, 'Missing Medplum patient ID'),
   status: ServiceRequestStatusSchema,
   intent: ServiceRequestIntentSchema,
   priority: PrioritySchema.optional(),

@@ -5,7 +5,7 @@ import { validatePayloadAndCreateSdks } from '../../lib/validatePayloadAndCreate
 import { type DocumentReferenceCreateInputType } from '../../lib/api/FhirR4/schema'
 import { AxiosError } from 'axios'
 import { addActivityEventLog } from '../../../../src/lib/awell'
-import { LoincCodeTypesDictionary } from '../../lib/api/schemas/DocumentReference'
+import { LoincCodeTypesDictionary } from '../../lib/api/customFhirSchemas/DocumentReference'
 
 export const createClinicalNote: Action<
   typeof fields,
