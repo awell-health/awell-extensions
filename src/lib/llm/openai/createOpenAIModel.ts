@@ -45,9 +45,10 @@ export const createOpenAIModel = async ({
   return {
     model,
     metadata: {
+      tenant_id: payload.pathway.tenant_id ?? '',
       care_flow_definition_id: payload.pathway.definition_id ?? '',
       care_flow_id: payload.pathway.id ?? '',
-      activity_id: payload.activity.id ?? '',
+      activity_id: payload.activity.id ?? ''
     }
   }
 }
