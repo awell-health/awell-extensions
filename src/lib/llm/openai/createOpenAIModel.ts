@@ -5,10 +5,11 @@ import { isNil } from 'lodash'
 
 /**
  * Creates a configured OpenAI model instance with proper tracing metadata
+ * Settings can optionally include openAiApiKey, otherwise falls back to environment configuration
  * 
  * @param config - Configuration for model creation
  * @returns Configured model and metadata for tracing
- * @throws Error if no API key is available
+ * @throws Error if no API key is available in either settings or environment
  * 
  * @example
  * ```typescript
@@ -21,16 +22,16 @@ import { isNil } from 'lodash'
  * ```
  */
 export const createOpenAIModel = async ({
-  settings,
+  settings = {},
   helpers,
   payload,
   modelType = OPENAI_MODELS.GPT4oMini
 }: CreateOpenAIModelConfig): Promise<OpenAIModelConfig> => {
-  // Get API key with proper fallback logic
+  // Try settings first, then fall back to environment config
   const apiKey = settings.openAiApiKey ?? helpers.getOpenAIConfig().apiKey
 
   if (isNil(apiKey)) {
-    throw new Error('No OpenAI API key available')
+    throw new Error('No OpenAI API key available in settings or environment configuration')
   }
 
   // Create model instance with standard configuration
