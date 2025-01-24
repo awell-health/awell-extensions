@@ -32,49 +32,45 @@ export const summarizeForm: Action<
   dataPoints,
 
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
-    try {
-      // 1. Validate input fields
-      const { summaryFormat, language } = FieldsValidationSchema.parse(payload.fields)
+    // 1. Validate input fields
+    const { summaryFormat, language } = FieldsValidationSchema.parse(payload.fields)
 
-      // 2. Initialize OpenAI model with metadata
-      const { model, metadata } = await createOpenAIModel({
-        settings: payload.settings,
-        helpers,
-        payload,
-        modelType: OPENAI_MODELS.GPT4o
-      })
+    // 2. Initialize OpenAI model with metadata
+    const { model, metadata } = await createOpenAIModel({
+      settings: payload.settings,
+      helpers,
+      payload,
+      modelType: OPENAI_MODELS.GPT4o
+    })
 
-      // 3. Get form data
-      const { formDefinition, formResponse } = await getLatestFormInCurrentStep({
-        awellSdk: await helpers.awellSdk(),
-        pathwayId: payload.pathway.id,
-        activityId: payload.activity.id,
-      })
+    // 3. Get form data
+    const { formDefinition, formResponse } = await getLatestFormInCurrentStep({
+      awellSdk: await helpers.awellSdk(),
+      pathwayId: payload.pathway.id,
+      activityId: payload.activity.id,
+    })
 
-      const { result: formData } = getFormResponseText({
-        formDefinition,
-        formResponse,
-      })
+    const { result: formData } = getFormResponseText({
+      formDefinition,
+      formResponse,
+    })
 
-      // 4. Generate summary
-      const summary = await summarizeFormWithLLM({
-        model,
-        formData,
-        summaryFormat,
-        language,
-        disclaimerMessage: DISCLAIMER_MSG_FORM,
-        metadata
-      })
+    // 4. Generate summary
+    const summary = await summarizeFormWithLLM({
+      model,
+      formData,
+      summaryFormat,
+      language,
+      disclaimerMessage: DISCLAIMER_MSG_FORM,
+      metadata
+    })
 
-      // 5. Format and return results
-      const htmlSummary = await markdownToHtml(summary)
-      await onComplete({
-        data_points: {
-          summary: htmlSummary,
-        },
-      })
-    } catch (error) {
-      throw new Error('Error summarizing form')
-    }
+    // 5. Format and return results
+    const htmlSummary = await markdownToHtml(summary)
+    await onComplete({
+      data_points: {
+        summary: htmlSummary,
+      },
+    })
   },
 }

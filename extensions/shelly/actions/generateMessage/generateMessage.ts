@@ -29,36 +29,32 @@ export const generateMessage: Action<
   dataPoints,
 
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
-    try {
-      // 1. Validate input fields
-      const { communicationObjective, personalizationInput, stakeholder, language } = 
-        FieldsValidationSchema.parse(payload.fields)
+    // 1. Validate input fields
+    const { communicationObjective, personalizationInput, stakeholder, language } = 
+      FieldsValidationSchema.parse(payload.fields)
 
-      // 2. Initialize OpenAI model with metadata
-      const { model, metadata } = await createOpenAIModel({
-        settings: payload.settings,
-        helpers,
-        payload,
-        modelType: OPENAI_MODELS.GPT4o // Using GPT4 for high-quality message generation
-      })
+    // 2. Initialize OpenAI model with metadata
+    const { model, metadata } = await createOpenAIModel({
+      settings: payload.settings,
+      helpers,
+      payload,
+      modelType: OPENAI_MODELS.GPT4o // Using GPT4 for high-quality message generation
+    })
 
-      // 3. Generate message
-      const { subject, message } = await generateMessageWithLLM({
-        model,
-        communicationObjective,
-        personalizationInput,
-        stakeholder,
-        language,
-        metadata
-      })
+    // 3. Generate message
+    const { subject, message } = await generateMessageWithLLM({
+      model,
+      communicationObjective,
+      personalizationInput,
+      stakeholder,
+      language,
+      metadata
+    })
 
-      // 4. Format and return results
-      const htmlMessage = await markdownToHtml(message)
-      await onComplete({
-        data_points: { subject, message: htmlMessage }
-      })
-    } catch (error) {
-      throw new Error('Error generating message')
-    }
+    // 4. Format and return results
+    const htmlMessage = await markdownToHtml(message)
+    await onComplete({
+      data_points: { subject, message: htmlMessage }
+    })
   },
 }

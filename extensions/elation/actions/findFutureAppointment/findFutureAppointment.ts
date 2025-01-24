@@ -23,76 +23,59 @@ export const findFutureAppointment: Action<
   previewable: false,
   dataPoints,
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
-    try {
-      // 1. Validate input
-      const { prompt, patientId } = FieldsValidationSchema.parse(payload.fields)
+    // 1. Validate input
+    const { prompt, patientId } = FieldsValidationSchema.parse(payload.fields)
 
-      // 2. Get future appointments
-      const appointments = await getFutureAppointments(
-        payload.settings as SettingsType,
-        patientId,
-      )
+    // 2. Get future appointments
+    const appointments = await getFutureAppointments(
+      payload.settings as SettingsType,
+      patientId,
+    )
 
-      if (appointments.length === 0) {
-        await onComplete({
-          data_points: {
-            appointmentExists: 'false',
-          },
-        })
-        return
-      }
-
-      // 3. Initialize OpenAI model with metadata
-      const { model, metadata } = await createOpenAIModel({
-        settings: payload.settings,
-        helpers,
-        payload,
-        modelType: OPENAI_MODELS.GPT4o
-      })
-
-      // 4. Find matching appointment
-      const { appointmentId, explanation } = await findAppointmentWithLLM({
-        model,
-        appointments,
-        prompt,
-        metadata
-      })
-
-      const matchedAppointmentId = AppointmentIdSchema.parse(appointmentId)
-      const foundAppointment = appointments.find(
-        (appointment) => appointment.id === Number(matchedAppointmentId),
-      )
-
-      // 5. Complete action with results
+    if (appointments.length === 0) {
       await onComplete({
         data_points: {
-          appointment: !isNil(matchedAppointmentId)
-            ? JSON.stringify(foundAppointment)
-            : undefined,
-          explanation,
-          appointmentExists: !isNil(matchedAppointmentId) ? 'true' : 'false',
+          appointmentExists: 'false',
         },
-        events: [
-          addActivityEventLog({
-            message: `Number of future scheduled or confirmed appointments for patient ${patientId}: ${appointments.length}\nFound appointment: ${isNil(foundAppointment) ? 'none' : foundAppointment?.id}\nExplanation: ${explanation}`,
-          }),
-        ],
       })
-    } catch (error) {
-      if (error instanceof Error) {
-        await onError({
-          events: [{
-            date: new Date().toISOString(),
-            text: { en: error.message },
-            error: {
-              category: 'SERVER_ERROR',
-              message: error.message
-            }
-          }]
-        })
-        return
-      }
-      throw error
+      return
     }
+
+    // 3. Initialize OpenAI model with metadata
+    const { model, metadata } = await createOpenAIModel({
+      settings: payload.settings,
+      helpers,
+      payload,
+      modelType: OPENAI_MODELS.GPT4o
+    })
+
+    // 4. Find matching appointment
+    const { appointmentId, explanation } = await findAppointmentWithLLM({
+      model,
+      appointments,
+      prompt,
+      metadata
+    })
+
+    const matchedAppointmentId = AppointmentIdSchema.parse(appointmentId)
+    const foundAppointment = appointments.find(
+      (appointment) => appointment.id === Number(matchedAppointmentId),
+    )
+
+    // 5. Complete action with results
+    await onComplete({
+      data_points: {
+        appointment: !isNil(matchedAppointmentId)
+          ? JSON.stringify(foundAppointment)
+          : undefined,
+        explanation,
+        appointmentExists: !isNil(matchedAppointmentId) ? 'true' : 'false',
+      },
+      events: [
+        addActivityEventLog({
+          message: `Number of future scheduled or confirmed appointments for patient ${patientId}: ${appointments.length}\nFound appointment: ${isNil(foundAppointment) ? 'none' : foundAppointment?.id}\nExplanation: ${explanation}`,
+        }),
+      ],
+    })
   },
 }

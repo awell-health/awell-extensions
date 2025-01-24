@@ -29,37 +29,29 @@ export const categorizeMessage: Action<
   dataPoints,
 
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
-    try {
-      // 1. Validate input fields
-      const { message, categories } = FieldsValidationSchema.parse(payload.fields)
+    // 1. Validate input fields
+    const { message, categories } = FieldsValidationSchema.parse(payload.fields)
 
-      // 2. Initialize OpenAI model with metadata
-      const { model, metadata } = await createOpenAIModel({
-        settings: payload.settings,
-        helpers,
-        payload,
-        modelType: OPENAI_MODELS.GPT4oMini // task is simple and we don't need a more powerful model
-      })
+    // 2. Initialize OpenAI model with metadata
+    const { model, metadata } = await createOpenAIModel({
+      settings: payload.settings,
+      helpers,
+      payload,
+      modelType: OPENAI_MODELS.GPT4oMini // task is simple and we don't need a more powerful model
+    })
 
-      // 3. Perform categorization
-      const { category, explanation } = await categorizeMessageWithLLM({
-        model,
-        message,
-        categories,
-        metadata
-      })
+    // 3. Perform categorization
+    const { category, explanation } = await categorizeMessageWithLLM({
+      model,
+      message,
+      categories,
+      metadata
+    })
 
-      // 4. Format and return results
-      const explanationHtml = await markdownToHtml(explanation)
-      await onComplete({
-        data_points: { category, explanation: explanationHtml }
-      })
-    } catch (error) {
-      throw new Error(
-        error instanceof Error 
-          ? error.message 
-          : 'Failed to categorize message'
-      )
-    }
+    // 4. Format and return results
+    const explanationHtml = await markdownToHtml(explanation)
+    await onComplete({
+      data_points: { category, explanation: explanationHtml }
+    })
   },
 }
