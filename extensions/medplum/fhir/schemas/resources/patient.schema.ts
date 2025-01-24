@@ -3,7 +3,7 @@ import {
   DateOnlyOptionalSchema,
   E164PhoneValidationOptionalSchema,
 } from '@awell-health/extensions-core'
-import { GenderSchema } from '../atoms'
+import { GenderSchema } from '../../../../../src/lib/fhir/schemas/Patient'
 
 export const PatientSchema = z.object({
   firstName: z.string().optional(),

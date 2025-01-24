@@ -1,9 +1,11 @@
 import { FieldType, type Field } from '@awell-health/extensions-core'
 import { type ZodObject, type ZodTypeAny } from 'zod'
 import { CreateServiceRequestSchema } from '../../../fhir/schemas/resources/serviceRequest.schema'
-import { ServiceRequestStatusSchema } from '../../../fhir/schemas/atoms/StatusSchema'
-import { ServiceRequestIntentSchema } from '../../../fhir/schemas/atoms/IntentSchema'
-import { PrioritySchema } from '../../../fhir/schemas/atoms/PrioritySchema'
+import {
+  ServiceRequestStatusSchema,
+  ServiceRequestIntentSchema,
+  PrioritySchema,
+} from '../../../../../src/lib/fhir/schemas/ServiceRequest'
 
 export const fields = {
   patientId: {
@@ -24,7 +26,7 @@ export const fields = {
         (status) => ({
           label: status,
           value: status,
-        })
+        }),
       ),
     },
   },
@@ -40,7 +42,7 @@ export const fields = {
         (intent) => ({
           label: intent,
           value: intent,
-        })
+        }),
       ),
     },
   },

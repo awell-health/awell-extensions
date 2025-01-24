@@ -1,6 +1,6 @@
 import { FieldType, type Field } from '@awell-health/extensions-core'
 import z, { type ZodTypeAny } from 'zod'
-import { GenderSchema } from '../../../lib/api/schemas/Patient'
+import { GenderSchema } from '../../../../../src/lib/fhir/schemas/Patient'
 import { startCase } from 'lodash'
 
 export const fields = {
