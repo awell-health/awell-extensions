@@ -1,0 +1,49 @@
+import { type ChatOpenAI } from '@langchain/openai'
+import { type AIActionMetadata } from '../../../../../../src/lib/llm/openai/types'
+import { systemPrompt } from './prompt'
+import { parser, type AppointmentsFromAI } from './parser'
+import { type AppointmentResponse } from '../../../../types'
+
+interface FindAppointmentsByPromptWithLLMProps {
+  model: ChatOpenAI
+  appointments: AppointmentResponse[]
+  prompt: string
+  metadata: AIActionMetadata
+}
+
+export const findAppointmentsByPromptWithLLM = async ({
+  model,
+  appointments,
+  prompt,
+  metadata,
+}: FindAppointmentsByPromptWithLLMProps): Promise<AppointmentsFromAI> => {
+  const chain = model.pipe(parser)
+
+  try {
+    const formattedAppointments = appointments
+      .map((appointment) => ({
+        id: appointment.id,
+        reason: appointment.reason,
+        scheduled_date: appointment.scheduled_date,
+      }))
+      .map((appointment) => JSON.stringify(appointment))
+      .join('\n\n')
+    
+    const result = await chain.invoke(
+      await systemPrompt.format({
+        currentDate: new Date().toISOString().split('T')[0],
+        appointments: formattedAppointments,
+        prompt,
+      }),
+      { metadata, runName: 'ElationFindAppointmentsByPrompt' }
+    )
+
+    return {
+      appointmentIds: result.appointmentIds,
+      explanation: result.explanation
+    }
+  } catch (error) {
+    console.error('Error in findAppointmentsByPromptWithLLM:', error, metadata)
+    throw new Error('Failed to find matching appointments.')
+  }
+}
