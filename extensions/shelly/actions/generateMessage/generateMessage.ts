@@ -34,7 +34,7 @@ export const generateMessage: Action<
       FieldsValidationSchema.parse(payload.fields)
 
     // 2. Initialize OpenAI model with metadata
-    const { model, metadata } = await createOpenAIModel({
+    const { model, metadata, callbacks } = await createOpenAIModel({
       settings: payload.settings,
       helpers,
       payload,
@@ -48,7 +48,8 @@ export const generateMessage: Action<
       personalizationInput,
       stakeholder,
       language,
-      metadata
+      metadata,
+      callbacks
     })
 
     // 4. Format and return results

@@ -2,6 +2,7 @@ import { parser } from './parser'
 import { systemPrompt } from './prompt'
 import { type ChatOpenAI } from '@langchain/openai'
 import { type AIActionMetadata } from '../../../../../../src/lib/llm/openai/types'
+import type { BaseCallbackHandler } from "@langchain/core/callbacks/base"
 
 /**
  * Generates a personalized message using LLM with retry logic
@@ -12,6 +13,7 @@ import { type AIActionMetadata } from '../../../../../../src/lib/llm/openai/type
  * @param stakeholder - Target recipient (e.g., Patient, Clinician)
  * @param language - Message language
  * @param metadata - Tracking info for LangSmith
+ * @param callbacks - Optional callbacks for LangChain
  * @returns Generated subject and message
  */
 export const generateMessageWithLLM = async ({
@@ -21,6 +23,7 @@ export const generateMessageWithLLM = async ({
   stakeholder,
   language,
   metadata,
+  callbacks,
 }: {
   model: ChatOpenAI
   communicationObjective: string
@@ -28,6 +31,7 @@ export const generateMessageWithLLM = async ({
   stakeholder: string
   language: string
   metadata: AIActionMetadata
+  callbacks?: BaseCallbackHandler[]
 }): Promise<{ subject: string; message: string }> => {
   // 1. Prepare prompt with inputs
   const prompt = await systemPrompt.format({
@@ -50,7 +54,7 @@ export const generateMessageWithLLM = async ({
     try {
       const generated_message = await structured_output_chain.invoke(
         prompt,
-        { metadata, runName: 'ShellyGenerateMessage' }
+        { metadata, runName: 'ShellyGenerateMessage', callbacks }
       )
       subject = generated_message.subject ?? ''
       message = generated_message.message ?? ''

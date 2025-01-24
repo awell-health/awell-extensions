@@ -40,7 +40,7 @@ export const findAppointmentsByPrompt: Action<
     }
 
     try {
-      const { model, metadata } = await createOpenAIModel({
+      const { model, metadata, callbacks } = await createOpenAIModel({
         settings: payload.settings,
         helpers,
         payload,
@@ -51,6 +51,7 @@ export const findAppointmentsByPrompt: Action<
         appointments,
         prompt,
         metadata,
+        callbacks
       })
 
       const selectedAppointments = appointments.filter(

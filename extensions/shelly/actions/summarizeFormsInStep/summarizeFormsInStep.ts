@@ -27,12 +27,13 @@ export const summarizeFormsInStep: Action<
     const { summaryFormat, language } = FieldsValidationSchema.parse(payload.fields)
     const pathway = payload.pathway
 
-    // 2. Initialize OpenAI model with metadata
-    const { model, metadata } = await createOpenAIModel({
+    // 2. Initialize OpenAI model with hideDataForTracing enabled
+    const { model, metadata, callbacks } = await createOpenAIModel({
       settings: payload.settings,
       helpers,
       payload,
-      modelType: OPENAI_MODELS.GPT4o
+      modelType: OPENAI_MODELS.GPT4o,
+      hideDataForTracing: true  // Hide input and output data when tracing
     })
     
     // Fetch all forms in the current step
@@ -54,7 +55,8 @@ export const summarizeFormsInStep: Action<
       summaryFormat, 
       language,
       disclaimerMessage: DISCLAIMER_MSG_FORM,
-      metadata
+      metadata,
+      callbacks  // Add callbacks here
     })
     
     // Disclaimer is now handled within summarizeFormWithLLM

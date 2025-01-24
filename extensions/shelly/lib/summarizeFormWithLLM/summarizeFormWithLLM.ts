@@ -1,6 +1,7 @@
 import { systemPromptBulletPoints, systemPromptTextParagraph } from './prompt'
 import { type ChatOpenAI } from '@langchain/openai'
 import { type AIActionMetadata } from '../../../../src/lib/llm/openai/types'
+import type { BaseCallbackHandler } from "@langchain/core/callbacks/base"
 
 /**
  * Uses LLM to summarize form data in a specified format and language.
@@ -26,6 +27,7 @@ export const summarizeFormWithLLM = async ({
   language,
   disclaimerMessage,
   metadata,
+  callbacks,
 }: {
   model: ChatOpenAI
   formData: string
@@ -33,6 +35,7 @@ export const summarizeFormWithLLM = async ({
   language: string
   disclaimerMessage: string
   metadata: AIActionMetadata
+  callbacks?: BaseCallbackHandler[]
 }): Promise<string> => {
   const systemPrompt = summaryFormat === 'Bullet-points' ? systemPromptBulletPoints : 
                       summaryFormat === 'Text paragraph' ? systemPromptTextParagraph :
@@ -47,7 +50,11 @@ export const summarizeFormWithLLM = async ({
   try {
     const result = await model.invoke(
       prompt,
-      { metadata, runName: 'ShellySummarizeForm' }
+      { 
+        metadata, 
+        runName: 'ShellySummarizeForm',
+        callbacks
+      }
     )
 
     return result.content as string

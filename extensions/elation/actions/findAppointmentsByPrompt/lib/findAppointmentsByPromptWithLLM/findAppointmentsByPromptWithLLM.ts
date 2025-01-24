@@ -1,5 +1,6 @@
 import { type ChatOpenAI } from '@langchain/openai'
 import { type AIActionMetadata } from '../../../../../../src/lib/llm/openai/types'
+import type { BaseCallbackHandler } from "@langchain/core/callbacks/base"
 import { systemPrompt } from './prompt'
 import { parser, type AppointmentsFromAI } from './parser'
 import { type AppointmentResponse } from '../../../../types'
@@ -9,6 +10,7 @@ interface FindAppointmentsByPromptWithLLMProps {
   appointments: AppointmentResponse[]
   prompt: string
   metadata: AIActionMetadata
+  callbacks?: BaseCallbackHandler[]
 }
 
 export const findAppointmentsByPromptWithLLM = async ({
@@ -16,6 +18,7 @@ export const findAppointmentsByPromptWithLLM = async ({
   appointments,
   prompt,
   metadata,
+  callbacks,
 }: FindAppointmentsByPromptWithLLMProps): Promise<AppointmentsFromAI> => {
   const chain = model.pipe(parser)
 
@@ -35,7 +38,11 @@ export const findAppointmentsByPromptWithLLM = async ({
         appointments: formattedAppointments,
         prompt,
       }),
-      { metadata, runName: 'ElationFindAppointmentsByPrompt' }
+      { 
+        metadata, 
+        runName: 'ElationFindAppointmentsByPrompt',
+        callbacks
+      }
     )
 
     return {

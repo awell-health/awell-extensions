@@ -36,11 +36,12 @@ export const summarizeForm: Action<
     const { summaryFormat, language } = FieldsValidationSchema.parse(payload.fields)
 
     // 2. Initialize OpenAI model with metadata
-    const { model, metadata } = await createOpenAIModel({
+    const { model, metadata, callbacks } = await createOpenAIModel({
       settings: payload.settings,
       helpers,
       payload,
-      modelType: OPENAI_MODELS.GPT4o
+      modelType: OPENAI_MODELS.GPT4o,
+      hideDataForTracing: true // Hide input and output data when tracing
     })
 
     // 3. Get form data
@@ -62,7 +63,8 @@ export const summarizeForm: Action<
       summaryFormat,
       language,
       disclaimerMessage: DISCLAIMER_MSG_FORM,
-      metadata
+      metadata,
+      callbacks
     })
 
     // 5. Format and return results

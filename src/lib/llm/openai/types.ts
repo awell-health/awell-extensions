@@ -1,7 +1,6 @@
 import type { ChatOpenAI } from '@langchain/openai'
 import type { OPENAI_MODELS } from './constants'
-import { type Pathway, type Patient } from '@awell-health/extensions-core'
-import { type Activity } from '@awell-health/extensions-core/dist/types/Activity'
+import type { BaseCallbackHandler } from "@langchain/core/callbacks/base"
 
 // This ensures modelType only accepts the exact values from OPENAI_MODELS
 export type OpenAIModelType = typeof OPENAI_MODELS[keyof typeof OPENAI_MODELS]
@@ -61,4 +60,5 @@ export interface OpenAIModelConfig {
     activity_id: string
     tenant_id: string
   }
+  callbacks?: BaseCallbackHandler[]
 }

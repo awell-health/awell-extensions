@@ -2,16 +2,18 @@ import { type ChatOpenAI } from '@langchain/openai'
 import { type AIActionMetadata } from '../../../../../../src/lib/llm/openai/types'
 import { systemPrompt } from './prompt'
 import { parser, type TagsFromAI } from './parser'
+import type { BaseCallbackHandler } from "@langchain/core/callbacks/base"
 
 interface GetTagsFromLLMProps {
   model: ChatOpenAI
   existingTags: string[]
   prompt: string
   metadata: AIActionMetadata
+  callbacks?: BaseCallbackHandler[]
 }
 
 export const getTagsFromLLM = async (props: GetTagsFromLLMProps): Promise<TagsFromAI> => {
-  const { model, existingTags, prompt, metadata } = props
+  const { model, existingTags, prompt, metadata, callbacks } = props
 
   try {
     const chain = model.pipe(parser)
@@ -19,7 +21,14 @@ export const getTagsFromLLM = async (props: GetTagsFromLLMProps): Promise<TagsFr
       existingTags: JSON.stringify(existingTags),
       prompt
     })
-    const result = await chain.invoke(formattedPrompt, { metadata, runName: 'ElationUpdatePatientTags' })
+    const result = await chain.invoke(
+      formattedPrompt, 
+      { 
+        metadata, 
+        runName: 'ElationUpdatePatientTags',
+        callbacks
+      }
+    )
 
     return {
       validatedTags: result.updatedTags,

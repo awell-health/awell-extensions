@@ -1,6 +1,7 @@
 import { systemPrompt } from './prompt'
 import { type ChatOpenAI } from '@langchain/openai'
 import { type AIActionMetadata } from '../../../../../../src/lib/llm/openai/types'
+import type { BaseCallbackHandler } from "@langchain/core/callbacks/base"
 
 /**
  * Uses LLM to summarize care flow activities.
@@ -24,12 +25,14 @@ export const summarizeCareFlowWithLLM = async ({
   stakeholder,
   additionalInstructions,
   metadata,
+  callbacks,
 }: {
   model: ChatOpenAI
   careFlowActivities: string
   stakeholder: string
   additionalInstructions: string
   metadata: AIActionMetadata
+  callbacks?: BaseCallbackHandler[]
 }): Promise<string> => {
   const prompt = await systemPrompt.format({
     stakeholder,
@@ -40,7 +43,11 @@ export const summarizeCareFlowWithLLM = async ({
   try {
     const response = await model.invoke(
       prompt,
-      { metadata, runName: 'ShellySummarizeCareFlow' }
+      { 
+        metadata, 
+        runName: 'ShellySummarizeCareFlow',
+        callbacks
+      }
     )
     return response.content as string
   } catch (error) {

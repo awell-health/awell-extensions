@@ -33,25 +33,26 @@ export const categorizeMessage: Action<
     const { message, categories } = FieldsValidationSchema.parse(payload.fields)
 
     // 2. Initialize OpenAI model with metadata
-    const { model, metadata } = await createOpenAIModel({
+    const { model, metadata, callbacks } = await createOpenAIModel({
       settings: payload.settings,
       helpers,
       payload,
-      modelType: OPENAI_MODELS.GPT4oMini // task is simple and we don't need a more powerful model
+      modelType: OPENAI_MODELS.GPT4oMini,
     })
 
     // 3. Perform categorization
-    const { category, explanation } = await categorizeMessageWithLLM({
+    const result = await categorizeMessageWithLLM({
       model,
       message,
       categories,
-      metadata
+      metadata,
+      callbacks
     })
 
     // 4. Format and return results
-    const explanationHtml = await markdownToHtml(explanation)
+    const explanationHtml = await markdownToHtml(result.explanation)
     await onComplete({
-      data_points: { category, explanation: explanationHtml }
+      data_points: { category: result.category, explanation: explanationHtml }
     })
   },
 }

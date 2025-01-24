@@ -26,7 +26,7 @@ export const summarizeCareFlow: Action<
     const pathway = payload.pathway
 
     // 2. Initialize OpenAI model with metadata
-    const { model, metadata } = await createOpenAIModel({
+    const { model, metadata, callbacks } = await createOpenAIModel({
       settings: payload.settings,
       helpers,
       payload,
@@ -81,7 +81,8 @@ export const summarizeCareFlow: Action<
       ),
       stakeholder,
       additionalInstructions,
-      metadata
+      metadata,
+      callbacks
     })
 
     const htmlSummary = await markdownToHtml(

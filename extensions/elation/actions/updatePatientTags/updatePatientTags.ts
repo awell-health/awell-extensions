@@ -37,8 +37,8 @@ export const updatePatientTags: Action<
     const { tags } = await api.getPatient(patientId)
     const existingTags = tags ?? []
 
-    // 3. Initialize OpenAI model with metadata
-    const { model, metadata } = await createOpenAIModel({
+    // 3. Initialize OpenAI model with metadata and callbacks
+    const { model, metadata, callbacks } = await createOpenAIModel({
       settings: payload.settings,
       helpers,
       payload,
@@ -50,7 +50,8 @@ export const updatePatientTags: Action<
       model,
       existingTags,
       prompt,
-      metadata
+      metadata,
+      callbacks
     })
 
     // 5. Update tags in Elation

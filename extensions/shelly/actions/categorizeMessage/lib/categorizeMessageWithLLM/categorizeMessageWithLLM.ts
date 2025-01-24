@@ -2,6 +2,7 @@ import { parser } from './parser'
 import { systemPrompt } from './prompt'
 import { type ChatOpenAI } from '@langchain/openai'
 import { type AIActionMetadata } from '../../../../../../src/lib/llm/openai/types'
+import type { BaseCallbackHandler } from "@langchain/core/callbacks/base"
 
 /**
  * Uses LLM to categorize a message into predefined categories.
@@ -24,11 +25,13 @@ export const categorizeMessageWithLLM = async ({
   message,
   categories,
   metadata,
+  callbacks,
 }: {
   model: ChatOpenAI
   message: string
   categories: string[]
-  metadata: AIActionMetadata  // Using dedicated metadata type
+  metadata: AIActionMetadata
+  callbacks?: BaseCallbackHandler[]
 }): Promise<{ category: string; explanation: string }> => {
   const prompt = await systemPrompt.format({
     categories: categories.concat('None').join(', '),
@@ -41,8 +44,7 @@ export const categorizeMessageWithLLM = async ({
   try {
     result = await chain.invoke(
       prompt,
-      // the following is used in LangSmith tracing
-      { metadata, runName: 'ShellyCategorizeMessage' }
+      { metadata, runName: 'ShellyCategorizeMessage', callbacks }
     )
   } catch (error) {
     throw new Error(

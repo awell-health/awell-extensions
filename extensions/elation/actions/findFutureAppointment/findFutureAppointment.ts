@@ -41,8 +41,8 @@ export const findFutureAppointment: Action<
       return
     }
 
-    // 3. Initialize OpenAI model with metadata
-    const { model, metadata } = await createOpenAIModel({
+    // 3. Initialize OpenAI model with metadata and callbacks
+    const { model, metadata, callbacks } = await createOpenAIModel({
       settings: payload.settings,
       helpers,
       payload,
@@ -54,7 +54,8 @@ export const findFutureAppointment: Action<
       model,
       appointments,
       prompt,
-      metadata
+      metadata,
+      callbacks
     })
 
     const matchedAppointmentId = AppointmentIdSchema.parse(appointmentId)
