@@ -20,7 +20,10 @@ jest.mock('../../../../src/lib/llm/openai/createOpenAIModel', () => ({
     metadata: {
       care_flow_definition_id: 'whatever',
       care_flow_id: 'test-flow-id',
-      activity_id: 'test-activity-id'
+      activity_id: 'test-activity-id',
+      tenant_id: '123',
+      org_id: '123',
+      org_slug: 'org-slug'
     }
   })
 }))

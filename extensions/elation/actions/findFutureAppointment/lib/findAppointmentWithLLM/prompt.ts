@@ -9,7 +9,7 @@ export const systemPrompt = ChatPromptTemplate.fromTemplate(`
   - Think like a clinician. In other words, "Rx" should match a prescription appointment or follow-up related to a prescription.
   - If no appointment exists that obviously matches the instructions, that's a perfectly acceptable outcome.
   - If multiple appointments exist that match the instructions, you should return the first one.
-  - Return your response in the following format:
+  - Return your response in the following JSON format:
   {format_instructions}
 
   Input array: {appointments}

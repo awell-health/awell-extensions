@@ -18,4 +18,5 @@ Instruction:
 
 Output a JSON object with the following keys:
 1. appointmentIds: array of numbers representing appointment IDs that match the instructions (or an empty array if no appointments exist that match the instructions).
-2. explanation: A readable explanation of how the appointments were found and why. Or, if no appointments exist that match the instructions, an explanation of why.`) 
+2. explanation: A readable explanation of how the appointments were found and why. Or, if no appointments exist that match the instructions, an explanation of why.`
+) 

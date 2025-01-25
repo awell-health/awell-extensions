@@ -5,43 +5,61 @@ This module provides standardized configuration and creation of OpenAI models th
 ## Overview
 
 The OpenAI Models module simplifies working with OpenAI's language models by providing:
-- Standardized model configuration and initialization
+- Standardized model configuration and initialization 
 - Consistent API key management
-- Built-in error handling and retries
-- Automatic metadata collection for tracing
+- Built-in error handling and automatic retries
+- Comprehensive metadata collection and tracing
 
 ## Available Models
 
 Currently supported models:
-- `gpt-4o` - Full GPT-4 model for complex tasks
-- `gpt-4o-mini` - Smaller, faster GPT-4 variant for simpler tasks
+- `gpt-4` - Latest GPT-4 model for complex reasoning and generation tasks
+- `gpt-4-turbo` - Optimized GPT-4 variant balancing performance and speed
 
-## Implementation Details
+These models should be sufficient for most use cases. If additional models are needed, they can be easily added by expanding the model definitions in `constants.ts`. Note that when adding new models, always specify a model snapshot version (e.g. `gpt-4-0613`) rather than just the base model name to ensure consistent behavior over time.
 
-### Basic Usage
 
-### API Key Management
 
-The module handles API key resolution in the following order:
-1. Custom API key from extension settings (`settings.openAiApiKey`)
-2. Default Awell API key (`helpers.getOpenAIConfig().apiKey`)
-3. Throws error if no key is available
+## Usage Guide
 
-### Standard Configuration
+### API Key Configuration
 
-All models are configured with these default settings:
-- `temperature: 0` - For deterministic outputs
-- `maxRetries: 3` - Automatic retry on failures
-- `timeout: 10000` - 10 second timeout
+API keys are resolved in the following priority order:
+1. Extension-specific key from settings (`settings.openAiApiKey`)
+2. Default Awell API key (`helpers.getOpenAIConfig().apiKey`) 
+3. Error thrown if no valid key found
 
-See `constants.ts` for current values.
+### Default Settings
 
-### Metadata Handling
+All models use these production-optimized defaults:
+- `temperature: 0` - Consistent, deterministic outputs
+- `maxRetries: 3` - Automatic retry on transient failures
+- `timeout: 10000ms` - 10 second timeout for responses
 
-The module automatically collects and includes tracing metadata:
-- `care_flow_definition_id` - Definition ID of the care flow
-- `care_flow_id` - ID of the current care flow
-- `activity_id` - ID of the current activity
-- #TODO: add tenant information
+Additional configuration options available in `constants.ts`.
 
-This metadata enables proper tracing and monitoring of LLM calls.
+### Metadata & Tracing
+
+The module automatically captures context metadata including:
+- Care flow information (definition ID, flow ID)
+- Activity context (activity ID)
+- Organization details (tenant ID, org ID/slug)
+
+This enables:
+- Request tracing and monitoring
+- Usage analytics and optimization
+- Cost allocation and tracking
+
+### Privacy & Security 
+
+LangSmith tracing is enabled by default but can be configured:
+- Set `hideDataForTracing: true` to mask sensitive inputs/outputs
+- Metadata and usage metrics still collected
+- Helps balance monitoring needs with data privacy
+
+### Error Handling
+
+The module provides robust error handling:
+- Automatic retries for transient failures
+- Clear error messages for common issues
+- Fallback behavior for degraded scenarios
