@@ -18,9 +18,7 @@ describe('Shelly - Review medication extraction', () => {
             'https://res.cloudinary.com/da7x4rzl4/image/upload/v1726601981/hackathon-sep-2024/seqn5izsagvs5nlferlf.png',
           medicationData: JSON.stringify({}),
         },
-        settings: {
-          openAiApiKey: 'a',
-        },
+        settings: {},
       }),
       onComplete,
       onError,

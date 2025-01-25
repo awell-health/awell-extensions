@@ -1,12 +1,11 @@
 // import { AwellSdk } from '@awell-health/awell-sdk'
 import { Category, type Action } from '@awell-health/extensions-core'
 import { validatePayloadAndCreateSdk } from '../../lib'
-import { type settings } from '../../settings'
 import { fields, dataPoints, FieldsValidationSchema } from './config'
 
 export const reviewMedicationExtraction: Action<
   typeof fields,
-  typeof settings,
+  Record<string, never>,
   keyof typeof dataPoints
 > = {
   key: 'reviewMedicationExtraction',

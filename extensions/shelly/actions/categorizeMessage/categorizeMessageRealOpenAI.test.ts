@@ -37,7 +37,7 @@ describe.skip('categorizeMessage - Real OpenAI calls', () => {
         message: 'I would like to schedule an appointment for next week.',
         categories: 'Appointment Scheduling,Medication Questions,Administrative Assistance,Feedback or Complaints',
       },
-      settings: {}, // Remove openAiApiKey from settings to use default
+      settings: {},
       pathway: {
         id: 'test-pathway-id',
         definition_id: 'test-def-id'
@@ -72,7 +72,7 @@ describe.skip('categorizeMessage - Real OpenAI calls', () => {
         categories:
           'Appointment Scheduling,Medication Questions,Administrative Assistance,Feedback or Complaints',
       },
-      settings: {}, // Remove openAiApiKey from settings to use default
+      settings: {},
       pathway: {
         id: 'test-pathway-id',
         definition_id: 'test-def-id',

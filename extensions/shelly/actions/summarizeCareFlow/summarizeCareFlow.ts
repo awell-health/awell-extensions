@@ -1,5 +1,4 @@
 import { Category, type Action } from '@awell-health/extensions-core'
-import { type settings } from '../../settings'
 import { fields, dataPoints, FieldsValidationSchema } from './config'
 import { DISCLAIMER_MSG } from '../../lib/constants'
 import { summarizeCareFlowWithLLM } from './lib/summarizeCareFlowWithLLM'
@@ -9,7 +8,7 @@ import { OPENAI_MODELS } from '../../../../src/lib/llm/openai/constants'
 
 export const summarizeCareFlow: Action<
   typeof fields,
-  typeof settings,
+  Record<string, never>,
   keyof typeof dataPoints
 > = {
   key: 'summarizeCareFlow',

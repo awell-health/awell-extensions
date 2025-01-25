@@ -2,7 +2,6 @@ import { Category, type Action } from '@awell-health/extensions-core'
 import { summarizeFormWithLLM } from '../../lib/summarizeFormWithLLM'
 import { createOpenAIModel } from '../../../../src/lib/llm/openai/createOpenAIModel'
 import { OPENAI_MODELS } from '../../../../src/lib/llm/openai/constants'
-import { type settings } from '../../settings'
 import { fields, dataPoints, FieldsValidationSchema } from './config'
 import { getFormResponseText } from '../../lib/getFormResponseText'
 import { getLatestFormInCurrentStep } from '../../../../src/lib/awell'
@@ -20,7 +19,7 @@ import { DISCLAIMER_MSG_FORM } from '../../lib/constants'
  */
 export const summarizeForm: Action<
   typeof fields,
-  typeof settings,
+  Record<string, never>,
   keyof typeof dataPoints
 > = {
   key: 'summarizeForm',

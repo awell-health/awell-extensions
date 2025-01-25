@@ -2,7 +2,6 @@ import { Category, type Action } from '@awell-health/extensions-core'
 import { categorizeMessageWithLLM } from './lib/categorizeMessageWithLLM'
 import { createOpenAIModel } from '../../../../src/lib/llm/openai/createOpenAIModel'
 import { OPENAI_MODELS } from '../../../../src/lib/llm/openai/constants'
-import { type settings } from '../../settings'
 import { fields, dataPoints, FieldsValidationSchema } from './config'
 import { markdownToHtml } from '../../../../src/utils'
 
@@ -17,7 +16,7 @@ import { markdownToHtml } from '../../../../src/utils'
  */
 export const categorizeMessage: Action<
   typeof fields,
-  typeof settings,
+  Record<string, never>,
   keyof typeof dataPoints
 > = {
   key: 'categorizeMessage',

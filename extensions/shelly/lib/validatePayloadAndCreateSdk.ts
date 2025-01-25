@@ -5,7 +5,6 @@ import {
   type Patient,
 } from '@awell-health/extensions-core'
 import z from 'zod'
-import { SettingsValidationSchema } from '../settings'
 import { type Activity } from '@awell-health/extensions-core/dist/types/Activity'
 
 type ValidatePayloadAndCreateSdk = <
@@ -16,7 +15,7 @@ type ValidatePayloadAndCreateSdk = <
   payload: P
 }) => Promise<{
   fields: z.infer<(typeof args)['fieldsSchema']>
-  settings: z.infer<typeof SettingsValidationSchema>
+  settings: Record<string, never>
   pathway: Pathway
   patient: Patient
   activity: Activity
@@ -29,7 +28,7 @@ export const validatePayloadAndCreateSdk: ValidatePayloadAndCreateSdk = async ({
   const { settings, fields } = validate({
     schema: z.object({
       fields: fieldsSchema,
-      settings: SettingsValidationSchema,
+      settings: z.object({}).strict(),
       pathway: z.object({
         id: z.string(),
         definition_id: z.string(),

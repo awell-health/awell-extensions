@@ -1,6 +1,5 @@
 import { Category, type Action } from '@awell-health/extensions-core'
 import { generateMessageWithLLM } from './lib/generateMessageWithLLM'
-import { type settings } from '../../settings'
 import { fields, dataPoints, FieldsValidationSchema } from './config'
 import { markdownToHtml } from '../../../../src/utils'
 import { createOpenAIModel } from '../../../../src/lib/llm/openai/createOpenAIModel'
@@ -17,7 +16,7 @@ import { OPENAI_MODELS } from '../../../../src/lib/llm/openai/constants'
  */
 export const generateMessage: Action<
   typeof fields,
-  typeof settings,
+  Record<string, never>,
   keyof typeof dataPoints
 > = {
   key: 'generateMessage',

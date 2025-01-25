@@ -1,13 +1,12 @@
 import { Category, type Action } from '@awell-health/extensions-core'
 import { validatePayloadAndCreateSdk } from '../../lib'
-import { type settings } from '../../settings'
 import { fields, dataPoints, FieldsValidationSchema } from './config'
 import { MedicationExtractorApi } from '../../lib/api'
 import { FetchError } from '../../lib/api/medicationExtractorApi'
 
 export const medicationFromImage: Action<
   typeof fields,
-  typeof settings,
+  Record<string, never>,
   keyof typeof dataPoints
 > = {
   key: 'medicationFromImage',

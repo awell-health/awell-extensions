@@ -4,7 +4,6 @@ import {
   AuthorType,
 } from '@awell-health/extensions-core'
 import actions from './actions'
-import { settings } from './settings'
 
 export const shelly: Extension = {
   key: 'shelly',
@@ -16,6 +15,6 @@ export const shelly: Extension = {
   author: {
     authorType: AuthorType.AWELL,
   },
-  settings,
+  settings: {},
   actions,
 }

@@ -1,5 +1,4 @@
 import { Category, type Action } from '@awell-health/extensions-core'
-import { type settings } from '../../settings'
 import { fields, dataPoints, FieldsValidationSchema } from './config'
 import { getResponsesForAllForms } from '../../lib/getFormResponseText'
 import { summarizeFormWithLLM } from '../../lib/summarizeFormWithLLM'
@@ -12,7 +11,7 @@ import { OPENAI_MODELS } from '../../../../src/lib/llm/openai/constants'
 
 export const summarizeFormsInStep: Action<
   typeof fields,
-  typeof settings,
+  Record<string, never>,
   keyof typeof dataPoints
 > = {
   key: 'summarizeFormsInStep',
