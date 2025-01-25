@@ -47,6 +47,8 @@ describe('Elation - Close care gap', () => {
       definition_id: '123',
       id: '123',
       tenant_id: '123',
+      org_id: '123',
+      org_slug: 'org-slug',
     },
     patient: {
       id: '123',
