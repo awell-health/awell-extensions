@@ -4,11 +4,10 @@ import {
   AuthorType,
 } from '@awell-health/extensions-core'
 import actions from './actions'
-import { settings } from './settings'
 
 export const shelly: Extension = {
   key: 'shelly',
-  title: 'Shelly (experimental)',
+  title: 'Shelly (Beta)',
   description: 'Library of AI-powered actions',
   icon_url:
     'https://res.cloudinary.com/da7x4rzl4/image/upload/v1726037275/Awell%20Extensions/shelly_logo.png',
@@ -16,6 +15,6 @@ export const shelly: Extension = {
   author: {
     authorType: AuthorType.AWELL,
   },
-  settings,
+  settings: {},
   actions,
 }

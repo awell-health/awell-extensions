@@ -125,6 +125,7 @@ describe('Is patient already enrolled in care flow action', () => {
         pathway: {
           id: 'pathway-instance-id-1',
           definition_id: 'pathway-definition-1',
+          tenant_id: '123',
         },
         fields: {
           pathwayStatus: '', // By default, only active care flows
@@ -167,6 +168,7 @@ describe('Is patient already enrolled in care flow action', () => {
         pathway: {
           id: 'pathway-instance-id-1',
           definition_id: 'pathway-definition-1',
+          tenant_id: '123',
         },
         fields: {
           pathwayStatus: undefined, // By default, only active care flows
@@ -215,6 +217,7 @@ describe('Is patient already enrolled in care flow action', () => {
         pathway: {
           id: 'pathway-instance-id-1',
           definition_id: 'pathway-definition-1',
+          tenant_id: '123',
         },
         fields: {
           pathwayStatus: `${PathwayStatus.Completed}`,
@@ -318,6 +321,7 @@ describe('Is patient already enrolled in care flow action', () => {
         pathway: {
           id: 'pathway-instance-id-1',
           definition_id: 'pathway-definition-1',
+          tenant_id: '123',
         },
         fields: {
           pathwayStatus: `${PathwayStatus.Active}, ${PathwayStatus.Completed}`,

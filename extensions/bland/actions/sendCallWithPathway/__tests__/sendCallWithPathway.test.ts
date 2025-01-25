@@ -47,6 +47,7 @@ describe('Bland.ai - Send call', () => {
         pathway: {
           id: 'pathway-id',
           definition_id: 'pathway-definition-id',
+          tenant_id: '123',
         },
         activity: {
           id: 'activity-id',

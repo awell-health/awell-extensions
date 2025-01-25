@@ -1,54 +1,57 @@
 import { Category, type Action } from '@awell-health/extensions-core'
 import { categorizeMessageWithLLM } from './lib/categorizeMessageWithLLM'
-import { validatePayloadAndCreateSdk } from '../../lib'
-import { type settings } from '../../settings'
+import { createOpenAIModel } from '../../../../src/lib/llm/openai/createOpenAIModel'
+import { OPENAI_MODELS } from '../../../../src/lib/llm/openai/constants'
 import { fields, dataPoints, FieldsValidationSchema } from './config'
 import { markdownToHtml } from '../../../../src/utils'
 
+/**
+ * Awell Action: Message Categorization
+ * 
+ * Takes a message and predefined categories as input, uses LLM to:
+ * 1. Determine the most appropriate category
+ * 2. Provide explanation for the categorization
+ * 
+ * @returns category and HTML-formatted explanation
+ */
 export const categorizeMessage: Action<
   typeof fields,
-  typeof settings,
+  Record<string, never>,
   keyof typeof dataPoints
 > = {
   key: 'categorizeMessage',
   category: Category.WORKFLOW,
   title: 'Categorize Message',
-  description:
-    'Categorize the input message into set of predefined categories and provides explanation.',
+  description: 'Categorizes messages into predefined categories with explanation.',
   fields,
   previewable: false,
   dataPoints,
+
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
-    const {
-      ChatModelGPT4oMini,
-      fields: { categories, message },
-    } = await validatePayloadAndCreateSdk({
-      fieldsSchema: FieldsValidationSchema,
+    // 1. Validate input fields
+    const { message, categories } = FieldsValidationSchema.parse(payload.fields)
+
+    // 2. Initialize OpenAI model with metadata
+    const { model, metadata, callbacks } = await createOpenAIModel({
+      settings: payload.settings,
+      helpers,
       payload,
+      modelType: OPENAI_MODELS.GPT4oMini,
     })
 
-    try {
-      const categorization_result = await categorizeMessageWithLLM({
-        ChatModelGPT4oMini,
-        message,
-        categories,
-      })
+    // 3. Perform categorization
+    const result = await categorizeMessageWithLLM({
+      model,
+      message,
+      categories,
+      metadata,
+      callbacks
+    })
 
-      const category = categorization_result.category
-      const explanationHtml = await markdownToHtml(
-        categorization_result.explanation
-      )
-
-      await onComplete({
-        data_points: {
-          category,
-          explanation: explanationHtml,
-        },
-      })
-    } catch (error) {
-      console.error('Error categorizing message:', error)
-      // Catch in extention server
-      throw new Error('Error categorizing message')
-    }
+    // 4. Format and return results
+    const explanationHtml = await markdownToHtml(result.explanation)
+    await onComplete({
+      data_points: { category: result.category, explanation: explanationHtml }
+    })
   },
 }

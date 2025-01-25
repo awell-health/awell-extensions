@@ -28,7 +28,7 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./",\
         "packageDependencies": [\
           ["@awell-health/awell-sdk", "npm:0.1.20"],\
-          ["@awell-health/extensions-core", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:1.0.11"],\
+          ["@awell-health/extensions-core", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:1.0.16"],\
           ["@awell-health/healthie-sdk", "npm:0.1.1"],\
           ["@dropbox/sign", "npm:1.8.0"],\
           ["@faker-js/faker", "npm:8.4.1"],\
@@ -39,7 +39,7 @@ const RAW_RUNTIME_STATE =
           ["@graphql-tools/apollo-engine-loader", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:7.3.26"],\
           ["@graphql-typed-document-node/core", "virtual:59c276aa517e7eece9b42c9ca677cfc463202227c49b72eb9628ab5409de25886e6a64d32aaab7e2700a825599bd4032ab3aba0073f8dc2a6b74ffd967e262ef#npm:3.2.0"],\
           ["@hubspot/api-client", "npm:11.2.0"],\
-          ["@langchain/core", "npm:0.3.3"],\
+          ["@langchain/core", "npm:0.3.33"],\
           ["@langchain/openai", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:0.3.0"],\
           ["@mailchimp/mailchimp_transactional", "npm:1.0.59"],\
           ["@medplum/core", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:3.2.14"],\
@@ -94,7 +94,8 @@ const RAW_RUNTIME_STATE =
           ["jsdom", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:26.0.0"],\
           ["jsonpath", "npm:1.1.1"],\
           ["jsonwebtoken", "npm:9.0.2"],\
-          ["langchain", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:0.3.2"],\
+          ["langchain", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:0.3.12"],\
+          ["langsmith", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:0.3.2"],\
           ["libphonenumber-js", "npm:1.11.8"],\
           ["lint-staged", "npm:15.2.11"],\
           ["lodash", "npm:4.17.21"],\
@@ -221,7 +222,7 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["@awell-health/awell-extensions", "workspace:."],\
           ["@awell-health/awell-sdk", "npm:0.1.20"],\
-          ["@awell-health/extensions-core", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:1.0.11"],\
+          ["@awell-health/extensions-core", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:1.0.16"],\
           ["@awell-health/healthie-sdk", "npm:0.1.1"],\
           ["@dropbox/sign", "npm:1.8.0"],\
           ["@faker-js/faker", "npm:8.4.1"],\
@@ -232,7 +233,7 @@ const RAW_RUNTIME_STATE =
           ["@graphql-tools/apollo-engine-loader", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:7.3.26"],\
           ["@graphql-typed-document-node/core", "virtual:59c276aa517e7eece9b42c9ca677cfc463202227c49b72eb9628ab5409de25886e6a64d32aaab7e2700a825599bd4032ab3aba0073f8dc2a6b74ffd967e262ef#npm:3.2.0"],\
           ["@hubspot/api-client", "npm:11.2.0"],\
-          ["@langchain/core", "npm:0.3.3"],\
+          ["@langchain/core", "npm:0.3.33"],\
           ["@langchain/openai", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:0.3.0"],\
           ["@mailchimp/mailchimp_transactional", "npm:1.0.59"],\
           ["@medplum/core", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:3.2.14"],\
@@ -287,7 +288,8 @@ const RAW_RUNTIME_STATE =
           ["jsdom", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:26.0.0"],\
           ["jsonpath", "npm:1.1.1"],\
           ["jsonwebtoken", "npm:9.0.2"],\
-          ["langchain", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:0.3.2"],\
+          ["langchain", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:0.3.12"],\
+          ["langsmith", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:0.3.2"],\
           ["libphonenumber-js", "npm:1.11.8"],\
           ["lint-staged", "npm:15.2.11"],\
           ["lodash", "npm:4.17.21"],\
@@ -330,17 +332,17 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["@awell-health/extensions-core", [\
-      ["npm:1.0.11", {\
-        "packageLocation": "./.yarn/cache/@awell-health-extensions-core-npm-1.0.11-992538064c-6c6821d6ce.zip/node_modules/@awell-health/extensions-core/",\
+      ["npm:1.0.16", {\
+        "packageLocation": "./.yarn/cache/@awell-health-extensions-core-npm-1.0.16-a3dc33c4e1-1910b7bff2.zip/node_modules/@awell-health/extensions-core/",\
         "packageDependencies": [\
-          ["@awell-health/extensions-core", "npm:1.0.11"]\
+          ["@awell-health/extensions-core", "npm:1.0.16"]\
         ],\
         "linkType": "SOFT"\
       }],\
-      ["virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:1.0.11", {\
-        "packageLocation": "./.yarn/__virtual__/@awell-health-extensions-core-virtual-bf46c3514a/0/cache/@awell-health-extensions-core-npm-1.0.11-992538064c-6c6821d6ce.zip/node_modules/@awell-health/extensions-core/",\
+      ["virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:1.0.16", {\
+        "packageLocation": "./.yarn/__virtual__/@awell-health-extensions-core-virtual-f4cfb936f4/0/cache/@awell-health-extensions-core-npm-1.0.16-a3dc33c4e1-1910b7bff2.zip/node_modules/@awell-health/extensions-core/",\
         "packageDependencies": [\
-          ["@awell-health/extensions-core", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:1.0.11"],\
+          ["@awell-health/extensions-core", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:1.0.16"],\
           ["@awell-health/awell-sdk", "npm:0.1.20"],\
           ["@types/awell-health__awell-sdk", null],\
           ["@types/json-schema", "npm:7.0.15"],\
@@ -1885,6 +1887,15 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./.yarn/cache/@bcoe-v8-coverage-npm-0.2.3-9e27b3c57e-1a1f0e356a.zip/node_modules/@bcoe/v8-coverage/",\
         "packageDependencies": [\
           ["@bcoe/v8-coverage", "npm:0.2.3"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["@cfworker/json-schema", [\
+      ["npm:4.1.0", {\
+        "packageLocation": "./.yarn/cache/@cfworker-json-schema-npm-4.1.0-1cac3ad966-12ee4dd6ef.zip/node_modules/@cfworker/json-schema/",\
+        "packageDependencies": [\
+          ["@cfworker/json-schema", "npm:4.1.0"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -3615,21 +3626,22 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["@langchain/core", [\
-      ["npm:0.3.3", {\
-        "packageLocation": "./.yarn/cache/@langchain-core-npm-0.3.3-1a04ce6427-f355345b8d.zip/node_modules/@langchain/core/",\
+      ["npm:0.3.33", {\
+        "packageLocation": "./.yarn/cache/@langchain-core-npm-0.3.33-279a14e27a-08b99289af.zip/node_modules/@langchain/core/",\
         "packageDependencies": [\
-          ["@langchain/core", "npm:0.3.3"],\
+          ["@langchain/core", "npm:0.3.33"],\
+          ["@cfworker/json-schema", "npm:4.1.0"],\
           ["ansi-styles", "npm:5.2.0"],\
           ["camelcase", "npm:6.3.0"],\
           ["decamelize", "npm:1.2.0"],\
           ["js-tiktoken", "npm:1.0.14"],\
-          ["langsmith", "virtual:1a04ce6427bc5f793ddd295df41f2d75cd9fe4b01c8b66bf3259ba655e1b3f6bb21315a5008e827d1e31de466288548d8af2f85cc04cf596f8dc2f8c4d80a1d8#npm:0.1.59"],\
+          ["langsmith", "virtual:279a14e27acbae61cce777a0571bf20768e2538d628175f2ec5bac44d9c2e3456219c88e945082c046ecb7eca6e0be719d0e7a174a10421eeade635c770c5c0b#npm:0.3.2"],\
           ["mustache", "npm:4.2.0"],\
           ["p-queue", "npm:6.6.2"],\
           ["p-retry", "npm:4.6.2"],\
           ["uuid", "npm:10.0.0"],\
           ["zod", "npm:3.23.8"],\
-          ["zod-to-json-schema", "virtual:1a04ce6427bc5f793ddd295df41f2d75cd9fe4b01c8b66bf3259ba655e1b3f6bb21315a5008e827d1e31de466288548d8af2f85cc04cf596f8dc2f8c4d80a1d8#npm:3.23.3"]\
+          ["zod-to-json-schema", "virtual:279a14e27acbae61cce777a0571bf20768e2538d628175f2ec5bac44d9c2e3456219c88e945082c046ecb7eca6e0be719d0e7a174a10421eeade635c770c5c0b#npm:3.23.3"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -3646,12 +3658,12 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./.yarn/__virtual__/@langchain-openai-virtual-0aa3f78922/0/cache/@langchain-openai-npm-0.3.0-b787e52caa-e84e90ec99.zip/node_modules/@langchain/openai/",\
         "packageDependencies": [\
           ["@langchain/openai", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:0.3.0"],\
-          ["@langchain/core", "npm:0.3.3"],\
+          ["@langchain/core", "npm:0.3.33"],\
           ["@types/langchain__core", null],\
           ["js-tiktoken", "npm:1.0.14"],\
           ["openai", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:4.62.1"],\
           ["zod", "npm:3.23.8"],\
-          ["zod-to-json-schema", "virtual:1a04ce6427bc5f793ddd295df41f2d75cd9fe4b01c8b66bf3259ba655e1b3f6bb21315a5008e827d1e31de466288548d8af2f85cc04cf596f8dc2f8c4d80a1d8#npm:3.23.3"]\
+          ["zod-to-json-schema", "virtual:279a14e27acbae61cce777a0571bf20768e2538d628175f2ec5bac44d9c2e3456219c88e945082c046ecb7eca6e0be719d0e7a174a10421eeade635c770c5c0b#npm:3.23.3"]\
         ],\
         "packagePeers": [\
           "@langchain/core",\
@@ -3668,11 +3680,11 @@ const RAW_RUNTIME_STATE =
         ],\
         "linkType": "SOFT"\
       }],\
-      ["virtual:fd2bc5d6cb09acfc47c9107140e6981c7aa1e56f5b6019484f438aabae6bc70264c584059956fd68eb0db3a9e8f413f56446f7b03aefc6fcf9d897ea312f94d0#npm:0.1.0", {\
-        "packageLocation": "./.yarn/__virtual__/@langchain-textsplitters-virtual-1504dc4b0f/0/cache/@langchain-textsplitters-npm-0.1.0-dcc9543794-87121ec5ad.zip/node_modules/@langchain/textsplitters/",\
+      ["virtual:237cca263a38ec28721a2ca6fe5b98c16a50f76aef1c12cca710b38c8eb787c44acf5b33d88a0d6de6b698f5cff46610cc1997d9a7eafbb5e683fc56fda45a23#npm:0.1.0", {\
+        "packageLocation": "./.yarn/__virtual__/@langchain-textsplitters-virtual-f940a38ff8/0/cache/@langchain-textsplitters-npm-0.1.0-dcc9543794-87121ec5ad.zip/node_modules/@langchain/textsplitters/",\
         "packageDependencies": [\
-          ["@langchain/textsplitters", "virtual:fd2bc5d6cb09acfc47c9107140e6981c7aa1e56f5b6019484f438aabae6bc70264c584059956fd68eb0db3a9e8f413f56446f7b03aefc6fcf9d897ea312f94d0#npm:0.1.0"],\
-          ["@langchain/core", "npm:0.3.3"],\
+          ["@langchain/textsplitters", "virtual:237cca263a38ec28721a2ca6fe5b98c16a50f76aef1c12cca710b38c8eb787c44acf5b33d88a0d6de6b698f5cff46610cc1997d9a7eafbb5e683fc56fda45a23#npm:0.1.0"],\
+          ["@langchain/core", "npm:0.3.33"],\
           ["@types/langchain__core", null],\
           ["js-tiktoken", "npm:1.0.14"]\
         ],\
@@ -6797,6 +6809,16 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./.yarn/cache/concat-map-npm-0.0.1-85a921b7ee-9680699c8e.zip/node_modules/concat-map/",\
         "packageDependencies": [\
           ["concat-map", "npm:0.0.1"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["console-table-printer", [\
+      ["npm:2.12.1", {\
+        "packageLocation": "./.yarn/cache/console-table-printer-npm-2.12.1-a4f4d866aa-37ac91d360.zip/node_modules/console-table-printer/",\
+        "packageDependencies": [\
+          ["console-table-printer", "npm:2.12.1"],\
+          ["simple-wcswidth", "npm:1.0.1"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -11415,37 +11437,41 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["langchain", [\
-      ["npm:0.3.2", {\
-        "packageLocation": "./.yarn/cache/langchain-npm-0.3.2-e30f659f16-e7f2105fc9.zip/node_modules/langchain/",\
+      ["npm:0.3.12", {\
+        "packageLocation": "./.yarn/cache/langchain-npm-0.3.12-114ea77c3f-d56af985b4.zip/node_modules/langchain/",\
         "packageDependencies": [\
-          ["langchain", "npm:0.3.2"]\
+          ["langchain", "npm:0.3.12"]\
         ],\
         "linkType": "SOFT"\
       }],\
-      ["virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:0.3.2", {\
-        "packageLocation": "./.yarn/__virtual__/langchain-virtual-fd2bc5d6cb/0/cache/langchain-npm-0.3.2-e30f659f16-e7f2105fc9.zip/node_modules/langchain/",\
+      ["virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:0.3.12", {\
+        "packageLocation": "./.yarn/__virtual__/langchain-virtual-237cca263a/0/cache/langchain-npm-0.3.12-114ea77c3f-d56af985b4.zip/node_modules/langchain/",\
         "packageDependencies": [\
-          ["langchain", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:0.3.2"],\
+          ["langchain", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:0.3.12"],\
           ["@langchain/anthropic", null],\
           ["@langchain/aws", null],\
+          ["@langchain/cerebras", null],\
           ["@langchain/cohere", null],\
-          ["@langchain/core", "npm:0.3.3"],\
+          ["@langchain/core", "npm:0.3.33"],\
           ["@langchain/google-genai", null],\
           ["@langchain/google-vertexai", null],\
+          ["@langchain/google-vertexai-web", null],\
           ["@langchain/groq", null],\
           ["@langchain/mistralai", null],\
           ["@langchain/ollama", null],\
           ["@langchain/openai", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:0.3.0"],\
-          ["@langchain/textsplitters", "virtual:fd2bc5d6cb09acfc47c9107140e6981c7aa1e56f5b6019484f438aabae6bc70264c584059956fd68eb0db3a9e8f413f56446f7b03aefc6fcf9d897ea312f94d0#npm:0.1.0"],\
+          ["@langchain/textsplitters", "virtual:237cca263a38ec28721a2ca6fe5b98c16a50f76aef1c12cca710b38c8eb787c44acf5b33d88a0d6de6b698f5cff46610cc1997d9a7eafbb5e683fc56fda45a23#npm:0.1.0"],\
           ["@types/axios", null],\
           ["@types/cheerio", null],\
           ["@types/handlebars", null],\
           ["@types/langchain__anthropic", null],\
           ["@types/langchain__aws", null],\
+          ["@types/langchain__cerebras", null],\
           ["@types/langchain__cohere", null],\
           ["@types/langchain__core", null],\
           ["@types/langchain__google-genai", null],\
           ["@types/langchain__google-vertexai", null],\
+          ["@types/langchain__google-vertexai-web", null],\
           ["@types/langchain__groq", null],\
           ["@types/langchain__mistralai", null],\
           ["@types/langchain__ollama", null],\
@@ -11457,7 +11483,7 @@ const RAW_RUNTIME_STATE =
           ["js-tiktoken", "npm:1.0.14"],\
           ["js-yaml", "npm:4.1.0"],\
           ["jsonpointer", "npm:5.0.1"],\
-          ["langsmith", "virtual:1a04ce6427bc5f793ddd295df41f2d75cd9fe4b01c8b66bf3259ba655e1b3f6bb21315a5008e827d1e31de466288548d8af2f85cc04cf596f8dc2f8c4d80a1d8#npm:0.1.59"],\
+          ["langsmith", "virtual:279a14e27acbae61cce777a0571bf20768e2538d628175f2ec5bac44d9c2e3456219c88e945082c046ecb7eca6e0be719d0e7a174a10421eeade635c770c5c0b#npm:0.3.2"],\
           ["openapi-types", "npm:12.1.3"],\
           ["p-retry", "npm:4.6.2"],\
           ["peggy", null],\
@@ -11465,14 +11491,16 @@ const RAW_RUNTIME_STATE =
           ["uuid", "npm:10.0.0"],\
           ["yaml", "npm:2.5.1"],\
           ["zod", "npm:3.23.8"],\
-          ["zod-to-json-schema", "virtual:1a04ce6427bc5f793ddd295df41f2d75cd9fe4b01c8b66bf3259ba655e1b3f6bb21315a5008e827d1e31de466288548d8af2f85cc04cf596f8dc2f8c4d80a1d8#npm:3.23.3"]\
+          ["zod-to-json-schema", "virtual:279a14e27acbae61cce777a0571bf20768e2538d628175f2ec5bac44d9c2e3456219c88e945082c046ecb7eca6e0be719d0e7a174a10421eeade635c770c5c0b#npm:3.23.3"]\
         ],\
         "packagePeers": [\
           "@langchain/anthropic",\
           "@langchain/aws",\
+          "@langchain/cerebras",\
           "@langchain/cohere",\
           "@langchain/core",\
           "@langchain/google-genai",\
+          "@langchain/google-vertexai-web",\
           "@langchain/google-vertexai",\
           "@langchain/groq",\
           "@langchain/mistralai",\
@@ -11482,9 +11510,11 @@ const RAW_RUNTIME_STATE =
           "@types/handlebars",\
           "@types/langchain__anthropic",\
           "@types/langchain__aws",\
+          "@types/langchain__cerebras",\
           "@types/langchain__cohere",\
           "@types/langchain__core",\
           "@types/langchain__google-genai",\
+          "@types/langchain__google-vertexai-web",\
           "@types/langchain__google-vertexai",\
           "@types/langchain__groq",\
           "@types/langchain__mistralai",\
@@ -11501,21 +11531,42 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["langsmith", [\
-      ["npm:0.1.59", {\
-        "packageLocation": "./.yarn/cache/langsmith-npm-0.1.59-2835e67852-9e71c09f63.zip/node_modules/langsmith/",\
+      ["npm:0.3.2", {\
+        "packageLocation": "./.yarn/cache/langsmith-npm-0.3.2-9ce51d8a31-cae13264bf.zip/node_modules/langsmith/",\
         "packageDependencies": [\
-          ["langsmith", "npm:0.1.59"]\
+          ["langsmith", "npm:0.3.2"]\
         ],\
         "linkType": "SOFT"\
       }],\
-      ["virtual:1a04ce6427bc5f793ddd295df41f2d75cd9fe4b01c8b66bf3259ba655e1b3f6bb21315a5008e827d1e31de466288548d8af2f85cc04cf596f8dc2f8c4d80a1d8#npm:0.1.59", {\
-        "packageLocation": "./.yarn/__virtual__/langsmith-virtual-29183b17bd/0/cache/langsmith-npm-0.1.59-2835e67852-9e71c09f63.zip/node_modules/langsmith/",\
+      ["virtual:279a14e27acbae61cce777a0571bf20768e2538d628175f2ec5bac44d9c2e3456219c88e945082c046ecb7eca6e0be719d0e7a174a10421eeade635c770c5c0b#npm:0.3.2", {\
+        "packageLocation": "./.yarn/__virtual__/langsmith-virtual-6ae109b63f/0/cache/langsmith-npm-0.3.2-9ce51d8a31-cae13264bf.zip/node_modules/langsmith/",\
         "packageDependencies": [\
-          ["langsmith", "virtual:1a04ce6427bc5f793ddd295df41f2d75cd9fe4b01c8b66bf3259ba655e1b3f6bb21315a5008e827d1e31de466288548d8af2f85cc04cf596f8dc2f8c4d80a1d8#npm:0.1.59"],\
+          ["langsmith", "virtual:279a14e27acbae61cce777a0571bf20768e2538d628175f2ec5bac44d9c2e3456219c88e945082c046ecb7eca6e0be719d0e7a174a10421eeade635c770c5c0b#npm:0.3.2"],\
           ["@types/openai", null],\
           ["@types/uuid", "npm:10.0.0"],\
-          ["commander", "npm:10.0.1"],\
+          ["chalk", "npm:4.1.2"],\
+          ["console-table-printer", "npm:2.12.1"],\
           ["openai", null],\
+          ["p-queue", "npm:6.6.2"],\
+          ["p-retry", "npm:4.6.2"],\
+          ["semver", "npm:7.6.3"],\
+          ["uuid", "npm:10.0.0"]\
+        ],\
+        "packagePeers": [\
+          "@types/openai",\
+          "openai"\
+        ],\
+        "linkType": "HARD"\
+      }],\
+      ["virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:0.3.2", {\
+        "packageLocation": "./.yarn/__virtual__/langsmith-virtual-3572fbeb2c/0/cache/langsmith-npm-0.3.2-9ce51d8a31-cae13264bf.zip/node_modules/langsmith/",\
+        "packageDependencies": [\
+          ["langsmith", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:0.3.2"],\
+          ["@types/openai", null],\
+          ["@types/uuid", "npm:10.0.0"],\
+          ["chalk", "npm:4.1.2"],\
+          ["console-table-printer", "npm:2.12.1"],\
+          ["openai", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:4.62.1"],\
           ["p-queue", "npm:6.6.2"],\
           ["p-retry", "npm:4.6.2"],\
           ["semver", "npm:7.6.3"],\
@@ -14391,6 +14442,15 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
+    ["simple-wcswidth", [\
+      ["npm:1.0.1", {\
+        "packageLocation": "./.yarn/cache/simple-wcswidth-npm-1.0.1-ac1dd0a592-75b1a5a941.zip/node_modules/simple-wcswidth/",\
+        "packageDependencies": [\
+          ["simple-wcswidth", "npm:1.0.1"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
     ["sisteransi", [\
       ["npm:1.0.5", {\
         "packageLocation": "./.yarn/cache/sisteransi-npm-1.0.5-af60cc0cfa-aba6438f46.zip/node_modules/sisteransi/",\
@@ -16354,10 +16414,10 @@ const RAW_RUNTIME_STATE =
         ],\
         "linkType": "SOFT"\
       }],\
-      ["virtual:1a04ce6427bc5f793ddd295df41f2d75cd9fe4b01c8b66bf3259ba655e1b3f6bb21315a5008e827d1e31de466288548d8af2f85cc04cf596f8dc2f8c4d80a1d8#npm:3.23.3", {\
-        "packageLocation": "./.yarn/__virtual__/zod-to-json-schema-virtual-5cebe5e126/0/cache/zod-to-json-schema-npm-3.23.3-86415b1ed5-09f783a232.zip/node_modules/zod-to-json-schema/",\
+      ["virtual:279a14e27acbae61cce777a0571bf20768e2538d628175f2ec5bac44d9c2e3456219c88e945082c046ecb7eca6e0be719d0e7a174a10421eeade635c770c5c0b#npm:3.23.3", {\
+        "packageLocation": "./.yarn/__virtual__/zod-to-json-schema-virtual-8d4bbd967f/0/cache/zod-to-json-schema-npm-3.23.3-86415b1ed5-09f783a232.zip/node_modules/zod-to-json-schema/",\
         "packageDependencies": [\
-          ["zod-to-json-schema", "virtual:1a04ce6427bc5f793ddd295df41f2d75cd9fe4b01c8b66bf3259ba655e1b3f6bb21315a5008e827d1e31de466288548d8af2f85cc04cf596f8dc2f8c4d80a1d8#npm:3.23.3"],\
+          ["zod-to-json-schema", "virtual:279a14e27acbae61cce777a0571bf20768e2538d628175f2ec5bac44d9c2e3456219c88e945082c046ecb7eca6e0be719d0e7a174a10421eeade635c770c5c0b#npm:3.23.3"],\
           ["@types/zod", null],\
           ["zod", "npm:3.23.8"]\
         ],\

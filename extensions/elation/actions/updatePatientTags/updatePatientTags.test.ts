@@ -1,32 +1,29 @@
+import { TestHelpers } from '@awell-health/extensions-core'
 import { makeAPIClientMockFunc } from '../../__mocks__/client'
 import { makeAPIClient } from '../../client'
 import { updatePatientTags as action } from './updatePatientTags'
-import { TestHelpers } from '@awell-health/extensions-core'
-import { ChatOpenAI } from '@langchain/openai'
 
+// Mock the client
 jest.mock('../../client')
 
-// Mock the module
-jest.mock('@langchain/openai', () => {
-  const mockInvoke = jest.fn().mockResolvedValue({
-    updatedTags: ['test', 'test2'],
-    explanation: 'Test explanation',
+// Mock createOpenAIModel
+jest.mock('../../../../src/lib/llm/openai/createOpenAIModel', () => ({
+  createOpenAIModel: jest.fn().mockResolvedValue({
+    model: {
+      pipe: jest.fn().mockReturnValue({
+        invoke: jest.fn().mockResolvedValue({
+          updatedTags: ['test', 'test2'],
+          explanation: 'Test explanation'
+        })
+      })
+    },
+    metadata: {
+      care_flow_definition_id: 'whatever',
+      care_flow_id: 'test-flow-id',
+      activity_id: 'test-activity-id'
+    }
   })
-
-  const mockChain = {
-    invoke: mockInvoke,
-  }
-
-  const mockPipe = jest.fn().mockReturnValue(mockChain)
-
-  const mockChatOpenAI = jest.fn().mockImplementation(() => ({
-    pipe: mockPipe,
-  }))
-
-  return {
-    ChatOpenAI: mockChatOpenAI,
-  }
-})
+}))
 
 describe('Elation - Update patient tags', () => {
   const {
@@ -47,7 +44,7 @@ describe('Elation - Update patient tags', () => {
     jest.clearAllMocks()
   })
 
-  test('Should return the correct letter', async () => {
+  it('Should update tags using custom API key', async () => {
     await updatePatientTags.onEvent({
       payload: {
         fields: {
@@ -61,15 +58,27 @@ describe('Elation - Update patient tags', () => {
           password: 'password',
           auth_url: 'authUrl',
           base_url: 'baseUrl',
-          openAiApiKey: 'openaiApiKey',
+          openAiApiKey: 'custom-key',
         },
-      } as any,
+        pathway: {
+          id: 'test-flow-id',
+          definition_id: '123',
+          tenant_id: '123',
+          org_slug: 'test-org-slug',
+          org_id: 'test-org-id'
+        },
+        activity: {
+          id: 'test-activity-id'
+        },
+        patient: {
+          id: 'test-patient-id'
+        }
+      },
       onComplete,
       onError,
       helpers,
     })
 
-    expect(ChatOpenAI).toHaveBeenCalled()
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
         updatedTags: 'test, test2',
@@ -83,5 +92,62 @@ describe('Elation - Update patient tags', () => {
         },
       ],
     })
+    expect(onError).not.toHaveBeenCalled()
+  })
+
+  it('Should use default OpenAI config', async () => {
+    helpers.getOpenAIConfig = jest.fn().mockReturnValue({
+      apiKey: 'default-key',
+      temperature: 0,
+      maxRetries: 3
+    })
+
+    await updatePatientTags.onEvent({
+      payload: {
+        fields: {
+          patientId: 123,
+          prompt: 'Add the tags "test" and "test2"',
+        },
+        settings: {
+          client_id: 'clientId',
+          client_secret: 'clientSecret',
+          username: 'username',
+          password: 'password',
+          auth_url: 'authUrl',
+          base_url: 'baseUrl',
+        },
+        pathway: {
+          id: 'test-flow-id',
+          definition_id: '123',
+          tenant_id: '123',
+          org_slug: 'test-org-slug',
+          org_id: 'test-org-id'
+        },
+        activity: {
+          id: 'test-activity-id'
+        },
+        patient: {
+          id: 'test-patient-id'
+        }
+      },
+      onComplete,
+      onError,
+      helpers,
+    })
+
+    expect(onComplete).toHaveBeenCalledWith({
+      data_points: {
+        updatedTags: 'test, test2',
+      },
+      events: [
+        {
+          date: expect.any(String),
+          text: {
+            en: 'Previous patient tags: No tags\nUpdated patient tags: test, test2\nExplanation: Test explanation',
+          },
+        },
+      ],
+    })
+    expect(onError).not.toHaveBeenCalled()
   })
 })

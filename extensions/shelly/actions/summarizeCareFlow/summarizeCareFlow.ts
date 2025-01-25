@@ -1,14 +1,14 @@
 import { Category, type Action } from '@awell-health/extensions-core'
-import { validatePayloadAndCreateSdk } from '../../lib'
-import { type settings } from '../../settings'
 import { fields, dataPoints, FieldsValidationSchema } from './config'
 import { DISCLAIMER_MSG } from '../../lib/constants'
 import { summarizeCareFlowWithLLM } from './lib/summarizeCareFlowWithLLM'
 import { markdownToHtml } from '../../../../src/utils'
+import { createOpenAIModel } from '../../../../src/lib/llm/openai'
+import { OPENAI_MODELS } from '../../../../src/lib/llm/openai/constants'
 
 export const summarizeCareFlow: Action<
   typeof fields,
-  typeof settings,
+  Record<string, never>,
   keyof typeof dataPoints
 > = {
   key: 'summarizeCareFlow',
@@ -18,14 +18,18 @@ export const summarizeCareFlow: Action<
   fields,
   previewable: false,
   dataPoints,
+
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
-    const {
-      ChatModelGPT4o,
-      fields: { additionalInstructions, stakeholder },
-      pathway,
-    } = await validatePayloadAndCreateSdk({
-      fieldsSchema: FieldsValidationSchema,
+    // 1. Validate input fields
+    const { additionalInstructions, stakeholder } = FieldsValidationSchema.parse(payload.fields)
+    const pathway = payload.pathway
+
+    // 2. Initialize OpenAI model with metadata
+    const { model, metadata, callbacks } = await createOpenAIModel({
+      settings: payload.settings,
+      helpers,
       payload,
+      modelType: OPENAI_MODELS.GPT4o
     })
 
     const awellSdk = await helpers.awellSdk()
@@ -67,30 +71,27 @@ export const summarizeCareFlow: Action<
       },
     })
 
-    try {
-      const summary = await summarizeCareFlowWithLLM({
-        ChatModelGPT4o,
-        careFlowActivities: JSON.stringify(
-          pathwayActivitesUntilNow.pathwayActivities.activities,
-          null,
-          2
-        ),
-        stakeholder,
-        additionalInstructions,
-      })
+    const summary = await summarizeCareFlowWithLLM({
+      model,
+      careFlowActivities: JSON.stringify(
+        pathwayActivitesUntilNow.pathwayActivities.activities,
+        null,
+        2
+      ),
+      stakeholder,
+      additionalInstructions,
+      metadata,
+      callbacks
+    })
 
-      const htmlSummary = await markdownToHtml(
-        `${DISCLAIMER_MSG}\n\n${summary}`
-      )
+    const htmlSummary = await markdownToHtml(
+      `${DISCLAIMER_MSG}\n\n${summary}`
+    )
 
-      await onComplete({
-        data_points: {
-          summary: htmlSummary,
-        },
-      })
-    } catch (error) {
-      console.error('Error summarizing care flow:', error)
-      throw new Error('Error summarizing care flow')
-    }
+    await onComplete({
+      data_points: {
+        summary: htmlSummary,
+      },
+    })
   },
 }

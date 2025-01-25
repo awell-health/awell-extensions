@@ -48,9 +48,7 @@ describe('Medication From Image', () => {
           imageUrl:
             'https://res.cloudinary.com/da7x4rzl4/image/upload/v1726601981/hackathon-sep-2024/seqn5izsagvs5nlferlf.png',
         },
-        settings: {
-          openAiApiKey: 'a',
-        },
+        settings: {},
       }),
       onComplete,
       onError,
@@ -96,9 +94,7 @@ describe('Medication From Image', () => {
           imageUrl:
             'https://res.cloudinary.com/da7x4rzl4/image/upload/v1726601981/hackathon-sep-2024/invalid-url.png',
         },
-        settings: {
-          openAiApiKey: 'a',
-        },
+        settings: {},
       }),
       onComplete,
       onError,
@@ -145,9 +141,7 @@ describe('Medication From Image', () => {
           imageUrl:
             'https://res.cloudinary.com/da7x4rzl4/image/upload/v1726601981/hackathon-sep-2024/invalid-url.png',
         },
-        settings: {
-          openAiApiKey: 'a',
-        },
+        settings: {},
       }),
       onComplete,
       onError,

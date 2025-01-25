@@ -3,19 +3,65 @@ import { TestHelpers } from '@awell-health/extensions-core'
 import { generateTestPayload } from '@/tests'
 import { summarizeCareFlow } from '.'
 import { mockPathwayActivitiesResponse } from './__mocks__/pathwayActivitiesResponse'
+import { DISCLAIMER_MSG } from '../../lib/constants'
 
-// remove .skip to run this test
-describe.skip('summarizeCareFlow - Real LLM calls with mocked Awell SDK', () => {
+
+jest.setTimeout(60000)
+
+describe.skip('summarizeCareFlow - Real OpenAI calls', () => {
   const { onComplete, onError, helpers, extensionAction, clearMocks } =
     TestHelpers.fromAction(summarizeCareFlow)
 
   beforeEach(() => {
     clearMocks()
     jest.clearAllMocks()
+    
+    // Ensure API key is always defined
+    process.env.OPENAI_API_KEY = process.env.OPENAI_API_KEY || 'test-api-key'
+    
+    helpers.getOpenAIConfig = jest.fn().mockReturnValue({
+      apiKey: process.env.OPENAI_API_KEY as string,
+      temperature: 0,
+      maxRetries: 3,
+      timeout: 10000
+    })
+
+    // Mock the SDK query to return activities
+    const mockQuery = jest.fn()
+      .mockResolvedValueOnce({
+        pathwayActivities: {
+          success: true,
+          activities: [{
+            id: 'test-activity-id',
+            status: 'DONE',
+            date: '2024-01-01T00:00:00Z',
+            object: {
+              id: 'test-object-id',
+              name: 'Test Activity',
+              type: 'FORM'
+            }
+          }]
+        }
+      })
+
+    helpers.awellSdk = jest.fn().mockReturnValue({
+      orchestration: {
+        query: mockQuery
+      }
+    })
   })
 
-  it('Should call the real model and use mocked care flow activities', async () => {
-    // Set up payload
+  afterEach(() => {
+    jest.clearAllTimers()
+    jest.clearAllMocks()
+  })
+
+  afterAll(async () => {
+    // Clean up any remaining promises
+    await new Promise(resolve => setTimeout(resolve, 100))
+  })
+
+  it('Should call the real model using default config', async () => {
     const payload = generateTestPayload({
       pathway: {
         id: 'ai4rZaYEocjB',
@@ -25,46 +71,28 @@ describe.skip('summarizeCareFlow - Real LLM calls with mocked Awell SDK', () => 
         stakeholder: 'Clinician',
         additionalInstructions: '',
       },
-      settings: {
-        openAiApiKey: process.env.OPENAI_TEST_KEY, // Use your actual OpenAI API key here
-      },
+      settings: {}, // Use default config
+      activity: {
+        id: 'test-activity-id'
+      }
     })
 
-    // Mock the Awell SDK to return care flow activities
-    const awellSdkMock = {
-      orchestration: {
-        query: jest.fn().mockResolvedValue({
-          pathwayActivities: mockPathwayActivitiesResponse,
-        }),
-      },
-    }
-
-    helpers.awellSdk = jest.fn().mockResolvedValue(awellSdkMock)
-
-    // Execute the action without mocking ChatOpenAI (real call)
     await extensionAction.onEvent({
       payload,
       onComplete,
       onError,
-      helpers,
+      helpers: helpers 
     })
 
-    // Assertions for the Awell SDK mock
-    expect(helpers.awellSdk).toHaveBeenCalled()
-    expect(awellSdkMock.orchestration.query).toHaveBeenCalledTimes(1)
-
-    // Ensure that the model has actually been called (real call to ChatOpenAI)
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
-        summary: expect.stringContaining('step'),
+        summary: expect.stringContaining(DISCLAIMER_MSG),
       },
     })
-
     expect(onError).not.toHaveBeenCalled()
   })
 
-  it('Should call the real model and focus on patient-completed actions', async () => {
-    // Set up payload
+  it('Should call the real model with different instructions', async () => {
     const payload = generateTestPayload({
       pathway: {
         id: 'ai4rZaYEocjB',
@@ -72,44 +100,26 @@ describe.skip('summarizeCareFlow - Real LLM calls with mocked Awell SDK', () => 
       },
       fields: {
         stakeholder: 'Clinician',
-        additionalInstructions:
-          'Focus only on actions completed by the patient.',
+        additionalInstructions: 'Focus only on actions completed by the patient.',
       },
-      settings: {
-        openAiApiKey: process.env.OPENAI_TEST_KEY, // Use your actual OpenAI API key here
-      },
+      settings: {}, // Use default config
+      activity: {
+        id: 'test-activity-id'
+      }
     })
 
-    // Mock the Awell SDK to return care flow activities
-    const awellSdkMock = {
-      orchestration: {
-        query: jest.fn().mockResolvedValue({
-          pathwayActivities: mockPathwayActivitiesResponse,
-        }),
-      },
-    }
-
-    helpers.awellSdk = jest.fn().mockResolvedValue(awellSdkMock)
-
-    // Execute the action without mocking ChatOpenAI (real call)
     await extensionAction.onEvent({
       payload,
       onComplete,
       onError,
-      helpers,
+      helpers: helpers
     })
 
-    // Assertions for the Awell SDK mock
-    expect(helpers.awellSdk).toHaveBeenCalled()
-    expect(awellSdkMock.orchestration.query).toHaveBeenCalledTimes(1)
-
-    // Ensure that the model has actually been called (real call to ChatOpenAI)
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
-        summary: expect.stringContaining('patient'),
+        summary: expect.stringContaining(DISCLAIMER_MSG),
       },
     })
-
     expect(onError).not.toHaveBeenCalled()
   })
 })

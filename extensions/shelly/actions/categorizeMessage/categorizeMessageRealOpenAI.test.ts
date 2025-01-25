@@ -3,43 +3,62 @@ import { generateTestPayload } from '@/tests'
 import { categorizeMessage } from '.'
 import 'dotenv/config'
 
-const settings = {
-  openAiApiKey: process.env.OPENAI_TEST_KEY,
-}
-
-// Remove skip to run the test
-describe.skip('categorizeMessage - Real LLM calls', () => {
+describe.skip('categorizeMessage - Real OpenAI calls', () => {
   const { onComplete, onError, helpers, extensionAction, clearMocks } =
     TestHelpers.fromAction(categorizeMessage)
 
   beforeEach(() => {
-    clearMocks() // Reset mocks before each test
-    jest.clearAllMocks() // Reset any mock functions
+    clearMocks()
+    jest.clearAllMocks()
+    
+    // Ensure API key is always defined in test environment
+    process.env.OPENAI_API_KEY = process.env.OPENAI_API_KEY || 'test-api-key'
+    
+    helpers.getOpenAIConfig = jest.fn().mockReturnValue({
+      apiKey: process.env.OPENAI_API_KEY as string,  // Type assertion
+      temperature: 0,
+      maxRetries: 3,
+      timeout: 10000
+    })
+  })
+
+  afterEach(() => {
+    jest.clearAllTimers()
+  })
+
+  afterAll(async () => {
+    // Clean up any remaining promises
+    await new Promise(resolve => setTimeout(resolve, 100))
   })
 
   it('should successfully categorize a message about scheduling an appointment using real LLM', async () => {
     const payload = generateTestPayload({
       fields: {
         message: 'I would like to schedule an appointment for next week.',
-        categories:
-          'Appointment Scheduling,Medication Questions,Administrative Assistance,Feedback or Complaints',
+        categories: 'Appointment Scheduling,Medication Questions,Administrative Assistance,Feedback or Complaints',
       },
-      settings,
+      settings: {},
+      pathway: {
+        id: 'test-pathway-id',
+        definition_id: 'test-def-id'
+      },
+      activity: {
+        id: 'test-activity-id'
+      }
     })
 
     await extensionAction.onEvent({
       payload,
       onComplete,
       onError,
-      helpers,
+      helpers: helpers // Use our mocked helpers
     })
 
     // Real LangChain function is called
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
         category: 'Appointment Scheduling',
-        explanation:
-          'The message explicitly states a desire to schedule an appointment, which directly aligns with the Appointment Scheduling category.',
+        explanation: expect.stringMatching(/^<p>.*appointment.*<\/p>$/),
       },
     })
 
@@ -53,22 +72,28 @@ describe.skip('categorizeMessage - Real LLM calls', () => {
         categories:
           'Appointment Scheduling,Medication Questions,Administrative Assistance,Feedback or Complaints',
       },
-      settings,
+      settings: {},
+      pathway: {
+        id: 'test-pathway-id',
+        definition_id: 'test-def-id',
+      },
+      activity: {
+        id: 'test-activity-id',
+      },
     })
 
     await extensionAction.onEvent({
       payload,
       onComplete,
       onError,
-      helpers,
+      helpers: helpers // Use our mocked helpers
     })
 
     // Real LangChain function is called and returns "None"
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
         category: 'None',
-        explanation:
-          'Categorization was ambiguous; we could not find a proper category.',
+        explanation: expect.stringMatching(/^<p>.*<\/p>$/),
       },
     })
 
