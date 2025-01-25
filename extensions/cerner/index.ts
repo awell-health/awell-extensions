@@ -10,7 +10,7 @@ export const cerner: Extension = {
   key: 'cerner',
   title: 'Cerner',
   description:
-    'Cerner EHR is a cloud-based healthcare IT solution used to streamline clinical, administrative, and financial workflows by practices of all sizes.',
+    'Cerner EMR is an electronic medical records system that helps healthcare organizations improve patient care and increase efficiency.',
   icon_url:
     'https://res.cloudinary.com/da7x4rzl4/image/upload/v1736327719/Awell%20Extensions/CERN-4c75d8aa.png',
   category: Category.EHR_INTEGRATIONS,

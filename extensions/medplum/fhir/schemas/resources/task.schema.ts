@@ -1,6 +1,10 @@
 import { DateOnlyOptionalSchema } from '@awell-health/extensions-core'
 import { z } from 'zod'
-import { PrioritySchema, TaskIntentSchema, TaskStatusSchema } from '../atoms'
+import {
+  PrioritySchema,
+  TaskIntentSchema,
+  TaskStatusSchema,
+} from '../../../../../src/lib/fhir/schemas/Task'
 
 export const CreateTaskSchema = z.object({
   patientId: z.string().nonempty('Missing Medplum patient ID'),

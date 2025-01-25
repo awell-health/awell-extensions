@@ -1,8 +1,8 @@
 import { FieldType, type Field } from '@awell-health/extensions-core'
 import {
-  StatusSchema,
   TypeSchema,
-} from '../../../lib/api/schemas/DocumentReference'
+  StatusSchema,
+} from '../../../lib/api/customFhirSchemas/DocumentReference'
 import { startCase } from 'lodash'
 import z, { type ZodTypeAny } from 'zod'
 

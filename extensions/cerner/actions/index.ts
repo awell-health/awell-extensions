@@ -1,13 +1,9 @@
-import { createPatient } from './createPatient'
 import { getPatient } from './getPatient'
-import { getAppointment } from './getAppointment'
-import { createClinicalNote } from './createClinicalNote'
+// import { createPatient } from './createPatient'
 
 const actions = {
   getPatient,
-  getAppointment,
-  createPatient,
-  createClinicalNote,
+  // createPatient,
 }
 
 export default actions

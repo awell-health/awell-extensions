@@ -1,0 +1,6 @@
+export * from './PatientRead.schema'
+export * from './PatientCreate.schema'
+export * from './PatientMatch.schema'
+export * from './DocumentReferenceCreate.schema'
+export * from './AppointmentRead.schema'
+export * from './PatientSearch.schema'
