@@ -10,6 +10,8 @@ interface MinimalPathway {
   id?: string
   definition_id?: string
   tenant_id?: string
+  org_slug?: string
+  org_id?: string
 }
 
 // Define the minimal structure we need from the activity
@@ -44,9 +46,12 @@ export interface CreateOpenAIModelConfig {
  * Used for LangSmith tracing and analytics
  */
 export interface AIActionMetadata {
+  activity_id: string,
   care_flow_definition_id: string
   care_flow_id: string
-  activity_id: string
+  tenant_id: string
+  org_slug: string
+  org_id: string
   [key: string]: unknown
 }
 
@@ -55,10 +60,12 @@ export interface OpenAIModelConfig {
   model: ChatOpenAI
   /** Tracing metadata for LangChain calls */
   metadata: {
+    activity_id: string,
     care_flow_definition_id: string
     care_flow_id: string
-    activity_id: string
     tenant_id: string
+    org_slug: string
+    org_id: string
   }
   callbacks?: BaseCallbackHandler[]
 }

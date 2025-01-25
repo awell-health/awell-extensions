@@ -3,7 +3,7 @@ import { generateTestPayload } from '@/tests'
 import { categorizeMessage } from '.'
 import 'dotenv/config'
 
-describe.skip('categorizeMessage - Real OpenAI calls', () => {
+describe('categorizeMessage - Real OpenAI calls', () => {
   const { onComplete, onError, helpers, extensionAction, clearMocks } =
     TestHelpers.fromAction(categorizeMessage)
 

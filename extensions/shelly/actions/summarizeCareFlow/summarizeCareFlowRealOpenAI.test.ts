@@ -8,7 +8,7 @@ import { DISCLAIMER_MSG } from '../../lib/constants'
 
 jest.setTimeout(60000)
 
-describe.skip('summarizeCareFlow - Real OpenAI calls', () => {
+describe('summarizeCareFlow - Real OpenAI calls', () => {
   const { onComplete, onError, helpers, extensionAction, clearMocks } =
     TestHelpers.fromAction(summarizeCareFlow)
 

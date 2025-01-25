@@ -35,7 +35,10 @@ describe('categorizeMessageWithLLM', () => {
       metadata: {
         care_flow_definition_id: 'test-def-id',
         care_flow_id: 'test-pathway-id',
-        activity_id: 'test-activity-id'
+        activity_id: 'test-activity-id',
+        tenant_id: 'test-tenant-id',
+        org_slug: 'test-org-slug',
+        org_id: 'test-org-id'
       }
     })
 
@@ -65,7 +68,10 @@ describe('categorizeMessageWithLLM', () => {
       metadata: {
         care_flow_definition_id: 'test-def-id',
         care_flow_id: 'test-pathway-id',
-        activity_id: 'test-activity-id'
+        activity_id: 'test-activity-id',
+        tenant_id: 'test-tenant-id',
+        org_slug: 'test-org-slug',
+        org_id: 'test-org-id'
       }
     })
 
@@ -95,7 +101,10 @@ describe('categorizeMessageWithLLM', () => {
       metadata: {
         care_flow_definition_id: 'test-def-id',
         care_flow_id: 'test-pathway-id',
-        activity_id: 'test-activity-id'
+        activity_id: 'test-activity-id',
+        tenant_id: 'test-tenant-id',
+        org_slug: 'test-org-slug',
+        org_id: 'test-org-id'
       }
     })
 

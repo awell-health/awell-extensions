@@ -30,11 +30,14 @@ describe('summarizeCareFlowWithLLM', () => {
 
     const stakeholder = 'Clinician'
     const additionalInstructions = 'Summarize the care flow activities, ensuring they are in chronological order.'
-    const metadata = { 
+    const metadata = {
       traceId: 'test-trace-id',
       care_flow_definition_id: 'test-def-id',
-      care_flow_id: 'test-flow-id',
-      activity_id: 'test-activity-id'
+      care_flow_id: 'test-pathway-id',
+      activity_id: 'test-activity-id',
+      tenant_id: 'test-tenant-id',
+      org_slug: 'test-org-slug',
+      org_id: 'test-org-id'
     }
 
     // Execute the function
@@ -75,7 +78,9 @@ describe('summarizeCareFlowWithLLM', () => {
       stakeholder: 'Patient',
       additionalInstructions: 'test instructions',
       metadata: { 
-        traceId: 'test-trace-id',
+        tenant_id: 'test-tenant-id',
+        org_slug: 'test-org-slug',
+        org_id: 'test-org-id',
         care_flow_definition_id: 'test-def-id',
         care_flow_id: 'test-flow-id',
         activity_id: 'test-activity-id'

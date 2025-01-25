@@ -55,10 +55,12 @@ export const createOpenAIModel = async ({
   return {
     model,
     metadata: {
+      activity_id: payload.activity.id ?? '',
       tenant_id: payload.pathway.tenant_id ?? '',
       care_flow_definition_id: payload.pathway.definition_id ?? '',
       care_flow_id: payload.pathway.id ?? '',
-      activity_id: payload.activity.id ?? ''
+      org_slug: payload.pathway.org_slug ?? '',
+      org_id: payload.pathway.org_id ?? '',
     },
     callbacks // if not hideDataForTracing, callbacks is undefined, will use default callbacks
   }

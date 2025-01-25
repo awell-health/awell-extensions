@@ -6,7 +6,7 @@ import { type AIActionMetadata } from '../../../../../../src/lib/llm/openai/type
 
 jest.setTimeout(60000) // Increases timeout to 60 seconds for all tests in this file
 
-describe.skip('generateMessageWithLLM with real OpenAI', () => {
+describe('generateMessageWithLLM with real OpenAI', () => {
   let model: Awaited<ReturnType<typeof createOpenAIModel>>
 
   beforeEach(async () => {

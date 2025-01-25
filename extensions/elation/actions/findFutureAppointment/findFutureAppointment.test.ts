@@ -58,6 +58,8 @@ describe('Elation - Find future appointment', () => {
           id: 'test-flow-id',
           definition_id: '123',
           tenant_id: '123',
+          org_slug: 'test-org-slug',
+          org_id: 'test-org-id'
         },
         activity: {
           id: 'test-activity-id'
@@ -112,6 +114,8 @@ describe('Elation - Find future appointment', () => {
           id: 'test-flow-id',
           definition_id: '123',
           tenant_id: '123',
+          org_slug: 'test-org-slug',
+          org_id: 'test-org-id'
         },
         activity: {
           id: 'test-activity-id'

@@ -21,6 +21,8 @@ jest.mock('../../../../src/lib/llm/openai/createOpenAIModel', () => ({
       care_flow_definition_id: 'test-def-id',
       care_flow_id: 'test-pathway-id',
       activity_id: 'test-activity-id',
+      org_slug: 'test-org-slug',
+      org_id: 'test-org-id',
       model: modelType
     }
   }))

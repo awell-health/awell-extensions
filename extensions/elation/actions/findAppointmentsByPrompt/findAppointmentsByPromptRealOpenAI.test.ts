@@ -80,6 +80,8 @@ describe.skip('findAppointmentsByPrompt - Real OpenAI calls', () => {
             id: 'test-flow-id',
             definition_id: 'whatever',
             tenant_id: '123',
+            org_slug: 'test-org-slug',
+            org_id: 'test-org-id'
           },
           activity: {
             id: 'test-activity-id'

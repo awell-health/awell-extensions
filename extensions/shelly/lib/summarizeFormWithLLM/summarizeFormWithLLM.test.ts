@@ -51,7 +51,10 @@ describe('summarizeFormWithLLM', () => {
     const metadata = {
       activity_id: 'test-activity-id',
       care_flow_definition_id: 'test-def-id',
-      care_flow_id: 'test-flow-id'
+      care_flow_id: 'test-pathway-id',
+      tenant_id: 'test-tenant-id',
+      org_slug: 'test-org-slug',
+      org_id: 'test-org-id'
     }
 
     const summary = await summarizeFormWithLLM({
@@ -91,7 +94,10 @@ describe('summarizeFormWithLLM', () => {
     const metadata = {
       activity_id: 'test-activity-id',
       care_flow_definition_id: 'test-def-id',
-      care_flow_id: 'test-flow-id'
+      care_flow_id: 'test-pathway-id',
+      tenant_id: 'test-tenant-id',
+      org_slug: 'test-org-slug',
+      org_id: 'test-org-id'
     }
 
     const summary = await summarizeFormWithLLM({
@@ -118,7 +124,10 @@ describe('summarizeFormWithLLM', () => {
     const metadata = {
       activity_id: 'test-activity-id',
       care_flow_definition_id: 'test-def-id',
-      care_flow_id: 'test-flow-id'
+      care_flow_id: 'test-pathway-id',
+      tenant_id: 'test-tenant-id',
+      org_slug: 'test-org-slug',
+      org_id: 'test-org-id'
     }
 
     await expect(

@@ -16,7 +16,9 @@ jest.mock('../../../../src/lib/llm/openai', () => ({
       traceId: 'test-trace-id',
       care_flow_definition_id: 'whatever',
       care_flow_id: 'ai4rZaYEocjB',
-      activity_id: 'test-activity-id'
+      activity_id: 'test-activity-id',
+      org_slug: 'test-org-slug',
+      org_id: 'test-org-id'
     }
   })
 }))
