@@ -44,10 +44,41 @@ export const createOpenAIModel = async ({
   })
 
   let callbacks;
-  if (hideDataForTracing) {
+  if (hideDataForTracing) {   
+    // Utility function to mask outputs while preserving token usage
+    const maskOutputs = (outputs: Record<string, any>): { 
+      generations: any[];
+      llmOutput?: { tokenUsage: unknown };
+    } => {
+      const maskedGenerations = outputs.generations.map((generationArray: any[]) =>
+        generationArray.map((generation) => ({
+          text: '[MASKED]',
+          message: {
+            lc: 1,
+            type: 'constructor',
+            id: ['langchain_core', 'messages', 'AIMessage'],
+            kwargs: {
+              content: '[MASKED]',
+              response_metadata: {
+                tokenUsage: generation.message?.kwargs?.response_metadata?.tokenUsage,
+                finish_reason: generation.message?.kwargs?.response_metadata?.finish_reason
+              }
+            }
+          }
+        }))
+      );
+
+      return {
+        generations: maskedGenerations,
+        llmOutput: {
+          tokenUsage: outputs.llmOutput?.tokenUsage
+        }
+      };
+    };
+
     const client = new Client({
       hideInputs: () => ({}),
-      hideOutputs: () => ({})
+      hideOutputs: maskOutputs
     })
     callbacks = [new LangChainTracer({ client })]
   }
