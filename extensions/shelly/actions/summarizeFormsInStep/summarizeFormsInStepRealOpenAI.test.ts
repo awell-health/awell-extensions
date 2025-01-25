@@ -4,20 +4,11 @@ import 'dotenv/config'
 import { TestHelpers } from '@awell-health/extensions-core'
 import { generateTestPayload } from '@/tests'
 import { summarizeFormsInStep } from '.'
-import { mockMultipleFormsPathwayActivitiesResponse } from './__mocks__/multipleFormsPathwayActivitiesResponse'
-import {
-  mockMultipleFormsDefinitionResponse1,
-  mockMultipleFormsDefinitionResponse2,
-} from './__mocks__/multipleFormsDefinitionResponse'
-import {
-  mockMultipleFormsResponseResponse1,
-  mockMultipleFormsResponseResponse2,
-} from './__mocks__/multipleFormsResponsesResponse'
 import { DISCLAIMER_MSG_FORM } from '../../lib/constants'
 
 jest.setTimeout(30000) // Increase timeout for real LLM calls
 
-describe('summarizeFormsInStep - Real OpenAI calls', () => {
+describe.skip('summarizeFormsInStep - Real OpenAI calls', () => {
   const { onComplete, onError, helpers, extensionAction, clearMocks } =
     TestHelpers.fromAction(summarizeFormsInStep)
 
