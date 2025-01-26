@@ -7,19 +7,19 @@ import type { BaseCallbackHandler } from "@langchain/core/callbacks/base"
 interface GetTagsFromLLMProps {
   model: ChatOpenAI
   existingTags: string[]
-  prompt: string
+  instructions: string
   metadata: AIActionMetadata
   callbacks?: BaseCallbackHandler[]
 }
 
 export const getTagsFromLLM = async (props: GetTagsFromLLMProps): Promise<TagsFromAI> => {
-  const { model, existingTags, prompt, metadata, callbacks } = props
+  const { model, existingTags, instructions, metadata, callbacks } = props
 
   try {
     const chain = model.pipe(parser)
     const formattedPrompt = await systemPrompt.format({
       existingTags: JSON.stringify(existingTags),
-      prompt
+      instructions
     })
     const result = await chain.invoke(
       formattedPrompt, 

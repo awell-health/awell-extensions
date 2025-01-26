@@ -15,7 +15,7 @@ export const TagsOutputSchema = z.object({
     updatedTags: TagsSchema,
     explanation: z
       .string()
-      .describe('A readable explanation of the changes made to the tags and why'),
+      .describe("A single, concise sentence summarizing all tag modifications, including the reasoning behind the changes or lack thereof."),
 })
 
 export const parser = StructuredOutputParser.fromZodSchema(TagsOutputSchema)

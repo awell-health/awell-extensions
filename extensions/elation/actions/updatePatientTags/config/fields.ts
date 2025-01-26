@@ -13,16 +13,16 @@ export const fields = {
     required: true,
     description: '',
   },
-  prompt: {
-    id: 'prompt',
-    label: 'Describe what tags you would like to add, update, or remove',
+  instructions: {
+    id: 'instructions',
+    label: 'Specify tags to add, remove, or modify',
     type: FieldType.TEXT,
     required: true,
-    description: '',
+    description: 'Provide clear instructions for tag changes and relevant context, especially for uncommon tags. Specify new tags in single quotes (e.g., \'Patient-Tag\').'
   },
 } satisfies Record<string, Field>
 
 export const FieldsValidationSchema = z.object({
   patientId: NumericIdSchema,
-  prompt: z.string().min(1),
+  instructions: z.string().min(1),
 } satisfies Record<keyof typeof fields, ZodTypeAny>)

@@ -21,7 +21,8 @@ jest.mock('../../../../src/lib/llm/openai/createOpenAIModel', () => ({
       care_flow_definition_id: 'whatever',
       care_flow_id: 'test-flow-id',
       activity_id: 'test-activity-id'
-    }
+    },
+    callbacks: []
   })
 }))
 
@@ -49,7 +50,7 @@ describe('Elation - Update patient tags', () => {
       payload: {
         fields: {
           patientId: 123,
-          prompt: 'Add the tags "test" and "test2"',
+          instructions: 'Add the tags "test" and "test2"',
         },
         settings: {
           client_id: 'clientId',
@@ -82,6 +83,7 @@ describe('Elation - Update patient tags', () => {
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
         updatedTags: 'test, test2',
+        explanation: 'Test explanation',
       },
       events: [
         {
@@ -106,7 +108,7 @@ describe('Elation - Update patient tags', () => {
       payload: {
         fields: {
           patientId: 123,
-          prompt: 'Add the tags "test" and "test2"',
+          instructions: 'Add the tags "test" and "test2"',
         },
         settings: {
           client_id: 'clientId',
@@ -138,6 +140,7 @@ describe('Elation - Update patient tags', () => {
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
         updatedTags: 'test, test2',
+        explanation: 'Test explanation',
       },
       events: [
         {

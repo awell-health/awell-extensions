@@ -23,14 +23,14 @@ export const updatePatientTags: Action<
 > = {
   key: 'updatePatientTags',
   category: Category.EHR_INTEGRATIONS,
-  title: '🪄 Update patient tags (Beta)',
+  title: '🪄 Update patient tags',
   description: 'Update patient tags in Elation.',
   fields,
   previewable: false,
   dataPoints,
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
     // 1. Validate input and initialize API client
-    const { prompt, patientId } = FieldsValidationSchema.parse(payload.fields)
+    const { instructions, patientId } = FieldsValidationSchema.parse(payload.fields)
     const api = makeAPIClient(payload.settings)
 
     // 2. Get existing tags
@@ -49,7 +49,7 @@ export const updatePatientTags: Action<
     const { validatedTags, explanation } = await getTagsFromLLM({
       model,
       existingTags,
-      prompt,
+      instructions,
       metadata,
       callbacks
     })
@@ -61,6 +61,7 @@ export const updatePatientTags: Action<
     await onComplete({
       data_points: {
         updatedTags: validatedTags.join(', '),
+        explanation,
       },
       events: [
         addActivityEventLog({
