@@ -1,0 +1,42 @@
+[config]
+enable_custom_labels = true
+
+[custom_labels."ai-actions"]
+description = "pr_agent: Label for PRs involving AI Actions that use LLMs and OpenAI models."
+
+[custom_labels."ai-actions-beta"]
+description = "pr_agent: Label for PRs involving beta AI Actions that use LLMs and OpenAI models - these will have '(Beta)' either in the name of the action or in the name of the extension they belong to."
+
+[pr_description]
+use_description_markers = true
+
+template = """
+# PR Title
+
+## Summary
+pr_agent:summary
+
+## Changes Walkthrough
+pr_agent:walkthrough
+
+{% if 'ai-actions' in labels %}
+## AI Evaluation (Required for AI Actions)
+To ensure reliability and performance of AI-powered actions intended for production, please provide the following evaluation details:
+
+### **LangSmith Experiment**
+- **Experiment Link**: [Paste the LangSmith experiment URL here]
+
+Or summarize the experiment details below:
+
+### **Dataset Overview**
+- **Number of examples:**  
+- **Input & Output Details:** (e.g., text-based, structured data, LLM outputs)  
+
+### **Evaluation Metrics**
+- **Metrics Used:** (e.g., accuracy, precision/recall, F1-score)  
+- **Performance on These Metrics:** (include numerical results)  
+
+### **Cost Estimate**
+- **Estimated cost per single run:** $  
+{% endif %}
+"""
