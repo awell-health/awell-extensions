@@ -1,0 +1,1 @@
+export { getDataPointValue } from './getDataPointValue'
