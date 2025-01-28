@@ -80,7 +80,7 @@ First, it checks if this identifier (system and value) is already associated wit
 
 ### Get data point value
 
-This action allows you to read the most recent data point value from a care flow different from the current one. The action returns multiple data points, each with a different value type. Pick the one you need from the returned data points based on the value type of the data point you want to read the value from.
+This action allows you to read the most recent data point value of a given data point definition id from a care flow different from the current one. The action returns multiple data points, each with a different value type. Pick the one you need from the returned data points based on the value type of the data point you want to read the value from.
 
 **Example:**
 If the data point you want to read the value from is of type `number`, then you should use the `valueNumber` data point.
