@@ -78,6 +78,13 @@ This action allows you to add a unique identifier to the current patient's profi
 
 First, it checks if this identifier (system and value) is already associated with another patient. If it's safe to proceed, it will add or update the identifier as needed. However, if another patient already has this identifier, the action will stop and notify you, preventing duplicates. To avoid conflicts, we recommend first running the "Get patient by identifier" action to check for any existing matches.
 
+### Get data point value
+
+This action allows you to read the most recent data point value of a given data point definition id from a care flow different from the current one. The action returns multiple data points, each with a different value type. Pick the one you need from the returned data points based on the value type of the data point you want to read the value from.
+
+**Example:**
+If the data point you want to read the value from is of type `number`, then you should use the `valueNumber` data point.
+
 ## Webhooks
 
 Webhooks in the Awell extension offer ways to trigger a care flow based on the end of another care flow, or from any event that happens in your system (via the pathwayStart webhook).
