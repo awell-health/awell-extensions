@@ -9,7 +9,7 @@ import { type Activity } from '@awell-health/extensions-core/dist/types/Activity
 
 type ValidatePayloadAndCreateSdk = <
   T extends z.ZodTypeAny,
-  P extends NewActivityPayload<any, any>
+  P extends NewActivityPayload<any, any>,
 >(args: {
   fieldsSchema: T
   payload: P
@@ -28,7 +28,7 @@ export const validatePayloadAndCreateSdk: ValidatePayloadAndCreateSdk = async ({
   const { settings, fields } = validate({
     schema: z.object({
       fields: fieldsSchema,
-      settings: z.object({}).strict(),
+      settings: z.object({}),
       pathway: z.object({
         id: z.string(),
         definition_id: z.string(),
