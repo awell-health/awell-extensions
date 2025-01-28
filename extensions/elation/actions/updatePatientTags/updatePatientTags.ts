@@ -10,7 +10,7 @@ import { OPENAI_MODELS } from '../../../../src/lib/llm/openai/constants'
 
 /**
  * Awell Action: Update Patient Tags
- * 
+ *
  * Takes existing tags and instructions, uses LLM to:
  * 1. Generate updated list of tags
  * 2. Provide explanation for changes
@@ -30,7 +30,9 @@ export const updatePatientTags: Action<
   dataPoints,
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
     // 1. Validate input and initialize API client
-    const { instructions, patientId } = FieldsValidationSchema.parse(payload.fields)
+    const { instructions, patientId } = FieldsValidationSchema.parse(
+      payload.fields,
+    )
     const api = makeAPIClient(payload.settings)
 
     // 2. Get existing tags
@@ -39,10 +41,10 @@ export const updatePatientTags: Action<
 
     // 3. Initialize OpenAI model with metadata and callbacks
     const { model, metadata, callbacks } = await createOpenAIModel({
-      settings: payload.settings,
+      settings: {}, // we use built-in API key for OpenAI
       helpers,
       payload,
-      modelType: OPENAI_MODELS.GPT4o
+      modelType: OPENAI_MODELS.GPT4o,
     })
 
     // 4. Generate updated tags
@@ -51,7 +53,7 @@ export const updatePatientTags: Action<
       existingTags,
       instructions,
       metadata,
-      callbacks
+      callbacks,
     })
 
     // 5. Update tags in Elation

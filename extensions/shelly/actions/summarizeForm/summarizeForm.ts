@@ -10,11 +10,11 @@ import { DISCLAIMER_MSG_FORM } from '../../lib/constants'
 
 /**
  * Awell Action: Form Summarization
- * 
+ *
  * Takes form responses and preferences as input, uses LLM to:
  * 1. Generate a concise summary in specified format and language
  * 2. Includes appropriate disclaimer
- * 
+ *
  * @returns HTML-formatted summary
  */
 export const summarizeForm: Action<
@@ -32,15 +32,17 @@ export const summarizeForm: Action<
 
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
     // 1. Validate input fields
-    const { summaryFormat, language } = FieldsValidationSchema.parse(payload.fields)
+    const { summaryFormat, language } = FieldsValidationSchema.parse(
+      payload.fields,
+    )
 
     // 2. Initialize OpenAI model with metadata
     const { model, metadata, callbacks } = await createOpenAIModel({
-      settings: payload.settings,
+      settings: {}, // we use built-in API key for OpenAI
       helpers,
       payload,
       modelType: OPENAI_MODELS.GPT4o,
-      hideDataForTracing: true // Hide input and output data when tracing
+      hideDataForTracing: true, // Hide input and output data when tracing
     })
 
     // 3. Get form data
@@ -63,7 +65,7 @@ export const summarizeForm: Action<
       language,
       disclaimerMessage: DISCLAIMER_MSG_FORM,
       metadata,
-      callbacks
+      callbacks,
     })
 
     // 5. Format and return results

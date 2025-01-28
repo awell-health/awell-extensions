@@ -21,7 +21,6 @@ describe('createMessageThread action', () => {
     client_secret: 'client_secret',
     username: 'username',
     password: 'password',
-    openAiApiKey: 'some_key',
   }
 
   const withFields = (fields: any) => generateTestPayload({ fields, settings })

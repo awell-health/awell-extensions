@@ -21,15 +21,16 @@ export const summarizeCareFlow: Action<
 
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
     // 1. Validate input fields
-    const { additionalInstructions, stakeholder } = FieldsValidationSchema.parse(payload.fields)
+    const { additionalInstructions, stakeholder } =
+      FieldsValidationSchema.parse(payload.fields)
     const pathway = payload.pathway
 
     // 2. Initialize OpenAI model with metadata
     const { model, metadata, callbacks } = await createOpenAIModel({
-      settings: payload.settings,
+      settings: {}, // we use built-in API key for OpenAI
       helpers,
       payload,
-      modelType: OPENAI_MODELS.GPT4o
+      modelType: OPENAI_MODELS.GPT4o,
     })
 
     const awellSdk = await helpers.awellSdk()
@@ -76,17 +77,15 @@ export const summarizeCareFlow: Action<
       careFlowActivities: JSON.stringify(
         pathwayActivitesUntilNow.pathwayActivities.activities,
         null,
-        2
+        2,
       ),
       stakeholder,
       additionalInstructions,
       metadata,
-      callbacks
+      callbacks,
     })
 
-    const htmlSummary = await markdownToHtml(
-      `${DISCLAIMER_MSG}\n\n${summary}`
-    )
+    const htmlSummary = await markdownToHtml(`${DISCLAIMER_MSG}\n\n${summary}`)
 
     await onComplete({
       data_points: {

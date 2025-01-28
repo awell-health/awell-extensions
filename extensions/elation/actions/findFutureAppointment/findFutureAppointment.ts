@@ -43,10 +43,10 @@ export const findFutureAppointment: Action<
 
     // 3. Initialize OpenAI model with metadata and callbacks
     const { model, metadata, callbacks } = await createOpenAIModel({
-      settings: payload.settings,
+      settings: {}, // we use built-in API key for OpenAI
       helpers,
       payload,
-      modelType: OPENAI_MODELS.GPT4o
+      modelType: OPENAI_MODELS.GPT4o,
     })
 
     // 4. Find matching appointment
@@ -55,7 +55,7 @@ export const findFutureAppointment: Action<
       appointments,
       prompt,
       metadata,
-      callbacks
+      callbacks,
     })
 
     const matchedAppointmentId = AppointmentIdSchema.parse(appointmentId)

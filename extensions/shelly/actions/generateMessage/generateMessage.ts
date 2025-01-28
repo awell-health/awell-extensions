@@ -7,11 +7,11 @@ import { OPENAI_MODELS } from '../../../../src/lib/llm/openai/constants'
 
 /**
  * Awell Action: Message Generation
- * 
+ *
  * Takes communication objective and personalization inputs, uses LLM to:
  * 1. Generate a personalized message
  * 2. Create appropriate subject line
- * 
+ *
  * @returns subject and HTML-formatted message
  */
 export const generateMessage: Action<
@@ -29,15 +29,19 @@ export const generateMessage: Action<
 
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
     // 1. Validate input fields
-    const { communicationObjective, personalizationInput, stakeholder, language } = 
-      FieldsValidationSchema.parse(payload.fields)
+    const {
+      communicationObjective,
+      personalizationInput,
+      stakeholder,
+      language,
+    } = FieldsValidationSchema.parse(payload.fields)
 
     // 2. Initialize OpenAI model with metadata
     const { model, metadata, callbacks } = await createOpenAIModel({
-      settings: payload.settings,
+      settings: {}, // we use built-in API key for OpenAI
       helpers,
       payload,
-      modelType: OPENAI_MODELS.GPT4o // Using GPT4 for high-quality message generation
+      modelType: OPENAI_MODELS.GPT4o, // Using GPT4 for high-quality message generation
     })
 
     // 3. Generate message
@@ -48,13 +52,13 @@ export const generateMessage: Action<
       stakeholder,
       language,
       metadata,
-      callbacks
+      callbacks,
     })
 
     // 4. Format and return results
     const htmlMessage = await markdownToHtml(message)
     await onComplete({
-      data_points: { subject, message: htmlMessage }
+      data_points: { subject, message: htmlMessage },
     })
   },
 }

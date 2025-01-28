@@ -41,24 +41,26 @@ export const findAppointmentsByPrompt: Action<
 
     try {
       const { model, metadata, callbacks } = await createOpenAIModel({
-        settings: payload.settings,
+        settings: {}, // we use built-in API key for OpenAI
         helpers,
         payload,
       })
 
-      const { appointmentIds, explanation } = await findAppointmentsByPromptWithLLM({
-        model,
-        appointments,
-        prompt,
-        metadata,
-        callbacks
-      })
+      const { appointmentIds, explanation } =
+        await findAppointmentsByPromptWithLLM({
+          model,
+          appointments,
+          prompt,
+          metadata,
+          callbacks,
+        })
 
-      const selectedAppointments = appointments.filter(
-        (appointment) => appointmentIds.includes(appointment.id)
+      const selectedAppointments = appointments.filter((appointment) =>
+        appointmentIds.includes(appointment.id),
       )
 
-      const appointmentCountsByStatus = getAppointmentCountsByStatus(selectedAppointments)
+      const appointmentCountsByStatus =
+        getAppointmentCountsByStatus(selectedAppointments)
 
       await onComplete({
         data_points: {
@@ -68,7 +70,7 @@ export const findAppointmentsByPrompt: Action<
         },
         events: [
           addActivityEventLog({
-            message: `Found ${selectedAppointments.length} appointments for patient ${patientId}`
+            message: `Found ${selectedAppointments.length} appointments for patient ${patientId}`,
           }),
         ],
       })

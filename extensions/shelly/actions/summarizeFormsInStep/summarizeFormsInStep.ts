@@ -8,7 +8,6 @@ import { markdownToHtml } from '../../../../src/utils'
 import { createOpenAIModel } from '../../../../src/lib/llm/openai'
 import { OPENAI_MODELS } from '../../../../src/lib/llm/openai/constants'
 
-
 export const summarizeFormsInStep: Action<
   typeof fields,
   Record<string, never>,
@@ -23,18 +22,20 @@ export const summarizeFormsInStep: Action<
   dataPoints,
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
     // 1. Validate input fields
-    const { summaryFormat, language } = FieldsValidationSchema.parse(payload.fields)
+    const { summaryFormat, language } = FieldsValidationSchema.parse(
+      payload.fields,
+    )
     const pathway = payload.pathway
 
     // 2. Initialize OpenAI model with hideDataForTracing enabled
     const { model, metadata, callbacks } = await createOpenAIModel({
-      settings: payload.settings,
+      settings: {}, // we use built-in API key for OpenAI
       helpers,
       payload,
       modelType: OPENAI_MODELS.GPT4o,
-      hideDataForTracing: true  // Hide input and output data when tracing
+      hideDataForTracing: true, // Hide input and output data when tracing
     })
-    
+
     // Fetch all forms in the current step
     const formsData = await getAllFormsInCurrentStep({
       awellSdk: await helpers.awellSdk(),
@@ -51,16 +52,16 @@ export const summarizeFormsInStep: Action<
     const summary = await summarizeFormWithLLM({
       model,
       formData: allFormsResponseText,
-      summaryFormat, 
+      summaryFormat,
       language,
       disclaimerMessage: DISCLAIMER_MSG_FORM,
       metadata,
-      callbacks  // Add callbacks here
+      callbacks, // Add callbacks here
     })
-    
+
     // Disclaimer is now handled within summarizeFormWithLLM
     const htmlSummary = await markdownToHtml(summary)
-  
+
     await onComplete({
       data_points: {
         summary: htmlSummary,

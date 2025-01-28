@@ -7,11 +7,11 @@ import { markdownToHtml } from '../../../../src/utils'
 
 /**
  * Awell Action: Message Categorization
- * 
+ *
  * Takes a message and predefined categories as input, uses LLM to:
  * 1. Determine the most appropriate category
  * 2. Provide explanation for the categorization
- * 
+ *
  * @returns category and HTML-formatted explanation
  */
 export const categorizeMessage: Action<
@@ -22,7 +22,8 @@ export const categorizeMessage: Action<
   key: 'categorizeMessage',
   category: Category.WORKFLOW,
   title: 'Categorize Message',
-  description: 'Categorizes messages into predefined categories with explanation.',
+  description:
+    'Categorizes messages into predefined categories with explanation.',
   fields,
   previewable: false,
   dataPoints,
@@ -33,7 +34,7 @@ export const categorizeMessage: Action<
 
     // 2. Initialize OpenAI model with metadata
     const { model, metadata, callbacks } = await createOpenAIModel({
-      settings: payload.settings,
+      settings: {}, // we use built-in API key for OpenAI
       helpers,
       payload,
       modelType: OPENAI_MODELS.GPT4oMini,
@@ -45,13 +46,13 @@ export const categorizeMessage: Action<
       message,
       categories,
       metadata,
-      callbacks
+      callbacks,
     })
 
     // 4. Format and return results
     const explanationHtml = await markdownToHtml(result.explanation)
     await onComplete({
-      data_points: { category: result.category, explanation: explanationHtml }
+      data_points: { category: result.category, explanation: explanationHtml },
     })
   },
 }
