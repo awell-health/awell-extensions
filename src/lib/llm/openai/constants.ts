@@ -6,8 +6,8 @@
  */
 export const OPENAI_CONFIG = {
   temperature: 0,
-  maxRetries: 3,
-  timeout: 10000,
+  maxRetries: 5,
+  timeout: 30000,
 } as const
 
 /**
