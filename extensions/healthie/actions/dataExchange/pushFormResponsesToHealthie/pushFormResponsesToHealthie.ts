@@ -1,4 +1,7 @@
-import { getAllFormsInCurrentStep } from '../../../../../src/lib/awell'
+import {
+  addActivityEventLog,
+  getAllFormsInCurrentStep,
+} from '../../../../../src/lib/awell'
 import { Category, type Action } from '@awell-health/extensions-core'
 import { validatePayloadAndCreateSdk } from '../../../lib/sdk/validatePayloadAndCreateSdk'
 import { type settings } from '../../../settings'
@@ -61,14 +64,23 @@ export const pushFormResponsesToHealthie: Action<
     })
 
     const mergedHealthieFormAnswers = formDataWithHealthieFormAnswers.flatMap(
-      ({ healthieFormAnswerInputs }) => healthieFormAnswerInputs
+      ({ healthieFormAnswerInputs }) => healthieFormAnswerInputs,
     )
     const mergedOmittedFormAnswers = formDataWithHealthieFormAnswers.flatMap(
-      ({ omittedFormAnswers }) => omittedFormAnswers
+      ({ omittedFormAnswers }) => omittedFormAnswers,
     )
 
     // indicates whether to make form values editable in Healthie
     const lock = defaultTo(fields.lockFormAnswerGroup, false)
+
+    /**
+     * Temporary log event to see the form answers we post to Healthie
+     * Added because it helps Paloma with debugging why the form answers are not being posted
+     * and unfortunately the Healthie API does not provide any useful error messages
+     */
+    const healthieFormAnswersLog = addActivityEventLog({
+      message: `Form answers:\n${JSON.stringify(mergedHealthieFormAnswers, null, 2)}`,
+    })
 
     try {
       const res = await healthieSdk.client.mutation({
@@ -120,18 +132,36 @@ export const pushFormResponsesToHealthie: Action<
       if (error instanceof HealthieError) {
         const errors = mapHealthieToActivityError(error.errors)
         await onError({
-          events: [...errors, ...getSubActivityLogs(mergedOmittedFormAnswers)],
+          events: [
+            ...errors,
+            ...getSubActivityLogs(mergedOmittedFormAnswers),
+            healthieFormAnswersLog,
+          ],
         })
-      } else if (error instanceof HealthieFormResponseNotCreated) {
+        return
+      }
+
+      if (error instanceof HealthieFormResponseNotCreated) {
         await onError({
           events: [
             parseHealthieFormResponseNotCreatedError(error.errors),
             ...getSubActivityLogs(mergedOmittedFormAnswers),
+            healthieFormAnswersLog,
           ],
         })
-      } else {
-        throw error
+        return
       }
+
+      const err = error as Error
+
+      await onError({
+        events: [
+          addActivityEventLog({
+            message: `Error: ${err.message}`,
+          }),
+          healthieFormAnswersLog,
+        ],
+      })
     }
   },
 }
