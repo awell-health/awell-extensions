@@ -13,10 +13,10 @@ interface OmittedFormAnswer {
 }
 
 const getMappingLogs = (
-  data: OmittedFormAnswer[]
+  data: OmittedFormAnswer[],
 ): ActivityEvent | undefined => {
   const errors = data.filter(
-    (item) => item.omitType === HealthieOmitType.MISSING_MAPPING
+    (item) => item.omitType === HealthieOmitType.MISSING_MAPPING,
   )
 
   if (errors.length === 0) return undefined
@@ -47,11 +47,11 @@ const getMappingLogs = (
 }
 
 const getFormDefinitionLogs = (
-  data: OmittedFormAnswer[]
+  data: OmittedFormAnswer[],
 ): ActivityEvent | undefined => {
   const errors = data.filter(
     (item) =>
-      item.omitType === HealthieOmitType.QUESTION_NOT_FOUND_IN_FORM_DEFINITION
+      item.omitType === HealthieOmitType.QUESTION_NOT_FOUND_IN_FORM_DEFINITION,
   )
 
   if (errors.length === 0) return undefined
@@ -82,7 +82,7 @@ const getFormDefinitionLogs = (
 }
 
 const getOtherErrors = (
-  data: OmittedFormAnswer[]
+  data: OmittedFormAnswer[],
 ): ActivityEvent | undefined => {
   const errors = data.filter((item) => item.omitType === HealthieOmitType.OTHER)
 
@@ -114,7 +114,7 @@ const getOtherErrors = (
 }
 
 export const getSubActivityLogs = (
-  data: OmittedFormAnswer[]
+  data: OmittedFormAnswer[],
 ): ActivityEvent[] => {
   const activityEvents = [
     getMappingLogs(data),
