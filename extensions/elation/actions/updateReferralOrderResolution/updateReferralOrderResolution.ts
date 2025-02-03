@@ -26,6 +26,10 @@ export const updateReferralOrderResolution: Action<
       await api.updateReferralOrder(referralOrderId, {
         resolution: {
           state: resolutionState,
+          /**
+           * This is required for the referral order to be marked as "fulfilled" correctly
+           * See https://linear.app/awell/issue/ET-889/check-that-referral-order-is-fulfilled-correctly-in-elation-for-phase
+           */
           resolving_document: resolvingDocument,
         },
       })
