@@ -9,13 +9,6 @@ export const listFields = {
     type: FieldType.STRING,
     required: true,
   },
-  facilityId: {
-    id: 'facilityId',
-    label: 'Facility ID',
-    description: 'The ID of the Facility where the patient is receiving care',
-    type: FieldType.STRING,
-    required: true,
-  },
 } satisfies Record<string, Field>
 
 export const getUrlFields = {
