@@ -1,7 +1,8 @@
-import {
-  type PatientCreate as MetriportPatientCreate,
-  usStateSchema,
-} from '@metriport/api-sdk'
+// import {
+//   type PatientCreate as MetriportPatientCreate,
+//   usStateSchema,
+// } from '@metriport/api-sdk'
+import { z } from 'zod'
 import { isValid } from 'driver-license-validator'
 import { type Action } from '@awell-health/extensions-core'
 import { Category } from '@awell-health/extensions-core'
@@ -12,6 +13,10 @@ import { createFields } from './fields'
 import { stringId } from '../../validation/generic.zod'
 import { type PatientCreate, patientCreateSchema } from './validation'
 import { patientIdDataPoint } from './dataPoints'
+
+// TODO: Remove these
+type MetriportPatientCreate = any
+const usStateSchema = z.object({})
 
 export const createPatient: Action<
   typeof createFields,
@@ -48,7 +53,6 @@ export const createPatient: Action<
     }
   },
 }
-
 export const convertToMetriportPatient = (
   patient: PatientCreate,
 ): MetriportPatientCreate => {
@@ -57,14 +61,14 @@ export const convertToMetriportPatient = (
     lastName: patient.lastName,
     dob: patient.dob,
     genderAtBirth: patient.genderAtBirth,
-    address: {
-      addressLine1: patient.addressLine1,
-      addressLine2: patient.addressLine2,
-      city: patient.city,
-      state: patient.state,
-      zip: patient.zip,
-      country: patient.country,
-    },
+    // address: {
+    //   addressLine1: patient.addressLine1,
+    //   addressLine2: patient.addressLine2,
+    //   city: patient.city,
+    //   state: patient.state,
+    //   zip: patient.zip,
+    //   country: patient.country,
+    // },
     personalIdentifiers: [],
     contact: {
       phone: patient.phone,

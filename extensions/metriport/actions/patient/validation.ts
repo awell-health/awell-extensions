@@ -1,6 +1,7 @@
 import * as z from 'zod'
-import { addressSchema, genderAtBirthSchema } from '@metriport/api-sdk'
-
+// import { addressSchema, genderAtBirthSchema } from '@metriport/api-sdk'
+const addressSchema = z.object({})
+const genderAtBirthSchema = z.object({})
 export const patientCreateSchema = z
   .object({
     firstName: z.string().min(1),

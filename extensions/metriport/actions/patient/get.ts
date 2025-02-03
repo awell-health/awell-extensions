@@ -40,7 +40,7 @@ export const getPatient: Action<
       }
 
       const driversLicense = patient.personalIdentifiers.find(
-        (id) => id.type === 'driversLicense'
+        (id: any) => id.type === 'driversLicense',
       )
 
       await onComplete({
