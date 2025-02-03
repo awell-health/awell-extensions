@@ -103,7 +103,6 @@ __metadata:
     "@mailchimp/mailchimp_transactional": "npm:^1.0.50"
     "@medplum/core": "npm:^3.1.4"
     "@medplum/fhirtypes": "npm:^3.1.4"
-    "@metriport/api-sdk": "npm:^14.11.1"
     "@sendgrid/client": "npm:^7.7.0"
     "@sendgrid/helpers": "npm:^7.7.0"
     "@sendgrid/mail": "npm:^7.7.0"
@@ -147,7 +146,6 @@ __metadata:
     graphql: "npm:^16.8.1"
     graphql-request: "npm:5.1.0"
     graphql-tag: "npm:^2.12.6"
-    http-status: "npm:1.7.4"
     husky: "npm:^9.1.7"
     jest: "npm:29.7.0"
     jest-fetch-mock: "npm:^3.0.3"
@@ -2177,18 +2175,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@medplum/core@npm:^2.2.10":
-  version: 2.2.10
-  resolution: "@medplum/core@npm:2.2.10"
-  peerDependencies:
-    pdfmake: ^0.2.5
-  peerDependenciesMeta:
-    pdfmake:
-      optional: true
-  checksum: 10/15c903209707ced01ae858ee323b9256876ea05c6428df807b5f16687a827cee230bd2b44fc9a5e0704c3ff7b41c022b931beeb22aabb07c6fbd538012eaf902
-  languageName: node
-  linkType: hard
-
 "@medplum/core@npm:^3.1.4":
   version: 3.2.14
   resolution: "@medplum/core@npm:3.2.14"
@@ -2201,60 +2187,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@medplum/fhirtypes@npm:^2.0.32":
-  version: 2.2.10
-  resolution: "@medplum/fhirtypes@npm:2.2.10"
-  checksum: 10/1592afd4ca3ca512eef42db9b75570bb1e211549867179dda52c5ca9e318eb369c42248acd7d297abde6a5a2cc6a2018ceca10c0f94db245e990397852f3f68b
-  languageName: node
-  linkType: hard
-
 "@medplum/fhirtypes@npm:^3.1.4, @medplum/fhirtypes@npm:^3.1.8":
   version: 3.2.14
   resolution: "@medplum/fhirtypes@npm:3.2.14"
   checksum: 10/e205afec2f69c96a1744f2e1214dfd8b9682b934072162fb0f67ecb4dcad4d3a433a50b850d9f3b32d1c21e2647d44a97375640f18d4a704cd4bb9093598189d
-  languageName: node
-  linkType: hard
-
-"@metriport/api-sdk@npm:^14.11.1":
-  version: 14.11.1
-  resolution: "@metriport/api-sdk@npm:14.11.1"
-  dependencies:
-    "@medplum/fhirtypes": "npm:^2.0.32"
-    "@metriport/commonwell-sdk": "npm:^5.5.2"
-    "@metriport/shared": "npm:^0.19.2"
-    axios: "npm:^1.4.0"
-    dayjs: "npm:^1.11.7"
-    dotenv: "npm:^16.3.1"
-    zod: "npm:^3.22.1"
-  checksum: 10/c85152aa0082e7dfd524573c5acec16d2ab3bc63e6f32d030a02e59c4917c752efeecd588b60bd556aaadfd71e5080c4bcc0eba22048cdcca1f00afed9d958b8
-  languageName: node
-  linkType: hard
-
-"@metriport/commonwell-sdk@npm:^5.5.2":
-  version: 5.5.2
-  resolution: "@metriport/commonwell-sdk@npm:5.5.2"
-  dependencies:
-    "@metriport/shared": "npm:^0.19.2"
-    axios: "npm:^1.4.0"
-    http-status: "npm:~1.7.0"
-    jsonwebtoken: "npm:^9.0.0"
-    zod: "npm:^3.22.1"
-  checksum: 10/edf47868b2bd8a082e0c2073e3e928c0bcbe7824ccbc27dcdc74c62c4742f59405b87871829039f8558c257813d82993b9d19737a3ac763bf589cd1c8c93107a
-  languageName: node
-  linkType: hard
-
-"@metriport/shared@npm:^0.19.2":
-  version: 0.19.2
-  resolution: "@metriport/shared@npm:0.19.2"
-  dependencies:
-    "@medplum/core": "npm:^2.2.10"
-    axios: "npm:^1.4.0"
-    dayjs: "npm:^1.11.9"
-    fast-xml-parser: "npm:^4.4.1"
-    http-status: "npm:~1.7.0"
-    lodash: "npm:^4.17.21"
-    zod: "npm:^3.22.1"
-  checksum: 10/3dde70b0473a239ad78707a2eae7b845a2d2e18007522c5bc00c4ba71220089184a389ff1cd2928a61d6cd5b44a5e9f4d9488e3d4766f1da1ab32439bfab5a95
   languageName: node
   linkType: hard
 
@@ -3900,17 +3836,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"axios@npm:^1.4.0":
-  version: 1.7.9
-  resolution: "axios@npm:1.7.9"
-  dependencies:
-    follow-redirects: "npm:^1.15.6"
-    form-data: "npm:^4.0.0"
-    proxy-from-env: "npm:^1.1.0"
-  checksum: 10/b7a5f660ea53ba9c2a745bf5ad77ad8bf4f1338e13ccc3f9f09f810267d6c638c03dac88b55dae8dc98b79c57d2d6835be651d58d2af97c174f43d289a9fd007
-  languageName: node
-  linkType: hard
-
 "babel-jest@npm:^29.7.0":
   version: 29.7.0
   resolution: "babel-jest@npm:29.7.0"
@@ -5097,7 +5022,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dayjs@npm:^1.11.7, dayjs@npm:^1.11.9":
+"dayjs@npm:^1.11.9":
   version: 1.11.13
   resolution: "dayjs@npm:1.11.13"
   checksum: 10/7374d63ab179b8d909a95e74790def25c8986e329ae989840bacb8b1888be116d20e1c4eee75a69ea0dfbae13172efc50ef85619d304ee7ca3c01d5878b704f5
@@ -6375,17 +6300,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fast-xml-parser@npm:^4.4.1":
-  version: 4.5.1
-  resolution: "fast-xml-parser@npm:4.5.1"
-  dependencies:
-    strnum: "npm:^1.0.5"
-  bin:
-    fxparser: src/cli/cli.js
-  checksum: 10/17ce5908e798de1b6d12a39d26f04ac3b582ea9ce28f3a6e3b9c401edcb74790f28df84d75377608af53308ff8caad2b244ba1283cc4b5b4cf4cc7bd532a9983
-  languageName: node
-  linkType: hard
-
 "fastq@npm:^1.6.0":
   version: 1.17.1
   resolution: "fastq@npm:1.17.1"
@@ -7191,13 +7105,6 @@ __metadata:
     agent-base: "npm:^7.1.0"
     debug: "npm:^4.3.4"
   checksum: 10/d062acfa0cb82beeb558f1043c6ba770ea892b5fb7b28654dbc70ea2aeea55226dd34c02a294f6c1ca179a5aa483c4ea641846821b182edbd9cc5d89b54c6848
-  languageName: node
-  linkType: hard
-
-"http-status@npm:1.7.4, http-status@npm:~1.7.0":
-  version: 1.7.4
-  resolution: "http-status@npm:1.7.4"
-  checksum: 10/6b510d25326ca3f183f64ecb797fe0a2ede4ca895e8243d92ce4abb35d9bfcd9ab468b2a565ebf4a718c3a986aa8754a23512fb6182a953d20f8f21c9a8f555e
   languageName: node
   linkType: hard
 
@@ -11714,13 +11621,6 @@ __metadata:
     "@types/node": "npm:>=8.1.0"
     qs: "npm:^6.11.0"
   checksum: 10/21287ebcaad81c6ddd54c3d45fe135a66ad69b7c3f107f94d520dbcbd6160c3812bfdcd8c0588cf52d031d4708257099ac7b032a70fd750e1b386ebeeb5471a7
-  languageName: node
-  linkType: hard
-
-"strnum@npm:^1.0.5":
-  version: 1.0.5
-  resolution: "strnum@npm:1.0.5"
-  checksum: 10/d3117975db8372d4d7b2c07601ed2f65bf21cc48d741f37a8617b76370d228f2ec26336e53791ebc3638264d23ca54e6c241f57f8c69bd4941c63c79440525ca
   languageName: node
   linkType: hard
 
