@@ -1,5 +1,5 @@
 import * as z from 'zod'
-import { addressSchema, genderAtBirthSchema } from '@metriport/api'
+import { addressSchema, genderAtBirthSchema } from '@metriport/api-sdk'
 
 export const patientCreateSchema = z
   .object({

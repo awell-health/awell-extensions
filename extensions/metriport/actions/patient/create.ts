@@ -1,7 +1,7 @@
 import {
   type PatientCreate as MetriportPatientCreate,
   usStateSchema,
-} from '@metriport/api'
+} from '@metriport/api-sdk'
 import { isValid } from 'driver-license-validator'
 import { type Action } from '@awell-health/extensions-core'
 import { Category } from '@awell-health/extensions-core'
@@ -50,7 +50,7 @@ export const createPatient: Action<
 }
 
 export const convertToMetriportPatient = (
-  patient: PatientCreate
+  patient: PatientCreate,
 ): MetriportPatientCreate => {
   const patientMetriport: MetriportPatientCreate = {
     firstName: patient.firstName,
@@ -77,14 +77,14 @@ export const convertToMetriportPatient = (
     patient.driversLicenseValue === undefined
   ) {
     throw new Error(
-      'Drivers license value is required when drivers license state is provided'
+      'Drivers license value is required when drivers license state is provided',
     )
   } else if (
     patient.driversLicenseState === undefined &&
     patient.driversLicenseValue !== undefined
   ) {
     throw new Error(
-      'Drivers license state is required when drivers license value is provided'
+      'Drivers license state is required when drivers license value is provided',
     )
   }
 
