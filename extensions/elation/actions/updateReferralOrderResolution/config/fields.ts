@@ -31,10 +31,10 @@ export const fields = {
   resolvingDocument: {
     id: 'resolvingDocument',
     label: 'Resolving document',
-    type: FieldType.STRING,
+    type: FieldType.NUMERIC,
     required: true,
     description:
-      'The ID of the document that resolves the referral order. Can be f.e. a reference to a non-visit note',
+      'The ID of the document that resolves the referral order. Can be f.e. a reference to a non-visit note. Required if the resolution state is "fulfilled".',
   },
 } satisfies Record<string, Field>
 
