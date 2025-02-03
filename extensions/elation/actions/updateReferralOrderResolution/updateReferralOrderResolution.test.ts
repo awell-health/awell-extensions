@@ -91,6 +91,7 @@ describe('Elation - Update referral order resolution', () => {
           fields: {
             referralOrderId: 142685415604249,
             resolutionState: 'fulfilled',
+            resolvingDocument: 1234567890,
           },
           settings: {
             client_id: 'clientId',
