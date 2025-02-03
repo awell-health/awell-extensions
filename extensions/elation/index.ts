@@ -18,4 +18,7 @@ export const Elation: Extension = {
   settings,
   actions,
   webhooks,
+  identifier: {
+    system: 'https://www.elationhealth.com/',
+  },
 }
