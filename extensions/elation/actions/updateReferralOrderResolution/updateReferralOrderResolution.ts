@@ -18,15 +18,15 @@ export const updateReferralOrderResolution: Action<
   previewable: false,
   dataPoints,
   onEvent: async ({ payload, onComplete, onError }): Promise<void> => {
-    const { referralOrderId, resolutionState } = FieldsValidationSchema.parse(
-      payload.fields,
-    )
+    const { referralOrderId, resolutionState, resolvingDocument } =
+      FieldsValidationSchema.parse(payload.fields)
     const api = makeAPIClient(payload.settings)
 
     try {
       await api.updateReferralOrder(referralOrderId, {
         resolution: {
           state: resolutionState,
+          resolving_document: resolvingDocument,
         },
       })
     } catch (error) {
