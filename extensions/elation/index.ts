@@ -3,6 +3,7 @@ import { type Extension } from '@awell-health/extensions-core'
 import { settings } from './settings'
 import { AuthorType, Category } from '@awell-health/extensions-core'
 import { webhooks } from './webhooks'
+import { timers } from './timers'
 
 export const Elation: Extension = {
   key: 'elation',
@@ -21,4 +22,5 @@ export const Elation: Extension = {
   identifier: {
     system: 'https://www.elationhealth.com/',
   },
+  timers,
 }
