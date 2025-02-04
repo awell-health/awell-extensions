@@ -1,1 +1,1 @@
-export { addAllergy } from './createMessageThread'
+export { createMessageThread } from './createMessageThread'

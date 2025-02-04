@@ -25,3 +25,10 @@ export interface MessageThreadResponse {
     sender: number
   }>
 }
+
+export interface AddMessageToThreadInput {
+  thread: number
+  sender: number
+  body: string
+  send_date: string
+}

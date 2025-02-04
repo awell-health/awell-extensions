@@ -48,6 +48,7 @@ import {
   type PostReferralOrderResponse,
   type GetReferralOrderInputType,
   type GetReferralOrderResponseType,
+  type AddMessageToThreadInput,
 } from './types'
 import { elationCacheService } from './cache'
 import { isEmpty } from 'lodash'
@@ -285,6 +286,21 @@ export class ElationDataWrapper extends DataWrapper {
     const req = this.Request<MessageThreadResponse>({
       method: 'POST',
       url: `/message_threads`,
+      data: obj,
+    })
+    const res = await req
+    return res
+  }
+
+  // A bit confusing, but in Elation, 'Message Thread' is the 'main object' 
+  // and you add thread messages to main Message Thread.
+  // see https://docs.elationhealth.com/reference/create-thread-message
+  public async addMessageToThread(
+    obj: AddMessageToThreadInput,
+  ): Promise<MessageThreadResponse> {
+    const req = this.Request<MessageThreadResponse>({
+      method: 'POST',
+      url: `/thread_messages`,
       data: obj,
     })
     const res = await req
@@ -575,6 +591,12 @@ export class ElationAPIClient extends APIClient<ElationDataWrapper> {
     obj: MessageThreadInput,
   ): Promise<MessageThreadResponse> {
     return await this.FetchData(async (dw) => await dw.createMessageThread(obj))
+  }
+
+  public async addMessageToThread(
+    obj: AddMessageToThreadInput,
+  ): Promise<MessageThreadResponse> {
+    return await this.FetchData(async (dw) => await dw.addMessageToThread(obj))
   }
 
   public async addAllergy(

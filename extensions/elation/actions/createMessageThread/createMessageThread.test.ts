@@ -2,7 +2,6 @@ import { generateTestPayload } from '../../../../tests/constants'
 import { ZodError } from 'zod'
 import { makeAPIClient } from '../../client'
 import { createMessageThread } from './createMessageThread'
-import { allergyExample } from '../../__mocks__/constants'
 
 jest.mock('../../client')
 
