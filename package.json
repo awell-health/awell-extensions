@@ -1,6 +1,6 @@
 {
   "name": "@awell-health/awell-extensions",
-  "version": "2.0.162",
+  "version": "2.0.165",
   "packageManager": "yarn@4.5.3",
   "main": "dist/src/index.js",
   "repository": {
@@ -87,7 +87,6 @@
     "@langchain/openai": "^0.3.0",
     "@mailchimp/mailchimp_transactional": "^1.0.50",
     "@medplum/core": "^3.1.4",
-    "@metriport/api": "^3.1.5",
     "@sendgrid/client": "^7.7.0",
     "@sendgrid/helpers": "^7.7.0",
     "@sendgrid/mail": "^7.7.0",
@@ -124,10 +123,11 @@
     "twilio": "^4.8.0",
     "uuid": "^10.0.0",
     "xml2js": "^0.6.2",
-    "zod": "^3.23.4",
+    "zod": "^3.24.1",
     "zod-validation-error": "^3.2.0"
   },
   "resolutions": {
-    "jsonpath-plus": "^10.2.0"
+    "jsonpath-plus": "^10.2.0",
+    "zod": "^3.24.1"
   }
 }

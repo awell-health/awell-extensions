@@ -5,7 +5,7 @@ import { createMetriportApi } from '../../client'
 import { handleErrorMessage } from '../../shared/errorHandler'
 import { listFields } from './fields'
 import { startQuerySchema } from './validation'
-import { documentsDataPoints as dataPoints } from './dataPoints'
+import { documentQueryDataPoints as dataPoints } from './dataPoints'
 
 export const queryDocs: Action<
   typeof listFields,
@@ -30,9 +30,10 @@ export const queryDocs: Action<
 
       await onComplete({
         data_points: {
-          queryStatus: resp.queryStatus,
-          queryProgressTotal: String(resp.queryProgress?.total),
-          queryProgressComplete: String(resp.queryProgress?.completed),
+          requestId: resp.requestId ?? '',
+          downloadStatus: resp.download?.status ?? '',
+          downloadTotal: String(resp.download?.total ?? 0),
+          downloadSuccessful: String(resp.download?.successful ?? 0),
         },
       })
     } catch (err) {

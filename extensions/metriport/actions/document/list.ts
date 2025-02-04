@@ -22,17 +22,15 @@ export const listDocuments: Action<
   dataPoints,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
     try {
-      const { patientId, facilityId } = startQuerySchema.parse(payload.fields)
+      const { patientId } = startQuerySchema.parse(payload.fields)
 
       const api = createMetriportApi(payload.settings)
 
-      const resp = await api.listDocuments(patientId, facilityId)
+      const resp = await api.listDocuments(patientId)
 
       await onComplete({
         data_points: {
-          queryStatus: resp.queryStatus,
-          queryProgressTotal: String(resp.queryProgress?.total),
-          queryProgressComplete: String(resp.queryProgress?.completed),
+          documents: JSON.stringify(resp.documents),
         },
       })
     } catch (err) {
