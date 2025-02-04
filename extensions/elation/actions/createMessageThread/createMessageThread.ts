@@ -1,13 +1,10 @@
-import {
-  type Action,
-} from '@awell-health/extensions-core'
+import { type Action } from '@awell-health/extensions-core'
 import { Category } from '@awell-health/extensions-core'
 import { type settings } from '../../settings'
 import { makeAPIClient } from '../../client'
 import { messageThreadSchema } from '../../validation/messageThread.zod'
 import { isNil } from 'lodash'
 import { dataPoints, fields } from './config'
-
 
 export const createMessageThread: Action<
   typeof fields,
@@ -30,8 +27,25 @@ export const createMessageThread: Action<
       chartDate,
       messageBody,
       isUrgent,
+      recipientId,
       groupId,
     } = payload.fields
+
+    const threadMembers = [
+      // Individual recipient
+      ...(!isNil(recipientId)
+        ? [{ user: recipientId, status: 'Requiring Action' }]
+        : []),
+      // Group recipient
+      ...(!isNil(groupId)
+        ? [{ group: groupId, status: 'Requiring Action' }]
+        : []),
+      // Sender
+      {
+        user: senderId,
+        status: 'Addressed',
+      },
+    ]
 
     const messageThread = messageThreadSchema.parse({
       patient: patientId,
@@ -47,14 +61,7 @@ export const createMessageThread: Action<
           sender: senderId,
         },
       ],
-      members: !isNil(groupId)
-        ? [
-            {
-              group: groupId,
-              status: 'Requiring Action',
-            },
-          ]
-        : [],
+      members: threadMembers,
     })
 
     const api = makeAPIClient(payload.settings)

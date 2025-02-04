@@ -1,27 +1,32 @@
-import { generateTestPayload } from '../../../../tests/constants'
 import { ZodError } from 'zod'
 import { makeAPIClient } from '../../client'
-import { createMessageThread } from './createMessageThread'
+import { createMessageThread as action } from './createMessageThread'
+import { TestHelpers } from '@awell-health/extensions-core'
+import { generateTestPayload } from '../../../../tests/constants'
+import { createAxiosError } from '../../../../tests'
+import { FieldsValidationSchema } from './config'
 
 jest.mock('../../client')
 
 describe('createMessageThread action', () => {
-  const onComplete = jest.fn()
-  const onError = jest.fn()
-  const mockAPIClient = makeAPIClient as jest.Mock
+  const { extensionAction, onComplete, onError, clearMocks } =
+    TestHelpers.fromAction(action)
 
-  // Test constants
-  const VALID_PAYLOAD = {
+  const mockCreateMessageThread = jest.fn()
+
+  const validFields = {
     patientId: 123456,
     practiceId: 654321,
     senderId: 7891011,
-    documentDate: '2024-11-05',
-    chartDate: '2024-11-05',
+    documentDate: '2025-02-04T08:21:43Z',
+    chartDate: '2025-02-04T08:21:43Z',
     isUrgent: true,
     messageBody: 'Initial message in the thread',
+    recipientId: 123456,
+    groupId: 654321,
   }
 
-  const settings = {
+  const validSettings = {
     auth_url: 'authurl',
     base_url: 'baseurl',
     client_id: 'client_id',
@@ -30,27 +35,28 @@ describe('createMessageThread action', () => {
     password: 'password',
   }
 
-  const withFields = (fields: any) => generateTestPayload({ fields, settings })
+  const createTestPayload = (fields: any) =>
+    generateTestPayload({ fields, settings: validSettings })
 
-  // Helper function to create test cases
-  const createTestPayload = (overrides = {}) => 
-    withFields({ ...VALID_PAYLOAD, ...overrides })
-
-  beforeEach(() => {
-    onComplete.mockClear()
-    onError.mockClear()
-    // Reset API mock to successful case by default
+  beforeAll(() => {
+    const mockAPIClient = makeAPIClient as jest.Mock
     mockAPIClient.mockImplementation(() => ({
-      createMessageThread: jest.fn(async () => ({ id: 1 })),
+      createMessageThread: mockCreateMessageThread,
     }))
   })
 
-  describe('successful cases', () => {
-    it('should create a message thread with valid payload', async () => {
-      const payload = createTestPayload()
+  beforeEach(() => {
+    clearMocks()
+  })
 
-      await createMessageThread.onEvent!({
-        payload,
+  describe('successful cases', () => {
+    beforeEach(() => {
+      mockCreateMessageThread.mockResolvedValue({ id: 1 })
+    })
+
+    it('should create a message thread with valid payload', async () => {
+      await extensionAction.onEvent({
+        payload: createTestPayload(validFields),
         onComplete,
         onError,
         helpers: {} as any,
@@ -64,13 +70,26 @@ describe('createMessageThread action', () => {
   })
 
   describe('validation errors', () => {
+    it('should set default documentDate and chartDate if not provided', async () => {
+      const fields = {
+        ...validFields,
+        documentDate: undefined,
+        chartDate: undefined,
+      }
+
+      const validatedFields = FieldsValidationSchema.parse(fields)
+
+      expect(validatedFields.documentDate).not.toBeUndefined()
+      expect(validatedFields.chartDate).not.toBeUndefined()
+    })
+
     it.each([
       ['invalid patientId', { patientId: 'invalid_id' }],
       ['missing messageBody', { messageBody: undefined }],
     ])('should fail with %s', async (_, invalidFields) => {
       const payload = createTestPayload(invalidFields)
 
-      const response = createMessageThread.onEvent!({
+      const response = extensionAction.onEvent({
         payload,
         onComplete,
         onError,
@@ -82,23 +101,29 @@ describe('createMessageThread action', () => {
   })
 
   describe('error handling', () => {
+    beforeEach(() => {
+      mockCreateMessageThread.mockRejectedValue(
+        createAxiosError(
+          400,
+          'Bad Request',
+          JSON.stringify({
+            detail: 'Bad Request',
+          }),
+        ),
+      )
+    })
+
     it('should handle API errors appropriately', async () => {
-      mockAPIClient.mockImplementationOnce(() => ({
-        createMessageThread: jest.fn(async () => {
-          throw new Error('API error')
-        }),
-      }))
+      const payload = createTestPayload(validFields)
 
-      const payload = createTestPayload()
-
-      const response = createMessageThread.onEvent!({
+      const response = extensionAction.onEvent({
         payload,
         onComplete,
         onError,
         helpers: {} as any,
       })
 
-      await expect(response).rejects.toThrowError('API error')
+      await expect(response).rejects.toThrow()
       expect(onComplete).not.toHaveBeenCalled()
     })
   })

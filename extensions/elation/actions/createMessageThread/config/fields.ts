@@ -1,5 +1,5 @@
 import {
-  DateTimeSchema,
+  DateTimeOptionalSchema,
   FieldType,
   NumericIdSchema,
   type Field,
@@ -10,7 +10,7 @@ export const fields = {
   patientId: {
     id: 'patientId',
     label: 'Patient ID',
-    description: 'The patient chart for which the thread is about',
+    description: 'The patient for which the thread is about',
     type: FieldType.NUMERIC,
     required: true,
   },
@@ -31,16 +31,16 @@ export const fields = {
   documentDate: {
     id: 'documentDate',
     label: 'Document Date',
-    description: 'Date associated with the document (ISO format)',
+    description: 'Defaults to today’s date if not provided',
     type: FieldType.DATE,
-    required: true,
+    required: false,
   },
   chartDate: {
     id: 'chartDate',
     label: 'Chart Date',
-    description: 'Date of the patient’s chart (ISO format)',
+    description: 'Defaults to today’s date if not provided',
     type: FieldType.DATE,
-    required: true,
+    required: false,
   },
   messageBody: {
     id: 'messageBody',
@@ -49,19 +49,29 @@ export const fields = {
     type: FieldType.STRING,
     required: true,
   },
+  recipientId: {
+    id: 'recipientId',
+    label: 'Recipient ID',
+    description:
+      'A user ID of the recipient of the message. They will be added as a member to the thread.',
+    type: FieldType.NUMERIC,
+    required: false,
+  },
   groupId: {
     id: 'groupId',
     label: 'Group ID',
-    description: 'The ID of the group to which the thread member belongs',
+    description:
+      'The ID of a group that will be added as a member to the thread.',
     type: FieldType.NUMERIC,
     required: false,
   },
   isUrgent: {
     id: 'isUrgent',
     label: 'Urgent',
-    description: 'Marks the message thread as urgent if true',
+    description:
+      'Marks the message thread as urgent if true. Defaults to false.',
     type: FieldType.BOOLEAN,
-    required: true,
+    required: false,
   },
 } satisfies Record<string, Field>
 
@@ -69,9 +79,18 @@ export const FieldsValidationSchema = z.object({
   patientId: NumericIdSchema,
   senderId: NumericIdSchema,
   practiceId: NumericIdSchema,
-  documentDate: DateTimeSchema,
-  chartDate: DateTimeSchema,
+  documentDate: z
+    .string()
+    .optional()
+    .default(new Date().toISOString())
+    .pipe(DateTimeOptionalSchema),
+  chartDate: z
+    .string()
+    .optional()
+    .default(new Date().toISOString())
+    .pipe(DateTimeOptionalSchema),
   messageBody: z.string().min(1),
+  recipientId: NumericIdSchema.optional(),
   groupId: NumericIdSchema.optional(),
-  isUrgent: z.boolean(),
+  isUrgent: z.boolean().optional().default(false),
 } satisfies Record<keyof typeof fields, ZodTypeAny>)
