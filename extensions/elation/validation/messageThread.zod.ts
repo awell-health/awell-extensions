@@ -20,7 +20,8 @@ export const ThreadMemberSchema = z
   })
 
 const CreateThreadMemberSchema = z.object({
-  group: z.number().int().positive().nullable(),
+  user: z.number().int().positive().nullable().optional(),
+  group: z.number().int().positive().nullable().optional(),
   status: z.enum(['Addressed', 'Requiring Action']),
 })
 
@@ -43,6 +44,6 @@ export const messageThreadSchema = z.object({
         message: "Invalid date format for 'send_date'",
       }),
       sender: z.number().int().positive(),
-    })
+    }),
   ),
 })

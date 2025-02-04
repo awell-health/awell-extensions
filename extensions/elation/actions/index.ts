@@ -14,6 +14,7 @@ import { getPhysician } from './getPhysician'
 import { postLetter } from './postLetter'
 import { createLabOrder } from './createLabOrder'
 import { createMessageThread } from './createMessageThread'
+import { addMessageToThread } from './addMessageToThread'
 import { addHistory } from './addHistory/addHistory'
 import { addAllergy } from './addAllergy/addAllergy'
 import { createVisitNote } from './createVisitNote/createVisitNote'
@@ -50,6 +51,7 @@ export const actions = {
   postLetter,
   createLabOrder,
   createMessageThread,
+  addMessageToThread,
   getLetter,
   createReferralOrder,
   createCareGap,

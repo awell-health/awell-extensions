@@ -1,0 +1,130 @@
+import { ZodError } from 'zod'
+import { makeAPIClient } from '../../client'
+import { createMessageThread as action } from './createMessageThread'
+import { TestHelpers } from '@awell-health/extensions-core'
+import { generateTestPayload } from '../../../../tests/constants'
+import { createAxiosError } from '../../../../tests'
+import { FieldsValidationSchema } from './config'
+
+jest.mock('../../client')
+
+describe('createMessageThread action', () => {
+  const { extensionAction, onComplete, onError, clearMocks } =
+    TestHelpers.fromAction(action)
+
+  const mockCreateMessageThread = jest.fn()
+
+  const validFields = {
+    patientId: 123456,
+    practiceId: 654321,
+    senderId: 7891011,
+    documentDate: '2025-02-04T08:21:43Z',
+    chartDate: '2025-02-04T08:21:43Z',
+    isUrgent: true,
+    messageBody: 'Initial message in the thread',
+    recipientId: 123456,
+    groupId: 654321,
+  }
+
+  const validSettings = {
+    auth_url: 'authurl',
+    base_url: 'baseurl',
+    client_id: 'client_id',
+    client_secret: 'client_secret',
+    username: 'username',
+    password: 'password',
+  }
+
+  const createTestPayload = (fields: any) =>
+    generateTestPayload({ fields, settings: validSettings })
+
+  beforeAll(() => {
+    const mockAPIClient = makeAPIClient as jest.Mock
+    mockAPIClient.mockImplementation(() => ({
+      createMessageThread: mockCreateMessageThread,
+    }))
+  })
+
+  beforeEach(() => {
+    clearMocks()
+  })
+
+  describe('successful cases', () => {
+    beforeEach(() => {
+      mockCreateMessageThread.mockResolvedValue({ id: 1 })
+    })
+
+    it('should create a message thread with valid payload', async () => {
+      await extensionAction.onEvent({
+        payload: createTestPayload(validFields),
+        onComplete,
+        onError,
+        helpers: {} as any,
+      })
+
+      expect(onComplete).toHaveBeenCalledWith({
+        data_points: { messageThreadId: '1' },
+      })
+      expect(onError).not.toHaveBeenCalled()
+    })
+  })
+
+  describe('validation errors', () => {
+    it('should set default documentDate and chartDate if not provided', async () => {
+      const fields = {
+        ...validFields,
+        documentDate: undefined,
+        chartDate: undefined,
+      }
+
+      const validatedFields = FieldsValidationSchema.parse(fields)
+
+      expect(validatedFields.documentDate).not.toBeUndefined()
+      expect(validatedFields.chartDate).not.toBeUndefined()
+    })
+
+    it.each([
+      ['invalid patientId', { patientId: 'invalid_id' }],
+      ['missing messageBody', { messageBody: undefined }],
+    ])('should fail with %s', async (_, invalidFields) => {
+      const payload = createTestPayload(invalidFields)
+
+      const response = extensionAction.onEvent({
+        payload,
+        onComplete,
+        onError,
+        helpers: {} as any,
+      })
+
+      await expect(response).rejects.toThrow(ZodError)
+    })
+  })
+
+  describe('error handling', () => {
+    beforeEach(() => {
+      mockCreateMessageThread.mockRejectedValue(
+        createAxiosError(
+          400,
+          'Bad Request',
+          JSON.stringify({
+            detail: 'Bad Request',
+          }),
+        ),
+      )
+    })
+
+    it('should handle API errors appropriately', async () => {
+      const payload = createTestPayload(validFields)
+
+      const response = extensionAction.onEvent({
+        payload,
+        onComplete,
+        onError,
+        helpers: {} as any,
+      })
+
+      await expect(response).rejects.toThrow()
+      expect(onComplete).not.toHaveBeenCalled()
+    })
+  })
+})
