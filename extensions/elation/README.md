@@ -96,3 +96,51 @@ Search a physician based on a set of parameters. The ID of the physician matchin
 
 Note that this action can only support finding one physician so if your search criteria match multiple physicians the action will throw an error.
 
+### 🪄 Find future appointment
+
+Tries to find a **single future appointment** for a patient based on a prompt in natural language. These are the steps executed by the action:
+
+1. All future appointments with status `Scheduled` or `Confirmed` for the patient are retrieved from Elation.
+2. Based on the provided prompt, an LLM tries to find a single appointment from the list of future appointments that matches the prompt.
+3. If multiple appointments exist that match the instructions, only the first one is returned.
+
+If a matching appointment is found, the action returns the full appointment resource and an explanation of why the LLM chose this appointment.
+
+### 🪄 Find appointments by prompt
+
+Tries to find **all appointments** for a patient based on a prompt in natural language. These are the steps executed by the action:
+
+1. All appointments, independent their date or status, for the patient are retrieved from Elation.
+2. Based on the provided prompt, an LLM tries to find all appointments from the list appointments that matches the prompt.
+
+The action returns the full appointment resources of all appointments matching the prompt and an explanation of why the LLM chose these appointments. Additionally, the action returns a count of appointments by status.
+
+Example data points output below.
+
+Appointments (note: only displaying a partial appointment resource)
+```json
+[
+  {
+    "id": 456,
+    "scheduled_date": "2023-07-12T20:44:22Z",
+    "status": {
+      "status": "Scheduled",
+    },
+  },
+  {
+    "id": 456,
+    "scheduled_date": "2023-08-12T20:44:22Z",
+    "status": {
+      "status": "Confirmed",
+    },
+  }
+]
+```
+
+Appointment counts by status
+```json
+{
+  "Scheduled": 1,
+  "Confirmed": 1,
+}
+```

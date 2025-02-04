@@ -74,7 +74,10 @@ export const findFutureAppointment: Action<
       },
       events: [
         addActivityEventLog({
-          message: `Number of future scheduled or confirmed appointments for patient ${patientId}: ${appointments.length}\nFound appointment: ${isNil(foundAppointment) ? 'none' : foundAppointment?.id}\nExplanation: ${explanation}`,
+          message: `Number of future scheduled or confirmed appointments: ${appointments.length}\n
+          Appointments data: ${JSON.stringify(appointments, null, 2)}\n
+          Found appointment: ${isNil(foundAppointment) ? 'none' : foundAppointment?.id}\n
+          Explanation: ${explanation}`,
         }),
       ],
     })

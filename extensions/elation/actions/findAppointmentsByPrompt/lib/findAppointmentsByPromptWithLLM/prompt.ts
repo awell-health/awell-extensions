@@ -1,6 +1,7 @@
 import { ChatPromptTemplate } from '@langchain/core/prompts'
 
-export const systemPrompt = ChatPromptTemplate.fromTemplate(`You are a helpful medical assistant. You will receive a list (array) of appointments for a single patient and instructions about which types of appointments to find. You're supposed to use the information in the list to find appointments that match, if any exist. If no appointments exists that obviously match the instructions, that's a perfectly acceptable outcome. If multiple appointments exist that match the instructions, you should return all of them.
+export const systemPrompt =
+  ChatPromptTemplate.fromTemplate(`You are a helpful medical assistant. You will receive a list (array) of appointments for a single patient and instructions about which types of appointments to find. You're supposed to use the information in the list to find appointments that match, if any exist. If no appointments exists that obviously match the instructions, that's a perfectly acceptable outcome. If multiple appointments exist that match the instructions, you should return all of them.
         
 Important instructions:
 - The appointment "reason" is the appointment type.
@@ -18,5 +19,4 @@ Instruction:
 
 Output a JSON object with the following keys:
 1. appointmentIds: array of numbers representing appointment IDs that match the instructions (or an empty array if no appointments exist that match the instructions).
-2. explanation: A readable explanation of how the appointments were found and why. Or, if no appointments exist that match the instructions, an explanation of why.`
-) 
+2. explanation: A readable explanation of how the appointments were found and why. Or, if no appointments exist that match the instructions, an explanation of why.`)
