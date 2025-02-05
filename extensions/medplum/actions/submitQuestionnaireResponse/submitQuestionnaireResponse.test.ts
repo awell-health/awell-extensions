@@ -103,6 +103,10 @@ describe('Medplum - Create questionnaire response', () => {
       expect(mockCreateResource).toHaveBeenCalledWith({
         item: [
           {
+            linkId: 'description-question-id',
+            text: 'Description content',
+          },
+          {
             answer: [
               {
                 valueCoding: {

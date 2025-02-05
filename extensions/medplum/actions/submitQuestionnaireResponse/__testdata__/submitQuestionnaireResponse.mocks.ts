@@ -15,6 +15,20 @@ export const simpleFormMockResponse = {
     metadata: '{"form": "metadata"}',
     questions: [
       {
+        id: 'description-question-id',
+        definition_id: 'description-question-definition-id',
+        title: '<p class="slate-p">Description content</p>',
+        key: 'description',
+        dataPointValueType: null,
+        questionType: 'NO_INPUT',
+        userQuestionType: 'DESCRIPTION',
+        metadata: null,
+        options: [],
+        rule: null,
+        questionConfig: null,
+        __typename: 'Question',
+      },
+      {
         id: 'question-id',
         definition_id: 'question-definition-id',
         title: 'Single select (number)',
