@@ -46,7 +46,7 @@ export const fields = {
     id: 'messageBody',
     label: 'Message Body',
     description: 'The content of the initial message in the thread',
-    type: FieldType.STRING,
+    type: FieldType.TEXT,
     required: true,
   },
   recipientId: {

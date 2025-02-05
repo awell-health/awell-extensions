@@ -25,7 +25,7 @@ export const fields = {
     id: 'messageBody',
     label: 'Message Body',
     description: 'The content of the message to be added to the thread',
-    type: FieldType.STRING,
+    type: FieldType.TEXT,
     required: true,
   },
 } satisfies Record<string, Field>
