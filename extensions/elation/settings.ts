@@ -59,7 +59,7 @@ export const settings = {
 export const rateLimitDurationSchema = z
   .string()
   .regex(
-    /^\d+[ ]+[smhd]$/,
+    /^\d+\s+[smhd]$/,
     'Duration must be in format {number} {unit} where unit is s,m,h,d',
   )
   .transform((val): Duration => {

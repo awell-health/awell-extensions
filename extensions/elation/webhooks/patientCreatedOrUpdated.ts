@@ -6,6 +6,7 @@ import { type SubscriptionEvent } from '../types/subscription'
 import { Duration } from '@upstash/ratelimit'
 import { rateLimitDurationSchema } from '../settings'
 import { createHash } from 'node:crypto'
+import { isNil } from 'lodash'
 
 const dataPoints = {
   patientId: {
@@ -42,7 +43,7 @@ export const patientCreatedOrUpdated: Webhook<
       settings.rateLimitDuration,
     )
 
-    if (rateLimitDuration) {
+    if (!isNil(rateLimitDuration)) {
       const rateLimiter = helpers.rateLimit(1, rateLimitDuration as Duration)
       const strPatient = JSON.stringify(data)
       const uniqueHash = createHash('sha256').update(strPatient).digest('hex')
