@@ -86,7 +86,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@awell-health/awell-extensions@workspace:."
   dependencies:
-    "@awell-health/awell-sdk": "npm:^0.1.20"
+    "@awell-health/awell-sdk": "npm:^0.1.21"
     "@awell-health/extensions-core": "npm:1.0.18"
     "@awell-health/healthie-sdk": "npm:^0.1.1"
     "@dropbox/sign": "npm:^1.8.0"
@@ -180,16 +180,17 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@awell-health/awell-sdk@npm:^0.1.20":
-  version: 0.1.20
-  resolution: "@awell-health/awell-sdk@npm:0.1.20"
+"@awell-health/awell-sdk@npm:^0.1.21":
+  version: 0.1.21
+  resolution: "@awell-health/awell-sdk@npm:0.1.21"
   dependencies:
     "@genql/cli": "npm:^6.3.3"
     "@medplum/fhirtypes": "npm:^3.1.8"
     crypto: "npm:^1.0.1"
     date-fns: "npm:^4.1.0"
+    jsdom: "npm:^26.0.0"
     lodash: "npm:^4.17.21"
-  checksum: 10/82698f1aa817483c247e3c0468368943ccd140e4f398c6547733b79f62cfd3a4a5701ce4cc8eeb48b192ecea48e3209e8caa4e58832478a1ecbc49e9e9ccf0f2
+  checksum: 10/619b8fc63ee8df8d7312b2a48f86d62eb3ef591f2e4c91d19b63a3ac65c8ed73e7b65aabacd7a34a9d540fc8c222a4a0af6134ed990c51dd6f56f584637e5d7e
   languageName: node
   linkType: hard
 
