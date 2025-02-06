@@ -4,7 +4,7 @@ import { type settings } from '../../settings'
 import { makeAPIClient } from '../../client'
 import { messageThreadSchema } from '../../validation/messageThread.zod'
 import { isNil } from 'lodash'
-import { dataPoints, fields } from './config'
+import { dataPoints, fields, FieldsValidationSchema } from './config'
 
 export const createMessageThread: Action<
   typeof fields,
@@ -29,7 +29,7 @@ export const createMessageThread: Action<
       isUrgent,
       recipientId,
       groupId,
-    } = payload.fields
+    } = FieldsValidationSchema.parse(payload.fields)
 
     const threadMembers = [
       // Individual recipient

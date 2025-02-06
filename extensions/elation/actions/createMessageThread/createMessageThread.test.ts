@@ -18,12 +18,12 @@ describe('createMessageThread action', () => {
     patientId: 123456,
     practiceId: 654321,
     senderId: 7891011,
-    documentDate: '2025-02-04T08:21:43Z',
-    chartDate: '2025-02-04T08:21:43Z',
-    isUrgent: true,
+    documentDate: undefined,
+    chartDate: undefined,
+    isUrgent: undefined,
     messageBody: 'Initial message in the thread',
-    recipientId: 123456,
-    groupId: 654321,
+    recipientId: undefined,
+    groupId: undefined,
   }
 
   const validSettings = {
@@ -71,16 +71,11 @@ describe('createMessageThread action', () => {
 
   describe('validation errors', () => {
     it('should set default documentDate and chartDate if not provided', async () => {
-      const fields = {
-        ...validFields,
-        documentDate: undefined,
-        chartDate: undefined,
-      }
-
-      const validatedFields = FieldsValidationSchema.parse(fields)
+      const validatedFields = FieldsValidationSchema.parse(validFields)
 
       expect(validatedFields.documentDate).not.toBeUndefined()
       expect(validatedFields.chartDate).not.toBeUndefined()
+      expect(validatedFields.isUrgent).toBe(false)
     })
 
     it.each([
