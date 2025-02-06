@@ -2,94 +2,76 @@ import { Category, type Action } from '@awell-health/extensions-core'
 import { type settings } from '../../settings'
 import { fields, FieldsValidationSchema, dataPoints } from './config'
 import { validatePayloadAndCreateSdks } from '../../lib/validatePayloadAndCreateSdks'
-import { type Patient } from '@medplum/fhirtypes'
+import { type DocumentReferenceCreateInputType } from '../../lib/api/FhirR4/schema'
 import { AxiosError } from 'axios'
-import { isEmpty } from 'lodash'
 import { addActivityEventLog } from '../../../../src/lib/awell'
 import { getResourceId } from '../../lib/api/getResourceId'
 
-export const createPatient: Action<
+export const createDocument: Action<
   typeof fields,
   typeof settings,
   keyof typeof dataPoints
 > = {
-  key: 'createPatient',
+  key: 'createDocument',
   category: Category.EHR_INTEGRATIONS,
-  title: 'Create patient',
-  description: 'Create a patient in Cerner',
+  title: 'Create document',
+  description: 'Create a document in Cerner',
   fields,
   previewable: false,
   dataPoints,
   onEvent: async ({ payload, onComplete, onError }): Promise<void> => {
     const {
       cernerFhirR4Sdk,
-      fields: {
-        familyName,
-        givenName,
-        email,
-        gender,
-        birthDate,
-        ssn,
-        assigningOrganizationId,
-      },
+      fields: { patientResourceId, encounterResourceId, type, note },
     } = await validatePayloadAndCreateSdks({
       fieldsSchema: FieldsValidationSchema,
       payload,
     })
 
-    const PatientResource = {
-      resourceType: 'Patient',
-      identifier: [
-        // Assigning Organization ID (required)
-        {
-          assigner: {
-            reference: `Organization/${assigningOrganizationId}`,
-          },
-        },
-        // Social Security Number
-        ...(!isEmpty(ssn)
-          ? [
-              {
-                type: {
-                  coding: [
-                    {
-                      system: 'http://terminology.hl7.org/CodeSystem/v2-0203',
-                      code: 'SS',
-                    },
-                  ],
-                },
-                system: 'http://hl7.org/fhir/sid/us-ssn',
-                value: ssn,
-              },
-            ]
-          : []),
-      ],
-      name: [
-        {
-          use: 'official',
-          family: familyName,
-          given: [givenName],
-        },
-      ],
-      ...(!isEmpty(gender) && {
-        gender,
-      }),
-      ...(!isEmpty(birthDate) && {
-        birthDate: birthDate.toISOString().split('T')[0],
-      }),
-      ...(!isEmpty(email) && {
-        telecom: [
+    const DocumentReferenceInput = {
+      resourceType: 'DocumentReference',
+      status: 'current',
+      docStatus: 'final',
+      type: {
+        // Hardcoding the type to Progress Note for now
+        coding: [
           {
-            use: 'home',
-            system: 'email',
-            value: email,
+            system: 'http://loinc.org',
+            code: '11506-3',
+            userSelected: false,
           },
         ],
-      }),
-    } satisfies Patient
+        text: type,
+      },
+      subject: {
+        reference: `Patient/${patientResourceId}`,
+      },
+      content: [
+        {
+          attachment: {
+            contentType: 'text/plain;charset=utf-8',
+            data: Buffer.from(note, 'utf-8').toString('base64'),
+          },
+        },
+      ],
+      context: {
+        encounter: [
+          {
+            reference: `Encounter/${encounterResourceId}`,
+          },
+        ],
+        // Required
+        period: {
+          start: new Date().toISOString(),
+          end: new Date().toISOString(),
+        },
+      },
+    } satisfies DocumentReferenceCreateInputType
 
     try {
-      const res = await cernerFhirR4Sdk.createPatient(PatientResource)
+      const res = await cernerFhirR4Sdk.createDocumentReference(
+        DocumentReferenceInput,
+      )
       const resourceReference =
         (res.headers.Location as string) ?? (res.headers.location as string)
       const resourceId = getResourceId(resourceReference)

@@ -39,13 +39,21 @@ export const validatePayloadAndCreateSdks: ValidatePayloadAndCreateSdks =
 
     const { authUrl, r4BaseUrl } = constructCernerUrls(settings.tenantId)
 
+    const SCOPES = [
+      'system/Patient.read',
+      'system/Patient.write',
+      'system/Appointment.read',
+      'system/DocumentReference.write',
+      'system/Encounter.read',
+    ]
+
     const cernerFhirR4Sdk = new CernerR4APIClient({
       authUrl,
       baseUrl: r4BaseUrl,
       requestConfig: {
         client_id: settings.clientId,
         client_secret: settings.clientSecret,
-        scope: 'system/Patient.r',
+        scope: SCOPES.join(','),
       },
     })
 

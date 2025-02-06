@@ -1,0 +1,1 @@
+export { getEncounter } from './getEncounter'

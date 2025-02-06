@@ -4,12 +4,19 @@ import { GenderSchema } from '../../../../../src/lib/fhir/schemas/Patient'
 import { startCase } from 'lodash'
 
 export const fields = {
+  assigningOrganizationId: {
+    id: 'assigningOrganizationId',
+    label: 'Assigning organization ID',
+    type: FieldType.STRING,
+    description: 'The ID of the organization that is creating the patient.',
+    required: true,
+  },
   ssn: {
     id: 'ssn',
     label: 'SSN',
     type: FieldType.STRING,
     description: 'The patient’s Social Security Number.',
-    required: true,
+    required: false,
   },
   familyName: {
     id: 'familyName',
@@ -30,13 +37,13 @@ export const fields = {
     id: 'birthDate',
     label: 'Birth date',
     type: FieldType.DATE,
-    required: true,
+    required: false,
   },
   gender: {
     id: 'gender',
     label: 'Gender',
     type: FieldType.STRING,
-    required: true,
+    required: false,
     options: {
       dropdownOptions: GenderSchema._def.values.map((value) => ({
         value,
@@ -53,16 +60,17 @@ export const fields = {
 } satisfies Record<string, Field>
 
 export const FieldsValidationSchema = z.object({
+  assigningOrganizationId: z.string().min(1),
   ssn: z
     .string()
-    .min(1)
     .regex(
       /^\d{3}-\d{2}-\d{4}$/,
       'Invalid SSN format. Must be in the format xxx-xx-xxxx',
-    ),
+    )
+    .optional(),
   familyName: z.string().min(1),
   givenName: z.string().min(1),
-  birthDate: z.coerce.date(),
-  gender: GenderSchema,
+  birthDate: z.coerce.date().optional(),
+  gender: GenderSchema.optional(),
   email: z.string().email().optional(),
 } satisfies Record<keyof typeof fields, ZodTypeAny>)

@@ -5,47 +5,54 @@ import { validatePayloadAndCreateSdks } from '../../lib/validatePayloadAndCreate
 import { AxiosError } from 'axios'
 import { addActivityEventLog } from '../../../../src/lib/awell'
 
-export const getPatient: Action<
+export const getPatientEncounters: Action<
   typeof fields,
   typeof settings,
   keyof typeof dataPoints
 > = {
-  key: 'getPatient',
+  key: 'getPatientEncounters',
   category: Category.EHR_INTEGRATIONS,
-  title: 'Get patient',
-  description: 'Retrieve patient details from Cerner',
+  title: 'Get patient encounters',
+  description: 'Retrieve all encounters for a patient',
   fields,
   previewable: true,
   dataPoints,
   onEvent: async ({ payload, onComplete, onError }): Promise<void> => {
     const {
       cernerFhirR4Sdk,
-      fields: { resourceId },
+      fields: { patientResourceId },
     } = await validatePayloadAndCreateSdks({
       fieldsSchema: FieldsValidationSchema,
       payload,
     })
 
     try {
-      const { data } = await cernerFhirR4Sdk.getPatient(resourceId)
+      const { data } = await cernerFhirR4Sdk.searchEncounter({
+        patientResourceId,
+      })
+
+      if (data?.total === 0) {
+        throw new Error('No encounters found')
+      }
 
       await onComplete({
         data_points: {
-          patient: JSON.stringify(data),
+          encounters: JSON.stringify(data.entry),
         },
       })
     } catch (error) {
       if (error instanceof AxiosError) {
         const err = error as AxiosError
 
-        if (err.status === 404)
-          await onError({
-            events: [
-              addActivityEventLog({
-                message: 'Patient not found',
-              }),
-            ],
-          })
+        await onError({
+          events: [
+            addActivityEventLog({
+              message: `Status: ${String(err.response?.status)} (${String(
+                err.response?.statusText,
+              )})\n${JSON.stringify(err.response?.data, null, 2)}`,
+            }),
+          ],
+        })
         return
       }
 

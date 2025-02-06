@@ -5,15 +5,15 @@ import { validatePayloadAndCreateSdks } from '../../lib/validatePayloadAndCreate
 import { AxiosError } from 'axios'
 import { addActivityEventLog } from '../../../../src/lib/awell'
 
-export const getPatient: Action<
+export const getAppointment: Action<
   typeof fields,
   typeof settings,
   keyof typeof dataPoints
 > = {
-  key: 'getPatient',
+  key: 'getAppointment',
   category: Category.EHR_INTEGRATIONS,
-  title: 'Get patient',
-  description: 'Retrieve patient details from Cerner',
+  title: 'Get appointment',
+  description: 'Retrieve appointment details from Cerner',
   fields,
   previewable: true,
   dataPoints,
@@ -27,11 +27,20 @@ export const getPatient: Action<
     })
 
     try {
-      const { data } = await cernerFhirR4Sdk.getPatient(resourceId)
+      const res = await cernerFhirR4Sdk.getAppointment(resourceId)
+
+      const patient = res.data.participant.find((participant) =>
+        participant.actor?.reference?.startsWith('Patient'),
+      )
+      const patientId = patient?.actor?.reference?.split('/')[1]
 
       await onComplete({
         data_points: {
-          patient: JSON.stringify(data),
+          appointment: JSON.stringify(res.data),
+          patientId,
+          appointmentStatus: res.data.status,
+          appointmentStartDateTime: res.data.start,
+          appointmentTypeCode: res.data?.appointmentType?.coding?.[0]?.code,
         },
       })
     } catch (error) {
@@ -42,7 +51,7 @@ export const getPatient: Action<
           await onError({
             events: [
               addActivityEventLog({
-                message: 'Patient not found',
+                message: 'Appointment not found',
               }),
             ],
           })
