@@ -6,6 +6,8 @@ import { ELATION_SYSTEM } from '../constants'
 import { type SubscriptionEvent } from '../types/subscription'
 import { createHash } from 'node:crypto'
 import { Duration } from '@upstash/ratelimit'
+import { rateLimitDurationSchema, SettingsValidationSchema } from '../settings'
+import { isNil } from 'lodash'
 
 const dataPoints = {
   appointmentId: {
@@ -31,7 +33,6 @@ export const appointmentCreatedOrUpdated: Webhook<
     helpers,
   }) => {
     const { action, resource, data } = payload
-    const { rateLimitDuration } = settings
     const { id: appointmentId, patient: patientId } = data
 
     // skip non 'saved'  actions for that webhook
@@ -39,7 +40,11 @@ export const appointmentCreatedOrUpdated: Webhook<
       return
     }
 
-    if (rateLimitDuration) {
+    const rateLimitDuration = rateLimitDurationSchema.parse(
+      settings.rateLimitDuration,
+    )
+
+    if (!isNil(rateLimitDuration)) {
       const rateLimiter = helpers.rateLimit(1, rateLimitDuration as Duration)
       const strAppt = JSON.stringify(data)
       const uniqueHash = createHash('sha256').update(strAppt).digest('hex')

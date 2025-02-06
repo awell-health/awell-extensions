@@ -4,6 +4,7 @@ import {
 } from '@awell-health/extensions-core'
 import { type SubscriptionEvent } from '../types/subscription'
 import { Duration } from '@upstash/ratelimit'
+import { rateLimitDurationSchema } from '../settings'
 import { createHash } from 'node:crypto'
 
 const dataPoints = {
@@ -30,13 +31,16 @@ export const patientCreatedOrUpdated: Webhook<
     helpers,
   }) => {
     const { data, resource, action } = payload
-    const { rateLimitDuration } = settings
     const { id: patientId } = data
 
     // skip non 'saved' actions for that webhook
     if (action !== 'saved') {
       return
     }
+
+    const rateLimitDuration = rateLimitDurationSchema.parse(
+      settings.rateLimitDuration,
+    )
 
     if (rateLimitDuration) {
       const rateLimiter = helpers.rateLimit(1, rateLimitDuration as Duration)

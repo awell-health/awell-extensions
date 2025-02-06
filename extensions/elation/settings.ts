@@ -56,6 +56,18 @@ export const settings = {
   },
 } satisfies Record<string, Setting>
 
+export const rateLimitDurationSchema = z
+  .string()
+  .regex(
+    /^\d+[ ]+[smhd]$/,
+    'Duration must be in format {number} {unit} where unit is s,m,h,d',
+  )
+  .transform((val): Duration => {
+    const [number, unit] = val.split(' ')
+    return `${number}${unit}` as Duration
+  })
+  .optional()
+
 export const SettingsValidationSchema = z.object({
   base_url: z.string().min(1),
   auth_url: z.string().min(1),
@@ -68,17 +80,7 @@ export const SettingsValidationSchema = z.object({
    */
   username: z.string().optional(),
   password: z.string().optional(),
-  rateLimitDuration: z
-    .string()
-    .regex(
-      /^\d+[ ]+[smhd]$/,
-      'Duration must be in format {number} {unit} where unit is s,m,h,d',
-    )
-    .transform((val): Duration => {
-      const [number, unit] = val.split(' ')
-      return `${number}${unit}` as Duration
-    })
-    .optional(),
+  rateLimitDuration: rateLimitDurationSchema,
 } satisfies Record<keyof typeof settings, ZodTypeAny>)
 
 export type SettingsType = z.infer<typeof SettingsValidationSchema>
