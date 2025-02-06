@@ -1,0 +1,1 @@
+export { getPatientVitals } from './getPatientVitals'

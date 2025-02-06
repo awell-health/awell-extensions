@@ -38,7 +38,7 @@ import {
   type CreateVisitNoteInputType,
   type CreateVisitNoteResponseType,
   type PharmacyResponse,
-  type AddVitalsInputType,
+  type AddVitalsInputType,  
   type AddVitalsResponseType,
   PharmacySchema,
   type PostCareGapInput,
@@ -49,6 +49,8 @@ import {
   type GetReferralOrderInputType,
   type GetReferralOrderResponseType,
   type AddMessageToThreadInput,
+  type FindVitalsInputType,
+  type FindVitalsResponseType,
 } from './types'
 import { elationCacheService } from './cache'
 import { isEmpty } from 'lodash'
@@ -353,6 +355,19 @@ export class ElationDataWrapper extends DataWrapper {
     return res
   }
 
+  public async findVitals(
+    obj: FindVitalsInputType,
+  ): Promise<FindVitalsResponseType> {
+    const req = this.Request<FindVitalsResponseType>({
+      method: 'GET',
+      url: `/vitals`,
+      params: obj,
+    })
+    const res = await req
+    return res
+  }
+
+
   public async getPharmacy(ncpdpId: string): Promise<PharmacyResponse> {
     return PharmacySchema.parse(
       await this.Request<PharmacyResponse>({
@@ -615,6 +630,12 @@ export class ElationAPIClient extends APIClient<ElationDataWrapper> {
     obj: AddVitalsInputType,
   ): Promise<AddVitalsResponseType> {
     return await this.FetchData(async (dw) => await dw.addVitals(obj))
+  }
+
+  public async findVitals(
+    obj: FindVitalsInputType,
+  ): Promise<FindVitalsResponseType> {
+    return await this.FetchData(async (dw) => await dw.findVitals(obj))
   }
 
   public async getPharmacy(ncpdpId: string): Promise<PharmacyResponse> {

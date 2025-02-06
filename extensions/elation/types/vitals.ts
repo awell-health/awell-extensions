@@ -74,8 +74,56 @@ export const AddVitalsInputSchema = z
   })
   .strict()
 
+export const FindVitalsInputSchema = z.object({
+  patient: z.array(z.number()).optional(),
+  practice: z.array(z.number()).optional(),
+  visit_note: z.array(z.number()).optional(),
+  non_visit_note: z.array(z.number()).optional(),
+})
+
+
 export type AddVitalsInputType = z.infer<typeof AddVitalsInputSchema>
+export type FindVitalsInputType = z.infer<typeof FindVitalsInputSchema>
 
 export interface AddVitalsResponseType extends AddVitalsInputType {
   id: number
+}
+
+interface Measurement {
+  value: string
+  units: string
+  note: string
+}
+
+export interface VitalsResponseType {
+  id: number
+  bmi?: number
+  height?: Measurement[]
+  weight?: Measurement[]
+  oxygen?: Measurement[]
+  rr?: Measurement[]
+  hr?: Measurement[]
+  hc?: Measurement[]
+  temperature?: Measurement[]
+  bp?: Measurement[]
+  pain?: Measurement[]
+  bmi_percentile?: number
+  length_for_weight_percentile?: number
+  patient: number
+  practice: number
+  visit_note?: number
+  non_visit_note?: number
+  document_date?: string
+  chart_date?: string
+  signed_date?: string
+  signed_by?: number
+  created_date: string
+  deleted_date?: string
+}
+
+export interface FindVitalsResponseType {
+  count: number
+  next?: string
+  previous?: string
+  results: VitalsResponseType[]
 }
