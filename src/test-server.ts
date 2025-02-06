@@ -16,15 +16,6 @@ app.use(bodyParser.json())
 
 app.post('/', async (req, res) => {
   console.log(req.body)
-  try {
-    const { success } = await rateLimit.limit('test')
-    if (!success) {
-      res.status(429).send('Too many requests')
-      return
-    }
-  } catch (error) {
-    console.error(error)
-  }
   res.send('ok')
 })
 
