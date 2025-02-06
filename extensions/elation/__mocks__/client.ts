@@ -117,6 +117,11 @@ export const mockClientReturn = {
   createReferralOrder: jest.fn(() => {
     return referralOrderExample
   }),
+  findVitals: jest.fn(() => {
+    return {
+      results: [vitalsResponseExample],
+    }
+  }),
 }
 const ElationAPIClientMock = jest.fn((params) => {
   return mockClientReturn

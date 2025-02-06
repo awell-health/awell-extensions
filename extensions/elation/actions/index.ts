@@ -29,6 +29,7 @@ import { findFutureAppointment } from './findFutureAppointment'
 import { findAppointmentsByPrompt } from './findAppointmentsByPrompt'
 import { signNonVisitNote } from './signNonVisitNote/signNonVisitNote'
 import { updateReferralOrderResolution } from './updateReferralOrderResolution'
+import { getPatientVitals } from './getPatientVitals'
 
 export const actions = {
   getPatient,
@@ -62,4 +63,5 @@ export const actions = {
   findAppointmentsByPrompt,
   signNonVisitNote,
   updateReferralOrderResolution,
+  getPatientVitals,
 }
