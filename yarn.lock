@@ -87,7 +87,7 @@ __metadata:
   resolution: "@awell-health/awell-extensions@workspace:."
   dependencies:
     "@awell-health/awell-sdk": "npm:^0.1.20"
-    "@awell-health/extensions-core": "npm:1.0.20"
+    "@awell-health/extensions-core": "npm:1.0.18"
     "@awell-health/healthie-sdk": "npm:^0.1.1"
     "@dropbox/sign": "npm:^1.8.0"
     "@faker-js/faker": "npm:^8.0.2"
@@ -125,7 +125,6 @@ __metadata:
     "@types/uuid": "npm:^10.0.0"
     "@types/xml2js": "npm:^0.4.12"
     "@typescript-eslint/eslint-plugin": "npm:^5.52.0"
-    "@upstash/ratelimit": "npm:^2.0.5"
     "@yarnpkg/sdks": "npm:^3.2.0"
     api: "npm:^6.0.0"
     axios: "npm:^1.6.8"
@@ -194,12 +193,11 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@awell-health/extensions-core@npm:1.0.20":
-  version: 1.0.20
-  resolution: "@awell-health/extensions-core@npm:1.0.20"
+"@awell-health/extensions-core@npm:1.0.18":
+  version: 1.0.18
+  resolution: "@awell-health/extensions-core@npm:1.0.18"
   dependencies:
     "@types/json-schema": "npm:^7.0.15"
-    "@upstash/ratelimit": "npm:^2.0.5"
     axios: "npm:^1.7.4"
     date-fns: "npm:^3.6.0"
     libphonenumber-js: "npm:^1.10.61"
@@ -208,7 +206,7 @@ __metadata:
     zod-validation-error: "npm:^3.2.0"
   peerDependencies:
     "@awell-health/awell-sdk": "*"
-  checksum: 10/fd829c1ced8c44dfbc9775b31ad3d96bf1afc5082b835ea06948514d66e6665efea2b5578f150efadcd80c347f240f6d3f850c8db7d484c0b264dff97f42112e
+  checksum: 10/f65aaf1c891b828d92cdf89d9fb2d61c00862d5ed3ef57c836d41039a845834e535bf39462c7e3fea870beb5d9f93c38709c16b639aad2971ad3d8287b6d22e0
   languageName: node
   linkType: hard
 
@@ -3259,35 +3257,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@upstash/core-analytics@npm:^0.0.10":
-  version: 0.0.10
-  resolution: "@upstash/core-analytics@npm:0.0.10"
-  dependencies:
-    "@upstash/redis": "npm:^1.28.3"
-  checksum: 10/945ed44fa02915a37a2ceaa254f38b3e1b305daede520164b8887681bb1bfbe722f4b90b41c6ca5a87f50b9a22bfe48367f7b5ff9b2a8feb1b467ab803663354
-  languageName: node
-  linkType: hard
-
-"@upstash/ratelimit@npm:^2.0.5":
-  version: 2.0.5
-  resolution: "@upstash/ratelimit@npm:2.0.5"
-  dependencies:
-    "@upstash/core-analytics": "npm:^0.0.10"
-  peerDependencies:
-    "@upstash/redis": ^1.34.3
-  checksum: 10/b3f50b73201da66af555a45c25df2d2bed9890b507dfdc96b5792f7513a688c8ccfedcdfc7a699b685124d5f1321715006353a3ec72900cca364c0698ed60ba6
-  languageName: node
-  linkType: hard
-
-"@upstash/redis@npm:^1.28.3":
-  version: 1.34.4
-  resolution: "@upstash/redis@npm:1.34.4"
-  dependencies:
-    crypto-js: "npm:^4.2.0"
-  checksum: 10/20ace4e0ac9f6703da67e6bd324980a49a33d7312205ca37ecfef961482e74848171af1c22a6e39e73bcdab83c8f435458562c605d57abaee4add3ee66ccd4c4
-  languageName: node
-  linkType: hard
-
 "@whatwg-node/events@npm:^0.0.3":
   version: 0.0.3
   resolution: "@whatwg-node/events@npm:0.0.3"
@@ -4902,13 +4871,6 @@ __metadata:
     shebang-command: "npm:^2.0.0"
     which: "npm:^2.0.1"
   checksum: 10/e1a13869d2f57d974de0d9ef7acbf69dc6937db20b918525a01dacb5032129bd552d290d886d981e99f1b624cb03657084cc87bd40f115c07ecf376821c729ce
-  languageName: node
-  linkType: hard
-
-"crypto-js@npm:^4.2.0":
-  version: 4.2.0
-  resolution: "crypto-js@npm:4.2.0"
-  checksum: 10/c7bcc56a6e01c3c397e95aa4a74e4241321f04677f9a618a8f48a63b5781617248afb9adb0629824792e7ec20ca0d4241a49b6b2938ae6f973ec4efc5c53c924
   languageName: node
   linkType: hard
 

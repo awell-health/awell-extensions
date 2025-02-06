@@ -8,21 +8,36 @@ import {
   AwellError,
 } from '@awell-health/extensions-core'
 import { extensions } from '../extensions'
+import { Ratelimit } from '@upstash/ratelimit'
+import { Redis } from 'ioredis'
 
 const app = express()
 const port = 3000
 
-// type QueueInput = (
-//   | Parameters<OnCompleteCallback>[0]
-//   | Parameters<OnErrorCallback>[0]
-// ) & { response: 'success' | 'failure' }
-
-// const queue: QueueInput[] = []
-
 app.use(bodyParser.json())
+
+const limiter = Ratelimit.fixedWindow(1, '1m')
+const rateLimit = new Ratelimit({
+  redis: new Redis({
+    host: 'localhost',
+    port: 6379,
+    password:
+      'VRmODJzStDXW0I0fr0G5UXd8v7Az5nJ4MvOMoGVR0iGhQEDuiACJLlNpBkBoyY8RUFhSW8tqt0ojoHIkqCJnLUeLRrmFHO47Og0DYv4wDv1pIfHCVU1uzFZOORNLDRp5',
+  }),
+  limiter,
+})
 
 app.post('/', async (req, res) => {
   console.log(req.body)
+  try {
+    const { success } = await rateLimit.limit('test')
+    if (!success) {
+      res.status(429).send('Too many requests')
+      return
+    }
+  } catch (error) {
+    console.error(error)
+  }
   res.send('ok')
 })
 
@@ -45,7 +60,7 @@ app.post('/:extension/:action', async (req, res) => {
     return
   }
   const action = Object.values(extension.actions).find(
-    ({ key }) => key === actionKey
+    ({ key }) => key === actionKey,
   )
   if (action === undefined) {
     res
@@ -76,7 +91,7 @@ app.post('/:extension/:action', async (req, res) => {
           },
         ],
       })
-    }
+    },
   )
   // const result = queue.shift()
   // res.send(result)
@@ -88,7 +103,7 @@ app.listen(port, () => {
 
 const createOnCompleteCallback = (
   // payload: NewActivityPayload,
-  res: express.Response
+  res: express.Response,
 ): OnCompleteCallback => {
   return async (params = {}) => {
     console.log({ ...params, response: 'success' })
@@ -98,7 +113,7 @@ const createOnCompleteCallback = (
 }
 const createOnErrorCallback = (
   // payload: NewActivityPayload,
-  res: express.Response
+  res: express.Response,
 ): OnErrorCallback => {
   return async (params = {}) => {
     console.error({ ...params, response: 'failure' })

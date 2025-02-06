@@ -26,43 +26,13 @@ export const appointmentCreatedOrUpdated: Webhook<
 > = {
   key: 'appointmentCreatedOrUpdated',
   dataPoints,
-  onEvent: async ({
-    payload: { payload, settings },
-    onSuccess,
-    onError,
-    helpers,
-  }) => {
+  onEvent: async ({ payload: { payload, settings }, onSuccess, onError }) => {
     const { action, resource, data } = payload
     const { id: appointmentId, patient: patientId } = data
 
     // skip non 'saved'  actions for that webhook
     if (action !== 'saved') {
       return
-    }
-
-    const rateLimitDuration = rateLimitDurationSchema.parse(
-      settings.rateLimitDuration,
-    )
-
-    if (!isNil(rateLimitDuration)) {
-      const rateLimiter = helpers.rateLimit(1, rateLimitDuration as Duration)
-      const strAppt = JSON.stringify(data)
-      const uniqueHash = createHash('sha256').update(strAppt).digest('hex')
-      // i'd rather use the unique hash here, but instead using an appointment ID
-      const { success } = await rateLimiter.limit(
-        `elation-appointment-${appointmentId}`,
-      )
-      if (!success) {
-        console.log(`ELATION: Rate limited for appointment_id=${appointmentId}`)
-        // we're sending a 200 response to elation to avoid them retrying the request
-        await onError({
-          response: {
-            statusCode: 200,
-            message: 'Rate limit exceeded',
-          },
-        })
-        return
-      }
     }
 
     if (resource !== 'appointments') {
