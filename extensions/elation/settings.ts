@@ -51,7 +51,7 @@ export const settings = {
     label: 'Rate Limit Duration',
     obfuscated: false,
     description:
-      'Rate limit Elation webhooks at a certain duration (e.g. only 1 event for a given appointment_id every 500ms, 30s, 1m, 12h, 30d). Value should be {number}{unit}.',
+      "Rate limit Elation webhooks at a certain duration (e.g. only 1 event for a given appointment_id every '30 s', '1 m', '12 h', '30 d'). Value should be {number} {unit}.",
     required: false,
   },
 } satisfies Record<string, Setting>
@@ -68,7 +68,17 @@ export const SettingsValidationSchema = z.object({
    */
   username: z.string().optional(),
   password: z.string().optional(),
-  rateLimitDuration: z.string().optional(),
+  rateLimitDuration: z
+    .string()
+    .regex(
+      /^\d+[ ]+[smhd]$/,
+      'Duration must be in format {number} {unit} where unit is s,m,h,d',
+    )
+    .transform((val): Duration => {
+      const [number, unit] = val.split(' ')
+      return `${number}${unit}` as Duration
+    })
+    .optional(),
 } satisfies Record<keyof typeof settings, ZodTypeAny>)
 
 export type SettingsType = z.infer<typeof SettingsValidationSchema>
