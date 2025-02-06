@@ -1,1 +1,1 @@
-export { findFutureAppointment } from './findFutureAppointmentWithAI'
+export { findFutureAppointmentWithAI } from './findFutureAppointmentWithAI'

@@ -25,8 +25,8 @@ import { createCareGap } from './createCareGap'
 import { closeCareGap } from './closeCareGap'
 import { updatePatientTags } from './updatePatientTags'
 import { getReferralOrder } from './getReferralOrder'
-import { findFutureAppointment } from './findFutureAppointmentWithAI'
-import { findAppointmentsByPrompt } from './findAppointmentsWithAI'
+import { findFutureAppointmentWithAI } from './findFutureAppointmentWithAI'
+import { findAppointmentsWithAI } from './findAppointmentsWithAI'
 import { signNonVisitNote } from './signNonVisitNote/signNonVisitNote'
 import { updateReferralOrderResolution } from './updateReferralOrderResolution'
 
@@ -58,8 +58,8 @@ export const actions = {
   closeCareGap,
   updatePatientTags,
   getReferralOrder,
-  findFutureAppointment,
-  findAppointmentsByPrompt,
+  findFutureAppointmentWithAI,
+  findAppointmentsWithAI,
   signNonVisitNote,
   updateReferralOrderResolution,
 }
