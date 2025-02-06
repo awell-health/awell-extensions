@@ -1,4 +1,5 @@
-import { type Setting } from '@awell-health/extensions-core'
+import { RateLimitConfig, type Setting } from '@awell-health/extensions-core'
+import { isFinite, isNil } from 'lodash'
 import { z, type ZodTypeAny } from 'zod'
 
 export const settings = {
@@ -58,13 +59,28 @@ export const settings = {
 
 export const rateLimitDurationSchema = z
   .string()
-  .regex(
-    /^\d+\s+[smhd]$/,
-    'Duration must be in format {number} {unit} where unit is s,m,h,d',
+  .refine(
+    (val) => {
+      try {
+        const [number, unit] = val.split(' ')
+        const parsedUnit = parseDurationUnit(unit)
+        return isFinite(Number(number)) && !isNil(parsedUnit)
+      } catch (error) {
+        return false
+      }
+    },
+    {
+      message:
+        'Duration must be in format {number} {unit} where unit is seconds, minutes, hours or days',
+    },
   )
-  .transform((val): Duration => {
+  .transform((val): RateLimitConfig['duration'] => {
     const [number, unit] = val.split(' ')
-    return `${number}${unit}` as Duration
+    const parsedUnit = parseDurationUnit(unit)
+    return {
+      value: Number(number),
+      unit: parsedUnit,
+    }
   })
   .optional()
 
@@ -84,3 +100,39 @@ export const SettingsValidationSchema = z.object({
 } satisfies Record<keyof typeof settings, ZodTypeAny>)
 
 export type SettingsType = z.infer<typeof SettingsValidationSchema>
+
+const parseDurationUnit = (
+  unit: string | undefined,
+): 'seconds' | 'minutes' | 'hours' | 'days' => {
+  if (!unit) throw new Error('Duration unit is required')
+
+  const normalized = unit.toLowerCase().trim()
+
+  switch (normalized) {
+    case 's':
+    case 'second':
+    case 'seconds':
+      return 'seconds'
+
+    case 'm':
+    case 'min':
+    case 'minute':
+    case 'minutes':
+      return 'minutes'
+
+    case 'h':
+    case 'hour':
+    case 'hours':
+      return 'hours'
+
+    case 'd':
+    case 'day':
+    case 'days':
+      return 'days'
+
+    default:
+      throw new Error(
+        `Invalid duration unit: ${unit}. Valid units are: s, m, h, d`,
+      )
+  }
+}
