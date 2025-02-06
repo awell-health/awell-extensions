@@ -4,8 +4,8 @@ import z, { type ZodTypeAny } from 'zod'
 export const fields = {
   resourceId: {
     id: 'resourceId',
-    label: 'Patient resource ID',
-    description: 'The resource ID of the patient',
+    label: 'Appointment resource ID',
+    description: 'The resource ID of the appointment.',
     type: FieldType.STRING,
     required: true,
   },
