@@ -3,6 +3,8 @@ import {
   type Webhook,
 } from '@awell-health/extensions-core'
 import { type SubscriptionEvent } from '../types/subscription'
+import { Duration } from '@upstash/ratelimit'
+import { createHash } from 'node:crypto'
 
 const dataPoints = {
   patientId: {
@@ -21,12 +23,37 @@ export const patientCreatedOrUpdated: Webhook<
 > = {
   key: 'patientCreatedOrUpdated',
   dataPoints,
-  onWebhookReceived: async ({ payload, settings }, onSuccess, onError) => {
+  onEvent: async ({
+    payload: { payload, settings },
+    onSuccess,
+    onError,
+    helpers,
+  }) => {
     const { data, resource, action } = payload
+    const { rateLimitDuration } = settings
+    const { id: patientId } = data
 
     // skip non 'saved' actions for that webhook
     if (action !== 'saved') {
       return
+    }
+
+    if (rateLimitDuration) {
+      const rateLimiter = helpers.rateLimit(1, rateLimitDuration as Duration)
+      const strPatient = JSON.stringify(data)
+      const uniqueHash = createHash('sha256').update(strPatient).digest('hex')
+      const { success } = await rateLimiter.limit(uniqueHash)
+      if (!success) {
+        console.log(`ELATION: Rate limited for patient_id=${patientId}`)
+        // we're sending a 200 response to elation to avoid them retrying the request
+        await onError({
+          response: {
+            statusCode: 200,
+            message: 'Rate limit exceeded',
+          },
+        })
+        return
+      }
     }
 
     if (resource !== 'patients') {
