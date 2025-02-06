@@ -43,7 +43,10 @@ export const appointmentCreatedOrUpdated: Webhook<
       const rateLimiter = helpers.rateLimit(1, rateLimitDuration as Duration)
       const strAppt = JSON.stringify(data)
       const uniqueHash = createHash('sha256').update(strAppt).digest('hex')
-      const { success } = await rateLimiter.limit(uniqueHash)
+      // i'd rather use the unique hash here, but instead using an appointment ID
+      const { success } = await rateLimiter.limit(
+        `elation-appointment-${appointmentId}`,
+      )
       if (!success) {
         console.log(`ELATION: Rate limited for appointment_id=${appointmentId}`)
         // we're sending a 200 response to elation to avoid them retrying the request

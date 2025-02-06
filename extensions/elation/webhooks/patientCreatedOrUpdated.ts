@@ -42,7 +42,10 @@ export const patientCreatedOrUpdated: Webhook<
       const rateLimiter = helpers.rateLimit(1, rateLimitDuration as Duration)
       const strPatient = JSON.stringify(data)
       const uniqueHash = createHash('sha256').update(strPatient).digest('hex')
-      const { success } = await rateLimiter.limit(uniqueHash)
+      // i'd rather use the unique hash here, but instead using a patient ID
+      const { success } = await rateLimiter.limit(
+        `elation-patient-${patientId}`,
+      )
       if (!success) {
         console.log(`ELATION: Rate limited for patient_id=${patientId}`)
         // we're sending a 200 response to elation to avoid them retrying the request
