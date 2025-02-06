@@ -13,20 +13,20 @@ jest.mock('../../../../src/lib/llm/openai/createOpenAIModel', () => ({
       pipe: jest.fn().mockReturnValue({
         invoke: jest.fn().mockResolvedValue({
           appointmentId: appointmentsMock[0].id,
-          explanation: 'Test explanation'
-        })
-      })
+          explanation: 'Test explanation',
+        }),
+      }),
     },
     metadata: {
       care_flow_definition_id: 'whatever',
       care_flow_id: 'test-flow-id',
-      activity_id: 'test-activity-id'
-    }
-  })
+      activity_id: 'test-activity-id',
+    },
+  }),
 }))
 
 describe('Elation - Find future appointment', () => {
-  const { extensionAction, onComplete, onError, helpers, clearMocks } = 
+  const { extensionAction, onComplete, onError, helpers, clearMocks } =
     TestHelpers.fromAction(action)
 
   beforeEach(() => {
@@ -35,7 +35,7 @@ describe('Elation - Find future appointment', () => {
 
     const mockAPIClient = makeAPIClient as jest.Mock
     mockAPIClient.mockImplementation(() => ({
-      findAppointments: jest.fn().mockResolvedValue(appointmentsMock)
+      findAppointments: jest.fn().mockResolvedValue(appointmentsMock),
     }))
   })
 
@@ -59,14 +59,14 @@ describe('Elation - Find future appointment', () => {
           definition_id: '123',
           tenant_id: '123',
           org_slug: 'test-org-slug',
-          org_id: 'test-org-id'
+          org_id: 'test-org-id',
         },
         activity: {
-          id: 'test-activity-id'
+          id: 'test-activity-id',
         },
         patient: {
-          id: 'test-patient-id'
-        }
+          id: 'test-patient-id',
+        },
       },
       onComplete,
       onError,
@@ -82,9 +82,9 @@ describe('Elation - Find future appointment', () => {
       events: [
         expect.objectContaining({
           text: expect.objectContaining({
-            en: expect.stringContaining('Found appointment: 123')
-          })
-        })
+            en: expect.stringContaining('Found appointment: 123'),
+          }),
+        }),
       ],
     })
     expect(onError).not.toHaveBeenCalled()
@@ -93,7 +93,7 @@ describe('Elation - Find future appointment', () => {
   test('Should handle no appointments', async () => {
     const mockAPIClient = makeAPIClient as jest.Mock
     mockAPIClient.mockImplementation(() => ({
-      findAppointments: jest.fn().mockResolvedValue([])
+      findAppointments: jest.fn().mockResolvedValue([]),
     }))
 
     await extensionAction.onEvent({
@@ -115,14 +115,14 @@ describe('Elation - Find future appointment', () => {
           definition_id: '123',
           tenant_id: '123',
           org_slug: 'test-org-slug',
-          org_id: 'test-org-id'
+          org_id: 'test-org-id',
         },
         activity: {
-          id: 'test-activity-id'
+          id: 'test-activity-id',
         },
         patient: {
-          id: 'test-patient-id'
-        }
+          id: 'test-patient-id',
+        },
       },
       onComplete,
       onError,
@@ -131,8 +131,10 @@ describe('Elation - Find future appointment', () => {
 
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
+        appointment: undefined,
         appointmentExists: 'false',
-      }
+        explanation: 'No future appointments found',
+      },
     })
     expect(onError).not.toHaveBeenCalled()
   })

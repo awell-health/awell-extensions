@@ -35,7 +35,9 @@ export const findFutureAppointment: Action<
     if (appointments.length === 0) {
       await onComplete({
         data_points: {
+          appointment: undefined,
           appointmentExists: 'false',
+          explanation: 'No future appointments found',
         },
       })
       return
