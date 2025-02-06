@@ -3,10 +3,6 @@ import {
   type Webhook,
 } from '@awell-health/extensions-core'
 import { type SubscriptionEvent } from '../types/subscription'
-import { Duration } from '@upstash/ratelimit'
-import { rateLimitDurationSchema } from '../settings'
-import { createHash } from 'node:crypto'
-import { isNil } from 'lodash'
 
 const dataPoints = {
   patientId: {

@@ -4,10 +4,6 @@ import {
 } from '@awell-health/extensions-core'
 import { ELATION_SYSTEM } from '../constants'
 import { type SubscriptionEvent } from '../types/subscription'
-import { createHash } from 'node:crypto'
-import { Duration } from '@upstash/ratelimit'
-import { rateLimitDurationSchema } from '../settings'
-import { isNil } from 'lodash'
 
 const dataPoints = {
   appointmentId: {
