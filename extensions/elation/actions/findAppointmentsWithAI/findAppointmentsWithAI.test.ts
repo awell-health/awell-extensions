@@ -1,7 +1,7 @@
 import { TestHelpers } from '@awell-health/extensions-core'
 import { makeAPIClient } from '../../client'
 import { appointmentsMock } from './__testdata__/GetAppointments.mock'
-import { findAppointmentsByPrompt as action } from './findAppointmentsByPrompt'
+import { findAppointmentsWithAI as action } from './findAppointmentsWithAI'
 
 // Mock the client
 jest.mock('../../client')
@@ -28,7 +28,7 @@ jest.mock('../../../../src/lib/llm/openai/createOpenAIModel', () => ({
   })
 }))
 
-describe('Elation - Find appointments by prompt', () => {
+describe('Elation - Find appointments with AI', () => {
   const { extensionAction, onComplete, onError, helpers, clearMocks } = 
     TestHelpers.fromAction(action)
 

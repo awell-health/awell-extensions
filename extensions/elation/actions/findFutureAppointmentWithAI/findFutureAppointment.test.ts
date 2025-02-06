@@ -1,7 +1,7 @@
 import { TestHelpers } from '@awell-health/extensions-core'
 import { makeAPIClient } from '../../client'
 import { appointmentsMock } from './__testdata__/GetAppointments.mock'
-import { findFutureAppointment as action } from './findFutureAppointment'
+import { findFutureAppointment as action } from './findFutureAppointmentWithAI'
 
 // Mock the client
 jest.mock('../../client')

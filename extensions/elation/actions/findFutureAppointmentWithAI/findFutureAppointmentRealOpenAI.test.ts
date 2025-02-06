@@ -2,7 +2,7 @@ import 'dotenv/config'
 import { TestHelpers } from '@awell-health/extensions-core'
 import { makeAPIClient } from '../../client'
 import { appointmentsMock } from './__testdata__/GetAppointments.mock'
-import { findFutureAppointment } from './findFutureAppointment'
+import { findFutureAppointment } from './findFutureAppointmentWithAI'
 
 jest.mock('../../client')
 jest.setTimeout(60000) // Increased timeout for OpenAI calls

@@ -1,1 +1,1 @@
-export { findAppointmentsByPrompt } from './findAppointmentsByPrompt'
+export { findAppointmentsWithAI } from './findAppointmentsWithAI'

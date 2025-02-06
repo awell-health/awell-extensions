@@ -15,10 +15,10 @@ export const fields = {
   },
   prompt: {
     id: 'prompt',
-    label: 'Describe what appointments you would like to find',
+    label: 'Describe the appointments to search for',
     type: FieldType.TEXT,
     required: true,
-    description: '',
+    description: 'Provide clear instructions about what appointments you want to find. You can search by appointment type (e.g., "Find all PCP visits"), status (e.g., "Find scheduled appointments"), or other criteria. Be as specific as possible for best results.',
   },
 } satisfies Record<string, Field>
 
