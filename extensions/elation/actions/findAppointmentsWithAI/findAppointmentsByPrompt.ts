@@ -6,7 +6,7 @@ import { makeAPIClient } from '../../client'
 import { createOpenAIModel } from '../../../../src/lib/llm/openai/createOpenAIModel'
 import { FieldsValidationSchema, fields, dataPoints } from './config'
 import { getAppointmentCountsByStatus } from './getAppoitnmentCountByStatus'
-import { findAppointmentsByPromptWithLLM } from './lib/findAppointmentsByPromptWithLLM/findAppointmentsByPromptWithLLM'
+import { findAppointmentsByPromptWithLLM } from '../../lib/findAppointmentsWithLLM/findAppointmentsWithLLM'
 
 export const findAppointmentsByPrompt: Action<
   typeof fields,

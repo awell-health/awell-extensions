@@ -26,7 +26,7 @@ import { closeCareGap } from './closeCareGap'
 import { updatePatientTags } from './updatePatientTags'
 import { getReferralOrder } from './getReferralOrder'
 import { findFutureAppointment } from './findFutureAppointment'
-import { findAppointmentsByPrompt } from './findAppointmentsByPrompt'
+import { findAppointmentsByPrompt } from './findAppointmentsWithAI'
 import { signNonVisitNote } from './signNonVisitNote/signNonVisitNote'
 import { updateReferralOrderResolution } from './updateReferralOrderResolution'
 
