@@ -34,7 +34,7 @@ describe('Elation - Close care gap', () => {
       password: 'password',
       auth_url: 'authUrl',
       base_url: 'baseUrl',
-      openAiApiKey: 'some_key',
+      rateLimitDuration: '10 s',
     },
     fields: {
       quality_program: 'quality_program',

@@ -1,4 +1,3 @@
-import { makeAPIClient } from '../../client'
 import { FindContactsResponse } from '../../types/contact'
 import { referralOrderExample } from '../../__mocks__/constants'
 import { createReferralOrder } from './createReferralOrder'
@@ -45,7 +44,7 @@ describe('Elation - Create referral order', () => {
       password: 'password',
       auth_url: 'authUrl',
       base_url: 'baseUrl',
-      openAiApiKey: 'some_key',
+      rateLimitDuration: '10 s',
     },
     activity: {
       id: '123',
