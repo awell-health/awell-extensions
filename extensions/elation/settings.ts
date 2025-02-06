@@ -46,7 +46,27 @@ export const settings = {
       '⚠️ Deprecated: Elation now uses client credentials authentication. This setting is no longer required and should be removed from your settings.',
     required: false,
   },
+  rateLimitDuration: {
+    key: 'rateLimitDuration',
+    label: 'Rate Limit Duration',
+    obfuscated: false,
+    description:
+      "Rate limit Elation webhooks at a certain duration (e.g. only 1 event for a given appointment_id every '30 s', '1 m', '12 h', '30 d'). Value should be {number} {unit}.",
+    required: false,
+  },
 } satisfies Record<string, Setting>
+
+export const rateLimitDurationSchema = z
+  .string()
+  .regex(
+    /^\d+[ ]+[smhd]$/,
+    'Duration must be in format {number} {unit} where unit is s,m,h,d',
+  )
+  .transform((val): Duration => {
+    const [number, unit] = val.split(' ')
+    return `${number}${unit}` as Duration
+  })
+  .optional()
 
 export const SettingsValidationSchema = z.object({
   base_url: z.string().min(1),
@@ -60,6 +80,7 @@ export const SettingsValidationSchema = z.object({
    */
   username: z.string().optional(),
   password: z.string().optional(),
+  rateLimitDuration: rateLimitDurationSchema,
 } satisfies Record<keyof typeof settings, ZodTypeAny>)
 
 export type SettingsType = z.infer<typeof SettingsValidationSchema>
