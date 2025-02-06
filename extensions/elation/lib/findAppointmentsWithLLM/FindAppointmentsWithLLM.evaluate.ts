@@ -14,7 +14,7 @@
  *   - LANGSMITH_PROJECT=ai-actions-local
  *
  * Usage:
- * ts-node FindAppointmentsWithLLM.evaluate.ts
+ * yarn ts-node extensions/elation/lib/findAppointmentsWithLLM/findAppointmentsWithLLM.evaluate.ts
  *
  * Results can be viewed in LangSmith dashboard:
  * https://smith.langchain.com/o/3fffae83-70ff-4574-81ba-aaaedf0b4dc5/datasets/745cea13-3379-463f-9a8a-c6b10e29b8f6
@@ -49,11 +49,12 @@ interface EvaluatorInput {
 interface EvaluatorOutput {
   key: string
   score: number
+  metadata?: Record<string, unknown>
 }
 
 interface DatasetExample {
   instruction: string
-  input_appointments: string[]
+  input_appointments: AppointmentResponse[]
 }
 
 // Fetch the 'test' split examples from the dataset
@@ -82,12 +83,9 @@ const appointmentsMatchEvaluator = async ({
   outputs,
   referenceOutputs,
 }: EvaluatorInput): Promise<EvaluatorOutput> => {
-  console.log('Evaluator received:', { outputs, referenceOutputs }) // Debug log
-
+  
   const generatedAppointmentIds = outputs?.appointmentIds as number[]
-  const expectedAppointmentIds = referenceOutputs?.expected_appointment_ids as number[]
-
-  // console.log('Comparing appointments:', { generatedAppointmentIds, expectedAppointmentIds }); // Debug log
+  const expectedAppointmentIds = referenceOutputs?.expected_output_appointment_ids as number[]
 
   const isEqual =
     Array.isArray(generatedAppointmentIds) &&
@@ -95,7 +93,14 @@ const appointmentsMatchEvaluator = async ({
     generatedAppointmentIds.length === expectedAppointmentIds.length &&
     generatedAppointmentIds.every((id, index) => id === expectedAppointmentIds[index])
 
-  return { key: 'appointments_match', score: isEqual ? 1 : 0 }
+  return { 
+    key: 'appointments_match', 
+    score: isEqual ? 1 : 0,
+    metadata: {
+      generatedIds: generatedAppointmentIds,
+      expectedIds: expectedAppointmentIds
+    }
+  }
 }
 
 // Wrapper function to adapt findAppointmentsWithLLM for evaluation
@@ -141,7 +146,7 @@ const findAppointmentsWithLLMWrapper = async (
 
   return await findAppointmentsWithLLM({
     model,
-    appointments: input.input_appointments.map(appt => JSON.parse(appt) as AppointmentResponse),
+    appointments: input.input_appointments,
     prompt: input.instruction,
     metadata,
     callbacks,
@@ -160,17 +165,15 @@ const runEvaluation = async (): Promise<void> => {
       data: testExamples,
       evaluators: [appointmentsMatchEvaluator],
       experimentPrefix: 'FindAppointmentsWithLLM Evaluation',
-      maxConcurrency: 4,
+      maxConcurrency: 16,
     })
 
     const resultsArray = Array.isArray(results) ? results : [results]
     const experimentId = resultsArray[0]?.run?.run_id as string
 
-    if (!isNil(experimentId) && experimentId.trim() !== '') {
-      console.log('\n✨ Evaluation Complete!')
-      console.log('View detailed results in LangSmith:')
-      console.log(`https://smith.langchain.com/runs/${experimentId}`)
-    }
+    console.log('\n✨ Evaluation Complete!')
+    console.log('View detailed results in LangSmith:')
+    console.log(`https://smith.langchain.com/runs/${experimentId}`)
   } catch (error) {
     console.error('❌ Error during evaluation:', error)
     throw error
