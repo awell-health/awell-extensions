@@ -28,7 +28,7 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./",\
         "packageDependencies": [\
           ["@awell-health/awell-sdk", "npm:0.1.21"],\
-          ["@awell-health/extensions-core", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:1.0.18"],\
+          ["@awell-health/extensions-core", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:1.0.21"],\
           ["@awell-health/healthie-sdk", "npm:0.1.1"],\
           ["@dropbox/sign", "npm:1.8.0"],\
           ["@faker-js/faker", "npm:8.4.1"],\
@@ -221,7 +221,7 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["@awell-health/awell-extensions", "workspace:."],\
           ["@awell-health/awell-sdk", "npm:0.1.21"],\
-          ["@awell-health/extensions-core", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:1.0.18"],\
+          ["@awell-health/extensions-core", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:1.0.21"],\
           ["@awell-health/healthie-sdk", "npm:0.1.1"],\
           ["@dropbox/sign", "npm:1.8.0"],\
           ["@faker-js/faker", "npm:8.4.1"],\
@@ -331,17 +331,17 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["@awell-health/extensions-core", [\
-      ["npm:1.0.18", {\
-        "packageLocation": "./.yarn/cache/@awell-health-extensions-core-npm-1.0.18-682857dd76-f65aaf1c89.zip/node_modules/@awell-health/extensions-core/",\
+      ["npm:1.0.21", {\
+        "packageLocation": "./.yarn/cache/@awell-health-extensions-core-npm-1.0.21-129ced1bdd-ff336c231c.zip/node_modules/@awell-health/extensions-core/",\
         "packageDependencies": [\
-          ["@awell-health/extensions-core", "npm:1.0.18"]\
+          ["@awell-health/extensions-core", "npm:1.0.21"]\
         ],\
         "linkType": "SOFT"\
       }],\
-      ["virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:1.0.18", {\
-        "packageLocation": "./.yarn/__virtual__/@awell-health-extensions-core-virtual-f615837ce5/0/cache/@awell-health-extensions-core-npm-1.0.18-682857dd76-f65aaf1c89.zip/node_modules/@awell-health/extensions-core/",\
+      ["virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:1.0.21", {\
+        "packageLocation": "./.yarn/__virtual__/@awell-health-extensions-core-virtual-4db16146fd/0/cache/@awell-health-extensions-core-npm-1.0.21-129ced1bdd-ff336c231c.zip/node_modules/@awell-health/extensions-core/",\
         "packageDependencies": [\
-          ["@awell-health/extensions-core", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:1.0.18"],\
+          ["@awell-health/extensions-core", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:1.0.21"],\
           ["@awell-health/awell-sdk", "npm:0.1.21"],\
           ["@types/awell-health__awell-sdk", null],\
           ["@types/json-schema", "npm:7.0.15"],\
@@ -349,6 +349,7 @@ const RAW_RUNTIME_STATE =
           ["date-fns", "npm:3.6.0"],\
           ["libphonenumber-js", "npm:1.11.8"],\
           ["lodash", "npm:4.17.21"],\
+          ["rate-limiter-flexible", "npm:5.0.5"],\
           ["zod", "npm:3.24.1"],\
           ["zod-validation-error", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:3.4.0"]\
         ],\
@@ -13695,6 +13696,15 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./.yarn/cache/range-parser-npm-1.2.1-1a470fa390-ce21ef2a2d.zip/node_modules/range-parser/",\
         "packageDependencies": [\
           ["range-parser", "npm:1.2.1"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["rate-limiter-flexible", [\
+      ["npm:5.0.5", {\
+        "packageLocation": "./.yarn/cache/rate-limiter-flexible-npm-5.0.5-7fb4970d25-51277add03.zip/node_modules/rate-limiter-flexible/",\
+        "packageDependencies": [\
+          ["rate-limiter-flexible", "npm:5.0.5"]\
         ],\
         "linkType": "HARD"\
       }]\

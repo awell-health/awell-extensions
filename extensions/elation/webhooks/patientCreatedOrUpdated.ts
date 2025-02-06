@@ -3,6 +3,8 @@ import {
   type Webhook,
 } from '@awell-health/extensions-core'
 import { type SubscriptionEvent } from '../types/subscription'
+import { rateLimitDurationSchema } from '../settings'
+import { isNil } from 'lodash'
 
 const dataPoints = {
   patientId: {
@@ -21,13 +23,47 @@ export const patientCreatedOrUpdated: Webhook<
 > = {
   key: 'patientCreatedOrUpdated',
   dataPoints,
-  onEvent: async ({ payload: { payload, settings }, onSuccess, onError }) => {
+  onEvent: async ({
+    payload: { payload, settings },
+    onSuccess,
+    onError,
+    helpers: { rateLimiter },
+  }) => {
     const { data, resource, action } = payload
     const { id: patientId } = data
-
     // skip non 'saved' actions for that webhook
     if (action !== 'saved') {
       return
+    }
+
+    // rate limiting
+    const { success, data: duration } = rateLimitDurationSchema.safeParse(
+      settings.rateLimitDuration,
+    )
+    if (success === true && !isNil(duration)) {
+      const limiter = rateLimiter('elation-patient', {
+        requests: 1,
+        duration,
+      })
+      const { success } = await limiter.limit(patientId.toString())
+      if (!success) {
+        console.warn({
+          data,
+          resource,
+          action,
+          message:
+            'Rate limit exceeded. 200 OK response sent to Elation to prevent further requests.',
+        })
+        await onError({
+          response: {
+            statusCode: 200,
+            message:
+              'Rate limit exceeded. 200 OK response sent to Elation to prevent further requests.',
+          },
+        })
+        return
+      }
+      console.log(`Rate limit success for patient_id=${patientId}`)
     }
 
     if (resource !== 'patients') {
