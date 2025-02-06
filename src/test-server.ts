@@ -8,24 +8,11 @@ import {
   AwellError,
 } from '@awell-health/extensions-core'
 import { extensions } from '../extensions'
-import { Ratelimit } from '@upstash/ratelimit'
-import { Redis } from 'ioredis'
 
 const app = express()
 const port = 3000
 
 app.use(bodyParser.json())
-
-const limiter = Ratelimit.fixedWindow(1, '1m')
-const rateLimit = new Ratelimit({
-  redis: new Redis({
-    host: 'localhost',
-    port: 6379,
-    password:
-      'VRmODJzStDXW0I0fr0G5UXd8v7Az5nJ4MvOMoGVR0iGhQEDuiACJLlNpBkBoyY8RUFhSW8tqt0ojoHIkqCJnLUeLRrmFHO47Og0DYv4wDv1pIfHCVU1uzFZOORNLDRp5',
-  }),
-  limiter,
-})
 
 app.post('/', async (req, res) => {
   console.log(req.body)
