@@ -1,12 +1,14 @@
 import { TestHelpers } from '@awell-health/extensions-core'
-import { getPatient as action } from './getPatient'
+import { getPatientEncounters as action } from './getPatientEncounters'
 import { CernerR4APIClient } from '../../lib/api/FhirR4'
-import { patientReadMock } from './__testdata__/PatientRead.mock'
-import { createAxiosError } from '../../../../tests'
+import {
+  GetPatientEncountersMockResponse,
+  GetPatientEncountersNoResultsMockResponse,
+} from './__testdata__/GetPatientEncounters.mock'
 
 jest.mock('../../lib/api/FhirR4')
 
-describe('Cerner - Get patient', () => {
+describe('Cerner - Get patient encounters', () => {
   const { extensionAction, onComplete, onError, helpers, clearMocks } =
     TestHelpers.fromAction(action)
 
@@ -14,23 +16,25 @@ describe('Cerner - Get patient', () => {
     clearMocks()
   })
 
-  describe('When the patient is found', () => {
-    test('Should return the patient', async () => {
-      const mockGetPatient = jest
+  describe('When at least one encounter is found', () => {
+    beforeEach(() => {
+      const mockSearchEncounter = jest
         .fn()
-        .mockResolvedValue({ data: patientReadMock })
+        .mockResolvedValue({ data: GetPatientEncountersMockResponse })
       const mockedCernerClient = jest.mocked(CernerR4APIClient)
 
       mockedCernerClient.mockImplementation(() => {
         return {
-          getPatient: mockGetPatient,
+          searchEncounter: mockSearchEncounter,
         } as unknown as CernerR4APIClient
       })
+    })
 
+    test('Should return the encounters', async () => {
       await extensionAction.onEvent({
         payload: {
           fields: {
-            resourceId: '12724067',
+            patientResourceId: '12724066',
           },
           settings: {
             tenantId: 'some-tenant-id',
@@ -45,44 +49,31 @@ describe('Cerner - Get patient', () => {
 
       expect(onComplete).toHaveBeenCalledWith({
         data_points: {
-          patient: JSON.stringify(patientReadMock),
+          encounters: JSON.stringify(GetPatientEncountersMockResponse.entry),
         },
       })
     })
   })
 
-  describe('When the patient is not found', () => {
-    test('Should return an error', async () => {
-      const mockGetPatient = jest.fn().mockRejectedValue(
-        createAxiosError(
-          404,
-          'Not Found',
-          JSON.stringify({
-            resourceType: 'OperationOutcome',
-            issue: [
-              {
-                severity: 'error',
-                code: 'not-found',
-                details: {
-                  text: 'Resource not found',
-                },
-              },
-            ],
-          }),
-        ),
-      )
+  describe('When no encounter found', () => {
+    beforeEach(() => {
+      const mockSearchEncounter = jest
+        .fn()
+        .mockResolvedValue({ data: GetPatientEncountersNoResultsMockResponse })
       const mockedCernerClient = jest.mocked(CernerR4APIClient)
 
       mockedCernerClient.mockImplementation(() => {
         return {
-          getPatient: mockGetPatient,
+          searchEncounter: mockSearchEncounter,
         } as unknown as CernerR4APIClient
       })
+    })
 
-      await extensionAction.onEvent({
+    test('Should return an error', async () => {
+      const res = extensionAction.onEvent({
         payload: {
           fields: {
-            resourceId: '12724067',
+            patientResourceId: 'something',
           },
           settings: {
             tenantId: 'some-tenant-id',
@@ -95,14 +86,7 @@ describe('Cerner - Get patient', () => {
         helpers,
       })
 
-      expect(onError).toHaveBeenCalledWith({
-        events: [
-          {
-            date: expect.any(String),
-            text: { en: 'Patient not found' },
-          },
-        ],
-      })
+      await expect(res).rejects.toThrow('No encounters found')
     })
   })
 })

@@ -5,47 +5,56 @@ import { validatePayloadAndCreateSdks } from '../../lib/validatePayloadAndCreate
 import { AxiosError } from 'axios'
 import { addActivityEventLog } from '../../../../src/lib/awell'
 
-export const getPatient: Action<
+export const findPatientByMRN: Action<
   typeof fields,
   typeof settings,
   keyof typeof dataPoints
 > = {
-  key: 'getPatient',
+  key: 'findPatientByMRN',
   category: Category.EHR_INTEGRATIONS,
-  title: 'Get patient',
-  description: 'Retrieve patient details from Cerner',
+  title: 'Find patient by MRN',
+  description: 'Find patient by MRN in Cerner',
   fields,
   previewable: true,
   dataPoints,
   onEvent: async ({ payload, onComplete, onError }): Promise<void> => {
     const {
       cernerFhirR4Sdk,
-      fields: { resourceId },
+      fields: { MRN },
     } = await validatePayloadAndCreateSdks({
       fieldsSchema: FieldsValidationSchema,
       payload,
     })
 
     try {
-      const { data } = await cernerFhirR4Sdk.getPatient(resourceId)
+      const { data } = await cernerFhirR4Sdk.searchPatient({ MRN })
+      const matchCount = data.total ?? 0
+
+      if (matchCount === 0) {
+        throw new Error('No patient found')
+      }
+
+      if (matchCount > 1) {
+        throw new Error('Multiple patients found')
+      }
 
       await onComplete({
         data_points: {
-          patient: JSON.stringify(data),
+          resourceId: data?.entry?.[0]?.resource?.id,
         },
       })
     } catch (error) {
       if (error instanceof AxiosError) {
         const err = error as AxiosError
-
-        if (err.status === 404)
-          await onError({
-            events: [
-              addActivityEventLog({
-                message: 'Patient not found',
-              }),
-            ],
-          })
+        await onError({
+          events: [
+            addActivityEventLog({
+              message: `Status: ${String(err.response?.status)} (${String(
+                err.response?.statusText,
+              )})\n${JSON.stringify(err.response?.data, null, 2)}`,
+            }),
+          ],
+        })
         return
       }
 
