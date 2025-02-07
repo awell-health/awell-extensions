@@ -8,6 +8,7 @@ import { getFutureAppointments } from './getFutureAppointments'
 import { findAppointmentsWithLLM } from '../../lib/findAppointmentsWithLLM/findAppointmentsWithLLM'
 import { createOpenAIModel } from '../../../../src/lib/llm/openai/createOpenAIModel'
 import { OPENAI_MODELS } from '../../../../src/lib/llm/openai/constants'
+import { markdownToHtml } from '../../../../src/utils'
 
 export const findFutureAppointmentWithAI: Action<
   typeof fields,
@@ -58,21 +59,22 @@ export const findFutureAppointmentWithAI: Action<
       metadata,
       callbacks,
     })
-
+    const htmlExplanation = await markdownToHtml(explanation)
+    
     // Handle case where no appointments were found by LLM
     if (appointmentIds.length === 0) {
       await onComplete({
         data_points: {
           appointment: undefined,
           appointmentExists: 'false',
-          explanation: explanation || 'No matching appointments found',
+          explanation: htmlExplanation,
         },
         events: [
           addActivityEventLog({
             message: `Number of future scheduled or confirmed appointments: ${appointments.length}\n
             Appointments data: ${JSON.stringify(appointments, null, 2)}\n
             Found appointment: none\n
-            Explanation: ${explanation || 'No matching appointments found'}`,
+            Explanation: ${htmlExplanation}`,
           }),
         ],
       })
@@ -84,14 +86,13 @@ export const findFutureAppointmentWithAI: Action<
     const foundAppointment = appointments.find(
       (appointment) => appointment.id === matchedAppointmentId
     )
-    console.log('Found appointment:', foundAppointment)
-
+   
     await onComplete({
       data_points: {
         appointment: !isNil(matchedAppointmentId)
           ? JSON.stringify(foundAppointment)
           : undefined,
-        explanation,
+        explanation: htmlExplanation,
         appointmentExists: !isNil(matchedAppointmentId) ? 'true' : 'false',
       },
       events: [
@@ -99,7 +100,7 @@ export const findFutureAppointmentWithAI: Action<
           message: `Number of future scheduled or confirmed appointments: ${appointments.length}\n
           Appointments data: ${JSON.stringify(appointments, null, 2)}\n
           Found appointment: ${isNil(foundAppointment) ? 'none' : foundAppointment?.id}\n
-          Explanation: ${explanation}`,
+          Explanation: ${htmlExplanation}`,
         }),
       ],
     })

@@ -13,7 +13,7 @@ jest.mock('../../../../src/lib/llm/openai/createOpenAIModel', () => ({
       pipe: jest.fn().mockReturnValue({
         invoke: jest.fn().mockResolvedValue({
           appointmentIds: [appointmentsMock[0].id],
-          explanation: 'Found the next available appointment'
+          explanation: '# Found Appointment\n\nI found the next available appointment for the patient. This appointment matches your search criteria.\n\n## Details\n- Appointment type: Follow-up visit\n- Date: Tomorrow at 2pm\n- Status: Scheduled'
         })
       })
     },
@@ -78,7 +78,7 @@ describe('Elation - Find Future Appointment with AI', () => {
 
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
-        explanation: 'Found the next available appointment',
+        explanation: '<h1>Found Appointment</h1>\n<p>I found the next available appointment for the patient. This appointment matches your search criteria.</p>\n<h2>Details</h2>\n<ul>\n<li>Appointment type: Follow-up visit</li>\n<li>Date: Tomorrow at 2pm</li>\n<li>Status: Scheduled</li>\n</ul>',
         appointmentExists: 'true',
         appointment: JSON.stringify(appointmentsMock[0])
       },
@@ -136,7 +136,8 @@ describe('Elation - Find Future Appointment with AI', () => {
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
         explanation: 'No future appointments found',
-        appointmentExists: 'false'
+        appointmentExists: 'false',
+        appointment: undefined
       }
     })
     expect(onError).not.toHaveBeenCalled()
