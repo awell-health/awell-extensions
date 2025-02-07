@@ -4,7 +4,7 @@ import { z, type ZodTypeAny } from 'zod'
 export const settings = {
   tenantId: {
     key: 'tenantId',
-    label: 'Base URL',
+    label: 'Tenant ID',
     required: true,
     obfuscated: false,
     description:
