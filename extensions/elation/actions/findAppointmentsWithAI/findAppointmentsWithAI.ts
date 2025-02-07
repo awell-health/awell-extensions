@@ -17,7 +17,7 @@ export const findAppointmentsWithAI: Action<
 > = {
   key: 'findAppointmentsWithAI',
   category: Category.EHR_INTEGRATIONS,
-  title: '🪄 Find Appointments with AI (Beta)',
+  title: '🪄 Find Appointments with AI',
   description: 'Find all appointments for a patient using natural language.',
   fields,
   previewable: false,
@@ -59,7 +59,7 @@ export const findAppointmentsWithAI: Action<
         metadata,
         callbacks,
       })
-      
+
       const htmlExplanation = await markdownToHtml(explanation)
 
       // Filter appointments based on LLM's selection

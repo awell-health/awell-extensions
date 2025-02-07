@@ -17,7 +17,7 @@ export const findFutureAppointmentWithAI: Action<
 > = {
   key: 'findFutureAppointmentWithAI',
   category: Category.EHR_INTEGRATIONS,
-  title: '🪄 Find Future Appointment with AI (Beta)',
+  title: '🪄 Find Future Appointment with AI',
   description: 'Find a future appointment in Elation.',
   fields,
   previewable: false,
