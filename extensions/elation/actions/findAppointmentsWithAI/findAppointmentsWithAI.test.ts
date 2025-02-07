@@ -13,7 +13,7 @@ jest.mock('../../../../src/lib/llm/openai/createOpenAIModel', () => ({
       pipe: jest.fn().mockReturnValue({
         invoke: jest.fn().mockResolvedValue({
           appointmentIds: appointmentsMock.map(a => a.id),
-          explanation: 'Test explanation'
+          explanation: '# Found Appointments\n\nI found 2 upcoming appointments:\n- Video visit tomorrow\n- Follow-up in 2 days'
         })
       })
     },
@@ -79,7 +79,7 @@ describe('Elation - Find appointments with AI', () => {
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
         appointments: JSON.stringify(appointmentsMock),
-        explanation: 'Test explanation',
+        explanation: '<h1>Found Appointments</h1>\n<p>I found 2 upcoming appointments:</p>\n<ul>\n<li>Video visit tomorrow</li>\n<li>Follow-up in 2 days</li>\n</ul>',
         appointmentCountsByStatus: JSON.stringify({ Scheduled: 2 }),
       },
       events: [

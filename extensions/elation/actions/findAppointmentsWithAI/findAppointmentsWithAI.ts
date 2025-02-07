@@ -7,6 +7,8 @@ import { createOpenAIModel } from '../../../../src/lib/llm/openai/createOpenAIMo
 import { FieldsValidationSchema, fields, dataPoints } from './config'
 import { getAppointmentCountsByStatus } from './getAppoitnmentCountByStatus'
 import { findAppointmentsWithLLM } from '../../lib/findAppointmentsWithLLM/findAppointmentsWithLLM'
+import { markdownToHtml } from '../../../../src/utils'
+
 
 export const findAppointmentsWithAI: Action<
   typeof fields,
@@ -57,6 +59,8 @@ export const findAppointmentsWithAI: Action<
         metadata,
         callbacks,
       })
+      
+      const htmlExplanation = await markdownToHtml(explanation)
 
       // Filter appointments based on LLM's selection
       const selectedAppointments = appointments.filter((appointment) =>
@@ -69,7 +73,7 @@ export const findAppointmentsWithAI: Action<
       await onComplete({
         data_points: {
           appointments: JSON.stringify(selectedAppointments),
-          explanation,
+          explanation: htmlExplanation,
           appointmentCountsByStatus: JSON.stringify(appointmentCountsByStatus),
         },
         events: [
