@@ -117,8 +117,7 @@ The action returns the full appointment resources of all appointments matching t
 
 Example data points output below.
 
-Appointments (note: only displaying a partial appointment resource)
-```json
+Appointments (note: only displaying a partial appointment resource)```json
 [
   {
     "id": 456,
@@ -134,8 +133,7 @@ Appointments (note: only displaying a partial appointment resource)
       "status": "Confirmed",
     },
   }
-]
-```
+]```
 
 Appointment counts by status
 ```json
@@ -144,3 +142,20 @@ Appointment counts by status
   "Confirmed": 1,
 }
 ```
+
+### 🪄 Update Patient Tags
+
+Uses AI to manage patient tags in Elation based on natural language instructions. The action executes the following steps:
+
+1. Retrieves existing patient tags from Elation
+2. Uses an LLM to interpret natural language instructions and determine required tag changes
+3. Updates patient tags in Elation according to the interpreted changes
+
+The action returns:
+- Complete list of updated tags after changes
+- Detailed explanation of what changes were made and why
+
+**Important Notes:**
+- When adding new tags, specify them in single quotes (e.g., 'Diabetes', 'High-Risk'). Tags must exist in your Elation database
+- Due to Elation API limitations, clearing all tags is implemented by setting a single space tag (' '). This is the recommended workaround from Elation's team
+
