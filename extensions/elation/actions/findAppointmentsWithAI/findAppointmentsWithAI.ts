@@ -6,16 +6,18 @@ import { makeAPIClient } from '../../client'
 import { createOpenAIModel } from '../../../../src/lib/llm/openai/createOpenAIModel'
 import { FieldsValidationSchema, fields, dataPoints } from './config'
 import { getAppointmentCountsByStatus } from './getAppoitnmentCountByStatus'
-import { findAppointmentsByPromptWithLLM } from './lib/findAppointmentsByPromptWithLLM/findAppointmentsByPromptWithLLM'
+import { findAppointmentsWithLLM } from '../../lib/findAppointmentsWithLLM/findAppointmentsWithLLM'
+import { markdownToHtml } from '../../../../src/utils'
 
-export const findAppointmentsByPrompt: Action<
+
+export const findAppointmentsWithAI: Action<
   typeof fields,
   typeof settings,
   keyof typeof dataPoints
 > = {
-  key: 'findAppointmentsByPrompt',
+  key: 'findAppointmentsWithAI',
   category: Category.EHR_INTEGRATIONS,
-  title: '🪄 Find Appointments by Prompt (Beta)',
+  title: '✨ Find Appointments',
   description: 'Find all appointments for a patient using natural language.',
   fields,
   previewable: false,
@@ -24,10 +26,12 @@ export const findAppointmentsByPrompt: Action<
     const { prompt, patientId } = FieldsValidationSchema.parse(payload.fields)
     const api = makeAPIClient(payload.settings)
 
+    // First fetch all appointments for the patient
     const appointments = await api.findAppointments({
       patient: patientId,
     })
 
+    // Early return if no appointments found
     if (isNil(appointments) || appointments.length === 0) {
       await onComplete({
         data_points: {
@@ -40,21 +44,25 @@ export const findAppointmentsByPrompt: Action<
     }
 
     try {
+      // Initialize OpenAI model for natural language processing
       const { model, metadata, callbacks } = await createOpenAIModel({
         settings: {}, // we use built-in API key for OpenAI
         helpers,
         payload,
       })
 
-      const { appointmentIds, explanation } =
-        await findAppointmentsByPromptWithLLM({
-          model,
-          appointments,
-          prompt,
-          metadata,
-          callbacks,
-        })
+      // Use LLM to find appointments matching the user's natural language prompt
+      const { appointmentIds, explanation } = await findAppointmentsWithLLM({
+        model,
+        appointments,
+        prompt,
+        metadata,
+        callbacks,
+      })
 
+      const htmlExplanation = await markdownToHtml(explanation)
+
+      // Filter appointments based on LLM's selection
       const selectedAppointments = appointments.filter((appointment) =>
         appointmentIds.includes(appointment.id),
       )
@@ -65,7 +73,7 @@ export const findAppointmentsByPrompt: Action<
       await onComplete({
         data_points: {
           appointments: JSON.stringify(selectedAppointments),
-          explanation,
+          explanation: htmlExplanation,
           appointmentCountsByStatus: JSON.stringify(appointmentCountsByStatus),
         },
         events: [

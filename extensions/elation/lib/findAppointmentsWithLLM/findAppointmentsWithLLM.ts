@@ -1,11 +1,10 @@
 import { type ChatOpenAI } from '@langchain/openai'
-import { type AIActionMetadata } from '../../../../../../src/lib/llm/openai/types'
+import { type AIActionMetadata } from '../../../../src/lib/llm/openai/types'
 import type { BaseCallbackHandler } from "@langchain/core/callbacks/base"
 import { systemPrompt } from './prompt'
-import { parser, type AppointmentsFromAI } from './parser'
-import { type AppointmentResponse } from '../../../../types'
-
-interface FindAppointmentsByPromptWithLLMProps {
+import { parser, type AppointmentsFromLLM } from './parser'
+import { type AppointmentResponse } from '../../types'
+interface FindAppointmentsWithLLMProps {
   model: ChatOpenAI
   appointments: AppointmentResponse[]
   prompt: string
@@ -13,24 +12,17 @@ interface FindAppointmentsByPromptWithLLMProps {
   callbacks?: BaseCallbackHandler[]
 }
 
-export const findAppointmentsByPromptWithLLM = async ({
+export const findAppointmentsWithLLM = async ({
   model,
   appointments,
   prompt,
   metadata,
   callbacks,
-}: FindAppointmentsByPromptWithLLMProps): Promise<AppointmentsFromAI> => {
+}: FindAppointmentsWithLLMProps): Promise<AppointmentsFromLLM> => {
   const chain = model.pipe(parser)
 
   try {
-    const formattedAppointments = appointments
-      .map((appointment) => ({
-        id: appointment.id,
-        reason: appointment.reason,
-        scheduled_date: appointment.scheduled_date,
-      }))
-      .map((appointment) => JSON.stringify(appointment))
-      .join('\n\n')
+    const formattedAppointments = JSON.stringify(appointments)
     
     const result = await chain.invoke(
       await systemPrompt.format({
@@ -40,7 +32,7 @@ export const findAppointmentsByPromptWithLLM = async ({
       }),
       { 
         metadata, 
-        runName: 'ElationFindAppointmentsByPrompt',
+        runName: 'ElationFindAppointmentsWithLLM',
         callbacks
       }
     )

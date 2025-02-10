@@ -23,7 +23,7 @@ export const updatePatientTags: Action<
 > = {
   key: 'updatePatientTags',
   category: Category.EHR_INTEGRATIONS,
-  title: '🪄 Update patient tags',
+  title: '✨ Update Patient Tags',
   description: 'Update patient tags in Elation.',
   fields,
   previewable: false,

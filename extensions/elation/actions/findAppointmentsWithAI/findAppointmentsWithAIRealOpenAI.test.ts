@@ -2,15 +2,15 @@ import 'dotenv/config'
 import { TestHelpers } from '@awell-health/extensions-core'
 import { makeAPIClient } from '../../client'
 import { appointmentsMock } from './__testdata__/GetAppointments.mock'
-import { findAppointmentsByPrompt } from './findAppointmentsByPrompt'
+import { findAppointmentsWithAI } from './findAppointmentsWithAI'
 
 // Only mock the client, not OpenAI
 jest.mock('../../client')
 jest.setTimeout(60000)
 
-describe.skip('findAppointmentsByPrompt - Real OpenAI calls', () => {
+describe.skip('findAppointmentsWithAI - Real OpenAI calls', () => {
   const { onComplete, onError, helpers, extensionAction, clearMocks } =
-    TestHelpers.fromAction(findAppointmentsByPrompt)
+    TestHelpers.fromAction(findAppointmentsWithAI)
 
   beforeEach(() => {
     clearMocks()
@@ -38,29 +38,88 @@ describe.skip('findAppointmentsByPrompt - Real OpenAI calls', () => {
       name: 'find all appointments',
       prompt: 'Find all appointments',
       shouldFind: true,
-      expectedCount: 2
-    },
-    {
-      name: 'find established patient visits',
-      prompt: 'Find established patient visits',
-      shouldFind: true,
-      expectedCount: 2
-    },
-    {
-      name: 'find non-existent appointments',
-      prompt: 'Find dental cleaning appointments',
-      shouldFind: false,
-      expectedCount: 0
+      expectedCount: 2,
+      validate: (appointments: typeof appointmentsMock) => {
+        expect(appointments).toHaveLength(2)
+      }
     },
     {
       name: 'find PCP appointments',
       prompt: 'Find PCP appointments',
       shouldFind: true,
-      expectedCount: 2
+      expectedCount: 2,
+      validate: (appointments: typeof appointmentsMock) => {
+        appointments.forEach(apt => {
+          expect(apt.reason).toContain('PCP')
+        })
+      }
+    },
+    {
+      name: 'find video appointments',
+      prompt: 'Find video appointments',
+      shouldFind: true,
+      expectedCount: 2,
+      validate: (appointments: typeof appointmentsMock) => {
+        appointments.forEach(apt => {
+          expect(apt.mode).toBe('VIDEO')
+        })
+      }
+    },
+    {
+      name: 'find scheduled appointments',
+      prompt: 'Find scheduled appointments',
+      shouldFind: true,
+      expectedCount: 2,
+      validate: (appointments: typeof appointmentsMock) => {
+        appointments.forEach(apt => {
+          expect(apt.status.status).toBe('Scheduled')
+        })
+      }
+    },
+    {
+      name: 'find appointments scheduled after November 2023',
+      prompt: 'Find appointments scheduled after November 2023',
+      shouldFind: true,
+      expectedCount: 2,
+      validate: (appointments: typeof appointmentsMock) => {
+        appointments.forEach(apt => {
+          const aptDate = new Date(apt.scheduled_date)
+          expect(aptDate.getTime()).toBeGreaterThanOrEqual(new Date('2023-12-01').getTime())
+        })
+      }
+    },
+    {
+      name: 'find appointments scheduled in 2024',
+      prompt: 'Find appointments scheduled in 2024',
+      shouldFind: false,
+      expectedCount: 0,
+      validate: (appointments: typeof appointmentsMock) => {
+        expect(appointments).toHaveLength(0)
+      }
+    },
+    {
+      name: 'find established patient visits',
+      prompt: 'Find established patient visits',
+      shouldFind: true,
+      expectedCount: 2,
+      validate: (appointments: typeof appointmentsMock) => {
+        appointments.forEach(apt => {
+          expect(apt.reason).toContain('Est. Patient')
+        })
+      }
+    },
+    {
+      name: 'find non-existent appointments',
+      prompt: 'Find dental cleaning appointments',
+      shouldFind: false,
+      expectedCount: 0,
+      validate: (appointments: typeof appointmentsMock) => {
+        expect(appointments).toHaveLength(0)
+      }
     }
   ]
 
-  testCases.forEach(({ name, prompt, shouldFind, expectedCount }) => {
+  testCases.forEach(({ name, prompt, shouldFind, expectedCount, validate }) => {
     test(`Should ${name}`, async () => {
       await extensionAction.onEvent({
         payload: {
@@ -113,6 +172,10 @@ describe.skip('findAppointmentsByPrompt - Real OpenAI calls', () => {
             ]
           })
         )
+        
+        // Validate specific appointment properties
+        const appointments = JSON.parse((onComplete.mock.calls[0][0] as any).data_points.appointments)
+        validate(appointments)
       } else {
         expect(onComplete).toHaveBeenCalledWith(
           expect.objectContaining({
@@ -123,8 +186,9 @@ describe.skip('findAppointmentsByPrompt - Real OpenAI calls', () => {
             })
           })
         )
+        validate([])
       }
       expect(onError).not.toHaveBeenCalled()
     }, 60000)
   })
-}) 
+})
