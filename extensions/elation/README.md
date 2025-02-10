@@ -106,7 +106,7 @@ Tries to find a **single future appointment** for a patient based on a prompt in
 
 If a matching appointment is found, the action returns the full appointment resource and an explanation of why the LLM chose this appointment.
 
-### 🪄 Find Appointments With AI
+### ✨ Find Appointments
 
 Tries to find **all appointments** for a patient based on a prompt in natural language. These are the steps executed by the action:
 

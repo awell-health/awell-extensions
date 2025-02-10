@@ -17,7 +17,7 @@ export const findAppointmentsWithAI: Action<
 > = {
   key: 'findAppointmentsWithAI',
   category: Category.EHR_INTEGRATIONS,
-  title: '🪄 Find Appointments with AI',
+  title: '✨ Find Appointments',
   description: 'Find all appointments for a patient using natural language.',
   fields,
   previewable: false,
