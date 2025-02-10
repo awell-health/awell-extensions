@@ -3,6 +3,7 @@ import { validatePayloadAndCreateSdk } from '../../lib'
 import { fields, dataPoints, FieldsValidationSchema } from './config'
 import { MedicationExtractorApi } from '../../lib/api'
 import { FetchError } from '../../lib/api/medicationExtractorApi'
+import { startCase } from 'lodash'
 
 export const medicationFromImage: Action<
   typeof fields,
@@ -34,11 +35,22 @@ export const medicationFromImage: Action<
         context: { pathwayId, activityId },
       })
 
+      const medicationAsText = data.medications
+        .map((medication) => {
+          return Object.entries(medication)
+            .map(([key, value]) => {
+              return `${startCase(key)}: ${value}`
+            })
+            .join('\n')
+        })
+        .join('\n\n-------\n\n')
+
       await onComplete({
         data_points: {
           data: JSON.stringify({
             medications: data.medications,
           }),
+          medicationAsText,
         },
       })
     } catch (error) {

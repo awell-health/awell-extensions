@@ -61,7 +61,7 @@ describe('Medication From Image', () => {
         method: 'POST',
         headers: expect.any(Object),
         body: expect.any(String),
-      })
+      }),
     )
 
     expect(onError).not.toHaveBeenCalled()
@@ -70,6 +70,15 @@ describe('Medication From Image', () => {
         data: JSON.stringify({
           medications: mockResponse.medications,
         }),
+        medicationAsText: `Product Rxcui: 809854
+Product Name: hydrochlorothiazide 12.5 MG / quinapril 10 MG Oral Tablet [Accuretic]
+Brand Name: Accuretic
+Dose Form Name: Oral Tablet
+Prescribable Name: Accuretic 10 MG / 12.5 MG Oral Tablet
+Extracted Medication Name: Accuretic
+Extracted Brand Name: Accuretic
+Extracted Dosage: 10 mg / 12.5 mg
+Extracted Ndcg: 0006-0711-31`,
       },
     })
   })
@@ -107,7 +116,7 @@ describe('Medication From Image', () => {
         method: 'POST',
         headers: expect.any(Object),
         body: expect.any(String),
-      })
+      }),
     )
 
     expect(onError).toHaveBeenCalledWith({
@@ -154,7 +163,7 @@ describe('Medication From Image', () => {
         method: 'POST',
         headers: expect.any(Object),
         body: expect.any(String),
-      })
+      }),
     )
 
     expect(onError).toHaveBeenCalledWith({
