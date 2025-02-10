@@ -143,7 +143,7 @@ Appointment counts by status
 }
 ```
 
-### 🪄 Update Patient Tags
+### ✨ Update Patient Tags
 
 Uses AI to manage patient tags in Elation based on natural language instructions. The action executes the following steps:
 
