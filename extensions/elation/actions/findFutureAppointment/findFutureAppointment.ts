@@ -10,14 +10,14 @@ import { createOpenAIModel } from '../../../../src/lib/llm/openai/createOpenAIMo
 import { OPENAI_MODELS } from '../../../../src/lib/llm/openai/constants'
 import { markdownToHtml } from '../../../../src/utils'
 
-export const findFutureAppointmentWithAI: Action<
+export const findFutureAppointment: Action<
   typeof fields,
   typeof settings,
   keyof typeof dataPoints
 > = {
-  key: 'findFutureAppointmentWithAI',
+  key: 'findFutureAppointment',
   category: Category.EHR_INTEGRATIONS,
-  title: '🪄 Find Future Appointment with AI',
+  title: '✨ Find Future Appointment',
   description: 'Find a future appointment in Elation.',
   fields,
   previewable: false,

@@ -2,15 +2,15 @@ import 'dotenv/config'
 import { TestHelpers } from '@awell-health/extensions-core'
 import { makeAPIClient } from '../../client'
 import { appointmentsMock } from './__testdata__/GetAppointments.mock'
-import { findFutureAppointmentWithAI } from './findFutureAppointmentWithAI'
+import { findFutureAppointment } from './findFutureAppointment'
 import { addDays } from 'date-fns'
 
 jest.mock('../../client')
 jest.setTimeout(60000) // Increased timeout for OpenAI calls
 
-describe.skip('findFutureAppointmentWithAI - Real OpenAI calls', () => {
+describe.skip('findFutureAppointment - Real OpenAI calls', () => {
   const { onComplete, onError, helpers, extensionAction, clearMocks } =
-    TestHelpers.fromAction(findFutureAppointmentWithAI)
+    TestHelpers.fromAction(findFutureAppointment)
 
   beforeEach(() => {
     clearMocks()

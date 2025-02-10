@@ -96,7 +96,7 @@ Search a physician based on a set of parameters. The ID of the physician matchin
 
 Note that this action can only support finding one physician so if your search criteria match multiple physicians the action will throw an error.
 
-### 🪄 Find Future Appointments With AI
+### ✨ Find Future Appointment
 
 Tries to find a **single future appointment** for a patient based on a prompt in natural language. These are the steps executed by the action:
 
