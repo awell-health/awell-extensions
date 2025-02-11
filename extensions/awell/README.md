@@ -85,6 +85,10 @@ This action allows you to read the most recent data point value of a given data 
 **Example:**
 If the data point you want to read the value from is of type `number`, then you should use the `valueNumber` data point.
 
+### Stop Hosted Pages session
+
+This action allows you to stop the current Hosted Pages session. A title and subtitle are optional and will be shown on the success page in Hosted Pages.
+
 ## Webhooks
 
 Webhooks in the Awell extension offer ways to trigger a care flow based on the end of another care flow, or from any event that happens in your system (via the pathwayStart webhook).
