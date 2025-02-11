@@ -10,6 +10,7 @@ import {
   startHostedPagesSession,
   startCareFlowAndSession,
   getDataPointValue,
+  stopHostedPagesSession,
 } from './v1/actions'
 import { type Extension } from '@awell-health/extensions-core'
 import { settings } from './settings'
@@ -39,6 +40,7 @@ export const Awell: Extension = {
     startHostedPagesSession,
     startCareFlowAndSession,
     getDataPointValue,
+    stopHostedPagesSession,
     // deletePatient, Deleting the patient who is currently enrolled in the pathway seems dangerous
   },
   webhooks,

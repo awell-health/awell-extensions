@@ -1,0 +1,1 @@
+export { stopHostedPagesSession } from './stopHostedPagesSession'
