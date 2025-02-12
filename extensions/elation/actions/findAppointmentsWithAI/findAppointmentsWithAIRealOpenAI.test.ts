@@ -98,13 +98,18 @@ describe.skip('findAppointmentsWithAI - Real OpenAI calls', () => {
       }
     },
     {
-      name: 'find established patient visits',
-      prompt: 'Find established patient visits',
+      name: 'find appointments from now until 30 hours from now',
+      prompt: 'Find appointments from now until 30 hours from now',
       shouldFind: true,
-      expectedCount: 2,
+      expectedCount: 1,
       validate: (appointments: typeof appointmentsMock) => {
+        expect(appointments).toHaveLength(1)
         appointments.forEach(apt => {
-          expect(apt.reason).toContain('Est. Patient')
+          const aptDate = new Date(apt.scheduled_date)
+          const now = new Date()
+          const thirtyHoursFromNow = new Date(now.getTime() + 30 * 60 * 60 * 1000)
+          expect(aptDate.getTime()).toBeGreaterThanOrEqual(now.getTime())
+          expect(aptDate.getTime()).toBeLessThanOrEqual(thirtyHoursFromNow.getTime())
         })
       }
     },

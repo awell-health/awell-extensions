@@ -1,9 +1,9 @@
-import { addDays } from 'date-fns'
+import { addHours } from 'date-fns'
 
 export const appointmentsMock = [
   {
     id: 123,
-    scheduled_date: addDays(new Date(), 1).toISOString(),
+    scheduled_date: addHours(new Date(), 12).toISOString(),
     duration: 60,
     billing_details: null,
     payment: null,
@@ -47,7 +47,7 @@ export const appointmentsMock = [
   },
   {
     id: 456,
-    scheduled_date: addDays(new Date(), 2).toISOString(),
+    scheduled_date: addHours(new Date(), 25).toISOString(),
     duration: 60,
     billing_details: null,
     payment: null,
