@@ -1,6 +1,5 @@
-import { z } from 'zod'
-import { type Action, Category, validate } from '@awell-health/extensions-core'
-import { SettingsValidationSchema, type settings } from '../../settings'
+import { type Action, Category } from '@awell-health/extensions-core'
+import { type settings } from '../../settings'
 import { makeAPIClient } from '../../client'
 import { AxiosError } from 'axios'
 import { nonVisitNoteSchema } from '../../validation/nonVisitNote.zod'
@@ -20,16 +19,8 @@ export const createNonVisitNote: Action<
   previewable: true,
   dataPoints,
   onEvent: async ({ payload, onComplete, onError }): Promise<void> => {
-    const {
-      fields: { patientId, authorId, tags, text, category },
-      settings,
-    } = validate({
-      schema: z.object({
-        fields: FieldsValidationSchema,
-        settings: SettingsValidationSchema,
-      }),
-      payload,
-    })
+    const { patientId, authorId, tags, text, category } =
+      FieldsValidationSchema.parse(payload.fields)
 
     const note = nonVisitNoteSchema.parse({
       tags,
@@ -39,7 +30,7 @@ export const createNonVisitNote: Action<
       chart_date: new Date().toISOString(),
     })
 
-    const api = makeAPIClient(settings)
+    const api = makeAPIClient(payload.settings)
 
     try {
       const {
