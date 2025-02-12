@@ -19,15 +19,9 @@ export const getPatient: Action<
   previewable: true,
   dataPoints,
   onEvent: async ({ payload, onComplete }): Promise<void> => {
-    const { fields, settings } = validate({
-      schema: z.object({
-        fields: FieldsValidationSchema,
-        settings: SettingsValidationSchema,
-      }),
-      payload,
-    })
+    const fields = FieldsValidationSchema.parse(payload.fields)
     // API Call should produce AuthError or something dif.
-    const api = makeAPIClient(settings)
+    const api = makeAPIClient(payload.settings)
 
     const patientInfo = await api.getPatient(fields.patientId)
 
@@ -40,10 +34,10 @@ export const getPatient: Action<
         primaryPhysicianId: String(patientInfo.primary_physician),
         caregiverPracticeId: String(patientInfo.caregiver_practice),
         mainPhone: elationMobilePhoneToE164(
-          patientInfo.phones?.find((p) => p.phone_type === 'Main')?.phone
+          patientInfo.phones?.find((p) => p.phone_type === 'Main')?.phone,
         ),
         mobilePhone: elationMobilePhoneToE164(
-          patientInfo.phones?.find((p) => p.phone_type === 'Mobile')?.phone
+          patientInfo.phones?.find((p) => p.phone_type === 'Mobile')?.phone,
         ),
         email: getLastEmail(patientInfo.emails),
         middleName: patientInfo.middle_name,
@@ -61,7 +55,7 @@ export const getPatient: Action<
         previousLastName: patientInfo.previous_last_name,
         status: patientInfo.patient_status.status,
         preferredServiceLocationId: String(
-          patientInfo.preferred_service_location
+          patientInfo.preferred_service_location,
         ),
         patientObject: JSON.stringify(patientInfo),
       },

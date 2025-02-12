@@ -1,5 +1,5 @@
 import { RateLimitConfig, type Setting } from '@awell-health/extensions-core'
-import { isFinite, isNil } from 'lodash'
+import { isEmpty, isFinite, isNil } from 'lodash'
 import { z, type ZodTypeAny } from 'zod'
 
 export const settings = {
@@ -57,24 +57,24 @@ export const settings = {
   },
 } satisfies Record<string, Setting>
 
-export const rateLimitDurationSchema = z
-  .string()
-  .refine(
-    (val) => {
-      try {
-        const [number, unit] = val.split(' ')
-        const parsedUnit = parseDurationUnit(unit)
-        return isFinite(Number(number)) && !isNil(parsedUnit)
-      } catch (error) {
-        return false
-      }
-    },
-    {
-      message:
-        'Duration must be in format {number} {unit} where unit is seconds, minutes, hours or days',
-    },
-  )
-  .optional()
+export const rateLimitDurationSchema = z.string().refine(
+  (val) => {
+    if (isNil(val) || isEmpty(val)) {
+      return true
+    }
+    try {
+      const [number, unit] = val.split(' ')
+      const parsedUnit = parseDurationUnit(unit)
+      return isFinite(Number(number)) && !isNil(parsedUnit)
+    } catch (error) {
+      return false
+    }
+  },
+  {
+    message:
+      'Duration must be in format {number} {unit} where unit is seconds, minutes, hours or days',
+  },
+)
 
 export const SettingsValidationSchema = z.object({
   base_url: z.string().min(1),
@@ -88,7 +88,7 @@ export const SettingsValidationSchema = z.object({
    */
   username: z.string().optional(),
   password: z.string().optional(),
-  rateLimitDuration: rateLimitDurationSchema,
+  rateLimitDuration: rateLimitDurationSchema.optional(),
 } satisfies Record<keyof typeof settings, ZodTypeAny>)
 
 export type SettingsType = z.infer<typeof SettingsValidationSchema>
