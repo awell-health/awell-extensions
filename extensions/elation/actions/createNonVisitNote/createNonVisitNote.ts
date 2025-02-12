@@ -57,7 +57,7 @@ export const createNonVisitNote: Action<
         await onError({
           events: [
             addActivityEventLog({
-              message: `${String(err.status)}: ${err.message}\n${JSON.stringify(err.response?.data, null, 2)}`,
+              message: `${String(err.response?.status)}: ${String(err.response?.statusText)}\n${JSON.stringify(err.response?.data, null, 2)}`,
             }),
           ],
         })

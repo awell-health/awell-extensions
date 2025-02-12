@@ -127,7 +127,7 @@ describe('Elation - Create non-visit note', () => {
           {
             date: expect.any(String),
             text: {
-              en: '400: Request failed with status code 400\n{\n  "patient": [\n    "Invalid pk \\"1\\" - object does not exist."\n  ]\n}',
+              en: '400: Bad Request\n{\n  "patient": [\n    "Invalid pk \\"1\\" - object does not exist."\n  ]\n}',
             },
           },
         ],
