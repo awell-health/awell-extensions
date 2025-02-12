@@ -53,6 +53,7 @@ import {
 import { elationCacheService } from './cache'
 import { isEmpty } from 'lodash'
 import { type DeepPartial } from '../../src/lib/types'
+import { type AxiosResponse } from 'axios'
 
 export class ElationDataWrapper extends DataWrapper {
   public async findAppointments(
@@ -205,8 +206,8 @@ export class ElationDataWrapper extends DataWrapper {
 
   public async createNonVisitNote(
     obj: NonVisitNoteInput,
-  ): Promise<NonVisitNoteResponse> {
-    return await this.Request({
+  ): Promise<AxiosResponse<NonVisitNoteResponse>> {
+    return await this.RequestRaw({
       method: 'POST',
       url: '/non_visit_notes/',
       data: obj,
@@ -292,7 +293,7 @@ export class ElationDataWrapper extends DataWrapper {
     return res
   }
 
-  // A bit confusing, but in Elation, 'Message Thread' is the 'main object' 
+  // A bit confusing, but in Elation, 'Message Thread' is the 'main object'
   // and you add thread messages to main Message Thread.
   // see https://docs.elationhealth.com/reference/create-thread-message
   public async addMessageToThread(
@@ -531,7 +532,7 @@ export class ElationAPIClient extends APIClient<ElationDataWrapper> {
 
   public async createNonVisitNote(
     obj: NonVisitNoteInput,
-  ): Promise<NonVisitNoteResponse> {
+  ): Promise<AxiosResponse<NonVisitNoteResponse>> {
     return await this.FetchData(async (dw) => await dw.createNonVisitNote(obj))
   }
 

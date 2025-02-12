@@ -5,6 +5,7 @@ import { makeAPIClient } from '../../client'
 import { nonVisitNoteSchema } from '../../validation/nonVisitNote.zod'
 import { TestHelpers } from '@awell-health/extensions-core'
 import { CreateNonVisitNoteMock } from './__testdata__/CreateNonVisitNote.mock'
+import { createAxiosError } from '../../../../tests'
 
 jest.mock('../../client', () => ({
   makeAPIClient: jest.fn(),
@@ -27,7 +28,9 @@ describe('Elation - Create non-visit note', () => {
 
   beforeAll(() => {
     const mockAPIClient = makeAPIClient as jest.Mock
-    mockAPIClient.mockImplementation(makeAPIClientMockFunc)
+    mockAPIClient.mockImplementation(() => ({
+      createNonVisitNote: mockCreateNonVisitNote,
+    }))
   })
 
   beforeEach(() => {
@@ -77,6 +80,7 @@ describe('Elation - Create non-visit note', () => {
         helpers,
       })
 
+      expect(mockCreateNonVisitNote).toHaveBeenCalled()
       expect(onComplete).toHaveBeenCalledWith({
         data_points: {
           nonVisitNoteId: String(nonVisitNoteResponseExample.id),
@@ -84,6 +88,49 @@ describe('Elation - Create non-visit note', () => {
             nonVisitNoteResponseExample.bullets[0].id,
           ),
         },
+      })
+    })
+  })
+
+  describe('When the non-visit note creation fails', () => {
+    beforeEach(() => {
+      mockCreateNonVisitNote.mockRejectedValue(
+        createAxiosError(
+          400,
+          'Bad Request',
+          JSON.stringify({
+            patient: ['Invalid pk "1" - object does not exist.'],
+          }),
+        ),
+      )
+    })
+
+    test('Should return with correct data_points', async () => {
+      await extensionAction.onEvent!({
+        payload: {
+          fields: {
+            patientId: nonVisitNoteResponseExample.patient,
+            authorId: nonVisitNoteResponseExample.bullets[0].author,
+            category: undefined,
+            tags: undefined,
+            text: nonVisitNoteResponseExample.bullets[0].text,
+          },
+          settings,
+        } as any,
+        onComplete,
+        onError,
+        helpers,
+      })
+
+      expect(onError).toHaveBeenCalledWith({
+        events: [
+          {
+            date: expect.any(String),
+            text: {
+              en: '400: Request failed with status code 400\n{\n  "patient": [\n    "Invalid pk \\"1\\" - object does not exist."\n  ]\n}',
+            },
+          },
+        ],
       })
     })
   })

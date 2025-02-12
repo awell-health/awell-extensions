@@ -1,11 +1,11 @@
-import { z, ZodError } from 'zod'
+import { z } from 'zod'
 import { type Action, Category, validate } from '@awell-health/extensions-core'
 import { SettingsValidationSchema, type settings } from '../../settings'
 import { makeAPIClient } from '../../client'
-import { fromZodError } from 'zod-validation-error'
 import { AxiosError } from 'axios'
 import { nonVisitNoteSchema } from '../../validation/nonVisitNote.zod'
 import { fields, FieldsValidationSchema, dataPoints } from './config'
+import { addActivityEventLog } from '../../../../src/lib/awell/addEventLog'
 
 export const createNonVisitNote: Action<
   typeof fields,
@@ -42,7 +42,9 @@ export const createNonVisitNote: Action<
     const api = makeAPIClient(settings)
 
     try {
-      const { id, bullets } = await api.createNonVisitNote(note)
+      const {
+        data: { id, bullets },
+      } = await api.createNonVisitNote(note)
 
       await onComplete({
         data_points: {
@@ -51,52 +53,18 @@ export const createNonVisitNote: Action<
         },
       })
     } catch (err) {
-      if (err instanceof ZodError) {
-        const error = fromZodError(err)
+      if (err instanceof AxiosError) {
         await onError({
           events: [
-            {
-              date: new Date().toISOString(),
-              text: { en: error.message },
-              error: {
-                category: 'WRONG_INPUT',
-                message: error.message,
-              },
-            },
+            addActivityEventLog({
+              message: `${String(err.status)}: ${err.message}\n${JSON.stringify(err.response?.data, null, 2)}`,
+            }),
           ],
         })
-      } else if (err instanceof AxiosError) {
-        await onError({
-          events: [
-            {
-              date: new Date().toISOString(),
-              text: {
-                en: `${err.status ?? '(no status code)'} Error: ${err.message}`,
-              },
-              error: {
-                category: 'SERVER_ERROR',
-                message: `${err.status ?? '(no status code)'} Error: ${
-                  err.message
-                }`,
-              },
-            },
-          ],
-        })
-      } else {
-        const message = (err as Error).message
-        await onError({
-          events: [
-            {
-              date: new Date().toISOString(),
-              text: { en: message },
-              error: {
-                category: 'SERVER_ERROR',
-                message,
-              },
-            },
-          ],
-        })
+        return
       }
+
+      throw err
     }
   },
 }
