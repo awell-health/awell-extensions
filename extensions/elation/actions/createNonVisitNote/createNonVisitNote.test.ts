@@ -1,6 +1,4 @@
 import { createNonVisitNote as action } from '.'
-import { nonVisitNoteResponseExample } from '../../__mocks__/constants'
-import { makeAPIClientMockFunc } from '../../__mocks__/client'
 import { makeAPIClient } from '../../client'
 import { nonVisitNoteSchema } from '../../validation/nonVisitNote.zod'
 import { TestHelpers } from '@awell-health/extensions-core'
@@ -67,11 +65,11 @@ describe('Elation - Create non-visit note', () => {
       await extensionAction.onEvent!({
         payload: {
           fields: {
-            patientId: nonVisitNoteResponseExample.patient,
-            authorId: nonVisitNoteResponseExample.bullets[0].author,
+            patientId: CreateNonVisitNoteMock.data.patient,
+            authorId: CreateNonVisitNoteMock.data.bullets[0].author,
             category: undefined,
             tags: undefined,
-            text: nonVisitNoteResponseExample.bullets[0].text,
+            text: CreateNonVisitNoteMock.data.bullets[0].text,
           },
           settings,
         } as any,
@@ -83,9 +81,9 @@ describe('Elation - Create non-visit note', () => {
       expect(mockCreateNonVisitNote).toHaveBeenCalled()
       expect(onComplete).toHaveBeenCalledWith({
         data_points: {
-          nonVisitNoteId: String(nonVisitNoteResponseExample.id),
+          nonVisitNoteId: String(CreateNonVisitNoteMock.data.id),
           nonVisitNoteBulletId: String(
-            nonVisitNoteResponseExample.bullets[0].id,
+            CreateNonVisitNoteMock.data.bullets[0].id,
           ),
         },
       })
@@ -109,11 +107,11 @@ describe('Elation - Create non-visit note', () => {
       await extensionAction.onEvent!({
         payload: {
           fields: {
-            patientId: nonVisitNoteResponseExample.patient,
-            authorId: nonVisitNoteResponseExample.bullets[0].author,
+            patientId: CreateNonVisitNoteMock.data.patient,
+            authorId: CreateNonVisitNoteMock.data.bullets[0].author,
             category: undefined,
             tags: undefined,
-            text: nonVisitNoteResponseExample.bullets[0].text,
+            text: CreateNonVisitNoteMock.data.bullets[0].text,
           },
           settings,
         } as any,
