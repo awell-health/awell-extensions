@@ -74,14 +74,6 @@ export const rateLimitDurationSchema = z
         'Duration must be in format {number} {unit} where unit is seconds, minutes, hours or days',
     },
   )
-  .transform((val): RateLimitConfig['duration'] => {
-    const [number, unit] = val.split(' ')
-    const parsedUnit = parseDurationUnit(unit)
-    return {
-      value: Number(number),
-      unit: parsedUnit,
-    }
-  })
   .optional()
 
 export const SettingsValidationSchema = z.object({
@@ -134,5 +126,16 @@ const parseDurationUnit = (
       throw new Error(
         `Invalid duration unit: ${unit}. Valid units are: s, m, h, d`,
       )
+  }
+}
+
+export const transformRateLimitDuration = (
+  val: string,
+): RateLimitConfig['duration'] => {
+  const [number, unit] = val.split(' ')
+  const parsedUnit = parseDurationUnit(unit)
+  return {
+    value: Number(number),
+    unit: parsedUnit,
   }
 }

@@ -4,7 +4,10 @@ import {
 } from '@awell-health/extensions-core'
 import { ELATION_SYSTEM } from '../constants'
 import { type SubscriptionEvent } from '../types/subscription'
-import { rateLimitDurationSchema } from '../settings'
+import {
+  rateLimitDurationSchema,
+  transformRateLimitDuration,
+} from '../settings'
 import { isNil } from 'lodash'
 
 const dataPoints = {
@@ -39,10 +42,11 @@ export const appointmentCreatedOrUpdated: Webhook<
     }
 
     // rate limiting
-    const { success, data: duration } = rateLimitDurationSchema.safeParse(
+    const { success, data: durationString } = rateLimitDurationSchema.safeParse(
       settings.rateLimitDuration,
     )
-    if (success === true && !isNil(duration)) {
+    if (success === true && !isNil(durationString)) {
+      const duration = transformRateLimitDuration(durationString)
       const limiter = rateLimiter('elation-appointment', {
         requests: 1,
         duration,
