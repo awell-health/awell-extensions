@@ -3,7 +3,10 @@ import {
   type Webhook,
 } from '@awell-health/extensions-core'
 import { type SubscriptionEvent } from '../types/subscription'
-import { rateLimitDurationSchema } from '../settings'
+import {
+  rateLimitDurationSchema,
+  transformRateLimitDuration,
+} from '../settings'
 import { isNil } from 'lodash'
 
 const dataPoints = {
@@ -37,10 +40,11 @@ export const patientCreatedOrUpdated: Webhook<
     }
 
     // rate limiting
-    const { success, data: duration } = rateLimitDurationSchema.safeParse(
+    const { success, data: durationString } = rateLimitDurationSchema.safeParse(
       settings.rateLimitDuration,
     )
-    if (success === true && !isNil(duration)) {
+    if (success === true && !isNil(durationString)) {
+      const duration = transformRateLimitDuration(durationString)
       const limiter = rateLimiter('elation-patient', {
         requests: 1,
         duration,

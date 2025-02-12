@@ -4,6 +4,7 @@ import {
   NumericIdSchema,
   validateCommaSeparatedList,
 } from '@awell-health/extensions-core'
+import { isEmpty, isNil } from 'lodash'
 
 const nonVisitNoteTypeEnum = z.enum(['email', 'nonvisit', 'phone'])
 
@@ -48,7 +49,10 @@ export const bulletSchema = z.object({
    * TODO: Remove this once we have a proper solution for the category field
    */
   // category: bulletCategoryEnum.default(bulletCategoryEnum.enum.Problem),
-  category: z.string().optional(),
+  category: z
+    .string()
+    .transform((v) => (isNil(v) || isEmpty(v) ? undefined : v))
+    .optional(),
 })
 
 export const nonVisitNoteSchema = z.object({
