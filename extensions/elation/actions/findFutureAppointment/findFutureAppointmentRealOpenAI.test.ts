@@ -62,6 +62,12 @@ describe.skip('findFutureAppointment - Real OpenAI calls', () => {
       name: 'handle empty prompt',
       prompt: ' ',
       shouldFind: false
+    },
+    {
+      name: 'find upcoming appointment in next 2 hours',
+      prompt: 'Find any appointment scheduled within the next 2 hours',
+      shouldFind: true,
+      expectedId: 789
     }
   ]
 
@@ -101,33 +107,31 @@ describe.skip('findFutureAppointment - Real OpenAI calls', () => {
       })
 
       if (shouldFind) {
-        const appointmentData = JSON.parse(
-          (await onComplete).mock.calls[0][0].data_points.appointment
-        )
-
-        expect(onComplete).toHaveBeenCalledWith(
-          expect.objectContaining({
-            data_points: expect.objectContaining({
-              appointmentExists: 'true',
-              explanation: expect.any(String),
-              appointment: expect.stringContaining(expectedId!.toString())
+        const response = (await onComplete).mock.calls[0][0]
+        
+        // First check if appointment exists
+        expect(response.data_points.appointmentExists).toBe('true')
+        
+        // Then safely parse appointment if it exists
+        if (response.data_points.appointment) {
+          const appointmentData = JSON.parse(response.data_points.appointment)
+          
+          // Add your appointment assertions here
+          expect(appointmentData).toEqual(
+            expect.objectContaining({
+              id: expectedId,
+              mode: 'VIDEO',
+              reason: 'PCP: Est. Patient Office',
+              status: expect.objectContaining({
+                status: 'Scheduled'
+              }),
+              duration: 60,
+              patient: 12345
             })
-          })
-        )
-
-        // Verify specific appointment properties
-        expect(appointmentData).toEqual(
-          expect.objectContaining({
-            id: expectedId,
-            mode: 'VIDEO',
-            reason: 'PCP: Est. Patient Office',
-            status: expect.objectContaining({
-              status: 'Scheduled'
-            }),
-            duration: 60,
-            patient: 12345
-          })
-        )
+          )
+        } else {
+          fail('Expected appointment data to be present')
+        }
       } else {
         expect(onComplete).toHaveBeenCalledWith(
           expect.objectContaining({

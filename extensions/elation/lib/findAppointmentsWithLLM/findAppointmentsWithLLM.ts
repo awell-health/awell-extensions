@@ -26,7 +26,7 @@ export const findAppointmentsWithLLM = async ({
     
     const result = await chain.invoke(
       await systemPrompt.format({
-        currentDate: new Date().toISOString().split('T')[0],
+        currentDateTime: new Date().toISOString(),
         appointments: formattedAppointments,
         prompt,
       }),
