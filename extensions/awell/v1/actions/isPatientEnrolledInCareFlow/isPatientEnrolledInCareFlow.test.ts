@@ -8,10 +8,6 @@ import { ZodError } from 'zod'
 
 jest.mock('../../sdk/awellSdk')
 
-const mockGetPatientCareFlowsFn = jest.spyOn(
-  AwellSdk.prototype,
-  'getPatientCareFlows'
-)
 
 describe('Is patient already enrolled in care flow action', () => {
   const {
@@ -101,26 +97,34 @@ describe('Is patient already enrolled in care flow action', () => {
   })
 
   test('Should call the onComplete callback and return true if patient is already enrolled in the care flow', async () => {
-    mockGetPatientCareFlowsFn.mockReturnValueOnce(
-      Promise.resolve([
-        {
-          id: 'pathway-instance-id-1', // current care flow
-          title: 'Pathway definition one',
-          pathway_definition_id: 'pathway-definition-1',
-          release_id: 'release-1',
-          status: PathwayStatus.Active,
-          start_date: '2024-01-01',
-        },
-        {
-          id: 'pathway-instance-id-2',
-          title: 'Pathway definition one',
-          pathway_definition_id: 'pathway-definition-1',
-          release_id: 'release-1',
-          status: PathwayStatus.Active,
-          start_date: '2024-01-01',
-        },
-      ])
-    )
+    const sdkMock = {
+      orchestration: {
+        query: jest.fn().mockResolvedValue({
+          patientPathways: {
+            patientPathways: [
+              {
+                id: 'pathway-instance-id-1', // current care flow
+                title: 'Pathway definition one',
+                pathway_definition_id: 'pathway-definition-1',
+                release_id: 'release-1',
+                status: PathwayStatus.Active,
+                start_date: '2024-01-01T00:00:00.000Z',
+              },
+              {
+                id: 'pathway-instance-id-2',
+                title: 'Pathway definition one',
+                pathway_definition_id: 'pathway-definition-1',
+                release_id: 'release-1',
+                status: PathwayStatus.Active,
+                start_date: '2024-01-01T00:00:00.000Z',
+              },
+            ],
+          },
+        }),
+      },
+    }
+    
+    helpers.awellSdk = jest.fn().mockResolvedValue(sdkMock)
 
     await isPatientEnrolledInCareFlow.onEvent({
       payload: generateTestPayload({
@@ -153,18 +157,26 @@ describe('Is patient already enrolled in care flow action', () => {
   })
 
   test('Should call the onComplete callback and return false if patient is not yet enrolled in another care flow with same care flow definition id', async () => {
-    mockGetPatientCareFlowsFn.mockReturnValueOnce(
-      Promise.resolve([
-        {
-          id: 'pathway-instance-id-1', // Current care flow
-          title: 'Pathway definition one',
-          pathway_definition_id: 'pathway-definition-1',
-          release_id: 'release-1',
-          status: PathwayStatus.Active,
-          start_date: '2024-01-01',
-        },
-      ])
-    )
+    const sdkMock = {
+      orchestration: {
+        query: jest.fn().mockResolvedValue({
+          patientPathways: {
+            patientPathways: [
+              {
+                id: 'pathway-instance-id-1', // Current care flow
+                title: 'Pathway definition one',
+                pathway_definition_id: 'pathway-definition-1',
+                release_id: 'release-1',
+                status: PathwayStatus.Active,
+                start_date: '2024-01-01T00:00:00.000Z',
+              },
+            ],
+          },
+        }),
+      },
+    }
+    
+    helpers.awellSdk = jest.fn().mockResolvedValue(sdkMock)
 
     await isPatientEnrolledInCareFlow.onEvent({
       payload: generateTestPayload({
@@ -196,26 +208,34 @@ describe('Is patient already enrolled in care flow action', () => {
   })
 
   test('Should call the onComplete callback and return true if patient is already enrolled in a completed care flow when status includes "completed" care flows', async () => {
-    mockGetPatientCareFlowsFn.mockReturnValueOnce(
-      Promise.resolve([
-        {
-          id: 'pathway-instance-id-1', // current care flow
-          title: 'Pathway definition one',
-          pathway_definition_id: 'pathway-definition-1',
-          release_id: 'release-1',
-          status: PathwayStatus.Active,
-          start_date: '2024-01-01',
-        },
-        {
-          id: 'pathway-instance-id-2',
-          title: 'Pathway definition one',
-          pathway_definition_id: 'pathway-definition-1',
-          release_id: 'release-1',
-          status: PathwayStatus.Completed,
-          start_date: '2024-06-01',
-        },
-      ])
-    )
+    const sdkMock = {
+      orchestration: {
+        query: jest.fn().mockResolvedValue({
+          patientPathways: {
+            patientPathways: [
+              {
+                id: 'pathway-instance-id-1', // current care flow
+                title: 'Pathway definition one',
+                pathway_definition_id: 'pathway-definition-1',
+                release_id: 'release-1',
+                status: PathwayStatus.Active,
+                start_date: '2024-01-01T00:00:00.000Z',
+              },
+              {
+                id: 'pathway-instance-id-2',
+                title: 'Pathway definition one',
+                pathway_definition_id: 'pathway-definition-1',
+                release_id: 'release-1',
+                status: PathwayStatus.Completed,
+                start_date: '2024-06-01T00:00:00.000Z',
+              },
+            ],
+          },
+        }),
+      },
+    }
+    
+    helpers.awellSdk = jest.fn().mockResolvedValue(sdkMock)
 
     await isPatientEnrolledInCareFlow.onEvent({
       payload: generateTestPayload({
@@ -247,26 +267,34 @@ describe('Is patient already enrolled in care flow action', () => {
   })
 
   test('Should call the onComplete callback and return true if patient is already enrolled in another care flow when careFlowDefinitionIds filter is specified', async () => {
-    mockGetPatientCareFlowsFn.mockReturnValueOnce(
-      Promise.resolve([
-        {
-          id: 'pathway-instance-id-1', // current care flow
-          title: 'Pathway definition one',
-          pathway_definition_id: 'pathway-definition-1',
-          release_id: 'release-1',
-          status: PathwayStatus.Active,
-          start_date: '2024-01-01',
-        },
-        {
-          id: 'pathway-instance-id-2',
-          title: 'Pathway definition two',
-          pathway_definition_id: 'pathway-definition-2',
-          release_id: 'release-1',
-          status: PathwayStatus.Active,
-          start_date: '2024-01-01',
-        },
-      ])
-    )
+    const sdkMock = {
+      orchestration: {
+        query: jest.fn().mockResolvedValue({
+          patientPathways: {
+            patientPathways: [
+              {
+                id: 'pathway-instance-id-1', // current care flow
+                title: 'Pathway definition one',
+                pathway_definition_id: 'pathway-definition-1',
+                release_id: 'release-1',
+                status: PathwayStatus.Active,
+                start_date: '2024-01-01T00:00:00.000Z',
+              },
+              {
+                id: 'pathway-instance-id-2',
+                title: 'Pathway definition two',
+                pathway_definition_id: 'pathway-definition-2',
+                release_id: 'release-1',
+                status: PathwayStatus.Active,
+                start_date: '2024-01-01T00:00:00.000Z',
+              },
+            ],
+          },
+        }),
+      },
+    }
+    
+    helpers.awellSdk = jest.fn().mockResolvedValue(sdkMock)
 
     await isPatientEnrolledInCareFlow.onEvent({
       payload: generateTestPayload({
@@ -297,34 +325,42 @@ describe('Is patient already enrolled in care flow action', () => {
   })
 
   test('Should call the onComplete callback and return true if patient is already in more than one other active or completed care flow', async () => {
-    mockGetPatientCareFlowsFn.mockReturnValueOnce(
-      Promise.resolve([
-        {
-          id: 'pathway-instance-id-1', // current care flow
-          title: 'Pathway definition one',
-          pathway_definition_id: 'pathway-definition-1',
-          release_id: 'release-1',
-          status: PathwayStatus.Active,
-          start_date: '2024-01-01',
-        },
-        {
-          id: 'pathway-instance-id-2',
-          title: 'Pathway definition one',
-          pathway_definition_id: 'pathway-definition-1',
-          release_id: 'release-1',
-          status: PathwayStatus.Active,
-          start_date: '2024-01-01',
-        },
-        {
-          id: 'pathway-instance-id-3',
-          title: 'Pathway definition one',
-          pathway_definition_id: 'pathway-definition-1',
-          release_id: 'release-1',
-          status: PathwayStatus.Completed,
-          start_date: '2024-06-01',
-        },
-      ])
-    )
+    const sdkMock = {
+      orchestration: {
+        query: jest.fn().mockResolvedValue({
+          patientPathways: {
+            patientPathways: [
+              {
+                id: 'pathway-instance-id-1', // current care flow
+                title: 'Pathway definition one',
+                pathway_definition_id: 'pathway-definition-1',
+                release_id: 'release-1',
+                status: PathwayStatus.Active,
+                start_date: '2024-01-01T00:00:00.000Z',
+              },
+              {
+                id: 'pathway-instance-id-2',
+                title: 'Pathway definition one',
+                pathway_definition_id: 'pathway-definition-1',
+                release_id: 'release-1',
+                status: PathwayStatus.Active,
+                start_date: '2024-01-01T00:00:00.000Z',
+              },
+              {
+                id: 'pathway-instance-id-3',
+                title: 'Pathway definition one',
+                pathway_definition_id: 'pathway-definition-1',
+                release_id: 'release-1',
+                status: PathwayStatus.Completed,
+                start_date: '2024-06-01T00:00:00.000Z',
+              },
+            ],
+          },
+        }),
+      },
+    }
+    
+    helpers.awellSdk = jest.fn().mockResolvedValue(sdkMock)
 
     await isPatientEnrolledInCareFlow.onEvent({
       payload: generateTestPayload({
@@ -360,26 +396,34 @@ describe('Is patient already enrolled in care flow action', () => {
     const tenDaysAgo = new Date(today)
     tenDaysAgo.setDate(today.getDate() - 10)
 
-    mockGetPatientCareFlowsFn.mockReturnValueOnce(
-      Promise.resolve([
-        {
-          id: 'pathway-instance-id-1', // current care flow
-          title: 'Pathway definition one',
-          pathway_definition_id: 'pathway-definition-1',
-          release_id: 'release-1',
-          status: PathwayStatus.Active,
-          start_date: today.toISOString(),
-        },
-        {
-          id: 'pathway-instance-id-2',
-          title: 'Pathway definition one',
-          pathway_definition_id: 'pathway-definition-1',
-          release_id: 'release-1',
-          status: PathwayStatus.Active,
-          start_date: tenDaysAgo.toISOString(),
-        },
-      ])
-    )
+    const sdkMock = {
+      orchestration: {
+        query: jest.fn().mockResolvedValue({
+          patientPathways: {
+            patientPathways: [
+              {
+                id: 'pathway-instance-id-1', // current care flow
+                title: 'Pathway definition one',
+                pathway_definition_id: 'pathway-definition-1',
+                release_id: 'release-1',
+                status: PathwayStatus.Active,
+                start_date: today.toISOString(),
+              },
+              {
+                id: 'pathway-instance-id-2',
+                title: 'Pathway definition one',
+                pathway_definition_id: 'pathway-definition-1',
+                release_id: 'release-1',
+                status: PathwayStatus.Active,
+                start_date: tenDaysAgo.toISOString(),
+              },
+            ],
+          },
+        }),
+      },
+    }
+    
+    helpers.awellSdk = jest.fn().mockResolvedValue(sdkMock)
 
     await isPatientEnrolledInCareFlow.onEvent({
       payload: generateTestPayload({
@@ -415,27 +459,35 @@ describe('Is patient already enrolled in care flow action', () => {
     const fortyDaysAgo = new Date(today)
     fortyDaysAgo.setDate(today.getDate() - 40)
 
-    mockGetPatientCareFlowsFn.mockReturnValueOnce(
-      Promise.resolve([
-        {
-          id: 'pathway-instance-id-1', // current care flow
-          title: 'Pathway definition one',
-          pathway_definition_id: 'pathway-definition-1',
-          release_id: 'release-1',
-          status: PathwayStatus.Active,
-          start_date: today.toISOString(),
-        },
-        {
-          id: 'pathway-instance-id-2',
-          title: 'Pathway definition one',
-          pathway_definition_id: 'pathway-definition-1',
-          release_id: 'release-1',
-          status: PathwayStatus.Active,
-          start_date: fortyDaysAgo.toISOString(),
-        },
-      ])
-    )
-
+    const sdkMock = {
+      orchestration: {
+        query: jest.fn().mockResolvedValue({
+          patientPathways: {
+            patientPathways: [
+              {
+                id: 'pathway-instance-id-1', // current care flow
+                title: 'Pathway definition one',
+                pathway_definition_id: 'pathway-definition-1',
+                release_id: 'release-1',
+                status: PathwayStatus.Active,
+                start_date: today.toISOString(),
+              },
+              {
+                id: 'pathway-instance-id-2',
+                title: 'Pathway definition one',
+                pathway_definition_id: 'pathway-definition-1',
+                release_id: 'release-1',
+                status: PathwayStatus.Active,
+                start_date: fortyDaysAgo.toISOString(),
+              },
+            ],
+          },
+        }),
+      },
+    }
+    
+    helpers.awellSdk = jest.fn().mockResolvedValue(sdkMock)
+    
     await isPatientEnrolledInCareFlow.onEvent({
       payload: generateTestPayload({
         pathway: {
@@ -475,42 +527,50 @@ describe('Is patient already enrolled in care flow action', () => {
     twentyFiveDaysAgo.setDate(today.getDate() - 25)
     fortyFiveDaysAgo.setDate(today.getDate() - 45)
 
-    mockGetPatientCareFlowsFn.mockReturnValueOnce(
-      Promise.resolve([
-        {
-          id: 'pathway-instance-id-1', // current care flow
-          title: 'Pathway definition one',
-          pathway_definition_id: 'pathway-definition-1',
-          release_id: 'release-1',
-          status: PathwayStatus.Active,
-          start_date: today.toISOString(),
-        },
-        {
-          id: 'pathway-instance-id-2',
-          title: 'Pathway definition one',
-          pathway_definition_id: 'pathway-definition-1',
-          release_id: 'release-1',
-          status: PathwayStatus.Active,
-          start_date: fifteenDaysAgo.toISOString(),
-        },
-        {
-          id: 'pathway-instance-id-3',
-          title: 'Pathway definition one',
-          pathway_definition_id: 'pathway-definition-1',
-          release_id: 'release-1',
-          status: PathwayStatus.Active,
-          start_date: twentyFiveDaysAgo.toISOString(),
-        },
-        {
-          id: 'pathway-instance-id-4',
-          title: 'Pathway definition one',
-          pathway_definition_id: 'pathway-definition-1',
-          release_id: 'release-1',
-          status: PathwayStatus.Active,
-          start_date: fortyFiveDaysAgo.toISOString(),
-        },
-      ])
-    )
+    const sdkMock = {
+      orchestration: {
+        query: jest.fn().mockResolvedValue({
+          patientPathways: {
+            patientPathways: [
+              {
+                id: 'pathway-instance-id-1', // current care flow
+                title: 'Pathway definition one',
+                pathway_definition_id: 'pathway-definition-1',
+                release_id: 'release-1',
+                status: PathwayStatus.Active,
+                start_date: today.toISOString(),
+              },
+              {
+                id: 'pathway-instance-id-2',
+                title: 'Pathway definition one',
+                pathway_definition_id: 'pathway-definition-1',
+                release_id: 'release-1',
+                status: PathwayStatus.Active,
+                start_date: fifteenDaysAgo.toISOString(),
+              },
+              {
+                id: 'pathway-instance-id-3',
+                title: 'Pathway definition one',
+                pathway_definition_id: 'pathway-definition-1',
+                release_id: 'release-1',
+                status: PathwayStatus.Active,
+                start_date: twentyFiveDaysAgo.toISOString(),
+              },
+              {
+                id: 'pathway-instance-id-4',
+                title: 'Pathway definition one',
+                pathway_definition_id: 'pathway-definition-1',
+                release_id: 'release-1',
+                status: PathwayStatus.Active,
+                start_date: fortyFiveDaysAgo.toISOString(),
+              },
+            ],
+          },
+        }),
+      },
+    }
+    
+    helpers.awellSdk = jest.fn().mockResolvedValue(sdkMock)
 
     await isPatientEnrolledInCareFlow.onEvent({
       payload: generateTestPayload({
