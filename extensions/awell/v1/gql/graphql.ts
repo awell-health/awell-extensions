@@ -742,10 +742,6 @@ export type FilterPathways = {
   version?: InputMaybe<NumberArrayFilter>
 }
 
-export type FilterPatientPathways = {
-  status: StringArrayFilter
-}
-
 export type FilterPatients = {
   name?: InputMaybe<TextFilter>
   national_registry_number?: InputMaybe<TextFilterEquals>
@@ -1338,34 +1334,6 @@ export type PatientDemographicsQueryConfigurationPayload = {
   is_enabled: Scalars['Boolean']['output']
 }
 
-export type PatientPathway = {
-  __typename?: 'PatientPathway'
-  active_activities?: Maybe<Scalars['Float']['output']>
-  baseline_info?: Maybe<Array<BaselineDataPoint>>
-  complete_date?: Maybe<Scalars['String']['output']>
-  start_date: Scalars['String']['output']
-  failed_activities?: Maybe<Scalars['Float']['output']>
-  id: Scalars['ID']['output']
-  latest_activity_date?: Maybe<Scalars['String']['output']>
-  latest_activity_title?: Maybe<Scalars['String']['output']>
-  latest_activity_type?: Maybe<Scalars['String']['output']>
-  pathway_definition_id: Scalars['String']['output']
-  release_id: Scalars['String']['output']
-  status: PathwayStatus
-  status_explanation?: Maybe<Scalars['String']['output']>
-  stop_date?: Maybe<Scalars['String']['output']>
-  title: Scalars['String']['output']
-  total_activities?: Maybe<Scalars['Float']['output']>
-  version?: Maybe<Scalars['Float']['output']>
-}
-
-export type PatientPathwaysPayload = Payload & {
-  __typename?: 'PatientPathwaysPayload'
-  code: Scalars['String']['output']
-  patientPathways: Array<PatientPathway>
-  success: Scalars['Boolean']['output']
-}
-
 export type PatientPayload = Payload & {
   __typename?: 'PatientPayload'
   code: Scalars['String']['output']
@@ -1506,7 +1474,6 @@ export type Query = {
   patient: PatientPayload
   patientByIdentifier: PatientPayload
   patientDemographicsQueryConfiguration: PatientDemographicsQueryConfigurationPayload
-  patientPathways: PatientPathwaysPayload
   patients: PatientsPayload
   publishedPathwayDefinitions: PublishedPathwayDefinitionsPayload
   publishedPathwayDefinitionsDashboard: PublishedPathwayDefinitionsPayload
@@ -1663,11 +1630,6 @@ export type QueryPatientArgs = {
 export type QueryPatientByIdentifierArgs = {
   system: Scalars['String']['input']
   value: Scalars['String']['input']
-}
-
-export type QueryPatientPathwaysArgs = {
-  filters?: InputMaybe<FilterPatientPathways>
-  patient_id: Scalars['String']['input']
 }
 
 export type QueryPatientsArgs = {
