@@ -33,6 +33,14 @@ export const fields = {
     type: FieldType.STRING,
     required: false,
   },
+  dayRange: {
+    id: 'dayRange',
+    label: 'Day range',
+    description:
+      'Specify the day range to look for the care flows that were started in the past. e.g last 30 days.',
+    type: FieldType.NUMERIC,
+    required: false,
+  },
 } satisfies Record<string, Field>
 
 export const FieldsValidationSchema = z.object({
@@ -58,4 +66,5 @@ export const FieldsValidationSchema = z.object({
         strArray.filter((str) => !isNil(str) && !isEmpty(str))
       )
   ),
+  dayRange: z.optional(z.number()),
 } satisfies Record<keyof typeof fields, ZodTypeAny>)

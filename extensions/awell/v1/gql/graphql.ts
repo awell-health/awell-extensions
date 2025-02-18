@@ -1343,6 +1343,7 @@ export type PatientPathway = {
   active_activities?: Maybe<Scalars['Float']['output']>
   baseline_info?: Maybe<Array<BaselineDataPoint>>
   complete_date?: Maybe<Scalars['String']['output']>
+  start_date: Scalars['String']['output']
   failed_activities?: Maybe<Scalars['Float']['output']>
   id: Scalars['ID']['output']
   latest_activity_date?: Maybe<Scalars['String']['output']>

@@ -11,6 +11,8 @@ query GetPatientPathways($patient_id: String!, $status: [String!]) {
         pathway_definition_id
         status
         status_explanation
+        start_date
+        complete_date
         version
         release_id
         baseline_info {

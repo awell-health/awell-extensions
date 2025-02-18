@@ -14,6 +14,17 @@ import { PathwayStatus, type PatientPathway } from '../../gql/graphql'
 import { isEmpty, isNil } from 'lodash'
 import { addActivityEventLog } from '../../../../../src/lib/awell/addEventLog'
 
+const isWithinDayRange = (startDateIso: string, dayRange: number): boolean => {
+  const startDate = new Date(startDateIso)
+  const now = new Date()
+  // Get difference between now and start date in milliseconds
+  const diffTime = now.getTime() - startDate.getTime()
+  // Convert to days
+  const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24))
+  // Return true if start date is within the day range
+  return diffDays <= dayRange
+}
+
 export const isPatientEnrolledInCareFlow: Action<
   typeof fields,
   typeof settings
@@ -30,7 +41,7 @@ export const isPatientEnrolledInCareFlow: Action<
     const {
       patient: { id: patientId },
       pathway: { id: pathwayId, definition_id: currentPathwayDefinitionId },
-      fields: { pathwayStatus, careFlowDefinitionIds },
+      fields: { pathwayStatus, careFlowDefinitionIds, dayRange },
     } = validate({
       schema: z.object({
         patient: PatientValidationSchema,
@@ -63,13 +74,12 @@ export const isPatientEnrolledInCareFlow: Action<
 
           return careFlowDefinitionIds.includes(careFlow.pathway_definition_id)
         })
-        // Filter by status
+        // Filter by day range
         .filter((careFlow) => {
-          if (isNil(pathwayStatus) || isEmpty(pathwayStatus)) {
-            return careFlow.status === PathwayStatus.Active
+          if (isNil(dayRange)) {
+            return true
           }
-
-          return pathwayStatus.includes(careFlow.status)
+          return isWithinDayRange(careFlow.start_date, dayRange)
         })
 
     const careFlows = getCareFlowsThatMatchFilters()

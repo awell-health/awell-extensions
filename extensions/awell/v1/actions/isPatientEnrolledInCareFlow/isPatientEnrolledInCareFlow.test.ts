@@ -1,5 +1,5 @@
 import { TestHelpers } from '@awell-health/extensions-core'
-import { generateTestPayload } from '@/tests'
+import { generateTestPayload } from '../../../../../tests/constants'
 import { PathwayStatus } from '../../gql/graphql'
 import AwellSdk from '../../sdk/awellSdk'
 import { isPatientEnrolledInCareFlow as actionInterface } from './isPatientEnrolledInCareFlow'
@@ -109,6 +109,7 @@ describe('Is patient already enrolled in care flow action', () => {
           pathway_definition_id: 'pathway-definition-1',
           release_id: 'release-1',
           status: PathwayStatus.Active,
+          start_date: '2024-01-01',
         },
         {
           id: 'pathway-instance-id-2',
@@ -116,6 +117,7 @@ describe('Is patient already enrolled in care flow action', () => {
           pathway_definition_id: 'pathway-definition-1',
           release_id: 'release-1',
           status: PathwayStatus.Active,
+          start_date: '2024-01-01',
         },
       ])
     )
@@ -159,6 +161,7 @@ describe('Is patient already enrolled in care flow action', () => {
           pathway_definition_id: 'pathway-definition-1',
           release_id: 'release-1',
           status: PathwayStatus.Active,
+          start_date: '2024-01-01',
         },
       ])
     )
@@ -201,6 +204,7 @@ describe('Is patient already enrolled in care flow action', () => {
           pathway_definition_id: 'pathway-definition-1',
           release_id: 'release-1',
           status: PathwayStatus.Active,
+          start_date: '2024-01-01',
         },
         {
           id: 'pathway-instance-id-2',
@@ -208,6 +212,7 @@ describe('Is patient already enrolled in care flow action', () => {
           pathway_definition_id: 'pathway-definition-1',
           release_id: 'release-1',
           status: PathwayStatus.Completed,
+          start_date: '2024-06-01',
         },
       ])
     )
@@ -250,6 +255,7 @@ describe('Is patient already enrolled in care flow action', () => {
           pathway_definition_id: 'pathway-definition-1',
           release_id: 'release-1',
           status: PathwayStatus.Active,
+          start_date: '2024-01-01',
         },
         {
           id: 'pathway-instance-id-2',
@@ -257,6 +263,7 @@ describe('Is patient already enrolled in care flow action', () => {
           pathway_definition_id: 'pathway-definition-2',
           release_id: 'release-1',
           status: PathwayStatus.Active,
+          start_date: '2024-01-01',
         },
       ])
     )
@@ -298,6 +305,7 @@ describe('Is patient already enrolled in care flow action', () => {
           pathway_definition_id: 'pathway-definition-1',
           release_id: 'release-1',
           status: PathwayStatus.Active,
+          start_date: '2024-01-01',
         },
         {
           id: 'pathway-instance-id-2',
@@ -305,6 +313,7 @@ describe('Is patient already enrolled in care flow action', () => {
           pathway_definition_id: 'pathway-definition-1',
           release_id: 'release-1',
           status: PathwayStatus.Active,
+          start_date: '2024-01-01',
         },
         {
           id: 'pathway-instance-id-3',
@@ -312,6 +321,7 @@ describe('Is patient already enrolled in care flow action', () => {
           pathway_definition_id: 'pathway-definition-1',
           release_id: 'release-1',
           status: PathwayStatus.Completed,
+          start_date: '2024-06-01',
         },
       ])
     )
@@ -343,5 +353,191 @@ describe('Is patient already enrolled in care flow action', () => {
       events: expect.any(Array),
     })
     expect(onError).not.toHaveBeenCalled()
+  })
+
+  test('Should return true if patient is enrolled in care flow within specified day range', async () => {
+    const today = new Date()
+    const tenDaysAgo = new Date(today)
+    tenDaysAgo.setDate(today.getDate() - 10)
+
+    mockGetPatientCareFlowsFn.mockReturnValueOnce(
+      Promise.resolve([
+        {
+          id: 'pathway-instance-id-1', // current care flow
+          title: 'Pathway definition one',
+          pathway_definition_id: 'pathway-definition-1',
+          release_id: 'release-1',
+          status: PathwayStatus.Active,
+          start_date: today.toISOString(),
+        },
+        {
+          id: 'pathway-instance-id-2',
+          title: 'Pathway definition one',
+          pathway_definition_id: 'pathway-definition-1',
+          release_id: 'release-1',
+          status: PathwayStatus.Active,
+          start_date: tenDaysAgo.toISOString(),
+        },
+      ])
+    )
+
+    await isPatientEnrolledInCareFlow.onEvent({
+      payload: generateTestPayload({
+        pathway: {
+          id: 'pathway-instance-id-1',
+          definition_id: 'pathway-definition-1',
+          tenant_id: '123',
+        },
+        fields: {
+          pathwayStatus: '',
+          careFlowDefinitionIds: undefined,
+          dayRange: 30, // Check last 30 days
+        },
+        settings: {},
+      }),
+      onComplete,
+      onError,
+      helpers,
+    })
+
+    expect(onComplete).toHaveBeenCalledWith({
+      data_points: {
+        result: 'true',
+        nbrOfResults: '1',
+        careFlowIds: 'pathway-instance-id-2',
+      },
+      events: expect.any(Array),
+    })
+  })
+
+  test('Should return false if patient care flows are outside specified day range', async () => {
+    const today = new Date()
+    const fortyDaysAgo = new Date(today)
+    fortyDaysAgo.setDate(today.getDate() - 40)
+
+    mockGetPatientCareFlowsFn.mockReturnValueOnce(
+      Promise.resolve([
+        {
+          id: 'pathway-instance-id-1', // current care flow
+          title: 'Pathway definition one',
+          pathway_definition_id: 'pathway-definition-1',
+          release_id: 'release-1',
+          status: PathwayStatus.Active,
+          start_date: today.toISOString(),
+        },
+        {
+          id: 'pathway-instance-id-2',
+          title: 'Pathway definition one',
+          pathway_definition_id: 'pathway-definition-1',
+          release_id: 'release-1',
+          status: PathwayStatus.Active,
+          start_date: fortyDaysAgo.toISOString(),
+        },
+      ])
+    )
+
+    await isPatientEnrolledInCareFlow.onEvent({
+      payload: generateTestPayload({
+        pathway: {
+          id: 'pathway-instance-id-1',
+          definition_id: 'pathway-definition-1',
+          tenant_id: '123',
+        },
+        fields: {
+          pathwayStatus: '',
+          careFlowDefinitionIds: undefined,
+          dayRange: 30, // Check last 30 days
+        },
+        settings: {},
+      }),
+      onComplete,
+      onError,
+      helpers,
+    })
+
+    expect(onComplete).toHaveBeenCalledWith({
+      data_points: {
+        result: 'false',
+        nbrOfResults: '0',
+        careFlowIds: '',
+      },
+      events: expect.any(Array),
+    })
+  })
+
+  test('Should only return care flows within the specified day range', async () => {
+    const today = new Date()
+    const fifteenDaysAgo = new Date(today)
+    const twentyFiveDaysAgo = new Date(today)
+    const fortyFiveDaysAgo = new Date(today)
+    
+    fifteenDaysAgo.setDate(today.getDate() - 15)
+    twentyFiveDaysAgo.setDate(today.getDate() - 25)
+    fortyFiveDaysAgo.setDate(today.getDate() - 45)
+
+    mockGetPatientCareFlowsFn.mockReturnValueOnce(
+      Promise.resolve([
+        {
+          id: 'pathway-instance-id-1', // current care flow
+          title: 'Pathway definition one',
+          pathway_definition_id: 'pathway-definition-1',
+          release_id: 'release-1',
+          status: PathwayStatus.Active,
+          start_date: today.toISOString(),
+        },
+        {
+          id: 'pathway-instance-id-2',
+          title: 'Pathway definition one',
+          pathway_definition_id: 'pathway-definition-1',
+          release_id: 'release-1',
+          status: PathwayStatus.Active,
+          start_date: fifteenDaysAgo.toISOString(),
+        },
+        {
+          id: 'pathway-instance-id-3',
+          title: 'Pathway definition one',
+          pathway_definition_id: 'pathway-definition-1',
+          release_id: 'release-1',
+          status: PathwayStatus.Active,
+          start_date: twentyFiveDaysAgo.toISOString(),
+        },
+        {
+          id: 'pathway-instance-id-4',
+          title: 'Pathway definition one',
+          pathway_definition_id: 'pathway-definition-1',
+          release_id: 'release-1',
+          status: PathwayStatus.Active,
+          start_date: fortyFiveDaysAgo.toISOString(),
+        },
+      ])
+    )
+
+    await isPatientEnrolledInCareFlow.onEvent({
+      payload: generateTestPayload({
+        pathway: {
+          id: 'pathway-instance-id-1',
+          definition_id: 'pathway-definition-1',
+          tenant_id: '123',
+        },
+        fields: {
+          pathwayStatus: '',
+          careFlowDefinitionIds: undefined,
+          dayRange: 30, // Check last 30 days
+        },
+        settings: {},
+      }),
+      onComplete,
+      onError,
+      helpers,
+    })
+
+    expect(onComplete).toHaveBeenCalledWith({
+      data_points: {
+        result: 'true',
+        nbrOfResults: '2',
+        careFlowIds: 'pathway-instance-id-2,pathway-instance-id-3',
+      },
+      events: expect.any(Array),
+    })
   })
 })
