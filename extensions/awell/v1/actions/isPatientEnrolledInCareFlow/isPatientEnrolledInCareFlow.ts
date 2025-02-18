@@ -9,8 +9,7 @@ import {
   PathwayValidationSchema,
 } from './config'
 import { z } from 'zod'
-import AwellSdk from '../../sdk/awellSdk'
-import { PathwayStatus, type PatientPathway } from '../../gql/graphql'
+import { PathwayStatus } from '../../gql/graphql'
 import { isEmpty, isNil } from 'lodash'
 import { addActivityEventLog } from '../../../../../src/lib/awell/addEventLog'
 
@@ -23,6 +22,16 @@ const isWithinDayRange = (startDateIso: string, dayRange: number): boolean => {
   const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24))
   // Return true if start date is within the day range
   return diffDays <= dayRange
+}
+
+interface PatientPathway {
+  id: string
+  title: string
+  pathway_definition_id: string
+  start_date: string
+  complete_date?: string
+  release_id: string
+  status: PathwayStatus
 }
 
 export const isPatientEnrolledInCareFlow: Action<
@@ -50,20 +59,29 @@ export const isPatientEnrolledInCareFlow: Action<
       }),
       payload,
     })
-    const awellSdk = await helpers.awellSdk()
-    const sdk = new AwellSdk({
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      apiUrl: awellSdk.apiUrl!,
-      apiKey: awellSdk.apiKey,
-    })
+  
+    const sdk = await helpers.awellSdk()
 
-    const results = await sdk.getPatientCareFlows({
-      patient_id: patientId,
-      status: pathwayStatus ?? [PathwayStatus.Active],
+    const { patientPathways: { patientPathways } } = await sdk.orchestration.query({
+      patientPathways: {
+        __args: {
+          patient_id: patientId,
+          status: pathwayStatus ?? [PathwayStatus.Active],
+        },
+        patientPathways: {
+          id: true,
+          title: true,
+          pathway_definition_id: true,
+          release_id: true,
+          start_date: true,
+          complete_date: true,
+          status: true,
+        }
+      },
     })
 
     const getCareFlowsThatMatchFilters = (): PatientPathway[] =>
-      results
+      (patientPathways as PatientPathway[])
         // Exclude the current care flow instance
         .filter((careFlow) => careFlow.id !== pathwayId)
         // Filter by care flow definition ids
