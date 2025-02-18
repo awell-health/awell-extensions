@@ -8,7 +8,7 @@ export const fields = {
     id: 'pathwayStatus',
     label: 'Pathway status',
     description: `A comma-separated string of care flow statuses that will be used when looking for care flows the patient is already enrolled in. By default, we only look at active care flows. Possible values are: ${Object.values(
-      PathwayStatus
+      PathwayStatus,
     ).join(', ')}.`,
     type: FieldType.STRING,
     required: false,
@@ -35,9 +35,9 @@ export const fields = {
   },
   dayRange: {
     id: 'dayRange',
-    label: 'Day range',
+    label: 'Past day range',
     description:
-      'Specify the day range to look for the care flows that were started in the past. e.g last 30 days.',
+      'The number of days to look back for care flows that were started in the past, e.g last 30 days.',
     type: FieldType.NUMERIC,
     required: false,
   },
@@ -53,9 +53,9 @@ export const FieldsValidationSchema = z.object({
         const possibleStatuses = Object.values(PathwayStatus)
 
         return strArray.filter((str) =>
-          possibleStatuses.includes(str as PathwayStatus)
+          possibleStatuses.includes(str as PathwayStatus),
         ) as PathwayStatus[]
-      })
+      }),
   ),
   careFlowDefinitionIds: z.optional(
     z
@@ -63,8 +63,8 @@ export const FieldsValidationSchema = z.object({
       .transform((chars) => chars.replace(/\s/g, '')) // Make sure all white spaces are stripped
       .transform((chars) => chars.split(','))
       .transform((strArray) =>
-        strArray.filter((str) => !isNil(str) && !isEmpty(str))
-      )
+        strArray.filter((str) => !isNil(str) && !isEmpty(str)),
+      ),
   ),
   dayRange: z.optional(z.number()),
 } satisfies Record<keyof typeof fields, ZodTypeAny>)
