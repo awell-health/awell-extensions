@@ -1,10 +1,10 @@
 import { TestHelpers } from '@awell-health/extensions-core'
 import { generateTestPayload } from '../../../../../tests/constants'
 import { PathwayStatus } from '../../gql/graphql'
-import AwellSdk from '../../sdk/awellSdk'
 import { isPatientEnrolledInCareFlow as actionInterface } from './isPatientEnrolledInCareFlow'
 import { FieldsValidationSchema } from './config'
 import { ZodError } from 'zod'
+import { subDays } from 'date-fns'
 
 jest.mock('../../sdk/awellSdk')
 
@@ -393,8 +393,7 @@ describe('Is patient already enrolled in care flow action', () => {
 
   test('Should return true if patient is enrolled in care flow within specified day range', async () => {
     const today = new Date()
-    const tenDaysAgo = new Date(today)
-    tenDaysAgo.setDate(today.getDate() - 10)
+    const tenDaysAgo = subDays(today, 10)
 
     const sdkMock = {
       orchestration: {
@@ -456,8 +455,7 @@ describe('Is patient already enrolled in care flow action', () => {
 
   test('Should return false if patient care flows are outside specified day range', async () => {
     const today = new Date()
-    const fortyDaysAgo = new Date(today)
-    fortyDaysAgo.setDate(today.getDate() - 40)
+    const fortyDaysAgo = subDays(today, 40)
 
     const sdkMock = {
       orchestration: {
@@ -519,13 +517,9 @@ describe('Is patient already enrolled in care flow action', () => {
 
   test('Should only return care flows within the specified day range', async () => {
     const today = new Date()
-    const fifteenDaysAgo = new Date(today)
-    const twentyFiveDaysAgo = new Date(today)
-    const fortyFiveDaysAgo = new Date(today)
-    
-    fifteenDaysAgo.setDate(today.getDate() - 15)
-    twentyFiveDaysAgo.setDate(today.getDate() - 25)
-    fortyFiveDaysAgo.setDate(today.getDate() - 45)
+    const fifteenDaysAgo = subDays(today, 15)
+    const twentyFiveDaysAgo = subDays(today, 25)
+    const fortyFiveDaysAgo = subDays(today, 45)
 
     const sdkMock = {
       orchestration: {
