@@ -6,7 +6,7 @@ export const settings = {
     key: 'clientId',
     label: 'Client ID',
     obfuscated: true,
-    required: false,
+    required: true,
     description: 'Used to authenticate with Medplum',
   },
   clientSecret: {
