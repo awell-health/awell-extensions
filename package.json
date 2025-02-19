@@ -78,7 +78,7 @@
     "typescript": "5.7.2"
   },
   "dependencies": {
-    "@awell-health/awell-sdk": "^0.1.21",
+    "@awell-health/awell-sdk": "^0.1.22",
     "@awell-health/extensions-core": "1.0.21",
     "@awell-health/healthie-sdk": "^0.1.1",
     "@dropbox/sign": "^1.8.0",

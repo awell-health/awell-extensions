@@ -1,14 +1,14 @@
 import { isEmpty, isNil } from 'lodash'
 import { z, type ZodTypeAny } from 'zod'
 import { FieldType, type Field } from '@awell-health/extensions-core'
-import { PathwayStatus } from '../../../gql/graphql'
+import { enumPathwayStatus, type PathwayStatus } from '@awell-health/awell-sdk'
 
 export const fields = {
   pathwayStatus: {
     id: 'pathwayStatus',
     label: 'Pathway status',
     description: `A comma-separated string of care flow statuses that will be used when looking for care flows the patient is already enrolled in. By default, we only look at active care flows. Possible values are: ${Object.values(
-      PathwayStatus
+      enumPathwayStatus,
     ).join(', ')}.`,
     type: FieldType.STRING,
     required: false,
@@ -33,6 +33,14 @@ export const fields = {
     type: FieldType.STRING,
     required: false,
   },
+  dayRange: {
+    id: 'dayRange',
+    label: 'Past day range',
+    description:
+      'The number of days to look back for care flows that were started in the past, e.g last 30 days.',
+    type: FieldType.NUMERIC,
+    required: false,
+  },
 } satisfies Record<string, Field>
 
 export const FieldsValidationSchema = z.object({
@@ -42,12 +50,12 @@ export const FieldsValidationSchema = z.object({
       .transform((chars) => chars.replace(/\s/g, '')) // Make sure all white spaces are stripped
       .transform((chars) => chars.split(','))
       .transform((strArray) => {
-        const possibleStatuses = Object.values(PathwayStatus)
+        const possibleStatuses = Object.values(enumPathwayStatus)
 
         return strArray.filter((str) =>
-          possibleStatuses.includes(str as PathwayStatus)
+          possibleStatuses.includes(str as PathwayStatus),
         ) as PathwayStatus[]
-      })
+      }),
   ),
   careFlowDefinitionIds: z.optional(
     z
@@ -55,7 +63,8 @@ export const FieldsValidationSchema = z.object({
       .transform((chars) => chars.replace(/\s/g, '')) // Make sure all white spaces are stripped
       .transform((chars) => chars.split(','))
       .transform((strArray) =>
-        strArray.filter((str) => !isNil(str) && !isEmpty(str))
-      )
+        strArray.filter((str) => !isNil(str) && !isEmpty(str)),
+      ),
   ),
+  dayRange: z.optional(z.number()),
 } satisfies Record<keyof typeof fields, ZodTypeAny>)

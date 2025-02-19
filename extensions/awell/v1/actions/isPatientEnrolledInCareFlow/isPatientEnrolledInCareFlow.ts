@@ -9,10 +9,20 @@ import {
   PathwayValidationSchema,
 } from './config'
 import { z } from 'zod'
-import AwellSdk from '../../sdk/awellSdk'
-import { PathwayStatus, type PatientPathway } from '../../gql/graphql'
+import { enumPathwayStatus, type PatientPathway } from '@awell-health/awell-sdk'
 import { isEmpty, isNil } from 'lodash'
 import { addActivityEventLog } from '../../../../../src/lib/awell/addEventLog'
+
+const isWithinDayRange = (startDateIso: string, dayRange: number): boolean => {
+  const startDate = new Date(startDateIso)
+  const now = new Date()
+  // Get difference between now and start date in milliseconds
+  const diffTime = now.getTime() - startDate.getTime()
+  // Convert to days
+  const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24))
+  // Return true if start date is within the day range
+  return diffDays <= dayRange
+}
 
 export const isPatientEnrolledInCareFlow: Action<
   typeof fields,
@@ -30,7 +40,7 @@ export const isPatientEnrolledInCareFlow: Action<
     const {
       patient: { id: patientId },
       pathway: { id: pathwayId, definition_id: currentPathwayDefinitionId },
-      fields: { pathwayStatus, careFlowDefinitionIds },
+      fields: { pathwayStatus, careFlowDefinitionIds, dayRange },
     } = validate({
       schema: z.object({
         patient: PatientValidationSchema,
@@ -39,20 +49,31 @@ export const isPatientEnrolledInCareFlow: Action<
       }),
       payload,
     })
-    const awellSdk = await helpers.awellSdk()
-    const sdk = new AwellSdk({
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      apiUrl: awellSdk.apiUrl!,
-      apiKey: awellSdk.apiKey,
-    })
 
-    const results = await sdk.getPatientCareFlows({
-      patient_id: patientId,
-      status: pathwayStatus ?? [PathwayStatus.Active],
+    const sdk = await helpers.awellSdk()
+
+    const {
+      patientPathways: { patientPathways },
+    } = await sdk.orchestration.query({
+      patientPathways: {
+        __args: {
+          patient_id: patientId,
+          status: pathwayStatus ?? [enumPathwayStatus.active],
+        },
+        patientPathways: {
+          id: true,
+          title: true,
+          pathway_definition_id: true,
+          release_id: true,
+          start_date: true,
+          complete_date: true,
+          status: true,
+        },
+      },
     })
 
     const getCareFlowsThatMatchFilters = (): PatientPathway[] =>
-      results
+      (patientPathways as PatientPathway[])
         // Exclude the current care flow instance
         .filter((careFlow) => careFlow.id !== pathwayId)
         // Filter by care flow definition ids
@@ -63,13 +84,12 @@ export const isPatientEnrolledInCareFlow: Action<
 
           return careFlowDefinitionIds.includes(careFlow.pathway_definition_id)
         })
-        // Filter by status
+        // Filter by day range
         .filter((careFlow) => {
-          if (isNil(pathwayStatus) || isEmpty(pathwayStatus)) {
-            return careFlow.status === PathwayStatus.Active
+          if (isNil(dayRange)) {
+            return true
           }
-
-          return pathwayStatus.includes(careFlow.status)
+          return isWithinDayRange(careFlow.start_date, dayRange)
         })
 
     const careFlows = getCareFlowsThatMatchFilters()
