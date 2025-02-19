@@ -9,7 +9,7 @@ import {
   PathwayValidationSchema,
 } from './config'
 import { z } from 'zod'
-import { PathwayStatus } from '../../gql/graphql'
+import { enumPathwayStatus, type PatientPathway } from '@awell-health/awell-sdk'
 import { isEmpty, isNil } from 'lodash'
 import { addActivityEventLog } from '../../../../../src/lib/awell/addEventLog'
 
@@ -22,16 +22,6 @@ const isWithinDayRange = (startDateIso: string, dayRange: number): boolean => {
   const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24))
   // Return true if start date is within the day range
   return diffDays <= dayRange
-}
-
-interface PatientPathway {
-  id: string
-  title: string
-  pathway_definition_id: string
-  start_date: string
-  complete_date?: string
-  release_id: string
-  status: PathwayStatus
 }
 
 export const isPatientEnrolledInCareFlow: Action<
@@ -59,14 +49,16 @@ export const isPatientEnrolledInCareFlow: Action<
       }),
       payload,
     })
-  
+
     const sdk = await helpers.awellSdk()
 
-    const { patientPathways: { patientPathways } } = await sdk.orchestration.query({
+    const {
+      patientPathways: { patientPathways },
+    } = await sdk.orchestration.query({
       patientPathways: {
         __args: {
           patient_id: patientId,
-          status: pathwayStatus ?? [PathwayStatus.Active],
+          status: pathwayStatus ?? [enumPathwayStatus.active],
         },
         patientPathways: {
           id: true,
@@ -76,7 +68,7 @@ export const isPatientEnrolledInCareFlow: Action<
           start_date: true,
           complete_date: true,
           status: true,
-        }
+        },
       },
     })
 

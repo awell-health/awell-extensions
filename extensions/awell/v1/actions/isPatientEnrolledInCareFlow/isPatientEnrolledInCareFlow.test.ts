@@ -6,8 +6,7 @@ import { FieldsValidationSchema } from './config'
 import { ZodError } from 'zod'
 import { subDays } from 'date-fns'
 
-jest.mock('../../sdk/awellSdk')
-
+jest.mock('@awell-health/awell-sdk')
 
 describe('Is patient already enrolled in care flow action', () => {
   const {
@@ -123,7 +122,7 @@ describe('Is patient already enrolled in care flow action', () => {
         }),
       },
     }
-    
+
     helpers.awellSdk = jest.fn().mockResolvedValue(sdkMock)
 
     await isPatientEnrolledInCareFlow.onEvent({
@@ -175,7 +174,7 @@ describe('Is patient already enrolled in care flow action', () => {
         }),
       },
     }
-    
+
     helpers.awellSdk = jest.fn().mockResolvedValue(sdkMock)
 
     await isPatientEnrolledInCareFlow.onEvent({
@@ -234,7 +233,7 @@ describe('Is patient already enrolled in care flow action', () => {
         }),
       },
     }
-    
+
     helpers.awellSdk = jest.fn().mockResolvedValue(sdkMock)
 
     await isPatientEnrolledInCareFlow.onEvent({
@@ -293,7 +292,7 @@ describe('Is patient already enrolled in care flow action', () => {
         }),
       },
     }
-    
+
     helpers.awellSdk = jest.fn().mockResolvedValue(sdkMock)
 
     await isPatientEnrolledInCareFlow.onEvent({
@@ -359,7 +358,7 @@ describe('Is patient already enrolled in care flow action', () => {
         }),
       },
     }
-    
+
     helpers.awellSdk = jest.fn().mockResolvedValue(sdkMock)
 
     await isPatientEnrolledInCareFlow.onEvent({
@@ -421,7 +420,7 @@ describe('Is patient already enrolled in care flow action', () => {
         }),
       },
     }
-    
+
     helpers.awellSdk = jest.fn().mockResolvedValue(sdkMock)
 
     await isPatientEnrolledInCareFlow.onEvent({
@@ -483,9 +482,9 @@ describe('Is patient already enrolled in care flow action', () => {
         }),
       },
     }
-    
+
     helpers.awellSdk = jest.fn().mockResolvedValue(sdkMock)
-    
+
     await isPatientEnrolledInCareFlow.onEvent({
       payload: generateTestPayload({
         pathway: {
@@ -563,7 +562,7 @@ describe('Is patient already enrolled in care flow action', () => {
         }),
       },
     }
-    
+
     helpers.awellSdk = jest.fn().mockResolvedValue(sdkMock)
 
     await isPatientEnrolledInCareFlow.onEvent({

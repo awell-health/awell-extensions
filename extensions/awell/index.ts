@@ -39,7 +39,6 @@ export const Awell: Extension = {
     startHostedPagesSession,
     startCareFlowAndSession,
     getDataPointValue,
-    // deletePatient, Deleting the patient who is currently enrolled in the pathway seems dangerous
   },
   webhooks,
 }
