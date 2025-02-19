@@ -9,9 +9,10 @@ import {
   PathwayValidationSchema,
 } from './config'
 import { z } from 'zod'
-import { enumPathwayStatus, type PatientPathway } from '@awell-health/awell-sdk'
+import { type PatientPathway } from '@awell-health/awell-sdk'
 import { isEmpty, isNil } from 'lodash'
 import { addActivityEventLog } from '../../../../../src/lib/awell/addEventLog'
+import { PathwayStatus } from '../../gql/graphql'
 
 const isWithinDayRange = (startDateIso: string, dayRange: number): boolean => {
   const startDate = new Date(startDateIso)
@@ -58,7 +59,11 @@ export const isPatientEnrolledInCareFlow: Action<
       patientPathways: {
         __args: {
           patient_id: patientId,
-          status: pathwayStatus ?? [enumPathwayStatus.active],
+          filters: {
+            status: {
+              in: pathwayStatus ?? [PathwayStatus.Active]
+            }
+          },
         },
         patientPathways: {
           id: true,
