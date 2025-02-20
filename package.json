@@ -79,7 +79,7 @@
   },
   "dependencies": {
     "@awell-health/awell-sdk": "^0.1.22",
-    "@awell-health/extensions-core": "1.0.21",
+    "@awell-health/extensions-core": "1.0.23",
     "@awell-health/healthie-sdk": "^0.1.1",
     "@dropbox/sign": "^1.8.0",
     "@hubspot/api-client": "^11.2.0",
