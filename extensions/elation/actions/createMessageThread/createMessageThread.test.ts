@@ -64,7 +64,6 @@ describe('createMessageThread action', () => {
 
       expect(onComplete).toHaveBeenCalledWith({
         data_points: { messageThreadId: '1' },
-        events: expect.any(Array),
       })
       expect(onError).not.toHaveBeenCalled()
     })

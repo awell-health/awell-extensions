@@ -82,12 +82,12 @@ export const FieldsValidationSchema = z.object({
   documentDate: z
     .string()
     .optional()
-    .default(new Date().toISOString())
+    .default(() => new Date().toISOString())
     .pipe(DateTimeOptionalSchema),
   chartDate: z
     .string()
     .optional()
-    .default(new Date().toISOString())
+    .default(() => new Date().toISOString())
     .pipe(DateTimeOptionalSchema),
   messageBody: z.string().min(1),
   recipientId: NumericIdSchema.optional(),

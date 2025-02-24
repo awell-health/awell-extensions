@@ -5,7 +5,6 @@ import { makeAPIClient } from '../../client'
 import { messageThreadSchema } from '../../validation/messageThread.zod'
 import { isNil } from 'lodash'
 import { dataPoints, fields, FieldsValidationSchema } from './config'
-import { addActivityEventLog } from '../../../../src/lib/awell/addEventLog'
 
 export const createMessageThread: Action<
   typeof fields,
@@ -72,18 +71,6 @@ export const createMessageThread: Action<
       data_points: {
         messageThreadId: String(data.id),
       },
-      /**
-       * Temporary logging for debugging purposes
-       * See https://awellhealth.slack.com/archives/C074XR57N0G/p1740425586512299
-       */
-      events: [
-        addActivityEventLog({
-          message: `Request\n${JSON.stringify(messageThread, null, 2)}`,
-        }),
-        addActivityEventLog({
-          message: `Response\n${JSON.stringify(data, null, 2)}`,
-        }),
-      ],
     })
   },
 }
