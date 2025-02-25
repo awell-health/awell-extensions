@@ -4,7 +4,6 @@ import {
   type Webhook,
 } from '@awell-health/extensions-core'
 import { type Patient as MedplumPatientCreatedWebhookPayload } from '@medplum/fhirtypes'
-import { webhookPayloadSchema } from './schemas'
 
 const MEDPLUM_IDENTIFIER = 'https://www.medplum.com/docs/api/fhir/resources/patient'
 
@@ -22,8 +21,7 @@ export const patientCreated: Webhook<
   key: 'patientCreated',
   dataPoints,
   onWebhookReceived: async ({ payload }, onSuccess, onError) => {
-    const validatedPayload = webhookPayloadSchema.parse(payload)
-    const patientId = validatedPayload.id
+    const patientId = payload.id
 
     if (isNil(patientId)) {
       await onError({
