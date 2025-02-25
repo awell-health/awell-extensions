@@ -2,6 +2,7 @@ import { type Extension } from '@awell-health/extensions-core'
 import { AuthorType, Category } from '@awell-health/extensions-core'
 import * as actions from './actions'
 import { settings } from './settings'
+import { webhooks } from './webhooks'
 
 export const Medplum: Extension = {
   key: 'medplum',
@@ -15,4 +16,5 @@ export const Medplum: Extension = {
   },
   settings,
   actions,
+  webhooks,
 }

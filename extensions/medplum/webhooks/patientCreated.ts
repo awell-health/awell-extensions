@@ -3,8 +3,10 @@ import {
   type DataPointDefinition,
   type Webhook,
 } from '@awell-health/extensions-core'
-import { MEDPLUM_IDENTIFIER, type MedplumWebhookPayload } from './types'
+import { type Patient as MedplumPatientCreatedWebhookPayload } from '@medplum/fhirtypes'
 import { webhookPayloadSchema } from './schemas'
+
+const MEDPLUM_IDENTIFIER = 'https://www.medplum.com/docs/api/fhir/resources/patient'
 
 const dataPoints = {
   patientId: {
@@ -15,7 +17,7 @@ const dataPoints = {
 
 export const patientCreated: Webhook<
   keyof typeof dataPoints,
-  MedplumWebhookPayload
+  MedplumPatientCreatedWebhookPayload
 > = {
   key: 'patientCreated',
   dataPoints,
