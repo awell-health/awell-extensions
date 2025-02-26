@@ -1,6 +1,8 @@
 import axios, { type AxiosResponse, type AxiosInstance } from 'axios'
-import { type Broadcast } from '../actions/types'
 import { isEmpty, isNil } from 'lodash'
+import CryptoJS from 'crypto-js'
+
+import { type Broadcast } from '../actions/types'
 
 interface TextEmAllClientConfig {
   customerKey: string
