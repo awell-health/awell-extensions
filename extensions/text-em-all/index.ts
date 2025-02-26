@@ -13,7 +13,7 @@ export const TextEmAll: Extension = {
   title: 'Text-em-all',
   description: 'Send text messages to your patients.',
   icon_url:
-    'https://res.cloudinary.com/da7x4rzl4/image/upload/v1727996065/gridspace_inc_logo_yd4j7n.jpg',
+    'https://res.cloudinary.com/da7x4rzl4/image/upload/c_thumb,w_200,g_face/v1740592441/text-em-all-logo_ljty2t.png',
   author: {
     authorType: AuthorType.AWELL,
   },
