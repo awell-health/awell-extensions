@@ -1,6 +1,6 @@
 import { type Extension } from '@awell-health/extensions-core'
 import { AuthorType, Category } from '@awell-health/extensions-core'
-// import * as actions from './actions'
+import * as actions from './actions'
 import { settings } from './settings'
 
 export const Braze: Extension = {
@@ -14,6 +14,6 @@ export const Braze: Extension = {
     authorType: AuthorType.AWELL,
   },
   settings,
-  actions: {},
+  actions,
   webhooks: [],
 }
