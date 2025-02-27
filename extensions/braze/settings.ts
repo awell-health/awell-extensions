@@ -9,7 +9,7 @@ export const settings = {
     required: true,
     description: 'Used to authenticate with Braze',
   },
-  url: {
+  baseUrl: {
     key: 'url',
     label: 'URL',
     obfuscated: false,
@@ -20,5 +20,5 @@ export const settings = {
 
 export const SettingsValidationSchema = z.object({
   apiKey: z.string().min(1),
-  url: z.string().min(1),
+  baseUrl: z.string().min(1),
 } satisfies Record<keyof typeof settings, ZodTypeAny>)
