@@ -86,7 +86,7 @@ export const scheduleEmail = {
       },
     }
 
-    const resp = await client.sendMessageImmediately(requestBody)
+    const resp = await client.scheduleMessage(requestBody)
 
     await onComplete({
       events: [
