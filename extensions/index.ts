@@ -2,6 +2,7 @@ import { athenahealth } from './athenahealth'
 import { Awell } from './awell'
 import { awellTasks } from './awellTasks'
 import { bland } from './bland'
+import { Braze } from './braze'
 import { CalDotCom } from './calDotCom'
 import { Calendly } from './calendly'
 import { CanvasMedical } from './canvasMedical'
@@ -52,6 +53,7 @@ export const markdown: Markdown = json
 
 export const extensions = [
   bland,
+  Braze,
   athenahealth,
   Awell,
   awellTasks,
