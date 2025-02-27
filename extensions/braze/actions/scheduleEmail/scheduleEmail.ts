@@ -5,6 +5,7 @@ import { Category, validate, type Action } from '@awell-health/extensions-core'
 import { type settings, SettingsValidationSchema } from '../../settings'
 import { BrazeClient } from '../../client'
 import { fields, dataPoints, FieldsSchema } from './config'
+import { addBooleanFieldIfDefined } from '../actionHelpers'
 
 export const scheduleEmail = {
   key: 'scheduleEmail',
@@ -49,16 +50,8 @@ export const scheduleEmail = {
       }),
       schedule: {
         time,
-        ...(typeof in_local_time === 'boolean'
-          ? {
-              in_local_time,
-            }
-          : {}),
-        ...(typeof at_optimal_time === 'boolean'
-          ? {
-              at_optimal_time,
-            }
-          : {}),
+        ...addBooleanFieldIfDefined({ in_local_time }),
+        ...addBooleanFieldIfDefined({ at_optimal_time }),
       },
       messages: {
         email: {
@@ -71,17 +64,13 @@ export const scheduleEmail = {
           ...(!isNil(preheader) && {
             preheader,
           }),
-          ...(typeof should_inline_css === 'boolean'
-            ? {
-                should_inline_css,
-              }
-            : {}),
           ...(!isNil(message_variation_id) && {
             message_variation_id,
           }),
           ...(!isNil(reply_to) && {
             reply_to,
           }),
+          ...addBooleanFieldIfDefined({ should_inline_css }),
         },
       },
     }

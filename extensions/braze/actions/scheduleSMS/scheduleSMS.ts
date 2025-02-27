@@ -5,6 +5,7 @@ import { Category, validate, type Action } from '@awell-health/extensions-core'
 import { type settings, SettingsValidationSchema } from '../../settings'
 import { BrazeClient } from '../../client'
 import { fields, dataPoints, FieldsSchema } from './config'
+import { addBooleanFieldIfDefined } from '../actionHelpers'
 
 export const scheduleSMS = {
   key: 'scheduleSMS',
@@ -47,16 +48,8 @@ export const scheduleSMS = {
       }),
       schedule: {
         time,
-        ...(typeof in_local_time === 'boolean'
-          ? {
-              in_local_time,
-            }
-          : {}),
-        ...(typeof at_optimal_time === 'boolean'
-          ? {
-              at_optimal_time,
-            }
-          : {}),
+        ...addBooleanFieldIfDefined({ in_local_time }),
+        ...addBooleanFieldIfDefined({ at_optimal_time }),
       },
       messages: {
         sms: {
@@ -66,16 +59,10 @@ export const scheduleSMS = {
           ...(!isNil(message_variation_id) && {
             message_variation_id,
           }),
-          ...(typeof link_shortening_enabled === 'boolean'
-            ? {
-                link_shortening_enabled,
-              }
-            : {}),
-          ...(typeof use_click_tracking_enabled === 'boolean'
-            ? {
-                use_click_tracking_enabled,
-              }
-            : {}),
+          ...addBooleanFieldIfDefined({ link_shortening_enabled }),
+          ...addBooleanFieldIfDefined({
+            use_click_tracking_enabled,
+          }),
         },
       },
     }

@@ -5,6 +5,7 @@ import { Category, validate, type Action } from '@awell-health/extensions-core'
 import { type settings, SettingsValidationSchema } from '../../settings'
 import { BrazeClient } from '../../client'
 import { fields, dataPoints, FieldsSchema } from './config'
+import { addBooleanFieldIfDefined } from '../actionHelpers'
 
 export const sendEmailUsingTemplate = {
   key: 'sendEmailUsingTemplate',
@@ -45,16 +46,8 @@ export const sendEmailUsingTemplate = {
       ...(!isNil(time) && {
         time,
       }),
-      ...(typeof in_local_time === 'boolean'
-        ? {
-            in_local_time,
-          }
-        : {}),
-      ...(typeof at_optimal_time === 'boolean'
-        ? {
-            at_optimal_time,
-          }
-        : {}),
+      ...addBooleanFieldIfDefined({ in_local_time }),
+      ...addBooleanFieldIfDefined({ at_optimal_time }),
     }
     const requestBody = {
       external_user_ids: [externalUserId],
