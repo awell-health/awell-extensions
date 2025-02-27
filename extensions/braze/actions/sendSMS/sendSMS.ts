@@ -17,14 +17,14 @@ export const sendSMS = {
   onEvent: async ({ payload, onComplete, onError, helpers }) => {
     const {
       fields: {
-        subscriptionGroupId,
+        subscriptionGroupId: subscription_group_id,
         externalUserId,
         body,
-        appId,
-        linkShorteningEnabled,
-        useClickTrackingEnabled,
-        campaignId,
-        messageVariantionId,
+        appId: app_id,
+        linkShorteningEnabled: link_shortening_enabled,
+        useClickTrackingEnabled: use_click_tracking_enabled,
+        campaignId: campaign_id,
+        messageVariantionId: message_variation_id,
       },
       settings: { apiKey, baseUrl },
     } = validate({
@@ -38,21 +38,27 @@ export const sendSMS = {
     const client = new BrazeClient({ apiKey, baseUrl })
     const requestBody = {
       external_user_ids: [externalUserId],
-      campaign_id: campaignId,
+      ...(!isNil(campaign_id) && {
+        campaign_id,
+      }),
       messages: {
         sms: {
-          subscription_group_id: subscriptionGroupId,
+          subscription_group_id,
           body,
-          app_id: appId,
-          ...(!isNil(messageVariantionId) && {
-            message_variation_id: messageVariantionId,
+          app_id,
+          ...(!isNil(message_variation_id) && {
+            message_variation_id,
           }),
-          ...(typeof linkShorteningEnabled === 'boolean' && {
-            link_shortening_enabled: linkShorteningEnabled,
-          }),
-          ...(typeof useClickTrackingEnabled === 'boolean' && {
-            use_click_tracking_enabled: useClickTrackingEnabled,
-          }),
+          ...(typeof link_shortening_enabled === 'boolean'
+            ? {
+                link_shortening_enabled,
+              }
+            : {}),
+          ...(typeof use_click_tracking_enabled === 'boolean'
+            ? {
+                use_click_tracking_enabled,
+              }
+            : {}),
         },
       },
     }

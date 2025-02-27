@@ -55,9 +55,11 @@ export const sendEmail = {
           ...(!isNil(preheader) && {
             preheader,
           }),
-          ...(typeof should_inline_css === 'boolean' && {
-            should_inline_css,
-          }),
+          ...(typeof should_inline_css === 'boolean'
+            ? {
+                should_inline_css,
+              }
+            : {}),
           ...(!isNil(message_variation_id) && {
             message_variation_id,
           }),

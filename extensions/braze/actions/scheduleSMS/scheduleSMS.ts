@@ -17,17 +17,17 @@ export const scheduleSMS = {
   onEvent: async ({ payload, onComplete, onError, helpers }) => {
     const {
       fields: {
-        subscriptionGroupId,
+        subscriptionGroupId: subscription_group_id,
         externalUserId,
         body,
-        appId,
-        scheduleTime,
-        inPatientLocalTime,
-        atOptimalTime,
-        linkShorteningEnabled,
-        useClickTrackingEnabled,
-        campaignId,
-        messageVariantionId,
+        appId: app_id,
+        scheduleTime: time,
+        inPatientLocalTime: in_local_time,
+        atOptimalTime: at_optimal_time,
+        linkShorteningEnabled: link_shortening_enabled,
+        useClickTrackingEnabled: use_click_tracking_enabled,
+        campaignId: campaign_id,
+        messageVariantionId: message_variation_id,
       },
       settings: { apiKey, baseUrl },
     } = validate({
@@ -42,30 +42,40 @@ export const scheduleSMS = {
 
     const requestBody = {
       external_user_ids: [externalUserId],
-      campaign_id: campaignId,
+      ...(!isNil(campaign_id) && {
+        campaign_id,
+      }),
       schedule: {
-        time: scheduleTime,
-        ...(typeof inPatientLocalTime === 'boolean' && {
-          in_local_time: inPatientLocalTime,
-        }),
-        ...(typeof atOptimalTime === 'boolean' && {
-          at_optimal_time: atOptimalTime,
-        }),
+        time,
+        ...(typeof in_local_time === 'boolean'
+          ? {
+              in_local_time,
+            }
+          : {}),
+        ...(typeof at_optimal_time === 'boolean'
+          ? {
+              at_optimal_time,
+            }
+          : {}),
       },
       messages: {
         sms: {
-          subscription_group_id: subscriptionGroupId,
+          subscription_group_id,
           body,
-          app_id: appId,
-          ...(!isNil(messageVariantionId) && {
-            message_variation_id: messageVariantionId,
+          app_id,
+          ...(!isNil(message_variation_id) && {
+            message_variation_id,
           }),
-          ...(typeof linkShorteningEnabled === 'boolean' && {
-            link_shortening_enabled: linkShorteningEnabled,
-          }),
-          ...(typeof useClickTrackingEnabled === 'boolean' && {
-            use_click_tracking_enabled: useClickTrackingEnabled,
-          }),
+          ...(typeof link_shortening_enabled === 'boolean'
+            ? {
+                link_shortening_enabled,
+              }
+            : {}),
+          ...(typeof use_click_tracking_enabled === 'boolean'
+            ? {
+                use_click_tracking_enabled,
+              }
+            : {}),
         },
       },
     }

@@ -49,12 +49,16 @@ export const scheduleEmail = {
       }),
       schedule: {
         time,
-        ...(typeof in_local_time === 'boolean' && {
-          in_local_time,
-        }),
-        ...(typeof at_optimal_time === 'boolean' && {
-          at_optimal_time,
-        }),
+        ...(typeof in_local_time === 'boolean'
+          ? {
+              in_local_time,
+            }
+          : {}),
+        ...(typeof at_optimal_time === 'boolean'
+          ? {
+              at_optimal_time,
+            }
+          : {}),
       },
       messages: {
         email: {
@@ -67,9 +71,11 @@ export const scheduleEmail = {
           ...(!isNil(preheader) && {
             preheader,
           }),
-          ...(typeof should_inline_css === 'boolean' && {
-            should_inline_css,
-          }),
+          ...(typeof should_inline_css === 'boolean'
+            ? {
+                should_inline_css,
+              }
+            : {}),
           ...(!isNil(message_variation_id) && {
             message_variation_id,
           }),
