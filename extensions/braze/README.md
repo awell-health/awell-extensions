@@ -5,7 +5,15 @@ description: Braze is a customer engagement platform that helps you communicate 
 
 # Braze
 
+Braze is a comprehensive customer engagement platform that specializes in helping businesses connect with their users through personalized messaging channels.
 
+## Supported Actins
+
+- **sendSMS** - Send an immediate SMS message to a specified user
+- **scheduleSMS** - Schedule an SMS message to be sent at a specific time
+- **sendEmail** - Send an immediate email to a specified user
+- **scheduleEmail** - Schedule an email to be sent at a specific time
+- **sendEmailUsingTemplate** - Send an email using a pre-defined Braze template
 
 ## Extension settings
 

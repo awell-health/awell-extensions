@@ -8,7 +8,8 @@ export const Braze: Extension = {
   title: 'Braze',
   description:
     'Braze is a customer engagement platform that helps you communicate with your patients.',
-  icon_url: '',
+  icon_url:
+    'https://res.cloudinary.com/da7x4rzl4/image/upload/c_thumb,w_200,g_face/v1740686243/brazeLogo_laecb9.jpg',
   category: Category.COMMUNICATION,
   author: {
     authorType: AuthorType.AWELL,
