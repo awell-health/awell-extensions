@@ -18,7 +18,7 @@ export const fields = {
     id: 'externalUserId',
     label: 'External User ID',
     type: FieldType.STRING,
-    required: false,
+    required: true,
     description:
       'The ID of the user in your system that this message is being sent to.',
   },
