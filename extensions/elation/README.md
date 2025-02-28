@@ -159,3 +159,6 @@ The action returns:
 - When adding new tags, specify them in single quotes (e.g., 'Diabetes', 'High-Risk'). Tags must exist in your Elation database
 - Due to Elation API limitations, clearing all tags is implemented by setting a single space tag (' '). This is the recommended workaround from Elation's team
 
+### ✨ Cancel appointments
+
+Given a prompt, this action retrieves a patient's upcoming appointments and cancels them.
