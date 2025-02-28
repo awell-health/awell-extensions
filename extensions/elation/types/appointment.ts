@@ -25,6 +25,7 @@ export interface AppointmentResponse
   created_date: string
   last_modified_date: string
   deleted_date?: string | null
+  mode: string
 }
 
 interface Status extends z.infer<typeof statusSchema> {

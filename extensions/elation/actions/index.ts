@@ -29,7 +29,7 @@ import { findFutureAppointment } from './findFutureAppointment'
 import { findAppointmentsWithAI } from './findAppointmentsWithAI'
 import { signNonVisitNote } from './signNonVisitNote/signNonVisitNote'
 import { updateReferralOrderResolution } from './updateReferralOrderResolution'
-
+import { cancelAppointments } from './cancelAppointments/cancelAppointments'
 export const actions = {
   getPatient,
   createPatient,
@@ -62,4 +62,5 @@ export const actions = {
   findAppointmentsWithAI,
   signNonVisitNote,
   updateReferralOrderResolution,
+  cancelAppointments,
 }
