@@ -161,4 +161,4 @@ The action returns:
 
 ### ✨ Cancel appointments
 
-Given a prompt, this action retrieves a patient's upcoming appointments and cancels them.
+Given a prompt, this action retrieves a patient's upcoming appointments matching the prompt and cancels them.
