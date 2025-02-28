@@ -99,6 +99,12 @@ export const cancelAppointments: Action<
         await onError({
           events: [
             addActivityEventLog({
+              message: `Successfully cancelled the following appointments: ${trace
+                .filter((t) => t.status === 'success')
+                .map((t) => t.appointmentId)
+                .join(', ')}`,
+            }),
+            addActivityEventLog({
               message: `Failed to cancel the following appointments: ${failedCancellations
                 .map((t) => t.appointmentId)
                 .join(', ')}`,

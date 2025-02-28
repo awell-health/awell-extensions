@@ -147,6 +147,12 @@ describe('Elation - Cancel appointments', () => {
             {
               date: expect.any(String),
               text: {
+                en: `Successfully cancelled the following appointments: 123`,
+              },
+            },
+            {
+              date: expect.any(String),
+              text: {
                 en: `Failed to cancel the following appointments: 456`,
               },
             },
