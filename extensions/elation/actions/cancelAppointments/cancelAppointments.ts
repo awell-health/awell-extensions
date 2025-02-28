@@ -76,22 +76,18 @@ export const cancelAppointments: Action<
       /**
        * Cancel the appointments
        */
-      interface Trace {
-        appointmentId: number
-        status: 'success' | 'error'
-      }
-      const trace: Trace[] = []
-
-      for (const appointmentId of appointmentIds) {
-        try {
-          await api.updateAppointment(appointmentId, {
-            status: { status: 'Cancelled' },
-          })
-          trace.push({ appointmentId, status: 'success' })
-        } catch (error) {
-          trace.push({ appointmentId, status: 'error' })
-        }
-      }
+      const trace = await Promise.all(
+        appointmentIds.map(async (appointmentId) => {
+          try {
+            await api.updateAppointment(appointmentId, {
+              status: { status: 'Cancelled' },
+            })
+            return { appointmentId, status: 'success' }
+          } catch (error) {
+            return { appointmentId, status: 'error' }
+          }
+        }),
+      )
 
       const failedCancellations = trace.filter((t) => t.status === 'error')
 
