@@ -40,6 +40,7 @@ import { shelly } from './shelly'
 import { stripe } from './stripe'
 import { TalkDesk } from './talkDesk'
 import { TextLine } from './textline'
+import { TextEmAll } from './text-em-all'
 import { Transform } from './transform'
 import { Twilio } from './twilio'
 import { WestFax } from './westFax'
@@ -94,6 +95,7 @@ export const extensions = [
   stripe,
   TalkDesk,
   TextLine,
+  TextEmAll,
   Transform,
   Twilio,
   WestFax,
