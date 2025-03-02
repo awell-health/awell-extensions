@@ -89,6 +89,19 @@ export class ElationDataWrapper extends DataWrapper {
     return res
   }
 
+  public async updateAppointment(
+    id: number,
+    obj: Partial<AppointmentInput>,
+  ): Promise<AppointmentResponse> {
+    const req = this.Request<AppointmentResponse>({
+      method: 'PATCH',
+      url: `/appointments/${id}`,
+      data: obj,
+    })
+    const res = await req
+    return res
+  }
+
   public async getPatient(id: number): Promise<PatientResponse> {
     const req = this.Request<PatientResponse>({
       method: 'GET',
@@ -461,6 +474,15 @@ export class ElationAPIClient extends APIClient<ElationDataWrapper> {
     obj: Partial<AppointmentInput>,
   ): Promise<AppointmentResponse> {
     return await this.FetchData(async (dw) => await dw.createAppointment(obj))
+  }
+
+  public async updateAppointment(
+    id: number,
+    obj: Partial<AppointmentInput>,
+  ): Promise<AppointmentResponse> {
+    return await this.FetchData(
+      async (dw) => await dw.updateAppointment(id, obj),
+    )
   }
 
   public async getPatient(id: number): Promise<PatientResponse> {
