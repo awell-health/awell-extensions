@@ -6,7 +6,8 @@ import {
   FieldType,
 } from '@awell-health/extensions-core'
 
-import { AudioSchema, BroadcastTypes, TransferSchema } from './types'
+import { BroadcastTypes } from './types'
+import { AudioSchema, TransferSchema } from '../types'
 import { validateJsonField } from '../utils/validateJsonField'
 
 export const fields = {

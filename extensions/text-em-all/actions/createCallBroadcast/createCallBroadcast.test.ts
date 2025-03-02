@@ -7,20 +7,15 @@ import { CreateCallBroadcastMockResponse } from './__testdata__/CreateCallBroadc
 jest.mock('../../lib/client')
 
 describe('CreateCallBroadcast', () => {
-  const { 
-    extensionAction, 
-    onComplete, 
-    onError, 
-    helpers, 
-    clearMocks
-  } = TestHelpers.fromAction(createCallBroadcast)
+  const { extensionAction, onComplete, onError, helpers, clearMocks } =
+    TestHelpers.fromAction(createCallBroadcast)
   beforeEach(clearMocks)
 
   it('should call the TextEmAllClient with the correct data', async () => {
     const mockCreateCallBroadcast = jest
       .fn()
       .mockResolvedValue(CreateCallBroadcastMockResponse)
-      
+
     const mockedTextEmAllClient = jest.mocked(TextEmAllClient)
 
     mockedTextEmAllClient.mockImplementation(() => {
@@ -34,7 +29,7 @@ describe('CreateCallBroadcast', () => {
         fields: {
           broadcastName: 'testBroadcast',
           phoneNumber: '5555550123',
-          startDate: '2025-01-02 13:15:00-0000',
+          startDate: '2/1/2020 1:15PM',
           broadcastType: 'Announcement',
         },
         settings: {
@@ -52,7 +47,7 @@ describe('CreateCallBroadcast', () => {
     expect(mockCreateCallBroadcast).toHaveBeenCalledWith({
       BroadcastName: 'testBroadcast',
       BroadcastType: 'Announcement',
-      StartDate: '2025-01-02 13:15:00-0000',
+      StartDate: '2/1/2020 1:15PM',
       Contacts: [{ PrimaryPhone: '5555550123' }],
     })
     expect(onError).not.toHaveBeenCalled()
