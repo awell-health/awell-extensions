@@ -10,7 +10,7 @@ export const createSMSBroadcast: Action<
   keyof typeof dataPoints
 > = {
   key: 'createSMSBroadcast',
-  title: 'Create a new SMS broadcast',
+  title: 'Send a new SMS broadcast',
   description:
     'A broadcast is a feature that allows you to send a text message to a recipient at specific time',
   category: Category.COMMUNICATION,

@@ -10,7 +10,7 @@ export const createCallBroadcast: Action<
   keyof typeof dataPoints
 > = {
   key: 'createCallBroadcast',
-  title: 'Create a new call broadcast',
+  title: 'Send a new call broadcast',
   description:
     'A broadcast is a feature that allows you to initiate a call to a recipient at specific time',
   category: Category.COMMUNICATION,
