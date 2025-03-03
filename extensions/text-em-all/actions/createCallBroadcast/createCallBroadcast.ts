@@ -54,21 +54,40 @@ export const createCallBroadcast: Action<
       ContinueOnNextDay,
       Contacts: [{ PrimaryPhone: phoneNumber }],
     }
-    const { data } = await client.createBroadcast(request)
-    await onComplete({
-      events: [
-        {
-          date: new Date().toISOString(),
-          text: { en: `Broadcast created. Response: ${JSON.stringify(data)}` },
+    const resp = await client.createBroadcast(request)
+    const data = resp.data
+    if (resp.status === 200 && 'BroadcastID' in data) {
+      await onComplete({
+        events: [
+          {
+            date: new Date().toISOString(),
+            text: {
+              en: `Broadcast created. Response: ${JSON.stringify(data)}`,
+            },
+          },
+        ],
+        data_points: {
+          broadcastId: data.BroadcastID.toString(),
+          broadcastStatus: data.BroadcastStatus,
+          uriBroadcastDetails: data.UriBroadcastDetails,
+          broadcastStatusCategory: data.BroadcastStatusCategory,
+          broadcastStartDate: data.StartDate,
         },
-      ],
-      data_points: {
-        broadcastId: data.BroadcastID.toString(),
-        broadcastStatus: data.BroadcastStatus,
-        uriBroadcastDetails: data.UriBroadcastDetails,
-        broadcastStatusCategory: data.BroadcastStatusCategory,
-        broadcastStartDate: data.StartDate,
-      },
-    })
+      })
+    } else {
+      const errorMessage = 'Message' in data ? data.Message : 'Unknown error'
+      await onError({
+        events: [
+          {
+            date: new Date().toISOString(),
+            text: { en: `Broadcast creation failed: ${errorMessage}` },
+            error: {
+              category: 'BAD_REQUEST',
+              message: 'Broadcast creation failed',
+            },
+          },
+        ],
+      })
+    }
   },
 } satisfies Action<typeof fields, typeof settings>
