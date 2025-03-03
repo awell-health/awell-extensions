@@ -105,6 +105,7 @@ const RAW_RUNTIME_STATE =
           ["messagebird", "npm:4.0.1"],\
           ["node-fetch", "virtual:67a4556f0ed6123f505a64afe957c4b01723f4071e8c26bf643cd1a06641bc0b5f76dd835419691dcbce85729d487b8bcfc7faf79afef587517fb21a0b33abd6#npm:2.7.0"],\
           ["nodemailer", "npm:6.9.15"],\
+          ["oauth-1.0a", "npm:2.2.6"],\
           ["openai", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:4.62.1"],\
           ["prettier", "npm:3.4.2"],\
           ["rimraf", "npm:4.4.1"],\
@@ -300,6 +301,7 @@ const RAW_RUNTIME_STATE =
           ["messagebird", "npm:4.0.1"],\
           ["node-fetch", "virtual:67a4556f0ed6123f505a64afe957c4b01723f4071e8c26bf643cd1a06641bc0b5f76dd835419691dcbce85729d487b8bcfc7faf79afef587517fb21a0b33abd6#npm:2.7.0"],\
           ["nodemailer", "npm:6.9.15"],\
+          ["oauth-1.0a", "npm:2.2.6"],\
           ["openai", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:4.62.1"],\
           ["prettier", "npm:3.4.2"],\
           ["rimraf", "npm:4.4.1"],\
@@ -12833,6 +12835,15 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./.yarn/cache/oauth-npm-0.10.0-74adff7683-3568089799.zip/node_modules/oauth/",\
         "packageDependencies": [\
           ["oauth", "npm:0.10.0"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["oauth-1.0a", [\
+      ["npm:2.2.6", {\
+        "packageLocation": "./.yarn/cache/oauth-1.0a-npm-2.2.6-bcd1a18561-5807a52077.zip/node_modules/oauth-1.0a/",\
+        "packageDependencies": [\
+          ["oauth-1.0a", "npm:2.2.6"]\
         ],\
         "linkType": "HARD"\
       }]\

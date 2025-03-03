@@ -164,6 +164,7 @@ __metadata:
     messagebird: "npm:^4.0.1"
     node-fetch: "npm:2"
     nodemailer: "npm:^6.9.15"
+    oauth-1.0a: "npm:^2.2.6"
     openai: "npm:^4.59.0"
     prettier: "npm:^3.4.2"
     rimraf: "npm:^4.1.2"
@@ -9823,6 +9824,13 @@ __metadata:
     path-to-regexp: "npm:^6.2.0"
     remove-undefined-objects: "npm:^3.0.0"
   checksum: 10/ca5f0226f99683b0a9a466504cb6b9ddec7bd5360e47cf65ff173d9a521c9a0136387dd1e562d7927b11008f1375c2325fa1f37368f60ec0d86f934ee8c75c5c
+  languageName: node
+  linkType: hard
+
+"oauth-1.0a@npm:^2.2.6":
+  version: 2.2.6
+  resolution: "oauth-1.0a@npm:2.2.6"
+  checksum: 10/5807a52077538e853a47a29ee4cc0a87a0882b89918b4c069ebb295ad81c5abef451010ccaca3b991bf59f79f18893fe1df0186706097e2a3fdda9abc5dbe211
   languageName: node
   linkType: hard
 
