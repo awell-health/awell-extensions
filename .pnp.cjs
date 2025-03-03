@@ -48,6 +48,7 @@ const RAW_RUNTIME_STATE =
           ["@sendgrid/helpers", "npm:7.7.0"],\
           ["@sendgrid/mail", "npm:7.7.0"],\
           ["@types/body-parser", "npm:1.19.5"],\
+          ["@types/crypto-js", "npm:4.2.2"],\
           ["@types/docusign-esign", "npm:5.19.6"],\
           ["@types/express", "npm:4.17.21"],\
           ["@types/jest", "npm:29.5.14"],\
@@ -71,6 +72,7 @@ const RAW_RUNTIME_STATE =
           ["axios", "npm:1.7.7"],\
           ["body-parser", "npm:1.20.3"],\
           ["cheerio", "npm:1.0.0"],\
+          ["crypto-js", "npm:4.2.0"],\
           ["date-fns", "npm:2.30.0"],\
           ["date-fns-tz", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:2.0.1"],\
           ["docusign-esign", "npm:7.0.0-rc1"],\
@@ -103,6 +105,7 @@ const RAW_RUNTIME_STATE =
           ["messagebird", "npm:4.0.1"],\
           ["node-fetch", "virtual:67a4556f0ed6123f505a64afe957c4b01723f4071e8c26bf643cd1a06641bc0b5f76dd835419691dcbce85729d487b8bcfc7faf79afef587517fb21a0b33abd6#npm:2.7.0"],\
           ["nodemailer", "npm:6.9.15"],\
+          ["oauth-1.0a", "npm:2.2.6"],\
           ["openai", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:4.62.1"],\
           ["prettier", "npm:3.4.2"],\
           ["rimraf", "npm:4.4.1"],\
@@ -241,6 +244,7 @@ const RAW_RUNTIME_STATE =
           ["@sendgrid/helpers", "npm:7.7.0"],\
           ["@sendgrid/mail", "npm:7.7.0"],\
           ["@types/body-parser", "npm:1.19.5"],\
+          ["@types/crypto-js", "npm:4.2.2"],\
           ["@types/docusign-esign", "npm:5.19.6"],\
           ["@types/express", "npm:4.17.21"],\
           ["@types/jest", "npm:29.5.14"],\
@@ -264,6 +268,7 @@ const RAW_RUNTIME_STATE =
           ["axios", "npm:1.7.7"],\
           ["body-parser", "npm:1.20.3"],\
           ["cheerio", "npm:1.0.0"],\
+          ["crypto-js", "npm:4.2.0"],\
           ["date-fns", "npm:2.30.0"],\
           ["date-fns-tz", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:2.0.1"],\
           ["docusign-esign", "npm:7.0.0-rc1"],\
@@ -296,6 +301,7 @@ const RAW_RUNTIME_STATE =
           ["messagebird", "npm:4.0.1"],\
           ["node-fetch", "virtual:67a4556f0ed6123f505a64afe957c4b01723f4071e8c26bf643cd1a06641bc0b5f76dd835419691dcbce85729d487b8bcfc7faf79afef587517fb21a0b33abd6#npm:2.7.0"],\
           ["nodemailer", "npm:6.9.15"],\
+          ["oauth-1.0a", "npm:2.2.6"],\
           ["openai", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:4.62.1"],\
           ["prettier", "npm:3.4.2"],\
           ["rimraf", "npm:4.4.1"],\
@@ -4374,6 +4380,15 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
+    ["@types/crypto-js", [\
+      ["npm:4.2.2", {\
+        "packageLocation": "./.yarn/cache/@types-crypto-js-npm-4.2.2-21357d525e-a40fc5a921.zip/node_modules/@types/crypto-js/",\
+        "packageDependencies": [\
+          ["@types/crypto-js", "npm:4.2.2"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
     ["@types/docusign-esign", [\
       ["npm:5.19.6", {\
         "packageLocation": "./.yarn/cache/@types-docusign-esign-npm-5.19.6-fae95ff172-cd60a3a18b.zip/node_modules/@types/docusign-esign/",\
@@ -6955,6 +6970,15 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./.yarn/cache/crypto-npm-1.0.1-7cb8e3dca6-087fe3165b.zip/node_modules/crypto/",\
         "packageDependencies": [\
           ["crypto", "npm:1.0.1"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["crypto-js", [\
+      ["npm:4.2.0", {\
+        "packageLocation": "./.yarn/cache/crypto-js-npm-4.2.0-d6f7744e63-c7bcc56a6e.zip/node_modules/crypto-js/",\
+        "packageDependencies": [\
+          ["crypto-js", "npm:4.2.0"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -12811,6 +12835,15 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./.yarn/cache/oauth-npm-0.10.0-74adff7683-3568089799.zip/node_modules/oauth/",\
         "packageDependencies": [\
           ["oauth", "npm:0.10.0"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["oauth-1.0a", [\
+      ["npm:2.2.6", {\
+        "packageLocation": "./.yarn/cache/oauth-1.0a-npm-2.2.6-bcd1a18561-5807a52077.zip/node_modules/oauth-1.0a/",\
+        "packageDependencies": [\
+          ["oauth-1.0a", "npm:2.2.6"]\
         ],\
         "linkType": "HARD"\
       }]\
