@@ -47,7 +47,6 @@ export class TextEmAllClient {
     // Add request interceptor to add OAuth headers
     this.client.interceptors.request.use((config) => {
       const url = `${baseUrl}${config.url ?? ''}`
-      console.log('Text-em-all request URL', url)
       const requestData = {
         url,
         method: config.method?.toUpperCase() ?? 'GET',
@@ -66,6 +65,7 @@ export class TextEmAllClient {
         throw new Error('Invalid OAuth header format')
       }
 
+      console.log('Text-em-all request headers', authHeader)
       config.headers.Authorization = authHeader.Authorization
       return config
     })
@@ -78,6 +78,7 @@ export class TextEmAllClient {
       const resp = await this.client.post('/broadcasts', data)
       return resp.data
     } catch (error) {
+      console.error('Text-em-all error', error)
       throw new Error(
         `Failed to create broadcast: ${error instanceof Error ? error.message : 'Unknown error'}`,
       )
