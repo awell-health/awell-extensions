@@ -120,3 +120,9 @@ export interface Broadcast {
   // Failed contacts information
   FailedContacts?: Array<Record<string, unknown>>
 }
+
+export interface TextEmAllError {
+  Message: string
+  ErrorType: string
+  ErrorCode: number
+}
