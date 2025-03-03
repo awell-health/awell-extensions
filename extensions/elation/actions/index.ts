@@ -24,12 +24,14 @@ import { createReferralOrder } from './createReferralOrder'
 import { createCareGap } from './createCareGap'
 import { closeCareGap } from './closeCareGap'
 import { updatePatientTags } from './updatePatientTags'
+import { checkPatientTags } from './checkPatientTags'
 import { getReferralOrder } from './getReferralOrder'
 import { findFutureAppointment } from './findFutureAppointment'
 import { findAppointmentsWithAI } from './findAppointmentsWithAI'
 import { signNonVisitNote } from './signNonVisitNote/signNonVisitNote'
 import { updateReferralOrderResolution } from './updateReferralOrderResolution'
 import { cancelAppointments } from './cancelAppointments/cancelAppointments'
+
 export const actions = {
   getPatient,
   createPatient,
@@ -57,6 +59,7 @@ export const actions = {
   createCareGap,
   closeCareGap,
   updatePatientTags,
+  checkPatientTags,
   getReferralOrder,
   findFutureAppointment,
   findAppointmentsWithAI,
