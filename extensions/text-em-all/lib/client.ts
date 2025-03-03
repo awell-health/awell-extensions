@@ -2,7 +2,7 @@ import axios, { type AxiosResponse, type AxiosInstance } from 'axios'
 import CryptoJS from 'crypto-js'
 import OAuth from 'oauth-1.0a'
 
-import { type Broadcast } from '../actions/types'
+import { type TextEmAllError, type Broadcast } from '../actions/types'
 
 interface TextEmAllClientConfig {
   customerKey: string
@@ -65,7 +65,7 @@ export class TextEmAllClient {
         throw new Error('Invalid OAuth header format')
       }
 
-      console.log('Text-em-all request headers', authHeader)
+      console.log('Text-em-all request headers', JSON.stringify(authHeader))
       config.headers.Authorization = authHeader.Authorization
       return config
     })
@@ -73,12 +73,12 @@ export class TextEmAllClient {
 
   async createBroadcast(
     data: Record<string, any>,
-  ): Promise<AxiosResponse<Broadcast>> {
+  ): Promise<AxiosResponse<Broadcast | TextEmAllError>> {
     try {
       const resp = await this.client.post('/broadcasts', data)
-      return resp.data
+      return resp
     } catch (error) {
-      console.error('Text-em-all error', error)
+      console.error('Text-em-all error', JSON.stringify(error))
       throw new Error(
         `Failed to create broadcast: ${error instanceof Error ? error.message : 'Unknown error'}`,
       )
