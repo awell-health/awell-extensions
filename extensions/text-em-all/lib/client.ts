@@ -8,7 +8,6 @@ interface TextEmAllClientConfig {
   customerKey: string
   customerSecret: string
   token: string
-  baseUrl: string
 }
 
 export class TextEmAllClient {
@@ -18,8 +17,10 @@ export class TextEmAllClient {
   private readonly customerSecret: string
 
   constructor(params: TextEmAllClientConfig) {
-    const { customerKey, customerSecret, token, baseUrl } = params
+    const { customerKey, customerSecret, token } = params
 
+    // text-em-all uses the same url for both sandbox and production
+    const baseUrl = 'https://rest.text-em-all.com/v1'
     this.token = token
     this.customerSecret = customerSecret
 
@@ -45,8 +46,10 @@ export class TextEmAllClient {
 
     // Add request interceptor to add OAuth headers
     this.client.interceptors.request.use((config) => {
+      const url = `${baseUrl}${config.url ?? ''}`
+      console.log('Text-em-all request URL', url)
       const requestData = {
-        url: `${baseUrl}${config.url ?? ''}`,
+        url,
         method: config.method?.toUpperCase() ?? 'GET',
         data: config.data,
       }
