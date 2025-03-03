@@ -16,6 +16,30 @@ describe.skip('checkPatientTags - Real OpenAI calls', () => {
   const { onComplete, onError, helpers, extensionAction, clearMocks } =
     TestHelpers.fromAction(checkPatientTags)
 
+  const basePayload = {
+    settings: {
+      client_id: 'clientId',
+      client_secret: 'clientSecret',
+      username: 'username',
+      password: 'password',
+      auth_url: 'authUrl',
+      base_url: 'baseUrl',
+    },
+    pathway: {
+      id: 'test-flow-id',
+      definition_id: '123',
+      tenant_id: '123',
+      org_slug: 'test-org-slug',
+      org_id: 'test-org-id'
+    },
+    activity: {
+      id: 'test-activity-id'
+    },
+    patient: {
+      id: 'test-patient-id'
+    }
+  }
+
   beforeEach(() => {
     clearMocks()
     jest.clearAllMocks()
@@ -43,30 +67,10 @@ describe.skip('checkPatientTags - Real OpenAI calls', () => {
   it('Should check for single tag using real OpenAI', async () => {
     await extensionAction.onEvent({
       payload: {
+        ...basePayload,
         fields: {
           patientId: 123,
           instructions: 'Check if patient has "Eligible" tag',
-        },
-        settings: {
-          client_id: 'clientId',
-          client_secret: 'clientSecret',
-          username: 'username',
-          password: 'password',
-          auth_url: 'authUrl',
-          base_url: 'baseUrl',
-        },
-        pathway: {
-          id: 'test-flow-id',
-          definition_id: '123',
-          tenant_id: '123',
-          org_slug: 'test-org-slug',
-          org_id: 'test-org-id'
-        },
-        activity: {
-          id: 'test-activity-id'
-        },
-        patient: {
-          id: 'test-patient-id'
         }
       },
       onComplete,
@@ -93,30 +97,10 @@ describe.skip('checkPatientTags - Real OpenAI calls', () => {
 
     await extensionAction.onEvent({
       payload: {
+        ...basePayload,
         fields: {
           patientId: 123,
           instructions: 'Check if patient has both "Eligible" and "High Risk" tags',
-        },
-        settings: {
-          client_id: 'clientId',
-          client_secret: 'clientSecret',
-          username: 'username',
-          password: 'password',
-          auth_url: 'authUrl',
-          base_url: 'baseUrl',
-        },
-        pathway: {
-          id: 'test-flow-id',
-          definition_id: '123',
-          tenant_id: '123',
-          org_slug: 'test-org-slug',
-          org_id: 'test-org-id'
-        },
-        activity: {
-          id: 'test-activity-id'
-        },
-        patient: {
-          id: 'test-patient-id'
         }
       },
       onComplete,
@@ -141,30 +125,10 @@ describe.skip('checkPatientTags - Real OpenAI calls', () => {
 
     await extensionAction.onEvent({
       payload: {
+        ...basePayload,
         fields: {
           patientId: 123,
           instructions: 'Check if patient does NOT have "Eligible" tag',
-        },
-        settings: {
-          client_id: 'clientId',
-          client_secret: 'clientSecret',
-          username: 'username',
-          password: 'password',
-          auth_url: 'authUrl',
-          base_url: 'baseUrl',
-        },
-        pathway: {
-          id: 'test-flow-id',
-          definition_id: '123',
-          tenant_id: '123',
-          org_slug: 'test-org-slug',
-          org_id: 'test-org-id'
-        },
-        activity: {
-          id: 'test-activity-id'
-        },
-        patient: {
-          id: 'test-patient-id'
         }
       },
       onComplete,
@@ -189,30 +153,10 @@ describe.skip('checkPatientTags - Real OpenAI calls', () => {
 
     await extensionAction.onEvent({
       payload: {
+        ...basePayload,
         fields: {
           patientId: 123,
           instructions: 'If patient has "High Risk" tag, then they must also have "Fall Risk" tag',
-        },
-        settings: {
-          client_id: 'clientId',
-          client_secret: 'clientSecret',
-          username: 'username',
-          password: 'password',
-          auth_url: 'authUrl',
-          base_url: 'baseUrl',
-        },
-        pathway: {
-          id: 'test-flow-id',
-          definition_id: '123',
-          tenant_id: '123',
-          org_slug: 'test-org-slug',
-          org_id: 'test-org-id'
-        },
-        activity: {
-          id: 'test-activity-id'
-        },
-        patient: {
-          id: 'test-patient-id'
         }
       },
       onComplete,
@@ -237,30 +181,10 @@ describe.skip('checkPatientTags - Real OpenAI calls', () => {
 
     await extensionAction.onEvent({
       payload: {
+        ...basePayload,
         fields: {
           patientId: 123,
           instructions: 'Check if patient has "Eligible" tag',
-        },
-        settings: {
-          client_id: 'clientId',
-          client_secret: 'clientSecret',
-          username: 'username',
-          password: 'password',
-          auth_url: 'authUrl',
-          base_url: 'baseUrl',
-        },
-        pathway: {
-          id: 'test-flow-id',
-          definition_id: '123',
-          tenant_id: '123',
-          org_slug: 'test-org-slug',
-          org_id: 'test-org-id'
-        },
-        activity: {
-          id: 'test-activity-id'
-        },
-        patient: {
-          id: 'test-patient-id'
         }
       },
       onComplete,

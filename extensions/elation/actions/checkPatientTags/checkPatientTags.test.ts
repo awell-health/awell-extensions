@@ -35,6 +35,30 @@ describe('Elation - Check patient tags', () => {
     clearMocks,
   } = TestHelpers.fromAction(action)
 
+  const basePayload = {
+    settings: {
+      client_id: 'clientId',
+      client_secret: 'clientSecret',
+      username: 'username',
+      password: 'password',
+      auth_url: 'authUrl',
+      base_url: 'baseUrl',
+    },
+    pathway: {
+      id: 'test-flow-id',
+      definition_id: '123',
+      tenant_id: '123',
+      org_slug: 'test-org-slug',
+      org_id: 'test-org-id'
+    },
+    activity: {
+      id: 'test-activity-id'
+    },
+    patient: {
+      id: 'test-patient-id'
+    }
+  }
+
   beforeAll(() => {
     const mockAPIClient = makeAPIClient as jest.Mock
     mockAPIClient.mockImplementation(makeAPIClientMockFunc)
@@ -48,31 +72,14 @@ describe('Elation - Check patient tags', () => {
   it('Should check tags using custom API key', async () => {
     await checkPatientTags.onEvent({
       payload: {
+        ...basePayload,
+        settings: {
+          ...basePayload.settings,
+          openAiApiKey: 'custom-key',
+        },
         fields: {
           patientId: 123,
           instructions: 'Check if patient has "Eligible" tag',
-        },
-        settings: {
-          client_id: 'clientId',
-          client_secret: 'clientSecret',
-          username: 'username',
-          password: 'password',
-          auth_url: 'authUrl',
-          base_url: 'baseUrl',
-          openAiApiKey: 'custom-key',
-        },
-        pathway: {
-          id: 'test-flow-id',
-          definition_id: '123',
-          tenant_id: '123',
-          org_slug: 'test-org-slug',
-          org_id: 'test-org-id'
-        },
-        activity: {
-          id: 'test-activity-id'
-        },
-        patient: {
-          id: 'test-patient-id'
         }
       },
       onComplete,
@@ -106,30 +113,10 @@ describe('Elation - Check patient tags', () => {
 
     await checkPatientTags.onEvent({
       payload: {
+        ...basePayload,
         fields: {
           patientId: 123,
           instructions: 'Check if patient has "Eligible" tag',
-        },
-        settings: {
-          client_id: 'clientId',
-          client_secret: 'clientSecret',
-          username: 'username',
-          password: 'password',
-          auth_url: 'authUrl',
-          base_url: 'baseUrl',
-        },
-        pathway: {
-          id: 'test-flow-id',
-          definition_id: '123',
-          tenant_id: '123',
-          org_slug: 'test-org-slug',
-          org_id: 'test-org-id'
-        },
-        activity: {
-          id: 'test-activity-id'
-        },
-        patient: {
-          id: 'test-patient-id'
         }
       },
       onComplete,
