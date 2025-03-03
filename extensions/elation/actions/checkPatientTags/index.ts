@@ -1,0 +1,1 @@
+export { checkPatientTags } from './checkPatientTags' 

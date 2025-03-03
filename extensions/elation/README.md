@@ -159,6 +159,23 @@ The action returns:
 - When adding new tags, specify them in single quotes (e.g., 'Diabetes', 'High-Risk'). Tags must exist in your Elation database
 - Due to Elation API limitations, clearing all tags is implemented by setting a single space tag (' '). This is the recommended workaround from Elation's team
 
+### ✨ Check Patient Tags
+
+Uses AI to check if a patient's tags match given instructions in natural language. The action executes the following steps:
+
+1. Retrieves existing patient tags from Elation
+2. Uses an LLM to interpret natural language instructions and check if the patient's tags match the requirements
+3. Returns a boolean result and explanation of the check
+
+The action returns:
+- `tagsFound`: Boolean indicating if the patient's tags match the instructions
+- `explanation`: Detailed explanation of why the tags match or don't match the instructions
+
+
+**Important Notes:**
+- When specifying exact tag matches, use double quotes (e.g., "Diabetes", "High-Risk"). Tags must exist in your Elation database
+- The LLM can understand complex logical conditions like "either/or", "both", "not", "any of", "none of"
+
 ### ✨ Cancel appointments
 
 Given a prompt, this action retrieves a patient's upcoming appointments matching the prompt and cancels them.
