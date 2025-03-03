@@ -5,8 +5,11 @@ import {
   type DataPointDefinition,
   FieldType,
   StringType,
+  DateTimeSchema,
 } from '@awell-health/extensions-core'
 import { parsePhoneNumber } from 'libphonenumber-js'
+import { isNil } from 'lodash'
+import format from 'date-fns/format'
 
 export const fields = {
   broadcastName: {
@@ -44,10 +47,10 @@ export const fields = {
   startDate: {
     id: 'startDate',
     label: 'Start Date',
-    type: FieldType.STRING,
+    type: FieldType.DATE,
     required: false,
     description:
-      'The time the broadcast should start. Will default to start immediately. Following format is required: 2/1/2020 1:15PM',
+      'The time the broadcast should start. Will default to start immediately. If provided must be a datetime as ISO 8601 string and time to send the message in UTC',
   },
 } satisfies Fields
 
@@ -82,6 +85,10 @@ export const FieldsSchema = z.object({
   }),
   textMessage: z.string(),
   textNumberID: z.number().optional(),
-  startDate: z.string().optional(),
+  startDate: DateTimeSchema.optional().transform((date) => {
+    if (isNil(date) || date === '') return undefined
+    // format is required: 2/1/2020 1:15PM',
+    return format(new Date(date), 'M/d/yyyy h:mmaa')
+  }),
 })
 export type ActionFields = z.infer<typeof FieldsSchema>

@@ -5,12 +5,15 @@ import {
   type DataPointDefinition,
   FieldType,
   StringType,
+  DateTimeSchema,
 } from '@awell-health/extensions-core'
 
 import { BroadcastTypes } from './types'
 import { AudioSchema, TransferSchema } from '../types'
 import { validateJsonField } from '../utils/validateJsonField'
 import { parsePhoneNumber } from 'libphonenumber-js'
+import format from 'date-fns/format'
+import { isNil } from 'lodash'
 
 export const fields = {
   broadcastName: {
@@ -39,7 +42,7 @@ export const fields = {
     type: FieldType.STRING,
     required: false,
     description:
-      'The time the broadcast should start. Will default to start immediately. Following format is required: 2/1/2020 1:15PM',
+      'The time the broadcast should start. Will default to start immediately. If provided must be a datetime as ISO 8601 string and time to send the message in UTC',
   },
   maxMessageLength: {
     id: 'maxMessageLength',
@@ -148,7 +151,11 @@ export const dataPoints = {
 export const FieldsSchema = z.object({
   broadcastName: z.string(),
   broadcastType: BroadcastTypes,
-  startDate: z.string().optional(),
+  startDate: DateTimeSchema.optional().transform((date) => {
+    if (isNil(date) || date === '') return undefined
+    // format is required: 2/1/2020 1:15PM',
+    return format(new Date(date), 'M/d/yyyy h:mmaa')
+  }),
   maxMessageLength: z.number().optional(),
   callerID: z.string().optional(),
   phoneNumber: z.string().transform((phone) => {
