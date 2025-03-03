@@ -28,8 +28,8 @@ describe('CreateCallBroadcast', () => {
       payload: generateTestPayload({
         fields: {
           broadcastName: 'testBroadcast',
-          phoneNumber: '5555550123',
-          startDate: '2/1/2020 1:15PM',
+          phoneNumber: '+15555550123',
+          startDate: '2025-03-03T10:00:00Z',
           broadcastType: 'Announcement',
         },
         settings: {
@@ -47,8 +47,8 @@ describe('CreateCallBroadcast', () => {
     expect(mockCreateCallBroadcast).toHaveBeenCalledWith({
       BroadcastName: 'testBroadcast',
       BroadcastType: 'Announcement',
-      StartDate: '2/1/2020 1:15PM',
-      Contacts: [{ PrimaryPhone: '5555550123' }],
+      StartDate: '3/3/2025 10:00AM',
+      Contacts: [{ PrimaryPhone: '(555) 555-0123' }],
     })
     expect(onError).not.toHaveBeenCalled()
     expect(onComplete).toHaveBeenCalled()

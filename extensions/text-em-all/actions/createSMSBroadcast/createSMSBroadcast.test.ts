@@ -28,9 +28,9 @@ describe('CreateSMSBroadcast', () => {
       payload: generateTestPayload({
         fields: {
           broadcastName: 'testBroadcast',
-          phoneNumber: '5555550123',
+          phoneNumber: '+15555550123',
           textMessage: 'This is a test text message. Please reply.',
-          startDate: '2/1/2020 1:15PM',
+          startDate: '2025-03-03T10:00:00Z',
           textNumberID: 1234567890,
         },
         settings: {
@@ -48,8 +48,8 @@ describe('CreateSMSBroadcast', () => {
     expect(mockCreateSMSBroadcast).toHaveBeenCalledWith({
       BroadcastName: 'testBroadcast',
       BroadcastType: 'SMS',
-      StartDate: '2/1/2020 1:15PM',
-      Contacts: [{ PrimaryPhone: '5555550123' }],
+      StartDate: '3/3/2025 10:00AM',
+      Contacts: [{ PrimaryPhone: '(555) 555-0123' }],
       TextMessage: 'This is a test text message. Please reply.',
       TextNumberID: 1234567890,
     })
