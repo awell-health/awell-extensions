@@ -7,20 +7,15 @@ import { CreateSMSBroadcastMockResponse } from './__testdata__/CreateSMSBroadcas
 jest.mock('../../lib/client')
 
 describe('CreateSMSBroadcast', () => {
-  const { 
-    extensionAction, 
-    onComplete, 
-    onError, 
-    helpers, 
-    clearMocks
-  } = TestHelpers.fromAction(createSMSBroadcast)
+  const { extensionAction, onComplete, onError, helpers, clearMocks } =
+    TestHelpers.fromAction(createSMSBroadcast)
   beforeEach(clearMocks)
 
   it('should call the TextEmAllClient with the correct data', async () => {
     const mockCreateSMSBroadcast = jest
       .fn()
       .mockResolvedValue(CreateSMSBroadcastMockResponse)
-      
+
     const mockedTextEmAllClient = jest.mocked(TextEmAllClient)
 
     mockedTextEmAllClient.mockImplementation(() => {
@@ -35,7 +30,7 @@ describe('CreateSMSBroadcast', () => {
           broadcastName: 'testBroadcast',
           phoneNumber: '5555550123',
           textMessage: 'This is a test text message. Please reply.',
-          startDate: '2025-01-02 13:15:00-0000',
+          startDate: '2/1/2020 1:15PM',
           textNumberID: 1234567890,
         },
         settings: {
@@ -53,7 +48,7 @@ describe('CreateSMSBroadcast', () => {
     expect(mockCreateSMSBroadcast).toHaveBeenCalledWith({
       BroadcastName: 'testBroadcast',
       BroadcastType: 'SMS',
-      StartDate: '2025-01-02 13:15:00-0000',
+      StartDate: '2/1/2020 1:15PM',
       Contacts: [{ PrimaryPhone: '5555550123' }],
       TextMessage: 'This is a test text message. Please reply.',
       TextNumberID: 1234567890,
