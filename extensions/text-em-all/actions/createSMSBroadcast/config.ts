@@ -4,7 +4,9 @@ import {
   type Fields,
   type DataPointDefinition,
   FieldType,
+  StringType,
 } from '@awell-health/extensions-core'
+import { parsePhoneNumber } from 'libphonenumber-js'
 
 export const fields = {
   broadcastName: {
@@ -18,6 +20,7 @@ export const fields = {
     id: 'phoneNumber',
     label: 'Phone Number',
     type: FieldType.STRING,
+    stringType: StringType.PHONE,
     required: true,
     description:
       'The primary phone number of the recipient. Must be a valid North American Numbering Plan (NANP) phone number.',
@@ -35,7 +38,8 @@ export const fields = {
     label: 'Text Number ID',
     type: FieldType.NUMERIC,
     required: false,
-    description: 'The ID of the text number your messages will be sent from. If omitted, the default text number on your account will be used.',
+    description:
+      'The ID of the text number your messages will be sent from. If omitted, the default text number on your account will be used.',
   },
   startDate: {
     id: 'startDate',
@@ -72,7 +76,10 @@ export const dataPoints = {
 
 export const FieldsSchema = z.object({
   broadcastName: z.string(),
-  phoneNumber: z.string(),
+  phoneNumber: z.string().transform((phone) => {
+    const parsedNumber = parsePhoneNumber(phone)
+    return parsedNumber.format('NATIONAL') // Returns "(XXX) XXX-XXXX" NANP format
+  }),
   textMessage: z.string(),
   textNumberID: z.number().optional(),
   startDate: z.string().optional(),

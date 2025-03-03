@@ -4,11 +4,13 @@ import {
   type Fields,
   type DataPointDefinition,
   FieldType,
+  StringType,
 } from '@awell-health/extensions-core'
 
 import { BroadcastTypes } from './types'
 import { AudioSchema, TransferSchema } from '../types'
 import { validateJsonField } from '../utils/validateJsonField'
+import { parsePhoneNumber } from 'libphonenumber-js'
 
 export const fields = {
   broadcastName: {
@@ -50,7 +52,7 @@ export const fields = {
   callerID: {
     id: 'callerID',
     label: 'Caller ID',
-    type: FieldType.STRING, // not adding a subtype as the phone number needs to be in NANP format and not a E164
+    type: FieldType.STRING,
     required: false,
     description:
       'Voice messages will appear to be coming from this phone number. If left blank, we will default to the callerID in your voice settings. Must be a valid North American Numbering Plan (NANP) phone number.',
@@ -59,9 +61,9 @@ export const fields = {
     id: 'phoneNumber',
     label: 'Phone Number',
     type: FieldType.STRING,
+    stringType: StringType.PHONE,
     required: true,
-    description:
-      'The primary phone number of the recipient. Must be a valid North American Numbering Plan (NANP) phone number.',
+    description: 'The primary phone number of the recipient in E.164 format',
   },
   checkCallingWindow: {
     id: 'checkCallingWindow',
@@ -149,7 +151,10 @@ export const FieldsSchema = z.object({
   startDate: z.string().optional(),
   maxMessageLength: z.number().optional(),
   callerID: z.string().optional(),
-  phoneNumber: z.string(),
+  phoneNumber: z.string().transform((phone) => {
+    const parsedNumber = parsePhoneNumber(phone)
+    return parsedNumber.format('NATIONAL') // Returns "(XXX) XXX-XXXX" NANP format
+  }),
   checkCallingWindow: z.boolean().optional(),
   continueOnNextDay: z.boolean().optional(),
   transferAndConnect: z
