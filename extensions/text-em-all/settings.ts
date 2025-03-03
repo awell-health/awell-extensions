@@ -23,20 +23,12 @@ export const settings = {
     required: true,
     description: 'Your Text-Em-All token.',
   },
-  baseUrl: {
-    label: 'Base URL',
-    key: 'baseUrl',
-    obfuscated: false,
-    required: true,
-    description: 'Your Text-Em-All base URL.',
-  },
 } satisfies Settings
 
 export const SettingsSchema = z.object({
   customerKey: z.string(),
   customerSecret: z.string(),
   token: z.string(),
-  baseUrl: z.string(),
 })
 
 export type ExtensionSettings = z.infer<typeof SettingsSchema>
