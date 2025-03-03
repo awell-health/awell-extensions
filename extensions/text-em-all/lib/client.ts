@@ -65,7 +65,6 @@ export class TextEmAllClient {
         throw new Error('Invalid OAuth header format')
       }
 
-      console.log('Text-em-all request headers', JSON.stringify(authHeader))
       config.headers.Authorization = authHeader.Authorization
       return config
     })
