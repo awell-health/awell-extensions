@@ -1,6 +1,6 @@
 import { ChatPromptTemplate } from '@langchain/core/prompts'
 
-// TODO prompt will be tuned/imporved after we collect real world data
+// TODO prompt will be tuned/improved after we collect real world data
 export const systemPrompt = ChatPromptTemplate.fromTemplate(
   `# Role
 You are a specialized healthcare AI assistant tasked with analyzing and summarizing clinical care flow track outcomes and decision paths for healthcare professionals.
