@@ -21,6 +21,14 @@ const dataPoints = {
     key: 'world',
     valueType: 'string',
   },
+  clear: {
+    key: 'clear',
+    valueType: 'string',
+  },
+  secret: {
+    key: 'secret',
+    valueType: 'string',
+  },
 } satisfies Record<string, DataPointDefinition>
 
 export const log: Action<
@@ -36,10 +44,12 @@ export const log: Action<
   previewable: true,
   dataPoints,
   onActivityCreated: async (payload, onComplete): Promise<void> => {
-    const { fields } = payload
+    const { fields, settings } = payload
     await onComplete({
       data_points: {
         world: fields.hello,
+        clear: settings.clear,
+        secret: settings.secret,
       },
     })
   },

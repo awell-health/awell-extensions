@@ -2,7 +2,7 @@ import { log } from '../'
 import { generateTestPayload } from '@/tests'
 
 describe('HelloWorld - log', () => {
-  test('Should call onComplete', async () => {
+  test('Should call onComplete with the correct data points', async () => {
     const onComplete = jest.fn()
     await log.onActivityCreated!(
       generateTestPayload({
@@ -10,13 +10,20 @@ describe('HelloWorld - log', () => {
           hello: 'Some text',
         },
         settings: {
+          clear: 'clear-value',
           secret: 'secret-value',
         },
       }),
       onComplete,
-      jest.fn()
+      jest.fn(),
     )
-    expect(onComplete).toHaveBeenCalled()
+    expect(onComplete).toHaveBeenCalledWith({
+      data_points: {
+        clear: 'clear-value',
+        secret: 'secret-value',
+        world: 'Some text',
+      },
+    })
   })
   test('Should call onComplete if fields are undefined', async () => {
     const onComplete = jest.fn()
@@ -26,11 +33,12 @@ describe('HelloWorld - log', () => {
           hello: undefined,
         },
         settings: {
+          clear: 'clear-value',
           secret: 'secret-value',
         },
       }),
       onComplete,
-      jest.fn()
+      jest.fn(),
     )
     expect(onComplete).toHaveBeenCalled()
   })
@@ -42,11 +50,12 @@ describe('HelloWorld - log', () => {
           hello: 'Some text',
         },
         settings: {
+          clear: undefined,
           secret: undefined,
         },
       }),
       onComplete,
-      jest.fn()
+      jest.fn(),
     )
     expect(onComplete).toHaveBeenCalled()
   })
