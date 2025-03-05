@@ -8,7 +8,7 @@ import { DISCLAIMER_MSG_FORM } from '../../lib/constants'
 
 jest.setTimeout(30000) // Increase timeout for real LLM calls
 
-describe('summarizeFormsInStep - Real OpenAI calls', () => {
+describe.skip('summarizeFormsInStep - Real OpenAI calls', () => {
   const { onComplete, onError, helpers, extensionAction, clearMocks } =
     TestHelpers.fromAction(summarizeFormsInStep)
 
