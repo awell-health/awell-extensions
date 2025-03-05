@@ -3,7 +3,6 @@
 import { TestHelpers } from '@awell-health/extensions-core'
 import { generateTestPayload } from '@/tests'
 import { summarizeFormsInStep } from '.'
-import { DISCLAIMER_MSG_FORM } from '../../lib/constants'
 import { mockMultipleFormsPathwayActivitiesResponse } from './__mocks__/multipleFormsPathwayActivitiesResponse'
 import {
   mockMultipleFormsDefinitionResponse1,
