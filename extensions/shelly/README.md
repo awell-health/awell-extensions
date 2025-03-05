@@ -14,3 +14,4 @@ Shelly is a library of AI-powered actions for enhancing workflow automation and 
 5. **generateMessage**: Generates personalized messages.
 6. **medicationFromImage**: Extracts medication information from images.
 7. **reviewMedicationExtraction**: Reviews and validates extracted medication information.
+8. **summarizeTrackOutcome**: Provides an AI-generated summary of track activities and overall track outcomes.
