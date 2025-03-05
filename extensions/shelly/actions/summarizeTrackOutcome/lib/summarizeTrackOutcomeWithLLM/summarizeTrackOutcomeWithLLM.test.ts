@@ -26,6 +26,41 @@ describe('summarizeTrackOutcomeWithLLM', () => {
     console.log('Current Activity ID:', currentActivityId)
     console.log('Tenant ID:', tenantId)
 
+    // Fetch pathway definition details
+    console.log('\n=== Fetching Pathway Definition Details ===')
+    const pathwayDetails = await awellSdk.orchestration.query({
+      pathway: {
+        __args: {
+          id: pathwayId,
+        },
+        code: true,
+        success: true,
+        pathway: {
+          id: true,
+          title: true,
+          pathway_definition_id: true,
+          release_id: true,
+          version: true,
+          status: true
+        },
+      },
+    })
+
+    console.log('\n=== Full Pathway Response ===')
+    console.log('Pathway response:', JSON.stringify(pathwayDetails, null, 2))
+
+    console.log('\n=== Pathway Definition Details ===')
+    console.log('Care Flow Title:', pathwayDetails.pathway?.pathway?.title)
+    console.log('Care Flow Definition ID:', pathwayDetails.pathway?.pathway?.pathway_definition_id)
+    console.log('Care Flow Version:', pathwayDetails.pathway?.pathway?.version)
+    console.log('Care Flow Release ID:', pathwayDetails.pathway?.pathway?.release_id)
+    console.log('Care Flow Status:', pathwayDetails.pathway?.pathway?.status)
+
+    // Print the disclaimer message that would be used
+    console.log('\n=== Disclaimer Message ===')
+    const disclaimerMsg = `Important Notice: The content provided is an AI-generated summary of Care Flow "${pathwayDetails.pathway?.pathway?.title ?? 'Unknown'}" (ID: ${pathwayDetails.pathway?.pathway?.pathway_definition_id ?? 'Unknown'}).`
+    console.log(disclaimerMsg)
+
     // Get real track data
     console.log('\n=== Fetching Track Data ===')
     const trackData = await getTrackData({
@@ -42,7 +77,7 @@ describe('summarizeTrackOutcomeWithLLM', () => {
     // Create metadata for the LLM
     const metadata: AIActionMetadata = {
       activity_id: currentActivityId,
-      care_flow_definition_id: '123',
+      care_flow_definition_id: pathwayDetails.pathway?.pathway?.pathway_definition_id ?? careFlowDefinitionId,
       care_flow_id: pathwayId,
       tenant_id: tenantId,
       track_id: trackId,
@@ -82,5 +117,9 @@ describe('summarizeTrackOutcomeWithLLM', () => {
     // Log the actual summary for manual review
     console.log('\n=== Generated Summary ===')
     console.log(summary)
+
+    // Test the complete output with disclaimer
+    console.log('\n=== Complete Output (with Disclaimer) ===')
+    console.log(`${disclaimerMsg}\n\n${summary}`)
   }, 30000) // Increased timeout for real API calls
 }) 

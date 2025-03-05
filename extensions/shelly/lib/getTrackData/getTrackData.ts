@@ -1,5 +1,6 @@
 import { type AwellSdk } from '@awell-health/awell-sdk'
 
+// TODO: This will be improved / solved more elegantly once we see what actual data we need to get
 interface GetTrackDataInput {
   awellSdk: AwellSdk
   pathwayId: string

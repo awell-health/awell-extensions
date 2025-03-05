@@ -1,9 +1,8 @@
 import { Category, type Action } from '@awell-health/extensions-core'
 import { type Activity } from '@awell-health/awell-sdk'
 import { fields, dataPoints, FieldsValidationSchema } from './config'
-import { DISCLAIMER_MSG } from '../../lib/constants'
-import { summarizeTrackOutcomeWithLLM } from './lib/summarizeTrackOutcomeWithLLM'
 import { markdownToHtml } from '../../../../src/utils'
+import { summarizeTrackOutcomeWithLLM } from './lib/summarizeTrackOutcomeWithLLM'
 import { createOpenAIModel } from '../../../../src/lib/llm/openai'
 import { OPENAI_MODELS } from '../../../../src/lib/llm/openai/constants'
 import { getTrackData } from '../../lib/getTrackData/index'
@@ -15,7 +14,7 @@ export const summarizeTrackOutcome: Action<
 > = {
   key: 'summarizeTrackOutcome',
   category: Category.WORKFLOW,
-  title: 'Summarize Track Outcome',
+  title: 'Summarize Track Outcome (Beta)',
   description: 'Summarize the care flow track outcome and decision path',
   fields,
   previewable: false,
@@ -37,6 +36,22 @@ export const summarizeTrackOutcome: Action<
 
     const awellSdk = await helpers.awellSdk()
 
+    // Get pathway details for the disclaimer
+    const pathwayDetails = await awellSdk.orchestration.query({
+      pathway: {
+        __args: {
+          id: pathway.id,
+        },
+        code: true,
+        success: true,
+        pathway: {
+          id: true,
+          title: true,
+          pathway_definition_id: true,
+        },
+      },
+    })
+
     // 3. Get track data including forms and decision path
     const trackData = await getTrackData({
       awellSdk,
@@ -53,7 +68,9 @@ export const summarizeTrackOutcome: Action<
       callbacks,
     })
 
-    const htmlSummary = await markdownToHtml(`${DISCLAIMER_MSG}\n\n${summary}`)
+    const disclaimerMsg = `Important Notice: The content provided is an AI-generated summary of Care Flow "${pathwayDetails.pathway?.pathway?.title ?? 'Unknown'}" (ID: ${pathwayDetails.pathway?.pathway?.pathway_definition_id ?? 'Unknown'}).`
+
+    const htmlSummary = await markdownToHtml(`${disclaimerMsg}\n\n${summary}`)
 
     await onComplete({
       data_points: {
