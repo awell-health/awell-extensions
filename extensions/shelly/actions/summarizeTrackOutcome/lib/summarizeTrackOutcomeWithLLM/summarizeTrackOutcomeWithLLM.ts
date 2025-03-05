@@ -20,19 +20,19 @@ import { systemPrompt } from './prompt'
  */
 export const summarizeTrackOutcomeWithLLM = async ({
   model,
-  careFlowActivities,
+  trackActivities,
   instructions = '',
   metadata,
   callbacks,
 }: {
   model: ChatOpenAI
-  careFlowActivities: string
+  trackActivities: string
   instructions?: string
   metadata: AIActionMetadata
   callbacks?: BaseCallbackHandler[]
 }): Promise<string> => {
   const messages = await systemPrompt.formatMessages({
-    input: careFlowActivities,
+    input: trackActivities,
     instructions,
   })
 

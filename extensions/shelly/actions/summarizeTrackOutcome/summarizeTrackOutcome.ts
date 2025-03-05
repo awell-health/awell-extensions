@@ -47,7 +47,7 @@ export const summarizeTrackOutcome: Action<
 
     const summary = await summarizeTrackOutcomeWithLLM({
       model,
-      careFlowActivities: JSON.stringify(trackData, null, 2),
+      trackActivities: JSON.stringify(trackData, null, 2),
       instructions,
       metadata,
       callbacks,

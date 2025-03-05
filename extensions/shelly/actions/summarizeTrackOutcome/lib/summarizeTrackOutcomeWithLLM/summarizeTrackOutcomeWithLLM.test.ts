@@ -14,9 +14,9 @@ describe('summarizeTrackOutcomeWithLLM', () => {
     })
 
     // Replace these with actual IDs from your development environment
-    const pathwayId = process.env.TEST_PATHWAY_ID ?? '2j8WrgtxgR0a'
-    const trackId = process.env.TEST_TRACK_ID ?? 'xhhtqphVOhsv'
-    const currentActivityId = process.env.TEST_ACTIVITY_ID ?? 'meYKu8o7jcA9xKGCpSy6d'
+    const pathwayId = process.env.TEST_PATHWAY_ID ?? 'xQ2P4uBn2cY8'
+    const trackId = process.env.TEST_TRACK_ID ?? 'C6f7O9cDWZIP'
+    const currentActivityId = process.env.TEST_ACTIVITY_ID ?? '2XomvSblmj7ZQUklvdpPE'
     const careFlowDefinitionId = process.env.TEST_CARE_FLOW_DEFINITION_ID ?? '123'
     const tenantId = process.env.TEST_TENANT_ID ?? '123'
 
@@ -24,7 +24,6 @@ describe('summarizeTrackOutcomeWithLLM', () => {
     console.log('Pathway ID:', pathwayId)
     console.log('Track ID:', trackId)
     console.log('Current Activity ID:', currentActivityId)
-    console.log('Care Flow Definition ID:', careFlowDefinitionId)
     console.log('Tenant ID:', tenantId)
 
     // Get real track data
@@ -36,36 +35,29 @@ describe('summarizeTrackOutcomeWithLLM', () => {
       currentActivityId,
     })
 
-    console.log('\n=== Track Information ===')
-    console.log('Track:', JSON.stringify(trackData.track, null, 2))
-    
-    console.log('\n=== Steps Information ===')
-    console.log('Steps:', JSON.stringify(trackData.steps, null, 2))
-    
-    console.log('\n=== Activities Information ===')
-    console.log('Activities:', JSON.stringify(trackData.activities, null, 2))
-    
-    console.log('\n=== Decision Path ===')
-    console.log('Decision Path:', JSON.stringify(trackData.decisionPath, null, 2))
+    // Log the cleaned track data
+    console.log('\n=== Cleaned Track Data ===')
+    console.log(JSON.stringify(trackData, null, 2))
 
-    // Create OpenAI model instance
-    const model = new ChatOpenAI({
-      modelName: 'gpt-4o',
-      temperature: 0,
-    })
-
-    // Create proper metadata object
+    // Create metadata for the LLM
     const metadata: AIActionMetadata = {
       activity_id: currentActivityId,
-      care_flow_definition_id: careFlowDefinitionId,
+      care_flow_definition_id: '123',
       care_flow_id: pathwayId,
       tenant_id: tenantId,
       track_id: trackId,
-      step_id: trackData.activities[0]?.context?.step_id ?? '',
+      step_id: '',
       action_id: currentActivityId,
-      org_slug: process.env.TEST_ORG_SLUG ?? '',
-      org_id: process.env.TEST_ORG_ID ?? '',
+      org_slug: '',
+      org_id: '',
     }
+
+    // Initialize the LLM model
+    const model = new ChatOpenAI({
+      openAIApiKey: process.env.OPENAI_API_KEY,
+      modelName: 'gpt-4o',
+      temperature: 0,
+    })
 
     console.log('\n=== Metadata ===')
     console.log('Metadata:', JSON.stringify(metadata, null, 2))
@@ -74,7 +66,7 @@ describe('summarizeTrackOutcomeWithLLM', () => {
     console.log('\n=== Generating Summary ===')
     const summary = await summarizeTrackOutcomeWithLLM({
       model,
-      careFlowActivities: JSON.stringify(trackData.activities),
+      trackActivities: JSON.stringify(trackData),
       instructions: 'Please provide a detailed summary of the track outcome and decision path.',
       metadata,
       callbacks: [],
