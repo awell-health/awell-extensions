@@ -71,7 +71,25 @@ describe.skip('summarizeTrackOutcome - Real LLM calls with mocked Awell SDK', ()
     // Mock the Awell SDK to return pathway details
     const awellSdkMock = {
       orchestration: {
-        query: jest.fn().mockResolvedValue(mockPathwayDetails)
+        query: jest.fn()
+          .mockImplementation(({ activity, pathway }) => {
+            if (activity) {
+              return Promise.resolve({
+                activity: {
+                  success: true,
+                  activity: {
+                    id: 'test-activity-id',
+                    context: {
+                      track_id: 'test-track-id'
+                    }
+                  }
+                }
+              })
+            }
+            if (pathway) {
+              return Promise.resolve(mockPathwayDetails)
+            }
+          })
       },
     }
     helpers.awellSdk = jest.fn().mockResolvedValue(awellSdkMock)

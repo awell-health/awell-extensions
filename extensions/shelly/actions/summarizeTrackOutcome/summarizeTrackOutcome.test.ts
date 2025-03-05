@@ -82,7 +82,25 @@ describe('summarizeTrackOutcome - Mocked LLM calls', () => {
 
     const awellSdkMock = {
       orchestration: {
-        query: jest.fn().mockResolvedValue(mockPathwayDetails)
+        query: jest.fn()
+          .mockImplementation(({ activity, pathway }) => {
+            if (activity) {
+              return Promise.resolve({
+                activity: {
+                  success: true,
+                  activity: {
+                    id: 'test-activity-id',
+                    context: {
+                      track_id: 'test-track-id'
+                    }
+                  }
+                }
+              })
+            }
+            if (pathway) {
+              return Promise.resolve(mockPathwayDetails)
+            }
+          })
       },
     }
 
@@ -162,7 +180,25 @@ describe('summarizeTrackOutcome - Mocked LLM calls', () => {
     
     const awellSdkMock = {
       orchestration: {
-        query: jest.fn().mockResolvedValue(mockPathwayDetails)
+        query: jest.fn()
+          .mockImplementation(({ activity, pathway }) => {
+            if (activity) {
+              return Promise.resolve({
+                activity: {
+                  success: true,
+                  activity: {
+                    id: 'test-activity-id',
+                    context: {
+                      track_id: 'test-track-id'
+                    }
+                  }
+                }
+              })
+            }
+            if (pathway) {
+              return Promise.resolve(mockPathwayDetails)
+            }
+          })
       },
     }
     helpers.awellSdk = jest.fn().mockResolvedValue(awellSdkMock)
