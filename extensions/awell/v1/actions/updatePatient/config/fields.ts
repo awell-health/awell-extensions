@@ -7,6 +7,7 @@ import { z, type ZodTypeAny } from 'zod'
 import { formatISO } from 'date-fns'
 import { Sex } from '../../../gql/graphql'
 import { E164PhoneValidationOptionalSchema } from '@awell-health/extensions-core'
+import { getTimezoneOptions } from './getTimezones'
 
 const SexEnum = z.enum([Sex.Female, Sex.Male, Sex.NotKnown])
 
@@ -115,6 +116,15 @@ export const fields = {
     type: FieldType.STRING,
     required: false,
   },
+  patientTimzone: {
+    id: 'patientTimzone',
+    label: 'Patient timezone',
+    type: FieldType.STRING,
+    required: false,
+    options: {
+      dropdownOptions: getTimezoneOptions(),
+    },
+  },
 } satisfies Record<string, Field>
 
 export const FieldsValidationSchema = z.object({
@@ -123,7 +133,7 @@ export const FieldsValidationSchema = z.object({
   lastName: z.optional(z.string().trim()),
   birthDate: z.optional(z.coerce.date().transform((date) => formatISO(date))),
   email: z.optional(
-    z.string().trim().email('Value passed is not an email address')
+    z.string().trim().email('Value passed is not an email address'),
   ),
   phone: E164PhoneValidationOptionalSchema,
   mobilePhone: E164PhoneValidationOptionalSchema,
@@ -135,4 +145,19 @@ export const FieldsValidationSchema = z.object({
   preferredLanguage: z.optional(z.string().trim()),
   sex: z.optional(z.preprocess((v) => String(v).toUpperCase(), SexEnum)),
   nationalRegistryNumber: z.string().trim().optional(),
+  patientTimzone: z.optional(
+    z
+      .string()
+      .trim()
+      .refine((tz) => {
+        try {
+          return (
+            Intl.DateTimeFormat(undefined, { timeZone: tz }).resolvedOptions()
+              .timeZone === tz
+          )
+        } catch {
+          return false
+        }
+      }, 'Invalid timezone. Must be a valid IANA timezone format'),
+  ),
 } satisfies Record<keyof typeof fields, ZodTypeAny>)

@@ -1,5 +1,4 @@
 /* eslint-disable */
-import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core'
 export type Maybe<T> = T | null
 export type InputMaybe<T> = Maybe<T>
 export type Exact<T extends { [key: string]: unknown }> = {
@@ -13,7 +12,7 @@ export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & {
 }
 export type MakeEmpty<
   T extends { [key: string]: unknown },
-  K extends keyof T
+  K extends keyof T,
 > = { [_ in K]?: never }
 export type Incremental<T> =
   | T
@@ -1358,6 +1357,7 @@ export type PatientProfileInput = {
   preferred_language?: InputMaybe<Scalars['String']['input']>
   /** Sex code as defined by ISO standard IEC_5218, 0 - NOT_KNOWN, 1 - MALE, 2 - FEMALE */
   sex?: InputMaybe<Sex>
+  patient_timezone?: InputMaybe<Scalars['String']['input']>
 }
 
 export type PatientsPayload = PaginationAndSortingPayload & {
