@@ -169,7 +169,7 @@ describe.skip('findAppointmentsWithAI - Real OpenAI calls', () => {
     findAppointments.mockResolvedValueOnce(appointments)
 
     await extensionAction.onEvent({
-      payload: generatePayload('Find scheduled appointments'),
+      payload: generatePayload('Find appointments with status "Scheduled"'),
       onComplete,
       onError,
       helpers,
@@ -200,12 +200,13 @@ describe.skip('findAppointmentsWithAI - Real OpenAI calls', () => {
     findAppointments.mockResolvedValueOnce(appointments)
 
     await extensionAction.onEvent({
-      payload: generatePayload('Find appointments after December 2023'),
+      payload: generatePayload('Find all appointments', 'After December 2023'),
       onComplete,
       onError,
       helpers,
     })
 
+    expect(onComplete).toHaveBeenCalledTimes(1)
     const data_points = (onComplete.mock.calls[0][0] as any).data_points
     const foundAppointments = JSON.parse(data_points.appointments)
     const explanation = data_points.explanation
@@ -231,7 +232,7 @@ describe.skip('findAppointmentsWithAI - Real OpenAI calls', () => {
     findAppointments.mockResolvedValueOnce(appointments)
 
     await extensionAction.onEvent({
-      payload: generatePayload('Find appointments in 2024'),
+      payload: generatePayload('Find all appointments', 'In 2024'),
       onComplete,
       onError,
       helpers,
@@ -262,7 +263,7 @@ describe.skip('findAppointmentsWithAI - Real OpenAI calls', () => {
     findAppointments.mockResolvedValueOnce(appointments)
 
     await extensionAction.onEvent({
-      payload: generatePayload('Find appointments in the next 24 hours'),
+      payload: generatePayload('Find all appointments', 'In the next 24 hours'),
       onComplete,
       onError,
       helpers,

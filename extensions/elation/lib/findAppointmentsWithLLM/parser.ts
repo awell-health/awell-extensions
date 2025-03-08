@@ -6,12 +6,11 @@ export const AppointmentsSchema = z.array(z.coerce.number())
 export const parser = StructuredOutputParser.fromZodSchema(
   z.object({
     appointmentIds: AppointmentsSchema,
-    explanation: z
-      .string()
-  })
+    explanation: z.string(),
+  }),
 )
 
 export interface AppointmentsFromLLM {
   appointmentIds: number[]
   explanation: string
-} 
+}
