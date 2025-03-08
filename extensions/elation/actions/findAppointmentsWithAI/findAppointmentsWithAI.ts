@@ -8,7 +8,9 @@ import { FieldsValidationSchema, fields, dataPoints } from './config'
 import { getAppointmentCountsByStatus } from './getAppoitnmentCountByStatus'
 import { findAppointmentsWithLLM } from '../../lib/findAppointmentsWithLLM/findAppointmentsWithLLM'
 import { markdownToHtml } from '../../../../src/utils'
-
+import { isAfter, isBefore, parseISO } from 'date-fns'
+import { extractDatesFromInstructions } from '../../lib/extractDatesFromInstructions/extractDatesFromInstructions'
+import { type DateFilterFromLLM } from '../../lib/extractDatesFromInstructions/parser'
 
 export const findAppointmentsWithAI: Action<
   typeof fields,
@@ -23,25 +25,9 @@ export const findAppointmentsWithAI: Action<
   previewable: false,
   dataPoints,
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
-    const { prompt, patientId } = FieldsValidationSchema.parse(payload.fields)
+    const { prompt, patientId, dateFilterPrompt } =
+      FieldsValidationSchema.parse(payload.fields)
     const api = makeAPIClient(payload.settings)
-
-    // First fetch all appointments for the patient
-    const appointments = await api.findAppointments({
-      patient: patientId,
-    })
-
-    // Early return if no appointments found
-    if (isNil(appointments) || appointments.length === 0) {
-      await onComplete({
-        data_points: {
-          explanation: 'No appointments found',
-          appointments: JSON.stringify([]),
-          appointmentCountsByStatus: JSON.stringify({}),
-        },
-      })
-      return
-    }
 
     try {
       // Initialize OpenAI model for natural language processing
@@ -50,6 +36,36 @@ export const findAppointmentsWithAI: Action<
         helpers,
         payload,
       })
+
+      let dateFilter: DateFilterFromLLM = {
+        from: undefined,
+        to: undefined,
+      }
+      if (!isNil(dateFilterPrompt)) {
+        dateFilter = await extractDatesFromInstructions({
+          model,
+          prompt: dateFilterPrompt,
+          metadata,
+          callbacks,
+        })
+      }
+
+      // First fetch all appointments for the patient
+      const appointments = await api.findAppointments({
+        patient: patientId,
+      })
+
+      // Early return if no appointments found
+      if (isNil(appointments) || appointments.length === 0) {
+        await onComplete({
+          data_points: {
+            explanation: 'No appointments found',
+            appointments: JSON.stringify([]),
+            appointmentCountsByStatus: JSON.stringify({}),
+          },
+        })
+        return
+      }
 
       // Use LLM to find appointments matching the user's natural language prompt
       const { appointmentIds, explanation } = await findAppointmentsWithLLM({
@@ -63,8 +79,19 @@ export const findAppointmentsWithAI: Action<
       const htmlExplanation = await markdownToHtml(explanation)
 
       // Filter appointments based on LLM's selection
-      const selectedAppointments = appointments.filter((appointment) =>
-        appointmentIds.includes(appointment.id),
+      const selectedAppointments = appointments.filter(
+        (appointment) =>
+          appointmentIds.includes(appointment.id) &&
+          (isNil(dateFilter.from) ||
+            isAfter(
+              parseISO(appointment.scheduled_date),
+              parseISO(dateFilter.from),
+            )) &&
+          (isNil(dateFilter.to) ||
+            isBefore(
+              parseISO(appointment.scheduled_date),
+              parseISO(dateFilter.to),
+            )),
       )
 
       const appointmentCountsByStatus =

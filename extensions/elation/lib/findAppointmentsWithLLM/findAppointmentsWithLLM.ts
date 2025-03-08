@@ -1,6 +1,6 @@
 import { type ChatOpenAI } from '@langchain/openai'
 import { type AIActionMetadata } from '../../../../src/lib/llm/openai/types'
-import type { BaseCallbackHandler } from "@langchain/core/callbacks/base"
+import type { BaseCallbackHandler } from '@langchain/core/callbacks/base'
 import { systemPrompt } from './prompt'
 import { parser, type AppointmentsFromLLM } from './parser'
 import { type AppointmentResponse } from '../../types'
@@ -23,23 +23,23 @@ export const findAppointmentsWithLLM = async ({
 
   try {
     const formattedAppointments = JSON.stringify(appointments)
-    
+
     const result = await chain.invoke(
       await systemPrompt.format({
         currentDateTime: new Date().toISOString(),
         appointments: formattedAppointments,
         prompt,
       }),
-      { 
-        metadata, 
+      {
+        metadata,
         runName: 'ElationFindAppointmentsWithLLM',
-        callbacks
-      }
+        callbacks,
+      },
     )
 
     return {
       appointmentIds: result.appointmentIds,
-      explanation: result.explanation
+      explanation: result.explanation,
     }
   } catch (error) {
     throw new Error('Failed to find matching appointments.')
