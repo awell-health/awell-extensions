@@ -110,6 +110,7 @@ __metadata:
     "@types/crypto-js": "npm:^4.2.2"
     "@types/docusign-esign": "npm:^5.19.0"
     "@types/express": "npm:^4.17.19"
+    "@types/faker": "npm:^6"
     "@types/jest": "npm:^29.5.14"
     "@types/jsdom": "npm:^21.1.7"
     "@types/json-schema": "npm:^7.0.15"
@@ -144,6 +145,7 @@ __metadata:
     eslint-plugin-n: "npm:^15.6.1"
     eslint-plugin-promise: "npm:^6.1.1"
     express: "npm:^4.18.2"
+    faker: "npm:^6.6.6"
     form-data: "npm:^4.0.0"
     graphql: "npm:^16.8.1"
     graphql-request: "npm:5.1.0"
@@ -2773,6 +2775,15 @@ __metadata:
     "@types/qs": "npm:*"
     "@types/serve-static": "npm:*"
   checksum: 10/7a6d26cf6f43d3151caf4fec66ea11c9d23166e4f3102edfe45a94170654a54ea08cf3103d26b3928d7ebcc24162c90488e33986b7e3a5f8941225edd5eb18c7
+  languageName: node
+  linkType: hard
+
+"@types/faker@npm:^6":
+  version: 6.6.8
+  resolution: "@types/faker@npm:6.6.8"
+  dependencies:
+    faker: "npm:*"
+  checksum: 10/21267dcb169acc9e424018d692c8eb60ff97c5d81d2c02de8f68f3a1f0397d7b7e28117c8b089760cb278ccb313c0d6c28b5a5673bcd56dc81a92e864f31f19d
   languageName: node
   linkType: hard
 
@@ -6243,6 +6254,13 @@ __metadata:
   version: 9.0.0
   resolution: "extract-files@npm:9.0.0"
   checksum: 10/0ad2f94ef5d7b7da1e5c20428ca08d02d70654af8d3a2c9fd4c1af4c2498b4ab11b9d93f11755348d89d477ce18aa408f22b8875de22fa82d8f166a59a52b06c
+  languageName: node
+  linkType: hard
+
+"faker@npm:*, faker@npm:^6.6.6":
+  version: 6.6.6
+  resolution: "faker@npm:6.6.6"
+  checksum: 10/bfb0d581ab4d76095f2c6bff213fe1735ce077f0f8df849c144ad26035e105bce1b7a704cc030366338c52e25b636ac097a712426a78c9b8804af78f6f2bffe7
   languageName: node
   linkType: hard
 
