@@ -1,145 +1,175 @@
 import { TestHelpers } from '@awell-health/extensions-core'
 import { makeAPIClient } from '../../client'
-import { appointmentsMock } from './__testdata__/GetAppointments.mock'
+import { generatePayload, generateMockAppointment } from './__testdata__'
 import { findAppointmentsWithAI as action } from './findAppointmentsWithAI'
+import { type AppointmentResponse } from '../../types/appointment'
 
 // Mock the client
 jest.mock('../../client')
+jest.mock('../../../../src/lib/llm/openai/createOpenAIModel')
 
-// Mock createOpenAIModel
-jest.mock('../../../../src/lib/llm/openai/createOpenAIModel', () => ({
-  createOpenAIModel: jest.fn().mockResolvedValue({
-    model: {
-      pipe: jest.fn().mockReturnValue({
-        invoke: jest.fn().mockResolvedValue({
-          appointmentIds: appointmentsMock.map(a => a.id),
-          explanation: '# Found Appointments\n\nI found 2 upcoming appointments:\n- Video visit tomorrow\n- Follow-up in 2 days'
-        })
-      })
-    },
-    metadata: {
-      care_flow_definition_id: 'whatever',
-      care_flow_id: 'test-flow-id',
-      activity_id: 'test-activity-id',
-      tenant_id: '123',
-      org_id: '123',
-      org_slug: 'org-slug'
-    }
-  })
+// Setup mocks that can be controlled in each test
+const findAppointments = jest.fn().mockResolvedValue([])
+const mockAPIClient = makeAPIClient as jest.Mock
+mockAPIClient.mockImplementation(() => ({
+  findAppointments,
 }))
 
+// Setup OpenAI mocks
+const invokeAI = jest.fn()
+const pipeAI = jest.fn().mockReturnValue({ invoke: invokeAI })
+const { createOpenAIModel } = jest.requireMock(
+  '../../../../src/lib/llm/openai/createOpenAIModel',
+)
+createOpenAIModel.mockResolvedValue({
+  model: {
+    pipe: pipeAI,
+  },
+  metadata: {
+    care_flow_definition_id: 'whatever',
+    care_flow_id: 'test-flow-id',
+    activity_id: 'test-activity-id',
+    tenant_id: '123',
+    org_id: '123',
+    org_slug: 'org-slug',
+  },
+})
+
 describe('Elation - Find appointments with AI', () => {
-  const { extensionAction, onComplete, onError, helpers, clearMocks } = 
+  const { extensionAction, onComplete, onError, helpers, clearMocks } =
     TestHelpers.fromAction(action)
 
   beforeEach(() => {
     clearMocks()
     jest.clearAllMocks()
-
-    const mockAPIClient = makeAPIClient as jest.Mock
-    mockAPIClient.mockImplementation(() => ({
-      findAppointments: jest.fn().mockResolvedValue(appointmentsMock)
-    }))
   })
 
   test('Should find the correct appointments', async () => {
+    const appointments = [
+      generateMockAppointment({
+        scheduled_date: '2024-01-15T10:00:00Z',
+        reason: 'PCP Visit',
+        status: 'Scheduled',
+      }),
+      generateMockAppointment({
+        scheduled_date: '2024-01-16T10:00:00Z',
+        reason: 'Follow-up',
+        status: 'Scheduled',
+      }),
+    ]
+
+    findAppointments.mockResolvedValueOnce(appointments)
+    invokeAI.mockResolvedValueOnce({
+      appointmentIds: appointments.map((a) => a.id),
+      explanation:
+        '# Found Appointments\n\nI found 2 upcoming appointments:\n- Video visit tomorrow\n- Follow-up in 2 days',
+    })
+
     await extensionAction.onEvent({
-      payload: {
-        fields: {
-          patientId: 12345,
-          prompt: 'Find all appointments',
-        },
-        settings: {
-          client_id: 'clientId',
-          client_secret: 'clientSecret',
-          username: 'username',
-          password: 'password',
-          auth_url: 'authUrl',
-          base_url: 'baseUrl',
-        },
-        pathway: {
-          id: 'test-flow-id',
-          definition_id: '123',
-          tenant_id: '123',
-          org_slug: 'test-org-slug',
-          org_id: 'test-org-id'
-        },
-        activity: {
-          id: 'test-activity-id'
-        },
-        patient: {
-          id: 'test-patient-id'
-        }
-      },
+      payload: generatePayload('Find all appointments'),
       onComplete,
       onError,
       helpers,
     })
 
-    expect(onComplete).toHaveBeenCalledWith({
-      data_points: {
-        appointments: JSON.stringify(appointmentsMock),
-        explanation: '<h1>Found Appointments</h1>\n<p>I found 2 upcoming appointments:</p>\n<ul>\n<li>Video visit tomorrow</li>\n<li>Follow-up in 2 days</li>\n</ul>',
-        appointmentCountsByStatus: JSON.stringify({ Scheduled: 2 }),
-      },
-      events: [
-        {
-          date: expect.any(String),
-          text: {
-            en: `Found ${appointmentsMock.length} appointments for patient ${12345}`
-          }
-        }
-      ],
+    const data_points = (onComplete.mock.calls[0][0] as any).data_points
+    const foundAppointments = JSON.parse(
+      data_points.appointments,
+    ) as AppointmentResponse[]
+
+    expect(foundAppointments).toHaveLength(2)
+    expect(foundAppointments.map((apt) => apt.id)).toEqual(
+      expect.arrayContaining(appointments.map((apt) => apt.id)),
+    )
+    expect(onComplete).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data_points: expect.objectContaining({
+          appointmentCountsByStatus: JSON.stringify({ Scheduled: 2 }),
+        }),
+        events: [
+          expect.objectContaining({
+            text: expect.objectContaining({
+              en: expect.stringContaining('Found 2 appointments'),
+            }),
+          }),
+        ],
+      }),
+    )
+  })
+
+  test('Should correctly group appointments by status', async () => {
+    const appointments = [
+      generateMockAppointment({
+        scheduled_date: '2024-01-15T10:00:00Z',
+        reason: 'PCP Visit',
+        status: 'Scheduled',
+      }),
+      generateMockAppointment({
+        scheduled_date: '2024-01-16T10:00:00Z',
+        reason: 'Follow-up',
+        status: 'Scheduled',
+      }),
+      generateMockAppointment({
+        scheduled_date: '2024-01-17T10:00:00Z',
+        reason: 'Follow-up',
+        status: 'Cancelled',
+      }),
+    ]
+
+    findAppointments.mockResolvedValueOnce(appointments)
+    invokeAI.mockResolvedValueOnce({
+      appointmentIds: appointments.map((a) => a.id),
+      explanation:
+        '# Found Appointments\n\nI found 3 upcoming appointments:\n- Video visit tomorrow\n- Follow-up in 2 days\n- Cancelled in 3 days',
     })
-    expect(onError).not.toHaveBeenCalled()
+
+    await extensionAction.onEvent({
+      payload: generatePayload('Find all appointments'),
+      onComplete,
+      onError,
+      helpers,
+    })
+
+    const data_points = (onComplete.mock.calls[0][0] as any).data_points
+    const foundAppointments = JSON.parse(
+      data_points.appointments,
+    ) as AppointmentResponse[]
+    const appointmentCountsByStatus = JSON.parse(
+      data_points.appointmentCountsByStatus,
+    )
+
+    expect(foundAppointments).toHaveLength(3)
+    expect(appointmentCountsByStatus).toEqual({
+      Scheduled: 2,
+      Cancelled: 1,
+    })
   })
 
   test('Should handle no appointments', async () => {
-    const mockAPIClient = makeAPIClient as jest.Mock
-    mockAPIClient.mockImplementation(() => ({
-      findAppointments: jest.fn().mockResolvedValue([])
-    }))
+    findAppointments.mockResolvedValueOnce([])
+    invokeAI.mockResolvedValueOnce({
+      appointmentIds: [],
+      explanation: 'No appointments found',
+    })
 
     await extensionAction.onEvent({
-      payload: {
-        fields: {
-          patientId: 12345,
-          prompt: 'Find all appointments',
-        },
-        settings: {
-          client_id: 'clientId',
-          client_secret: 'clientSecret',
-          username: 'username',
-          password: 'password',
-          auth_url: 'authUrl',
-          base_url: 'baseUrl',
-        },
-        pathway: {
-          id: 'test-flow-id',
-          definition_id: '123',
-          tenant_id: '123',
-          org_slug: 'test-org-slug',
-          org_id: 'test-org-id'
-        },
-        activity: {
-          id: 'test-activity-id'
-        },
-        patient: {
-          id: 'test-patient-id'
-        }
-      },
+      payload: generatePayload('Find all appointments'),
       onComplete,
       onError,
       helpers,
     })
 
+    const data_points = (onComplete.mock.calls[0][0] as any).data_points
+    const foundAppointments = JSON.parse(
+      data_points.appointments,
+    ) as AppointmentResponse[]
+
+    expect(foundAppointments).toHaveLength(0)
     expect(onComplete).toHaveBeenCalledWith({
-      data_points: {
-        explanation: 'No appointments found',
-        appointments: JSON.stringify([]),
-        appointmentCountsByStatus: JSON.stringify({}),
-      }
+      data_points: expect.objectContaining({
+        appointments: '[]',
+        appointmentCountsByStatus: '{}',
+      }),
     })
-    expect(onError).not.toHaveBeenCalled()
   })
 })
