@@ -11,6 +11,7 @@ import { markdownToHtml } from '../../../../src/utils'
 import { isAfter, isBefore, parseISO } from 'date-fns'
 import { extractDatesFromInstructions } from '../../lib/extractDatesFromInstructions/extractDatesFromInstructions'
 import { type DateFilterFromLLM } from '../../lib/extractDatesFromInstructions/parser'
+import { OPENAI_MODELS } from '../../../../src/lib/llm/openai/constants'
 
 export const findAppointmentsWithAI: Action<
   typeof fields,
@@ -32,7 +33,8 @@ export const findAppointmentsWithAI: Action<
     try {
       // Initialize OpenAI model for natural language processing
       const { model, metadata, callbacks } = await createOpenAIModel({
-        settings: {}, // we use built-in API key for OpenAI
+        modelType: OPENAI_MODELS.GPT4o, // GPT4oMini is not reliable enough to work with dates.
+        settings: {},
         helpers,
         payload,
       })
@@ -59,7 +61,7 @@ export const findAppointmentsWithAI: Action<
       if (isNil(appointments) || appointments.length === 0) {
         await onComplete({
           data_points: {
-            explanation: 'No appointments found',
+            explanation: 'No appointments found for the given patient',
             appointments: JSON.stringify([]),
             appointmentCountsByStatus: JSON.stringify({}),
           },
@@ -97,17 +99,37 @@ export const findAppointmentsWithAI: Action<
       const appointmentCountsByStatus =
         getAppointmentCountsByStatus(selectedAppointments)
 
+      const events = [
+        addActivityEventLog({
+          message: `Found ${appointmentIds.length} appointments for patient ${patientId} that match the search instructions.`,
+        }),
+      ]
+      if (!isNil(dateFilter.from) && !isNil(dateFilter.to)) {
+        events.push(
+          addActivityEventLog({
+            message: `Narrowed down to ${selectedAppointments.length} appointments scheduled between ${dateFilter.from} and ${dateFilter.to}.`,
+          }),
+        )
+      } else if (!isNil(dateFilter.from)) {
+        events.push(
+          addActivityEventLog({
+            message: `Narrowed down to ${selectedAppointments.length} appointments scheduled after ${dateFilter.from}.`,
+          }),
+        )
+      } else if (!isNil(dateFilter.to)) {
+        events.push(
+          addActivityEventLog({
+            message: `Narrowed down to ${selectedAppointments.length} appointments scheduled before ${dateFilter.to}.`,
+          }),
+        )
+      }
       await onComplete({
         data_points: {
           appointments: JSON.stringify(selectedAppointments),
           explanation: htmlExplanation,
           appointmentCountsByStatus: JSON.stringify(appointmentCountsByStatus),
         },
-        events: [
-          addActivityEventLog({
-            message: `Found ${selectedAppointments.length} appointments for patient ${patientId}`,
-          }),
-        ],
+        events,
       })
     } catch (error) {
       await onError({

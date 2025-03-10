@@ -37,6 +37,10 @@ export const extractDatesFromInstructions = async ({
       to: result.to,
     }
   } catch (error) {
-    throw new Error('Failed to extract dates from instructions.')
+    throw new Error(
+      `Failed to extract dates from instructions. LLM reported error: ${
+        error instanceof Error ? error.message : 'Unknown error'
+      }`,
+    )
   }
 }

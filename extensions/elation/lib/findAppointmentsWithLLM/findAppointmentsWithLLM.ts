@@ -42,6 +42,10 @@ export const findAppointmentsWithLLM = async ({
       explanation: result.explanation,
     }
   } catch (error) {
-    throw new Error('Failed to find matching appointments.')
+    throw new Error(
+      `Failed to find matching appointments. LLM reported error: ${
+        error instanceof Error ? error.message : 'Unknown error'
+      }`,
+    )
   }
 }

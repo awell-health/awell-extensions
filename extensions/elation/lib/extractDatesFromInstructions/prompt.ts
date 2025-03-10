@@ -21,7 +21,7 @@ Your output must be a valid JSON object with the following fields:
 - to: The upper boundary of the period that the instructions describe.
 
 ## Critical Requirements
-- Use the ISO 8601 format for the dates, with millisecond precision and the UTC timezone. For example: 2025-01-01T00:00:00.000Z.
+- Use the ISO 8601 format for the dates, with second precision and the UTC timezone. For example: 2025-01-01T00:00:00Z.
 - If the instructions do not require an upper or lower boundary, set the corresponding value to null.
 - If the instructions describe a period relative to the current date but do not explicitly specify if it should be in the past or future, assume that it should be in the future.
   - Example: "Within 5 minutes" should be interpreted as "from now to now + 5 minutes"
