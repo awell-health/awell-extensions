@@ -5,10 +5,12 @@ export const parser = StructuredOutputParser.fromZodSchema(
   z.object({
     from: z.string().optional().nullable(),
     to: z.string().optional().nullable(),
+    instructions: z.string().optional().nullable(),
   }),
 )
 
-export interface DateFilterFromLLM {
+export interface InstructionsWithDatesExtracted {
   from?: string | null
   to?: string | null
+  instructions?: string | null
 }

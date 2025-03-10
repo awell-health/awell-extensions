@@ -1,17 +1,16 @@
-import { isNil } from 'lodash'
 import { type Action, Category } from '@awell-health/extensions-core'
-import { addActivityEventLog } from '../../../../src/lib/awell/addEventLog'
-import { type settings } from '../../settings'
-import { makeAPIClient } from '../../client'
-import { createOpenAIModel } from '../../../../src/lib/llm/openai/createOpenAIModel'
-import { FieldsValidationSchema, fields, dataPoints } from './config'
-import { getAppointmentCountsByStatus } from './getAppoitnmentCountByStatus'
-import { findAppointmentsWithLLM } from '../../lib/findAppointmentsWithLLM/findAppointmentsWithLLM'
-import { markdownToHtml } from '../../../../src/utils'
 import { isAfter, isBefore, parseISO } from 'date-fns'
-import { extractDatesFromInstructions } from '../../lib/extractDatesFromInstructions/extractDatesFromInstructions'
-import { type DateFilterFromLLM } from '../../lib/extractDatesFromInstructions/parser'
+import { defaultTo, isNil } from 'lodash'
+import { addActivityEventLog } from '../../../../src/lib/awell/addEventLog'
 import { OPENAI_MODELS } from '../../../../src/lib/llm/openai/constants'
+import { createOpenAIModel } from '../../../../src/lib/llm/openai/createOpenAIModel'
+import { markdownToHtml } from '../../../../src/utils'
+import { makeAPIClient } from '../../client'
+import { extractDatesFromInstructions } from '../../lib/extractDatesFromInstructions/extractDatesFromInstructions'
+import { findAppointmentsWithLLM } from '../../lib/findAppointmentsWithLLM/findAppointmentsWithLLM'
+import { type settings } from '../../settings'
+import { FieldsValidationSchema, dataPoints, fields } from './config'
+import { getAppointmentCountsByStatus } from './getAppoitnmentCountByStatus'
 
 export const findAppointmentsWithAI: Action<
   typeof fields,
@@ -26,8 +25,7 @@ export const findAppointmentsWithAI: Action<
   previewable: false,
   dataPoints,
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
-    const { prompt, patientId, dateFilterPrompt } =
-      FieldsValidationSchema.parse(payload.fields)
+    const { prompt, patientId } = FieldsValidationSchema.parse(payload.fields)
     const api = makeAPIClient(payload.settings)
 
     try {
@@ -39,18 +37,12 @@ export const findAppointmentsWithAI: Action<
         payload,
       })
 
-      let dateFilter: DateFilterFromLLM = {
-        from: undefined,
-        to: undefined,
-      }
-      if (!isNil(dateFilterPrompt)) {
-        dateFilter = await extractDatesFromInstructions({
-          model,
-          prompt: dateFilterPrompt,
-          metadata,
-          callbacks,
-        })
-      }
+      const { from, to, instructions } = await extractDatesFromInstructions({
+        model,
+        prompt,
+        metadata,
+        callbacks,
+      })
 
       // First fetch all appointments for the patient
       const appointments = await api.findAppointments({
@@ -73,7 +65,7 @@ export const findAppointmentsWithAI: Action<
       const { appointmentIds, explanation } = await findAppointmentsWithLLM({
         model,
         appointments,
-        prompt,
+        prompt: defaultTo(instructions, 'Find all appointments'),
         metadata,
         callbacks,
       })
@@ -84,16 +76,10 @@ export const findAppointmentsWithAI: Action<
       const selectedAppointments = appointments.filter(
         (appointment) =>
           appointmentIds.includes(appointment.id) &&
-          (isNil(dateFilter.from) ||
-            isAfter(
-              parseISO(appointment.scheduled_date),
-              parseISO(dateFilter.from),
-            )) &&
-          (isNil(dateFilter.to) ||
-            isBefore(
-              parseISO(appointment.scheduled_date),
-              parseISO(dateFilter.to),
-            )),
+          (isNil(from) ||
+            isAfter(parseISO(appointment.scheduled_date), parseISO(from))) &&
+          (isNil(to) ||
+            isBefore(parseISO(appointment.scheduled_date), parseISO(to))),
       )
 
       const appointmentCountsByStatus =
@@ -104,22 +90,22 @@ export const findAppointmentsWithAI: Action<
           message: `Found ${appointmentIds.length} appointments for patient ${patientId} that match the search instructions.`,
         }),
       ]
-      if (!isNil(dateFilter.from) && !isNil(dateFilter.to)) {
+      if (!isNil(from) && !isNil(to)) {
         events.push(
           addActivityEventLog({
-            message: `Narrowed down to ${selectedAppointments.length} appointments scheduled between ${dateFilter.from} and ${dateFilter.to}.`,
+            message: `Narrowed down to ${selectedAppointments.length} appointments scheduled between ${from} and ${to}.`,
           }),
         )
-      } else if (!isNil(dateFilter.from)) {
+      } else if (!isNil(from)) {
         events.push(
           addActivityEventLog({
-            message: `Narrowed down to ${selectedAppointments.length} appointments scheduled after ${dateFilter.from}.`,
+            message: `Narrowed down to ${selectedAppointments.length} appointments scheduled after ${from}.`,
           }),
         )
-      } else if (!isNil(dateFilter.to)) {
+      } else if (!isNil(to)) {
         events.push(
           addActivityEventLog({
-            message: `Narrowed down to ${selectedAppointments.length} appointments scheduled before ${dateFilter.to}.`,
+            message: `Narrowed down to ${selectedAppointments.length} appointments scheduled before ${to}.`,
           }),
         )
       }

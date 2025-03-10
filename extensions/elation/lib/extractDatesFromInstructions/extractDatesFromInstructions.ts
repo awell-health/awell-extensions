@@ -1,7 +1,7 @@
 import type { BaseCallbackHandler } from '@langchain/core/callbacks/base'
 import { type ChatOpenAI } from '@langchain/openai'
 import { type AIActionMetadata } from '../../../../src/lib/llm/openai/types'
-import { parser, type DateFilterFromLLM } from './parser'
+import { parser, type InstructionsWithDatesExtracted } from './parser'
 import { systemPrompt } from './prompt'
 
 interface ExtractDatesFromInstructionsProps {
@@ -16,7 +16,7 @@ export const extractDatesFromInstructions = async ({
   prompt,
   metadata,
   callbacks,
-}: ExtractDatesFromInstructionsProps): Promise<DateFilterFromLLM> => {
+}: ExtractDatesFromInstructionsProps): Promise<InstructionsWithDatesExtracted> => {
   const chain = model.pipe(parser)
 
   try {
@@ -35,6 +35,7 @@ export const extractDatesFromInstructions = async ({
     return {
       from: result.from,
       to: result.to,
+      instructions: result.instructions,
     }
   } catch (error) {
     throw new Error(

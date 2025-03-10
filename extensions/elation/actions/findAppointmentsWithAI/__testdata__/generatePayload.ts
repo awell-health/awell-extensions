@@ -4,12 +4,10 @@ import { type settings } from '../../../settings'
 
 export const generatePayload = (
   prompt: string,
-  dateFilterPrompt?: string,
 ): NewActivityPayload<typeof fields, typeof settings> => ({
   fields: {
     patientId: 12345,
     prompt,
-    dateFilterPrompt,
   },
   settings: {
     client_id: 'clientId',
