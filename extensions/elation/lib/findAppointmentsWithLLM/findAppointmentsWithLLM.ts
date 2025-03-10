@@ -1,7 +1,7 @@
 import { type ChatOpenAI } from '@langchain/openai'
 import { type AIActionMetadata } from '../../../../src/lib/llm/openai/types'
 import type { BaseCallbackHandler } from '@langchain/core/callbacks/base'
-import { systemPrompt } from './prompt'
+import { systemPromptWithDates, systemPromptWithoutDates } from './prompt'
 import { parser, type AppointmentsFromLLM } from './parser'
 import { type AppointmentResponse } from '../../types'
 interface FindAppointmentsWithLLMProps {
@@ -10,6 +10,7 @@ interface FindAppointmentsWithLLMProps {
   prompt: string
   metadata: AIActionMetadata
   callbacks?: BaseCallbackHandler[]
+  evaluateDates?: boolean
 }
 
 export const findAppointmentsWithLLM = async ({
@@ -18,11 +19,15 @@ export const findAppointmentsWithLLM = async ({
   prompt,
   metadata,
   callbacks,
+  evaluateDates = false,
 }: FindAppointmentsWithLLMProps): Promise<AppointmentsFromLLM> => {
   const chain = model.pipe(parser)
 
   try {
     const formattedAppointments = JSON.stringify(appointments)
+    const systemPrompt = evaluateDates
+      ? systemPromptWithDates
+      : systemPromptWithoutDates
 
     const result = await chain.invoke(
       await systemPrompt.format({

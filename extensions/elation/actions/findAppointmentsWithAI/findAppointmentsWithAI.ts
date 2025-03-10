@@ -10,7 +10,7 @@ import { extractDatesFromInstructions } from '../../lib/extractDatesFromInstruct
 import { findAppointmentsWithLLM } from '../../lib/findAppointmentsWithLLM/findAppointmentsWithLLM'
 import { type settings } from '../../settings'
 import { FieldsValidationSchema, dataPoints, fields } from './config'
-import { getAppointmentCountsByStatus } from './getAppoitnmentCountByStatus'
+import { getAppointmentCountsByStatus } from './getAppointmentCountByStatus'
 
 export const findAppointmentsWithAI: Action<
   typeof fields,
