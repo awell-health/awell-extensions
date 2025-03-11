@@ -7,7 +7,7 @@ export const fields = {
     label: 'Instructions',
     description:
       'Specify instructions for the AI to generate the track outcome summary. You can include details about: what outcome to focus on, where to find it in the track, specific forms to analyze, desired length and format, parts of the track to exclude, level of detail for decision paths, etc.',
-    type: FieldType.STRING,
+    type: FieldType.TEXT,
     required: false,
   },
 } satisfies Record<string, Field>

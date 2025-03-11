@@ -615,28 +615,12 @@ export const getTrackData = async ({
 
   // Get the track IDs we need to match against
   const relevantTrackIds = new Set<string>();
-  activitiesQuery.pathwayActivities.activities.forEach(activity => {
-    if (activity.track?.id === trackId) {
-      relevantTrackIds.add(activity.track.id);
-      // Find the corresponding track element to get its ID
-      const trackElement = elementsQuery.pathwayElements.elements.find(
-        element => element.type === 'TRACK' && 
-        (element.context?.track_id === activity.context?.track_id)
-      );
-      if (trackElement?.id !== undefined) {
-        relevantTrackIds.add(trackElement.id);
-      }
-    }
-  });
+  relevantTrackIds.add(trackId);
 
   // Filter activities by track and date
   const trackActivities = activitiesQuery.pathwayActivities.activities
     .filter(activity => {
-      // An activity belongs to a track if either:
-      // 1. Its track.id matches any of the relevant track IDs, or
-      // 2. Its context.track_id matches any of the relevant track IDs
-      const isInTrack = (activity.track?.id !== undefined && relevantTrackIds.has(activity.track.id)) ||
-                       (activity.context?.track_id !== undefined && relevantTrackIds.has(activity.context.track_id))
+      const isInTrack = activity.context?.track_id === trackId
       const isBeforeOrEqualDate = currentActivityDate.length === 0 || activity.date <= currentActivityDate
       return isInTrack && isBeforeOrEqualDate
     })
@@ -665,11 +649,9 @@ export const getTrackData = async ({
 
   // 6. Enhance activities with data points
   const activitiesWithDataPoints = trackActivities.map(activity => {
-    // Find data points for this activity
     const activityDataPoints = dataPointsQuery.pathwayDataPoints.dataPoints
       .filter(dp => dp.activity_id === activity.id)
       .map(dp => {
-        // Special handling for activation data points
         if (dp.data_point_definition_id.endsWith('-ACTIVATION')) {
           return {
             ...dp,
@@ -680,7 +662,6 @@ export const getTrackData = async ({
         return dp;
       });
 
-    // Map form responses to data points if they exist
     const questions = activity.form?.questions;
     if (questions !== undefined && questions !== null) {
       const formResponses = questions.map(question => {
@@ -710,15 +691,9 @@ export const getTrackData = async ({
   // 8. Get steps from the elements query and filter by track ID and type STEP
   const steps = elementsQuery.pathwayElements.elements
     .filter(element => {
-      const parentId = element.parent_id;
-      
-      // A step belongs to a track if:
-      // 1. Its parent_id matches one of our relevant track IDs
-      const isInTrack = parentId !== undefined && relevantTrackIds.has(parentId);
-      
-      // Only include STEP elements
+      const elementTrackId = element.context?.track_id;
+      const isInTrack = elementTrackId === trackId;
       const isStep = element.type === 'STEP';
-      
       return isInTrack && isStep;
     })
     .map(element => ({
@@ -739,7 +714,6 @@ export const getTrackData = async ({
 
   // 9. Associate activities with steps
   const stepsWithActivities = steps.map(step => {
-    // Find all activities that belong to this step
     const stepActivities = activitiesWithDataPoints.filter(
       activity => activity.context?.step_id === step.id
     )
@@ -751,14 +725,20 @@ export const getTrackData = async ({
   })
 
   // 10. Process the track data
-  const track = pathwayQuery.pathway.pathway.tracks.find((t) => t.id === trackId);
+  // First try to get track title from activities
+  const trackFromActivities = trackActivities.find(activity => activity.track?.id === trackId)?.track;
   
-  // If track is not found, use default values with just the ID
-  const finalTrack = track !== undefined ? {
-    id: track.id,
-    title: track.title,
-  } : {
+  // If not found in activities, try to get from elements
+  const trackElement = elementsQuery.pathwayElements.elements.find(
+    element => element.type === 'TRACK' && element.context?.track_id === trackId
+  );
+
+  // Finally check pathway tracks
+  const trackFromPathway = pathwayQuery.pathway.pathway.tracks.find((t) => t.id === trackId);
+  
+  const finalTrack = {
     id: trackId,
+    title: trackFromActivities?.title ?? trackElement?.name ?? trackFromPathway?.title ?? 'Untitled Track'
   };
 
   const rawTrackData = {
@@ -766,6 +746,8 @@ export const getTrackData = async ({
     activities: activitiesWithDataPoints,
     steps: stepsWithActivities,
   }
+
   // Clean the data for LLM consumption and return only cleaned data
-  return await cleanDataForLLM(rawTrackData, awellSdk, pathwayId);
+  const cleanedData = await cleanDataForLLM(rawTrackData, awellSdk, pathwayId);
+  return cleanedData;
 }

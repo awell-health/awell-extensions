@@ -7,6 +7,10 @@ import { type AppointmentResponse } from '../../types/appointment'
 // Mock the client
 jest.mock('../../client')
 jest.mock('../../../../src/lib/llm/openai/createOpenAIModel')
+jest.mock('../../lib/extractDatesFromInstructions/extractDatesFromInstructions')
+jest.mock('../../../../src/utils', () => ({
+  markdownToHtml: jest.fn().mockImplementation((text) => Promise.resolve(text))
+}))
 
 // Setup mocks that can be controlled in each test
 const findAppointments = jest.fn().mockResolvedValue([])
@@ -33,6 +37,16 @@ createOpenAIModel.mockResolvedValue({
     org_id: '123',
     org_slug: 'org-slug',
   },
+})
+
+// Mock extractDatesFromInstructions
+const { extractDatesFromInstructions } = jest.requireMock(
+  '../../lib/extractDatesFromInstructions/extractDatesFromInstructions'
+)
+extractDatesFromInstructions.mockResolvedValue({
+  from: null,
+  to: null,
+  instructions: 'Find all appointments'
 })
 
 describe('Elation - Find appointments with AI', () => {
