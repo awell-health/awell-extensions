@@ -34,6 +34,7 @@ export const updatePatient: Action<typeof fields, typeof settings> = {
         preferredLanguage,
         sex,
         nationalRegistryNumber,
+        patientTimzone,
       },
       patient: { id: patientId },
     } = validate({
@@ -99,6 +100,7 @@ export const updatePatient: Action<typeof fields, typeof settings> = {
         preferred_language: preferredLanguage,
         sex,
         national_registry_number: nationalRegistryNumber,
+        patient_timezone: patientTimzone,
       },
     })
 
