@@ -1,19 +1,21 @@
-import { summarizeForm } from './summarizeForm'
-import { summarizeFormsInStep } from './summarizeFormsInStep'
 import { categorizeMessage } from './categorizeMessage'
-import { summarizeCareFlow } from './summarizeCareFlow'
+import { generateMessage } from './generateMessage'
 import { medicationFromImage } from './medicationFromImage'
 import { reviewMedicationExtraction } from './reviewMedicationExtraction'
-import { generateMessage } from './generateMessage'
+import { summarizeCareFlow } from './summarizeCareFlow'
+import { summarizeForm } from './summarizeForm'
+import { summarizeFormsInStep } from './summarizeFormsInStep'
+import { summarizeTrackOutcome } from './summarizeTrackOutcome'
 
 const actions = {
-  summarizeForm,
-  summarizeFormsInStep,
-  summarizeCareFlow,
   categorizeMessage,
   generateMessage,
   medicationFromImage,
   reviewMedicationExtraction,
+  summarizeCareFlow,
+  summarizeForm,
+  summarizeFormsInStep,
+  summarizeTrackOutcome,
 }
 
 export default actions

@@ -58,9 +58,10 @@ export const findFutureAppointment: Action<
       prompt,
       metadata,
       callbacks,
+      evaluateDates: true,
     })
     const htmlExplanation = await markdownToHtml(explanation)
-    
+
     // Handle case where no appointments were found by LLM
     if (appointmentIds.length === 0) {
       await onComplete({
@@ -84,9 +85,9 @@ export const findFutureAppointment: Action<
     // 5. If appointments were found by LLM, return the first matching appointment
     const matchedAppointmentId = appointmentIds[0]
     const foundAppointment = appointments.find(
-      (appointment) => appointment.id === matchedAppointmentId
+      (appointment) => appointment.id === matchedAppointmentId,
     )
-   
+
     await onComplete({
       data_points: {
         appointment: !isNil(matchedAppointmentId)

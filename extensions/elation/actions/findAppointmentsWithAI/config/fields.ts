@@ -18,7 +18,8 @@ export const fields = {
     label: 'Describe the appointments to search for',
     type: FieldType.TEXT,
     required: true,
-    description: 'Provide clear instructions about what appointments you want to find. You can search by appointment type (e.g., "Find all PCP visits"), status (e.g., "Find scheduled appointments"), or other criteria. Be as specific as possible for best results.',
+    description:
+      'Provide clear instructions about what appointments you want to find. You can search by appointment type (e.g. "Find all PCP visits"), status (e.g., "Find scheduled appointments"), or other criteria. Be as specific as possible for best results.',
   },
 } satisfies Record<string, Field>
 

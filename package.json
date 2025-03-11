@@ -1,6 +1,6 @@
 {
   "name": "@awell-health/awell-extensions",
-  "version": "2.0.202",
+  "version": "2.0.209",
   "packageManager": "yarn@4.5.3",
   "main": "dist/src/index.js",
   "repository": {
@@ -44,6 +44,7 @@
     "@types/crypto-js": "^4.2.2",
     "@types/docusign-esign": "^5.19.0",
     "@types/express": "^4.17.19",
+    "@types/faker": "^6",
     "@types/jest": "^29.5.14",
     "@types/jsdom": "^21.1.7",
     "@types/jsonpath": "^0.2.4",
@@ -67,6 +68,7 @@
     "eslint-plugin-import": "^2.28.1",
     "eslint-plugin-n": "^15.6.1",
     "eslint-plugin-promise": "^6.1.1",
+    "faker": "^6.6.6",
     "husky": "^9.1.7",
     "jest": "29.7.0",
     "jest-fetch-mock": "^3.0.3",

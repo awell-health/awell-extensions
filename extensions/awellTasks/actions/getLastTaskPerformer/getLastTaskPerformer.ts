@@ -37,7 +37,7 @@ export const getLastTaskPerformer: Action<
     })
 
     const lastTask = first(data.tasks)
-    
+
     if (isNil(lastTask)) {
       await onError({
         events: [
@@ -45,9 +45,9 @@ export const getLastTaskPerformer: Action<
             date: new Date().toISOString(),
             text: {
               en: `No completed task found in this care flow`,
-          },  
-          error: {
-            category: 'SERVER_ERROR',
+            },
+            error: {
+              category: 'SERVER_ERROR',
               message: `No completed task found in this care flow`,
             },
           },
@@ -56,11 +56,25 @@ export const getLastTaskPerformer: Action<
       return
     }
 
+    const performer = get(lastTask, 'performer')
+
+    const events = isNil(performer)
+      ? [
+          {
+            date: new Date().toISOString(),
+            text: {
+              en: `The last completed task in this care flow (${lastTask.title} - ${lastTask.id}) has no performer.`,
+            },
+          },
+        ]
+      : []
+
     await onComplete({
       data_points: {
-        stytchUserId: get(lastTask, 'performer.stytch_user_id') ?? undefined,
-        email: get(lastTask, 'performer.email') ?? undefined,
+        stytchUserId: get(performer, 'stytch_user_id') ?? undefined,
+        email: get(performer, 'email') ?? undefined,
       },
+      events,
     })
   },
 }

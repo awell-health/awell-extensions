@@ -10,11 +10,11 @@ export const settings = {
     description: 'Used to authenticate with Braze',
   },
   baseUrl: {
-    key: 'url',
-    label: 'URL',
+    key: 'baseUrl',
+    label: 'Base URL',
     obfuscated: false,
     required: true,
-    description: 'The URL of the Braze instance',
+    description: 'The base URL of the Braze instance',
   },
 } satisfies Record<string, Setting>
 

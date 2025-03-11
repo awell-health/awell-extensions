@@ -124,30 +124,28 @@ export const getFormResponseText = (opts: {
   const formAnswers: string[] = []
   const omittedFormAnswers: OmittedFormAnswer[] = []
  
-  opts.formResponse.answers.forEach((questionResponse) => {
-    const questionDefinition = opts.formDefinition.questions.find(
-      (q) => q.id === questionResponse.question_id
+  opts.formDefinition.questions.forEach((questionDefinition) => {
+    const questionResponse = opts.formResponse.answers.find(
+      (a) => a.question_id === questionDefinition.id
     )
 
-    if (questionDefinition === undefined) {
+    if (questionResponse === undefined) {
       omittedFormAnswers.push({
-        questionId: questionResponse.question_id,
-        reason:
-          'No corresponding question definition found in the form definition',
+        questionId: questionDefinition.id,
+        reason: 'No corresponding answer found in the form response',
       })
       return
     }
 
     try {
       const answer = getQuestionAndAnswer(questionDefinition, questionResponse)
-
       formAnswers.push(answer)
     } catch (error) {
       const errorMessage =
         error instanceof Error ? error.message : 'Unknown error'
 
       omittedFormAnswers.push({
-        questionId: questionResponse.question_id,
+        questionId: questionDefinition.id,
         reason: `Error processing answer: ${errorMessage}`,
       })
     }
