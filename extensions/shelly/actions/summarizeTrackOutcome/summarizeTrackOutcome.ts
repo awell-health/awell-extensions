@@ -70,9 +70,6 @@ export const summarizeTrackOutcome: Action<
             },
           },
         })
-        .catch((error: Error) => {
-          throw new Error(`Failed to fetch activity ${activityId}: ${error.message}`)
-        })
 
       const currentActivity = activityDetails?.activity?.activity
 
