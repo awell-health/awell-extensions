@@ -6,7 +6,6 @@ import { fields, dataPoints, FieldsValidationSchema } from './config'
 import { getFormResponseText } from '../../lib/getFormResponseText'
 import { getLatestFormInCurrentStep } from '../../../../src/lib/awell'
 import { markdownToHtml } from '../../../../src/utils'
-import { DISCLAIMER_MSG_FORM } from '../../lib/constants'
 
 /**
  * Awell Action: Form Summarization
@@ -45,9 +44,27 @@ export const summarizeForm: Action<
       hideDataForTracing: true, // Hide input and output data when tracing
     })
 
+    const awellSdk = await helpers.awellSdk()
+
+    // Get pathway details for the disclaimer
+    const pathwayDetails = await awellSdk.orchestration.query({
+      pathway: {
+        __args: {
+          id: payload.pathway.id,
+        },
+        code: true,
+        success: true,
+        pathway: {
+          id: true,
+          title: true,
+          pathway_definition_id: true,
+        },
+      },
+    })
+
     // 3. Get form data
     const { formDefinition, formResponse } = await getLatestFormInCurrentStep({
-      awellSdk: await helpers.awellSdk(),
+      awellSdk,
       pathwayId: payload.pathway.id,
       activityId: payload.activity.id,
     })
@@ -63,7 +80,7 @@ export const summarizeForm: Action<
       formData,
       summaryFormat,
       language,
-      disclaimerMessage: DISCLAIMER_MSG_FORM,
+      disclaimerMessage: `Important Notice: The content provided is an AI-generated summary of form responses in Care Flow "${pathwayDetails.pathway?.pathway?.title ?? 'Unknown'}" (ID: ${pathwayDetails.pathway?.pathway?.pathway_definition_id ?? 'Unknown'}).`,
       metadata,
       callbacks,
     })
