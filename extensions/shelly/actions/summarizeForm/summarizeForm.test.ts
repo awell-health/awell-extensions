@@ -1,11 +1,32 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 
 import { TestHelpers } from '@awell-health/extensions-core'
-import { generateTestPayload } from '@/tests'
 import { summarizeForm } from '.'
 import { mockFormDefinitionResponse } from './__mocks__/formDefinitionResponse'
 import { mockFormResponseResponse } from './__mocks__/formResponseResponse'
 import { markdownToHtml } from '../../../../src/utils'
+
+// Simple payload generator function to replace the external import
+const generateTestPayload = (overrides = {}) => {
+  return {
+    pathway: {
+      id: 'test-pathway-id',
+      definition_id: 'test-definition-id',
+      tenant_id: 'test-tenant-id',
+      org_slug: 'test-org-slug',
+      org_id: 'test-org-id'
+    },
+    activity: {
+      id: 'test-activity-id'
+    },
+    fields: {},
+    settings: {},
+    patient: {
+      id: 'test-patient-id'
+    },
+    ...overrides
+  }
+}
 
 // Mock the OpenAI modules
 jest.mock('../../../../src/lib/llm/openai/createOpenAIModel', () => ({
@@ -23,14 +44,36 @@ jest.mock('../../../../src/lib/llm/openai/createOpenAIModel', () => ({
   }),
 }))
 
+jest.mock('../../lib/summarizeFormWithLLM', () => ({
+  summarizeFormWithLLM: jest.fn().mockImplementation(({ disclaimerMessage, additionalInstructions }) => {
+    return Promise.resolve('The patient reported good overall health. They experienced fatigue and headache in the last 7 days. Additionally, they mentioned occasional dizziness when standing up too quickly.')
+  }),
+}))
+
 describe('summarizeForm - Mocked LLM calls', () => {
   const { onComplete, onError, helpers, extensionAction, clearMocks } =
     TestHelpers.fromAction(summarizeForm)
+
+  // Define mock pathway details for the disclaimer
+  const mockPathwayDetails = {
+    pathway: {
+      success: true,
+      code: 200,
+      pathway: {
+        id: 'ai4rZaYEocjB',
+        title: 'Test Care Flow',
+        pathway_definition_id: 'whatever',
+      }
+    }
+  }
 
   beforeEach(() => {
     clearMocks()
     jest.clearAllMocks()
     const mockQuery = jest.fn()
+      // First query: get pathway details for disclaimer
+      .mockResolvedValueOnce(mockPathwayDetails)
+      // Second query: get current activity
       .mockResolvedValueOnce({
         activity: {
           success: true,
@@ -43,6 +86,7 @@ describe('summarizeForm - Mocked LLM calls', () => {
           }
         }
       })
+      // Third query: get activities in current step
       .mockResolvedValueOnce({
         pathwayStepActivities: {
           success: true,
@@ -61,9 +105,11 @@ describe('summarizeForm - Mocked LLM calls', () => {
           }]
         }
       })
+      // Fourth query: get form definition
       .mockResolvedValueOnce({
         form: mockFormDefinitionResponse,
       })
+      // Fifth query: get form response
       .mockResolvedValueOnce({
         formResponse: mockFormResponseResponse,
       })
@@ -85,6 +131,38 @@ describe('summarizeForm - Mocked LLM calls', () => {
       fields: {
         summaryFormat: 'Bullet-points',
         language: 'Default',
+      },
+      settings: {},
+    })
+
+    await extensionAction.onEvent({
+      payload,
+      onComplete,
+      onError,
+      helpers,
+    })
+
+    const expected = await markdownToHtml('The patient reported good overall health. They experienced fatigue and headache in the last 7 days. Additionally, they mentioned occasional dizziness when standing up too quickly.')
+    expect(onComplete).toHaveBeenCalledWith({
+      data_points: {
+        summary: expected,
+      },
+    })
+
+    expect(onError).not.toHaveBeenCalled()
+  })
+
+  it('Should summarize form with LLM and additional instructions', async () => {
+    const payload = generateTestPayload({
+      pathway: {
+        id: 'ai4rZaYEocjB',
+        definition_id: 'whatever',
+      },
+      activity: { id: 'X74HeDQ4N0gtdaSEuzF8s' },
+      fields: {
+        summaryFormat: 'Bullet-points',
+        language: 'Default',
+        additionalInstructions: 'Focus on medication details and side effects.',
       },
       settings: {},
     })
