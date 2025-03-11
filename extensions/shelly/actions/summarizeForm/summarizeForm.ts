@@ -31,7 +31,7 @@ export const summarizeForm: Action<
 
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
     // 1. Validate input fields
-    const { summaryFormat, language } = FieldsValidationSchema.parse(
+    const { summaryFormat, language, additionalInstructions } = FieldsValidationSchema.parse(
       payload.fields,
     )
 
@@ -81,6 +81,7 @@ export const summarizeForm: Action<
       summaryFormat,
       language,
       disclaimerMessage: `Important Notice: The content provided is an AI-generated summary of form responses in Care Flow "${pathwayDetails.pathway?.pathway?.title ?? 'Unknown'}" (ID: ${pathwayDetails.pathway?.pathway?.pathway_definition_id ?? 'Unknown'}).`,
+      additionalInstructions,
       metadata,
       callbacks,
     })

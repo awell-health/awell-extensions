@@ -17,6 +17,7 @@ import type { BaseCallbackHandler } from "@langchain/core/callbacks/base"
  *   summaryFormat: "Bullet-points",
  *   language: "English",
  *   disclaimerMessage: "AI generated...",
+ *   additionalInstructions: "Focus on medication details",
  *   metadata: { ... }
  * })
  */
@@ -26,6 +27,7 @@ export const summarizeFormWithLLM = async ({
   summaryFormat,
   language,
   disclaimerMessage,
+  additionalInstructions,
   metadata,
   callbacks,
 }: {
@@ -34,6 +36,7 @@ export const summarizeFormWithLLM = async ({
   summaryFormat: string
   language: string
   disclaimerMessage: string
+  additionalInstructions?: string
   metadata: AIActionMetadata
   callbacks?: BaseCallbackHandler[]
 }): Promise<string> => {
@@ -45,6 +48,7 @@ export const summarizeFormWithLLM = async ({
     language,
     input: formData,
     disclaimerMessage,
+    additionalInstructions: additionalInstructions ?? 'No additional instructions',
   })
 
   try {

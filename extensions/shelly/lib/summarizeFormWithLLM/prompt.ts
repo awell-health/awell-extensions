@@ -59,6 +59,9 @@ export const systemPromptBulletPoints = ChatPromptTemplate.fromTemplate(`
 
   {language}
 
+  **Additional Instructions:**
+  {additionalInstructions}
+
   ---
 
   **Content to Summarize:**
@@ -112,6 +115,9 @@ export const systemPromptTextParagraph = ChatPromptTemplate.fromTemplate(`
   **Specified Language:**
 
   {language}
+
+  **Additional Instructions:**
+  {additionalInstructions}
 
   ---
 

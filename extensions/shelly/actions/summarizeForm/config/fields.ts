@@ -1,13 +1,11 @@
 import { type Field, FieldType } from '@awell-health/extensions-core'
 import z, { type ZodTypeAny } from 'zod'
 
-// Step 1: Define the enum
 export enum SummaryFormatEnum {
   BULLET_POINTS = 'Bullet-points',
   TEXT_PARAGRAPH = 'Text paragraph',
 }
 
-// Step 2: Define the fields object
 export const fields = {
   summaryFormat: {
     id: 'summaryFormat',
@@ -31,6 +29,14 @@ export const fields = {
     type: FieldType.STRING,
     required: false,
   },
+  additionalInstructions: {
+    id: 'additionalInstructions',
+    label: 'Additional Instructions',
+    description:
+      '[Optional] Specify additional instructions for the AI to generate the form summary. You can include details about: specific questions to focus on, desired level of detail, information to emphasize or exclude, etc.',
+    type: FieldType.TEXT,
+    required: false,
+  },
 } satisfies Record<string, Field>
 
 // Step 3: Define the validation schema using zod
@@ -45,4 +51,5 @@ export const FieldsValidationSchema = z.object({
         : SummaryFormatEnum.BULLET_POINTS
     ),
   language: z.string().optional().default('Default'),
+  additionalInstructions: z.string().optional().default('No additional instructions'),
 } satisfies Record<keyof typeof fields, ZodTypeAny>)

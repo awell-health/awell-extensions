@@ -44,9 +44,8 @@ jest.mock('../../../../src/lib/llm/openai/createOpenAIModel', () => ({
   }),
 }))
 
-// Mock the summarizeFormWithLLM function to handle the new disclaimerMessage parameter
 jest.mock('../../lib/summarizeFormWithLLM', () => ({
-  summarizeFormWithLLM: jest.fn().mockImplementation(({ disclaimerMessage }) => {
+  summarizeFormWithLLM: jest.fn().mockImplementation(({ disclaimerMessage, additionalInstructions }) => {
     return Promise.resolve('The patient reported good overall health. They experienced fatigue and headache in the last 7 days. Additionally, they mentioned occasional dizziness when standing up too quickly.')
   }),
 }))
@@ -132,6 +131,38 @@ describe('summarizeForm - Mocked LLM calls', () => {
       fields: {
         summaryFormat: 'Bullet-points',
         language: 'Default',
+      },
+      settings: {},
+    })
+
+    await extensionAction.onEvent({
+      payload,
+      onComplete,
+      onError,
+      helpers,
+    })
+
+    const expected = await markdownToHtml('The patient reported good overall health. They experienced fatigue and headache in the last 7 days. Additionally, they mentioned occasional dizziness when standing up too quickly.')
+    expect(onComplete).toHaveBeenCalledWith({
+      data_points: {
+        summary: expected,
+      },
+    })
+
+    expect(onError).not.toHaveBeenCalled()
+  })
+
+  it('Should summarize form with LLM and additional instructions', async () => {
+    const payload = generateTestPayload({
+      pathway: {
+        id: 'ai4rZaYEocjB',
+        definition_id: 'whatever',
+      },
+      activity: { id: 'X74HeDQ4N0gtdaSEuzF8s' },
+      fields: {
+        summaryFormat: 'Bullet-points',
+        language: 'Default',
+        additionalInstructions: 'Focus on medication details and side effects.',
       },
       settings: {},
     })
