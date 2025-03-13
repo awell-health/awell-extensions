@@ -5,6 +5,15 @@ import { mockFormDefinitionResponse } from './__mocks__/formDefinitionResponse'
 import { mockFormResponseResponse } from './__mocks__/formResponseResponse'
 import { mockPathwayActivitiesResponse } from './__mocks__/pathwayActivitiesResponse'
 
+// Mock getCareFlowDetails
+jest.mock('../../lib/getCareFlowDetails', () => ({
+  getCareFlowDetails: jest.fn().mockResolvedValue({
+    title: 'Test Care Flow',
+    id: 'whatever',
+    version: 3
+  })
+}))
+
 jest.setTimeout(30000) // Increase timeout if needed for real LLM calls
 
 const generateTestPayload = (overrides = {}) => {
@@ -42,19 +51,6 @@ describe.skip('summarizeForm - Real LLM calls with mocked Awell SDK', () => {
     settings: {}
   }
 
-  // Define mock pathway details for the disclaimer
-  const mockPathwayDetails = {
-    pathway: {
-      success: true,
-      code: 200,
-      pathway: {
-        id: 'ai4rZaYEocjB',
-        title: 'Test Care Flow',
-        pathway_definition_id: 'whatever',
-      }
-    }
-  }
-
   beforeEach(() => {
     clearMocks()
     jest.clearAllMocks()
@@ -76,23 +72,39 @@ describe.skip('summarizeForm - Real LLM calls with mocked Awell SDK', () => {
     })
 
     const mockQuery = jest.fn()
-      // First query: get pathway details for disclaimer
-      .mockResolvedValueOnce(mockPathwayDetails)
-      // Second query: get current activity
+      // First query: get current activity
       .mockResolvedValueOnce({
         activity: {
           success: true,
-          activity: mockPathwayActivitiesResponse.activities[0]
+          activity: {
+            id: 'X74HeDQ4N0gtdaSEuzF8s',
+            date: '2024-09-11T22:56:59.607Z',
+            context: {
+              step_id: 'Xkn5dkyPA5uW'
+            }
+          }
         }
       })
-      // Third query: get activities in current step
+      // Second query: get activities in current step
       .mockResolvedValueOnce({
         pathwayStepActivities: {
           success: true,
-          activities: mockPathwayActivitiesResponse.activities
+          activities: [{
+            id: 'form_activity_id',
+            status: 'DONE',
+            date: '2024-09-11T22:56:58.607Z',
+            object: {
+              id: 'OGhjJKF5LRmo',
+              name: 'General Dummy Form',
+              type: 'FORM'
+            },
+            context: {
+              step_id: 'Xkn5dkyPA5uW'
+            }
+          }]
         }
       })
-      // Fourth query: get form definition
+      // Third query: get form definition
       .mockResolvedValueOnce({
         form: {
           form: {
@@ -106,7 +118,7 @@ describe.skip('summarizeForm - Real LLM calls with mocked Awell SDK', () => {
           }
         }
       })
-      // Fifth query: get form response
+      // Fourth query: get form response
       .mockResolvedValueOnce({
         formResponse: {
           response: {
@@ -132,11 +144,11 @@ describe.skip('summarizeForm - Real LLM calls with mocked Awell SDK', () => {
     })
 
     expect(helpers.awellSdk).toHaveBeenCalled()
-    expect(mockQuery).toHaveBeenCalledTimes(5)
+    expect(mockQuery).toHaveBeenCalledTimes(4)
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
         summary: expect.stringMatching(
-          new RegExp(`Important Notice: The content provided is an AI-generated summary of form responses in Care Flow "Test Care Flow".*Test Question.*Test Answer.*`, 's')
+          new RegExp(`Important Notice: The content provided is an AI-generated summary of form responses of version 3 of Care Flow "Test Care Flow".*Test Question.*Test Answer.*`, 's')
         ),
       },
     })
@@ -154,23 +166,39 @@ describe.skip('summarizeForm - Real LLM calls with mocked Awell SDK', () => {
     })
 
     const mockQuery = jest.fn()
-      // First query: get pathway details for disclaimer
-      .mockResolvedValueOnce(mockPathwayDetails)
-      // Second query: get current activity
+      // First query: get current activity
       .mockResolvedValueOnce({
         activity: {
           success: true,
-          activity: mockPathwayActivitiesResponse.activities[0]
+          activity: {
+            id: 'X74HeDQ4N0gtdaSEuzF8s',
+            date: '2024-09-11T22:56:59.607Z',
+            context: {
+              step_id: 'Xkn5dkyPA5uW'
+            }
+          }
         }
       })
-      // Third query: get activities in current step
+      // Second query: get activities in current step
       .mockResolvedValueOnce({
         pathwayStepActivities: {
           success: true,
-          activities: mockPathwayActivitiesResponse.activities
+          activities: [{
+            id: 'form_activity_id',
+            status: 'DONE',
+            date: '2024-09-11T22:56:58.607Z',
+            object: {
+              id: 'OGhjJKF5LRmo',
+              name: 'General Dummy Form',
+              type: 'FORM'
+            },
+            context: {
+              step_id: 'Xkn5dkyPA5uW'
+            }
+          }]
         }
       })
-      // Fourth query: get form definition
+      // Third query: get form definition
       .mockResolvedValueOnce({
         form: {
           form: {
@@ -184,7 +212,7 @@ describe.skip('summarizeForm - Real LLM calls with mocked Awell SDK', () => {
           }
         }
       })
-      // Fifth query: get form response
+      // Fourth query: get form response
       .mockResolvedValueOnce({
         formResponse: {
           response: {
@@ -210,11 +238,11 @@ describe.skip('summarizeForm - Real LLM calls with mocked Awell SDK', () => {
     })
 
     expect(helpers.awellSdk).toHaveBeenCalled()
-    expect(mockQuery).toHaveBeenCalledTimes(5)
+    expect(mockQuery).toHaveBeenCalledTimes(4)
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
         summary: expect.stringMatching(
-          new RegExp(`Important Notice: The content provided is an AI-generated summary of form responses in Care Flow "Test Care Flow".*Test Question.*Test Answer.*`, 's')
+          new RegExp(`Important Notice: The content provided is an AI-generated summary of form responses of version 3 of Care Flow "Test Care Flow".*Test Question.*Test Answer.*`, 's')
         ),
       },
     })
@@ -231,13 +259,12 @@ describe.skip('summarizeForm - Real LLM calls with mocked Awell SDK', () => {
     })
 
     const mockQuery = jest.fn()
-      // First query: get pathway details for disclaimer
-      .mockResolvedValueOnce(mockPathwayDetails)
-      // Second query: get current activity
+      // First query: get current activity
       .mockResolvedValueOnce({
         activity: {
           success: true,
           activity: {
+            id: 'X74HeDQ4N0gtdaSEuzF8s',
             date: '2024-09-11T22:56:59.607Z',
             context: {
               step_id: 'Xkn5dkyPA5uW'
@@ -245,7 +272,7 @@ describe.skip('summarizeForm - Real LLM calls with mocked Awell SDK', () => {
           }
         }
       })
-      // Third query: get activities in current step
+      // Second query: get activities in current step
       .mockResolvedValueOnce({
         pathwayStepActivities: {
           success: true,
@@ -264,7 +291,7 @@ describe.skip('summarizeForm - Real LLM calls with mocked Awell SDK', () => {
           }]
         }
       })
-      // Fourth query: get form definition
+      // Third query: get form definition
       .mockResolvedValueOnce({
         form: {
           form: {
@@ -278,7 +305,7 @@ describe.skip('summarizeForm - Real LLM calls with mocked Awell SDK', () => {
           }
         }
       })
-      // Fifth query: get form response
+      // Fourth query: get form response
       .mockResolvedValueOnce({
         formResponse: {
           response: {
@@ -304,11 +331,11 @@ describe.skip('summarizeForm - Real LLM calls with mocked Awell SDK', () => {
     })
 
     expect(helpers.awellSdk).toHaveBeenCalled()
-    expect(mockQuery).toHaveBeenCalledTimes(5)
+    expect(mockQuery).toHaveBeenCalledTimes(4)
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
         summary: expect.stringMatching(
-          new RegExp(`Important Notice: The content provided is an AI-generated summary of form responses in Care Flow "Test Care Flow".*Test Question.*Test Answer.*`, 's')
+          new RegExp(`Important Notice: The content provided is an AI-generated summary of form responses of version 3 of Care Flow "Test Care Flow".*Test Question.*Test Answer.*`, 's')
         ),
       },
     })
@@ -325,13 +352,12 @@ describe.skip('summarizeForm - Real LLM calls with mocked Awell SDK', () => {
     })
 
     const mockQuery = jest.fn()
-      // First query: get pathway details for disclaimer
-      .mockResolvedValueOnce(mockPathwayDetails)
-      // Second query: get current activity
+      // First query: get current activity
       .mockResolvedValueOnce({
         activity: {
           success: true,
           activity: {
+            id: 'X74HeDQ4N0gtdaSEuzF8s',
             date: '2024-09-11T22:56:59.607Z',
             context: {
               step_id: 'Xkn5dkyPA5uW'
@@ -339,7 +365,7 @@ describe.skip('summarizeForm - Real LLM calls with mocked Awell SDK', () => {
           }
         }
       })
-      // Third query: get activities in current step
+      // Second query: get activities in current step
       .mockResolvedValueOnce({
         pathwayStepActivities: {
           success: true,
@@ -358,7 +384,7 @@ describe.skip('summarizeForm - Real LLM calls with mocked Awell SDK', () => {
           }]
         }
       })
-      // Fourth query: get form definition
+      // Third query: get form definition
       .mockResolvedValueOnce({
         form: {
           form: {
@@ -372,7 +398,7 @@ describe.skip('summarizeForm - Real LLM calls with mocked Awell SDK', () => {
           }
         }
       })
-      // Fifth query: get form response
+      // Fourth query: get form response
       .mockResolvedValueOnce({
         formResponse: {
           response: {
@@ -398,11 +424,11 @@ describe.skip('summarizeForm - Real LLM calls with mocked Awell SDK', () => {
     })
 
     expect(helpers.awellSdk).toHaveBeenCalled()
-    expect(mockQuery).toHaveBeenCalledTimes(5)
+    expect(mockQuery).toHaveBeenCalledTimes(4)
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
         summary: expect.stringMatching(
-          new RegExp(`Important Notice: The content provided is an AI-generated summary of form responses in Care Flow "Test Care Flow".*Test Question.*Test Answer.*`, 's')
+          new RegExp(`Important Notice: The content provided is an AI-generated summary of form responses of version 3 of Care Flow "Test Care Flow".*Test Question.*Test Answer.*`, 's')
         ),
       },
     })
@@ -416,88 +442,48 @@ describe.skip('summarizeForm - Real LLM calls with mocked Awell SDK', () => {
         summaryFormat: 'Bullet-points',
         language: 'Default',
       },
-      settings: {
-        openAiApiKey: process.env.OPENAI_API_KEY,
-      }
     })
 
     const mockQuery = jest.fn()
-      // First query: get pathway details for disclaimer
-      .mockResolvedValueOnce(mockPathwayDetails)
-      // Second query: get current activity
+      // First query: get current activity
       .mockResolvedValueOnce({
         activity: {
           success: true,
-          activity: mockPathwayActivitiesResponse.activities[0]
+          activity: {
+            id: 'X74HeDQ4N0gtdaSEuzF8s',
+            date: '2024-09-11T22:56:59.607Z',
+            context: {
+              step_id: 'Xkn5dkyPA5uW'
+            }
+          }
         }
       })
-      // Third query: get activities in current step
+      // Second query: get activities in current step
       .mockResolvedValueOnce({
         pathwayStepActivities: {
           success: true,
-          activities: mockPathwayActivitiesResponse.activities
+          activities: [{
+            id: 'form_activity_id',
+            status: 'DONE',
+            date: '2024-09-11T22:56:58.607Z',
+            object: {
+              id: 'OGhjJKF5LRmo',
+              name: 'General Dummy Form',
+              type: 'FORM'
+            },
+            context: {
+              step_id: 'Xkn5dkyPA5uW'
+            }
+          }]
         }
       })
-      // Fourth query: get form definition
+      // Third query: get form definition
       .mockResolvedValueOnce({
-        form: {
-          form: {
-            id: 'OGhjJKF5LRmo',
-            title: 'Patient Health Questionnaire',
-            questions: [
-              {
-                id: 'q1',
-                title: 'How would you rate your overall health?',
-                type: 'SELECT',
-                options: [
-                  { value: 'excellent', label: 'Excellent' },
-                  { value: 'good', label: 'Good' },
-                  { value: 'fair', label: 'Fair' },
-                  { value: 'poor', label: 'Poor' }
-                ]
-              },
-              {
-                id: 'q2',
-                title: 'What symptoms have you experienced in the last 7 days?',
-                type: 'MULTIPLE_SELECT',
-                options: [
-                  { value: 'fatigue', label: 'Fatigue' },
-                  { value: 'headache', label: 'Headache' },
-                  { value: 'fever', label: 'Fever' },
-                  { value: 'cough', label: 'Cough' },
-                  { value: 'none', label: 'None of the above' }
-                ]
-              },
-              {
-                id: 'q3',
-                title: 'Please describe any other health concerns:',
-                type: 'TEXT',
-                options: []
-              }
-            ]
-          }
-        }
+        form: mockFormDefinitionResponse
       })
-      // Fifth query: get form response
+      // Fourth query: get form response
       .mockResolvedValueOnce({
-        formResponse: {
-          response: {
-            answers: [
-              {
-                question_id: 'q1',
-                value: 'good'
-              },
-              {
-                question_id: 'q2',
-                value: ['fatigue', 'headache']
-              },
-              {
-                question_id: 'q3',
-                value: 'I have been experiencing occasional dizziness when standing up too quickly.'
-              }
-            ]
-          }
-        }
+        formResponse: mockFormResponseResponse
       })
 
     helpers.awellSdk = jest.fn().mockReturnValue({
@@ -514,11 +500,11 @@ describe.skip('summarizeForm - Real LLM calls with mocked Awell SDK', () => {
     })
 
     expect(helpers.awellSdk).toHaveBeenCalled()
-    expect(mockQuery).toHaveBeenCalledTimes(5)
+    expect(mockQuery).toHaveBeenCalledTimes(4)
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
         summary: expect.stringMatching(
-          new RegExp(`Important Notice: The content provided is an AI-generated summary of form responses in Care Flow "Test Care Flow".*Patient Health Questionnaire.*Overall health.*Symptoms.*health concerns.*`, 's')
+          new RegExp(`Important Notice: The content provided is an AI-generated summary of form responses of version 3 of Care Flow "Test Care Flow".*`, 's')
         ),
       },
     })
