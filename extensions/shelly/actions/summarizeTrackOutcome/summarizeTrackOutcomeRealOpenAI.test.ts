@@ -72,7 +72,7 @@ describe.skip('summarizeTrackOutcome - Real LLM calls with mocked Awell SDK', ()
     const awellSdkMock = {
       orchestration: {
         query: jest.fn()
-          .mockImplementation(({ activity, pathway }) => {
+          .mockImplementation(({ activity, pathway, publishedPathwayDefinitions }) => {
             if (activity) {
               return Promise.resolve({
                 activity: {
@@ -88,6 +88,22 @@ describe.skip('summarizeTrackOutcome - Real LLM calls with mocked Awell SDK', ()
             }
             if (pathway) {
               return Promise.resolve(mockPathwayDetails)
+            }
+            if (publishedPathwayDefinitions) {
+              return Promise.resolve({
+                publishedPathwayDefinitions: {
+                  code: '200',
+                  success: true,
+                  publishedPathwayDefinitions: [
+                    {
+                      id: 'ty0CmaHm2jlX', // Match the pathway_definition_id from mockPathwayDetails
+                      title: 'AI Actions Check',
+                      version: 6,
+                      release_id: 'rel_123', // Match the release_id from mockPathwayDetails
+                    }
+                  ]
+                }
+              })
             }
           })
       },

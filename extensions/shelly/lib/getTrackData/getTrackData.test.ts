@@ -7,7 +7,7 @@ import {
   mockPathwayDataPointsResponse,
   mockFormDefinitionResponse,
   mockFormResponseResponse
-} from './__testdata__'
+} from './__mocks__'
 
 jest.mock('@awell-health/awell-sdk', () => {
   return {
