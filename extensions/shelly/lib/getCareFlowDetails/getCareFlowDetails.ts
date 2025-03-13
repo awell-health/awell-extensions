@@ -94,7 +94,7 @@ export async function getCareFlowDetails(
         (def) => def.release_id === releaseId
       );
       
-      if (matchingReleaseVersion !== null && matchingReleaseVersion !== undefined) {
+      if (matchingReleaseVersion !== undefined) {
         version = matchingReleaseVersion.version;
       }
     }

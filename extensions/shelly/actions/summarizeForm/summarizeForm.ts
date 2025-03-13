@@ -63,13 +63,21 @@ export const summarizeForm: Action<
       formResponse,
     })
 
+    // Create disclaimer message based on version availability
+    let disclaimerMessage = '';
+    if (!isNil(careFlowDetails.version)) {
+      disclaimerMessage = `Important Notice: The content provided is an AI-generated summary of form responses of version ${careFlowDetails.version} of Care Flow "${careFlowDetails.title}" (ID: ${careFlowDetails.id}).`;
+    } else {
+      disclaimerMessage = `Important Notice: The content provided is an AI-generated summary of form responses of Care Flow "${careFlowDetails.title}" (ID: ${careFlowDetails.id}).`;
+    }
+
     // 4. Generate summary
     const summary = await summarizeFormWithLLM({
       model,
       formData,
       summaryFormat,
       language,
-      disclaimerMessage: `Important Notice: The content provided is an AI-generated summary of form responses${!isNil(careFlowDetails.version) ? ` of version ${careFlowDetails.version}` : ''} of Care Flow "${careFlowDetails.title}" (ID: ${careFlowDetails.id}).`,
+      disclaimerMessage,
       additionalInstructions,
       metadata,
       callbacks,

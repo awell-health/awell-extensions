@@ -1,3 +1,14 @@
+/**
+ * TEMPORARY TEST FILE - Will be deleted after testing
+ * 
+ * This file is used for local testing of the summarizeTrackOutcome action with real data.
+ * It contains intentional type assertions and bypasses some TypeScript checks
+ * to make testing easier. Linter errors are expected and can be ignored.
+ * 
+ * To run this file:
+ * yarn ts-node --transpile-only extensions/shelly/actions/summarizeTrackOutcome/test-summarize-track-outcome.ts
+ */
+
 import { AwellSdk } from '@awell-health/awell-sdk'
 import dotenv from 'dotenv'
 import { summarizeTrackOutcome } from './summarizeTrackOutcome'
@@ -10,11 +21,6 @@ dotenv.config()
 
 // Output file path for saving results
 const OUTPUT_PATH = './summarize-track-outcome-output.json'
-
-// Define the type for the data points
-interface DataPoints {
-  outcomeSummary: string
-}
 
 // Test payload with real data
 const testPayload = {
@@ -65,14 +71,14 @@ async function testSummarizeTrackOutcome(): Promise<void> {
 
   // Check for API key
   const apiKey = process.env.AWELL_API_KEY
-  if (apiKey === undefined || apiKey === null || apiKey.trim() === '') {
+  if (!apiKey || apiKey.trim() === '') {
     throw new Error('AWELL_API_KEY is not set in .env file')
   }
   console.log('API Key loaded successfully')
 
   // Check for OpenAI API key
   const openaiApiKey = process.env.OPENAI_API_KEY
-  if (openaiApiKey === undefined || openaiApiKey === null || openaiApiKey.trim() === '') {
+  if (!openaiApiKey || openaiApiKey.trim() === '') {
     console.warn('Warning: OPENAI_API_KEY is not set in .env file')
   } else {
     console.log('OpenAI API Key loaded successfully')
@@ -111,7 +117,7 @@ async function testSummarizeTrackOutcome(): Promise<void> {
     }
     
     const trackIdValue = activityResponse.activity?.activity?.context?.track_id
-    if (typeof trackIdValue !== 'string' || trackIdValue.trim() === '') {
+    if (!trackIdValue || typeof trackIdValue !== 'string' || trackIdValue.trim() === '') {
       throw new Error('Failed to get track ID: track_id is missing or empty in activity context')
     }
     
@@ -144,24 +150,15 @@ async function testSummarizeTrackOutcome(): Promise<void> {
       totalActivities: totalActivities
     }, null, 2))
 
-    // Fetch pathway details directly to check if it works
-    console.log('Fetching pathway details directly...')
-    const pathwayDetails = await awellSdk.orchestration.query({
-      pathway: {
-        __args: {
-          id: testPayload.pathway.id,
-        },
-        code: true,
-        success: true,
-        pathway: {
-          id: true,
-          title: true,
-          pathway_definition_id: true,
-          version: true,
-        },
-      },
-    })
-    console.log('Pathway details response:', JSON.stringify(pathwayDetails, null, 2))
+    // Import getCareFlowDetails dynamically
+    console.log('Importing getCareFlowDetails module')
+    const { getCareFlowDetails } = await import('../../lib/getCareFlowDetails')
+    console.log('Module imported successfully')
+    
+    // Fetch care flow details
+    console.log('Fetching care flow details...')
+    const careFlowDetails = await getCareFlowDetails(awellSdk, testPayload.pathway.id)
+    console.log('Care flow details:', JSON.stringify(careFlowDetails, null, 2))
 
     // Create helpers object
     console.log('Creating helpers object')
@@ -205,44 +202,17 @@ async function testSummarizeTrackOutcome(): Promise<void> {
       }
     }
 
-    // Monkey patch the awellSdk.orchestration.query method to log all queries
-    const originalQuery = awellSdk.orchestration.query;
-    awellSdk.orchestration.query = async (options: any) => {
-      // Only log pathway queries
-      if (options.pathway && options.pathway.__args && options.pathway.__args.id) {
-        console.log('\n=== PATHWAY QUERY DETECTED ===');
-        console.log('Query for pathway ID:', options.pathway.__args.id);
-        console.log('Query details:', JSON.stringify(options.pathway, null, 2));
-        
-        // Add version field if this is the pathway details query from summarizeTrackOutcome
-        if (options.pathway.pathway && !options.pathway.pathway.version) {
-          console.log('Adding version field to pathway query');
-          options.pathway.pathway.version = true;
-        }
-      }
-      
-      const result = await originalQuery(options);
-      
-      // Only log pathway query results
-      if (options.pathway && options.pathway.__args && options.pathway.__args.id) {
-        console.log('\n=== PATHWAY QUERY RESULT ===');
-        console.log(JSON.stringify(result.pathway, null, 2));
-      }
-      
-      return result;
-    };
-
     // Create completion and error handlers
     console.log('Setting up completion and error handlers')
-    let result: { data_points?: { outcomeSummary: string } } | null = null
     
-    const onComplete = async (params: { data_points?: { outcomeSummary: string } }): Promise<void> => {
+    // Using any type for the callbacks to avoid TypeScript errors in this test script
+    const onComplete = async (params: Record<string, any>): Promise<void> => {
       console.log('\n=== ACTION COMPLETED ===');
       
       // Save both track data and summary to the output file
       const outputData = {
         trackData,
-        pathwayDetails,
+        careFlowDetails,
         summary: params
       }
       
@@ -253,8 +223,9 @@ async function testSummarizeTrackOutcome(): Promise<void> {
       console.log(`Results saved to ${OUTPUT_PATH}`);
       
       // Display summary preview
-      if (params?.data_points?.outcomeSummary) {
-        const plainTextSummary = params.data_points.outcomeSummary
+      const summary = params?.data_points?.outcomeSummary;
+      if (summary && typeof summary === 'string') {
+        const plainTextSummary = summary
           .replace(/<[^>]*>/g, '')
           .replace(/&nbsp;/g, ' ')
           .replace(/&amp;/g, '&')
@@ -266,10 +237,11 @@ async function testSummarizeTrackOutcome(): Promise<void> {
       }
     }
 
-    const onError = async (error: { error?: { message: string } }): Promise<void> => {
+    const onError = async (error: Record<string, any>): Promise<void> => {
       console.error('onError called with error:', error)
-      if (error?.error?.message) {
-        throw new Error(`Action execution failed: ${error.error.message}`)
+      const errorMessage = error?.error?.message;
+      if (errorMessage && typeof errorMessage === 'string') {
+        throw new Error(`Action execution failed: ${errorMessage}`)
       } else {
         throw new Error(`Action execution failed: ${JSON.stringify(error)}`)
       }
@@ -278,7 +250,7 @@ async function testSummarizeTrackOutcome(): Promise<void> {
     // Get the onEvent handler
     console.log('Getting onEvent handler from summarizeTrackOutcome')
     const handler = summarizeTrackOutcome.onEvent
-    if (!handler) {
+    if (handler === undefined) {
       throw new Error('onEvent handler is not defined')
     }
     console.log('Handler found, preparing to execute')

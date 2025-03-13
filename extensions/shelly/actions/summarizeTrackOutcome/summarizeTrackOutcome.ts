@@ -89,11 +89,12 @@ export const summarizeTrackOutcome: Action<
     const careFlowDetails = await getCareFlowDetails(awellSdk, pathway.id)
     
     // Create version string if version is available
-    const versionStr = careFlowDetails.version !== null 
-      ? ` version ${careFlowDetails.version}` 
-      : '';
-    
-    const disclaimerMsg = `Important Notice: The content provided is an AI-generated summary of${versionStr} Care Flow "${careFlowDetails.title}" (ID: ${careFlowDetails.id}).`
+    let disclaimerMsg = '';
+    if (!isNil(careFlowDetails.version)) {
+      disclaimerMsg = `Important Notice: The content provided is an AI-generated summary of version ${careFlowDetails.version} of Care Flow "${careFlowDetails.title}" (ID: ${careFlowDetails.id}).`;
+    } else {
+      disclaimerMsg = `Important Notice: The content provided is an AI-generated summary of Care Flow "${careFlowDetails.title}" (ID: ${careFlowDetails.id}).`;
+    }
 
     const htmlSummary = await markdownToHtml(`${disclaimerMsg}\n\n${summary}`)
 
