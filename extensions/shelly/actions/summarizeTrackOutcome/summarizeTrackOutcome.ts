@@ -33,7 +33,7 @@ export const summarizeTrackOutcome: Action<
       helpers,
       payload,
       modelType: OPENAI_MODELS.GPT4o,
-      hideDataForTracing: false, // TODO: set to true before production
+      hideDataForTracing: false, // IMPORTANT: set to true if there is a use case that might include PHI 
     })
 
     const awellSdk = await helpers.awellSdk()
