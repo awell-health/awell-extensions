@@ -70,9 +70,13 @@ export async function getCareFlowDetails(
       },
     });
 
-    // If publishedDefinitions or its properties are undefined, return with null version
-    if (!publishedDefinitions?.publishedPathwayDefinitions?.success || 
-        !Array.isArray(publishedDefinitions?.publishedPathwayDefinitions?.publishedPathwayDefinitions)) {
+    // Check if the published definitions query was successful
+    if (!publishedDefinitions?.publishedPathwayDefinitions?.success) {
+      throw new Error('Failed to fetch published pathway definitions');
+    }
+
+    // If publishedDefinitions.publishedPathwayDefinitions array is undefined, return with null version
+    if (!Array.isArray(publishedDefinitions?.publishedPathwayDefinitions?.publishedPathwayDefinitions)) {
       // Return basic details without version information
       return {
         title,
