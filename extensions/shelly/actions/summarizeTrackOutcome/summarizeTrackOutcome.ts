@@ -16,7 +16,7 @@ export const summarizeTrackOutcome: Action<
 > = {
   key: 'summarizeTrackOutcome',
   category: Category.WORKFLOW,
-  title: 'Summarize Track Outcome (Beta)',
+  title: 'Summarize Track Outcome',
   description: 'Summarize the care flow track outcome and activities that led to the outcome',
   fields,
   previewable: false,
