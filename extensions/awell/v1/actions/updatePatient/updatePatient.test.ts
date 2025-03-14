@@ -2,6 +2,8 @@ import { TestHelpers } from '@awell-health/extensions-core'
 import { ZodError } from 'zod'
 import { generateTestPayload } from '@/tests'
 import { updatePatient } from './updatePatient'
+import { getTimezoneOptions } from './config/getTimezones'
+import { FieldsValidationSchema } from './config/fields'
 
 jest.mock('../../sdk/awellSdk')
 
@@ -16,6 +18,34 @@ describe('Update patient', () => {
   beforeEach(() => {
     onComplete.mockClear()
     onError.mockClear()
+  })
+
+  describe('getTimezones', () => {
+    test('Should return the correct timezones (only testing for some timezones)', () => {
+      const timezones = getTimezoneOptions()
+
+      expect(timezones).toEqual(
+        expect.arrayContaining([
+          { label: 'America/New_York', value: 'America/New_York' },
+          { label: 'America/Los_Angeles', value: 'America/Los_Angeles' },
+          { label: 'Europe/Brussels', value: 'Europe/Brussels' },
+          { label: 'Europe/London', value: 'Europe/London' },
+          { label: 'Asia/Tokyo', value: 'Asia/Tokyo' },
+        ]),
+      )
+    })
+
+    test('Should validate and successfully parse a valid timezone', () => {
+      expect(() =>
+        FieldsValidationSchema.shape.patientTimzone.parse('America/New_York'),
+      ).not.toThrow(ZodError)
+    })
+
+    test('Should validate and throw when parsing an invalid timezone', () => {
+      expect(() =>
+        FieldsValidationSchema.shape.patientTimzone.parse('Invalid/Timezone'),
+      ).toThrow(ZodError)
+    })
   })
 
   test('Should call the onComplete callback', async () => {
