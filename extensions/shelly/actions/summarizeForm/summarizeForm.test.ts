@@ -6,6 +6,15 @@ import { mockFormDefinitionResponse } from './__mocks__/formDefinitionResponse'
 import { mockFormResponseResponse } from './__mocks__/formResponseResponse'
 import { markdownToHtml } from '../../../../src/utils'
 
+// Mock getCareFlowDetails
+jest.mock('../../lib/getCareFlowDetails', () => ({
+  getCareFlowDetails: jest.fn().mockResolvedValue({
+    title: 'Test Care Flow',
+    id: 'whatever',
+    version: 3
+  })
+}))
+
 // Simple payload generator function to replace the external import
 const generateTestPayload = (overrides = {}) => {
   return {
@@ -54,26 +63,11 @@ describe('summarizeForm - Mocked LLM calls', () => {
   const { onComplete, onError, helpers, extensionAction, clearMocks } =
     TestHelpers.fromAction(summarizeForm)
 
-  // Define mock pathway details for the disclaimer
-  const mockPathwayDetails = {
-    pathway: {
-      success: true,
-      code: 200,
-      pathway: {
-        id: 'ai4rZaYEocjB',
-        title: 'Test Care Flow',
-        pathway_definition_id: 'whatever',
-      }
-    }
-  }
-
   beforeEach(() => {
     clearMocks()
     jest.clearAllMocks()
     const mockQuery = jest.fn()
-      // First query: get pathway details for disclaimer
-      .mockResolvedValueOnce(mockPathwayDetails)
-      // Second query: get current activity
+      // First query: get current activity
       .mockResolvedValueOnce({
         activity: {
           success: true,
@@ -86,7 +80,7 @@ describe('summarizeForm - Mocked LLM calls', () => {
           }
         }
       })
-      // Third query: get activities in current step
+      // Second query: get activities in current step
       .mockResolvedValueOnce({
         pathwayStepActivities: {
           success: true,
@@ -105,11 +99,11 @@ describe('summarizeForm - Mocked LLM calls', () => {
           }]
         }
       })
-      // Fourth query: get form definition
+      // Third query: get form definition
       .mockResolvedValueOnce({
         form: mockFormDefinitionResponse,
       })
-      // Fifth query: get form response
+      // Fourth query: get form response
       .mockResolvedValueOnce({
         formResponse: mockFormResponseResponse,
       })
@@ -142,6 +136,14 @@ describe('summarizeForm - Mocked LLM calls', () => {
       helpers,
     })
 
+    // Verify the summarizeFormWithLLM function was called with the correct disclaimer
+    const { summarizeFormWithLLM } = require('../../lib/summarizeFormWithLLM')
+    expect(summarizeFormWithLLM).toHaveBeenCalledWith(
+      expect.objectContaining({
+        disclaimerMessage: 'Important Notice: The content provided is an AI-generated summary of form responses of version 3 of Care Flow "Test Care Flow" (ID: whatever).'
+      })
+    )
+
     const expected = await markdownToHtml('The patient reported good overall health. They experienced fatigue and headache in the last 7 days. Additionally, they mentioned occasional dizziness when standing up too quickly.')
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
@@ -173,6 +175,15 @@ describe('summarizeForm - Mocked LLM calls', () => {
       onError,
       helpers,
     })
+
+    // Verify the summarizeFormWithLLM function was called with the correct disclaimer and instructions
+    const { summarizeFormWithLLM } = require('../../lib/summarizeFormWithLLM')
+    expect(summarizeFormWithLLM).toHaveBeenCalledWith(
+      expect.objectContaining({
+        disclaimerMessage: 'Important Notice: The content provided is an AI-generated summary of form responses of version 3 of Care Flow "Test Care Flow" (ID: whatever).',
+        additionalInstructions: 'Focus on medication details and side effects.'
+      })
+    )
 
     const expected = await markdownToHtml('The patient reported good overall health. They experienced fatigue and headache in the last 7 days. Additionally, they mentioned occasional dizziness when standing up too quickly.')
     expect(onComplete).toHaveBeenCalledWith({

@@ -1,1 +1,1 @@
-export { getTrackData } from './getTrackData'
+export * from './getTrackData'

@@ -1,8 +1,6 @@
 import 'dotenv/config'
 import { TestHelpers } from '@awell-health/extensions-core'
 import { summarizeTrackOutcome } from '.'
-import { DISCLAIMER_MSG } from '../../lib/constants'
-import { mockPathwayDetails } from './__mocks__/mockPathwayDetails'
 import { mockTrackData } from './__mocks__/mockTrackData'
 
 // Mock getTrackData to return test data
@@ -13,6 +11,15 @@ jest.mock('../../lib/getTrackData/index', () => {
     getTrackData: jest.fn()
   }
 })
+
+// Mock getCareFlowDetails
+jest.mock('../../lib/getCareFlowDetails', () => ({
+  getCareFlowDetails: jest.fn().mockResolvedValue({
+    title: 'AI Actions Check',
+    id: 'xQ2P4uBn2cY8',
+    version: 6
+  })
+}))
 
 jest.setTimeout(30000) // Increase timeout for real LLM calls
 
@@ -68,11 +75,11 @@ describe.skip('summarizeTrackOutcome - Real LLM calls with mocked Awell SDK', ()
       }
     }
 
-    // Mock the Awell SDK to return pathway details
+    // Mock the Awell SDK to return activity details
     const awellSdkMock = {
       orchestration: {
         query: jest.fn()
-          .mockImplementation(({ activity, pathway }) => {
+          .mockImplementation(({ activity }) => {
             if (activity) {
               return Promise.resolve({
                 activity: {
@@ -86,9 +93,7 @@ describe.skip('summarizeTrackOutcome - Real LLM calls with mocked Awell SDK', ()
                 }
               })
             }
-            if (pathway) {
-              return Promise.resolve(mockPathwayDetails)
-            }
+            return Promise.resolve({})
           })
       },
     }
@@ -109,8 +114,8 @@ describe.skip('summarizeTrackOutcome - Real LLM calls with mocked Awell SDK', ()
       // Get the summary from the onComplete call
       const summary = onComplete.mock.calls[0][0].data_points.outcomeSummary
       
-      // Verify the summary contains the disclaimer
-      expect(summary).toContain('Important Notice: The content provided is an AI-generated summary')
+      // Verify the summary contains the disclaimer with version
+      expect(summary).toContain('Important Notice: The content provided is an AI-generated summary of version 6 of Care Flow "AI Actions Check"')
       
       // Verify the summary contains relevant information about the track
       // These are key terms that should appear in any reasonable summary of our mock data
