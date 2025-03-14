@@ -232,61 +232,55 @@ export const getTrackData = async ({
   trackId,
   currentActivityId,
 }: GetTrackDataInput): Promise<GetTrackDataOutput> => {
+  // Validate input parameters
+  if (isNil(awellSdk)) throw new Error('AwellSdk is required');
+  if (isEmpty(pathwayId)) throw new Error('PathwayId is required');
+  if (isEmpty(trackId)) throw new Error('TrackId is required');
+  if (isEmpty(currentActivityId)) throw new Error('CurrentActivityId is required');
+
+  // 1. Make a single combined query for all data
+  const combinedQuery = await fetchAllTrackData(awellSdk, pathwayId);
+
+  // 2. Find current activity cutoff date
+  const activities = combinedQuery.pathwayActivities?.activities ?? [];
+  const currentActivity = activities.find(activity => activity.id === currentActivityId);
+  const currentActivityDate = currentActivity?.date ?? '';
+
+  // 3. Filter activities for this track
+  const trackActivities = filterTrackActivities(activities, trackId, currentActivityDate);
+
+  // 4. Get and process steps for this track
+  const elements = combinedQuery.pathwayElements?.elements ?? [];
+  const trackSteps = filterTrackSteps(elements, trackId);
+
+  // 5. Process data points for activities
+  const dataPoints = combinedQuery.pathwayDataPoints?.dataPoints ?? [];
+  const activityDataPointsMap = createDataPointsMap(dataPoints);
+
+  // 6. Extract activities with forms for processing
+  const activitiesWithForms = extractActivitiesWithForms(trackActivities);
+
+  // 7. Process form definitions and responses
+  const { formDefinitionsMap, formResponsesMap } = 
+    await processFormDefinitionsAndResponses(awellSdk, pathwayId, activitiesWithForms);
+
+  // 8. Try to extract message activities and fetch message content, but continue if it fails
+  let messageContentsMap = new Map<string, { subject?: string; body?: string }>();
   try {
-    // Validate input parameters
-    if (isNil(awellSdk)) throw new Error('AwellSdk is required');
-    if (isEmpty(pathwayId)) throw new Error('PathwayId is required');
-    if (isEmpty(trackId)) throw new Error('TrackId is required');
-    if (isEmpty(currentActivityId)) throw new Error('CurrentActivityId is required');
-
-    // 1. Make a single combined query for all data
-    const combinedQuery = await fetchAllTrackData(awellSdk, pathwayId);
-
-    // 2. Find current activity cutoff date
-    const activities = combinedQuery.pathwayActivities?.activities ?? [];
-    const currentActivity = activities.find(activity => activity.id === currentActivityId);
-    const currentActivityDate = currentActivity?.date ?? '';
-
-    // 3. Filter activities for this track
-    const trackActivities = filterTrackActivities(activities, trackId, currentActivityDate);
-
-    // 4. Get and process steps for this track
-    const elements = combinedQuery.pathwayElements?.elements ?? [];
-    const trackSteps = filterTrackSteps(elements, trackId);
-
-    // 5. Process data points for activities
-    const dataPoints = combinedQuery.pathwayDataPoints?.dataPoints ?? [];
-    const activityDataPointsMap = createDataPointsMap(dataPoints);
-
-    // 6. Extract activities with forms for processing
-    const activitiesWithForms = extractActivitiesWithForms(trackActivities);
-
-    // 7. Process form definitions and responses
-    const { formDefinitionsMap, formResponsesMap } = 
-      await processFormDefinitionsAndResponses(awellSdk, pathwayId, activitiesWithForms);
-
-    // 8. Try to extract message activities and fetch message content, but continue if it fails
-    let messageContentsMap = new Map<string, { subject?: string; body?: string }>();
-    try {
-      const messageActivities = extractMessageActivities(trackActivities);
-      messageContentsMap = await fetchMessageContents(awellSdk, messageActivities);
-    } catch (error) {
-      console.error('Error fetching message contents, continuing without message data:', error);
-      // Continue without message data
-    }
-
-    // 9. Process steps with activities
-    const processedSteps = trackSteps.map(step => 
-      processStep(step, trackActivities, activityDataPointsMap, formDefinitionsMap, formResponsesMap, messageContentsMap)
-    );
-
-    return {
-      steps: processedSteps
-    };
+    const messageActivities = extractMessageActivities(trackActivities);
+    messageContentsMap = await fetchMessageContents(awellSdk, messageActivities);
   } catch (error) {
-    console.error('Error in getTrackData:', error);
-    throw error;
+    // Continue without message data
   }
+
+  // 9. Process steps with activities
+  const processedSteps = trackSteps.map(step => 
+    processStep(step, trackActivities, activityDataPointsMap, formDefinitionsMap, formResponsesMap, messageContentsMap)
+  );
+
+  return {
+    steps: processedSteps
+  };
 };
 
 /**
@@ -371,7 +365,6 @@ async function fetchAllTrackData(
       }
     }) as CombinedQueryResponse;
   } catch (error) {
-    console.error('Error fetching track data:', error);
     throw new Error(`Failed to fetch track data: ${error instanceof Error ? error.message : String(error)}`);
   }
 }
@@ -536,7 +529,6 @@ async function processBatch(
         }
         return null;
       } catch (error) {
-        console.error(`Error fetching form definition for ${formId}:`, error);
         return null;
       }
     });
@@ -560,7 +552,6 @@ async function processBatch(
           }
         });
       } catch (error) {
-        console.error(`Error fetching form response for activity ${activityId}:`, error);
         return null;
       }
     });
@@ -598,7 +589,6 @@ async function processBatch(
       }
     });
   } catch (error) {
-    console.error('Error processing batch:', error);
     // Continue with partial data rather than failing completely
   }
 }
