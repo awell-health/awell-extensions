@@ -18,14 +18,25 @@ export const createNonVisitNote: Action<
   fields,
   previewable: true,
   dataPoints,
-  onEvent: async ({ payload, onComplete, onError }): Promise<void> => {
+  onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
     const { patientId, authorId, tags, text, category } =
       FieldsValidationSchema.parse(payload.fields)
+
+    const awellSdk = await helpers.awellSdk()
+    const escapedPlainText = awellSdk.utils.awell.slateToEscapedJsString(text, {
+      paragraphSpacing: 'single',
+    }) // Strip any HTML from the text
+
+    const unescapedPlainText = escapedPlainText
+      .replace(/\\n/g, '\n')
+      .replace(/\\t/g, '\t')
+      .replace(/\\"/g, '"')
+      .replace(/\\\\/g, '\\')
 
     const note = nonVisitNoteSchema.parse({
       tags,
       patient: patientId,
-      bullets: [{ text, author: authorId, category }],
+      bullets: [{ text: unescapedPlainText, author: authorId, category }],
       document_date: new Date().toISOString(),
       chart_date: new Date().toISOString(),
     })
