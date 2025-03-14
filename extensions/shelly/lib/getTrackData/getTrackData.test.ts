@@ -6,7 +6,11 @@ import {
   mockPathwayActivitiesResponse,
   mockPathwayDataPointsResponse,
   mockFormDefinitionResponse,
-  mockFormResponseResponse
+  mockFormResponseResponse,
+  mockMessageResponse,
+  mockEmptyMessageResponse,
+  mockMessageActivityWithId,
+  mockMessageActivityWithoutId
 } from './__mocks__'
 
 jest.mock('@awell-health/awell-sdk', () => {
@@ -209,5 +213,228 @@ describe('getTrackData', () => {
     // Verify activity-5 is not included
     const activityIds = allActivities.map(a => a.date)
     expect(activityIds).not.toContain('2023-01-05T10:00:00.000Z')
+  })
+
+  test('Should fetch and process message content successfully', async () => {
+    const mockQuery = awellSdkMock.orchestration.query as jest.Mock
+    mockQuery.mockReset()
+    
+    // Add message activity to the activities response
+    const activitiesWithMessage = {
+      ...mockPathwayActivitiesResponse,
+      activities: [
+        ...mockPathwayActivitiesResponse.activities,
+        mockMessageActivityWithId
+      ]
+    }
+    
+    // Mock the combined query response
+    mockQuery.mockResolvedValueOnce({
+      pathway: mockPathwayResponse,
+      pathwayElements: mockPathwayElementsResponse,
+      pathwayActivities: activitiesWithMessage,
+      pathwayDataPoints: mockPathwayDataPointsResponse
+    })
+    
+    // Mock form definition and response queries
+    mockQuery.mockResolvedValueOnce(mockFormDefinitionResponse)
+    mockQuery.mockResolvedValueOnce(mockFormResponseResponse)
+    
+    // Mock message query
+    mockQuery.mockResolvedValueOnce(mockMessageResponse)
+    
+    const result = await getTrackData({
+      awellSdk: awellSdkMock,
+      pathwayId: 'test-pathway-id',
+      trackId: 'test-track-id',
+      currentActivityId: 'activity-4',
+    })
+    
+    // Verify the SDK was called with the correct queries
+    expect(awellSdkMock.orchestration.query).toHaveBeenCalledTimes(4) // Combined query + form def + form response + message
+    
+    // Find the message activity in the result
+    const step1 = result.steps.find(step => step.name === 'Step 1')
+    expect(step1).toBeDefined()
+    
+    const messageActivity = step1?.activities.find(activity => activity.subject.type === 'AWELL' && activity.object.type === 'MESSAGE')
+    expect(messageActivity).toBeDefined()
+    expect(messageActivity).toHaveProperty('message')
+    expect(messageActivity?.message).toMatchObject({
+      subject: 'Test Message Subject',
+      body: '<p>This is a test message body</p>'
+    })
+  })
+  
+  test('Should handle missing message ID gracefully', async () => {
+    const mockQuery = awellSdkMock.orchestration.query as jest.Mock
+    mockQuery.mockReset()
+    
+    // Add message activity without ID to the activities response
+    const activitiesWithoutMessageId = {
+      ...mockPathwayActivitiesResponse,
+      activities: [
+        ...mockPathwayActivitiesResponse.activities,
+        mockMessageActivityWithoutId
+      ]
+    }
+    
+    // Mock the combined query response
+    mockQuery.mockResolvedValueOnce({
+      pathway: mockPathwayResponse,
+      pathwayElements: mockPathwayElementsResponse,
+      pathwayActivities: activitiesWithoutMessageId,
+      pathwayDataPoints: mockPathwayDataPointsResponse
+    })
+    
+    // Mock form definition and response queries
+    mockQuery.mockResolvedValueOnce(mockFormDefinitionResponse)
+    mockQuery.mockResolvedValueOnce(mockFormResponseResponse)
+    
+    const result = await getTrackData({
+      awellSdk: awellSdkMock,
+      pathwayId: 'test-pathway-id',
+      trackId: 'test-track-id',
+      currentActivityId: 'activity-4',
+    })
+    
+    // Verify the SDK was called with the correct queries - should not attempt to fetch message
+    expect(awellSdkMock.orchestration.query).toHaveBeenCalledTimes(3) // Combined query + form def + form response
+    
+    // Find the message activity in the result
+    const step1 = result.steps.find(step => step.name === 'Step 1')
+    expect(step1).toBeDefined()
+    
+    // The message activity should be included but without message content
+    const messageActivity = step1?.activities.find(activity => 
+      activity.subject.type === 'AWELL' && 
+      activity.object.type === 'MESSAGE' && 
+      activity.object.name === 'Test Message Without ID'
+    )
+    expect(messageActivity).toBeDefined()
+    expect(messageActivity).not.toHaveProperty('message')
+  })
+  
+  test('Should handle message fetch errors gracefully', async () => {
+    const mockQuery = awellSdkMock.orchestration.query as jest.Mock
+    mockQuery.mockReset()
+    
+    // Add message activity to the activities response
+    const activitiesWithMessage = {
+      ...mockPathwayActivitiesResponse,
+      activities: [
+        ...mockPathwayActivitiesResponse.activities,
+        mockMessageActivityWithId
+      ]
+    }
+    
+    // Mock the combined query response
+    mockQuery.mockResolvedValueOnce({
+      pathway: mockPathwayResponse,
+      pathwayElements: mockPathwayElementsResponse,
+      pathwayActivities: activitiesWithMessage,
+      pathwayDataPoints: mockPathwayDataPointsResponse
+    })
+    
+    // Mock form definition and response queries
+    mockQuery.mockResolvedValueOnce(mockFormDefinitionResponse)
+    mockQuery.mockResolvedValueOnce(mockFormResponseResponse)
+    
+    // Mock message query to throw an error
+    mockQuery.mockRejectedValueOnce(new Error('Failed to fetch message'))
+    
+    const result = await getTrackData({
+      awellSdk: awellSdkMock,
+      pathwayId: 'test-pathway-id',
+      trackId: 'test-track-id',
+      currentActivityId: 'activity-4',
+    })
+    
+    // Verify the SDK was called with the correct queries
+    expect(awellSdkMock.orchestration.query).toHaveBeenCalledTimes(4) // Combined query + form def + form response + message (failed)
+    
+    // The function should complete successfully despite the message fetch error
+    expect(result).toHaveProperty('steps')
+    
+    // Find the message activity in the result
+    const step1 = result.steps.find(step => step.name === 'Step 1')
+    expect(step1).toBeDefined()
+    
+    // The message activity should be included but without message content
+    const messageActivity = step1?.activities.find(activity => 
+      activity.subject.type === 'AWELL' && 
+      activity.object.type === 'MESSAGE'
+    )
+    expect(messageActivity).toBeDefined()
+    
+    // Should use fallback content if available
+    if (messageActivity) {
+      if (messageActivity.message) {
+        expect(messageActivity.message.subject).toBe('Test Message')
+      } else {
+        // This is also acceptable - the message property might not be set at all
+        expect(messageActivity.message).toBeUndefined()
+      }
+    }
+  })
+  
+  test('Should handle empty message response gracefully', async () => {
+    const mockQuery = awellSdkMock.orchestration.query as jest.Mock
+    mockQuery.mockReset()
+    
+    // Add message activity to the activities response
+    const activitiesWithMessage = {
+      ...mockPathwayActivitiesResponse,
+      activities: [
+        ...mockPathwayActivitiesResponse.activities,
+        mockMessageActivityWithId
+      ]
+    }
+    
+    // Mock the combined query response
+    mockQuery.mockResolvedValueOnce({
+      pathway: mockPathwayResponse,
+      pathwayElements: mockPathwayElementsResponse,
+      pathwayActivities: activitiesWithMessage,
+      pathwayDataPoints: mockPathwayDataPointsResponse
+    })
+    
+    // Mock form definition and response queries
+    mockQuery.mockResolvedValueOnce(mockFormDefinitionResponse)
+    mockQuery.mockResolvedValueOnce(mockFormResponseResponse)
+    
+    // Mock message query to return empty response
+    mockQuery.mockResolvedValueOnce(mockEmptyMessageResponse)
+    
+    const result = await getTrackData({
+      awellSdk: awellSdkMock,
+      pathwayId: 'test-pathway-id',
+      trackId: 'test-track-id',
+      currentActivityId: 'activity-4',
+    })
+    
+    // Verify the SDK was called with the correct queries
+    expect(awellSdkMock.orchestration.query).toHaveBeenCalledTimes(4) // Combined query + form def + form response + message
+    
+    // Find the message activity in the result
+    const step1 = result.steps.find(step => step.name === 'Step 1')
+    expect(step1).toBeDefined()
+    
+    // The message activity should be included but without message content
+    const messageActivity = step1?.activities.find(activity => 
+      activity.subject.type === 'AWELL' && 
+      activity.object.type === 'MESSAGE'
+    )
+    expect(messageActivity).toBeDefined()
+    
+    // Should use fallback content if available
+    if (messageActivity) {
+      if (messageActivity.message) {
+        expect(messageActivity.message.subject).toBe('Test Message')
+      } else {
+        // This is also acceptable - the message property might not be set at all
+        expect(messageActivity.message).toBeUndefined()
+      }
+    }
   })
 }) 

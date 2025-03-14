@@ -140,6 +140,23 @@ export const mockTrackData = {
               title: 'Completion Date'
             }
           ]
+        },
+        {
+          date: '2023-05-15T14:30:00.000Z',
+          action: 'SENT',
+          status: 'DONE',
+          subject: {
+            type: 'PROVIDER',
+            name: 'Dr. Smith'
+          },
+          object: {
+            type: 'MESSAGE',
+            name: 'Medication Refill Confirmation'
+          },
+          message: {
+            subject: 'Medication Refill Confirmation',
+            body: '<p>Dear John Doe,</p><p>I have reviewed your request and approved the refill for Lisinopril 10mg. The prescription has been sent to CVS Pharmacy and should be ready for pickup within 24 hours.</p><p>Please schedule a follow-up appointment for a blood pressure check in the next 30 days.</p><p>Best regards,<br>Dr. Smith</p>'
+          }
         }
       ]
     }

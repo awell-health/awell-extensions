@@ -47,13 +47,13 @@ const testPayload = {
     id: "test-patient-id"
   },
   activity: {
-    id: "8eiWQSjyH00Txb8FsD306" // Use the same activity ID as before
+    id: "3wPuhvAPyE226BUtrDtNa" // Use the same activity ID as before
   },
   pathway: {
     org_slug: "awell-dev",
     org_id: "organization-test-id",
     definition_id: "test-definition-id",
-    id: "2ifb4DsPa1JQ", // Use the same pathway ID as before
+    id: "J4RpraKW5fjW", // Use the same pathway ID as before
     tenant_id: "test-tenant-id"
   },
   settings: {},

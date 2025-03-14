@@ -56,6 +56,7 @@ interface ActivityResponse {
   object: {
     type: string
     name: string
+    id?: string
   }
   indirect_object?: {
     type?: string
@@ -152,6 +153,24 @@ interface CombinedQueryResponse {
 // Type for form responses map
 type FormResponsesMap = Record<string, Record<string, FormResponseData>>;
 
+// Add a new interface for MessageResponse
+interface MessageResponse {
+  message?: {
+    message?: {
+      id: string
+      subject?: string
+      body?: string
+      format?: string
+      attachments?: Array<{
+        id: string
+        name: string
+        type: string
+        url: string
+      }> | null
+    }
+  }
+}
+
 // Simplified activity interface
 interface ExtendedActivity {
   date: string
@@ -176,6 +195,10 @@ interface ExtendedActivity {
       title: string
       response?: string
     }>
+  }
+  message?: {
+    subject?: string
+    body?: string
   }
   data_points?: Array<{
     value: string
@@ -242,9 +265,19 @@ export const getTrackData = async ({
     const { formDefinitionsMap, formResponsesMap } = 
       await processFormDefinitionsAndResponses(awellSdk, pathwayId, activitiesWithForms);
 
-    // 8. Process steps with activities
+    // 8. Try to extract message activities and fetch message content, but continue if it fails
+    let messageContentsMap = new Map<string, { subject?: string; body?: string }>();
+    try {
+      const messageActivities = extractMessageActivities(trackActivities);
+      messageContentsMap = await fetchMessageContents(awellSdk, messageActivities);
+    } catch (error) {
+      console.error('Error fetching message contents, continuing without message data:', error);
+      // Continue without message data
+    }
+
+    // 9. Process steps with activities
     const processedSteps = trackSteps.map(step => 
-      processStep(step, trackActivities, activityDataPointsMap, formDefinitionsMap, formResponsesMap)
+      processStep(step, trackActivities, activityDataPointsMap, formDefinitionsMap, formResponsesMap, messageContentsMap)
     );
 
     return {
@@ -307,7 +340,11 @@ async function fetchAllTrackData(
           status: true,
           resolution: true,
           subject: { type: true, name: true },
-          object: { type: true, name: true },
+          object: { 
+            type: true, 
+            name: true,
+            id: true // id field to get message ID
+          },
           indirect_object: { type: true, name: true },
           form: {
             id: true,
@@ -567,6 +604,124 @@ async function processBatch(
 }
 
 /**
+ * Extract activities that are messages
+ */
+function extractMessageActivities(
+  activities: ActivityResponse[]
+): Array<{ activityId: string; messageId: string; fallbackSubject?: string; fallbackBody?: string }> {
+  const messageActivities = activities
+    .filter(activity => {
+      return !isNil(activity.object) && 
+             typeof activity.object.type === 'string' && 
+             activity.object.type === 'MESSAGE' &&
+             !isNil(activity.object.id) &&
+             !isEmpty(activity.object.id);
+    })
+    .map(activity => {
+      // Use object.id as the message ID
+      const messageId = activity.object.id as string;
+      
+      // Extract fallback content from activity if available
+      let fallbackSubject = '';
+      if (!isNil(activity.object.name) && !isEmpty(activity.object.name)) {
+        fallbackSubject = activity.object.name;
+      }
+      
+      return {
+        activityId: activity.id,
+        messageId,
+        fallbackSubject,
+        fallbackBody: ''
+      };
+    });
+  
+  return messageActivities;
+}
+
+/**
+ * Fetch message contents for message activities
+ */
+async function fetchMessageContents(
+  awellSdk: AwellSdk,
+  messageActivities: Array<{ activityId: string; messageId: string; fallbackSubject?: string; fallbackBody?: string }>
+): Promise<Map<string, { subject?: string; body?: string }>> {
+  const messageContentsMap = new Map<string, { subject?: string; body?: string }>();
+  
+  if (messageActivities.length === 0) {
+    return messageContentsMap;
+  }
+  
+  // Process in batches to avoid overloading
+  const batchSize = 10;
+  const batches = [];
+  
+  for (let i = 0; i < messageActivities.length; i += batchSize) {
+    batches.push(messageActivities.slice(i, i + batchSize));
+  }
+  
+  for (const batch of batches) {
+    await Promise.all(batch.map(async ({ activityId, messageId, fallbackSubject, fallbackBody }) => {
+      try {
+        // Try to fetch message content with the query structure from documentation
+        const response = await awellSdk.orchestration.query({
+          message: {
+            __args: {
+              id: messageId
+            },
+            message: {
+              id: true,
+              subject: true,
+              body: true,
+              format: true,
+              attachments: {
+                id: true,
+                name: true,
+                type: true,
+                url: true
+              }
+            }
+          }
+        }) as MessageResponse;
+        
+        // Use lodash to check for null/undefined values
+        if (!isNil(response) && 
+            !isNil(response.message) && 
+            !isNil(response.message.message)) {
+          messageContentsMap.set(activityId, {
+            subject: response.message.message.subject,
+            body: response.message.message.body
+          });
+        } else {
+          // Use fallback content if available
+          const hasFallbackSubject = !isNil(fallbackSubject) && !isEmpty(fallbackSubject);
+          const hasFallbackBody = !isNil(fallbackBody) && !isEmpty(fallbackBody);
+          
+          if (hasFallbackSubject || hasFallbackBody) {
+            messageContentsMap.set(activityId, {
+              subject: fallbackSubject,
+              body: fallbackBody
+            });
+          }
+        }
+      } catch (error) {
+        // Use fallback content if available after error
+        const hasFallbackSubject = !isNil(fallbackSubject) && !isEmpty(fallbackSubject);
+        const hasFallbackBody = !isNil(fallbackBody) && !isEmpty(fallbackBody);
+        
+        if (hasFallbackSubject || hasFallbackBody) {
+          messageContentsMap.set(activityId, {
+            subject: fallbackSubject,
+            body: fallbackBody
+          });
+        }
+      }
+    }));
+  }
+  
+  return messageContentsMap;
+}
+
+/**
  * Process a step with its activities
  */
 function processStep(
@@ -574,7 +729,8 @@ function processStep(
   trackActivities: ActivityResponse[],
   activityDataPointsMap: Map<string, ExtendedDataPoint[]>,
   formDefinitionsMap: Map<string, any>,
-  formResponsesMap: FormResponsesMap
+  formResponsesMap: FormResponsesMap,
+  messageContentsMap: Map<string, { subject?: string; body?: string }>
 ): GetTrackDataOutput['steps'][0] {
   const stepActivities = trackActivities
     .filter(activity => activity.context?.step_id === step.id)
@@ -582,7 +738,8 @@ function processStep(
       activity, 
       activityDataPointsMap, 
       formDefinitionsMap, 
-      formResponsesMap
+      formResponsesMap,
+      messageContentsMap
     ));
 
   return {
@@ -605,7 +762,8 @@ function processActivity(
   activity: ActivityResponse,
   activityDataPointsMap: Map<string, ExtendedDataPoint[]>,
   formDefinitionsMap: Map<string, any>,
-  formResponsesMap: FormResponsesMap
+  formResponsesMap: FormResponsesMap,
+  messageContentsMap: Map<string, { subject?: string; body?: string }>
 ): ExtendedActivity {
   const baseActivity: ExtendedActivity = {
     date: activity.date,
@@ -633,6 +791,9 @@ function processActivity(
     };
   }
 
+  // Process message if exists
+  processActivityMessage(baseActivity, activity, messageContentsMap);
+  
   // Process form if exists
   processActivityForm(baseActivity, activity, formDefinitionsMap, formResponsesMap);
   
@@ -640,6 +801,25 @@ function processActivity(
   processActivityDataPoints(baseActivity, activity, activityDataPointsMap);
 
   return baseActivity;
+}
+
+/**
+ * Process message for an activity
+ */
+function processActivityMessage(
+  baseActivity: ExtendedActivity,
+  activity: ActivityResponse,
+  messageContentsMap: Map<string, { subject?: string; body?: string }>
+): void {
+  if (messageContentsMap.has(activity.id)) {
+    const messageContent = messageContentsMap.get(activity.id);
+    if (!isNil(messageContent)) {
+      baseActivity.message = {
+        subject: messageContent.subject,
+        body: messageContent.body
+      };
+    }
+  }
 }
 
 /**
