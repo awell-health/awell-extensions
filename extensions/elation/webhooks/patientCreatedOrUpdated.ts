@@ -51,18 +51,10 @@ export const patientCreatedOrUpdated: Webhook<
       })
       const { success } = await limiter.limit(patientId.toString())
       if (!success) {
-        console.warn({
-          data,
-          resource,
-          action,
-          message:
-            'Rate limit exceeded. 200 OK response sent to Elation to prevent further requests.',
-        })
         await onError({
           response: {
             statusCode: 200,
-            message:
-              'Rate limit exceeded. 200 OK response sent to Elation to prevent further requests.',
+            message: `Rate limit exceeded for patient_id=${patientId}. 200 OK response sent to Elation to prevent further requests.`,
           },
         })
         return

@@ -53,13 +53,6 @@ export const appointmentCreatedOrUpdated: Webhook<
       })
       const { success } = await limiter.limit(appointmentId.toString())
       if (!success) {
-        console.warn({
-          data,
-          resource,
-          action,
-          message:
-            'Rate limit exceeded. 200 OK response sent to Elation to prevent further requests.',
-        })
         await onError({
           response: {
             statusCode: 200,
