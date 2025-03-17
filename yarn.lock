@@ -87,7 +87,7 @@ __metadata:
   resolution: "@awell-health/awell-extensions@workspace:."
   dependencies:
     "@awell-health/awell-sdk": "npm:^0.1.23"
-    "@awell-health/extensions-core": "npm:1.0.23"
+    "@awell-health/extensions-core": "npm:1.0.24"
     "@awell-health/healthie-sdk": "npm:^0.1.1"
     "@dropbox/sign": "npm:^1.8.0"
     "@faker-js/faker": "npm:^8.0.2"
@@ -200,9 +200,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@awell-health/extensions-core@npm:1.0.23":
-  version: 1.0.23
-  resolution: "@awell-health/extensions-core@npm:1.0.23"
+"@awell-health/extensions-core@npm:1.0.24":
+  version: 1.0.24
+  resolution: "@awell-health/extensions-core@npm:1.0.24"
   dependencies:
     "@types/json-schema": "npm:^7.0.15"
     axios: "npm:^1.7.4"
@@ -214,7 +214,7 @@ __metadata:
     zod-validation-error: "npm:^3.2.0"
   peerDependencies:
     "@awell-health/awell-sdk": "*"
-  checksum: 10/3951e0f8a2d66c640cf8e240c7d1e17519cd9af4dce074c765525018b897b66c3e9c4d8dd69fdabb68477397e259149948a3fd62b4985c9ecc924b2b26c01b4e
+  checksum: 10/32a5d32f9c0995a8e4db7bce876822c8e9ccc761b550b5985327064ecbac51b08977b101a627d26b16237d375bcf8a40578074a03d4b1213e6de07675ef23072
   languageName: node
   linkType: hard
 
