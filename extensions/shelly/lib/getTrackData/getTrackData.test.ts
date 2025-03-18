@@ -73,9 +73,10 @@ describe('getTrackData', () => {
     
     // First call should be the combined query
     const firstCallArgs = (awellSdkMock.orchestration.query as jest.Mock).mock.calls[0][0]
-    expect(firstCallArgs).toHaveProperty('pathway.__args.id', 'test-pathway-id')
     expect(firstCallArgs).toHaveProperty('pathwayElements.__args.pathway_id', 'test-pathway-id')
+    expect(firstCallArgs).toHaveProperty('pathwayElements.__args.track_id', 'test-track-id')
     expect(firstCallArgs).toHaveProperty('pathwayActivities.__args.pathway_id', 'test-pathway-id')
+    expect(firstCallArgs).toHaveProperty('pathwayActivities.__args.track_id', 'test-track-id')
     expect(firstCallArgs).toHaveProperty('pathwayDataPoints.__args.pathway_id', 'test-pathway-id')
 
     // Verify the structure of the result
@@ -162,7 +163,7 @@ describe('getTrackData', () => {
     })).rejects.toThrow('CurrentActivityId is required')
   })
 
-  test('Should filter activities by track ID and current activity date', async () => {
+  test('Should filter activities by current activity date', async () => {
     // Set up a specific current activity date
     const mockQuery = awellSdkMock.orchestration.query as jest.Mock
     mockQuery.mockReset()
@@ -199,6 +200,11 @@ describe('getTrackData', () => {
       trackId: 'test-track-id',
       currentActivityId: 'activity-3',
     })
+
+    // Verify the track_id is being passed to the SDK query
+    const firstCallArgs = (awellSdkMock.orchestration.query as jest.Mock).mock.calls[0][0]
+    expect(firstCallArgs).toHaveProperty('pathwayElements.__args.track_id', 'test-track-id')
+    expect(firstCallArgs).toHaveProperty('pathwayActivities.__args.track_id', 'test-track-id')
 
     // Should only include activities up to activity-3's date
     const allActivities = result.steps.flatMap(step => step.activities)

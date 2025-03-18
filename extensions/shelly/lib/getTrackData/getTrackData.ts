@@ -25,33 +25,32 @@ export const getTrackData = async ({
   trackId,
   currentActivityId,
 }: GetTrackDataInput): Promise<GetTrackDataOutput> => {
-  // Validate input parameters
-  if (isNil(awellSdk)) throw new Error('AwellSdk is required');
+  // Validate empty strings
   if (isEmpty(pathwayId)) throw new Error('PathwayId is required');
   if (isEmpty(trackId)) throw new Error('TrackId is required');
   if (isEmpty(currentActivityId)) throw new Error('CurrentActivityId is required');
 
-  // 1. Make a single combined query for all data
-  const combinedQuery = await fetchAllTrackData(awellSdk, pathwayId);
+  // 1. Make a single combined query for all track data needed
+  const combinedQuery = await fetchAllTrackData(awellSdk, pathwayId, trackId);
 
   // 2. Find current activity cutoff date
   const activities = combinedQuery.pathwayActivities?.activities ?? [];
   const currentActivity = activities.find(activity => activity.id === currentActivityId);
   const currentActivityDate = currentActivity?.date ?? '';
 
-  // 3. Filter activities for this track
-  const trackActivities = filterTrackActivities(activities, trackId, currentActivityDate);
+  // 3. Filter activities by date cutoff
+  const filteredActivities = filterActivitiesByDate(activities, currentActivityDate);
 
-  // 4. Get and process steps for this track
+  // 4. Get all steps
   const elements = combinedQuery.pathwayElements?.elements ?? [];
-  const trackSteps = filterTrackSteps(elements, trackId);
+  const trackSteps = filterStepElements(elements);
 
   // 5. Process data points for activities
   const dataPoints = combinedQuery.pathwayDataPoints?.dataPoints ?? [];
   const activityDataPointsMap = createDataPointsMap(dataPoints);
 
   // 6. Extract activities with forms for processing
-  const activitiesWithForms = extractActivitiesWithForms(trackActivities);
+  const activitiesWithForms = extractActivitiesWithForms(filteredActivities);
 
   // 7. Process form definitions and responses
   const { formDefinitionsMap, formResponsesMap } = 
@@ -60,15 +59,15 @@ export const getTrackData = async ({
   // 8. Try to extract message activities and fetch message content, but continue if it fails
   let messageContentsMap = new Map<string, { subject?: string; body?: string }>();
   try {
-    const messageActivities = extractMessageActivities(trackActivities);
+    const messageActivities = extractMessageActivities(filteredActivities);
     messageContentsMap = await fetchMessageContents(awellSdk, messageActivities);
   } catch (error) {
-    // Continue without message data
+    // Let's not raise an error but continue without message data
   }
 
-  // 9. Process steps with activities
+  // 9. Finally process steps with activities
   const processedSteps = trackSteps.map(step => 
-    processStep(step, trackActivities, activityDataPointsMap, formDefinitionsMap, formResponsesMap, messageContentsMap)
+    processStep(step, filteredActivities, activityDataPointsMap, formDefinitionsMap, formResponsesMap, messageContentsMap)
   );
 
   return {
@@ -81,21 +80,16 @@ export const getTrackData = async ({
  */
 async function fetchAllTrackData(
   awellSdk: AwellSdk, 
-  pathwayId: string
+  pathwayId: string,
+  trackId: string
 ): Promise<CombinedQueryResponse> {
   try {
     return await awellSdk.orchestration.query({
-      pathway: {
-        __args: { id: pathwayId },
-        pathway: {
-          tracks: {
-            id: true,
-            title: true
-          }
-        }
-      },
-      pathwayElements: {
-        __args: { pathway_id: pathwayId },
+      pathwayElements: {  // actually track elements 
+        __args: { 
+          pathway_id: pathwayId,
+          track_id: trackId 
+        },
         elements: {
           id: true,
           name: true,
@@ -106,19 +100,17 @@ async function fetchAllTrackData(
           end_date: true,
           status: true,
           type: true,
-          stakeholders: {
-            name: true
-          },
           context: {
             step_id: true,
             track_id: true
           }
         }
       },
-      pathwayActivities: {
+      pathwayActivities: { // actually track activities
         __args: {
           pathway_id: pathwayId,
-          pagination: { offset: 0, count: 500 } // TODO: we might need to handle this differently later but it is ok for now
+          track_id: trackId,
+          pagination: { offset: 0, count: 500 } // we should never get more than 500 activities, if there is a track with more than I would say it is justified to cut them off
         },
         activities: {
           id: true,
@@ -163,39 +155,31 @@ async function fetchAllTrackData(
 }
 
 /**
- * Filter activities that belong to the specified track
+ * Filter activities by date (keeping those before or equal to current activity date)
  */
-function filterTrackActivities(
+function filterActivitiesByDate(
   activities: ActivityResponse[], 
-  trackId: string, 
   currentActivityDate: string
 ): ActivityResponse[] {
+  if (isEmpty(currentActivityDate)) {
+    // If there's no date cutoff, return all activities sorted by date
+    return activities.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+  }
+  
   return activities
-    .filter(activity => {
-      const isInTrack = !isNil(activity.context?.track_id) && 
-                        !isEmpty(activity.context?.track_id) && 
-                        activity.context.track_id === trackId;
-      
-      const hasNoCurrentActivityDate = isEmpty(currentActivityDate);
-      const isBeforeOrEqualToCurrentDate = !hasNoCurrentActivityDate && activity.date <= currentActivityDate;
-      const isBeforeOrEqualDate = hasNoCurrentActivityDate || isBeforeOrEqualToCurrentDate;
-      
-      return isInTrack && isBeforeOrEqualDate;
-    })
+    .filter(activity => activity.date <= currentActivityDate)
     .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 }
 
 /**
- * Filter steps that belong to the specified track
+ * Filter elements that are steps
  */
-function filterTrackSteps(
-  elements: ElementResponse[], 
-  trackId: string
+function filterStepElements(
+  elements: ElementResponse[]
 ): ElementResponse[] {
   return elements.filter(element => {
-    if (isNil(element.context?.track_id) || isEmpty(element.context?.track_id)) return false;
     if (isNil(element.type) || isEmpty(element.type)) return false;
-    return element.context.track_id === trackId && element.type === 'STEP';
+    return element.type === 'STEP';
   });
 }
 
@@ -214,7 +198,7 @@ function createDataPointsMap(dataPoints: ExtendedDataPoint[]): Map<string, Exten
       // Add enhanced data point with improved title detection
       const enhancedDataPoint = { ...dataPoint };
       
-      // Apply pattern-based mappings for titles
+      // Apply pattern-based mappings for titles for easier LLM reasoning
       if (typeof dataPoint.data_point_definition_id === 'string' && dataPoint.data_point_definition_id !== '') {
         if (dataPoint.data_point_definition_id.endsWith('-ACTIVATION')) {
           enhancedDataPoint.definitionTitle = 'Activation Date';
@@ -263,7 +247,7 @@ async function processFormDefinitionsAndResponses(
   }
   
   // Prepare queries in batches to avoid overloading
-  const batchSize = 10;
+  const batchSize = 5;
   const batches = [];
   
   for (let i = 0; i < activitiesWithForms.length; i += batchSize) {
@@ -401,7 +385,6 @@ function extractMessageActivities(
              !isEmpty(activity.object.id);
     })
     .map(activity => {
-      // Use object.id as the message ID
       const messageId = activity.object.id as string;
       
       // Extract fallback content from activity if available
@@ -435,7 +418,7 @@ async function fetchMessageContents(
   }
   
   // Process in batches to avoid overloading
-  const batchSize = 10;
+  const batchSize = 5;
   const batches = [];
   
   for (let i = 0; i < messageActivities.length; i += batchSize) {
@@ -445,7 +428,6 @@ async function fetchMessageContents(
   for (const batch of batches) {
     await Promise.all(batch.map(async ({ activityId, messageId, fallbackSubject, fallbackBody }) => {
       try {
-        // Try to fetch message content with the query structure from documentation
         const response = await awellSdk.orchestration.query({
           message: {
             __args: {
@@ -454,19 +436,11 @@ async function fetchMessageContents(
             message: {
               id: true,
               subject: true,
-              body: true,
-              format: true,
-              attachments: {
-                id: true,
-                name: true,
-                type: true,
-                url: true
-              }
+              body: true
             }
           }
         }) as MessageResponse;
         
-        // Use lodash to check for null/undefined values
         if (!isNil(response) && 
             !isNil(response.message) && 
             !isNil(response.message.message)) {
@@ -531,9 +505,6 @@ function processStep(
     status: step.status,
     start_date: step.start_date,
     end_date: step.end_date,
-    stakeholders: step.stakeholders?.map(s => ({
-      name: typeof s.name === 'string' ? s.name : ''
-    })),
     activities: stepActivities
   };
 }
@@ -693,7 +664,7 @@ function processActivityDataPoints(
   
   const hasForm = !isNil(activity.form) && !isEmpty(get(activity.form, 'id'));
   if (hasForm) {
-    // If this activity has a form, only include activation data points
+    // If this activity has a form, only include activation data points, as questions/answers will be processed separately
     dataPointsToInclude = activityDataPoints.filter(dp => 
       !isNil(dp) && !isNil(dp.data_point_definition_id) && 
       dp.data_point_definition_id.endsWith('-ACTIVATION')
