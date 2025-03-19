@@ -1,4 +1,8 @@
-import { type Field, FieldType } from '@awell-health/extensions-core'
+import {
+  type Field,
+  FieldType,
+  StringType,
+} from '@awell-health/extensions-core'
 import { isEmpty, isNil } from 'lodash'
 import z, { type ZodTypeAny } from 'zod'
 
@@ -24,6 +28,14 @@ export const fields = {
     type: FieldType.STRING,
     required: false,
   },
+  phone: {
+    id: 'phone',
+    label: 'Phone',
+    description: 'The phone number of the contact',
+    type: FieldType.STRING,
+    stringType: StringType.PHONE,
+    required: false,
+  },
   customProperties: {
     id: 'customProperties',
     label: 'Custom properties',
@@ -41,6 +53,10 @@ export const FieldsValidationSchema = z.object({
     .optional()
     .transform((val) => (isEmpty(val) ? undefined : val)),
   lastName: z
+    .string()
+    .optional()
+    .transform((val) => (isEmpty(val) ? undefined : val)),
+  phone: z
     .string()
     .optional()
     .transform((val) => (isEmpty(val) ? undefined : val)),

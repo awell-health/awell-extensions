@@ -35,6 +35,7 @@ export const createOrUpdateContact: Action<
       email: fields.email,
       ...(!isNil(fields.firstName) && { firstname: fields.firstName }),
       ...(!isNil(fields.lastName) && { lastname: fields.lastName }),
+      ...(!isNil(fields.phone) && { phone: fields.phone }),
       ...(!isNil(fields.customProperties) && fields.customProperties),
     }
 

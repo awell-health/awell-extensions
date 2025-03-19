@@ -1,4 +1,4 @@
-import { Client } from '@hubspot/api-client'
+import { type Client } from '@hubspot/api-client'
 import {
   type ApiException,
   type SimplePublicObjectWithAssociations,
