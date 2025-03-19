@@ -8,6 +8,7 @@ import { OPENAI_MODELS } from '../../../../src/lib/llm/openai/constants'
 import { getTrackData } from '../../lib/getTrackData/index'
 import { getCareFlowDetails } from '../../lib/getCareFlowDetails'
 import { isNil } from 'lodash'
+import { addActivityEventLog } from '../../../../src/lib/awell/addEventLog'
 
 export const summarizeTrackOutcome: Action<
   typeof fields,
@@ -102,6 +103,11 @@ export const summarizeTrackOutcome: Action<
       data_points: {
         outcomeSummary: htmlSummary,
       },
+      events: [
+        addActivityEventLog({
+          message: `Processing track data with ${trackData.steps.length} steps and ${trackData.steps.flatMap(step => step.activities).length} total activities`,
+        }),
+      ],
     })
   },
 } 
