@@ -105,7 +105,7 @@ export const summarizeTrackOutcome: Action<
       },
       events: [
         addActivityEventLog({
-          message: `Processing track data with ${trackData.steps.length} steps and ${trackData.steps.flatMap(step => step.activities).length} total activities`,
+          message: `Processing track data with ${trackData.steps.length} steps and ${trackData.steps.flatMap(step => step.activities).length} total activities (hard limit is 500)`,
         }),
       ],
     })
