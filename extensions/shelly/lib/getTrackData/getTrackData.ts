@@ -25,6 +25,8 @@ export const getTrackData = async ({
   trackId,
   currentActivityId,
 }: GetTrackDataInput): Promise<GetTrackDataOutput> => {
+  const startTime = Date.now();
+
   // Validate empty strings
   if (isEmpty(pathwayId)) throw new Error('PathwayId is required');
   if (isEmpty(trackId)) throw new Error('TrackId is required');
@@ -32,6 +34,9 @@ export const getTrackData = async ({
 
   // 1. Make a single combined query for all track data needed
   const combinedQuery = await fetchAllTrackData(awellSdk, pathwayId, trackId);
+
+  // Log query results 'size'
+  console.log(`Track data fetched for care flow ${pathwayId}, track ${trackId} with ${combinedQuery.pathwayActivities?.activities?.length ?? 0} activities (limit is set to 500), ${combinedQuery.pathwayElements?.elements?.length ?? 0} elements`);
 
   // 2. Find current activity cutoff date
   const activities = combinedQuery.pathwayActivities?.activities ?? [];
@@ -51,6 +56,7 @@ export const getTrackData = async ({
 
   // 6. Extract activities with forms for processing
   const activitiesWithForms = extractActivitiesWithForms(filteredActivities);
+  console.log(`Processing ${activitiesWithForms.length} forms for care flow ${pathwayId}, track ${trackId}`);
 
   // 7. Process form definitions and responses
   const { formDefinitionsMap, formResponsesMap } = 
@@ -60,15 +66,21 @@ export const getTrackData = async ({
   let messageContentsMap = new Map<string, { subject?: string; body?: string }>();
   try {
     const messageActivities = extractMessageActivities(filteredActivities);
+    console.log(`Processing ${messageActivities.length} messages for care flow ${pathwayId}, track ${trackId}`);
     messageContentsMap = await fetchMessageContents(awellSdk, messageActivities);
   } catch (error) {
-    // Let's not raise an error but continue without message data
+    console.error(`Failed to process messages for care flow ${pathwayId}, track ${trackId}: ${error instanceof Error ? error.message : String(error)}`);
+    // Log error and continue without message data
   }
 
   // 9. Finally process steps with activities
   const processedSteps = trackSteps.map(step => 
     processStep(step, filteredActivities, activityDataPointsMap, formDefinitionsMap, formResponsesMap, messageContentsMap)
   );
+
+  // Log completion time
+  const processingTime = Date.now() - startTime;
+  console.log(`Completed processing track data for care flow ${pathwayId}, track ${trackId} in ${processingTime}ms`);
 
   return {
     steps: processedSteps
@@ -84,7 +96,10 @@ async function fetchAllTrackData(
   trackId: string
 ): Promise<CombinedQueryResponse> {
   try {
-    return await awellSdk.orchestration.query({
+    console.log(`Starting track data query for care flow ${pathwayId}, track ${trackId} (activity limit: 500)`);
+    const queryStartTime = Date.now();
+
+    const result = await awellSdk.orchestration.query({
       pathwayElements: {  // actually track elements 
         __args: { 
           pathway_id: pathwayId,
@@ -149,8 +164,14 @@ async function fetchAllTrackData(
         },
       }
     }) as CombinedQueryResponse;
+
+    const queryTime = Date.now() - queryStartTime;
+    console.log(`Completed track data query for care flow ${pathwayId}, track ${trackId} in ${queryTime}ms`);
+
+    return result;
   } catch (error) {
-    throw new Error(`Failed to fetch track data: ${error instanceof Error ? error.message : String(error)}`);
+    console.error(`Failed to fetch track data for care flow ${pathwayId}, track ${trackId}: ${error instanceof Error ? error.message : String(error)}`);
+    throw error;
   }
 }
 
@@ -366,6 +387,7 @@ async function processBatch(
       }
     });
   } catch (error) {
+    console.warn(`Partial form data processed for batch of ${batch.length} forms: ${error instanceof Error ? error.message : String(error)}`);
     // Continue with partial data rather than failing completely
   }
 }
