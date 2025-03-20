@@ -62,7 +62,6 @@ describe('HubSpot - Get contact', () => {
       await extensionAction.onEvent({
         payload: generateTestPayload({
           fields: {
-            identifierMode: 'email',
             email: 'existing-contact@awellhealth.com',
             firstName: 'Updated first name',
           },
@@ -130,7 +129,6 @@ describe('HubSpot - Get contact', () => {
       await extensionAction.onEvent({
         payload: generateTestPayload({
           fields: {
-            identifierMode: 'email',
             email: 'new-contact@awellhealth.com',
             firstName: 'Nick',
             lastName: 'Awell',
