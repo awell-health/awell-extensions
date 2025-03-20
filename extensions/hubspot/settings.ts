@@ -5,7 +5,7 @@ export const settings = {
   accessToken: {
     key: 'accessToken',
     label: 'Access token',
-    obfuscated: false,
+    obfuscated: true,
     required: true,
     description:
       'The access token will be used to authenticate requests to the HubSpot API',
