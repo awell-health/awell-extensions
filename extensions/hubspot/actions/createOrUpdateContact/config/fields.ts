@@ -42,7 +42,7 @@ export const fields = {
     description:
       'An object of key-values pairs of custom properties of the contact',
     type: FieldType.JSON,
-    required: true,
+    required: false,
   },
 } satisfies Record<string, Field>
 
