@@ -23,6 +23,12 @@ Sending transactional emails via HubSpot requires you to add the [corresponding 
 
 ## Actions
 
+### Create or update contact
+
+Creates or updates a contact in HubSpot using the provided information. The patient is matched based on their email address—if a match is found, the existing contact is updated (PATCH); otherwise, a new contact is created.
+
+Scope: `crm.objects.contacts.write`
+
 ### Get contact
 
 Retrieve the details of a contact based on the provided contact ID.
