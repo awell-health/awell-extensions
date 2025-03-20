@@ -4,23 +4,8 @@ import { Client } from '@hubspot/api-client'
 import { generateTestPayload } from '../../../../tests'
 import { ApiException } from '@hubspot/api-client/lib/codegen/crm/contacts'
 
-jest.mock('@hubspot/api-client', () => {
-  return {
-    Client: jest.fn().mockImplementation(() => {
-      return {
-        crm: {
-          contacts: {
-            basicApi: {
-              getById: jest.fn(),
-              create: jest.fn(),
-              update: jest.fn(),
-            },
-          },
-        },
-      }
-    }),
-  }
-})
+jest.mock('@hubspot/api-client')
+
 describe('HubSpot - Get contact', () => {
   const { onComplete, onError, helpers, extensionAction, clearMocks } =
     TestHelpers.fromAction(createOrUpdateContact)
@@ -53,7 +38,7 @@ describe('HubSpot - Get contact', () => {
 
   describe('Contact does exist', () => {
     beforeEach(() => {
-      mockGetById.mockResolvedValue({
+      const existingResource = {
         id: '107388952666',
         properties: {
           email: 'existing-contact@awellhealth.com',
@@ -61,9 +46,15 @@ describe('HubSpot - Get contact', () => {
           lastname: 'Hellemans',
         },
         updatedAt: '2025-03-19T20:49:59.249Z',
-      })
+      }
+
+      mockGetById.mockResolvedValue(existingResource)
       mockUpdate.mockResolvedValue({
-        id: '107388952666',
+        ...existingResource,
+        properties: {
+          ...existingResource.properties,
+          firstName: 'Updated first name',
+        },
       })
     })
 
@@ -73,6 +64,7 @@ describe('HubSpot - Get contact', () => {
           fields: {
             identifierMode: 'email',
             email: 'existing-contact@awellhealth.com',
+            firstName: 'Updated first name',
           },
           settings: {
             accessToken: 'accessToken',
