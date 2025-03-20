@@ -75,7 +75,7 @@ export const createOrUpdateContact: Action<
           events: [
             ...eventLogs,
             addActivityEventLog({
-              message: `Contact updated in Hubspot with email ${fields.email}. Contact ID: ${updatedContact.id}`,
+              message: `Updated contact:\n${JSON.stringify(updatedContact, null, 2)}`,
             }),
           ],
         })
@@ -103,6 +103,9 @@ export const createOrUpdateContact: Action<
           ...eventLogs,
           addActivityEventLog({
             message: `Contact created in Hubspot with email ${fields.email}. Contact ID: ${newContact.id}`,
+          }),
+          addActivityEventLog({
+            message: `New contact:\n${JSON.stringify(newContact, null, 2)}`,
           }),
         ],
       })

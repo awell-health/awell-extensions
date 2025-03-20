@@ -37,17 +37,17 @@ describe('HubSpot - Get contact', () => {
   })
 
   describe('Contact does exist', () => {
-    beforeEach(() => {
-      const existingResource = {
-        id: '107388952666',
-        properties: {
-          email: 'existing-contact@awellhealth.com',
-          firstname: 'Nick',
-          lastname: 'Hellemans',
-        },
-        updatedAt: '2025-03-19T20:49:59.249Z',
-      }
+    const existingResource = {
+      id: '107388952666',
+      properties: {
+        email: 'existing-contact@awellhealth.com',
+        firstname: 'Nick',
+        lastname: 'Hellemans',
+      },
+      updatedAt: '2025-03-19T20:49:59.249Z',
+    }
 
+    beforeEach(() => {
       mockGetById.mockResolvedValue(existingResource)
       mockUpdate.mockResolvedValue({
         ...existingResource,
@@ -91,18 +91,17 @@ describe('HubSpot - Get contact', () => {
         data_points: {
           hubspotContactId: '107388952666',
           contactResource: JSON.stringify({
-            id: '107388952666',
+            ...existingResource,
+            properties: {
+              ...existingResource.properties,
+              firstName: 'Updated first name',
+            },
           }),
         },
         events: expect.arrayContaining([
           expect.objectContaining({
             text: {
               en: 'Existing contact found in Hubspot with email existing-contact@awellhealth.com. Contact ID: 107388952666',
-            },
-          }),
-          expect.objectContaining({
-            text: {
-              en: 'Contact updated in Hubspot with email existing-contact@awellhealth.com. Contact ID: 107388952666',
             },
           }),
         ]),
