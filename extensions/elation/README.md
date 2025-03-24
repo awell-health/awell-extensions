@@ -176,6 +176,15 @@ The action returns:
 - When specifying exact tag matches, use double quotes (e.g., "Diabetes", "High-Risk"). Tags must exist in your Elation database
 - The LLM can understand complex logical conditions like "either/or", "both", "not", "any of", "none of"
 
-### ✨ Cancel appointments
+### ✨ Cancel Appointments
 
-Given a prompt, this action retrieves a patient's upcoming appointments matching the prompt and cancels them.
+Uses AI to identify and cancel patient appointments based on natural language instructions. The action executes the following steps:
+
+1. Retrieves all upcoming appointments for the patient from Elation
+2. Uses an LLM to interpret the prompt and identify which appointments should be canceled
+3. Processes the cancellation for matched appointments and handles partial success scenarios
+
+The action returns:
+- `cancelledAppointments`: Array of appointment IDs that were successfully canceled
+- `explanation`: Detailed explanation of which appointments were canceled and why they matched the criteria
+
