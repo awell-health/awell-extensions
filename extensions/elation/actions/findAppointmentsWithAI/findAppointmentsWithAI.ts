@@ -31,7 +31,7 @@ export const findAppointmentsWithAI: Action<
     try {
       // Initialize OpenAI model for natural language processing
       const { model, metadata, callbacks } = await createOpenAIModel({
-        modelType: OPENAI_MODELS.GPT4o, // GPT4oMini is not reliable enough to work with dates.
+        modelType: OPENAI_MODELS.GPT4o,
         settings: {},
         helpers,
         payload,

@@ -1,12 +1,15 @@
-import { isNil } from 'lodash'
+import { isNil, defaultTo } from 'lodash'
 import { type Action, Category } from '@awell-health/extensions-core'
+import { isAfter, isBefore, parseISO } from 'date-fns'
 import { addActivityEventLog } from '../../../../src/lib/awell/addEventLog'
 import { type settings } from '../../settings'
 import { makeAPIClient } from '../../client'
 import { createOpenAIModel } from '../../../../src/lib/llm/openai/createOpenAIModel'
+import { OPENAI_MODELS } from '../../../../src/lib/llm/openai/constants'
 import { FieldsValidationSchema, fields, dataPoints } from './config'
 import { findAppointmentsWithLLM } from '../../lib/findAppointmentsWithLLM/findAppointmentsWithLLM'
 import { markdownToHtml } from '../../../../src/utils'
+import { extractDatesFromInstructions } from '../../lib/extractDatesFromInstructions/extractDatesFromInstructions'
 
 export const cancelAppointments: Action<
   typeof fields,
@@ -15,7 +18,7 @@ export const cancelAppointments: Action<
 > = {
   key: 'cancelAppointments',
   category: Category.EHR_INTEGRATIONS,
-  title: '✨ Cancel appointments',
+  title: '✨ Cancel Appointments',
   description: 'Cancel appointments for a patient using natural language.',
   fields,
   previewable: false,
@@ -56,28 +59,56 @@ export const cancelAppointments: Action<
         settings: {}, // we use built-in API key for OpenAI
         helpers,
         payload,
+        modelType: OPENAI_MODELS.GPT4o,
+      })
+
+      // Extract date information from the prompt
+      const { from, to, instructions } = await extractDatesFromInstructions({
+        model,
+        prompt,
+        metadata,
+        callbacks,
       })
 
       // Use LLM to find appointments matching the user's natural language prompt
       const { appointmentIds, explanation } = await findAppointmentsWithLLM({
         model,
         appointments,
-        prompt,
+        prompt: defaultTo(instructions, prompt),
         metadata,
         callbacks,
       })
 
       const htmlExplanation = await markdownToHtml(explanation)
 
-      const appointmentsToCancel = appointments.filter((appointment) =>
-        appointmentIds.includes(appointment.id),
+      // Filter appointments based on both LLM selection and date range
+      const appointmentsToCancel = appointments.filter(
+        (appointment) =>
+          appointmentIds.includes(appointment.id) &&
+          (isNil(from) ||
+            isAfter(parseISO(appointment.scheduled_date), parseISO(from))) &&
+          (isNil(to) ||
+            isBefore(parseISO(appointment.scheduled_date), parseISO(to)))
       )
 
-      /**
-       * Cancel the appointments
-       */
+      const appointmentIdsToCancel = appointmentsToCancel.map(
+        (appointment) => appointment.id
+      )
+
+      // If no appointments match the criteria after filtering, return early
+      if (appointmentIdsToCancel.length === 0) {
+        await onComplete({
+          data_points: {
+            cancelledAppointments: JSON.stringify([]),
+            explanation: isNil(htmlExplanation) ? 'No matching appointments found to cancel.' : htmlExplanation,
+          }
+        })
+        return
+      }
+
+      // Cancel the filtered appointments
       const trace = await Promise.all(
-        appointmentIds.map(async (appointmentId) => {
+        appointmentIdsToCancel.map(async (appointmentId) => {
           try {
             await api.updateAppointment(appointmentId, {
               status: { status: 'Cancelled' },
@@ -86,7 +117,7 @@ export const cancelAppointments: Action<
           } catch (error) {
             return { appointmentId, status: 'error' }
           }
-        }),
+        })
       )
 
       const failedCancellations = trace.filter((t) => t.status === 'error')
@@ -117,7 +148,7 @@ export const cancelAppointments: Action<
         },
         events: [
           addActivityEventLog({
-            message: `${appointmentsToCancel.length} appointments for patient ${patientId} were cancelled: ${appointmentIds.join(', ')}`,
+            message: `${appointmentsToCancel.length} appointments for patient ${patientId} were cancelled: ${appointmentIdsToCancel.join(', ')}`,
           }),
         ],
       })
