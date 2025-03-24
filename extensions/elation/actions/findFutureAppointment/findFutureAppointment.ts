@@ -69,7 +69,6 @@ export const findFutureAppointment: Action<
       prompt: defaultTo(instructions, prompt),
       metadata,
       callbacks,
-      evaluateDates: true,
     })
     const htmlExplanation = await markdownToHtml(explanation)
 
