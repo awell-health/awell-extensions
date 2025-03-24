@@ -18,7 +18,7 @@ export const cancelAppointments: Action<
 > = {
   key: 'cancelAppointments',
   category: Category.EHR_INTEGRATIONS,
-  title: '✨ Cancel appointments',
+  title: '✨ Cancel Appointments',
   description: 'Cancel appointments for a patient using natural language.',
   fields,
   previewable: false,
