@@ -1,5 +1,6 @@
-import { isNil } from 'lodash'
+import { isNil, defaultTo } from 'lodash'
 import { type Action, Category } from '@awell-health/extensions-core'
+import { isAfter, isBefore, parseISO } from 'date-fns'
 
 import { addActivityEventLog } from '../../../../src/lib/awell/addEventLog'
 import type { settings, SettingsType } from '../../settings'
@@ -9,6 +10,7 @@ import { findAppointmentsWithLLM } from '../../lib/findAppointmentsWithLLM/findA
 import { createOpenAIModel } from '../../../../src/lib/llm/openai/createOpenAIModel'
 import { OPENAI_MODELS } from '../../../../src/lib/llm/openai/constants'
 import { markdownToHtml } from '../../../../src/utils'
+import { extractDatesFromInstructions } from '../../lib/extractDatesFromInstructions/extractDatesFromInstructions'
 
 export const findFutureAppointment: Action<
   typeof fields,
@@ -26,12 +28,13 @@ export const findFutureAppointment: Action<
     // 1. Validate input
     const { prompt, patientId } = FieldsValidationSchema.parse(payload.fields)
 
-    // 2. Get future appointments (scheduled or confirmed)
+    // 2. Get future appointments (scheduled or confirmed) first
     const appointments = await getFutureAppointments(
       payload.settings as SettingsType,
       patientId,
     )
 
+    // Early return if no appointments found - no need to go to LLMs
     if (appointments.length === 0) {
       await onComplete({
         data_points: {
@@ -51,19 +54,41 @@ export const findFutureAppointment: Action<
       modelType: OPENAI_MODELS.GPT4o,
     })
 
-    // 4. Find matching appointments
+    // 4. Extract date information from the prompt
+    const { from, to, instructions } = await extractDatesFromInstructions({
+      model,
+      prompt,
+      metadata,
+      callbacks,
+    })
+
+    // 5. Find matching appointments with LLM
     const { appointmentIds, explanation } = await findAppointmentsWithLLM({
       model,
       appointments,
-      prompt,
+      prompt: defaultTo(instructions, prompt),
       metadata,
       callbacks,
       evaluateDates: true,
     })
     const htmlExplanation = await markdownToHtml(explanation)
 
-    // Handle case where no appointments were found by LLM
-    if (appointmentIds.length === 0) {
+    // 6. Filter appointments based on both LLM selection and date range
+    const filteredAppointments = appointments.filter(
+      (appointment) =>
+        appointmentIds.includes(appointment.id) &&
+        (isNil(from) ||
+          isAfter(parseISO(appointment.scheduled_date), parseISO(from))) &&
+        (isNil(to) ||
+          isBefore(parseISO(appointment.scheduled_date), parseISO(to))),
+    )
+
+    const filteredAppointmentIds = filteredAppointments.map(
+      (appointment) => appointment.id
+    )
+
+    // Handle case where no appointments were found after filtering
+    if (filteredAppointmentIds.length === 0) {
       await onComplete({
         data_points: {
           appointment: undefined,
@@ -82,11 +107,9 @@ export const findFutureAppointment: Action<
       return
     }
 
-    // 5. If appointments were found by LLM, return the first matching appointment
-    const matchedAppointmentId = appointmentIds[0]
-    const foundAppointment = appointments.find(
-      (appointment) => appointment.id === matchedAppointmentId,
-    )
+    // 7. If appointments were found, return the first matching appointment
+    const matchedAppointmentId = filteredAppointmentIds[0]
+    const foundAppointment = filteredAppointments[0]
 
     await onComplete({
       data_points: {
