@@ -92,9 +92,9 @@ export const summarizeTrackOutcome: Action<
     // Create version string if version is available
     let disclaimerMsg = '';
     if (!isNil(careFlowDetails.version)) {
-      disclaimerMsg = `Important Notice: The content provided is an AI-generated summary of version ${careFlowDetails.version} of Care Flow "${careFlowDetails.title}" (ID: ${careFlowDetails.id}).`;
+      disclaimerMsg = `**Important Notice:** The content provided is an AI-generated summary of version ${careFlowDetails.version} of Care Flow "${careFlowDetails.title}" (ID: ${pathway.id}).`;
     } else {
-      disclaimerMsg = `Important Notice: The content provided is an AI-generated summary of Care Flow "${careFlowDetails.title}" (ID: ${careFlowDetails.id}).`;
+      disclaimerMsg = `**Important Notice:** The content provided is an AI-generated summary of Care Flow "${careFlowDetails.title}" (ID: ${pathway.id}).`;
     }
 
     const htmlSummary = await markdownToHtml(`${disclaimerMsg}\n\n${summary}`)

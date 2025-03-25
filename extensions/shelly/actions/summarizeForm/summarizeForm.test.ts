@@ -140,7 +140,7 @@ describe('summarizeForm - Mocked LLM calls', () => {
     const { summarizeFormWithLLM } = require('../../lib/summarizeFormWithLLM')
     expect(summarizeFormWithLLM).toHaveBeenCalledWith(
       expect.objectContaining({
-        disclaimerMessage: 'Important Notice: The content provided is an AI-generated summary of form responses of version 3 of Care Flow "Test Care Flow" (ID: whatever).'
+        disclaimerMessage: '**Important Notice:** The content provided is an AI-generated summary of form responses of version 3 of Care Flow "Test Care Flow" (ID: ai4rZaYEocjB).'
       })
     )
 
@@ -180,7 +180,7 @@ describe('summarizeForm - Mocked LLM calls', () => {
     const { summarizeFormWithLLM } = require('../../lib/summarizeFormWithLLM')
     expect(summarizeFormWithLLM).toHaveBeenCalledWith(
       expect.objectContaining({
-        disclaimerMessage: 'Important Notice: The content provided is an AI-generated summary of form responses of version 3 of Care Flow "Test Care Flow" (ID: whatever).',
+        disclaimerMessage: '**Important Notice:** The content provided is an AI-generated summary of form responses of version 3 of Care Flow "Test Care Flow" (ID: ai4rZaYEocjB).',
         additionalInstructions: 'Focus on medication details and side effects.'
       })
     )

@@ -26,10 +26,10 @@ jest.mock('../../../../src/lib/llm/openai', () => ({
   createOpenAIModel: jest.fn().mockResolvedValue({
     model: {
       invoke: jest.fn().mockResolvedValue({
-        content: `## Outcome:
+        content: `**Outcome:**
 The patient's medication refill request was processed successfully.
 
-## Details supporting the outcome:
+**Details supporting the outcome:**
 - Patient John Doe requested a refill for Lisinopril 10mg
 - The request was categorized as a Medication Refill Request
 - Dr. Smith approved and processed the refill for 90 days
@@ -137,7 +137,7 @@ describe('summarizeTrackOutcome - Mocked LLM calls', () => {
     })
 
     // Verify the disclaimer is included
-    const expectedDisclaimerMsg = `Important Notice: The content provided is an AI-generated summary of version 6 of Care Flow "AI Actions Check" (ID: ty0CmaHm2jlX).`
+    const expectedDisclaimerMsg = `<p><strong>Important Notice:</strong> The content provided is an AI-generated summary of version 6 of Care Flow "AI Actions Check" (ID: xQ2P4uBn2cY8).</p>`
     
     // Verify onComplete was called with the expected data
     expect(onComplete).toHaveBeenCalled()

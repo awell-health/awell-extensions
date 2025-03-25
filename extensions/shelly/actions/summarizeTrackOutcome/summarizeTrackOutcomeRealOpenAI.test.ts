@@ -115,7 +115,7 @@ describe.skip('summarizeTrackOutcome - Real LLM calls with mocked Awell SDK', ()
       const summary = onComplete.mock.calls[0][0].data_points.outcomeSummary
       
       // Verify the summary contains the disclaimer with version
-      expect(summary).toContain('Important Notice: The content provided is an AI-generated summary of version 6 of Care Flow "AI Actions Check"')
+      expect(summary).toContain('<p><strong>Important Notice:</strong> The content provided is an AI-generated summary of version 6 of Care Flow "AI Actions Check"')
       
       // Verify the summary contains relevant information about the track
       // These are key terms that should appear in any reasonable summary of our mock data

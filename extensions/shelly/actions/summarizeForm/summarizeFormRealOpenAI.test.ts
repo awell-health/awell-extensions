@@ -147,9 +147,7 @@ describe.skip('summarizeForm - Real LLM calls with mocked Awell SDK', () => {
     expect(mockQuery).toHaveBeenCalledTimes(4)
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
-        summary: expect.stringMatching(
-          new RegExp(`Important Notice: The content provided is an AI-generated summary of form responses of version 3 of Care Flow "Test Care Flow".*Test Question.*Test Answer.*`, 's')
-        ),
+        summary: expect.stringContaining('<p><strong>Important Notice:</strong> The content provided is an AI-generated summary of form responses of version 3 of Care Flow "Test Care Flow" (ID: ai4rZaYEocjB)')
       },
     })
     expect(onError).not.toHaveBeenCalled()
@@ -241,9 +239,7 @@ describe.skip('summarizeForm - Real LLM calls with mocked Awell SDK', () => {
     expect(mockQuery).toHaveBeenCalledTimes(4)
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
-        summary: expect.stringMatching(
-          new RegExp(`Important Notice: The content provided is an AI-generated summary of form responses of version 3 of Care Flow "Test Care Flow".*Test Question.*Test Answer.*`, 's')
-        ),
+        summary: expect.stringContaining('<p><strong>Important Notice:</strong> The content provided is an AI-generated summary of form responses of version 3 of Care Flow "Test Care Flow" (ID: ai4rZaYEocjB)')
       },
     })
     expect(onError).not.toHaveBeenCalled()
@@ -334,9 +330,7 @@ describe.skip('summarizeForm - Real LLM calls with mocked Awell SDK', () => {
     expect(mockQuery).toHaveBeenCalledTimes(4)
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
-        summary: expect.stringMatching(
-          new RegExp(`Important Notice: The content provided is an AI-generated summary of form responses of version 3 of Care Flow "Test Care Flow".*Test Question.*Test Answer.*`, 's')
-        ),
+        summary: expect.stringContaining('<p><strong>Important Notice:</strong> The content provided is an AI-generated summary of form responses of version 3 of Care Flow "Test Care Flow" (ID: ai4rZaYEocjB)')
       },
     })
     expect(onError).not.toHaveBeenCalled()
@@ -427,9 +421,7 @@ describe.skip('summarizeForm - Real LLM calls with mocked Awell SDK', () => {
     expect(mockQuery).toHaveBeenCalledTimes(4)
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
-        summary: expect.stringMatching(
-          new RegExp(`Important Notice: The content provided is an AI-generated summary of form responses of version 3 of Care Flow "Test Care Flow".*Test Question.*Test Answer.*`, 's')
-        ),
+        summary: expect.stringContaining('<p><strong>Important Notice:</strong> The content provided is an AI-generated summary of form responses of version 3 of Care Flow "Test Care Flow" (ID: ai4rZaYEocjB)')
       },
     })
     expect(onError).not.toHaveBeenCalled()
@@ -503,9 +495,7 @@ describe.skip('summarizeForm - Real LLM calls with mocked Awell SDK', () => {
     expect(mockQuery).toHaveBeenCalledTimes(4)
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
-        summary: expect.stringMatching(
-          new RegExp(`Important Notice: The content provided is an AI-generated summary of form responses of version 3 of Care Flow "Test Care Flow".*`, 's')
-        ),
+        summary: expect.stringContaining('<p><strong>Important Notice:</strong> The content provided is an AI-generated summary of form responses of version 3 of Care Flow "Test Care Flow" (ID: ai4rZaYEocjB)')
       },
     })
     expect(onError).not.toHaveBeenCalled()

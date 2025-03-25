@@ -66,9 +66,9 @@ export const summarizeForm: Action<
     // Create disclaimer message based on version availability
     let disclaimerMessage = '';
     if (!isNil(careFlowDetails.version)) {
-      disclaimerMessage = `Important Notice: The content provided is an AI-generated summary of form responses of version ${careFlowDetails.version} of Care Flow "${careFlowDetails.title}" (ID: ${careFlowDetails.id}).`;
+      disclaimerMessage = `**Important Notice:** The content provided is an AI-generated summary of form responses of version ${careFlowDetails.version} of Care Flow "${careFlowDetails.title}" (ID: ${payload.pathway.id}).`;
     } else {
-      disclaimerMessage = `Important Notice: The content provided is an AI-generated summary of form responses of Care Flow "${careFlowDetails.title}" (ID: ${careFlowDetails.id}).`;
+      disclaimerMessage = `**Important Notice:** The content provided is an AI-generated summary of form responses of Care Flow "${careFlowDetails.title}" (ID: ${payload.pathway.id}).`;
     }
 
     // 4. Generate summary

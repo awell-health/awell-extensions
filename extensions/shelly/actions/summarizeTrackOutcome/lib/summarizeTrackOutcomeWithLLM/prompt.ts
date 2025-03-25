@@ -71,12 +71,12 @@ Structure your summary as follows:
 - **Only describe completed actions**—do not include planned future steps or what happens next.  
   - **Correct:**  
     \`\`\`
-    ## Outcome:
+    **Outcome:**
     The alternate treatment plan (ATP) was not accepted.
     \`\`\`
   - **Incorrect:**  
     \`\`\`
-    ## Outcome:
+    **Outcome:**
     The alternate treatment plan (ATP) was not accepted, and the case was directed toward pre-certification.
     \`\`\`
 - **Avoid mentioning the patient unless explicitly necessary.** Instead, focus on what occurred:  
@@ -110,10 +110,10 @@ Structure your summary as follows:
 
 ----------
 # Example Output Format
-## **Outcome:**
+**Outcome:**
 The alternate treatment plan (ATP) was not accepted.
 
-## **Details Supporting the Outcome:**
+**Details Supporting the Outcome:**
 - During the initial hernia triage, it was indicated that the hernia was reducible and did not affect the patient's activities of daily living (ADLs).
 - A physician was presented with a form to accept an Alternate Treatment Plan (ATP).
 - The physician declined the ATP, as indicated by the form response.
