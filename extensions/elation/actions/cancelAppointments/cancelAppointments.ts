@@ -110,19 +110,31 @@ export const cancelAppointments: Action<
       const trace = await Promise.all(
         appointmentIdsToCancel.map(async (appointmentId) => {
           try {
-            // Find the original appointment to get its service_location
+            // Find the original appointment to get all its fields
             const appointmentToCancel = appointmentsToCancel.find(
               (appointment) => appointment.id === appointmentId
             )
             
-            // Include service_location in the update if it exists in the original appointment
-            const updateData: Record<string, any> = {
-              status: { status: 'Cancelled' },
+            if (isNil(appointmentToCancel)) {
+              throw new Error(`Appointment ${appointmentId} not found`)
             }
             
-            const serviceLocation = appointmentToCancel?.service_location;
-            if (!isNil(serviceLocation)) {
-              updateData.service_location = serviceLocation;
+            // Elation API requires all these fields in the update request, as their API doesn't support partial updates.
+            // We need to include the original values for fields we don't want to change (known limitation in their API).
+            // The API only allows status_detail for 'Not Seen' status, not for 'Cancelled'.
+            const updateData = {
+              status: {
+                status: 'Cancelled' as const,
+                status_date: new Date().toISOString(),
+                room: appointmentToCancel.status?.room  // Keep the original room value if any
+              },
+              service_location: appointmentToCancel.service_location?.id,
+              patient: appointmentToCancel.patient,
+              physician: appointmentToCancel.physician,
+              practice: appointmentToCancel.practice,
+              scheduled_date: appointmentToCancel.scheduled_date,
+              reason: appointmentToCancel.reason,
+              duration: appointmentToCancel.duration,
             }
             
             await api.updateAppointment(appointmentId, updateData)
