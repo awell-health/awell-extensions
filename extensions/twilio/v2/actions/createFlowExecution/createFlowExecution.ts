@@ -32,7 +32,7 @@ export const createFlowExecution: Action<typeof fields, typeof settings> = {
       accountSid,
     })
 
-    const execution = await client.studio.flows(flow_id).executions.create({
+    const execution = await client.studio.v2.flows(flow_id).executions.create({
       to: recipient,
       from,
       parameters,
