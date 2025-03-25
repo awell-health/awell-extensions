@@ -110,11 +110,25 @@ export const cancelAppointments: Action<
       const trace = await Promise.all(
         appointmentIdsToCancel.map(async (appointmentId) => {
           try {
-            await api.updateAppointment(appointmentId, {
+            // Find the original appointment to get its service_location
+            const appointmentToCancel = appointmentsToCancel.find(
+              (appointment) => appointment.id === appointmentId
+            )
+            
+            // Include service_location in the update if it exists in the original appointment
+            const updateData: Record<string, any> = {
               status: { status: 'Cancelled' },
-            })
+            }
+            
+            const serviceLocation = appointmentToCancel?.service_location;
+            if (!isNil(serviceLocation)) {
+              updateData.service_location = serviceLocation;
+            }
+            
+            await api.updateAppointment(appointmentId, updateData)
             return { appointmentId, status: 'success' }
           } catch (error) {
+            console.error(`Error canceling appointment ${appointmentId}:`, error)
             return { appointmentId, status: 'error' }
           }
         })
