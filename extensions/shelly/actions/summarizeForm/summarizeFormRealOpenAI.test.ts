@@ -37,7 +37,7 @@ const generateTestPayload = (overrides = {}) => {
   }
 }
 
-describe('summarizeForm - Real LLM calls with mocked Awell SDK', () => {
+describe.skip('summarizeForm - Real LLM calls with mocked Awell SDK', () => {
   const { onComplete, onError, helpers, extensionAction, clearMocks } =
     TestHelpers.fromAction(summarizeForm)
 
