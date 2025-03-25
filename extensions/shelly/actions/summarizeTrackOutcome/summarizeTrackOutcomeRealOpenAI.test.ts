@@ -25,7 +25,7 @@ jest.setTimeout(30000) // Increase timeout for real LLM calls
 
 // Use describe.skip to prevent this test from running in normal CI/CD pipelines
 // Remove .skip when you want to run this test locally with a real OpenAI API key
-describe('summarizeTrackOutcome - Real LLM calls with mocked Awell SDK', () => {
+describe.skip('summarizeTrackOutcome - Real LLM calls with mocked Awell SDK', () => {
   const { onComplete, onError, helpers, extensionAction, clearMocks } =
     TestHelpers.fromAction(summarizeTrackOutcome)
 

@@ -137,7 +137,7 @@ describe('summarizeTrackOutcome - Mocked LLM calls', () => {
     })
 
     // Verify the disclaimer is included
-    const expectedDisclaimerMsg = `<p><strong>Important Notice:</strong> The content provided is an AI-generated summary of version 6 of Care Flow "AI Actions Check" (ID: ty0CmaHm2jlX).</p>`
+    const expectedDisclaimerMsg = `<p><strong>Important Notice:</strong> The content provided is an AI-generated summary of version 6 of Care Flow "AI Actions Check" (ID: xQ2P4uBn2cY8).</p>`
     
     // Verify onComplete was called with the expected data
     expect(onComplete).toHaveBeenCalled()
