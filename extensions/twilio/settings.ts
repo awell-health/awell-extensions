@@ -19,6 +19,13 @@ export const settings = {
     required: true,
     description: 'Find your Auth Token at twilio.com/console.',
   },
+  clientId: {
+    label: 'Client ID',
+    key: 'clientId',
+    obfuscated: true,
+    required: false,
+    description: 'Find your Client ID at twilio.com/console.',
+  },
   fromNumber: {
     label: '"From" number',
     key: 'fromNumber',
@@ -63,6 +70,7 @@ export const settings = {
 export const SettingsValidationSchema = z.object({
   accountSid: z.string().min(1, { message: 'Missing Twilio account SID' }),
   authToken: z.string().min(1, { message: 'Missing Twilio auth token' }),
+  clientId: z.string().optional(),
   fromNumber: E164PhoneValidationOptionalSchema,
   messagingServiceSid: z.string().optional(),
   addOptOutLanguage: z
