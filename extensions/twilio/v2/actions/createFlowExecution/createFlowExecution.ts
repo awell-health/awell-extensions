@@ -3,7 +3,7 @@ import { type settings } from '../../../settings'
 import { Category, validate } from '@awell-health/extensions-core'
 import { CreateFlowExecutionSchema, fields, dataPoints } from './config'
 import { isNil } from 'lodash'
-import { validateAndCreateSdkClient } from 'extensions/twilio/common/validateAndCreateSdkClient'
+import { createSdkClient } from 'extensions/twilio/common/createSdkClient'
 
 export const createFlowExecution: Action<typeof fields, typeof settings> = {
   key: 'createFlowExecution',
@@ -27,7 +27,7 @@ export const createFlowExecution: Action<typeof fields, typeof settings> = {
       throw new Error('`from` should never be invalid')
     }
 
-    const { client } = await validateAndCreateSdkClient({ payload })
+    const { client } = await createSdkClient({ payload })
 
     const execution = await client.studio.v2.flows(flow_id).executions.create({
       to: recipient,
