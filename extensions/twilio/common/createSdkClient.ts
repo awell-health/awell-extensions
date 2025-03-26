@@ -20,7 +20,10 @@ export const createSdkClient: createSdkClientParams = async ({ payload }) => {
   })
 
   if (clientId !== undefined) {
-    const client = new Twilio(clientId, authToken, { accountSid })
+    const client = new Twilio(clientId, authToken, {
+      accountSid,
+      region: 'IE1',
+    })
     return { client }
   } else {
     const client = twilioSdk(accountSid, authToken, {
