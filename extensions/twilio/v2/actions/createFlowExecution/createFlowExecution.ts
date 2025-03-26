@@ -3,7 +3,7 @@ import { type settings } from '../../../settings'
 import { Category, validate } from '@awell-health/extensions-core'
 import { CreateFlowExecutionSchema, fields, dataPoints } from './config'
 import { isNil } from 'lodash'
-import { createSdkClient } from 'extensions/twilio/common/createSdkClient'
+import { createSdkClient } from '../../../common/createSdkClient'
 
 export const createFlowExecution: Action<typeof fields, typeof settings> = {
   key: 'createFlowExecution',
