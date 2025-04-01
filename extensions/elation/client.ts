@@ -113,8 +113,8 @@ export class ElationDataWrapper extends DataWrapper {
 
   public async createPatient(
     obj: Partial<PatientInput>,
-  ): Promise<PatientResponse> {
-    const req = this.Request<PatientResponse>({
+  ): Promise<AxiosResponse<PatientResponse>> {
+    const req = this.RequestRaw<PatientResponse>({
       method: 'POST',
       url: `/patients`,
       data: obj,
@@ -491,7 +491,7 @@ export class ElationAPIClient extends APIClient<ElationDataWrapper> {
 
   public async createPatient(
     obj: Partial<PatientInput>,
-  ): Promise<PatientResponse> {
+  ): Promise<AxiosResponse<PatientResponse>> {
     return await this.FetchData(async (dw) => await dw.createPatient(obj))
   }
 

@@ -2,7 +2,7 @@ import { DateOnlySchema, NumericIdSchema } from '@awell-health/extensions-core'
 import { z } from 'zod'
 
 // Enums
-const genderIdentityEnum = z.enum([
+export const genderIdentityEnum = z.enum([
   'unknown',
   'man',
   'woman',
@@ -14,18 +14,18 @@ const genderIdentityEnum = z.enum([
   'two_spirit',
 ])
 
-const legalGenderMarkerEnum = z.enum(['M', 'F', 'X', 'U'])
+export const legalGenderMarkerEnum = z.enum(['M', 'F', 'X', 'U'])
 
-const pronounsEnum = z.enum([
+export const pronounsEnum = z.enum([
   'he_him_his',
   'she_her_hers',
   'they_them_theirs',
   'not_listed',
 ])
 
-const sexEnum = z.enum(['Male', 'Female', 'Other', 'Unknown'])
+export const sexEnum = z.enum(['Male', 'Female', 'Other', 'Unknown'])
 
-const sexualOrientationEnum = z.enum([
+export const sexualOrientationEnum = z.enum([
   'unknown',
   'straight',
   'gay',
@@ -37,7 +37,7 @@ const sexualOrientationEnum = z.enum([
   'asexual',
 ])
 
-const raceEnum = z.enum([
+export const raceEnum = z.enum([
   'No race specified',
   'American Indian or Alaska Native',
   'Asian',
@@ -48,7 +48,7 @@ const raceEnum = z.enum([
   'Declined to specify',
 ])
 
-const ethnicityEnum = z.enum([
+export const ethnicityEnum = z.enum([
   'No ethnicity specified',
   'Hispanic or Latino',
   'Not Hispanic or Latino',
@@ -56,7 +56,7 @@ const ethnicityEnum = z.enum([
   'Declined to specify',
 ])
 
-const phoneTypeEnum = z.enum([
+export const phoneTypeEnum = z.enum([
   'Home',
   'Mobile',
   'Main',
