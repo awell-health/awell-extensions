@@ -188,45 +188,28 @@ describe('Elation - Create patient', () => {
         )
       })
 
-      test('Should throw the error as an event', async () => {
-        await extensionAction.onEvent!({
-          payload: {
-            fields: {
-              firstName: 'Nick Test',
-              lastName: 'Test',
-              dob: '1993-11-30',
-              sex: 'Male',
-              primaryPhysicianId: 141377681883138,
-              caregiverPracticeId: 141127173275652,
-            },
-            settings,
-          } as any,
-          onComplete,
-          onError,
-          helpers,
-        })
+      test('Should throw the error', async () => {
+        await expect(
+          extensionAction.onEvent!({
+            payload: {
+              fields: {
+                firstName: 'Nick Test',
+                lastName: 'Test',
+                dob: '1993-11-30',
+                sex: 'Male',
+                primaryPhysicianId: 141377681883138,
+                caregiverPracticeId: 141127173275652,
+              },
+              settings,
+            } as any,
+            onComplete,
+            onError,
+            helpers,
+          }),
+        ).rejects.toThrow()
 
         expect(mockCreatePatient).toHaveBeenCalled()
         expect(onComplete).not.toHaveBeenCalled()
-        expect(onError).toHaveBeenCalledWith({
-          events: [
-            {
-              date: expect.any(String),
-              text: {
-                en: `400: Bad Request\n${JSON.stringify(
-                  {
-                    caregiver_practice: [
-                      'Invalid pk "141127173275652" - object does not exist.',
-                    ],
-                    primary_physician: ['This field is required.'],
-                  },
-                  null,
-                  2,
-                )}`,
-              },
-            },
-          ],
-        })
       })
     })
   })

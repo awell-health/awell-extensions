@@ -89,26 +89,16 @@ export const createPatient: Action<
         },
       })
     } catch (err) {
-      if (err instanceof AxiosError) {
-        if (err.response?.status === 409) {
-          await onComplete({
-            data_points: {
-              patientId: String(err.response?.data?.redirect),
-            },
-            events: [
-              addActivityEventLog({
-                message: `Patient already exists. Returning the existing patient id.`,
-              }),
-            ],
-          })
-          return
-        }
-
-        // In all other cases, we want to throw the error with error details
-        await onError({
+      // Handle the patient exists already specifically. Every other validation or axios error is handled
+      // by the default error handler in extensions-core.
+      if (err instanceof AxiosError && err.response?.status === 409) {
+        await onComplete({
+          data_points: {
+            patientId: String(err.response?.data?.redirect),
+          },
           events: [
             addActivityEventLog({
-              message: `${String(err.response?.status)}: ${String(err.response?.statusText)}\n${JSON.stringify(err.response?.data, null, 2)}`,
+              message: `Patient already exists. Returning the existing patient id.`,
             }),
           ],
         })
