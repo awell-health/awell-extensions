@@ -43,6 +43,8 @@ This action creates a patient in Elation.
 - Primary physician ID: you can retrieve this ID by using the [Find Physicians](https://docs.elationhealth.com/reference/find-physicians) API call, or by using the `Find Physician` action
 - Caregiver Practice ID: similar to the primary physician ID, you can find this ID by using the same API call or action
 
+If the Elation API throws an error indicating the patient with the provided information already exists, the action will succeed and the ID of the existing patient will be returned.
+
 ### Get Patient
 
 Using a patient identifier, retrieve a patient object from Elation. 
