@@ -27,13 +27,15 @@ export const patientCreatedOrUpdated: Webhook<
   key: 'patientCreatedOrUpdated',
   dataPoints,
   onEvent: async ({
-    payload: { payload, settings },
+    payload: { payload, settings, endpoint },
     onSuccess,
     onError,
     helpers: { rateLimiter },
   }) => {
     const { data, resource, action } = payload
-    const { id: patientId } = data
+    const { id: patientId } = data as {
+      id: number
+    }
     // skip non 'saved' actions for that webhook
     if (action !== 'saved') {
       return
@@ -43,23 +45,23 @@ export const patientCreatedOrUpdated: Webhook<
     const { success, data: durationString } = rateLimitDurationSchema.safeParse(
       settings.rateLimitDuration,
     )
-    if (success === true && !isNil(durationString)) {
+    if (success && !isNil(durationString)) {
       const duration = transformRateLimitDuration(durationString)
       const limiter = rateLimiter('elation-patient', {
         requests: 1,
         duration,
       })
-      const { success } = await limiter.limit(patientId.toString())
+      const key = `${endpoint?.id ?? 'global'}-${patientId}`
+      const { success } = await limiter.limit(key)
       if (!success) {
         await onError({
           response: {
             statusCode: 200,
-            message: `Rate limit exceeded for patient_id=${patientId}. 200 OK response sent to Elation to prevent further requests.`,
+            message: `Rate limit exceeded for patient_id=${patientId} on endpoint ${endpoint?.url ?? 'global'}. 200 OK response sent to Elation to prevent further requests.`,
           },
         })
         return
       }
-      console.log(`Rate limit success for patient_id=${patientId}`)
     }
 
     if (resource !== 'patients') {
