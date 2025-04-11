@@ -47,17 +47,18 @@ export const patientCreatedOrUpdated: Webhook<
     )
     if (success && !isNil(durationString)) {
       const duration = transformRateLimitDuration(durationString)
-      const limiter = rateLimiter('elation-patient', {
+      const limiterName = `elation-patient-${endpoint?.id ?? 'global'}`
+      const limiter = rateLimiter(limiterName, {
         requests: 1,
         duration,
       })
-      const key = `${endpoint?.id ?? 'global'}-${patientId}`
+      const key = patientId.toString()
       const { success } = await limiter.limit(key)
       if (!success) {
         await onError({
           response: {
             statusCode: 200,
-            message: `Rate limit exceeded for patient_id=${patientId} on endpoint ${endpoint?.url ?? 'global'}. 200 OK response sent to Elation to prevent further requests.`,
+            message: `Rate limit exceeded on limiter ${limiterName} for key ${key}. 200 OK response sent to Elation to prevent further requests for patient ${patientId} on endpoint ${endpoint?.url ?? 'global'}.`,
           },
         })
         return

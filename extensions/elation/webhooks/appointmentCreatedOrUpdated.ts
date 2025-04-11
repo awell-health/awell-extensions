@@ -50,17 +50,18 @@ export const appointmentCreatedOrUpdated: Webhook<
     )
     if (success && !isNil(durationString)) {
       const duration = transformRateLimitDuration(durationString)
-      const limiter = rateLimiter('elation-appointment', {
+      const limiterName = `elation-appointment-${endpoint?.id ?? 'global'}`
+      const limiter = rateLimiter(limiterName, {
         requests: 1,
         duration,
       })
-      const key = `${endpoint?.id ?? 'global'}-${appointmentId}`
+      const key = appointmentId.toString()
       const { success } = await limiter.limit(key)
       if (!success) {
         await onError({
           response: {
             statusCode: 200,
-            message: `Rate limit exceeded. 200 OK response sent to Elation to prevent further requests for appointment ${appointmentId} on endpoint ${endpoint?.url ?? 'global'}.`,
+            message: `Rate limit exceeded on limiter ${limiterName} for key ${key}. 200 OK response sent to Elation to prevent further requests for appointment ${appointmentId} on endpoint ${endpoint?.url ?? 'global'}.`,
           },
         })
         return
