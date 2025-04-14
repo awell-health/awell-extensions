@@ -4,6 +4,7 @@ import { validatePayloadAndCreateSdk } from '../../lib/validatePayloadAndCreateS
 import { type settings } from '../../settings'
 import { fields, FieldsValidationSchema, dataPoints } from './config'
 import { SendCallInputSchema } from '../../api/schema'
+import { addActivityEventLog } from '../../../../src/lib/awell/addEventLog'
 
 export const sendCall: Action<
   typeof fields,
@@ -37,21 +38,19 @@ export const sendCall: Action<
       analysis_schema: fields.analysisSchema,
     })
 
-    await blandSdk.sendCall({
+    const { data } = await blandSdk.sendCall({
       ...sendCallInput,
-      /**
-       * A POST request will be made to this endpoint when the call ends
-       *
-       * [!!]
-       * Currently only works with the sandbox environment but that's good enough for Workit bootcamp.
-       * Todo: We need to ensure we grab the right base URL, depending on the environment.
-       */
-      webhook: `https://workit-cloud-functions-105158578148.us-central1.run.app/?activity_id=${payload.activity.id}`,
     })
 
-    /**
-     * Completion of the activity happens via a
-     * Webhook to the endpoint provided in the `webhook` field.
-     */
+    await onComplete({
+      data_points: {
+        call_id: data.call_id,
+      },
+      events: [
+        addActivityEventLog({
+          message: `Request for call sent to Bland.\nStatus: ${data.status}\nCall ID: ${data.call_id}\nMessage: ${data.message}`,
+        }),
+      ],
+    })
   },
 }

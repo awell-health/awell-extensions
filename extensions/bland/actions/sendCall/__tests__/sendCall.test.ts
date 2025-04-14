@@ -64,22 +64,13 @@ describe('Bland.ai - Send call', () => {
     expect(mockedSdk).toHaveBeenCalled()
 
     // Completion happens async via a Webhook from Bland
-    expect(onComplete).not.toHaveBeenCalled()
-    // expect(onComplete).toHaveBeenCalledWith(
-    //   expect.objectContaining({
-    //     data_points: expect.objectContaining({
-    //       callId: '9d404c1b-6a23-4426-953a-a52c392ff8f1',
-    //       status: 'success',
-    //     }),
-    //     events: expect.arrayContaining([
-    //       expect.objectContaining({
-    //         date: expect.any(String),
-    //         text: {
-    //           en: 'Call sent to Bland. Status: success, Call ID: 9d404c1b-6a23-4426-953a-a52c392ff8f1',
-    //         },
-    //       }),
-    //     ]),
-    //   })
-    // )
+    expect(onComplete).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data_points: expect.objectContaining({
+          call_id: '9d404c1b-6a23-4426-953a-a52c392ff8f1',
+        }),
+        events: expect.any(Array),
+      }),
+    )
   })
 })
