@@ -15,7 +15,7 @@ To set up this extension, you will need to provide an API key for Bland.
 
 ### Send call (with Pathway)
 
-Send an AI phone call using a simple prompt or a conversational pathway agent you've built in the Bland platform. **The action is completed when Awell receives a callback from the Bland platform.**
+Initiates an AI phone call using a simple prompt or a conversational pathway agent built on the Bland platform. This action is asynchronous—it triggers a call request in Bland, which queues the call. Note that the action only confirms that Bland has received the request; it does not wait for the call to complete or handle any callbacks from Bland.
 
 Awell lets you specify both the data you want to send to Bland and the structured data you’d like to receive in return. This is achieved by defining the request data for outgoing information and an analysis schema for the structured data you’ll get back.
 
@@ -64,8 +64,6 @@ When retrieving the call details, Bland will return data about the call in the f
 ```
 
 [Also see Bland documentation.](https://docs.bland.ai/api-v1/post/calls)
-
-
 
 ### Get call details
 
