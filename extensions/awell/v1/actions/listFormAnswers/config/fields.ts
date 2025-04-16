@@ -4,15 +4,6 @@ import { z, type ZodTypeAny } from 'zod'
 const LanguageEnum = z.enum(['English', 'Dutch', 'French'])
 export type OutputLanguageType = z.infer<typeof LanguageEnum>
 
-const dropdownOptionsBoolean = [
-  { value: 'true', label: 'Yes' },
-  { value: 'false', label: 'No' },
-]
-
-const dropdownOptionsBooleanSchema = z
-  .enum(['true', 'false'])
-  .transform((val) => val === 'true')
-
 export const fields = {
   language: {
     id: 'language',
@@ -32,22 +23,16 @@ export const fields = {
     label: 'Include descriptions',
     description:
       'Should descriptions be included in the output? Default is "Yes".',
-    type: FieldType.STRING,
+    type: FieldType.BOOLEAN,
     required: false,
-    options: {
-      dropdownOptions: dropdownOptionsBoolean,
-    },
   },
   includeMissingAnswers: {
     id: 'includeMissingAnswers',
     label: 'Include missing answers',
     description:
       'Should missing or unanswered questions be included in the output? Default is "Yes".',
-    type: FieldType.STRING,
+    type: FieldType.BOOLEAN,
     required: false,
-    options: {
-      dropdownOptions: dropdownOptionsBoolean,
-    },
   },
   separator: {
     id: 'separator',
@@ -61,7 +46,7 @@ export const fields = {
 
 export const FieldsValidationSchema = z.object({
   language: LanguageEnum.default('English'),
-  includeDescriptions: dropdownOptionsBooleanSchema.default('true'),
-  includeMissingAnswers: dropdownOptionsBooleanSchema.default('true'),
+  includeDescriptions: z.boolean().optional().default(true),
+  includeMissingAnswers: z.boolean().optional().default(true),
   separator: z.string().optional(),
 } satisfies Record<keyof typeof fields, ZodTypeAny>)

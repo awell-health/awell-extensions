@@ -1,12 +1,12 @@
 import { AwellSdk } from '@awell-health/awell-sdk'
 import { TestHelpers } from '@awell-health/extensions-core'
-import { generateFormAnswersOutput as actionInterface } from '.'
+import { listFormAnswers as actionInterface } from '.'
 import {
   mockFormDefinitionResponse,
   mockFormResponseResponse,
 } from './__testdata__'
 
-describe('generateFormAnswersOutput', () => {
+describe('listFormAnswers', () => {
   const {
     extensionAction: action,
     onComplete,
@@ -32,7 +32,6 @@ describe('generateFormAnswersOutput', () => {
             },
           },
         })
-        // Second query: get activities in current step
         .mockResolvedValueOnce({
           pathwayStepActivities: {
             success: true,
@@ -83,11 +82,10 @@ describe('generateFormAnswersOutput', () => {
         activity: { id: 'X74HeDQ4N0gtdaSEuzF8s' },
         patient: { id: 'whatever' },
         fields: {
-          style: 'Question-Answer',
           language: 'English',
           separator: '---',
-          includeDescriptions: 'false',
-          includeMissingAnswers: 'false',
+          includeDescriptions: false,
+          includeMissingAnswers: false,
         },
         settings: {},
       } as any,
