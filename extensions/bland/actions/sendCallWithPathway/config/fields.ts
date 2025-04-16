@@ -5,7 +5,7 @@ import {
 } from '@awell-health/extensions-core'
 import {
   backgroundTrackOptions,
-  BackgroundTrackSchema,
+  BackgroundTrackEnum,
   ModelSchema,
   VoicemailActionSchema,
 } from '../../../api/schema/atoms'
@@ -333,7 +333,7 @@ export const FieldsValidationSchema = z.object({
   pathwayId: z.string().min(1),
   pathwayVersion: z.number().optional(),
   voice: z.string().optional(),
-  background_track: BackgroundTrackSchema.optional(),
+  background_track: BackgroundTrackEnum.optional(),
   first_sentence: z.string().optional(),
   wait_for_greeting: dropdownOptionsBooleanSchema.optional(),
   block_interruptions: dropdownOptionsBooleanSchema.optional(),

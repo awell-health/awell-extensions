@@ -5,7 +5,7 @@ import {
 } from '@awell-health/extensions-core'
 import {
   backgroundTrackOptions,
-  BackgroundTrackSchema,
+  BackgroundTrackEnum,
   ModelSchema,
   VoicemailActionSchema,
 } from '../../../api/schema/atoms'
@@ -34,14 +34,6 @@ export const fields = {
       'Provide instructions, relevant information, and examples of the ideal conversation flow.',
     type: FieldType.TEXT,
     required: true,
-  },
-  pathwayVersion: {
-    id: 'pathwayVersion',
-    label: 'Pathway version',
-    description:
-      'The version number of the pathway to use for the call. Defaults to the production version.',
-    type: FieldType.NUMERIC,
-    required: false,
   },
   voice: {
     id: 'voice',
@@ -332,9 +324,8 @@ export const fields = {
 export const FieldsValidationSchema = z.object({
   phoneNumber: z.string().min(1),
   task: z.string().min(1),
-  pathwayVersion: z.number().optional(),
   voice: z.string().optional(),
-  background_track: BackgroundTrackSchema.optional(),
+  background_track: BackgroundTrackEnum.optional(),
   first_sentence: z.string().optional(),
   wait_for_greeting: dropdownOptionsBooleanSchema.optional(),
   block_interruptions: dropdownOptionsBooleanSchema.optional(),

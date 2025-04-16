@@ -1,13 +1,21 @@
 import { z } from 'zod'
 
-export const BackgroundTrackSchema = z
-  .enum(['null', 'office', 'cafe', 'restaurant', 'none'])
-  .transform((value) => (value === 'null' ? null : value))
+export const BackgroundTrackEnum = z.enum([
+  'null',
+  'office',
+  'cafe',
+  'restaurant',
+  'none',
+])
+
+export const BackgroundTrackSchema = BackgroundTrackEnum.transform((value) =>
+  value === 'null' ? null : value,
+)
 
 export type BackgroundTrack = z.infer<typeof BackgroundTrackSchema>
 
 export const backgroundTrackOptions: Array<{
-  value: string
+  value: z.infer<typeof BackgroundTrackEnum>
   label: string
 }> = [
   { value: 'null', label: 'Default' },
