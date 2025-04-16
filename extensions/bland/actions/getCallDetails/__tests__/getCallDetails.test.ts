@@ -126,8 +126,19 @@ describe('Bland.ai - Get call details', () => {
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
         callData: JSON.stringify(callData),
+        callLength: callData.call_length.toString(),
+        to: callData.to,
+        from: callData.from,
+        completed: String(callData.completed),
+        metadata: JSON.stringify(callData.metadata),
+        summary: callData.summary,
+        startedAt: callData.started_at,
+        endAt: callData.end_at,
+        analysisSchema: undefined,
+        analysis: JSON.stringify(callData.analysis),
+        concatenatedTranscript: callData.concatenated_transcript,
+        transcripts: JSON.stringify(callData.transcripts),
       },
-      events: expect.any(Array),
     })
   })
 })

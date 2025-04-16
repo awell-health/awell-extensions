@@ -268,10 +268,7 @@ export const fields = {
     type: FieldType.STRING,
     required: false,
     options: {
-      dropdownOptions: [
-        { value: 'true', label: 'Yes' },
-        { value: 'false', label: 'No' },
-      ],
+      dropdownOptions: dropdownOptionsBoolean,
     },
   },
   metadata: {

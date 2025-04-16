@@ -6,7 +6,7 @@ export const fields = {
     id: 'callId',
     label: 'Call ID',
     description:
-      'The unique identifier of the call for which you want to retrieve detailed information.',
+      'The identifier of the call for which you want to retrieve information.',
     type: FieldType.STRING,
     required: true,
   },
