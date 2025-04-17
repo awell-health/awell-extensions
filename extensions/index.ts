@@ -10,6 +10,7 @@ import { cerner } from './cerner'
 import { Cloudinary } from './cloudinary'
 import { CmDotCom } from './cmDotCom'
 import { CollectData } from './collectData'
+import { dateHelpers } from './dateHelpers'
 import { dockHealth } from './dockHealth'
 import { DocuSign } from './docuSign'
 import { DropboxSign } from './dropboxSign'
@@ -65,6 +66,7 @@ export const extensions = [
   Cloudinary,
   CmDotCom,
   CollectData,
+  dateHelpers,
   dockHealth,
   DocuSign,
   DropboxSign,
