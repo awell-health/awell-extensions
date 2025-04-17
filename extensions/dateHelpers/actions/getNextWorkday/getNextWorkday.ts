@@ -1,7 +1,7 @@
 import { type Action } from '@awell-health/extensions-core'
 import { Category } from '@awell-health/extensions-core'
 import { type settings } from '../../settings'
-import { dataPoints, fields } from './config'
+import { dataPoints, fields, FieldsValidationSchema } from './config'
 
 export const getNextWorkday: Action<
   typeof fields,
@@ -16,20 +16,27 @@ export const getNextWorkday: Action<
   dataPoints,
   previewable: true,
   onActivityCreated: async (payload, onComplete, onError) => {
+    const { referenceDate: referenceDateInput } = FieldsValidationSchema.parse(
+      payload.fields,
+    )
+
+    const referenceDate = referenceDateInput ?? new Date()
+
     const SUNDAY = 0
     const SATURDAY = 6
 
-    const today = new Date()
-
     // Normalize to start of day to avoid timezone issues
-    today.setUTCHours(0, 0, 0, 0)
+    referenceDate.setUTCHours(0, 0, 0, 0)
 
     // Advance to the next weekday if today is Saturday or Sunday
-    while (today.getDay() === SUNDAY || today.getDay() === SATURDAY) {
-      today.setDate(today.getDate() + 1)
+    while (
+      referenceDate.getDay() === SUNDAY ||
+      referenceDate.getDay() === SATURDAY
+    ) {
+      referenceDate.setDate(referenceDate.getDate() + 1)
     }
 
-    const nextWorkday = today.toISOString()
+    const nextWorkday = referenceDate.toISOString()
 
     await onComplete({
       data_points: {
