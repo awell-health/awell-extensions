@@ -98,7 +98,7 @@ const getDateAnswer = (
 ): string => {
   const date = new Date(answer)
   const locale = languageToLocaleString(language)
-  return date.toLocaleString(locale)
+  return date.toLocaleDateString(locale)
 }
 
 const getQuestionAndAnswer = (
