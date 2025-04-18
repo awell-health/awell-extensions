@@ -16,23 +16,27 @@ export const getNextWorkday: Action<
   dataPoints,
   previewable: true,
   onActivityCreated: async (payload, onComplete, onError) => {
-    const { referenceDate: referenceDateInput } = FieldsValidationSchema.parse(
-      payload.fields,
-    )
+    const { referenceDate: referenceDateInput, includeReferenceDate } =
+      FieldsValidationSchema.parse(payload.fields)
 
     const referenceDate = referenceDateInput ?? new Date()
-
-    const SUNDAY = 0
-    const SATURDAY = 6
 
     // Normalize to start of day to avoid timezone issues
     referenceDate.setUTCHours(0, 0, 0, 0)
 
-    // Advance to the next weekday if today is Saturday or Sunday
-    while (
-      referenceDate.getDay() === SUNDAY ||
-      referenceDate.getDay() === SATURDAY
-    ) {
+    const SUNDAY = 0
+    const SATURDAY = 6
+    const isWeekend = (date: Date): boolean =>
+      date.getDay() === SUNDAY || date.getDay() === SATURDAY
+    const referenceDateIsWeekday = !isWeekend(referenceDate)
+
+    // If reference date is a weekday and we should *not* include it, move forward by one day
+    if (!includeReferenceDate && !isWeekend(referenceDate)) {
+      referenceDate.setDate(referenceDate.getDate() + 1)
+    }
+
+    // If resultDate is a weekend, keep moving forward to the next weekday
+    while (isWeekend(referenceDate)) {
       referenceDate.setDate(referenceDate.getDate() + 1)
     }
 
@@ -41,6 +45,7 @@ export const getNextWorkday: Action<
     await onComplete({
       data_points: {
         nextWorkday,
+        referenceDateIsWeekday: String(referenceDateIsWeekday),
       },
     })
   },

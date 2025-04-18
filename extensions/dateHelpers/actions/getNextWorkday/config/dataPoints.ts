@@ -5,4 +5,8 @@ export const dataPoints = {
     key: 'nextWorkday',
     valueType: 'date',
   },
+  referenceDateIsWeekday: {
+    key: 'referenceDateIsWeekday',
+    valueType: 'boolean',
+  },
 } satisfies Record<string, DataPointDefinition>
