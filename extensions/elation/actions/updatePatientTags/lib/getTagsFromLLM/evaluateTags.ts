@@ -14,7 +14,7 @@
  *   - LANGSMITH_PROJECT=ai-actions-local
  *
  * Usage:
- * node getTagsFromLLM/evaluateTags.ts
+ *  * yarn ts-node extensions/elation/actions/updatePatientTags/lib/getTagsFromLLM/evaluateTags.ts
  *
  * Results can be viewed in LangSmith dashboard:
  * https://smith.langchain.com/o/3fffae83-70ff-4574-81ba-aaaedf0b4dc5/datasets/745cea13-3379-463f-9a8a-c6b10e29b8f6
@@ -61,7 +61,7 @@ const fetchTestExamples = async (): Promise<Example[]> => {
   try {
     const testExamples = langsmith.listExamples({
       datasetName,
-      splits: ['test'],
+      splits: ['test'], // change to ['validation'] to run on validation set
     })
     const examples: Example[] = []
     for await (const example of testExamples) {
@@ -82,12 +82,8 @@ const tagsMatchEvaluator = async ({
   outputs,
   referenceOutputs,
 }: EvaluatorInput): Promise<EvaluatorOutput> => {
-  console.log('Evaluator received:', { outputs, referenceOutputs }) // Debug log
-
   const generatedTags = outputs?.validatedTags as string[]
   const expectedTags = referenceOutputs?.expected_updated_tags as string[]
-
-  // console.log('Comparing tags:', { generatedTags, expectedTags }); // Debug log
 
   const isEqual =
     Array.isArray(generatedTags) &&
@@ -160,7 +156,8 @@ const runEvaluation = async (): Promise<void> => {
       data: testExamples,
       evaluators: [tagsMatchEvaluator],
       experimentPrefix: 'GetTagsFromLLM Evaluation',
-      maxConcurrency: 4,
+      maxConcurrency: 16,
+      numRepetitions: 3,
     })
 
     const resultsArray = Array.isArray(results) ? results : [results]
