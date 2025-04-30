@@ -84,11 +84,15 @@ export class ZoomApiClient {
         expires_in: number
         scope: string
         api_url: string
-      }>(authUrl.toString(), {
-        headers: {
-          Authorization: `Basic ${authorizationToken}`,
+      }>(
+        authUrl.toString(),
+        {},
+        {
+          headers: {
+            Authorization: `Basic ${authorizationToken}`,
+          },
         },
-      })
+      )
 
       this.accessToken = tokenResponse.data.access_token
       this.tokenExpiry =
