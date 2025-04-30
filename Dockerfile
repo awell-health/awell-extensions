@@ -10,6 +10,7 @@ COPY \
   .pnp.loader.mjs \
   .yarnrc.yml \
   package.json \
+  tsconfig.build.json \
   tsconfig.json \
   yarn.lock \
   /app/
