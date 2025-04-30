@@ -14,7 +14,7 @@
   "scripts": {
     "clean": "rimraf dist/* && echo 'Cleaned dist/'",
     "compile": "tsc",
-    "build": "tsc && echo 'Built new dist/' && yarn copy-markdown",
+    "build": "tsc -p tsconfig.build.json && echo 'Built new dist/' && yarn copy-markdown",
     "copy-markdown": "node copy-markdown.js && echo 'Copied markdown files to dist/'",
     "start": "node dist/src/index.js",
     "lint": "eslint \"**/*.ts\"",
