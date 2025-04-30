@@ -1,7 +1,8 @@
 import { Category, type Action } from '@awell-health/extensions-core'
 import { type settings } from '../../settings'
 import { fields, dataPoints, FieldsValidationSchema } from './config'
-import { htmlToBase64Pdf, validatePayloadAndCreateClient } from '../../helpers'
+import { validatePayloadAndCreateClient } from '../../helpers'
+import { htmlToBase64Pdf } from '../../../../src/utils/htmlToPdf'
 
 export const addClinicalDocument: Action<
   typeof fields,
@@ -26,7 +27,7 @@ export const addClinicalDocument: Action<
     })
 
     const contentAsBase64String = await htmlToBase64Pdf(
-      input.attachmentcontents ?? ''
+      input.attachmentcontents ?? '',
     )
 
     const res = await client.addClinicalDocumentToPatientChart({
