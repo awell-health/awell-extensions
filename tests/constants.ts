@@ -7,7 +7,7 @@ export const testPayload: NewActivityPayload<any, any> = {
     definition_id: 'pathway-definition-id',
     tenant_id: 'tenant-id',
     org_slug: 'org-slug',
-    org_id: 'org-id'
+    org_id: 'org-id',
   },
   activity: {
     id: 'activity-id',
@@ -26,11 +26,14 @@ type DeepPartial<T> = T extends object
     }
   : T
 
-type FieldsType = Record<string, string | number | boolean | undefined>
+type FieldsType = Record<
+  string,
+  string | number | boolean | Record<string, any> | undefined
+>
 type SettingsType = Record<string, string | undefined>
 type ReturnType<
   Fields extends FieldsType,
-  Settings extends SettingsType
+  Settings extends SettingsType,
 > = Omit<NewActivityPayload, 'fields' | 'settings'> & {
   fields: Fields
   settings: Settings
@@ -38,7 +41,7 @@ type ReturnType<
 
 export const generateTestPayload = <
   Fields extends FieldsType,
-  Settings extends SettingsType
+  Settings extends SettingsType,
 >({
   fields,
   settings,

@@ -1,14 +1,15 @@
 import { type Extension } from '@awell-health/extensions-core'
 import { AuthorType, Category } from '@awell-health/extensions-core'
 import {
+  feetAndInchesToInches,
+  generateDynamicUrl,
+  htmlToPdf,
   parseDateToUnixTimestamp,
   parseNumberToText,
+  parseNumberToTextWithDictionary,
+  parseStringToPhoneNumber,
   parseTextToNumber,
   parseUnixTimestampToDate,
-  parseNumberToTextWithDictionary,
-  generateDynamicUrl,
-  parseStringToPhoneNumber,
-  feetAndInchesToInches,
   serializeJson,
 } from './v1/actions'
 import { settings } from './settings'
@@ -26,13 +27,14 @@ export const Transform: Extension = {
   },
   actions: {
     feetAndInchesToInches,
+    generateDynamicUrl,
+    htmlToPdf,
     parseDateToUnixTimestamp,
     parseNumberToText,
+    parseNumberToTextWithDictionary,
+    parseStringToPhoneNumber,
     parseTextToNumber,
     parseUnixTimestampToDate,
-    parseNumberToTextWithDictionary,
-    generateDynamicUrl,
-    parseStringToPhoneNumber,
     serializeJson,
   },
   settings,

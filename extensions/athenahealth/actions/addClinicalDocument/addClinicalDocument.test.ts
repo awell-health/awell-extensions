@@ -2,7 +2,7 @@ import { type AxiosError } from 'axios'
 import { addClinicalDocument } from '.'
 import { generateTestPayload } from '@/tests'
 import { mockSettings } from '../../api/__mocks__/mockData'
-import * as helpers from '../../helpers'
+import * as htmlToPdf from '../../../../src/utils/htmlToPdf/htmlToBase64Pdf'
 
 jest.mock('../../api/client')
 
@@ -10,7 +10,7 @@ describe('athenahealth - Add clinical document', () => {
   const onComplete = jest.fn()
   const onError = jest.fn()
   jest
-    .spyOn(helpers, 'htmlToBase64Pdf')
+    .spyOn(htmlToPdf, 'htmlToBase64Pdf')
     .mockImplementation(async (_: string) => 'base64string')
 
   beforeEach(() => {
@@ -30,7 +30,7 @@ describe('athenahealth - Add clinical document', () => {
     await addClinicalDocument.onActivityCreated!(
       mockOnActivityCreateParams,
       onComplete,
-      onError
+      onError,
     )
 
     expect(onComplete).toHaveBeenCalled()
@@ -50,7 +50,7 @@ describe('athenahealth - Add clinical document', () => {
       await addClinicalDocument.onActivityCreated!(
         mockOnActivityCreateParams,
         onComplete,
-        onError
+        onError,
       )
     } catch (error) {
       const axiosError = error as AxiosError
@@ -80,7 +80,7 @@ describe('athenahealth - Add clinical document', () => {
       await addClinicalDocument.onActivityCreated!(
         mockOnActivityCreateParams,
         onComplete,
-        onError
+        onError,
       )
     } catch (error) {
       const axiosError = error as AxiosError
