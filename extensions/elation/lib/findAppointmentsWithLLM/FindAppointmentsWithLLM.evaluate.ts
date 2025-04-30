@@ -62,7 +62,7 @@ const fetchTestExamples = async (): Promise<Example[]> => {
   try {
     const testExamples = langsmith.listExamples({
       datasetName,
-      splits: ['test'],
+      splits: ['test'], // change to ['validation'] to run on validation set
     })
     const examples: Example[] = []
     for await (const example of testExamples) {
@@ -166,6 +166,7 @@ const runEvaluation = async (): Promise<void> => {
       evaluators: [appointmentsMatchEvaluator],
       experimentPrefix: 'FindAppointmentsWithLLM Evaluation',
       maxConcurrency: 16,
+      numRepetitions: 3,
     })
 
     const resultsArray = Array.isArray(results) ? results : [results]
