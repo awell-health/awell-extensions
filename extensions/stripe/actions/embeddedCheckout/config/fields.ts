@@ -9,6 +9,22 @@ export const fields = {
       "The mode of the checkout session which can be 'payment', 'setup', and 'subscription'",
     type: FieldType.STRING,
     required: true,
+    options: {
+      dropdownOptions: [
+        {
+          label: 'Payment',
+          value: 'payment',
+        },
+        {
+          label: 'Setup',
+          value: 'setup',
+        },
+        {
+          label: 'Subscription',
+          value: 'subscription',
+        },
+      ],
+    },
   },
   item: {
     id: 'item',
@@ -20,10 +36,6 @@ export const fields = {
 } satisfies Record<string, Field>
 
 export const FieldsValidationSchema = z.object({
-  mode: z
-    .string()
-    .min(1)
-    .toLowerCase()
-    .pipe(z.enum(['payment', 'setup', 'subscription'])),
+  mode: z.enum(['payment', 'setup', 'subscription']),
   item: z.string().min(1),
 } satisfies Record<keyof typeof fields, ZodTypeAny>)
