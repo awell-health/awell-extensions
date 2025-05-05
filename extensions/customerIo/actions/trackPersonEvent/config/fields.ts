@@ -13,7 +13,7 @@ export const fields = {
     type: FieldType.STRING,
     required: true,
     options: {
-      dropdownOptions: Object.values(IdentifierOptionsSchema.enum).map(
+      dropdownOptions: Object.values(IdentifierOptionsSchema.options).map(
         (identifier) => ({
           label: identifier,
           value: identifier,
