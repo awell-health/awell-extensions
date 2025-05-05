@@ -47,6 +47,19 @@ describe('Customer.io - Track person event', () => {
           },
           patient: {
             id: 'patient-id',
+            profile: {
+              identifier: [
+                {
+                  system:
+                    'http://terminology.hl7.org/ValueSet-identifier-type.html',
+                  value: 'test@example.com',
+                },
+                {
+                  system: 'http://medplum.com',
+                  value: '123',
+                },
+              ],
+            },
           },
           activity: {
             id: 'activity-id',
@@ -73,6 +86,9 @@ describe('Customer.io - Track person event', () => {
           _awell_careflow_definition_id: 'care-flow-definition-id',
           _awell_patient_id: 'patient-id',
           _awell_activity_id: 'activity-id',
+          '_awell_identifier_http://terminology.hl7.org/ValueSet-identifier-type.html':
+            'test@example.com',
+          '_awell_identifier_http://medplum.com': '123',
           hello: 'world',
         },
       })

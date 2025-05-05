@@ -23,4 +23,5 @@ By default, Awell adds the following attributes to the event:
 - `_awell_careflow_definition_id`: The ID of the careflow definition.
 - `_awell_patient_id`: The ID of the patient.
 - `_awell_activity_id`: The ID of the activity.
+- `_awell_identifier_{system_namespace}`: For every identifier the patient has in Awell, an attribute is added with the system namespace as the key and the identifier value as the value.
 
