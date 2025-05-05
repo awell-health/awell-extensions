@@ -41,6 +41,16 @@ describe('Customer.io - Track person event', () => {
               hello: 'world',
             }),
           },
+          pathway: {
+            id: 'care-flow-id',
+            definition_id: 'care-flow-definition-id',
+          },
+          patient: {
+            id: 'patient-id',
+          },
+          activity: {
+            id: 'activity-id',
+          },
           settings: {
             siteId: 'siteId',
             apiKey: 'apiKey',
@@ -59,6 +69,10 @@ describe('Customer.io - Track person event', () => {
           email: 'test@example.com',
         },
         attributes: {
+          _awell_careflow_id: 'care-flow-id',
+          _awell_careflow_definition_id: 'care-flow-definition-id',
+          _awell_patient_id: 'patient-id',
+          _awell_activity_id: 'activity-id',
           hello: 'world',
         },
       })

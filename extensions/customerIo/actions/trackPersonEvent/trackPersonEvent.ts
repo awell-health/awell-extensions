@@ -16,7 +16,7 @@ export const trackPersonEvent: Action<
   previewable: false,
   dataPoints,
   onEvent: async ({ payload, onComplete, onError }): Promise<void> => {
-    const { customerIoTrackClient, fields } =
+    const { customerIoTrackClient, fields, pathway, patient, activity } =
       await validatePayloadAndCreateSdks({
         fieldsSchema: FieldsValidationSchema,
         payload,
@@ -29,7 +29,13 @@ export const trackPersonEvent: Action<
       identifiers: {
         [fields.personIdentifierType]: fields.identifierValue,
       },
-      attributes: fields.attributes,
+      attributes: {
+        _awell_careflow_id: pathway.id,
+        _awell_careflow_definition_id: pathway.definition_id,
+        _awell_patient_id: patient.id,
+        _awell_activity_id: activity.id,
+        ...fields.attributes,
+      },
     })
 
     await onComplete()
