@@ -1,6 +1,7 @@
 import { type Setting } from '@awell-health/extensions-core'
 import { z, type ZodTypeAny } from 'zod'
-import { emailSchema } from 'src/utils'
+import { emailSchema } from '../../src/utils/emailValidation'
+
 export const settings = {
   baseUrl: {
     label: 'Base URL',

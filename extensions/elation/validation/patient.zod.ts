@@ -1,6 +1,6 @@
 import { DateOnlySchema, NumericIdSchema } from '@awell-health/extensions-core'
 import { z } from 'zod'
-import { emailSchema as defaultEmailSchema } from 'src/utils'
+import { emailSchema as defaultEmailSchema } from '../../../src/utils/emailValidation'
 // Enums
 export const genderIdentityEnum = z.enum([
   'unknown',

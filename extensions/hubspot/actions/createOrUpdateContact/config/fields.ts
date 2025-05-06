@@ -4,7 +4,7 @@ import {
   StringType,
 } from '@awell-health/extensions-core'
 import { isEmpty, isNil } from 'lodash'
-import { emailSchema } from 'src/utils'
+import { emailSchema } from '../../../../../src/utils/emailValidation'
 import z, { type ZodTypeAny } from 'zod'
 
 export const fields = {

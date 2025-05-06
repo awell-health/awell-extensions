@@ -15,7 +15,7 @@ import {
   raceEnum,
 } from '../../../validation/patient.zod'
 import { isEmpty, isNil, startCase } from 'lodash'
-import { optionalEmailSchema } from 'src/utils'
+import { optionalEmailSchema } from '../../../../../src/utils/emailValidation'
 
 export const fields = {
   firstName: {

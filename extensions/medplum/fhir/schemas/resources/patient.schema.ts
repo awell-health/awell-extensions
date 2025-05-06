@@ -4,7 +4,7 @@ import {
   E164PhoneValidationOptionalSchema,
 } from '@awell-health/extensions-core'
 import { GenderSchema } from '../../../../../src/lib/fhir/schemas/Patient'
-import { optionalEmailSchema } from 'src/utils'
+import { optionalEmailSchema } from '../../../../../src/utils/emailValidation'
 
 export const PatientSchema = z.object({
   firstName: z.string().optional(),

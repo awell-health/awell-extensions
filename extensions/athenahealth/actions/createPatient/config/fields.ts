@@ -1,7 +1,7 @@
 import { FieldType, type Field } from '@awell-health/extensions-core'
 import z, { type ZodTypeAny } from 'zod'
 import { AwellToAthenaDateOnlySchema } from '../../../validation/date'
-import { emailSchema } from 'src/utils'
+import { emailSchema } from '../../../../../src/utils/emailValidation'
 
 export const fields = {
   departmentid: {

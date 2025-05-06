@@ -1,6 +1,6 @@
 import z from 'zod'
 import { ActionType, EventType } from './atoms'
-import { optionalEmailSchema } from 'src/utils'
+import { optionalEmailSchema } from '../../../../../src/utils/emailValidation'
 
 export const IdentifiersSchema = z
   .object({

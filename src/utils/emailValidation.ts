@@ -18,6 +18,13 @@ export const emailSchema = z
   )
 
 /**
- * Helper function to create an optional email schema
+ * Helper function to create an optional email schema allows undefined and empty strings
  */
-export const optionalEmailSchema = emailSchema.optional()
+export const optionalEmailSchema = z
+  .string()
+  .optional()
+  .refine(
+    (val) =>
+      val === undefined || val === '' || emailSchema.safeParse(val).success,
+    'Invalid email format',
+  )

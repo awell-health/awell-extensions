@@ -8,7 +8,7 @@ import { formatISO } from 'date-fns'
 import { Sex } from '../../../gql/graphql'
 import { E164PhoneValidationOptionalSchema } from '@awell-health/extensions-core'
 import { getTimezoneOptions } from './getTimezones'
-import { optionalEmailSchema } from 'src/utils'
+import { optionalEmailSchema } from '../../../../../../src/utils/emailValidation'
 
 const SexEnum = z.enum([Sex.Female, Sex.Male, Sex.NotKnown])
 

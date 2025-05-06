@@ -1,4 +1,4 @@
-import { optionalEmailSchema } from 'src/utils'
+import { optionalEmailSchema } from '../../../src/utils/emailValidation'
 import * as z from 'zod'
 
 export const physicianSchema = z

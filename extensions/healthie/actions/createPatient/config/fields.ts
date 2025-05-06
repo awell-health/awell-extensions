@@ -3,7 +3,7 @@ import {
   FieldType,
   StringType,
 } from '@awell-health/extensions-core'
-import { optionalEmailSchema } from 'src/utils'
+import { optionalEmailSchema } from '../../../../../src/utils/emailValidation'
 import { z, type ZodTypeAny } from 'zod'
 
 export const fields = {
