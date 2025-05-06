@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const matter = require('gray-matter');
-const algoliasearch = require('algoliasearch');
+const algoliasearch = require('algoliasearch').algoliasearch;
 const glob = require('glob');
 
 // Read environment variables
