@@ -23,6 +23,7 @@ You'll have to set up a [Server-to-Server OAuth app](https://developers.zoom.us/
 
 Send an SMS to a recipient.
 
-Ensure your account credentials have the following scopes set:
+Ensure your Server-to-Server OAuth app has the following scopes set:
+
 - Scopes: `contact_center_sms:write:admin`
 - Granular Scopes: `contact_center:write:sms:admin`

@@ -64,7 +64,7 @@ export class ZoomApiClient {
   private async refreshAccessToken(): Promise<void> {
     const authUrl = new URL(this.authUrl)
     /**
-     * Zoom deviates from the OAuth2 spec in that the grant_type is account_credentials
+     * Zoom deviates from the OAuth2 spec in that the grant_type is account_credentials :)))
      * and not client_credentials. Hence why we have this custom class instead of using OAuth helpers from
      * Extensions core.
      *

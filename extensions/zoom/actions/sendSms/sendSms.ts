@@ -17,7 +17,7 @@ export const sendSms: Action<
   fields,
   previewable: false,
   dataPoints,
-  onEvent: async ({ payload, onComplete }): Promise<void> => {
+  onEvent: async ({ payload, onComplete, onError }): Promise<void> => {
     const { fields, zoomSdk } = await validatePayloadAndCreateSdk({
       fieldsSchema: FieldsValidationSchema,
       payload,
@@ -28,6 +28,23 @@ export const sendSms: Action<
       consumer_numbers: [fields.to],
       body: fields.body,
     })
+
+    /**
+     * Custom error handling for Zoom API
+     * For some errors, Zoom returns a 200 with success: false
+     *
+     * All other errors are handled by with AxiosError and caught in Extensions Core
+     */
+    if (!data[0].success) {
+      await onError({
+        events: [
+          addActivityEventLog({
+            message: data[0].description ?? 'Unknown error',
+          }),
+        ],
+      })
+      return
+    }
 
     await onComplete({
       data_points: {

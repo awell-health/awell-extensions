@@ -6,7 +6,7 @@ export const settings = {
     key: 'accountId',
     label: 'Account ID',
     obfuscated: false,
-    description: 'The account ID of your Zoom account',
+    description: 'The account ID of your Zoom account.',
     required: true,
   },
   clientId: {
