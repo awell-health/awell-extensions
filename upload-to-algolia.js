@@ -1,8 +1,8 @@
 const fs = require('fs');
 const path = require('path');
-const glob = require('glob');
 const matter = require('gray-matter');
 const algoliasearch = require('algoliasearch');
+const glob = require('glob');
 
 // Read environment variables
 const ALGOLIA_APP_ID = process.env.ALGOLIA_APP_ID || '';
