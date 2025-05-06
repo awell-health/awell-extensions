@@ -16,13 +16,10 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '18'
+          node-version: '20'
 
       - name: Install dependencies
-        run: yarn
-
-      - name: Install gray-matter and algoliasearch
-        run: yarn add gray-matter algoliasearch glob
+        run: yarn --immutable
 
       - name: Update Algolia Index
         run: node upload-to-algolia.js
