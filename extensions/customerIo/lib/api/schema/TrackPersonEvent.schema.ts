@@ -1,11 +1,12 @@
 import z from 'zod'
 import { ActionType, EventType } from './atoms'
+import { optionalEmailSchema } from 'src/utils'
 
 export const IdentifiersSchema = z
   .object({
     // Only one of these should be present
     id: z.string().optional(),
-    email: z.string().email().optional(),
+    email: optionalEmailSchema,
     cio_id: z.string().optional(),
   })
   .refine(

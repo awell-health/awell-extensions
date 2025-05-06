@@ -15,6 +15,7 @@ import {
   raceEnum,
 } from '../../../validation/patient.zod'
 import { isEmpty, isNil, startCase } from 'lodash'
+import { optionalEmailSchema } from 'src/utils'
 
 export const fields = {
   firstName: {
@@ -221,7 +222,7 @@ export const FieldsValidationSchema = z.object({
   sex: sexEnum,
   primaryPhysicianId: NumericIdSchema,
   caregiverPracticeId: NumericIdSchema,
-  email: z.string().email().optional(),
+  email: optionalEmailSchema,
   mobilePhone: z.string().optional(),
   middleName: z.string().optional(),
   actualName: z.string().optional(),

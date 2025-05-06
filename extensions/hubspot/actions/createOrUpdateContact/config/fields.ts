@@ -4,6 +4,7 @@ import {
   StringType,
 } from '@awell-health/extensions-core'
 import { isEmpty, isNil } from 'lodash'
+import { emailSchema } from 'src/utils'
 import z, { type ZodTypeAny } from 'zod'
 
 export const fields = {
@@ -47,7 +48,7 @@ export const fields = {
 } satisfies Record<string, Field>
 
 export const FieldsValidationSchema = z.object({
-  email: z.string().min(1).email(),
+  email: emailSchema,
   firstName: z
     .string()
     .optional()

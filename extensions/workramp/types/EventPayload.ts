@@ -1,9 +1,9 @@
 import z from 'zod'
 import { EventType } from './EventType'
-
+import { optionalEmailSchema } from 'src/utils'
 const UserSchema = z.object({
   id: z.string(),
-  email: z.string().email(),
+  email: optionalEmailSchema,
   firstName: z.string(),
   lastName: z.string(),
   customAttributes: z.record(z.string(), z.any()),
