@@ -33,7 +33,7 @@ export const sendSms: Action<
      * Custom error handling for Zoom API
      * For some errors, Zoom returns a 200 with success: false
      *
-     * All other errors are handled by with AxiosError and caught in Extensions Core
+     * All other errors are handled with AxiosError and caught in Extensions Core
      */
     if (!data[0].success) {
       await onError({
