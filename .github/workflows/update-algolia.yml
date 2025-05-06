@@ -25,7 +25,7 @@ jobs:
         run: yarn install --immutable
 
       - name: Update Algolia Index
-        run: yarn node upload-to-algolia.js
+        run: yarn node upload-to-algolia.mjs
         env:
           ALGOLIA_APP_ID: ${{ secrets.ALGOLIA_APP_ID }}
           ALGOLIA_ADMIN_KEY: ${{ secrets.ALGOLIA_ADMIN_KEY }}
