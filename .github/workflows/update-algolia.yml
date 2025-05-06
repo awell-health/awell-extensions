@@ -18,11 +18,14 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Install dependencies
-        run: yarn --immutable
+      - name: Enable Corepack (for Yarn 4)
+        run: corepack enable
+
+      - name: Install dependencies with Yarn PnP
+        run: yarn install --immutable
 
       - name: Update Algolia Index
-        run: node upload-to-algolia.js
+        run: yarn node upload-to-algolia.js
         env:
-            ALGOLIA_APP_ID: ${{ secrets.ALGOLIA_APP_ID }}
-            ALGOLIA_ADMIN_KEY: ${{ secrets.ALGOLIA_ADMIN_KEY }}
+          ALGOLIA_APP_ID: ${{ secrets.ALGOLIA_APP_ID }}
+          ALGOLIA_ADMIN_KEY: ${{ secrets.ALGOLIA_ADMIN_KEY }}
