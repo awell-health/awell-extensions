@@ -7,8 +7,8 @@ import {
 import z from 'zod'
 import { SettingsValidationSchema } from '../settings'
 import { type Activity } from '@awell-health/extensions-core/dist/types/Activity'
-import { ZoomApiClient } from '../api/client'
-import { ZOOM_AUTH_URL, ZOOM_API_URL } from '../api/constants'
+import { ZoomApiClient } from './api/client'
+import { ZOOM_AUTH_URL, ZOOM_API_URL } from './api/constants'
 
 type ValidatePayloadAndCreateSdk = <
   T extends z.ZodTypeAny,

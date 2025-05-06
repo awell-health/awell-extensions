@@ -1,10 +1,10 @@
 import { TestHelpers } from '@awell-health/extensions-core'
-import { ZoomApiClient } from '../../api/client'
+import { ZoomApiClient } from '../../lib/api/client'
 import { sendSms as action } from './sendSms'
 import { createAxiosError } from '../../../../tests'
 import { AxiosError } from 'axios'
 
-jest.mock('../../api/client')
+jest.mock('../../lib/api/client')
 
 describe('Zoom - Send SMS', () => {
   const { extensionAction, onComplete, onError, helpers, clearMocks } =
