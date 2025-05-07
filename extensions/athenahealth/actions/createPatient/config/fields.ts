@@ -1,6 +1,7 @@
 import { FieldType, type Field } from '@awell-health/extensions-core'
 import z, { type ZodTypeAny } from 'zod'
 import { AwellToAthenaDateOnlySchema } from '../../../validation/date'
+import { emailSchema } from '../../../../../src/utils/emailValidation'
 
 export const fields = {
   departmentid: {
@@ -45,7 +46,7 @@ export const FieldsValidationSchema = z.object({
   firstname: z.string().min(1),
   lastname: z.string().min(1),
   dob: AwellToAthenaDateOnlySchema,
-  email: z.string().min(1).email(),
+  email: emailSchema,
 } satisfies Record<keyof typeof fields, ZodTypeAny>)
 
 export type CreatePatientInputType = z.infer<typeof FieldsValidationSchema>

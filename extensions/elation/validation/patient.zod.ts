@@ -1,6 +1,6 @@
 import { DateOnlySchema, NumericIdSchema } from '@awell-health/extensions-core'
 import { z } from 'zod'
-
+import { emailSchema as defaultEmailSchema } from '../../../src/utils/emailValidation'
 // Enums
 export const genderIdentityEnum = z.enum([
   'unknown',
@@ -115,7 +115,7 @@ export const phoneSchema = z.object({
 })
 
 export const emailSchema = z.object({
-  email: z.string().email().max(75),
+  email: defaultEmailSchema.max(75),
 })
 
 export const guarantorSchema = z.object({

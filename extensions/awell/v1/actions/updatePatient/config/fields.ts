@@ -8,6 +8,7 @@ import { formatISO } from 'date-fns'
 import { Sex } from '../../../gql/graphql'
 import { E164PhoneValidationOptionalSchema } from '@awell-health/extensions-core'
 import { getTimezoneOptions } from './getTimezones'
+import { optionalEmailSchema } from '../../../../../../src/utils/emailValidation'
 
 const SexEnum = z.enum([Sex.Female, Sex.Male, Sex.NotKnown])
 
@@ -132,9 +133,7 @@ export const FieldsValidationSchema = z.object({
   firstName: z.optional(z.string().trim()),
   lastName: z.optional(z.string().trim()),
   birthDate: z.optional(z.coerce.date().transform((date) => formatISO(date))),
-  email: z.optional(
-    z.string().trim().email('Value passed is not an email address'),
-  ),
+  email: optionalEmailSchema,
   phone: E164PhoneValidationOptionalSchema,
   mobilePhone: E164PhoneValidationOptionalSchema,
   street: z.optional(z.string().trim()),

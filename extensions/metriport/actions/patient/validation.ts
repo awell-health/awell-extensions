@@ -1,4 +1,5 @@
 import * as z from 'zod'
+import { optionalEmailSchema } from '../../../../src/utils/emailValidation'
 // import { addressSchema, genderAtBirthSchema } from '@metriport/api-sdk'
 const addressSchema = z.object({})
 const genderAtBirthSchema = z.object({})
@@ -11,7 +12,7 @@ export const patientCreateSchema = z
     driversLicenseState: z.string().optional(),
     driversLicenseValue: z.string().optional(),
     phone: z.string().optional(),
-    email: z.string().email().optional(),
+    email: optionalEmailSchema,
   })
   .merge(addressSchema)
 

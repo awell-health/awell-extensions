@@ -3,6 +3,7 @@ import {
   FieldType,
   StringType,
 } from '@awell-health/extensions-core'
+import { optionalEmailSchema } from '../../../../../src/utils/emailValidation'
 import { z, type ZodTypeAny } from 'zod'
 
 export const fields = {
@@ -141,7 +142,7 @@ export const FieldsValidationSchema = z.object({
   first_name: z.string().optional(),
   last_name: z.string().optional(),
   legal_name: z.string().optional(),
-  email: z.string().optional(),
+  email: optionalEmailSchema,
   dob: z.string().optional(),
   phone_number: z.string().optional(),
   provider_id: z.string().optional(),

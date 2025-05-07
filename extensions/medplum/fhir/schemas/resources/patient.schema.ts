@@ -4,11 +4,12 @@ import {
   E164PhoneValidationOptionalSchema,
 } from '@awell-health/extensions-core'
 import { GenderSchema } from '../../../../../src/lib/fhir/schemas/Patient'
+import { optionalEmailSchema } from '../../../../../src/utils/emailValidation'
 
 export const PatientSchema = z.object({
   firstName: z.string().optional(),
   lastName: z.string().optional(),
-  email: z.string().email().optional(),
+  email: optionalEmailSchema,
   mobilePhone: E164PhoneValidationOptionalSchema,
   birthDate: DateOnlyOptionalSchema,
   gender: GenderSchema.optional(),
