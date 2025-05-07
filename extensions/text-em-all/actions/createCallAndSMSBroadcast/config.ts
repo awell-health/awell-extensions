@@ -8,7 +8,7 @@ import {
   DateTimeSchema,
 } from '@awell-health/extensions-core'
 
-import { BroadcastTypes } from './types'
+import { MixedBroadcastTypes } from './types'
 import { AudioSchema, TransferSchema } from '../types'
 import { validateJsonField } from '../utils/validateJsonField'
 import { parsePhoneNumber } from 'libphonenumber-js'
@@ -30,7 +30,7 @@ export const fields = {
     required: true,
     description: 'The type of broadcast.',
     options: {
-      dropdownOptions: Object.values(BroadcastTypes.enum).map((type) => ({
+      dropdownOptions: Object.values(MixedBroadcastTypes.enum).map((type) => ({
         label: type,
         value: type,
       })),
@@ -43,6 +43,22 @@ export const fields = {
     stringType: StringType.PHONE,
     required: true,
     description: 'The primary phone number of the recipient in E.164 format',
+  },
+  textMessage: {
+    id: 'textMessage',
+    label: 'Text Message',
+    type: FieldType.TEXT,
+    required: true,
+    description:
+      'The text of the message for a text type broadcast. The max length is based on the setting in your account.',
+  },
+  textNumberID: {
+    id: 'textNumberID',
+    label: 'Text Number ID',
+    type: FieldType.NUMERIC,
+    required: false,
+    description:
+      'The ID of the text number your messages will be sent from. If omitted, the default text number on your account will be used.',
   },
   startDate: {
     id: 'startDate',
@@ -150,12 +166,14 @@ export const dataPoints = {
 
 export const FieldsSchema = z.object({
   broadcastName: z.string(),
-  broadcastType: BroadcastTypes,
+  broadcastType: MixedBroadcastTypes,
   startDate: DateTimeSchema.optional().transform((date) => {
     if (isNil(date) || date === '') return undefined
     // format is required: 2/1/2020 1:15PM',
     return format(new Date(date), 'M/d/yyyy h:mmaa')
   }),
+  textMessage: z.string(),
+  textNumberID: z.number().optional(),
   maxMessageLength: z.number().optional(),
   callerID: z.string().optional(),
   phoneNumber: z.string().transform((phone) => {
