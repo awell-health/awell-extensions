@@ -60,7 +60,7 @@ const fetchTestExamples = async (): Promise<Example[]> => {
   try {
     const testExamples = langsmith.listExamples({
       datasetName,
-      splits: ['validation'],
+      splits: ['test'],
     })
     const examples: Example[] = []
     for await (const example of testExamples) {
@@ -165,14 +165,14 @@ const runEvaluation = async (): Promise<void> => {
       data: testExamples,
       evaluators: [summaryProvidedEvaluator],
       experimentPrefix: 'SummarizeFormWithLLM Evaluation',
-      maxConcurrency: 16,
-      numRepetitions: 3,
+      maxConcurrency: 4,
+      numRepetitions: 5,
     })
 
     const resultsArray = Array.isArray(results) ? results : [results]
     const experimentId = resultsArray[0]?.run?.run_id as string
 
-    console.log('\n✨ Evaluation Complete!')
+    console.log('\n✨ Experiment Run Complete! Actual evaluation is running in LangSmith via LLM as judges.')
     console.log('View detailed results in LangSmith:')
     console.log(`https://smith.langchain.com/runs/${experimentId}`)
   } catch (error) {
