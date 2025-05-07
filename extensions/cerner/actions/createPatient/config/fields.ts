@@ -2,6 +2,7 @@ import { FieldType, type Field } from '@awell-health/extensions-core'
 import z, { type ZodTypeAny } from 'zod'
 import { GenderSchema } from '../../../../../src/lib/fhir/schemas/Patient'
 import { startCase } from 'lodash'
+import { optionalEmailSchema } from '../../../../../src/utils/emailValidation'
 
 export const fields = {
   assigningOrganizationId: {
@@ -72,5 +73,5 @@ export const FieldsValidationSchema = z.object({
   givenName: z.string().min(1),
   birthDate: z.coerce.date().optional(),
   gender: GenderSchema.optional(),
-  email: z.string().email().optional(),
+  email: optionalEmailSchema,
 } satisfies Record<keyof typeof fields, ZodTypeAny>)
