@@ -5,9 +5,9 @@ export const systemPromptBulletPoints = ChatPromptTemplate.fromTemplate(`
 
   First, write the disclaimer message "{disclaimerMessage}" in specified language: {language}, following these rules:
   - If specified language is Default or not specified: translate all parts of {disclaimerMessage} into the language of the form. If you cannot determine language use English.
-  - If specified language is other than Default (French, Spanish, bosnian, ...): translate all parts of {disclaimerMessage} into specified language: {language} It is critical that the entire disclaimer message is written in the same language as specified language: {language}.
-    For example if the disclaimer message is "Important Notice: The content provided is an AI-generated summary." and specified language is Spanish, the disclaimer message in Spanish would be "Aviso Importante: El contenido proporcionado es un resumen generado por IA de las respuestas del formulario".
-    If the specified language is French than the same disclaimer message should be: "Avis Important : Le contenu fourni est un résumé généré par IA des réponses du formulaire"
+  - If specified language is other than Default (French, Spanish, bosnian, ...): translate ALL parts of {disclaimerMessage} into specified language: {language}, including ANY heading text such as "Important Notice" which MUST be translated too. It is critical that the entire disclaimer message is written in the same language as specified language: {language} without any English words remaining.
+    For example if the disclaimer message is "**Important Notice:** The content provided is an AI-generated summary." and specified language is Spanish, the disclaimer message in Spanish would be "**Aviso Importante:** El contenido proporcionado es un resumen generado por IA de las respuestas del formulario".
+    If the specified language is French than the same disclaimer message should be: "**Avis Important :** Le contenu fourni est un résumé généré par IA des réponses du formulario".
   Then add two new lines after the disclaimer message.
 
   Then adhere strictly to these step-by-step instructions:
@@ -74,9 +74,9 @@ export const systemPromptTextParagraph = ChatPromptTemplate.fromTemplate(`
 
   First, write the disclaimer message "{disclaimerMessage}" in specified language: {language}, following these rules:
   - If specified language is Default or not specified: translate all parts of {disclaimerMessage} into the language of the form. If you cannot determine language use English.
-  - If specified language is other than Default (French, Spanish, bosnian, ...): translate all parts of {disclaimerMessage} into specified language: {language} It is critical that the entire disclaimer message is written in the same language as specified language: {language}.
-    For example if the disclaimer message is "Important Notice: The content provided is an AI-generated summary." and specified language is Spanish, the disclaimer message in Spanish would be "Aviso Importante: El contenido proporcionado es un resumen generado por IA de las respuestas del formulario".
-    If the specified language is French than the same disclaimer message should be: "Avis Important : Le contenu fourni est un résumé généré par IA des réponses du formulaire"
+  - If specified language is other than Default (French, Spanish, bosnian, ...): translate ALL parts of {disclaimerMessage} into specified language: {language}, including ANY heading text such as "Important Notice" which MUST be translated too. It is critical that the entire disclaimer message is written in the same language as specified language: {language} without any English words remaining.
+    For example if the disclaimer message is "**Important Notice:** The content provided is an AI-generated summary." and specified language is Spanish, the disclaimer message in Spanish would be "**Aviso Importante:** El contenido proporcionado es un resumen generado por IA de las respuestas del formulario".
+    If the specified language is French than the same disclaimer message should be: "**Avis Important :** Le contenu fourni est un résumé généré par IA des réponses du formulario".
   Then add two new lines after the disclaimer message.
   
   Then adhere strictly to these step-by-step instructions:
@@ -110,7 +110,7 @@ export const systemPromptTextParagraph = ChatPromptTemplate.fromTemplate(`
 
   **Language:**
 
-    - It is critical to summarize in the language specified below. If Default or not specified, use the language of the form.
+  - It is critical to summarize in the language specified below. If Default or not specified, use the language of the form.
 
   **Specified Language:**
 

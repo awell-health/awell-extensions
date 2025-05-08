@@ -2,6 +2,7 @@ import { Category, type Action } from '@awell-health/extensions-core'
 import { fields, dataPoints, FieldsValidationSchema } from './config'
 import { getResponsesForAllForms } from '../../lib/getFormResponseText'
 import { summarizeFormWithLLM } from '../../lib/summarizeFormWithLLM'
+import { detectLanguageWithLLM } from '../../lib/detectLanguageWithLLM'
 import { DISCLAIMER_MSG_FORM } from '../../lib/constants'
 import { getAllFormsInCurrentStep } from '../../../../src/lib/awell'
 import { markdownToHtml } from '../../../../src/utils'
@@ -48,12 +49,30 @@ export const summarizeFormsInStep: Action<
       formsData,
     })
 
+    // Determine which language to use for summarization
+    let summaryLanguage = language
+    
+    // If language is set to 'Default', detect the language
+    if (language === 'Default') {
+      try {
+        summaryLanguage = await detectLanguageWithLLM({
+          model,
+          text: allFormsResponseText,
+          metadata,
+          callbacks,
+        })
+      } catch (error) {
+        // If language detection fails, fall back to 'Default'
+        summaryLanguage = 'Default'
+      }
+    }
+
     // Summarize all forms' responses
     const summary = await summarizeFormWithLLM({
       model,
       formData: allFormsResponseText,
       summaryFormat,
-      language,
+      language: summaryLanguage,
       disclaimerMessage: DISCLAIMER_MSG_FORM,
       metadata,
       callbacks, // Add callbacks here
