@@ -1,5 +1,6 @@
 import { Category, type Action } from '@awell-health/extensions-core'
 import { summarizeFormWithLLM } from '../../lib/summarizeFormWithLLM'
+import { detectLanguageWithLLM } from '../../lib/detectLanguageWithLLM'
 import { createOpenAIModel } from '../../../../src/lib/llm/openai/createOpenAIModel'
 import { OPENAI_MODELS } from '../../../../src/lib/llm/openai/constants'
 import { fields, dataPoints, FieldsValidationSchema } from './config'
@@ -70,13 +71,29 @@ export const summarizeForm: Action<
     } else {
       disclaimerMessage = `**Important Notice:** The content provided is an AI-generated summary of form responses of Care Flow "${careFlowDetails.title}" (ID: ${payload.pathway.id}).`;
     }
+    
+    let summaryLanguage = language
+    
+    if (language === 'Default') {
+      try {
+        summaryLanguage = await detectLanguageWithLLM({
+          model,
+          text: formData,
+          metadata,
+          callbacks,
+        })
+      } catch (error) {
+        // If language detection fails, keep using 'Default'
+        summaryLanguage = 'Default'
+      }
+    }
 
     // 4. Generate summary
     const summary = await summarizeFormWithLLM({
       model,
       formData,
       summaryFormat,
-      language,
+      language: summaryLanguage,
       disclaimerMessage,
       additionalInstructions,
       metadata,

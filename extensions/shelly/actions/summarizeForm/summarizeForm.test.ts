@@ -15,6 +15,11 @@ jest.mock('../../lib/getCareFlowDetails', () => ({
   })
 }))
 
+// Mock the detectLanguageWithLLM function
+jest.mock('../../lib/detectLanguageWithLLM', () => ({
+  detectLanguageWithLLM: jest.fn().mockImplementation(async () => 'English'),
+}))
+
 // Simple payload generator function to replace the external import
 const generateTestPayload = (overrides = {}) => {
   return {
@@ -138,9 +143,15 @@ describe('summarizeForm - Mocked LLM calls', () => {
 
     // Verify the summarizeFormWithLLM function was called with the correct disclaimer
     const { summarizeFormWithLLM } = require('../../lib/summarizeFormWithLLM')
+    const { detectLanguageWithLLM } = require('../../lib/detectLanguageWithLLM')
+    
+    // Verify language detection was called
+    expect(detectLanguageWithLLM).toHaveBeenCalled()
+    
     expect(summarizeFormWithLLM).toHaveBeenCalledWith(
       expect.objectContaining({
-        disclaimerMessage: '**Important Notice:** The content provided is an AI-generated summary of form responses of version 3 of Care Flow "Test Care Flow" (ID: ai4rZaYEocjB).'
+        disclaimerMessage: '**Important Notice:** The content provided is an AI-generated summary of form responses of version 3 of Care Flow "Test Care Flow" (ID: ai4rZaYEocjB).',
+        language: 'English' // Should be the detected language
       })
     )
 
@@ -154,7 +165,7 @@ describe('summarizeForm - Mocked LLM calls', () => {
     expect(onError).not.toHaveBeenCalled()
   })
 
-  it('Should summarize form with LLM and additional instructions', async () => {
+  it('Should NOT use language detection when specific language is provided', async () => {
     const payload = generateTestPayload({
       pathway: {
         id: 'ai4rZaYEocjB',
@@ -163,7 +174,7 @@ describe('summarizeForm - Mocked LLM calls', () => {
       activity: { id: 'X74HeDQ4N0gtdaSEuzF8s' },
       fields: {
         summaryFormat: 'Bullet-points',
-        language: 'Default',
+        language: 'Spanish', // Specific language
         additionalInstructions: 'Focus on medication details and side effects.',
       },
       settings: {},
@@ -176,11 +187,18 @@ describe('summarizeForm - Mocked LLM calls', () => {
       helpers,
     })
 
-    // Verify the summarizeFormWithLLM function was called with the correct disclaimer and instructions
+    // Get references to mocked functions
     const { summarizeFormWithLLM } = require('../../lib/summarizeFormWithLLM')
+    const { detectLanguageWithLLM } = require('../../lib/detectLanguageWithLLM')
+    
+    // Verify language detection was NOT called
+    expect(detectLanguageWithLLM).not.toHaveBeenCalled()
+    
+    // Verify summarizeFormWithLLM was called with the provided language
     expect(summarizeFormWithLLM).toHaveBeenCalledWith(
       expect.objectContaining({
         disclaimerMessage: '**Important Notice:** The content provided is an AI-generated summary of form responses of version 3 of Care Flow "Test Care Flow" (ID: ai4rZaYEocjB).',
+        language: 'Spanish',
         additionalInstructions: 'Focus on medication details and side effects.'
       })
     )
