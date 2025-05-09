@@ -24,5 +24,6 @@ Documentation on API keys can be found [here](https://www.braze.com/docs/api/bas
 Permissions needed for the API key: 
 - messages.schedule.create (Schedule a message to be sent at a specific time.)
 - messages.send (Send an immediate message to specific users.)
+- campaigns.trigger.send (sendEmailWithAttributes action)
 
 
