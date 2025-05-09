@@ -21,7 +21,7 @@ export const generateMessage: Action<
 > = {
   key: 'generateMessage',
   category: Category.WORKFLOW,
-  title: 'Generate Message',
+  title: 'Generate Message (Beta)',
   description: 'Generate a personalized message',
   fields,
   previewable: false,
