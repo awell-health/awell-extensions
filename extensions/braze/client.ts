@@ -37,4 +37,11 @@ export class BrazeClient {
     const response = await this.client.post(`/messages/schedule/create`, data)
     return response.data
   }
+
+  async sendEmailWithAttributes(
+    data: Record<string, any>,
+  ): Promise<SendMessageImmediatelyResponse> {
+    const response = await this.client.post(`/campaigns/trigger/send`, data)
+    return response.data
+  }
 }
