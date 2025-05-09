@@ -1,12 +1,12 @@
 import { TestHelpers } from '@awell-health/extensions-core'
-import { sendEmailWithAttributes } from './sendEmailWithAttributes'
+import { sendCampaign } from './sendCampaign'
 import { BrazeClient } from '../../client'
 import { generateTestPayload } from '../../../../tests/constants'
 
 jest.mock('../../client')
 
-const mockSendEmailWithAttributes = jest
-  .spyOn(BrazeClient.prototype, 'sendEmailWithAttributes')
+const mockSendCampaign = jest
+  .spyOn(BrazeClient.prototype, 'sendCampaign')
   .mockImplementation(() => {
     return Promise.resolve({
       dispatch_id: '123',
@@ -14,9 +14,9 @@ const mockSendEmailWithAttributes = jest
     })
   })
 
-describe('sendEmailWithAttributes', () => {
+describe('sendCampaign', () => {
   const { extensionAction, onComplete, onError, helpers, clearMocks } =
-    TestHelpers.fromAction(sendEmailWithAttributes)
+    TestHelpers.fromAction(sendCampaign)
   beforeEach(clearMocks)
 
   it('should call the BrazeClient with the correct data when externalUserId is provided', async () => {
@@ -25,12 +25,12 @@ describe('sendEmailWithAttributes', () => {
         fields: {
           externalUserId: '456',
           campaignId: '123',
-          triggerProperties: {
+          triggerProperties: JSON.stringify({
             property1: 'value1',
-          },
-          attributes: {
+          }),
+          attributes: JSON.stringify({
             attribute1: 'value1',
-          },
+          }),
         },
         settings: {
           apiKey: 'someApiKey',
@@ -42,7 +42,7 @@ describe('sendEmailWithAttributes', () => {
       helpers,
     })
 
-    expect(mockSendEmailWithAttributes).toHaveBeenCalledWith({
+    expect(mockSendCampaign).toHaveBeenCalledWith({
       campaign_id: '123',
       recipients: [
         {
@@ -64,9 +64,9 @@ describe('sendEmailWithAttributes', () => {
         fields: {
           email: 'test@test.com',
           campaignId: '123',
-          triggerProperties: {
+          triggerProperties: JSON.stringify({
             property1: 'value1',
-          },
+          }),
         },
         settings: {
           apiKey: 'someApiKey',
@@ -78,7 +78,7 @@ describe('sendEmailWithAttributes', () => {
       helpers,
     })
 
-    expect(mockSendEmailWithAttributes).toHaveBeenCalledWith({
+    expect(mockSendCampaign).toHaveBeenCalledWith({
       campaign_id: '123',
       recipients: [
         {
@@ -96,9 +96,9 @@ describe('sendEmailWithAttributes', () => {
       payload: generateTestPayload({
         fields: {
           campaignId: '123',
-          triggerProperties: {
+          triggerProperties: JSON.stringify({
             property1: 'value1',
-          },
+          }),
         },
         settings: {
           apiKey: 'someApiKey',

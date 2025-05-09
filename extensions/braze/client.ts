@@ -38,7 +38,7 @@ export class BrazeClient {
     return response.data
   }
 
-  async sendEmailWithAttributes(
+  async sendCampaign(
     data: Record<string, any>,
   ): Promise<SendMessageImmediatelyResponse> {
     const response = await this.client.post(`/campaigns/trigger/send`, data)

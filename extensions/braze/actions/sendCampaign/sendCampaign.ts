@@ -6,10 +6,10 @@ import { type settings, SettingsValidationSchema } from '../../settings'
 import { BrazeClient } from '../../client'
 import { fields, dataPoints, FieldsSchema } from './config'
 
-export const sendEmailWithAttributes = {
-  key: 'sendEmailWithAttributes',
-  title: 'Send Email With Attributes',
-  description: 'Send an email with attributes to a patient.',
+export const sendCampaign = {
+  key: 'sendCampaign',
+  title: 'Send campaign',
+  description: 'Send a campaign with Braze',
   category: Category.COMMUNICATION,
   fields,
   dataPoints,
@@ -62,7 +62,7 @@ export const sendEmailWithAttributes = {
       }),
     }
 
-    const resp = await client.sendEmailWithAttributes(requestBody)
+    const resp = await client.sendCampaign(requestBody)
 
     await onComplete({
       events: [
