@@ -26,7 +26,7 @@ export const fields = {
     id: 'description',
     label: 'Description name',
     description: 'Human-readable explanation of task',
-    type: FieldType.STRING,
+    type: FieldType.TEXT,
     required: false,
   },
   status: {
