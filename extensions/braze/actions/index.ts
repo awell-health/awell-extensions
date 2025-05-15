@@ -3,7 +3,7 @@ import { scheduleSMS } from './scheduleSMS'
 import { sendEmail } from './sendEmail'
 import { scheduleEmail } from './scheduleEmail'
 import { sendEmailUsingTemplate } from './sendEmailUsingTemplate'
-import { sendEmailWithAttributes } from './sendEmailWithAttributes'
+import { sendCampaign } from './sendCampaign'
 
 export const actions = {
   sendSMS,
@@ -11,5 +11,5 @@ export const actions = {
   sendEmail,
   scheduleEmail,
   sendEmailUsingTemplate,
-  sendEmailWithAttributes,
+  sendCampaign,
 }

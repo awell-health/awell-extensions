@@ -3,6 +3,7 @@ import {
   type DataPointDefinition,
   FieldType,
 } from '@awell-health/extensions-core'
+import { isEmpty, isNil } from 'lodash'
 import { z } from 'zod'
 
 export const fields = {
@@ -41,7 +42,8 @@ export const fields = {
     label: 'Trigger Properties',
     type: FieldType.JSON,
     required: false,
-    description: 'Personalization key-value pairs that will apply to this user',
+    description:
+      'Key-value pairs that can be referenced in your message template to personalize it and insert dynamic content.',
   },
   attributes: {
     id: 'attributes',
@@ -49,7 +51,7 @@ export const fields = {
     type: FieldType.JSON,
     required: false,
     description:
-      'Attributes will create or update an attribute of that name with the given value on the specified user profile before the message is sent and existing values will be overwritten',
+      'Create or update user-specific profile attribute. Attributes can trigger campaigns, can be used for segmentation, and personalization of messages.',
   },
 } satisfies Fields
 
@@ -65,7 +67,40 @@ export const FieldsSchema = z.object({
   sendId: z.string().optional(),
   externalUserId: z.string().optional(),
   email: z.string().optional(),
-  triggerProperties: z.record(z.string(), z.string()).optional(),
-  attributes: z.record(z.string(), z.string()).optional(),
+  triggerProperties: z
+    .string()
+    .optional()
+    .transform((str, ctx): Record<string, string> | undefined => {
+      if (isNil(str) || isEmpty(str)) return undefined
+
+      try {
+        const parsedJson = JSON.parse(str)
+        return parsedJson
+      } catch (e) {
+        ctx.addIssue({
+          code: 'custom',
+          message: 'triggerProperties is not a valid JSON object',
+        })
+        return z.NEVER
+      }
+    }),
+  attributes: z
+    .string()
+    .optional()
+    .transform((str, ctx): Record<string, string> | undefined => {
+      if (isNil(str) || isEmpty(str)) return undefined
+
+      try {
+        const parsedJson = JSON.parse(str)
+        return parsedJson
+      } catch (e) {
+        ctx.addIssue({
+          code: 'custom',
+          message: 'attributes is not a valid JSON object',
+        })
+        return z.NEVER
+      }
+    }),
 })
+
 export type ActionFields = z.infer<typeof FieldsSchema>
