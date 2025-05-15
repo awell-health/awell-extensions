@@ -12,7 +12,7 @@ export const medicationFromImage: Action<
 > = {
   key: 'medicationFromImage',
   category: Category.WORKFLOW,
-  title: 'Extract medication from image',
+  title: 'Extract medication from image (Beta)',
   description: 'Generates structured medication list from picture ',
   fields,
   previewable: false,
