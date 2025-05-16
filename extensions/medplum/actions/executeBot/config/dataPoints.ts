@@ -5,4 +5,8 @@ export const dataPoints = {
     key: 'data',
     valueType: 'string',
   },
+  jsonData: {
+    key: 'jsonData',
+    valueType: 'json',
+  },
 } satisfies Record<string, DataPointDefinition>

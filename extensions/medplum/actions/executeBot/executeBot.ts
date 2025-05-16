@@ -24,12 +24,13 @@ export const executeBot: Action<
     const res = await medplumSdk.executeBot(
       input.botId,
       input.body,
-      'application/json'
+      'application/json',
     )
 
     await onComplete({
       data_points: {
         data: JSON.stringify(res),
+        jsonData: JSON.stringify(res),
       },
     })
   },
