@@ -1,4 +1,4 @@
-mutation lockFormAnswerGroup($input: lockFormAnswerGroupInput!) {
+mutation lockFormAnswerGroup($input: LockInput!) {
   lockFormAnswerGroup(input: $input) {
     form_answer_group {
       id

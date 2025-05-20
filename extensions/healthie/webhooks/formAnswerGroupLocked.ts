@@ -42,7 +42,7 @@ export const formAnswerGroupLocked: Webhook<
         data_points: {
           lockedFormAnswerGroupId,
           lockedFormAnswerGroup: JSON.stringify(
-            response?.data?.formAnswerGroup
+            response?.data?.formAnswerGroup,
           ),
         },
         ...(!isNil(healthiePatientId) && {

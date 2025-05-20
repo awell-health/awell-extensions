@@ -8,6 +8,7 @@ query getFormAnswerGroup($id: ID) {
     }
     custom_module_form {
       id
+      name
     }
     form_answers {
       id
