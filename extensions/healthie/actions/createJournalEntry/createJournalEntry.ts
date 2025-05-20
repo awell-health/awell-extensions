@@ -49,7 +49,7 @@ export const createJournalEntry: Action<
           input: {
             user_id: id,
             type,
-            percieved_hungriness: String(percieved_hungriness),
+            perceived_hungriness: String(percieved_hungriness),
           },
         })
 
