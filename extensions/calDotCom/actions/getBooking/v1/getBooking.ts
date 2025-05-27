@@ -2,8 +2,7 @@ import { type Action, Category, validate } from '@awell-health/extensions-core'
 import { z, ZodError } from 'zod'
 import { fromZodError } from 'zod-validation-error'
 import CalComApi from '../../../lib/api/v1/calComApi'
-import { SettingsSchema } from '../../../lib/api/v1/schema'
-import { type settings } from '../../../settings'
+import { SettingsValidationSchema, type settings } from '../../../settings'
 import { dataPoints, fields, FieldsValidationSchema } from './config'
 
 export const getBooking: Action<typeof fields, typeof settings> = {
@@ -21,7 +20,7 @@ export const getBooking: Action<typeof fields, typeof settings> = {
         settings: { apiKey },
       } = validate({
         schema: z.object({
-          settings: SettingsSchema,
+          settings: SettingsValidationSchema,
           fields: FieldsValidationSchema,
         }),
         payload,

@@ -1,9 +1,5 @@
 import { z } from 'zod'
 
-export const SettingsSchema = z.object({
-  apiKey: z.string().nonempty('Missing API key'),
-})
-
 const UserSchema = z.object({
   email: z.string(),
   name: z.string(),

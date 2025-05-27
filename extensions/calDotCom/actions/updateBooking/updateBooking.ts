@@ -4,8 +4,7 @@ import { type Action } from '@awell-health/extensions-core'
 import { Category, validate } from '@awell-health/extensions-core'
 import { FieldsValidationSchema, fields, dataPoints } from './config'
 import CalComApi from '../../lib/api/v1/calComApi'
-import { SettingsSchema } from '../../lib/api/v1/schema'
-import { type settings } from '../../settings'
+import { SettingsValidationSchema, type settings } from '../../settings'
 
 export const updateBooking: Action<typeof fields, typeof settings> = {
   key: 'updateBooking',
@@ -22,7 +21,7 @@ export const updateBooking: Action<typeof fields, typeof settings> = {
         fields: { bookingId, title, description, status, start, end },
       } = validate({
         schema: z.object({
-          settings: SettingsSchema,
+          settings: SettingsValidationSchema,
           fields: FieldsValidationSchema,
         }),
         payload,
