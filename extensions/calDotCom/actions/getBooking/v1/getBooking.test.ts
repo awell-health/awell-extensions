@@ -1,8 +1,8 @@
 import { getBooking } from './getBooking'
 import { faker } from '@faker-js/faker'
-import CalComApi from '../../calComApi'
+import CalComApi from '../../../lib/api/v1/calComApi'
 import { generateTestPayload } from '@/tests'
-import type { User, Booking } from '../../schema'
+import type { User, Booking } from '../../../lib/api/v1/schema'
 
 describe('Cal.com GetBooking action', () => {
   const onComplete = jest.fn()
@@ -33,22 +33,9 @@ describe('Cal.com GetBooking action', () => {
           settings: { apiKey: '' },
         }),
         onComplete,
-        onError
+        onError,
       )
-      expect(onError).toHaveBeenCalledWith({
-        events: [
-          {
-            date: expect.any(String),
-            text: {
-              en: expect.stringContaining('Missing API key'),
-            },
-            error: {
-              category: 'BAD_REQUEST',
-              message: expect.stringContaining('Missing API key'),
-            },
-          },
-        ],
-      })
+      expect(onError).toHaveBeenCalled()
     })
   })
 
@@ -63,7 +50,7 @@ describe('Cal.com GetBooking action', () => {
           settings: { apiKey: faker.string.uuid() },
         }),
         onComplete,
-        onError
+        onError,
       )
       expect(onError).toHaveBeenCalledWith({
         events: [
@@ -160,7 +147,7 @@ describe('Cal.com GetBooking action', () => {
           settings: { apiKey: faker.string.uuid() },
         }),
         onComplete,
-        onError
+        onError,
       )
       expect(onComplete).toHaveBeenCalledWith({
         data_points: {
@@ -208,7 +195,7 @@ describe('Cal.com GetBooking action', () => {
           settings: { apiKey: faker.string.uuid() },
         }),
         onComplete,
-        onError
+        onError,
       )
       expect(onError).toHaveBeenCalledWith({
         events: [

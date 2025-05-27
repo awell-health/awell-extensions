@@ -1,8 +1,11 @@
 import { createBooking } from './createBooking'
 import { generateTestPayload } from '@/tests'
-import { mockReturnValue, sampleBooking } from '../../__mocks__/calComApi'
+import {
+  mockReturnValue,
+  sampleBooking,
+} from '../../lib/api/v1/__mocks__/calComApi'
 
-jest.mock('../../calComApi', () => jest.fn(() => mockReturnValue))
+jest.mock('../../lib/api/v1/calComApi', () => jest.fn(() => mockReturnValue))
 
 describe('Create booking', () => {
   const onComplete = jest.fn()

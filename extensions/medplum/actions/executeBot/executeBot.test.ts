@@ -31,12 +31,13 @@ describe('Medplum - Execute bot', () => {
     await executeBot.onActivityCreated!(
       mockOnActivityCreateParams,
       onComplete,
-      onError
+      onError,
     )
 
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
         data: '"Bot executed!"',
+        jsonData: '"Bot executed!"',
       },
     })
   })

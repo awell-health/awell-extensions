@@ -13,7 +13,7 @@ class CalComApi {
 
   private constructUrl(
     url: string,
-    params?: Record<string, string | number | boolean>
+    params?: Record<string, string | number | boolean>,
   ): string {
     const nonEmptyParams = omitBy(params, isNil)
     const queryParams = new URLSearchParams({
@@ -61,7 +61,7 @@ class CalComApi {
 
     if (response.status >= 400) {
       throw new Error(
-        result?.message ?? 'Unknown error in Cal.com API has occurred'
+        result?.message ?? 'Unknown error in Cal.com API has occurred',
       )
     }
 
@@ -76,7 +76,7 @@ class CalComApi {
       end?: string
       status?: string
       description?: string
-    }
+    },
   ): Promise<Booking> {
     const url = this.constructUrl(`/bookings/${id}`)
     const response = await fetch(url, {
@@ -94,7 +94,7 @@ class CalComApi {
 
   async deleteBooking(
     id: string,
-    value: { allRemainingBookings?: boolean; cancellationReason?: string }
+    value: { allRemainingBookings?: boolean; cancellationReason?: string },
   ): Promise<void> {
     const url = this.constructUrl(`/bookings/${id}/cancel`, value)
     await fetch(url, {

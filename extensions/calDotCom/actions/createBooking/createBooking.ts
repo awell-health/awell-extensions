@@ -3,13 +3,12 @@ import { fromZodError } from 'zod-validation-error'
 import { type Action } from '@awell-health/extensions-core'
 import { Category, validate } from '@awell-health/extensions-core'
 import { FieldsValidationSchema, fields, dataPoints } from './config'
-import CalComApi from '../../calComApi'
-import { SettingsSchema } from '../../schema'
-import { type settings } from '../../settings'
+import CalComApi from '../../lib/api/v1/calComApi'
+import { SettingsValidationSchema, type settings } from '../../settings'
 
 export const createBooking: Action<typeof fields, typeof settings> = {
   key: 'createBooking',
-  title: 'Create booking',
+  title: 'Create booking (v1)',
   description: 'Creates a new booking via the Cal.com API',
   category: Category.SCHEDULING,
   fields,
@@ -34,7 +33,7 @@ export const createBooking: Action<typeof fields, typeof settings> = {
         },
       } = validate({
         schema: z.object({
-          settings: SettingsSchema,
+          settings: SettingsValidationSchema,
           fields: FieldsValidationSchema,
         }),
         payload,
