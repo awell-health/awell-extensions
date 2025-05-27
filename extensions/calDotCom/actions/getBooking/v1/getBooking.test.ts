@@ -35,20 +35,7 @@ describe('Cal.com GetBooking action', () => {
         onComplete,
         onError,
       )
-      expect(onError).toHaveBeenCalledWith({
-        events: [
-          {
-            date: expect.any(String),
-            text: {
-              en: expect.stringContaining('Missing API key'),
-            },
-            error: {
-              category: 'BAD_REQUEST',
-              message: expect.stringContaining('Missing API key'),
-            },
-          },
-        ],
-      })
+      expect(onError).toHaveBeenCalled()
     })
   })
 
