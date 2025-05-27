@@ -1,1 +1,2 @@
-export { getBooking } from './getBooking'
+export * from './v1'
+export * from './v2'

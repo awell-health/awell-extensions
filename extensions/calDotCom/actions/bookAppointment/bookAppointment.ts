@@ -2,7 +2,7 @@ import { validate, type Action } from '@awell-health/extensions-core'
 import { Category } from '@awell-health/extensions-core'
 import { z, ZodError } from 'zod'
 import { fromZodError } from 'zod-validation-error'
-import { SettingsSchema } from '../../schema'
+import { SettingsSchema } from '../../lib/api/v1/schema'
 import { type settings } from '../../settings'
 import { dataPoints, fields, FieldsValidationSchema } from './config'
 

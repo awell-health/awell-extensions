@@ -1,6 +1,9 @@
 import { deleteBooking } from './deleteBooking'
 import { generateTestPayload } from '@/tests'
-import { mockReturnValue, sampleBooking } from '../../__mocks__/calComApi'
+import {
+  mockReturnValue,
+  sampleBooking,
+} from '../../lib/api/v1/__mocks__/calComApi'
 
 jest.mock('../../calComApi', () => jest.fn(() => mockReturnValue))
 
@@ -28,7 +31,7 @@ describe('Delete booking', () => {
 
     expect(mockReturnValue.deleteBooking).toHaveBeenCalledWith(
       String(sampleBooking.id),
-      { allRemainingBookings: undefined, cancellationReason: undefined }
+      { allRemainingBookings: undefined, cancellationReason: undefined },
     )
     expect(onComplete).toHaveBeenCalledWith()
   })
