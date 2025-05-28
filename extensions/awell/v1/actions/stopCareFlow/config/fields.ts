@@ -12,5 +12,8 @@ export const fields = {
 } satisfies Record<string, Field>
 
 export const FieldsValidationSchema = z.object({
-  reason: z.string(),
+  reason: z
+    .string()
+    .optional()
+    .default('Default message: Stopped by extension.'),
 } satisfies Record<keyof typeof fields, ZodTypeAny>)
