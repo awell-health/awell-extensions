@@ -58,6 +58,7 @@ describe('Healthie - updatePatient', () => {
         first_name: 'Test',
         last_name: 'Test',
         email: 'test+lol11@test.com',
+        resend_welcome_email: true,
       })
     }
   })

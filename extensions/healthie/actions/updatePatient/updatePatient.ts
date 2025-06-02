@@ -7,11 +7,7 @@ import {
   HealthieError,
   mapHealthieToActivityError,
 } from '../../lib/sdk/graphql-codegen/errors'
-import {
-  fields,
-  FieldsValidationSchema,
-  type UpdatePatientPayload,
-} from './config'
+import { fields, FieldsValidationSchema } from './config'
 import { ZodError } from 'zod'
 
 export const updatePatient: Action<typeof fields, typeof settings> = {
@@ -27,36 +23,34 @@ export const updatePatient: Action<typeof fields, typeof settings> = {
         fieldsSchema: FieldsValidationSchema,
         payload,
       })
+
       const dietitian_id =
         fields.provider_id === '' || isNil(fields.provider_id)
           ? undefined
           : fields.provider_id
 
-      const input: UpdatePatientPayload = {
-        id: fields.id,
-        first_name: fields.first_name,
-        last_name: fields.last_name,
-        legal_name: fields.legal_name,
-        email: fields.email,
-        phone_number: fields.phone_number,
-        dietitian_id,
-        gender: fields.gender,
-        gender_identity: fields.gender_identity,
-        height: fields.height,
-        sex: fields.sex,
-        user_group_id: fields.user_group_id,
-        active: fields.active,
-        dob: fields.dob,
-      }
-
-      if (fields.resend_welcome_email === true) {
-        input.resend_welcome = true
-      }
-
       await healthieSdk.client.mutation({
         updateClient: {
           __args: {
-            input,
+            input: {
+              id: fields.id,
+              first_name: fields.first_name,
+              last_name: fields.last_name,
+              legal_name: fields.legal_name,
+              email: fields.email,
+              phone_number: fields.phone_number,
+              dietitian_id,
+              gender: fields.gender,
+              gender_identity: fields.gender_identity,
+              height: fields.height,
+              sex: fields.sex,
+              user_group_id: fields.user_group_id,
+              active: fields.active,
+              dob: fields.dob,
+              resend_welcome: fields.resend_welcome_email,
+              record_identifier: fields.record_identifier,
+              additional_record_identifier: fields.additional_record_identifier,
+            },
           },
           user: {
             id: true,
