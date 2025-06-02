@@ -64,6 +64,20 @@ export const fields = {
       'This is the ID of the provider and defaults to the user the API key is associated with. Also known as the `dietitian_id`.',
     type: FieldType.STRING,
   },
+  record_identifier: {
+    id: 'record_identifier',
+    label: 'Record identifier',
+    description: 'The record identifier of the patient',
+    type: FieldType.STRING,
+    required: false,
+  },
+  additional_record_identifier: {
+    id: 'additional_record_identifier',
+    label: 'Additional record identifier',
+    description: 'An additional record identifier of the patient',
+    type: FieldType.STRING,
+    required: false,
+  },
 } satisfies Record<string, Field>
 
 export const FieldsValidationSchema = z.object({
@@ -75,17 +89,6 @@ export const FieldsValidationSchema = z.object({
   phone_number: z.string().optional(),
   send_invite: z.boolean().optional(),
   provider_id: z.string().optional(),
+  record_identifier: z.string().optional(),
+  additional_record_identifier: z.string().optional(),
 } satisfies Record<keyof typeof fields, ZodTypeAny>)
-
-export interface CreatePatientPayload {
-  first_name: string
-  last_name: string
-  legal_name?: string
-  email?: string
-  dob?: string
-  skipped_email?: boolean
-  phone_number?: string
-  dietitian_id?: string
-  user_group_id?: string
-  dont_send_welcome?: boolean
-}

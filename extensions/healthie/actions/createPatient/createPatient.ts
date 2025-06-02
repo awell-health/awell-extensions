@@ -6,12 +6,7 @@ import {
   HealthieError,
   mapHealthieToActivityError,
 } from '../../lib/sdk/graphql-codegen/errors'
-import {
-  fields,
-  FieldsValidationSchema,
-  dataPoints,
-  type CreatePatientPayload,
-} from './config'
+import { fields, FieldsValidationSchema, dataPoints } from './config'
 import { validatePayloadAndCreateSdk } from '../../lib/sdk/validatePayloadAndCreateSdk'
 import {
   HealthiePatientNotCreated,
@@ -44,24 +39,22 @@ export const createPatient: Action<
     const skipped_email = fields.email === undefined || fields.email === '' // if email is empty we still want to create the patient
 
     try {
-      const input: CreatePatientPayload = {
-        first_name: fields.first_name,
-        last_name: fields.last_name,
-        legal_name: fields.legal_name,
-        email: fields.email,
-        phone_number: fields.phone_number,
-        dob: fields.dob,
-        dietitian_id,
-        dont_send_welcome,
-      }
-
-      if (skipped_email) {
-        input.skipped_email = true
-      }
       const res = await healthieSdk.client.mutation({
         createClient: {
           __args: {
-            input,
+            input: {
+              first_name: fields.first_name,
+              last_name: fields.last_name,
+              legal_name: fields.legal_name,
+              email: fields.email,
+              phone_number: fields.phone_number,
+              dob: fields.dob,
+              dietitian_id,
+              dont_send_welcome,
+              skipped_email,
+              record_identifier: fields.record_identifier,
+              additional_record_identifier: fields.additional_record_identifier,
+            },
           },
           user: {
             id: true,

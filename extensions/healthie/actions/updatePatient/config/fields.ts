@@ -116,26 +116,21 @@ export const fields = {
     type: FieldType.BOOLEAN,
     required: false,
   },
+  record_identifier: {
+    id: 'record_identifier',
+    label: 'Record identifier',
+    description: 'The record identifier of the patient',
+    type: FieldType.STRING,
+    required: false,
+  },
+  additional_record_identifier: {
+    id: 'additional_record_identifier',
+    label: 'Additional record identifier',
+    description: 'An additional record identifier of the patient',
+    type: FieldType.STRING,
+    required: false,
+  },
 } satisfies Record<string, Field>
-
-export interface UpdatePatientPayload {
-  id: string
-  first_name?: string
-  last_name?: string
-  legal_name?: string
-  email?: string
-  skipped_email?: boolean
-  dob?: string
-  phone_number?: string
-  dietitian_id?: string
-  user_group_id?: string
-  active?: boolean
-  height?: string
-  gender?: string
-  gender_identity?: string
-  sex?: string
-  resend_welcome?: boolean
-}
 
 export const FieldsValidationSchema = z.object({
   id: z.string().min(1),
@@ -153,4 +148,6 @@ export const FieldsValidationSchema = z.object({
   gender_identity: z.string().optional(),
   sex: z.enum(['Female', 'Male']).optional(),
   resend_welcome_email: z.boolean().optional(),
+  record_identifier: z.string().optional(),
+  additional_record_identifier: z.string().optional(),
 } satisfies Record<keyof typeof fields, ZodTypeAny>)
