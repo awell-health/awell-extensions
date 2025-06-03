@@ -10,7 +10,7 @@ import { SettingsValidationSchema } from '../settings'
 import { type Activity } from '@awell-health/extensions-core/dist/types/Activity'
 import { isNil, isEmpty } from 'lodash'
 
-type ValidateAndCreateStripeSdk = <
+type ValidateAndCreateBrazeClient = <
   T extends z.ZodTypeAny,
   P extends NewActivityPayload<any, any>,
 >(args: {
@@ -27,7 +27,7 @@ type ValidateAndCreateStripeSdk = <
   activity: Activity
 }>
 
-export const validateAndCreateClient: ValidateAndCreateStripeSdk = async ({
+export const validateAndCreateClient: ValidateAndCreateBrazeClient = async ({
   fieldsSchema,
   payload,
   requiresAppId = true,
