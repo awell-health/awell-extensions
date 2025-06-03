@@ -19,8 +19,9 @@ export const fields = {
     id: 'appId',
     label: 'App ID',
     type: FieldType.STRING,
-    required: true,
-    description: 'App id is the reference of the specific app.',
+    required: false,
+    description:
+      'Specifies the app within your Braze workspace the activity will be associated with. Can also be provided via the extension settings.',
   },
   from: {
     id: 'from',
@@ -102,7 +103,7 @@ export const dataPoints = {
 
 export const FieldsSchema = z.object({
   externalUserId: z.string().min(1),
-  appId: z.string().min(1),
+  appId: z.string().optional(),
   from: z.string(),
   templateId: z.string(),
   replyTo: z.string().optional(),

@@ -1,9 +1,9 @@
 import { TestHelpers } from '@awell-health/extensions-core'
 import { sendCampaign } from './sendCampaign'
-import { BrazeClient } from '../../client'
+import { BrazeClient } from '../../lib/api/client'
 import { generateTestPayload } from '../../../../tests/constants'
 
-jest.mock('../../client')
+jest.mock('../../lib/api/client')
 
 const mockSendCampaign = jest
   .spyOn(BrazeClient.prototype, 'sendCampaign')

@@ -32,8 +32,9 @@ export const fields = {
     id: 'appId',
     label: 'App ID',
     type: FieldType.STRING,
-    required: true,
-    description: 'App id is the reference of the specific app.',
+    required: false,
+    description:
+      'Specifies the app within your Braze workspace the activity will be associated with. Can also be provided via the extension settings.',
   },
   linkShorteningEnabled: {
     id: 'linkShorteningEnabled',
@@ -79,7 +80,7 @@ export const FieldsSchema = z.object({
   subscriptionGroupId: z.string().min(1),
   externalUserId: z.string().min(1),
   body: z.string().min(1),
-  appId: z.string().min(1),
+  appId: z.string().optional(),
   linkShorteningEnabled: z.boolean().optional(),
   useClickTrackingEnabled: z.boolean().optional(),
   campaignId: z.string().optional(),

@@ -2,6 +2,14 @@ import { type Setting } from '@awell-health/extensions-core'
 import { z, type ZodTypeAny } from 'zod'
 
 export const settings = {
+  appId: {
+    key: 'appId',
+    label: 'App ID',
+    obfuscated: false,
+    required: false,
+    description:
+      'Specifies the app within your workspace that extension activity should be associated with. Can also be provided via the action field.',
+  },
   apiKey: {
     key: 'apiKey',
     label: 'API Key',
@@ -19,6 +27,7 @@ export const settings = {
 } satisfies Record<string, Setting>
 
 export const SettingsValidationSchema = z.object({
+  appId: z.string().optional(),
   apiKey: z.string().min(1),
   baseUrl: z.string().min(1),
 } satisfies Record<keyof typeof settings, ZodTypeAny>)

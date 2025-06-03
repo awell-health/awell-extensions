@@ -9,7 +9,9 @@ Braze is a comprehensive customer engagement platform that specializes in helpin
 
 ## Extension settings
 
-An api key and the REST Endpoint URL are needed to be provided in order for the extension to authenticate with Braze's API.
+An api key and the REST Endpoint URL are needed to be provided in order for the extension to authenticate with Braze's API. 
+
+An app ID can also be specified via the extension settings or the action field. Actions requiring an app ID to be provided will throw an error if no app ID is provided via the extension settings or the action field. If both are provided, the app ID from the action field will be used.
 
 List of URLs can be found [here](https://www.braze.com/docs/api/basics/#endpoints) - make sure it's the REST Endpoint URL. Documentation on API keys can be found [here](https://www.braze.com/docs/api/basics/#about-rest-api-keys).
 
