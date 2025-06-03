@@ -34,7 +34,8 @@ export const fields = {
     label: 'App ID',
     type: FieldType.STRING,
     required: false,
-    description: 'App id is the reference of the specific app.',
+    description:
+      'Specifies the app within your Braze workspace the activity will be associated with. Can also be provided via the extension settings.',
   },
   scheduleTime: {
     id: 'scheduleTime',
