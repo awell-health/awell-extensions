@@ -1,10 +1,9 @@
-import { z } from 'zod'
 import { isNil } from 'lodash'
-import { Category, validate, type Action } from '@awell-health/extensions-core'
+import { Category, type Action } from '@awell-health/extensions-core'
 
-import { type settings, SettingsValidationSchema } from '../../settings'
-import { BrazeClient } from '../../client'
+import { type settings } from '../../settings'
 import { fields, dataPoints, FieldsSchema } from './config'
+import { validateAndCreateClient } from '../../lib/validateAndCreateClient'
 
 export const sendCampaign = {
   key: 'sendCampaign',
@@ -16,6 +15,7 @@ export const sendCampaign = {
   previewable: false,
   onEvent: async ({ payload, onComplete, onError, helpers }) => {
     const {
+      brazeClient,
       fields: {
         externalUserId: external_user_id,
         sendId: send_id,
@@ -24,20 +24,15 @@ export const sendCampaign = {
         triggerProperties: trigger_properties,
         attributes,
       },
-      settings: { apiKey, baseUrl },
-    } = validate({
-      schema: z.object({
-        fields: FieldsSchema,
-        settings: SettingsValidationSchema,
-      }),
+    } = await validateAndCreateClient({
+      fieldsSchema: FieldsSchema,
       payload,
+      requiresAppId: false, // Sending a campaign doesn't require an app ID to be set
     })
 
     if (isNil(external_user_id) && isNil(email)) {
       throw new Error('Either externalUserId or email must be provided.')
     }
-
-    const client = new BrazeClient({ apiKey, baseUrl })
 
     const requestBody = {
       campaign_id,
@@ -62,7 +57,7 @@ export const sendCampaign = {
       }),
     }
 
-    const resp = await client.sendCampaign(requestBody)
+    const resp = await brazeClient.sendCampaign(requestBody)
 
     await onComplete({
       events: [

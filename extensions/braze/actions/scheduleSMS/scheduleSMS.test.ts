@@ -1,9 +1,9 @@
 import { TestHelpers } from '@awell-health/extensions-core'
 import { scheduleSMS } from './scheduleSMS'
-import { BrazeClient } from '../../client'
+import { BrazeClient } from '../../lib/api/client'
 import { generateTestPayload } from '../../../../tests/constants'
 
-jest.mock('../../client')
+jest.mock('../../lib/api/client')
 
 const mockScheduleSMS = jest
   .spyOn(BrazeClient.prototype, 'scheduleMessage')

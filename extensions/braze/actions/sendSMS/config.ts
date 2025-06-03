@@ -32,7 +32,7 @@ export const fields = {
     id: 'appId',
     label: 'App ID',
     type: FieldType.STRING,
-    required: true,
+    required: false,
     description: 'App id is the reference of the specific app.',
   },
   linkShorteningEnabled: {
@@ -79,7 +79,7 @@ export const FieldsSchema = z.object({
   subscriptionGroupId: z.string().min(1),
   externalUserId: z.string().min(1),
   body: z.string().min(1),
-  appId: z.string().min(1),
+  appId: z.string().optional(),
   linkShorteningEnabled: z.boolean().optional(),
   useClickTrackingEnabled: z.boolean().optional(),
   campaignId: z.string().optional(),

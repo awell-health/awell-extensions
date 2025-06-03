@@ -19,7 +19,7 @@ export const fields = {
     id: 'appId',
     label: 'App ID',
     type: FieldType.STRING,
-    required: true,
+    required: false,
     description: 'App id is the reference of the specific app.',
   },
   from: {
@@ -117,7 +117,7 @@ export const dataPoints = {
 
 export const FieldsSchema = z.object({
   externalUserId: z.string().min(1),
-  appId: z.string().min(1),
+  appId: z.string().optional(),
   from: z.string(),
   replyTo: z.string().optional(),
   subject: z.string().optional(),

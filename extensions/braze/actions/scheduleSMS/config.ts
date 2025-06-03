@@ -33,7 +33,7 @@ export const fields = {
     id: 'appId',
     label: 'App ID',
     type: FieldType.STRING,
-    required: true,
+    required: false,
     description: 'App id is the reference of the specific app.',
   },
   scheduleTime: {
@@ -107,7 +107,7 @@ export const FieldsSchema = z.object({
   subscriptionGroupId: z.string().min(1),
   externalUserId: z.string().min(1),
   body: z.string().min(1),
-  appId: z.string().min(1),
+  appId: z.string().optional(),
   scheduleTime: DateTimeSchema,
   inPatientLocalTime: z.boolean().optional(),
   atOptimalTime: z.boolean().optional(),

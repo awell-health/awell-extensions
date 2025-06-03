@@ -1,10 +1,9 @@
-import { z } from 'zod'
 import { isNil } from 'lodash'
-import { Category, validate, type Action } from '@awell-health/extensions-core'
+import { Category, type Action } from '@awell-health/extensions-core'
 
-import { type settings, SettingsValidationSchema } from '../../settings'
-import { BrazeClient } from '../../client'
+import { type settings } from '../../settings'
 import { fields, dataPoints, FieldsSchema } from './config'
+import { validateAndCreateClient } from '../../lib/validateAndCreateClient'
 
 export const sendSMS = {
   key: 'sendSMS',
@@ -16,26 +15,22 @@ export const sendSMS = {
   previewable: false,
   onEvent: async ({ payload, onComplete, onError, helpers }) => {
     const {
+      brazeClient,
+      appId,
       fields: {
         subscriptionGroupId: subscription_group_id,
         externalUserId,
         body,
-        appId: app_id,
         linkShorteningEnabled: link_shortening_enabled,
         useClickTrackingEnabled: use_click_tracking_enabled,
         campaignId: campaign_id,
         messageVariantionId: message_variation_id,
       },
-      settings: { apiKey, baseUrl },
-    } = validate({
-      schema: z.object({
-        fields: FieldsSchema,
-        settings: SettingsValidationSchema,
-      }),
+    } = await validateAndCreateClient({
+      fieldsSchema: FieldsSchema,
       payload,
     })
 
-    const client = new BrazeClient({ apiKey, baseUrl })
     const requestBody = {
       external_user_ids: [externalUserId],
       ...(!isNil(campaign_id) && {
@@ -45,7 +40,7 @@ export const sendSMS = {
         sms: {
           subscription_group_id,
           body,
-          app_id,
+          app_id: appId,
           ...(!isNil(message_variation_id) && {
             message_variation_id,
           }),
@@ -63,7 +58,7 @@ export const sendSMS = {
       },
     }
 
-    const resp = await client.sendMessageImmediately(requestBody)
+    const resp = await brazeClient.sendMessageImmediately(requestBody)
 
     await onComplete({
       events: [

@@ -1,10 +1,9 @@
-import { z } from 'zod'
 import { isNil } from 'lodash'
-import { Category, validate, type Action } from '@awell-health/extensions-core'
+import { Category, type Action } from '@awell-health/extensions-core'
 
-import { type settings, SettingsValidationSchema } from '../../settings'
-import { BrazeClient } from '../../client'
+import { type settings } from '../../settings'
 import { fields, dataPoints, FieldsSchema } from './config'
+import { validateAndCreateClient } from '../../lib/validateAndCreateClient'
 
 export const sendEmail = {
   key: 'sendEmail',
@@ -16,9 +15,10 @@ export const sendEmail = {
   previewable: false,
   onEvent: async ({ payload, onComplete, onError, helpers }) => {
     const {
+      brazeClient,
+      appId,
       fields: {
         externalUserId,
-        appId: app_id,
         from,
         replyTo: reply_to,
         subject,
@@ -28,16 +28,10 @@ export const sendEmail = {
         campaignId: campaign_id,
         messageVariantionId: message_variation_id,
       },
-      settings: { apiKey, baseUrl },
-    } = validate({
-      schema: z.object({
-        fields: FieldsSchema,
-        settings: SettingsValidationSchema,
-      }),
+    } = await validateAndCreateClient({
+      fieldsSchema: FieldsSchema,
       payload,
     })
-
-    const client = new BrazeClient({ apiKey, baseUrl })
 
     const requestBody = {
       external_user_ids: [externalUserId],
@@ -48,7 +42,7 @@ export const sendEmail = {
         email: {
           from,
           body,
-          app_id,
+          app_id: appId,
           ...(!isNil(subject) && {
             subject,
           }),
@@ -70,7 +64,7 @@ export const sendEmail = {
       },
     }
 
-    const resp = await client.sendMessageImmediately(requestBody)
+    const resp = await brazeClient.sendMessageImmediately(requestBody)
 
     await onComplete({
       events: [

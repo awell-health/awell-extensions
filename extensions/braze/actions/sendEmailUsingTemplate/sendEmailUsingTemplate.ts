@@ -1,11 +1,10 @@
-import { z } from 'zod'
 import { isEmpty, isNil } from 'lodash'
-import { Category, validate, type Action } from '@awell-health/extensions-core'
+import { Category, type Action } from '@awell-health/extensions-core'
 
-import { type settings, SettingsValidationSchema } from '../../settings'
-import { BrazeClient } from '../../client'
+import { type settings } from '../../settings'
 import { fields, dataPoints, FieldsSchema } from './config'
 import { addBooleanFieldIfDefined } from '../actionHelpers'
+import { validateAndCreateClient } from '../../lib/validateAndCreateClient'
 
 export const sendEmailUsingTemplate = {
   key: 'sendEmailUsingTemplate',
@@ -18,9 +17,10 @@ export const sendEmailUsingTemplate = {
   previewable: false,
   onEvent: async ({ payload, onComplete, onError, helpers }) => {
     const {
+      brazeClient,
+      appId,
       fields: {
         externalUserId,
-        appId: app_id,
         from,
         replyTo: reply_to,
         templateId: email_template_id,
@@ -31,16 +31,10 @@ export const sendEmailUsingTemplate = {
         campaignId: campaign_id,
         messageVariantionId: message_variation_id,
       },
-      settings: { apiKey, baseUrl },
-    } = validate({
-      schema: z.object({
-        fields: FieldsSchema,
-        settings: SettingsValidationSchema,
-      }),
+    } = await validateAndCreateClient({
+      fieldsSchema: FieldsSchema,
       payload,
     })
-
-    const client = new BrazeClient({ apiKey, baseUrl })
 
     const schedule = {
       ...(!isNil(time) && {
@@ -60,7 +54,7 @@ export const sendEmailUsingTemplate = {
       messages: {
         email: {
           from,
-          app_id,
+          app_id: appId,
           email_template_id,
           ...(!isNil(preheader) && {
             preheader,
@@ -76,8 +70,8 @@ export const sendEmailUsingTemplate = {
     }
 
     const resp = isNil(time)
-      ? await client.sendMessageImmediately(requestBody)
-      : await client.scheduleMessage(requestBody)
+      ? await brazeClient.sendMessageImmediately(requestBody)
+      : await brazeClient.scheduleMessage(requestBody)
 
     await onComplete({
       events: [
