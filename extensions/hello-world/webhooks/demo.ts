@@ -48,6 +48,7 @@ export interface Payload {
   a_date: string
   a_phone: string
   a_json: string
+  patient_id?: string
 }
 
 export const demo: Webhook<keyof typeof dataPoints, Payload> = {
@@ -63,6 +64,7 @@ export const demo: Webhook<keyof typeof dataPoints, Payload> = {
       a_date,
       a_phone,
       a_json,
+      patient_id,
     } = payload
     await onSuccess({
       data_points: {
@@ -75,6 +77,7 @@ export const demo: Webhook<keyof typeof dataPoints, Payload> = {
         a_phone,
         a_json, // objects unique come already serialized as a string
       },
+      ...(patient_id ? { patient_id } : {}),
     })
   },
 }
