@@ -11,7 +11,7 @@ export const searchPatientsByPatientCode: Action<
   typeof settings
 > = {
   key: 'searchPatientsByPatientCode',
-  category: Category.WORKFLOW,
+  category: Category.DEMO,
   title: 'Search patient by patient code (DEPRECATED, USE IDENTIFIERS)',
   description:
     "Search whether the current patient already exists. Search happens based on the `patient_code` field which is taken from the patient's profile.",
@@ -47,7 +47,7 @@ export const searchPatientsByPatientCode: Action<
      * Otherwise the result would always be true.
      */
     const resultsWithoutCurrentPatient = results.filter(
-      (res) => res.id !== patientId
+      (res) => res.id !== patientId,
     )
 
     const numberOfPatientsFound = resultsWithoutCurrentPatient.length
