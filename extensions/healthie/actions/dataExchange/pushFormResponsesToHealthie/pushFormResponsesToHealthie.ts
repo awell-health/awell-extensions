@@ -23,7 +23,7 @@ export const pushFormResponsesToHealthie: Action<
   keyof typeof datapoints
 > = {
   key: 'pushFormResponsesToHealthie',
-  category: Category.DEMO,
+  category: Category.EHR_INTEGRATIONS,
   title: 'Push form responses to Healthie',
   description:
     'Pushes all form response from the current step to a Healthie form',
