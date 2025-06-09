@@ -19,12 +19,15 @@ export const sendCall: Action<
   previewable: false,
   dataPoints,
   onEvent: async ({ payload, onComplete }): Promise<void> => {
-    const { fields, blandSdk } = await validatePayloadAndCreateSdk({
+    const { fields: allFields, blandSdk } = await validatePayloadAndCreateSdk({
       fieldsSchema: FieldsValidationSchema,
       payload,
     })
-
+    const { otherData, ...fields } = allFields
+    // otherData helps us to pass in fields that are not part of the SendCallInputSchema,
+    // given bland's schema is updating quickly
     const sendCallInput = SendCallInputSchema.parse({
+      ...otherData,
       ...fields,
       phone_number: fields.phoneNumber,
       request_data: fields.requestData,

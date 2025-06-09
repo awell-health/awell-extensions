@@ -319,6 +319,14 @@ export const fields = {
     type: FieldType.JSON,
     required: false,
   },
+  otherData: {
+    id: 'otherData',
+    label: 'Other data',
+    description:
+      'Any fields you put in here will be sent in the request body of the call, but will be overridden by all other fields above if that field is also set.',
+    type: FieldType.JSON,
+    required: false,
+  },
 } satisfies Record<string, Field>
 
 export const FieldsValidationSchema = z.object({
@@ -372,4 +380,5 @@ export const FieldsValidationSchema = z.object({
   precall_dtmf_sequence: z.string().optional(),
   requestData: JsonObjectSchema.optional(),
   analysisSchema: JsonObjectSchema.optional(),
+  otherData: JsonObjectSchema.optional(),
 } satisfies Record<keyof typeof fields, ZodTypeAny>)

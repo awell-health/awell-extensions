@@ -63,6 +63,7 @@ export const SendCallInputSchema = z
     analysis_schema: z.record(z.string(), z.any()).optional(),
     answered_by_enabled: z.boolean().optional(),
   })
+  .passthrough()
   .refine(
     (data) => {
       if (isNil(data.pathway_id) && isEmpty(data.pathway_id)) {
