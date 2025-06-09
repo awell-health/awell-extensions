@@ -11,6 +11,10 @@ const dataPoints = {
     key: 'callId',
     valueType: 'string',
   },
+  callObject: {
+    key: 'callObject',
+    valueType: 'json',
+  },
 } satisfies Record<string, DataPointDefinition>
 
 export const callCompleted: Webhook<
@@ -39,6 +43,7 @@ export const callCompleted: Webhook<
     await onSuccess({
       data_points: {
         callId,
+        callObject: JSON.stringify(payload),
       },
     })
   },

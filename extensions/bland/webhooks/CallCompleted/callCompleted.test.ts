@@ -29,6 +29,7 @@ describe('Webhook - Call completed', () => {
       expect(onSuccess).toHaveBeenCalledWith({
         data_points: {
           callId: callCompletedPayload.call_id,
+          callObject: JSON.stringify(callCompletedPayload),
         },
       })
     })
