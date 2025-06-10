@@ -6,7 +6,7 @@ import { ChatPromptTemplate } from '@langchain/core/prompts'
  * 1. Choose a category from the provided list
  * 2. Explain the choice
  * 3. Return "None" if no category fits
- * 
+ *
  * Variables:
  * {categories} - Available categories, comma-separated
  * {input} - Message to categorize
@@ -27,6 +27,9 @@ export const systemPrompt = ChatPromptTemplate.fromTemplate(`
   - matched_category: The most suitable category from: {categories}
   - match_explanation: A brief explanation supporting your decision.
 
+  Additional Instructions:
+  {instructions}
+
   Input:
   {input}
-`) 
+`)

@@ -15,6 +15,13 @@ export const fields = {
     type: FieldType.STRING,
     required: true,
   },
+  instructions: {
+    id: 'instructions',
+    label: 'Instructions',
+    description: 'Add additional instructions prompt for the LLM',
+    type: FieldType.STRING,
+    required: false,
+  },
 } satisfies Record<string, Field>
 
 export const FieldsValidationSchema = z.object({
@@ -27,4 +34,5 @@ export const FieldsValidationSchema = z.object({
     .refine((arr) => arr.length > 0, {
       message: 'At least one category is required',
     }),
+  instructions: z.string().optional(),
 } satisfies Record<keyof typeof fields, ZodTypeAny>)
