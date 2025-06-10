@@ -30,7 +30,9 @@ export const categorizeMessage: Action<
 
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
     // 1. Validate input fields
-    const { message, categories } = FieldsValidationSchema.parse(payload.fields)
+    const { message, categories, instructions } = FieldsValidationSchema.parse(
+      payload.fields,
+    )
 
     // 2. Initialize OpenAI model with metadata
     const { model, metadata, callbacks } = await createOpenAIModel({
@@ -45,6 +47,7 @@ export const categorizeMessage: Action<
       model,
       message,
       categories,
+      instructions,
       metadata,
       callbacks,
     })

@@ -2,7 +2,7 @@ import { parser } from './parser'
 import { systemPrompt } from './prompt'
 import { type ChatOpenAI } from '@langchain/openai'
 import { type AIActionMetadata } from '../../../../../../src/lib/llm/openai/types'
-import type { BaseCallbackHandler } from "@langchain/core/callbacks/base"
+import type { BaseCallbackHandler } from '@langchain/core/callbacks/base'
 
 /**
  * Uses LLM to categorize a message into predefined categories.
@@ -10,7 +10,7 @@ import type { BaseCallbackHandler } from "@langchain/core/callbacks/base"
  * 1. Formats prompt with available categories
  * 2. Runs LLM chain with structured output parsing
  * 3. Validates and processes the result
- * 
+ *
  * @example
  * const result = await categorizeMessageWithLLM({
  *   model,
@@ -24,31 +24,36 @@ export const categorizeMessageWithLLM = async ({
   model,
   message,
   categories,
+  instructions,
   metadata,
   callbacks,
 }: {
   model: ChatOpenAI
   message: string
   categories: string[]
+  instructions?: string
   metadata: AIActionMetadata
   callbacks?: BaseCallbackHandler[]
 }): Promise<{ category: string; explanation: string }> => {
   const prompt = await systemPrompt.format({
     categories: categories.concat('None').join(', '),
     input: message,
+    instructions:
+      instructions ?? 'No additional instructions have been provided',
   })
 
   const chain = model.pipe(parser)
 
   let result
   try {
-    result = await chain.invoke(
-      prompt,
-      { metadata, runName: 'ShellyCategorizeMessage', callbacks }
-    )
+    result = await chain.invoke(prompt, {
+      metadata,
+      runName: 'ShellyCategorizeMessage',
+      callbacks,
+    })
   } catch (error) {
     throw new Error(
-      'Failed to categorize the message due to an internal error.'
+      'Failed to categorize the message due to an internal error.',
     )
   }
 
