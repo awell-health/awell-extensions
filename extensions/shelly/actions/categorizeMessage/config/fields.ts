@@ -19,7 +19,7 @@ export const fields = {
     id: 'instructions',
     label: 'Instructions',
     description: 'Add additional instructions prompt for the LLM',
-    type: FieldType.STRING,
+    type: FieldType.TEXT,
     required: false,
   },
 } satisfies Record<string, Field>
