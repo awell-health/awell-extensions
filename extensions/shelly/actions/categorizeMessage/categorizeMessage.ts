@@ -4,6 +4,7 @@ import { createOpenAIModel } from '../../../../src/lib/llm/openai/createOpenAIMo
 import { OPENAI_MODELS } from '../../../../src/lib/llm/openai/constants'
 import { fields, dataPoints, FieldsValidationSchema } from './config'
 import { markdownToHtml } from '../../../../src/utils'
+import { isNil } from 'lodash'
 
 /**
  * Awell Action: Message Categorization
@@ -30,9 +31,33 @@ export const categorizeMessage: Action<
 
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
     // 1. Validate input fields
-    const { message, categories, instructions } = FieldsValidationSchema.parse(
-      payload.fields,
-    )
+    const {
+      message: messageText,
+      messageDataPoint,
+      categories,
+      instructions,
+    } = FieldsValidationSchema.parse(payload.fields)
+
+    const message: string =
+      !isNil(messageDataPoint) && messageDataPoint?.length > 0
+        ? messageDataPoint
+        : (messageText ?? '')
+
+    // ensure message is not empty
+    if (message.length === 0) {
+      await onError({
+        events: [
+          {
+            date: new Date().toISOString(),
+            text: { en: 'Either message or messageDataPoint is required' },
+            error: {
+              category: 'BAD_REQUEST',
+              message: 'Either message or messageDataPoint is required',
+            },
+          },
+        ],
+      })
+    }
 
     // 2. Initialize OpenAI model with metadata
     const { model, metadata, callbacks } = await createOpenAIModel({
