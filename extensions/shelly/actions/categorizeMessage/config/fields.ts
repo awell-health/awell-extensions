@@ -1,12 +1,22 @@
 import { type Field, FieldType } from '@awell-health/extensions-core'
 import z, { type ZodTypeAny } from 'zod'
+
 export const fields = {
+  messageDataPoint: {
+    id: 'messageDataPoint',
+    label: 'Message Data Point',
+    description:
+      'The message to be categorized. Use this if you want to use a data point for the message.',
+    type: FieldType.STRING, // Should be string, to allow selecting a data point
+    required: false,
+  },
   message: {
     id: 'message',
     label: 'Message',
-    description: 'The message to be categorized',
-    type: FieldType.STRING, // Should be string, TEXT doesn't allow selecting a data point
-    required: true,
+    description:
+      'The message to be categorized. Use this if you want to use a text for the message.',
+    type: FieldType.TEXT, // TEXT if data point is not in use
+    required: false,
   },
   categories: {
     id: 'categories',
@@ -25,7 +35,8 @@ export const fields = {
 } satisfies Record<string, Field>
 
 export const FieldsValidationSchema = z.object({
-  message: z.string().min(1, 'Message is required'),
+  message: z.string().optional(),
+  messageDataPoint: z.string().optional(),
   categories: z
     .string()
     .trim()
