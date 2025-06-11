@@ -47,7 +47,7 @@ export interface Payload {
   a_boolean: boolean
   a_date: string
   a_phone: string
-  a_json: string
+  a_json: Record<string, unknown>
   patient_id?: string
 }
 
@@ -75,7 +75,7 @@ export const demo: Webhook<keyof typeof dataPoints, Payload> = {
         a_boolean: String(a_boolean),
         a_date,
         a_phone,
-        a_json, // objects unique come already serialized as a string
+        a_json: JSON.stringify(a_json),
       },
       ...(patient_id ? { patient_id } : {}),
     })
