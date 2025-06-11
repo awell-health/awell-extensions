@@ -48,7 +48,7 @@ export const validateAndCreateSdkClient: ValidateAndCreateSdkClient = async ({
 
   // Only add baseUrl if it's provided and not empty
   if (baseUrl && baseUrl.trim() !== '') {
-    clientConfig.baseUrl = baseUrl
+    clientConfig.baseUrl = baseUrl.trim()
   }
 
   const medplumSdk = new MedplumClient(clientConfig)
