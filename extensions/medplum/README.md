@@ -9,4 +9,8 @@ Medplum is the open source healthcare developer platform that helps you build, t
 
 ## Extension settings
 
-A client ID and client secret needs to be provided in order for the extension to authenticate with Medplum's API.
+The following settings are required to configure the Medplum extension:
+
+- **Client ID**: Used to authenticate with Medplum's API (required)
+- **Client Secret**: Used to authenticate with Medplum's API (required)
+- **Base URL**: Optional custom base URL for your Medplum server (e.g., `https://api.medplum.com/`). Leave empty to use the default Medplum server.

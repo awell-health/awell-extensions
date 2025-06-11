@@ -29,7 +29,7 @@ export const validateAndCreateSdkClient: ValidateAndCreateSdkClient = async ({
   payload,
 }) => {
   const {
-    settings: { clientId, clientSecret },
+    settings: { clientId, clientSecret, baseUrl },
     fields,
     settings,
   } = validate({
@@ -44,9 +44,14 @@ export const validateAndCreateSdkClient: ValidateAndCreateSdkClient = async ({
 
   const { patient, pathway, activity } = payload
 
-  const medplumSdk = new MedplumClient({
-    clientId,
-  })
+  const clientConfig: { clientId: string; baseUrl?: string } = { clientId }
+
+  // Only add baseUrl if it's provided and not empty
+  if (baseUrl && baseUrl.trim() !== '') {
+    clientConfig.baseUrl = baseUrl.trim()
+  }
+
+  const medplumSdk = new MedplumClient(clientConfig)
 
   await medplumSdk.startClientLogin(clientId, clientSecret)
 
