@@ -11,12 +11,12 @@ const mockPayload = {
   activity: { id: 'activity-id' },
   settings: mockSettings,
   fields: {},
-}
+} as any
 
 const mockPayloadWithoutBaseUrl = {
   ...mockPayload,
   settings: mockSettingsWithoutBaseUrl,
-}
+} as any
 
 describe('validateAndCreateSdkClient', () => {
   beforeEach(() => {
@@ -55,7 +55,7 @@ describe('validateAndCreateSdkClient', () => {
     const payloadWithEmptyBaseUrl = {
       ...mockPayload,
       settings: { ...mockSettings, baseUrl: '' },
-    }
+    } as any
     
     await validateAndCreateSdkClient({
       fieldsSchema,
