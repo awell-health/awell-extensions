@@ -1,4 +1,4 @@
-export { mockSettings } from './mockSettings'
+export { mockSettings, mockSettingsWithoutBaseUrl } from './mockSettings'
 export {
   mockGetPatientResponse,
   mockCreatePatientResponse,
