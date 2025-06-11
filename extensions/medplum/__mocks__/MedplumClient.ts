@@ -13,6 +13,13 @@ import {
 } from '@medplum/fhirtypes'
 
 export class MedplumClient {
+  constructor(config?: { clientId?: string; baseUrl?: string }) {
+    // Store config for potential testing verification
+    this.config = config
+  }
+
+  config?: { clientId?: string; baseUrl?: string }
+
   startClientLogin = jest.fn()
 
   readResource = jest.fn(
