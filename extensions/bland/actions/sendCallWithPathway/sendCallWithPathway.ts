@@ -19,12 +19,13 @@ export const sendCallWithPathway: Action<
   previewable: false,
   dataPoints,
   onEvent: async ({ payload, onComplete }): Promise<void> => {
-    const { fields, blandSdk } = await validatePayloadAndCreateSdk({
+    const { fields: allFields, blandSdk } = await validatePayloadAndCreateSdk({
       fieldsSchema: FieldsValidationSchema,
       payload,
     })
-
+    const { otherData, ...fields } = allFields
     const sendCallInput = SendCallInputSchema.parse({
+      ...otherData,
       ...fields,
       phone_number: fields.phoneNumber,
       pathway_id: fields.pathwayId,

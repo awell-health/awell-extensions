@@ -5,26 +5,26 @@ import { ZodError } from 'zod'
 import { BlandApiClient } from '../../api/client'
 import { SendCallInputSchema } from '../../api/schema'
 
-jest.mock('../../api/client', () => ({
-  BlandApiClient: jest.fn().mockImplementation(() => ({
-    sendCall: jest.fn().mockResolvedValue({
-      data: {
-        status: 'success',
-        call_id: '9d404c1b-6a23-4426-953a-a52c392ff8f1',
-      },
-    }),
-  })),
-}))
-
-const mockedSdk = jest.mocked(BlandApiClient)
+const mockedCallResponse = async () => {
+  return {
+    data: {
+      status: 'success',
+      call_id: '9d404c1b-6a23-4426-953a-a52c392ff8f1',
+    },
+  } as any
+}
 
 describe('Bland - Send call with pathway', () => {
+  let sendCallSpy: jest.SpyInstance
   const { extensionAction, onComplete, onError, helpers, clearMocks } =
     TestHelpers.fromAction(action)
 
   beforeEach(() => {
     clearMocks()
     jest.clearAllMocks()
+    sendCallSpy = jest
+      .spyOn(BlandApiClient.prototype, 'sendCall')
+      .mockImplementation(mockedCallResponse)
   })
 
   describe('Action fields validation', () => {
@@ -292,19 +292,23 @@ describe('Bland - Send call with pathway', () => {
   })
 
   describe('Action execution', () => {
+    const fields = {
+      phoneNumber: '1234567890',
+      pathwayId: '123',
+      requestData: JSON.stringify({
+        name: 'John Doe',
+      }),
+      analysisSchema: JSON.stringify({
+        name: 'string',
+      }),
+      otherData: JSON.stringify({
+        foo: 'bar',
+      }),
+    }
     test('Should work', async () => {
       const res = await extensionAction.onEvent({
         payload: {
-          fields: {
-            phoneNumber: '1234567890',
-            pathwayId: '123',
-            requestData: JSON.stringify({
-              name: 'John Doe',
-            }),
-            analysisSchema: JSON.stringify({
-              name: 'string',
-            }),
-          },
+          fields,
           patient: {
             id: 'patient-id',
           },
@@ -325,7 +329,22 @@ describe('Bland - Send call with pathway', () => {
         helpers,
       })
 
-      expect(mockedSdk).toHaveBeenCalled()
+      expect(sendCallSpy).toHaveBeenCalledWith(
+        expect.objectContaining({
+          phone_number: fields.phoneNumber,
+          request_data: JSON.parse(fields.requestData),
+          ...JSON.parse(fields.otherData),
+          metadata: expect.objectContaining({
+            awell_patient_id: 'patient-id',
+            awell_care_flow_definition_id: 'pathway-definition-id',
+            awell_care_flow_id: 'pathway-id',
+            awell_activity_id: 'activity-id',
+          }),
+          analysis_schema: JSON.parse(fields.analysisSchema),
+        }),
+      )
+
+      // Completion happens async via a Webhook from Bland
       expect(onComplete).toHaveBeenCalledWith(
         expect.objectContaining({
           data_points: expect.objectContaining({

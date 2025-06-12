@@ -2,7 +2,6 @@ import { TestHelpers } from '@awell-health/extensions-core'
 import { BlandApiClient } from '../../../api/client'
 import { sendCall as action } from '../sendCall'
 
-const mockedSdk = jest.mocked(BlandApiClient)
 const mockedCallResponse = async () => {
   return {
     data: {
