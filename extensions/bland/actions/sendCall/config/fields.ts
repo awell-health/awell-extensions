@@ -253,6 +253,13 @@ export const fields = {
     type: FieldType.NUMERIC,
     required: false,
   },
+  webhook: {
+    id: 'webhook',
+    label: 'Webhook',
+    description: 'The webhook to send the call completed event to.',
+    type: FieldType.STRING,
+    required: false,
+  },
   record: {
     id: 'record',
     label: 'Record call',
@@ -364,6 +371,7 @@ export const FieldsValidationSchema = z.object({
   voicemail_action: VoicemailActionSchema.optional(),
   retry: JsonObjectSchema.optional(),
   max_duration: z.number().optional(),
+  webhook: z.string().optional(),
   record: dropdownOptionsBooleanSchema.optional(),
   metadata: JsonObjectSchema.optional(),
   analysis_preset: z.string().optional(),
