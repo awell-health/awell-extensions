@@ -42,6 +42,13 @@ export const fields = {
     type: FieldType.NUMERIC,
     required: false,
   },
+  webhook: {
+    id: 'webhook',
+    label: 'Webhook',
+    description: 'The webhook to send the call completed event to.',
+    type: FieldType.STRING,
+    required: false,
+  },
   voice: {
     id: 'voice',
     label: 'Voice',
@@ -260,13 +267,6 @@ export const fields = {
     type: FieldType.NUMERIC,
     required: false,
   },
-  webhook: {
-    id: 'webhook',
-    label: 'Webhook',
-    description: 'The webhook to send the call completed event to.',
-    type: FieldType.STRING,
-    required: false,
-  },
   record: {
     id: 'record',
     label: 'Record call',
@@ -344,8 +344,8 @@ export const fields = {
 } satisfies Record<string, Field>
 
 export const FieldsValidationSchema = z.object({
-  phoneNumber: z.string().min(1),
-  pathwayId: z.string().min(1),
+  phoneNumber: z.string().trim().min(1),
+  pathwayId: z.string().trim().min(1),
   pathwayVersion: z.number().optional(),
   voice: z.string().optional(),
   background_track: BackgroundTrackEnum.optional(),

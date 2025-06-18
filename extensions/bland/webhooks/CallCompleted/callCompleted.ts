@@ -47,7 +47,7 @@ export const callCompleted: Webhook<
         callId,
         callObject: JSON.stringify(payload),
       },
-      ...(awellPatientId ? { patient_id: awellPatientId } : {}),
+      ...(awellPatientId && { patient_id: awellPatientId }),
     })
   },
 }
