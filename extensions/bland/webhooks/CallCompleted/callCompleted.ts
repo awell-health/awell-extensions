@@ -30,6 +30,7 @@ export const callCompleted: Webhook<
     onError,
   }) => {
     const callId = payload?.call_id
+    const awellPatientId = payload?.variables?.metadata?.awell_patient_id
 
     if (isNil(callId)) {
       await onError({
@@ -45,6 +46,7 @@ export const callCompleted: Webhook<
         callId,
         callObject: JSON.stringify(payload),
       },
+      ...(awellPatientId ? { patient: { id: awellPatientId } } : {}),
     })
   },
 }
