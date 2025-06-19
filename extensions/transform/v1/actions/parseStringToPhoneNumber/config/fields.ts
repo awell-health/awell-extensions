@@ -9,8 +9,17 @@ export const fields = {
     type: FieldType.STRING,
     required: true,
   },
+  countryCallingCode: {
+    id: 'countryCallingCode',
+    label: 'Country calling code',
+    description:
+      'The country calling code you want to use for the phone number in case the phone number is not in E164 format. Enter the country calling code as a number.',
+    type: FieldType.NUMERIC,
+    required: false,
+  },
 } satisfies Record<string, Field>
 
 export const FieldsValidationSchema = z.object({
   text: z.string(),
+  countryCallingCode: z.number().optional(),
 } satisfies Record<keyof typeof fields, ZodTypeAny>)
