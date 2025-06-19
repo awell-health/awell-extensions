@@ -31,6 +31,7 @@ describe('Webhook - Call completed', () => {
           callId: callCompletedPayload.call_id,
           callObject: JSON.stringify(callCompletedPayload),
         },
+        patient_id: callCompletedPayload.variables?.metadata?.awell_patient_id,
       })
     })
   })

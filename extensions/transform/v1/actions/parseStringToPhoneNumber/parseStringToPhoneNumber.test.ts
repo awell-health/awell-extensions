@@ -91,6 +91,23 @@ describe('Transform - Parse text to phone number', () => {
     })
   })
 
+  describe('When the input is a seemingly E164 phone number but is not valid', () => {
+    it('Should throw a ZodError', async () => {
+      await extensionAction.onEvent({
+        payload: generateTestPayload({
+          fields: {
+            text: '123',
+            countryCallingCode: undefined,
+          },
+          settings: {},
+        }),
+        onComplete,
+        onError,
+        helpers,
+      })
+    })
+  })
+
   describe('When the input phone number is not a valid phone number', () => {
     describe('When the country calling code is not provided', () => {
       it('Should throw a ZodError', async () => {
