@@ -8,6 +8,7 @@ describe('HelloWorld - log', () => {
       generateTestPayload({
         fields: {
           hello: 'Some text',
+          secondField: 'Some text',
         },
         settings: {
           clear: 'clear-value',
@@ -31,6 +32,7 @@ describe('HelloWorld - log', () => {
       generateTestPayload({
         fields: {
           hello: undefined,
+          secondField: undefined,
         },
         settings: {
           clear: 'clear-value',
@@ -48,6 +50,7 @@ describe('HelloWorld - log', () => {
       generateTestPayload({
         fields: {
           hello: 'Some text',
+          secondField: 'Some text',
         },
         settings: {
           clear: undefined,

@@ -14,6 +14,13 @@ const fields = {
     description: 'A string field configured at design time',
     type: FieldType.STRING,
   },
+  secondField: {
+    id: 'secondField',
+    label: 'Second Field',
+    description: 'A second field',
+    required: false,
+    type: FieldType.STRING,
+  },
 } satisfies Record<string, Field>
 
 const dataPoints = {
