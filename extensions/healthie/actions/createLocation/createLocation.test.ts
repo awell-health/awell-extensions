@@ -36,10 +36,11 @@ describe('createLocation action', () => {
         settings: {
           apiKey: 'apiKey',
           apiUrl: 'test-url',
+          formAnswerMaxSizeKB: undefined,
         },
       }),
       onComplete,
-      jest.fn()
+      jest.fn(),
     )
 
     expect(mockGetSdkReturn.createLocation).toHaveBeenCalled()

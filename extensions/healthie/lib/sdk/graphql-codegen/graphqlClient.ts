@@ -20,9 +20,10 @@ export const responseMiddleware: Required<PatchedRequestInit>['responseMiddlewar
  * @deprecated DO NOT USE
  * DO NOT USE
  */
-export const initialiseClient = (
-  s: Record<keyof typeof settings, string | undefined>
-): GraphQLClient | undefined => {
+export const initialiseClient = (s: {
+  apiUrl: string | undefined
+  apiKey: string | undefined
+}): GraphQLClient | undefined => {
   const { apiUrl, apiKey } = s
   if (apiUrl !== undefined && apiKey !== undefined) {
     return new GraphQLClient(apiUrl, {

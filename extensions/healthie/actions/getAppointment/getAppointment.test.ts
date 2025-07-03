@@ -18,6 +18,7 @@ describe('getAppointment action', () => {
     settings: {
       apiKey: 'apiKey',
       apiUrl: 'test-url',
+      formAnswerMaxSizeKB: undefined,
     },
   })
   const appointmentWithNoDate = {
@@ -60,7 +61,7 @@ describe('getAppointment action', () => {
     await getAppointment.onActivityCreated!(
       newActivityPayload,
       onComplete,
-      jest.fn()
+      jest.fn(),
     )
 
     expect(mockGetSdkReturn.getAppointment).toHaveBeenCalledWith({
@@ -87,7 +88,7 @@ describe('getAppointment action', () => {
     await getAppointment.onActivityCreated!(
       newActivityPayload,
       onComplete,
-      jest.fn()
+      jest.fn(),
     )
 
     expect(mockGetSdkReturn.getAppointment).toHaveBeenCalledWith({
@@ -114,7 +115,7 @@ describe('getAppointment action', () => {
     await getAppointment.onActivityCreated!(
       newActivityPayload,
       onComplete,
-      jest.fn()
+      jest.fn(),
     )
 
     expect(onComplete).toHaveBeenCalledWith({

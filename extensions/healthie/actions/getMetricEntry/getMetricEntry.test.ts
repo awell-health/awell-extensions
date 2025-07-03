@@ -28,10 +28,11 @@ describe('Healthie - Get metric entry', () => {
         settings: {
           apiKey: 'api-key',
           apiUrl: 'api-url',
+          formAnswerMaxSizeKB: undefined,
         },
       }),
       onComplete,
-      onError
+      onError,
     )
 
     expect(onComplete).toBeCalledWith({
