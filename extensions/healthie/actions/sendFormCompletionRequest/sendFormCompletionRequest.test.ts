@@ -39,6 +39,7 @@ const samplePayload = generateTestPayload({
   settings: {
     apiKey: 'apiKey',
     apiUrl: 'test-url',
+    formAnswerMaxSizeKB: undefined,
   },
 })
 
@@ -58,7 +59,7 @@ describe('sendFormCompletionRequest action', () => {
     await sendFormCompletionRequest.onActivityCreated!(
       samplePayload,
       onComplete,
-      onError
+      onError,
     )
 
     expect(mockGetSdkReturn.createFormCompletionRequest).toHaveBeenCalled()
@@ -86,7 +87,7 @@ describe('sendFormCompletionRequest action', () => {
           },
         },
         onComplete,
-        onError
+        onError,
       )
       expect(mockGetSdkReturn.createFormCompletionRequest).toHaveBeenCalledWith(
         {
@@ -100,10 +101,10 @@ describe('sendFormCompletionRequest action', () => {
             recurrence_ends: true,
             ends_on: endsOnExpected,
           },
-        }
+        },
       )
       expect(onComplete).toHaveBeenCalled()
-    }
+    },
   )
 
   describe('Frequency validation', () => {
@@ -120,19 +121,19 @@ describe('sendFormCompletionRequest action', () => {
               },
             },
             onComplete,
-            onError
+            onError,
           )
 
           expect(onComplete).toHaveBeenCalled()
           expect(
-            mockGetSdkReturn.createFormCompletionRequest
+            mockGetSdkReturn.createFormCompletionRequest,
           ).toHaveBeenCalledWith({
             input: {
               ...sampleFormCompletion,
               is_recurring: false,
             },
           })
-        }
+        },
       )
     })
 
@@ -160,12 +161,12 @@ describe('sendFormCompletionRequest action', () => {
             },
           },
           onComplete,
-          onError
+          onError,
         )
 
         expect(onComplete).toHaveBeenCalled()
         expect(
-          mockGetSdkReturn.createFormCompletionRequest
+          mockGetSdkReturn.createFormCompletionRequest,
         ).toHaveBeenCalledWith({
           input: {
             ...sampleFormCompletion,
@@ -205,11 +206,11 @@ describe('sendFormCompletionRequest action', () => {
             },
           },
           onComplete,
-          onError
+          onError,
         )
 
         expect(
-          mockGetSdkReturn.createFormCompletionRequest
+          mockGetSdkReturn.createFormCompletionRequest,
         ).toHaveBeenCalledWith({
           input: {
             ...sampleFormCompletion,
@@ -235,12 +236,12 @@ describe('sendFormCompletionRequest action', () => {
             },
           },
           onComplete,
-          onError
+          onError,
         )
 
         expect(onComplete).toHaveBeenCalled()
         expect(
-          mockGetSdkReturn.createFormCompletionRequest
+          mockGetSdkReturn.createFormCompletionRequest,
         ).toHaveBeenCalledWith({
           input: {
             ...sampleFormCompletion,

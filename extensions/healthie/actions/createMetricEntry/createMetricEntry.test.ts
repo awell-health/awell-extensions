@@ -29,10 +29,11 @@ describe('createMetricEntry action', () => {
         settings: {
           apiKey: 'apiKey',
           apiUrl: 'test-url',
+          formAnswerMaxSizeKB: undefined,
         },
       }),
       onComplete,
-      onError
+      onError,
     )
     expect(onComplete).toBeCalledTimes(1)
     expect(onError).toBeCalledTimes(0)
@@ -51,10 +52,11 @@ describe('createMetricEntry action', () => {
         settings: {
           apiKey: 'apiKey',
           apiUrl: 'test-url',
+          formAnswerMaxSizeKB: undefined,
         },
       }),
       onComplete,
-      onError
+      onError,
     )
     expect(onComplete).toBeCalledTimes(0)
     expect(onError).toBeCalledTimes(1)
@@ -73,10 +75,11 @@ describe('createMetricEntry action', () => {
         settings: {
           apiKey: 'apiKey',
           apiUrl: 'test-url',
+          formAnswerMaxSizeKB: undefined,
         },
       }),
       onComplete,
-      onError
+      onError,
     )
     expect(onComplete).toBeCalledTimes(0)
     expect(onError).toBeCalledTimes(1)
@@ -95,10 +98,11 @@ describe('createMetricEntry action', () => {
         settings: {
           apiKey: 'apiKey',
           apiUrl: 'test-url',
+          formAnswerMaxSizeKB: undefined,
         },
       }),
       onComplete,
-      onError
+      onError,
     )
     expect(onComplete).toBeCalledTimes(0)
     expect(onError).toBeCalledTimes(1)

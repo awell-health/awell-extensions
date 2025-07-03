@@ -25,6 +25,7 @@ const samplePayload = generateTestPayload({
   settings: {
     apiKey: 'apiKey',
     apiUrl: 'test-url',
+    formAnswerMaxSizeKB: undefined,
   },
 })
 
@@ -73,12 +74,12 @@ describe('createTask action', () => {
               },
             },
             onComplete,
-            onError
+            onError,
           )
 
           expect(onComplete).toHaveBeenCalled()
           expect(mockGetSdkReturn.createTask).toHaveBeenCalledWith(sampleTask)
-        }
+        },
       )
 
       test('Should call onError when isReminderEnabled is undefined and any of the rest fields is not undefined', async () => {
@@ -91,7 +92,7 @@ describe('createTask action', () => {
             },
           },
           onComplete,
-          onError
+          onError,
         )
 
         expect(failedPromise).rejects.toThrow()
@@ -118,7 +119,7 @@ describe('createTask action', () => {
             },
           },
           onComplete,
-          onError
+          onError,
         )
 
         expect(onComplete).toHaveBeenCalled()
@@ -147,7 +148,7 @@ describe('createTask action', () => {
         const failedPromise = createTask.onActivityCreated!(
           payload,
           onComplete,
-          onError
+          onError,
         )
         expect(failedPromise).rejects.toThrow()
       })
@@ -180,7 +181,7 @@ describe('createTask action', () => {
             },
           },
           onComplete,
-          onError
+          onError,
         )
 
         expect(mockGetSdkReturn.createTask).toHaveBeenCalledWith({
@@ -208,7 +209,7 @@ describe('createTask action', () => {
             },
           },
           onComplete,
-          onError
+          onError,
         )
 
         expect(failedPromise).rejects.toThrow()
@@ -229,7 +230,7 @@ describe('createTask action', () => {
             },
           },
           onComplete,
-          onError
+          onError,
         )
 
         expect(onComplete).toHaveBeenCalled()
@@ -257,7 +258,7 @@ describe('createTask action', () => {
             },
           },
           onComplete,
-          onError
+          onError,
         )
 
         expect(failedPromise).rejects.toThrow()
@@ -278,7 +279,7 @@ describe('createTask action', () => {
             },
           },
           onComplete,
-          onError
+          onError,
         )
 
         expect(onComplete).toHaveBeenCalled()
@@ -306,7 +307,7 @@ describe('createTask action', () => {
             },
           },
           onComplete,
-          onError
+          onError,
         )
 
         expect(failedPromise).rejects.toThrow()

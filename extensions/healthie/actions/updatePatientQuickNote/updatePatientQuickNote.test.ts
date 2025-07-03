@@ -29,10 +29,11 @@ describe('createMetricEntry action', () => {
         settings: {
           apiKey: 'apiKey',
           apiUrl: 'test-url',
+          formAnswerMaxSizeKB: undefined,
         },
       }),
       onComplete,
-      onError
+      onError,
     )
     expect(onComplete).toBeCalledTimes(1)
     expect(onError).toBeCalledTimes(0)

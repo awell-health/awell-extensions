@@ -4,10 +4,11 @@ import {
   type Webhook,
 } from '@awell-health/extensions-core'
 import { HEALTHIE_IDENTIFIER, type HealthieWebhookPayload } from '../lib/types'
-import { type settings } from '../settings'
+import { SettingsValidationSchema, type settings } from '../settings'
 import { formatError } from '../lib/sdk/graphql-codegen/errors'
 import { createSdk } from '../lib/sdk/graphql-codegen/createSdk'
 import { webhookPayloadSchema } from '../lib/helpers'
+import { processFormAnswersForSize } from '../lib/helpers/processFormAnswers'
 
 const dataPoints = {
   lockedFormAnswerGroupId: {
@@ -30,6 +31,8 @@ export const formAnswerGroupLocked: Webhook<
   onWebhookReceived: async ({ payload, settings }, onSuccess, onError) => {
     try {
       const { sdk } = await createSdk({ settings })
+      const formAnswerMaxSizeKB =
+        SettingsValidationSchema.parse(settings).formAnswerMaxSizeKB
 
       const validatedPayload = webhookPayloadSchema.parse(payload)
       const lockedFormAnswerGroupId = validatedPayload.resource_id.toString()
@@ -37,13 +40,24 @@ export const formAnswerGroupLocked: Webhook<
       const response = await sdk.getFormAnswerGroup({
         id: lockedFormAnswerGroupId,
       })
-      const healthiePatientId = response?.data?.formAnswerGroup?.user?.id
+
+      const rawFormAnswerGroup = response?.data?.formAnswerGroup
+
+      if (!rawFormAnswerGroup) {
+        throw new Error('Form answer group not found')
+      }
+
+      // Process form answers to replace large ones with error messages
+      const processedFormAnswerGroup = processFormAnswersForSize(
+        rawFormAnswerGroup,
+        formAnswerMaxSizeKB,
+      )
+
+      const healthiePatientId = processedFormAnswerGroup.user?.id
       await onSuccess({
         data_points: {
           lockedFormAnswerGroupId,
-          lockedFormAnswerGroup: JSON.stringify(
-            response?.data?.formAnswerGroup,
-          ),
+          lockedFormAnswerGroup: JSON.stringify(processedFormAnswerGroup),
         },
         ...(!isNil(healthiePatientId) && {
           patient_identifier: {

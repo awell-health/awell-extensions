@@ -57,10 +57,11 @@ describe('getPatient action', () => {
             settings: {
               apiKey: 'apiKey',
               apiUrl: 'test-url',
+              formAnswerMaxSizeKB: undefined,
             },
           }),
           onComplete,
-          jest.fn()
+          jest.fn(),
         )
 
         expect(onComplete).toHaveBeenCalledWith({
@@ -77,7 +78,7 @@ describe('getPatient action', () => {
           },
           events: undefined,
         })
-      }
+      },
     )
 
     test.each([
@@ -104,10 +105,11 @@ describe('getPatient action', () => {
             settings: {
               apiKey: 'apiKey',
               apiUrl: 'test-url',
+              formAnswerMaxSizeKB: undefined,
             },
           }),
           onComplete,
-          jest.fn()
+          jest.fn(),
         )
 
         expect(onComplete).toHaveBeenCalledWith({
@@ -128,18 +130,18 @@ describe('getPatient action', () => {
               error: {
                 category: 'WRONG_DATA',
                 message: `Phone number from Healthie (${String(
-                  healthiePhone
+                  healthiePhone,
                 )}) not stored because it isn't a valid E.164 phone number`,
               },
               text: {
                 en: `Phone number from Healthie (${String(
-                  healthiePhone
+                  healthiePhone,
                 )}) not stored because it isn't a valid E.164 phone number`,
               },
             },
           ],
         })
-      }
+      },
     )
   })
 
@@ -198,10 +200,11 @@ describe('getPatient action', () => {
             settings: {
               apiKey: 'apiKey',
               apiUrl: 'test-url',
+              formAnswerMaxSizeKB: undefined,
             },
           }),
           onComplete,
-          jest.fn()
+          jest.fn(),
         )
 
         expect(onComplete).toHaveBeenCalledWith({
@@ -218,7 +221,7 @@ describe('getPatient action', () => {
           },
           events: undefined,
         })
-      }
+      },
     )
 
     test.each([
@@ -247,10 +250,11 @@ describe('getPatient action', () => {
             settings: {
               apiKey: 'apiKey',
               apiUrl: 'test-url',
+              formAnswerMaxSizeKB: undefined,
             },
           }),
           onComplete,
-          jest.fn()
+          jest.fn(),
         )
 
         expect(onComplete).toHaveBeenCalledWith({
@@ -271,18 +275,18 @@ describe('getPatient action', () => {
               error: {
                 category: 'WRONG_DATA',
                 message: `DOB from Healthie (${String(
-                  healthieDate
+                  healthieDate,
                 )}) not stored because it isn't a valid ISO8601 date`,
               },
               text: {
                 en: `DOB from Healthie (${String(
-                  healthieDate
+                  healthieDate,
                 )}) not stored because it isn't a valid ISO8601 date`,
               },
             },
           ],
         })
-      }
+      },
     )
   })
 })

@@ -31,10 +31,11 @@ describe('sendChatMessage action', () => {
         settings: {
           apiKey: 'apiKey',
           apiUrl: 'test-url',
+          formAnswerMaxSizeKB: undefined,
         },
       }),
       onComplete,
-      jest.fn()
+      jest.fn(),
     )
 
     expect(mockGetSdkReturn.getConversationList).toHaveReturnedWith({
@@ -76,10 +77,11 @@ describe('sendChatMessage action', () => {
         settings: {
           apiKey: 'apiKey',
           apiUrl: 'test-url',
+          formAnswerMaxSizeKB: undefined,
         },
       }),
       onComplete,
-      jest.fn()
+      jest.fn(),
     )
 
     expect(mockGetSdkReturn.createConversation).not.toHaveBeenCalled()
@@ -146,10 +148,11 @@ describe('sendChatMessage action', () => {
         settings: {
           apiKey: 'apiKey',
           apiUrl: 'test-url',
+          formAnswerMaxSizeKB: undefined,
         },
       }),
       onComplete,
-      jest.fn()
+      jest.fn(),
     )
 
     expect(mockGetSdkReturn.createConversation).not.toHaveBeenCalled()
