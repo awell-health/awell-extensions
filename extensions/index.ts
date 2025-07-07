@@ -21,6 +21,7 @@ import { Experimental } from './experimental'
 import { ExternalServer } from './external-server'
 import { Formsort } from './formsort'
 import { freshdesk } from './freshdesk'
+import { freshsales } from './freshsales'
 import { Gridspace } from './gridspace'
 import { Healthie } from './healthie'
 import { HelloWorld } from './hello-world'
@@ -80,6 +81,7 @@ export const extensions = [
   ExternalServer,
   Formsort,
   freshdesk,
+  freshsales,
   Gridspace,
   Healthie,
   HelloWorld,
