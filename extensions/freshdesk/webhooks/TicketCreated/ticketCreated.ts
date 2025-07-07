@@ -12,7 +12,7 @@ export const ticketCreated: Webhook<
   TicketCreatedWebhookPayload,
   typeof settings
 > = {
-  key: 'callCompleted',
+  key: 'ticketCreated',
   dataPoints,
   onEvent: async ({
     payload: { payload, rawBody, headers, settings },
