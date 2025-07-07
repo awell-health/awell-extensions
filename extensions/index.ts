@@ -20,6 +20,7 @@ import { epic } from './epic'
 import { Experimental } from './experimental'
 import { ExternalServer } from './external-server'
 import { Formsort } from './formsort'
+import { freshdesk } from './freshdesk'
 import { Gridspace } from './gridspace'
 import { Healthie } from './healthie'
 import { HelloWorld } from './hello-world'
@@ -78,6 +79,7 @@ export const extensions = [
   Experimental,
   ExternalServer,
   Formsort,
+  freshdesk,
   Gridspace,
   Healthie,
   HelloWorld,
