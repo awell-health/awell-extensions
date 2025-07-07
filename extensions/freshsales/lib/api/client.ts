@@ -8,7 +8,7 @@ export class FreshsalesApiClient {
     this.client = axios.create({
       baseURL: baseUrl,
       headers: {
-        Authorization: apiKey,
+        Authorization: `Token token=${apiKey}`,
         'Content-Type': 'application/json',
       },
     })

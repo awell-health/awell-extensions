@@ -11,10 +11,18 @@ export class FreshdeskApiClient {
   private readonly client: AxiosInstance
 
   constructor({ baseUrl, apiKey }: { baseUrl: string; apiKey: string }) {
+    /**
+     * Freshdesk uses Basic Auth with the API key as the username and a placeholder as the password.
+     */
+    const passwordPlaceholder = 'X'
+    const token = Buffer.from(`${apiKey}:${passwordPlaceholder}`).toString(
+      'base64',
+    )
+
     this.client = axios.create({
       baseURL: baseUrl,
       headers: {
-        Authorization: apiKey,
+        Authorization: `Basic ${token}`,
         'Content-Type': 'application/json',
       },
     })
