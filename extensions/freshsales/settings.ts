@@ -4,9 +4,9 @@ import { z, type ZodTypeAny } from 'zod'
 export const settings = {
   domain: {
     key: 'domain',
-    label: 'Freshdesk helpdesk domain',
+    label: 'Freshsales domain',
     description:
-      'Will be used to construct the API URL. E.g. https://<domain>.freshdesk.com/',
+      'Will be used to construct the API URL. E.g. https://<domain>.freshsales.io/',
     required: true,
     obfuscated: false,
   },

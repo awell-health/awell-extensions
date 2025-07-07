@@ -1,5 +1,5 @@
 ---
-title: Freshdesk.ai
+title: Freshdesk
 description: Freshdesk is a cloud-based customer service software that helps businesses manage and streamline their customer support operations.
 ---
 
