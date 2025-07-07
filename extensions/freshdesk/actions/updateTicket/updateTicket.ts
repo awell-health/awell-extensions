@@ -44,7 +44,7 @@ export const updateTicket: Action<
     await onComplete({
       events: [
         addActivityEventLog({
-          message: `Ticket to update:\n${JSON.stringify(ticketToUpdate, null, 2)}`,
+          message: `Ticket to update:\n${JSON.stringify(ticketToUpdate.data, null, 2)}`,
         }),
         addActivityEventLog({
           message: `Ticket updated successfully with the following fields:\n${JSON.stringify(requestBody, null, 2)}`,

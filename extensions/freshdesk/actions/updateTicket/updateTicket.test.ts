@@ -2,29 +2,31 @@ import { TestHelpers } from '@awell-health/extensions-core'
 import { FreshdeskApiClient } from '../../lib/api/client'
 import { updateTicket as action } from './updateTicket'
 import { UpdateTicketResponseMock } from './__mocks__/UpdateTicketResponse.mock'
+import { GetTicketResponseMock } from '../getTicket/__mocks__/GetTicketResponse.mock'
 
 describe('Freshdesk - Update ticket', () => {
-  let sendCallSpy: jest.SpyInstance
+  let getTicketSpy: jest.SpyInstance
+  let updateTicketSpy: jest.SpyInstance
 
-  const {
-    extensionAction: sendCall,
-    onComplete,
-    onError,
-    helpers,
-    clearMocks,
-  } = TestHelpers.fromAction(action)
+  const { extensionAction, onComplete, onError, helpers, clearMocks } =
+    TestHelpers.fromAction(action)
 
   beforeEach(() => {
     clearMocks()
-    sendCallSpy = jest
+    getTicketSpy = jest
+      .spyOn(FreshdeskApiClient.prototype, 'getTicket')
+      .mockImplementationOnce(
+        jest.fn().mockResolvedValue({ data: GetTicketResponseMock }),
+      )
+    updateTicketSpy = jest
       .spyOn(FreshdeskApiClient.prototype, 'updateTicket')
       .mockImplementationOnce(
-        jest.fn().mockResolvedValue(UpdateTicketResponseMock),
+        jest.fn().mockResolvedValue({ data: UpdateTicketResponseMock }),
       )
   })
 
   test('Should work', async () => {
-    await sendCall.onEvent({
+    await extensionAction.onEvent({
       payload: {
         fields: {
           ticketId: '1',
