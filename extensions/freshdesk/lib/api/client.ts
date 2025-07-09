@@ -45,7 +45,7 @@ export class FreshdeskApiClient {
     ticketId: string
     input: UpdateTicketInputType
   }): Promise<AxiosResponse<UpdateTicketResponseType>> {
-    const response = await this.client.post<UpdateTicketResponseType>(
+    const response = await this.client.put<UpdateTicketResponseType>(
       `/tickets/${ticketId}`,
       input,
     )

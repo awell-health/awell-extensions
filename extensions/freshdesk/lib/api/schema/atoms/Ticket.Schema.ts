@@ -15,7 +15,7 @@ export const TicketSchema = z.object({
   spam: z.boolean(),
   status: TicketStatusSchema,
   subject: z.string().nullable(),
-  company_id: z.number().optional(),
+  company_id: z.number().optional().nullable(),
   id: z.number(),
   type: z.string().nullable(),
   to_emails: z.array(z.string()).nullable(),
@@ -28,7 +28,10 @@ export const TicketSchema = z.object({
   association_type: z.unknown().nullable(),
   description_text: z.string(),
   description: z.string(),
-  custom_fields: z.record(z.string(), z.string()).optional().nullable(),
+  custom_fields: z
+    .record(z.string(), z.union([z.string(), z.null()]))
+    .optional()
+    .nullable(),
   tags: z.array(z.string()),
   attachments: z.array(z.unknown()),
 })

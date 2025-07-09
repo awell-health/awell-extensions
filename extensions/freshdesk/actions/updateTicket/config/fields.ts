@@ -113,8 +113,8 @@ export const FieldsValidationSchema = z.object({
   customFields: z
     .string()
     .optional()
-    .transform((str, ctx): Record<string, string> => {
-      if (isNil(str) || isEmpty(str)) return {}
+    .transform((str, ctx): Record<string, string> | undefined => {
+      if (isNil(str) || isEmpty(str)) return undefined
 
       try {
         const parsedJson = JSON.parse(str)
