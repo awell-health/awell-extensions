@@ -9,13 +9,9 @@ export const dataPoints = {
     key: 'email',
     valueType: 'string',
   },
-  workNumber: {
-    key: 'workNumber',
-    valueType: 'string',
-  },
   mobileNumber: {
     key: 'mobileNumber',
-    valueType: 'string',
+    valueType: 'telephone',
   },
   address: {
     key: 'address',

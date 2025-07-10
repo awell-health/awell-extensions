@@ -47,10 +47,13 @@ export const GetLeadResponseMock = {
           '/leads/1/conversations?include=email_conversation_recipients%2Ctargetable%2Cphone_number%2Cphone_caller%2Cnote%2Cuser\u0026per_page=3',
         activities: '/leads/1/activities',
       },
+      created_at: '2016-02-10T02:36:06-08:00',
       updated_at: '2016-02-10T02:36:06-08:00',
       facebook: null,
       twitter: 'https://twitter.com/janesampleton',
       linkedin: 'http://linkedin.com/pub/jane-sampleton/109/39/b0',
+      is_deleted: false,
     },
+    meta: null,
   },
 } satisfies Partial<AxiosResponse<GetLeadResponseType>>
