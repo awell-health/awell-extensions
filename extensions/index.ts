@@ -1,4 +1,5 @@
 import { athenahealth } from './athenahealth'
+import { availity } from './availity'
 import { Awell } from './awell'
 import { awellTasks } from './awellTasks'
 import { bland } from './bland'
@@ -61,6 +62,7 @@ export const extensions = [
   bland,
   Braze,
   athenahealth,
+  availity,
   Awell,
   awellTasks,
   CalDotCom,
