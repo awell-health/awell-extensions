@@ -1,3 +1,5 @@
+import { z } from 'zod'
+
 /**
  * Problem:
  * Freshdesk allows their users to define a custom webhook payload.
@@ -13,4 +15,12 @@
  *
  * See https://support.freshdesk.com/support/solutions/articles/132589-using-webhooks-in-automation-rules
  */
-export type TicketCreatedWebhookPayload = Record<string, unknown>
+
+export const zTicketCreatedWebhookPayload = z.object({
+  freshdesk_webhook: z.object({
+    ticket_id: z.string(),
+  }),
+})
+export type TicketCreatedWebhookPayload = z.infer<
+  typeof zTicketCreatedWebhookPayload
+>

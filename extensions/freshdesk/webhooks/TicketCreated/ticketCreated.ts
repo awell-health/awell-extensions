@@ -4,8 +4,14 @@ import {
 } from '@awell-health/extensions-core'
 import { type settings } from '../../settings'
 import { type TicketCreatedWebhookPayload } from './types'
+import { zTicketCreatedWebhookPayload } from './types'
 
-const dataPoints = {} satisfies Record<string, DataPointDefinition>
+const dataPoints = {
+  ticketId: {
+    key: 'ticketId',
+    valueType: 'string',
+  },
+} satisfies Record<string, DataPointDefinition>
 
 export const ticketCreated: Webhook<
   keyof typeof dataPoints,
@@ -19,8 +25,22 @@ export const ticketCreated: Webhook<
     onSuccess,
     onError,
   }) => {
+    const parsedPayload = zTicketCreatedWebhookPayload.safeParse(payload)
+
+    if (!parsedPayload.success) {
+      await onError({
+        response: {
+          statusCode: 400,
+          message: JSON.stringify(parsedPayload.error, null, 2),
+        },
+      })
+      return
+    }
+
     await onSuccess({
-      data_points: {},
+      data_points: {
+        ticketId: parsedPayload.data.freshdesk_webhook.ticket_id,
+      },
     })
   },
 }

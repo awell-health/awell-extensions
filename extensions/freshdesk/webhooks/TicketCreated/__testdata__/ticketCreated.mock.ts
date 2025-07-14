@@ -1,3 +1,7 @@
 import { type TicketCreatedWebhookPayload } from '../types'
 
-export const ticketCreatedPayload = {} satisfies TicketCreatedWebhookPayload
+export const ticketCreatedPayload = {
+  freshdesk_webhook: {
+    ticket_id: '295186',
+  },
+} satisfies TicketCreatedWebhookPayload
