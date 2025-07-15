@@ -42,7 +42,7 @@ export const addNoteToTicket: Action<
       if (error instanceof AxiosError) {
         const err = error as AxiosError
 
-        if (err.status === 404)
+        if (err.response?.status === 404)
           await onError({
             events: [
               addActivityEventLog({
