@@ -14,15 +14,15 @@ describe('Freshdesk - Update ticket', () => {
 
   beforeEach(() => {
     clearMocks()
-    getTicketSpy = jest
-      .spyOn(FreshdeskApiClient.prototype, 'getTicket')
-      .mockImplementationOnce(
-        jest.fn().mockResolvedValue({ data: GetTicketResponseMock }),
-      )
   })
 
   describe('Happy path', () => {
     beforeEach(() => {
+      getTicketSpy = jest
+        .spyOn(FreshdeskApiClient.prototype, 'getTicket')
+        .mockImplementationOnce(
+          jest.fn().mockResolvedValue({ data: GetTicketResponseMock }),
+        )
       updateTicketSpy = jest
         .spyOn(FreshdeskApiClient.prototype, 'updateTicket')
         .mockImplementationOnce(
@@ -64,6 +64,7 @@ describe('Freshdesk - Update ticket', () => {
             ),
         )
     })
+
     test('Should work', async () => {
       await extensionAction.onEvent({
         payload: {
