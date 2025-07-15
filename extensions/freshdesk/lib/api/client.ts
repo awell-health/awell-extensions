@@ -5,6 +5,7 @@ import {
   type AddNoteInputType,
   type AddNoteResponseType,
   type GetTicketResponseType,
+  type GetContactResponseType,
 } from './schema'
 
 export class FreshdeskApiClient {
@@ -26,6 +27,16 @@ export class FreshdeskApiClient {
         'Content-Type': 'application/json',
       },
     })
+  }
+
+  async getContact(
+    contactId: string,
+  ): Promise<AxiosResponse<GetContactResponseType>> {
+    const response = await this.client.get<GetContactResponseType>(
+      `/contacts/${contactId}`,
+    )
+
+    return response
   }
 
   async getTicket(

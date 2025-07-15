@@ -1,11 +1,11 @@
 import { TestHelpers } from '@awell-health/extensions-core'
-import { FreshsalesApiClient } from '../../lib/api/client'
-import { getLead as action } from './getLead'
-import { GetLeadResponseMock } from './__mocks__/GetLeadResponse.mock'
+import { FreshdeskApiClient } from '../../lib/api/client'
+import { getContact as action } from './getContact'
+import { GetContactResponseMock } from './__mocks__/GetContact.mock'
 import { createAxiosError } from '../../../../tests'
 
-describe('Freshsales - Get lead', () => {
-  let getLeadSpy: jest.SpyInstance
+describe('Freshdesk - Get contact', () => {
+  let getContactSpy: jest.SpyInstance
 
   const { extensionAction, onComplete, onError, helpers, clearMocks } =
     TestHelpers.fromAction(action)
@@ -16,10 +16,10 @@ describe('Freshsales - Get lead', () => {
 
   describe('Happy path', () => {
     beforeEach(() => {
-      getLeadSpy = jest
-        .spyOn(FreshsalesApiClient.prototype, 'getLead')
+      getContactSpy = jest
+        .spyOn(FreshdeskApiClient.prototype, 'getContact')
         .mockImplementationOnce(
-          jest.fn().mockResolvedValue(GetLeadResponseMock),
+          jest.fn().mockResolvedValue(GetContactResponseMock),
         )
     })
 
@@ -27,7 +27,7 @@ describe('Freshsales - Get lead', () => {
       await extensionAction.onEvent({
         payload: {
           fields: {
-            leadId: '1',
+            contactId: '1',
           },
           settings: {
             domain: 'domain',
@@ -41,28 +41,22 @@ describe('Freshsales - Get lead', () => {
 
       expect(onComplete).toHaveBeenCalledWith({
         data_points: {
-          leadData: JSON.stringify(GetLeadResponseMock.data),
-          email: GetLeadResponseMock.data.lead.email,
-          mobileNumber: '+19266529503',
-          address: GetLeadResponseMock.data.lead.address,
-          city: GetLeadResponseMock.data.lead.city,
-          state: GetLeadResponseMock.data.lead.state,
-          zipcode: GetLeadResponseMock.data.lead.zipcode,
-          country: GetLeadResponseMock.data.lead.country,
-          timeZone: undefined,
-          displayName: GetLeadResponseMock.data.lead.display_name,
-          firstName: GetLeadResponseMock.data.lead.first_name,
-          lastName: GetLeadResponseMock.data.lead.last_name,
+          contactData: JSON.stringify(GetContactResponseMock.data),
+          name: GetContactResponseMock.data.name,
+          email: GetContactResponseMock.data.email,
+          customFields: JSON.stringify(
+            GetContactResponseMock.data.custom_fields,
+          ),
+          tags: JSON.stringify(GetContactResponseMock.data.tags),
         },
-        events: expect.any(Array),
       })
     })
   })
 
-  describe('When lead is not found', () => {
+  describe('When ticket is not found', () => {
     beforeEach(() => {
-      getLeadSpy = jest
-        .spyOn(FreshsalesApiClient.prototype, 'getLead')
+      getContactSpy = jest
+        .spyOn(FreshdeskApiClient.prototype, 'getContact')
         .mockImplementationOnce(
           jest
             .fn()
@@ -76,7 +70,7 @@ describe('Freshsales - Get lead', () => {
       await extensionAction.onEvent({
         payload: {
           fields: {
-            leadId: '1',
+            contactId: '1',
           },
           settings: {
             domain: 'domain',
@@ -92,7 +86,7 @@ describe('Freshsales - Get lead', () => {
         events: expect.arrayContaining([
           expect.objectContaining({
             text: {
-              en: 'Lead not found (404)',
+              en: 'Contact not found (404)',
             },
           }),
         ]),

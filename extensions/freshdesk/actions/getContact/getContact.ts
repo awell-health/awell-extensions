@@ -3,23 +3,19 @@ import { Category } from '@awell-health/extensions-core'
 import { validatePayloadAndCreateSdk } from '../../lib/validatePayloadAndCreateSdk'
 import { type settings } from '../../settings'
 import { fields, FieldsValidationSchema, dataPoints } from './config'
-import {
-  TicketPriority,
-  TicketSource,
-  TicketStatus,
-} from '../../lib/api/schema/atoms'
 import { AxiosError } from 'axios'
 import { addActivityEventLog } from '../../../../src/lib/awell/addEventLog'
+import { isNil } from 'lodash'
 
-export const getTicket: Action<
+export const getContact: Action<
   typeof fields,
   typeof settings,
   keyof typeof dataPoints
 > = {
-  key: 'getTicket',
+  key: 'getContact',
   category: Category.CUSTOMER_SUPPORT,
-  title: 'Get ticket',
-  description: 'Get a ticket from Freshdesk.',
+  title: 'Get contact',
+  description: 'Get a contact from Freshdesk.',
   fields,
   previewable: false,
   dataPoints,
@@ -30,34 +26,18 @@ export const getTicket: Action<
     })
 
     try {
-      const { data } = await freshdeskSdk.getTicket(fields.ticketId)
-
-      const priorityLabel = Object.entries(TicketPriority).find(
-        ([, value]) => value === data.priority,
-      )?.[0]
-      const statusLabel = Object.entries(TicketStatus).find(
-        ([, value]) => value === data.status,
-      )?.[0]
-      const sourceLabel = Object.entries(TicketSource).find(
-        ([, value]) => value === data.source,
-      )?.[0]
+      const { data } = await freshdeskSdk.getContact(fields.contactId)
+      console.log(JSON.stringify(data, null, 2))
 
       await onComplete({
         data_points: {
-          ticketData: JSON.stringify(data),
-          requesterId: String(data.requester_id),
-          subject: data.subject,
-          type: data.type,
-          priorityValue: String(data.priority),
-          priorityLabel,
-          statusValue: String(data.status),
-          statusLabel,
-          sourceValue: String(data.source),
-          sourceLabel,
-          descriptionText: data.description_text,
-          descriptionHtml: data.description,
-          customFields: JSON.stringify(data.custom_fields),
-          tags: JSON.stringify(data.tags),
+          contactData: JSON.stringify(data),
+          name: data.name,
+          email: isNil(data.email) ? undefined : data.email,
+          customFields: isNil(data.custom_fields)
+            ? undefined
+            : JSON.stringify(data.custom_fields),
+          tags: isNil(data.tags) ? undefined : JSON.stringify(data.tags),
         },
       })
     } catch (error) {
@@ -69,7 +49,7 @@ export const getTicket: Action<
           await onError({
             events: [
               addActivityEventLog({
-                message: 'Ticket not found (404)',
+                message: 'Contact not found (404)',
               }),
             ],
           })

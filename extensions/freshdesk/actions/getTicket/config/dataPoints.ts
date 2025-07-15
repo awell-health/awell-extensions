@@ -5,6 +5,10 @@ export const dataPoints = {
     key: 'ticketData',
     valueType: 'json',
   },
+  requesterId: {
+    key: 'requesterId',
+    valueType: 'string',
+  },
   subject: {
     key: 'subject',
     valueType: 'string',
