@@ -5,16 +5,17 @@ import { type settings } from '../../settings'
 import { fields, FieldsValidationSchema, dataPoints } from './config'
 import { AxiosError } from 'axios'
 import { addActivityEventLog } from '../../../../src/lib/awell/addEventLog'
+import { isNil } from 'lodash'
 
-export const addNoteToTicket: Action<
+export const getContact: Action<
   typeof fields,
   typeof settings,
   keyof typeof dataPoints
 > = {
-  key: 'addNoteToTicket',
+  key: 'getContact',
   category: Category.CUSTOMER_SUPPORT,
-  title: 'Add note to ticket',
-  description: 'Add a note to a ticket in Freshdesk.',
+  title: 'Get contact',
+  description: 'Get a contact from Freshdesk.',
   fields,
   previewable: false,
   dataPoints,
@@ -25,18 +26,20 @@ export const addNoteToTicket: Action<
     })
 
     try {
-      await freshdeskSdk.addNote({
-        ticketId: fields.ticketId,
-        input: {
-          body: fields.body,
-          incoming: fields.incoming,
-          notify_emails: fields.notifyEmails,
-          private: fields.private,
-          user_id: fields.userId,
+      const { data } = await freshdeskSdk.getContact(fields.contactId)
+      console.log(JSON.stringify(data, null, 2))
+
+      await onComplete({
+        data_points: {
+          contactData: JSON.stringify(data),
+          name: data.name,
+          email: isNil(data.email) ? undefined : data.email,
+          customFields: isNil(data.custom_fields)
+            ? undefined
+            : JSON.stringify(data.custom_fields),
+          tags: isNil(data.tags) ? undefined : JSON.stringify(data.tags),
         },
       })
-
-      await onComplete()
     } catch (error) {
       // Some errors we want to handle explicitly for more human-readable logging
       if (error instanceof AxiosError) {
@@ -46,7 +49,7 @@ export const addNoteToTicket: Action<
           await onError({
             events: [
               addActivityEventLog({
-                message: 'Ticket to add note to not found (404)',
+                message: 'Contact not found (404)',
               }),
             ],
           })

@@ -7,13 +7,8 @@ import { createAxiosError } from '../../../../tests'
 describe('Freshdesk - Get ticket', () => {
   let getTicketSpy: jest.SpyInstance
 
-  const {
-    extensionAction: sendCall,
-    onComplete,
-    onError,
-    helpers,
-    clearMocks,
-  } = TestHelpers.fromAction(action)
+  const { extensionAction, onComplete, onError, helpers, clearMocks } =
+    TestHelpers.fromAction(action)
 
   beforeEach(() => {
     clearMocks()
@@ -29,7 +24,7 @@ describe('Freshdesk - Get ticket', () => {
     })
 
     test('Should work', async () => {
-      await sendCall.onEvent({
+      await extensionAction.onEvent({
         payload: {
           fields: {
             ticketId: '1',
@@ -47,6 +42,7 @@ describe('Freshdesk - Get ticket', () => {
       expect(onComplete).toHaveBeenCalledWith({
         data_points: {
           ticketData: JSON.stringify(GetTicketResponseMock.data),
+          requesterId: String(GetTicketResponseMock.data.requester_id),
           subject: GetTicketResponseMock.data.subject,
           type: GetTicketResponseMock.data.type,
           priorityValue: String(GetTicketResponseMock.data.priority),
@@ -80,7 +76,7 @@ describe('Freshdesk - Get ticket', () => {
     })
 
     test('Should call onError', async () => {
-      await sendCall.onEvent({
+      await extensionAction.onEvent({
         payload: {
           fields: {
             ticketId: '1',

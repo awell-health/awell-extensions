@@ -10,7 +10,7 @@ export const GetTicketResponseMock = {
     fr_escalated: false,
     group_id: null,
     priority: 1, // Low
-    requester_id: 1,
+    requester_id: 1, // This is the ID of the Freshdesk contact the ticket is assigned to, we can then retrieve the contract which contains email and with that email we can retrieve Freshsales Lead
     responder_id: null,
     source: 2, // Portal
     spam: false,
