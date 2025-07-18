@@ -30,6 +30,7 @@ import { hubspot } from './hubspot'
 import { identityVerification } from './identityVerification'
 import { Infobip } from './infobip'
 import { Iterable } from './iterable'
+import { landingAi } from './landingAi'
 import { Mailchimp } from './mailchimp'
 import { Mailgun } from './mailgun'
 import { MathExtension } from './math'
@@ -91,6 +92,7 @@ export const extensions = [
   identityVerification,
   Infobip,
   Iterable,
+  landingAi,
   Mailchimp,
   Mailgun,
   MathExtension,
