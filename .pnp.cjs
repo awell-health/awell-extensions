@@ -70,7 +70,7 @@ const RAW_RUNTIME_STATE =
           ["@typescript-eslint/eslint-plugin", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:5.62.0"],\
           ["@yarnpkg/sdks", "npm:3.2.0"],\
           ["algoliasearch", "npm:5.24.0"],\
-          ["api", "npm:6.1.2"],\
+          ["api", "npm:6.1.3"],\
           ["axios", "npm:1.7.7"],\
           ["body-parser", "npm:1.20.3"],\
           ["cheerio", "npm:1.0.0"],\
@@ -428,7 +428,7 @@ const RAW_RUNTIME_STATE =
           ["@typescript-eslint/eslint-plugin", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:5.62.0"],\
           ["@yarnpkg/sdks", "npm:3.2.0"],\
           ["algoliasearch", "npm:5.24.0"],\
-          ["api", "npm:6.1.2"],\
+          ["api", "npm:6.1.3"],\
           ["axios", "npm:1.7.7"],\
           ["body-parser", "npm:1.20.3"],\
           ["cheerio", "npm:1.0.0"],\
@@ -4250,10 +4250,10 @@ const RAW_RUNTIME_STATE =
         ],\
         "linkType": "SOFT"\
       }],\
-      ["virtual:ae8f2e1fccccef8148d2f28a4b06272c8d574bc7d4e38827824539bb5e8062837ff0560c1292fe123880a7cb7a7329b07870a590f12bcf6266966bbd098389e1#npm:2.6.0", {\
-        "packageLocation": "./.yarn/__virtual__/@readme-openapi-parser-virtual-c2025774a4/0/cache/@readme-openapi-parser-npm-2.6.0-8130548636-d2e929d827.zip/node_modules/@readme/openapi-parser/",\
+      ["virtual:4ff2f5441284b14fea5f0a6e8791f6986a20ca15ce0b7aa56cda48fb01d08635a2fdc6ac45d40a468c485cc20f495a491120b52dd918a0e37cc0485856fc2442#npm:2.6.0", {\
+        "packageLocation": "./.yarn/__virtual__/@readme-openapi-parser-virtual-2829603291/0/cache/@readme-openapi-parser-npm-2.6.0-8130548636-d2e929d827.zip/node_modules/@readme/openapi-parser/",\
         "packageDependencies": [\
-          ["@readme/openapi-parser", "virtual:ae8f2e1fccccef8148d2f28a4b06272c8d574bc7d4e38827824539bb5e8062837ff0560c1292fe123880a7cb7a7329b07870a590f12bcf6266966bbd098389e1#npm:2.6.0"],\
+          ["@readme/openapi-parser", "virtual:4ff2f5441284b14fea5f0a6e8791f6986a20ca15ce0b7aa56cda48fb01d08635a2fdc6ac45d40a468c485cc20f495a491120b52dd918a0e37cc0485856fc2442#npm:2.6.0"],\
           ["@apidevtools/swagger-methods", "npm:3.0.2"],\
           ["@jsdevtools/ono", "npm:7.1.3"],\
           ["@readme/better-ajv-errors", "virtual:9a6c4c71946dbad441a2495fd83d22022aad7cbd03ecacbb953dd99109e3abec9bdd6844f418f0bc9025190df277cac53bc659aca1da9ea9b271bab2f21db527#npm:1.6.0"],\
@@ -5687,12 +5687,12 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["api", [\
-      ["npm:6.1.2", {\
-        "packageLocation": "./.yarn/cache/api-npm-6.1.2-ae8f2e1fcc-7761a8d5b8.zip/node_modules/api/",\
+      ["npm:6.1.3", {\
+        "packageLocation": "./.yarn/cache/api-npm-6.1.3-4ff2f54412-db47ef84af.zip/node_modules/api/",\
         "packageDependencies": [\
-          ["api", "npm:6.1.2"],\
+          ["api", "npm:6.1.3"],\
           ["@readme/oas-to-har", "npm:20.1.1"],\
-          ["@readme/openapi-parser", "virtual:ae8f2e1fccccef8148d2f28a4b06272c8d574bc7d4e38827824539bb5e8062837ff0560c1292fe123880a7cb7a7329b07870a590f12bcf6266966bbd098389e1#npm:2.6.0"],\
+          ["@readme/openapi-parser", "virtual:4ff2f5441284b14fea5f0a6e8791f6986a20ca15ce0b7aa56cda48fb01d08635a2fdc6ac45d40a468c485cc20f495a491120b52dd918a0e37cc0485856fc2442#npm:2.6.0"],\
           ["caseless", "npm:0.12.0"],\
           ["chalk", "npm:4.1.2"],\
           ["commander", "npm:10.0.1"],\
@@ -5711,7 +5711,7 @@ const RAW_RUNTIME_STATE =
           ["lodash", "npm:4.17.21"],\
           ["make-dir", "npm:3.1.0"],\
           ["node-abort-controller", "npm:3.1.1"],\
-          ["oas", "npm:20.10.3"],\
+          ["oas", "npm:20.11.0"],\
           ["ora", "npm:5.4.1"],\
           ["prompts", "npm:2.4.2"],\
           ["remove-undefined-objects", "npm:2.0.2"],\
@@ -13037,6 +13037,22 @@ const RAW_RUNTIME_STATE =
           ["openapi-types", "npm:12.1.3"],\
           ["path-to-regexp", "npm:6.3.0"],\
           ["remove-undefined-objects", "npm:3.0.0"]\
+        ],\
+        "linkType": "HARD"\
+      }],\
+      ["npm:20.11.0", {\
+        "packageLocation": "./.yarn/cache/oas-npm-20.11.0-d7bcb3eddf-d466b9c94d.zip/node_modules/oas/",\
+        "packageDependencies": [\
+          ["oas", "npm:20.11.0"],\
+          ["@readme/json-schema-ref-parser", "npm:1.2.1"],\
+          ["@types/json-schema", "npm:7.0.15"],\
+          ["json-schema-merge-allof", "npm:0.8.1"],\
+          ["jsonpath", "npm:1.1.1"],\
+          ["jsonpointer", "npm:5.0.1"],\
+          ["memoizee", "npm:0.4.17"],\
+          ["oas-normalize", "npm:8.4.1"],\
+          ["openapi-types", "npm:12.1.3"],\
+          ["path-to-regexp", "npm:6.3.0"]\
         ],\
         "linkType": "HARD"\
       }]\
