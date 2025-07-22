@@ -23,11 +23,12 @@ describe('send fax action', () => {
         settings: {
           username: 'asd',
           password: 'somewrongpass',
+          productId: undefined,
           faceSheetUrl: '',
         },
       }),
       onComplete,
-      onError
+      onError,
     )
 
     expect(onComplete).toHaveBeenCalledWith({

@@ -1,0 +1,1 @@
+export { getFaxDocument } from './getFaxDocument'
