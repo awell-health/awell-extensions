@@ -20,4 +20,15 @@ This extension allows you to let a stakeholder (eg: a patient) send a fax as par
 
 In order to set up this extension, **you will need to provide a WestFax Username and Password**. You will need as well to provide the ProductId when setting up the action - check how [here](https://westfax.com/how-to-get-productid/).
 
+## Actions
+
+### Get Fax document
+
+Retrieve a fax document using a fax ID, sometimes also referred to as a job ID.
+
+## Webhooks
+
+### Fax received
+
+Trigger a care flow when a fax is received. Currently only works together with https://github.com/awell-health/westfax-webhook-handler
 

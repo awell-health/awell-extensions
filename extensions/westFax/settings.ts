@@ -16,6 +16,14 @@ export const settings = {
     required: true,
     description: 'Your WestFax password',
   },
+  productId: {
+    key: 'productId',
+    label: 'Product ID',
+    obfuscated: false,
+    required: false,
+    description:
+      'Your WestFax product ID. Required for some functionality in the extension.',
+  },
   faceSheetUrl: {
     key: 'faceSheetUrl',
     label: 'URL to facesheet (PDF)',
@@ -33,5 +41,6 @@ export const SettingsValidationSchema = z.object({
   password: z.string().min(1, {
     message: 'Missing "Password in the extension settings."',
   }),
+  productId: z.string().optional(),
   faceSheetUrl: z.string().url().optional().or(z.literal('')),
 } satisfies Record<keyof typeof settings, ZodTypeAny>)

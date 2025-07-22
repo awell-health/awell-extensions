@@ -2,6 +2,7 @@ import { actions } from './actions'
 import { type Extension } from '@awell-health/extensions-core'
 import { settings } from './settings'
 import { AuthorType, Category } from '@awell-health/extensions-core'
+import { webhooks } from './webhooks'
 
 export const WestFax: Extension = {
   key: 'westFax',
@@ -16,4 +17,5 @@ export const WestFax: Extension = {
   },
   settings,
   actions,
+  webhooks,
 }
