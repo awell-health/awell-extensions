@@ -37,14 +37,6 @@ export const fields = {
     description: 'We advise using a obfuscated constant',
     type: FieldType.STRING,
     required: true,
-    options: {
-      dropdownOptions: Object.entries(OcrProviderOptions).map(
-        ([key, value]) => ({
-          label: value,
-          value: key,
-        }),
-      ),
-    },
   },
   fieldsSchema: {
     id: 'fieldsSchema',
