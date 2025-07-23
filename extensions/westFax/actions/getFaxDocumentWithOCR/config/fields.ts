@@ -32,8 +32,8 @@ export const fields = {
     },
   },
   ocrProviderApiKey: {
-    id: 'ocrProvider',
-    label: 'OCR Provider',
+    id: 'ocrProviderApiKey',
+    label: 'OCR Provider API Key',
     description: 'We advise using a obfuscated constant',
     type: FieldType.STRING,
     required: true,
