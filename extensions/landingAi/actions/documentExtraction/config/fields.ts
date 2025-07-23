@@ -41,7 +41,7 @@ export const fields = {
 
 export const FieldsValidationSchema = z.object({
   fileType: z.enum(['image', 'pdf']),
-  fileUrl: z.string(),
+  fileUrl: z.string().min(1),
   fieldsSchema: z
     .string()
     .optional()

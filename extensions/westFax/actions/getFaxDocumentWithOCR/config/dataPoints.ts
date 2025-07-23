@@ -9,6 +9,22 @@ export const dataPoints = {
   //   key: 'base64EncodedFax',
   //   valueType: 'string',
   // },
+  markdown: {
+    key: 'markdown',
+    valueType: 'string',
+  },
+  chunks: {
+    key: 'chunks',
+    valueType: 'json',
+  },
+  extractedDataBasedOnSchema: {
+    key: 'extractedDataBasedOnSchema',
+    valueType: 'json',
+  },
+  extractedMetadata: {
+    key: 'extractedMetadata',
+    valueType: 'json',
+  },
   direction: {
     key: 'direction',
     valueType: 'string',

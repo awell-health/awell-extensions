@@ -25,15 +25,18 @@ export const documentExtraction: Action<
     })
 
     const { data } = await landingAiSdk.agenticDocumentAnalysis({
-      body: {
-        image: fields.fileType === 'image' ? fields.fileUrl : null,
-        pdf: fields.fileType === 'pdf' ? fields.fileUrl : null,
-        include_marginalia: true,
-        include_metadata_in_markdown: true,
-        fields_schema: !isNil(fields.fieldsSchema)
-          ? JSON.stringify(fields.fieldsSchema)
-          : null,
+      input: {
+        body: {
+          image: fields.fileType === 'image' ? fields.fileUrl : null,
+          pdf: fields.fileType === 'pdf' ? fields.fileUrl : null,
+          include_marginalia: true,
+          include_metadata_in_markdown: true,
+          fields_schema: !isNil(fields.fieldsSchema)
+            ? JSON.stringify(fields.fieldsSchema)
+            : null,
+        },
       },
+      mode: 'remoteFile',
     })
 
     if (data.errors.length > 0) {
