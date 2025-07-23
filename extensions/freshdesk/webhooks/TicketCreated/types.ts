@@ -18,7 +18,7 @@ import { z } from 'zod'
 
 export const zTicketCreatedWebhookPayload = z.object({
   freshdesk_webhook: z.object({
-    ticket_id: z.string(),
+    ticket_id: z.union([z.string(), z.number()]),
   }),
 })
 export type TicketCreatedWebhookPayload = z.infer<

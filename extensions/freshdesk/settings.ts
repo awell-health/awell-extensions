@@ -1,6 +1,8 @@
 import { type Setting } from '@awell-health/extensions-core'
 import { z, type ZodTypeAny } from 'zod'
 
+export const FRESHDESK_IDENTIFIER_SYSTEM = 'http://freshdesk.io/'
+
 export const settings = {
   domain: {
     key: 'domain',

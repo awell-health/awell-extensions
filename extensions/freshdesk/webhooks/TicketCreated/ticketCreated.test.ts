@@ -1,8 +1,13 @@
 import { TestHelpers } from '@awell-health/extensions-core'
 import { ticketCreated as webhook } from '.'
 import { ticketCreatedPayload } from './__testdata__/ticketCreated.mock'
+import { FreshdeskApiClient } from '../../lib/api/client'
+import { GetTicketResponseMock } from '../../actions/getTicket/__mocks__/GetTicketResponse.mock'
+import { FRESHDESK_IDENTIFIER_SYSTEM } from '../../settings'
 
 describe('Freshesk - Webhook - Ticket created', () => {
+  let getTicketSpy: jest.SpyInstance
+
   const { extensionWebhook, onSuccess, onError, helpers, clearMocks } =
     TestHelpers.fromWebhook(webhook)
 
@@ -11,6 +16,14 @@ describe('Freshesk - Webhook - Ticket created', () => {
   })
 
   describe('When payload is valid', () => {
+    beforeEach(() => {
+      getTicketSpy = jest
+        .spyOn(FreshdeskApiClient.prototype, 'getTicket')
+        .mockImplementationOnce(
+          jest.fn().mockResolvedValue(GetTicketResponseMock),
+        )
+    })
+
     test('Should call onSuccess, which starts the care flow', async () => {
       await extensionWebhook.onEvent!({
         payload: {
@@ -27,7 +40,15 @@ describe('Freshesk - Webhook - Ticket created', () => {
         helpers,
       })
 
-      expect(onSuccess).toHaveBeenCalled()
+      expect(onSuccess).toHaveBeenCalledWith({
+        data_points: {
+          ticketId: '20',
+        },
+        patient_identifier: {
+          system: FRESHDESK_IDENTIFIER_SYSTEM,
+          value: '1',
+        },
+      })
     })
   })
 })
