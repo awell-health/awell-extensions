@@ -20,28 +20,63 @@ export class LandingAiApiClient {
     })
   }
 
-  async agenticDocumentAnalysis(
-    input: AgenticDocumentAnalysisInputType,
-  ): Promise<AxiosResponse<AgenticDocumentAnalysisResponseType>> {
+  async agenticDocumentAnalysis({
+    input,
+    mode,
+  }: {
+    input: AgenticDocumentAnalysisInputType
+    mode: 'remoteFile' | 'base64EncodedFile'
+  }): Promise<AxiosResponse<AgenticDocumentAnalysisResponseType>> {
     const form = new FormData()
 
     /**
-     * Step 1: Download the file as a stream
      * Their API currently doesn't support a reference to a file URL,
      * so we need to download the file and append it to the form
      */
-    if (!isNil(input.body.pdf)) {
-      const fileRes = await axios.get<Readable>(input.body.pdf, {
-        responseType: 'stream',
-      })
-      form.append('pdf', fileRes.data, { filename: 'document.pdf' })
-    } else if (!isNil(input.body.image)) {
-      const fileRes = await axios.get<Readable>(input.body.image, {
-        responseType: 'stream',
-      })
-      form.append('image', fileRes.data, { filename: 'document.png' })
-    } else {
-      throw new Error('Must provide either image or pdf file URL.')
+    if (mode === 'remoteFile') {
+      if (!isNil(input.body.pdf)) {
+        const fileRes = await axios.get<Readable>(input.body.pdf, {
+          responseType: 'stream',
+        })
+        form.append('pdf', fileRes.data, {
+          filename: 'document.pdf',
+          contentType: 'application/pdf',
+        })
+      } else if (!isNil(input.body.image)) {
+        const fileRes = await axios.get<Readable>(input.body.image, {
+          responseType: 'stream',
+        })
+        form.append('image', fileRes.data, {
+          filename: 'document.png',
+          contentType: 'image/png',
+        })
+      } else {
+        throw new Error('Must provide either image or pdf file URL.')
+      }
+    } else if (mode === 'base64EncodedFile') {
+      if (!isNil(input.body.pdf)) {
+        const base64PdfToBuffer = Buffer.from(
+          input.body.pdf.replace(/^data:.*;base64,/, ''),
+          'base64',
+        )
+
+        form.append('pdf', base64PdfToBuffer, {
+          filename: 'document.pdf',
+          contentType: 'application/pdf',
+        })
+      } else if (!isNil(input.body.image)) {
+        const base64ImageToBuffer = Buffer.from(
+          input.body.image.replace(/^data:.*;base64,/, ''),
+          'base64',
+        )
+
+        form.append('image', base64ImageToBuffer, {
+          filename: 'document.png',
+          contentType: 'image/png',
+        })
+      } else {
+        throw new Error('Must provide either base64 image or pdf.')
+      }
     }
 
     // Add remaining fields

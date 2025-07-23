@@ -41,8 +41,6 @@ describe('WestFax - Get fax document', () => {
 
       expect(onComplete).toHaveBeenCalledWith({
         data_points: {
-          base64EncodedFax:
-            getFaxDocumentMock.Result[0].FaxFiles[0].FileContents,
           direction: getFaxDocumentMock.Result[0].Direction,
           date: getFaxDocumentMock.Result[0].Date,
           status: getFaxDocumentMock.Result[0].Status,

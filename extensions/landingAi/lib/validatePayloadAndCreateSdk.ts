@@ -24,6 +24,8 @@ type ValidatePayloadAndCreateSdk = <
   activity: Activity
 }>
 
+export const baseUrl = `https://api.va.landing.ai`
+
 export const validatePayloadAndCreateSdk: ValidatePayloadAndCreateSdk = async ({
   fieldsSchema,
   payload,
@@ -37,8 +39,6 @@ export const validatePayloadAndCreateSdk: ValidatePayloadAndCreateSdk = async ({
   })
 
   const { patient, pathway, activity } = payload
-
-  const baseUrl = `https://api.va.landing.ai`
 
   const landingAiSdk = new LandingAiApiClient({
     baseUrl,
