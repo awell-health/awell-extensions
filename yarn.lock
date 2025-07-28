@@ -279,7 +279,7 @@ __metadata:
     date-fns: "npm:^2.29.3"
     date-fns-tz: "npm:^2.0.1"
     docusign-esign: "npm:7.0.0-rc1"
-    dotenv: "npm:^16.4.5"
+    dotenv: "npm:^17.2.1"
     driver-license-validator: "npm:2.0.2"
     eslint: "npm:^8.50.0"
     eslint-config-prettier: "npm:^8.6.0"
@@ -5525,7 +5525,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dotenv@npm:^16.0.0, dotenv@npm:^16.4.5":
+"dotenv@npm:^16.0.0":
   version: 16.4.5
   resolution: "dotenv@npm:16.4.5"
   checksum: 10/55a3134601115194ae0f924e54473459ed0d9fc340ae610b676e248cca45aa7c680d86365318ea964e6da4e2ea80c4514c1adab5adb43d6867fb57ff068f95c8
@@ -5536,6 +5536,13 @@ __metadata:
   version: 16.4.7
   resolution: "dotenv@npm:16.4.7"
   checksum: 10/f13bfe97db88f0df4ec505eeffb8925ec51f2d56a3d0b6d916964d8b4af494e6fb1633ba5d09089b552e77ab2a25de58d70259b2c5ed45ec148221835fc99a0c
+  languageName: node
+  linkType: hard
+
+"dotenv@npm:^17.2.1":
+  version: 17.2.1
+  resolution: "dotenv@npm:17.2.1"
+  checksum: 10/8fde672d1cc57f176095be8c93de1c5ea100ab38f2db183b50d522323fd9a6c07235e4145da624eec27fa310bb66d061aa8cb766f99e22ebe1e4a7ae78b5e56e
   languageName: node
   linkType: hard
 
