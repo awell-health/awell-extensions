@@ -233,7 +233,7 @@ export const fields = {
     label: 'Voicemail message',
     description:
       'When the AI encounters a voicemail, it will leave this message after the beep and then immediately end the call.',
-    type: FieldType.STRING,
+    type: FieldType.TEXT,
     required: false,
   },
   voicemail_action: {
