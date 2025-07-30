@@ -77,7 +77,7 @@ export const getLead: Action<
       if (error instanceof AxiosError) {
         const err = error as AxiosError
 
-        if (err.response?.status === 404)
+        if (err.response?.status === 404) {
           await onError({
             events: [
               addActivityEventLog({
@@ -85,7 +85,11 @@ export const getLead: Action<
               }),
             ],
           })
-        return
+          return
+        }
+
+        // Throw all other Axios errors
+        throw error
       }
 
       // Throw all other errors
