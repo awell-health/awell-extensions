@@ -5,6 +5,7 @@ import { type settings } from '../../settings'
 import { fields, FieldsValidationSchema, dataPoints } from './config'
 import { AxiosError } from 'axios'
 import { addActivityEventLog } from '../../../../src/lib/awell/addEventLog'
+import { ZodError } from 'zod'
 
 export const addNoteToTicket: Action<
   typeof fields,
@@ -39,10 +40,20 @@ export const addNoteToTicket: Action<
       await onComplete()
     } catch (error) {
       // Some errors we want to handle explicitly for more human-readable logging
-      if (error instanceof AxiosError) {
+      if (error instanceof ZodError) {
+        await onError({
+          events: [
+            {
+              date: new Date().toISOString(),
+              text: { en: error.message },
+              error: { category: 'WRONG_INPUT', message: error.message },
+            },
+          ],
+        })
+      } else if (error instanceof AxiosError) {
         const err = error as AxiosError
 
-        if (err.response?.status === 404)
+        if (err.response?.status === 404) {
           await onError({
             events: [
               addActivityEventLog({
@@ -50,11 +61,25 @@ export const addNoteToTicket: Action<
               }),
             ],
           })
-        return
+        }
+        if (err.response?.status === 400) {
+          await onError({
+            events: [
+              addActivityEventLog({
+                message: `Bad request (400): ${JSON.stringify(err.response?.data, null, 2)}`,
+              }),
+            ],
+          })
+        }
+      } else {
+        await onError({
+          events: [
+            addActivityEventLog({
+              message: `Error: ${JSON.stringify(error, null, 2)}`,
+            }),
+          ],
+        })
       }
-
-      // Throw all other errors
-      throw error
     }
   },
 }
