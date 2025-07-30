@@ -5,7 +5,6 @@ import { type settings } from '../../settings'
 import { fields, FieldsValidationSchema, dataPoints } from './config'
 import { addActivityEventLog } from '../../../../src/lib/awell/addEventLog'
 import { AxiosError } from 'axios'
-import { ZodError } from 'zod'
 
 export const updateTicket: Action<
   typeof fields,
@@ -56,17 +55,7 @@ export const updateTicket: Action<
       })
     } catch (error) {
       // Some errors we want to handle explicitly for more human-readable logging
-      if (error instanceof ZodError) {
-        await onError({
-          events: [
-            {
-              date: new Date().toISOString(),
-              text: { en: error.message },
-              error: { category: 'WRONG_INPUT', message: error.message },
-            },
-          ],
-        })
-      } else if (error instanceof AxiosError) {
+      if (error instanceof AxiosError) {
         const err = error as AxiosError
 
         if (err.response?.status === 404) {
@@ -77,6 +66,7 @@ export const updateTicket: Action<
               }),
             ],
           })
+          return
         }
         if (err.response?.status === 400) {
           await onError({
@@ -86,16 +76,15 @@ export const updateTicket: Action<
               }),
             ],
           })
+          return
         }
-      } else {
-        await onError({
-          events: [
-            addActivityEventLog({
-              message: `Error: ${JSON.stringify(error, null, 2)}`,
-            }),
-          ],
-        })
+
+        // Throw other Axios errors
+        throw error
       }
+
+      // Throw all other errors
+      throw error
     }
   },
 }
