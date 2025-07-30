@@ -10,7 +10,11 @@ describe('Update baseline info', () => {
     TestHelpers.fromAction(updateBaselineInfo)
   const sdkMock = {
     orchestration: {
-      mutation: jest.fn().mockResolvedValue({}),
+      mutation: jest.fn().mockResolvedValue({
+        updateBaselineInfo: {
+          success: true,
+        },
+      }),
     },
   }
   helpers.awellSdk = jest.fn().mockResolvedValue(sdkMock)
