@@ -32,7 +32,7 @@ export const updateBaselineInfo: Action<typeof fields, typeof settings> = {
 
     const sdk = await helpers.awellSdk()
 
-    await sdk.orchestration.mutation({
+    const { updateBaselineInfo } = await sdk.orchestration.mutation({
       updateBaselineInfo: {
         __args: {
           input: {
@@ -41,10 +41,14 @@ export const updateBaselineInfo: Action<typeof fields, typeof settings> = {
           },
         },
         code: true,
-        success: true
+        success: true,
       },
     })
 
-    await onComplete()
+    await onComplete({
+      data_points: {
+        success: updateBaselineInfo.success.toString(),
+      },
+    })
   },
 }
