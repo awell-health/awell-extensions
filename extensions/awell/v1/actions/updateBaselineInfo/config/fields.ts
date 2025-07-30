@@ -7,8 +7,17 @@ export const fields = {
   baselineInfo: {
     id: 'baselineInfo',
     label: 'Baseline info',
-    description:
-      'Use baseline data points often used to start a care flow. Must be an array of objects<{value, data_point_definition_id}>.',
+    description: `Use baseline data points often used to start a care flow. Example: 
+      [
+        {
+          "data_point_definition_id": "age",
+          "value": "29"
+        },
+        {
+          "data_point_definition_id": "dob",
+          "value": "1993-11-30"
+        }
+      ]`,
     type: FieldType.JSON,
     required: false,
   },
@@ -49,7 +58,7 @@ export const FieldsValidationSchema = z.object({
             ctx.addIssue({
               code: 'custom',
               message: `Item "${String(
-                obj
+                obj,
               )}" in baseline info array is not an object.`,
             })
             return z.NEVER
