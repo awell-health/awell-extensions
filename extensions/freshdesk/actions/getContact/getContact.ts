@@ -45,7 +45,7 @@ export const getContact: Action<
       if (error instanceof AxiosError) {
         const err = error as AxiosError
 
-        if (err.response?.status === 404)
+        if (err.response?.status === 404) {
           await onError({
             events: [
               addActivityEventLog({
@@ -53,7 +53,21 @@ export const getContact: Action<
               }),
             ],
           })
-        return
+          return
+        }
+        if (err.response?.status === 400) {
+          await onError({
+            events: [
+              addActivityEventLog({
+                message: `Bad request (400): ${JSON.stringify(err.response?.data, null, 2)}`,
+              }),
+            ],
+          })
+          return
+        }
+
+        // Throw other Axios errors
+        throw error
       }
 
       // Throw all other errors
