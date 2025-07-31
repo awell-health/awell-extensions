@@ -37,7 +37,7 @@ export const ticketCreated: Webhook<
       await onError({
         response: {
           statusCode: 400,
-          message: JSON.stringify(parsedPayload.error, null, 2),
+          message: `Shape of payload does not match expected shape.\n\nExpected: ${JSON.stringify(zTicketCreatedWebhookPayload.shape, null, 2)}\n\nReceived: ${JSON.stringify(parsedPayload.error, null, 2)}`,
         },
       })
       return
@@ -65,7 +65,7 @@ export const ticketCreated: Webhook<
     const ticket = await freshdeskSdk.getTicket(
       parsedPayload.data.freshdesk_webhook.ticket_id.toString(),
     )
-    const requesterId = ticket.data?.requester_id // requested ID is the ID of the Freshdesk contact/patient
+    const requesterId = ticket.data?.requester_id // requester ID is the ID of the Freshdesk contact/patient
 
     await onSuccess({
       data_points: {
