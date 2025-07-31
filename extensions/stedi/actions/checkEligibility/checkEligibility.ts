@@ -2,7 +2,6 @@ import { validate, type Action } from '@awell-health/extensions-core'
 import { Category } from '@awell-health/extensions-core'
 import { type settings, SettingsValidationSchema } from '../../settings'
 import { fields, dataPoints, FieldsValidationSchema } from './config'
-import { isNil } from 'lodash'
 import { z } from 'zod'
 
 export const checkEligibility: Action<
@@ -29,7 +28,7 @@ export const checkEligibility: Action<
 
     await onComplete({
       data_points: {
-        data: isNil(fields.data) ? undefined : JSON.stringify(fields.data),
+        data: fields.data,
       },
     })
   },
