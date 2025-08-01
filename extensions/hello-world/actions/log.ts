@@ -19,7 +19,7 @@ const fields = {
     label: 'Second Field',
     description: 'A second field',
     required: false,
-    type: FieldType.STRING,
+    type: FieldType.TEXT,
   },
 } satisfies Record<string, Field>
 
