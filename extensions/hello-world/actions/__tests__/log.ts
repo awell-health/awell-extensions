@@ -9,6 +9,7 @@ describe('HelloWorld - log', () => {
         fields: {
           hello: 'Some text',
           secondField: 'Some text',
+          thirdField: 123,
         },
         settings: {
           clear: 'clear-value',
@@ -33,6 +34,7 @@ describe('HelloWorld - log', () => {
         fields: {
           hello: undefined,
           secondField: undefined,
+          thirdField: undefined,
         },
         settings: {
           clear: 'clear-value',
@@ -51,6 +53,7 @@ describe('HelloWorld - log', () => {
         fields: {
           hello: 'Some text',
           secondField: 'Some text',
+          thirdField: 123,
         },
         settings: {
           clear: undefined,
