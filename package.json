@@ -84,6 +84,7 @@
     "typescript": "5.7.2"
   },
   "dependencies": {
+    "@airtop/sdk": "^0.1.44",
     "@awell-health/awell-sdk": "0.1.24",
     "@awell-health/extensions-core": "1.0.26",
     "@awell-health/healthie-sdk": "^0.1.1",
@@ -125,6 +126,7 @@
     "nodemailer": "^6.9.15",
     "oauth-1.0a": "^2.2.6",
     "openai": "^4.59.0",
+    "puppeteer": "^24.15.0",
     "sanitize-html": "^2.13.0",
     "showdown": "^2.1.0",
     "stripe": "^15.5.0",
