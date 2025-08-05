@@ -1,5 +1,6 @@
 import { athenahealth } from './athenahealth'
 import { availity } from './availity'
+import { airtop } from './airtop'
 import { Awell } from './awell'
 import { awellTasks } from './awellTasks'
 import { bland } from './bland'
@@ -65,6 +66,7 @@ export const extensions = [
   Braze,
   athenahealth,
   availity,
+  airtop,
   Awell,
   awellTasks,
   CalDotCom,
