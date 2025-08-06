@@ -7,26 +7,22 @@ import twilioSdk from './sdk/twilio'
 
 type createSdkClientParams = <P>(args: {
   payload: P
-  useEdge?: boolean
 }) => Promise<{
   client: Twilio
 }>
 
 export const createSdkClient: createSdkClientParams = async ({
   payload,
-  useEdge = false,
 }) => {
   const {
-    settings: { accountSid, authToken, clientId },
+    settings: { accountSid, authToken, clientId, region },
   } = validate({
     schema: z.object({
       settings: SettingsValidationSchema,
     }),
     payload,
   })
-  const options = useEdge
-    ? { accountSid, edge: 'dublin' }
-    : { accountSid, region: 'IE1' }
+  const options = { accountSid, region: region ?? 'IE1' }
 
   if (clientId !== undefined) {
     const client = new Twilio(clientId, authToken, options)
