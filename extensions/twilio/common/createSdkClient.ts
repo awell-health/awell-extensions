@@ -7,14 +7,14 @@ import twilioSdk from './sdk/twilio'
 
 type createSdkClientParams = <P>(args: {
   payload: P
-  skipRegion?: boolean
+  useEdge?: boolean
 }) => Promise<{
   client: Twilio
 }>
 
 export const createSdkClient: createSdkClientParams = async ({
   payload,
-  skipRegion = false,
+  useEdge = false,
 }) => {
   const {
     settings: { accountSid, authToken, clientId },
@@ -24,7 +24,9 @@ export const createSdkClient: createSdkClientParams = async ({
     }),
     payload,
   })
-  const options = skipRegion ? { accountSid } : { accountSid, region: 'IE1' }
+  const options = useEdge
+    ? { accountSid, edge: 'dublin' }
+    : { accountSid, region: 'IE1' }
 
   if (clientId !== undefined) {
     const client = new Twilio(clientId, authToken, options)
