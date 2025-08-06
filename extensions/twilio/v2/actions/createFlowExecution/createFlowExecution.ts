@@ -27,7 +27,7 @@ export const createFlowExecution: Action<typeof fields, typeof settings> = {
       throw new Error('`from` should never be invalid')
     }
 
-    const { client } = await createSdkClient({ payload, skipRegion: true })
+    const { client } = await createSdkClient({ payload, useEdge: true })
 
     const execution = await client.studio.v2.flows(flow_id).executions.create({
       to: recipient,
