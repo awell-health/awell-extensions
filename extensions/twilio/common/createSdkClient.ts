@@ -5,11 +5,17 @@ import z from 'zod'
 import { SettingsValidationSchema } from '../settings'
 import twilioSdk from './sdk/twilio'
 
-type createSdkClientParams = <P>(args: { payload: P }) => Promise<{
+type createSdkClientParams = <P>(args: {
+  payload: P
+  useEdge?: boolean
+}) => Promise<{
   client: Twilio
 }>
 
-export const createSdkClient: createSdkClientParams = async ({ payload }) => {
+export const createSdkClient: createSdkClientParams = async ({
+  payload,
+  useEdge = false,
+}) => {
   const {
     settings: { accountSid, authToken, clientId },
   } = validate({
@@ -18,18 +24,15 @@ export const createSdkClient: createSdkClientParams = async ({ payload }) => {
     }),
     payload,
   })
+  const options = useEdge
+    ? { accountSid, edge: 'ie1' }
+    : { accountSid, region: 'IE1' }
 
   if (clientId !== undefined) {
-    const client = new Twilio(clientId, authToken, {
-      accountSid,
-      region: 'IE1',
-    })
+    const client = new Twilio(clientId, authToken, options)
     return { client }
   } else {
-    const client = twilioSdk(accountSid, authToken, {
-      region: 'IE1',
-      accountSid,
-    })
+    const client = twilioSdk(accountSid, authToken, options)
     return { client }
   }
 }
