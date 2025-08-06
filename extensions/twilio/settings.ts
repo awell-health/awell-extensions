@@ -26,6 +26,13 @@ export const settings = {
     required: false,
     description: 'Find your Client ID at twilio.com/console.',
   },
+  region: {
+    label: 'Region',
+    key: 'region',
+    obfuscated: false,
+    required: false,
+    description: 'Possible options: IE1, AU1, US1 - Default is IE1.',
+  },
   fromNumber: {
     label: '"From" number',
     key: 'fromNumber',
@@ -71,6 +78,7 @@ export const SettingsValidationSchema = z.object({
   accountSid: z.string().min(1, { message: 'Missing Twilio account SID' }),
   authToken: z.string().min(1, { message: 'Missing Twilio auth token' }),
   clientId: z.string().optional(),
+  region: z.enum(['IE1', 'AU1', 'US1']).optional(),
   fromNumber: E164PhoneValidationOptionalSchema,
   messagingServiceSid: z.string().optional(),
   addOptOutLanguage: z
