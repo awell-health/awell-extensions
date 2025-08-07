@@ -323,7 +323,7 @@ __metadata:
     ts-node-dev: "npm:^2.0.0"
     twilio: "npm:^5.8.0"
     typescript: "npm:5.7.2"
-    tzdata: "npm:^1.0.43"
+    tzdata: "npm:^1.0.44"
     uuid: "npm:^10.0.0"
     xml2js: "npm:^0.6.2"
     zod: "npm:^3.24.1"
@@ -12658,10 +12658,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tzdata@npm:^1.0.43":
-  version: 1.0.43
-  resolution: "tzdata@npm:1.0.43"
-  checksum: 10/5b6bd0358830d6ecdd19187bfd53f610bc64463c31da1c3db6c28bad18dfe28e937059298dfcc7f44b886e27fdf72fc415bf59789795cf7d5d273a115d3a21b5
+"tzdata@npm:^1.0.44":
+  version: 1.0.44
+  resolution: "tzdata@npm:1.0.44"
+  checksum: 10/04c540b82c0b8da2b5f5a243972f48d8fff453bfa741ffe995a9aee6a18aa85d538f412f51e8bf9f0db3627766178abbb7a30a08498156a739131f2f0d4af089
   languageName: node
   linkType: hard
 
