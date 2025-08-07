@@ -24,9 +24,9 @@ export const createSdkClient: createSdkClientParams = async ({
     }),
     payload,
   })
-  const options = skipRegion
-    ? { accountSid }
-    : { accountSid, region: region ?? 'IE1' }
+
+  // skip region also means that we don't need to pass the accountSid
+  const options = skipRegion ? {} : { accountSid, region: region ?? 'IE1' }
 
   if (clientId !== undefined) {
     const client = new Twilio(clientId, authToken, options)

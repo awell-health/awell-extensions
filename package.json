@@ -128,7 +128,7 @@
     "sanitize-html": "^2.13.0",
     "showdown": "^2.1.0",
     "stripe": "^15.5.0",
-    "twilio": "^4.8.0",
+    "twilio": "^5.8.0",
     "tzdata": "^1.0.43",
     "uuid": "^10.0.0",
     "xml2js": "^0.6.2",
