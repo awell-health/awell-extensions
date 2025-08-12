@@ -23,7 +23,7 @@ export const fields = {
     description:
       'Optional JSON schema to guide the AI’s response and force it to return JSON. This can be useful if you want a structured response that is more suitable for automated processing.',
     type: FieldType.JSON,
-    required: true,
+    required: false,
   },
 } satisfies Record<string, Field>
 
