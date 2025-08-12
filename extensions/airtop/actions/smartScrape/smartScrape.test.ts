@@ -19,9 +19,15 @@ describe('Airtop - Smart Scrape', () => {
       const mockAirtopClient = {
         sessions: {
           create: jest.fn().mockResolvedValue({ data: { id: 'session-id' } }),
+          terminate: jest
+            .fn()
+            .mockResolvedValue({ data: { id: 'session-id' } }),
         },
         windows: {
           create: jest
+            .fn()
+            .mockResolvedValue({ data: { windowId: 'window-id' } }),
+          close: jest
             .fn()
             .mockResolvedValue({ data: { windowId: 'window-id' } }),
           scrapeContent: jest.fn().mockResolvedValue({
