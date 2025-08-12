@@ -1,0 +1,1 @@
+export { getFaxDocumentWithOCR } from './getFaxDocumentWithOCR'
