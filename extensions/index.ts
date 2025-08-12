@@ -54,6 +54,7 @@ import { WestFax } from './westFax'
 import { Workramp } from './workramp'
 import { Zendesk } from './zendesk'
 import { zoom } from './zoom'
+import { srfax } from './srfax'
 
 import * as json from './markdown.json'
 
@@ -117,4 +118,5 @@ export const extensions = [
   Workramp,
   Zendesk,
   zoom,
+  srfax,
 ]
