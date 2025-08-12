@@ -84,6 +84,7 @@
     "typescript": "5.7.2"
   },
   "dependencies": {
+    "@airtop/sdk": "^0.1.44",
     "@awell-health/awell-sdk": "0.1.24",
     "@awell-health/extensions-core": "1.0.26",
     "@awell-health/healthie-sdk": "^0.1.1",
