@@ -52,13 +52,6 @@ export const mockClientReturn = {
       },
     }
   }),
-  findAppointments: jest.fn((params) => {
-    if (params.patient === 12345) {
-      return mockFindAppointmentsResponse
-    } else {
-      return []
-    }
-  }),
   getPhysician: jest.fn((params) => {
     return physicianResponseExample
   }),

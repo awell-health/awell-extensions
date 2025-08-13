@@ -5,16 +5,8 @@ export const dataPoints = {
     key: 'appointments',
     valueType: 'json',
   },
-  explanation: {
-    key: 'explanation',
-    valueType: 'string',
-  },
-  appointmentsFound: {
-    key: 'appointmentsFound',
+  appointment_exists: {
+    key: 'appointment_exists',
     valueType: 'boolean',
-  },
-  appointmentCountsByStatus: {
-    key: 'appointmentCountsByStatus',
-    valueType: 'json',
   },
 } satisfies Record<string, DataPointDefinition>
