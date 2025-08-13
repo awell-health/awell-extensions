@@ -9,7 +9,7 @@ jest.mock('../../client')
 jest.mock('../../../../src/lib/llm/openai/createOpenAIModel')
 jest.mock('../../lib/extractDatesFromInstructions/extractDatesFromInstructions')
 jest.mock('../../../../src/utils', () => ({
-  markdownToHtml: jest.fn().mockImplementation((text) => Promise.resolve(text))
+  markdownToHtml: jest.fn().mockImplementation((text) => Promise.resolve(text)),
 }))
 
 // Setup mocks that can be controlled in each test
@@ -41,12 +41,12 @@ createOpenAIModel.mockResolvedValue({
 
 // Mock extractDatesFromInstructions
 const { extractDatesFromInstructions } = jest.requireMock(
-  '../../lib/extractDatesFromInstructions/extractDatesFromInstructions'
+  '../../lib/extractDatesFromInstructions/extractDatesFromInstructions',
 )
 extractDatesFromInstructions.mockResolvedValue({
   from: null,
   to: null,
-  instructions: 'Find all appointments'
+  instructions: 'Find all appointments',
 })
 
 describe('Elation - Find appointments with AI', () => {
@@ -99,6 +99,7 @@ describe('Elation - Find appointments with AI', () => {
       expect.objectContaining({
         data_points: expect.objectContaining({
           appointmentCountsByStatus: JSON.stringify({ Scheduled: 2 }),
+          appointmentsFound: 'true',
         }),
         events: [
           expect.objectContaining({
@@ -182,6 +183,7 @@ describe('Elation - Find appointments with AI', () => {
     expect(onComplete).toHaveBeenCalledWith({
       data_points: expect.objectContaining({
         appointments: '[]',
+        appointmentsFound: 'false',
         appointmentCountsByStatus: '{}',
       }),
     })

@@ -54,6 +54,7 @@ export const findAppointmentsWithAI: Action<
         await onComplete({
           data_points: {
             explanation: 'No appointments found for the given patient',
+            appointmentsFound: 'false',
             appointments: JSON.stringify([]),
             appointmentCountsByStatus: JSON.stringify({}),
           },
@@ -113,6 +114,7 @@ export const findAppointmentsWithAI: Action<
         data_points: {
           appointments: JSON.stringify(selectedAppointments),
           explanation: htmlExplanation,
+          appointmentsFound: selectedAppointments.length > 0 ? 'true' : 'false',
           appointmentCountsByStatus: JSON.stringify(appointmentCountsByStatus),
         },
         events,
