@@ -21,7 +21,7 @@ describe('Create Navi Session', () => {
       status: 200,
       ok: true,
       statusText: 'OK',
-      text: jest.fn().mockResolvedValue(JSON.stringify({ sessionId: 'abc' })),
+      json: jest.fn().mockResolvedValue({ session_id: 'abc' }),
     } satisfies Partial<Response>)
 
     await extensionAction.onEvent({

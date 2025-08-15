@@ -1,5 +1,3 @@
-export { fields, FieldsValidationSchema, PathwayContextValidationSchema } from './fields'
+export { fields, FieldsValidationSchema } from './fields'
 export { dataPoints } from './dataPoints'
 export { PatientValidationSchema } from './patient'
-
-

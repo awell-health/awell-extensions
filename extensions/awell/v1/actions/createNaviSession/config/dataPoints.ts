@@ -5,6 +5,10 @@ export const dataPoints = {
     key: 'sessionId',
     valueType: 'string',
   },
+  naviSessionUrl: {
+    key: 'naviSessionUrl',
+    valueType: 'string',
+  },
   statusCode: {
     key: 'statusCode',
     valueType: 'string',

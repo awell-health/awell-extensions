@@ -50,22 +50,21 @@ export const createNaviSession: Action<typeof fields, typeof settings> = {
         },
       )
 
-      const text = await response.text()
-      const maybeJson = (() => {
-        try {
-          return JSON.parse(text)
-        } catch (_) {
-          return undefined
-        }
-      })()
+      const ResponseSchema = z.union([
+        z.object({ session_id: z.string() }),
+        z.object({ error: z.string() }),
+      ])
+      const json = ResponseSchema.parse(await response.json())
 
-      if (!response.ok) {
+      if (!response.ok || 'error' in json) {
         await onError({
           events: [
             {
               date: new Date().toISOString(),
               text: {
-                en: `Failed to create Navi session: ${response.status} ${response.statusText} ${text}`,
+                en: `Failed to create Navi session: ${response.status} ${response.statusText} ${
+                  'error' in json ? json.error : ''
+                }`,
               },
               error: {
                 category: 'SERVER_ERROR',
@@ -77,13 +76,31 @@ export const createNaviSession: Action<typeof fields, typeof settings> = {
         return
       }
 
-      const sessionId =
-        maybeJson?.sessionId ?? maybeJson?.session_id ?? maybeJson?.id ?? text
+      const sessionId = json.session_id
+      if (sessionId == null) {
+        await onError({
+          events: [
+            {
+              date: new Date().toISOString(),
+              text: {
+                en: 'Failed to create Navi session: missing session id in response',
+              },
+              error: {
+                category: 'SERVER_ERROR',
+                message:
+                  'Failed to create Navi session: missing session id in response',
+              },
+            },
+          ],
+        })
+        return
+      }
 
       await onComplete({
         data_points: {
-          sessionId: String(sessionId),
+          sessionId,
           statusCode: String(response.status),
+          naviSessionUrl: `https://navi-portal.awellhealth.com/direct/${sessionId}`,
         },
         events: [
           addActivityEventLog({
