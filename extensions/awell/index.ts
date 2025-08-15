@@ -11,6 +11,7 @@ import {
   startCareFlowAndSession,
   getDataPointValue,
   listFormAnswers,
+  createNaviSession,
 } from './v1/actions'
 import { type Extension } from '@awell-health/extensions-core'
 import { settings } from './settings'
@@ -41,6 +42,7 @@ export const Awell: Extension = {
     startCareFlowAndSession,
     getDataPointValue,
     listFormAnswers,
+    createNaviSession,
   },
   webhooks,
 }
