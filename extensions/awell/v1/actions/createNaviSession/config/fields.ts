@@ -3,14 +3,6 @@ import { z, type ZodTypeAny } from 'zod'
 import { isEmpty } from 'lodash'
 
 export const fields = {
-  careFlowId: {
-    id: 'careFlowId',
-    label: 'Care flow ID',
-    description:
-      'The instance ID of the care flow to create a Navi session for',
-    type: FieldType.STRING,
-    required: true,
-  },
   stakeholderId: {
     id: 'stakeholderId',
     label: 'Stakeholder',
@@ -18,18 +10,6 @@ export const fields = {
       'The stakeholder to create the session for. Leave empty to default to the patient.',
     type: FieldType.STRING,
     required: false,
-    options: {
-      dropdownOptions: [
-        {
-          value: 'patient',
-          label: 'Patient (default)',
-        },
-        {
-          value: 'LGH3v741vUqm',
-          label: 'Physician',
-        },
-      ],
-    },
   },
   exp: {
     id: 'exp',
@@ -42,7 +22,6 @@ export const fields = {
 } satisfies Record<string, Field>
 
 export const FieldsValidationSchema = z.object({
-  careFlowId: z.string().min(1),
   stakeholderId: z
     .string()
     .optional()

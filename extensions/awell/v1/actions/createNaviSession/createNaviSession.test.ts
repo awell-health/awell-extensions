@@ -27,7 +27,6 @@ describe('Create Navi Session', () => {
     await extensionAction.onEvent({
       payload: generateTestPayload({
         fields: {
-          careFlowId: 'c1',
           stakeholderId: 'patient',
           exp: String(1755000000),
         },

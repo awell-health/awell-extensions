@@ -20,7 +20,7 @@ export const createNaviSession: Action<typeof fields, typeof settings> = {
   previewable: false,
   onEvent: async ({ payload, onComplete, onError }): Promise<void> => {
     const {
-      fields: { careFlowId, stakeholderId, exp },
+      fields: { stakeholderId, exp },
       pathway: { org_id, tenant_id },
     } = validate({
       schema: z.object({
@@ -30,6 +30,7 @@ export const createNaviSession: Action<typeof fields, typeof settings> = {
       payload,
     })
 
+    const careflowId = payload.pathway.id
     const environment = process.env.AWELL_ENVIRONMENT ?? 'test'
 
     const body = {
@@ -38,7 +39,7 @@ export const createNaviSession: Action<typeof fields, typeof settings> = {
       environment,
       exp: exp ?? Math.floor(Date.now() / 1000) + 3600 * 24 * 30,
       patientId: payload.patient.id,
-      careflowId: careFlowId,
+      careflowId,
       stakeholderId,
     }
 
@@ -91,7 +92,7 @@ export const createNaviSession: Action<typeof fields, typeof settings> = {
         },
         events: [
           addActivityEventLog({
-            message: `Created Navi session for care flow ${careFlowId} (stakeholder: ${stakeholderId ?? 'patient'})`,
+            message: `Created Navi session for care flow ${careflowId} (stakeholder: ${stakeholderId ?? 'patient'})`,
           }),
         ],
       })
