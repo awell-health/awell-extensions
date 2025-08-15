@@ -39,8 +39,3 @@ export const FieldsValidationSchema = z.object({
       return parsed
     }),
 } satisfies Record<keyof typeof fields, ZodTypeAny>)
-
-export const PathwayContextValidationSchema = z.object({
-  org_id: z.string().min(1),
-  tenant_id: z.string().min(1),
-})

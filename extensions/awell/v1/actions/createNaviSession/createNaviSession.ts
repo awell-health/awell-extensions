@@ -1,12 +1,7 @@
 import { type Action } from '@awell-health/extensions-core'
 import { type settings } from '../../../settings'
 import { Category, validate } from '@awell-health/extensions-core'
-import {
-  fields,
-  dataPoints,
-  FieldsValidationSchema,
-  PathwayContextValidationSchema,
-} from './config'
+import { fields, dataPoints, FieldsValidationSchema } from './config'
 import { z } from 'zod'
 import { addActivityEventLog } from '../../../../../src/lib/awell/addEventLog'
 
@@ -21,26 +16,26 @@ export const createNaviSession: Action<typeof fields, typeof settings> = {
   onEvent: async ({ payload, onComplete, onError }): Promise<void> => {
     const {
       fields: { stakeholderId, exp },
-      pathway: { org_id, tenant_id },
     } = validate({
       schema: z.object({
         fields: FieldsValidationSchema,
-        pathway: PathwayContextValidationSchema,
       }),
       payload,
     })
 
     const careflowId = payload.pathway.id
+    const orgId = payload.pathway.org_id
+    const tenantId = payload.pathway.tenant_id
     const environment = process.env.AWELL_ENVIRONMENT ?? 'test'
 
     const body = {
-      orgId: org_id,
-      tenantId: tenant_id,
+      orgId,
+      tenantId,
       environment,
       exp: exp ?? Math.floor(Date.now() / 1000) + 3600 * 24 * 30,
       patientId: payload.patient.id,
+      stakeholderId: stakeholderId ?? payload.patient.id,
       careflowId,
-      stakeholderId,
     }
 
     try {
