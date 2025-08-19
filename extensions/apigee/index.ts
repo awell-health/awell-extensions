@@ -1,4 +1,16 @@
-import { listApis } from './actions'
+import { 
+  listApis, 
+  listProxiesWithDeployments, 
+  listApiProducts,
+  ensureDeveloper,
+  createDeveloperAppAndApproveKey,
+  rotateKeyWithOverlap,
+  revokeKeyOrSuspendApp,
+  kvmGet,
+  kvmSet,
+  deploymentStatusSnapshot,
+  opsSnapshot
+} from './actions'
 import { type Extension } from '@awell-health/extensions-core'
 import { settings } from './settings'
 import { AuthorType, Category } from '@awell-health/extensions-core'
@@ -17,5 +29,15 @@ export const Apigee: Extension = {
   settings,
   actions: {
     listApis,
+    listProxiesWithDeployments,
+    listApiProducts,
+    ensureDeveloper,
+    createDeveloperAppAndApproveKey,
+    rotateKeyWithOverlap,
+    revokeKeyOrSuspendApp,
+    kvmGet,
+    kvmSet,
+    deploymentStatusSnapshot,
+    opsSnapshot,
   },
 }

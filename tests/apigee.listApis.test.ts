@@ -2,41 +2,29 @@ import { listApis } from '../extensions/apigee/actions'
 import { generateTestPayload } from './constants'
 import { ApigeeApiClient } from '../extensions/apigee/client'
 
-jest.mock('google-auth-library', () => ({
-  GoogleAuth: jest.fn().mockImplementation(() => ({
-    getAccessToken: jest.fn().mockResolvedValue('ya.fake.token'),
-  })),
-}))
-
-jest.mock('axios', () => ({
-  create: jest.fn(() => ({
-    interceptors: {
-      request: { use: jest.fn() },
-    },
-    get: jest.fn(),
-  })),
-  AxiosHeaders: {
-    from: jest.fn(() => ({ set: jest.fn() })),
-  },
-}))
-
 jest.mock('../extensions/apigee/client')
 
 describe('Apigee - listApis', () => {
+  const mockedApigeeApiClient = jest.mocked(ApigeeApiClient)
+  const mockListApis = jest.fn()
+
   beforeEach(() => {
     jest.clearAllMocks()
+  })
 
-    ;(ApigeeApiClient as jest.MockedClass<typeof ApigeeApiClient>).mockImplementation(() => ({
-      listApis: jest.fn().mockResolvedValue({
-        proxies: ['foo', 'bar'],
-      }),
-      getAccessToken: jest.fn().mockResolvedValue('ya.fake.token'),
+  beforeAll(() => {
+    mockedApigeeApiClient.mockImplementation(() => ({
+      listApis: mockListApis,
     } as any))
   })
 
   test('Should call onComplete with correct datapoints', async () => {
     const onComplete = jest.fn()
     const onError = jest.fn()
+
+    mockListApis.mockResolvedValue({
+      proxies: ['foo', 'bar'],
+    })
 
     await listApis.onActivityCreated!(
       generateTestPayload({
@@ -65,10 +53,7 @@ describe('Apigee - listApis', () => {
     const onComplete = jest.fn()
     const onError = jest.fn()
 
-    ;(ApigeeApiClient as jest.MockedClass<typeof ApigeeApiClient>).mockImplementation(() => ({
-      listApis: jest.fn().mockRejectedValue(new Error('API Error')),
-      getAccessToken: jest.fn().mockResolvedValue('ya.fake.token'),
-    } as any))
+    mockListApis.mockRejectedValue(new Error('API Error'))
 
     await listApis.onActivityCreated!(
       generateTestPayload({
@@ -102,12 +87,9 @@ describe('Apigee - listApis', () => {
     const onComplete = jest.fn()
     const onError = jest.fn()
 
-    ;(ApigeeApiClient as jest.MockedClass<typeof ApigeeApiClient>).mockImplementation(() => ({
-      listApis: jest.fn().mockResolvedValue({
-        proxies: [],
-      }),
-      getAccessToken: jest.fn().mockResolvedValue('ya.fake.token'),
-    } as any))
+    mockListApis.mockResolvedValue({
+      proxies: [],
+    })
 
     await listApis.onActivityCreated!(
       generateTestPayload({
