@@ -1,12 +1,14 @@
-import { Webhook } from '@awell-health/extensions-core'
+import { type Webhook } from '@awell-health/extensions-core'
 import { dataPoints } from './config/dataPoints'
 
-export const sessionEvents: Webhook = {
+type Payload = Record<string, any>
+
+export const sessionEvents: Webhook<keyof typeof dataPoints, Payload> = {
   key: 'sessionEvents',
   dataPoints,
-  onEvent: async ({ payload, onSuccess, onError }) => {
+  onWebhookReceived: async ({ payload }, onSuccess, onError) => {
     try {
-      const body = payload.rawBody ?? {}
+      const body = (payload as any)?.rawBody ?? {}
       const eventType = (body as any).eventType ?? 'unknown'
       const sessionId = (body as any).sessionId ?? ''
       const agentId = (body as any).agentId ?? ''
@@ -22,7 +24,14 @@ export const sessionEvents: Webhook = {
         },
       })
     } catch (e: any) {
-      await onError({ events: [{ date: new Date().toISOString(), text: e.message }] })
+      await onError({
+        events: [
+          {
+            date: new Date().toISOString(),
+            text: { message: `Shelly Voice sessionEvents webhook error: ${(e as Error).message}` },
+          },
+        ],
+      })
     }
   },
 }

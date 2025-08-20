@@ -1,9 +1,10 @@
-import { Action, Category, validate } from '@awell-health/extensions-core'
+import { type Action, Category } from '@awell-health/extensions-core'
+import { type settings } from '../../settings'
 import { fields, FieldsValidationSchema } from './config/fields'
 import { dataPoints } from './config/dataPoints'
 import { createAgent } from '../../lib/livekitClient'
 
-export const createAgentAction: Action<typeof FieldsValidationSchema, Record<string, unknown>> = {
+export const createAgentAction: Action<typeof fields, typeof settings, keyof typeof dataPoints> = {
   key: 'createAgent',
   title: 'Create Shelly Voice agent',
   description: 'Create a new LiveKit voice agent',
@@ -13,10 +14,7 @@ export const createAgentAction: Action<typeof FieldsValidationSchema, Record<str
   previewable: false,
   onActivityCreated: async (payload, onComplete, onError) => {
     try {
-      const { fields: f } = validate({
-        schema: FieldsValidationSchema,
-        payload,
-      })
+      const f = FieldsValidationSchema.parse(payload.fields)
       const result = await createAgent({
         voice: f.voice,
         language: f.language,
@@ -25,12 +23,19 @@ export const createAgentAction: Action<typeof FieldsValidationSchema, Record<str
       await onComplete({
         data_points: {
           agentId: result.agentId,
-          config: result.config,
+          config: JSON.stringify(result.config),
           createdAt: new Date().toISOString(),
         },
       })
     } catch (e: any) {
-      await onError({ events: [{ date: new Date().toISOString(), text: e.message }] })
+      await onError({
+        events: [
+          {
+            date: new Date().toISOString(),
+            text: { message: `Shelly Voice createAgent error: ${(e as Error).message}` },
+          },
+        ],
+      })
     }
   },
 }

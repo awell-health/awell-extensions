@@ -21,6 +21,7 @@
       "**/*.test.ts",
       "**/__tests__/**/*.ts",
       "**/__mocks__/**/*.ts",
-      "**/scripts/*.ts"
+      "**/scripts/*.ts",
+      "extensions/**/webapp/**"
     ]
   }

@@ -1,12 +1,12 @@
-import { DataPointDefinition, DataPointValueType } from '@awell-health/extensions-core'
+import { type DataPointDefinition } from '@awell-health/extensions-core'
 
 export const dataPoints = {
   status: {
     key: 'status',
-    valueType: DataPointValueType.STRING,
+    valueType: 'string',
   },
   stoppedAt: {
     key: 'stoppedAt',
-    valueType: DataPointValueType.STRING,
+    valueType: 'string',
   },
 } satisfies Record<string, DataPointDefinition>

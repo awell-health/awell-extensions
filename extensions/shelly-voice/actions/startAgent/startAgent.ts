@@ -1,10 +1,10 @@
-import { Action, Category, validate } from '@awell-health/extensions-core'
+import { type Action, Category } from '@awell-health/extensions-core'
+import { type settings, SettingsValidationSchema } from '../../settings'
 import { fields, FieldsValidationSchema } from './config/fields'
 import { dataPoints } from './config/dataPoints'
 import { startAgent } from '../../lib/livekitClient'
-import { SettingsValidationSchema } from '../../settings'
 
-export const startAgentAction: Action<typeof FieldsValidationSchema, Record<string, unknown>> = {
+export const startAgentAction: Action<typeof fields, typeof settings, keyof typeof dataPoints> = {
   key: 'startAgent',
   title: 'Start Shelly Voice agent',
   description: 'Start a LiveKit voice agent session',
@@ -14,16 +14,13 @@ export const startAgentAction: Action<typeof FieldsValidationSchema, Record<stri
   previewable: false,
   onActivityCreated: async (payload, onComplete, onError) => {
     try {
-      const { fields: f, settings } = validate({
-        schema: FieldsValidationSchema,
-        payload,
-        settingsSchema: SettingsValidationSchema,
-      })
+      const f = FieldsValidationSchema.parse(payload.fields)
+      const s = SettingsValidationSchema.parse(payload.settings)
       const result = await startAgent(
         {
-          livekitServerUrl: settings.livekitServerUrl,
-          livekitApiKey: settings.livekitApiKey,
-          livekitApiSecret: settings.livekitApiSecret,
+          livekitServerUrl: s.livekitServerUrl,
+          livekitApiKey: s.livekitApiKey,
+          livekitApiSecret: s.livekitApiSecret,
         },
         f.agentId,
         {
@@ -41,7 +38,14 @@ export const startAgentAction: Action<typeof FieldsValidationSchema, Record<stri
         },
       })
     } catch (e: any) {
-      await onError({ events: [{ date: new Date().toISOString(), text: e.message }] })
+      await onError({
+        events: [
+          {
+            date: new Date().toISOString(),
+            text: { message: `Shelly Voice startAgent error: ${(e as Error).message}` },
+          },
+        ],
+      })
     }
   },
 }

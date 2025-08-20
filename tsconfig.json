@@ -15,6 +15,7 @@
     "**/__tests__/**/*.mock.ts"
   ],
   "exclude": [
-    "**/scripts/*.ts"
+    "**/scripts/*.ts",
+    "extensions/**/webapp/**"
   ]
 }

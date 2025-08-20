@@ -1,16 +1,16 @@
-import { DataPointDefinition, DataPointValueType } from '@awell-health/extensions-core'
+import { type DataPointDefinition } from '@awell-health/extensions-core'
 
 export const dataPoints = {
   agentId: {
     key: 'agentId',
-    valueType: DataPointValueType.STRING,
+    valueType: 'string',
   },
   config: {
     key: 'config',
-    valueType: DataPointValueType.JSON,
+    valueType: 'json',
   },
   createdAt: {
     key: 'createdAt',
-    valueType: DataPointValueType.STRING,
+    valueType: 'string',
   },
 } satisfies Record<string, DataPointDefinition>

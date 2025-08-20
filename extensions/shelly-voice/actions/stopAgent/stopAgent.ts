@@ -1,10 +1,10 @@
-import { Action, Category, validate } from '@awell-health/extensions-core'
+import { type Action, Category } from '@awell-health/extensions-core'
+import { type settings, SettingsValidationSchema } from '../../settings'
 import { fields, FieldsValidationSchema } from './config/fields'
 import { dataPoints } from './config/dataPoints'
 import { stopAgent } from '../../lib/livekitClient'
-import { SettingsValidationSchema } from '../../settings'
 
-export const stopAgentAction: Action<typeof FieldsValidationSchema, Record<string, unknown>> = {
+export const stopAgentAction: Action<typeof fields, typeof settings, keyof typeof dataPoints> = {
   key: 'stopAgent',
   title: 'Stop Shelly Voice agent',
   description: 'Stop a LiveKit voice agent session',
@@ -14,16 +14,13 @@ export const stopAgentAction: Action<typeof FieldsValidationSchema, Record<strin
   previewable: false,
   onActivityCreated: async (payload, onComplete, onError) => {
     try {
-      const { fields: f, settings } = validate({
-        schema: FieldsValidationSchema,
-        payload,
-        settingsSchema: SettingsValidationSchema,
-      })
+      const f = FieldsValidationSchema.parse(payload.fields)
+      const s = SettingsValidationSchema.parse(payload.settings)
       const result = await stopAgent(
         {
-          livekitServerUrl: settings.livekitServerUrl,
-          livekitApiKey: settings.livekitApiKey,
-          livekitApiSecret: settings.livekitApiSecret,
+          livekitServerUrl: s.livekitServerUrl,
+          livekitApiKey: s.livekitApiKey,
+          livekitApiSecret: s.livekitApiSecret,
         },
         f.agentId
       )
@@ -34,7 +31,14 @@ export const stopAgentAction: Action<typeof FieldsValidationSchema, Record<strin
         },
       })
     } catch (e: any) {
-      await onError({ events: [{ date: new Date().toISOString(), text: e.message }] })
+      await onError({
+        events: [
+          {
+            date: new Date().toISOString(),
+            text: { message: `Shelly Voice stopAgent error: ${(e as Error).message}` },
+          },
+        ],
+      })
     }
   },
 }
