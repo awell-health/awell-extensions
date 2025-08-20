@@ -1,17 +1,17 @@
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5175/api'
+const API = import.meta.env.VITE_API_URL || 'http://localhost:5057/api'
 
-export async function createAgent(data: { voice: string; language: string; personality: string }) {
-  const res = await fetch(`${API_URL}/agents`, {
+export async function createAgent(body: { voice: string; language: string; personality: string }) {
+  const res = await fetch(`${API}/agents`, {
     method: 'POST',
     headers: { 'content-type': 'application/json' },
-    body: JSON.stringify(data),
+    body: JSON.stringify(body),
   })
   if (!res.ok) throw new Error('Failed to create agent')
   return res.json()
 }
 
-export async function startAgent(agentId: string, sessionContext: any) {
-  const res = await fetch(`${API_URL}/agents/${agentId}/start`, {
+export async function startAgent(agentId: string, sessionContext: Record<string, unknown>) {
+  const res = await fetch(`${API}/agents/${agentId}/start`, {
     method: 'POST',
     headers: { 'content-type': 'application/json' },
     body: JSON.stringify({ sessionContext }),
@@ -21,13 +21,15 @@ export async function startAgent(agentId: string, sessionContext: any) {
 }
 
 export async function stopAgent(agentId: string) {
-  const res = await fetch(`${API_URL}/agents/${agentId}/stop`, { method: 'POST' })
+  const res = await fetch(`${API}/agents/${agentId}/stop`, {
+    method: 'POST',
+  })
   if (!res.ok) throw new Error('Failed to stop agent')
   return res.json()
 }
 
 export async function getEvents() {
-  const res = await fetch(`${API_URL}/events`)
-  if (!res.ok) throw new Error('Failed to fetch events')
+  const res = await fetch(`${API}/events`)
+  if (!res.ok) throw new Error('Failed to get events')
   return res.json()
 }

@@ -11,6 +11,12 @@
     "url": "https://github.com/awell-health/awell-extensions/issues"
   },
   "homepage": "https://github.com/awell-health/awell-extensions#readme",
+  "workspaces": [
+    "extensions/*",
+    "packages/*",
+    "extensions/shelly-voice/webapp/server",
+    "extensions/shelly-voice/webapp/client"
+  ],
   "scripts": {
     "clean": "rimraf dist/* && echo 'Cleaned dist/'",
     "compile": "tsc",

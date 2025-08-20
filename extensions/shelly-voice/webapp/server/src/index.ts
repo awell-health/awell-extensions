@@ -7,9 +7,10 @@ import { router } from './routes'
 const app = express()
 app.use(cors())
 app.use(bodyParser.json({ limit: '2mb' }))
-
 app.use('/api', router)
 
 app.listen(env.PORT, () => {
-  console.log(`Shelly Voice server listening on :${env.PORT}`)
+  console.log(`Shelly Voice server listening on http://localhost:${env.PORT}`)
 })
+
+export default app

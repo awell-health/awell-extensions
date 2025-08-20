@@ -32,12 +32,14 @@ router.post('/agents/:id/start', async (req: Request, res: Response) => {
   try {
     const result = await startAgent(
       {
-        livekitServerUrl: env.LIVEKIT_SERVER_URL,
+        livekitServerUrl: env.LIVEKIT_URL,
         livekitApiKey: env.LIVEKIT_API_KEY,
         livekitApiSecret: env.LIVEKIT_API_SECRET,
       },
       id,
-      sessionContext
+      {
+        sessionContext,
+      }
     )
     addEvent('agent.started', { agentId: id, sessionId: result.sessionId })
     res.json(result)
@@ -51,7 +53,7 @@ router.post('/agents/:id/stop', async (req: Request, res: Response) => {
   try {
     const result = await stopAgent(
       {
-        livekitServerUrl: env.LIVEKIT_SERVER_URL,
+        livekitServerUrl: env.LIVEKIT_URL,
         livekitApiKey: env.LIVEKIT_API_KEY,
         livekitApiSecret: env.LIVEKIT_API_SECRET,
       },
@@ -74,8 +76,7 @@ router.post('/webhooks/livekit', async (req: Request, res: Response) => {
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify(body),
       })
-    } catch {
-    }
+    } catch {}
   }
   res.json({ ok: true })
 })
