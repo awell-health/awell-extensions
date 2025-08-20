@@ -16,13 +16,14 @@ router.get('/events', (_req: Request, res: Response) => {
 })
 
 router.post('/agents', async (req: Request, res: Response) => {
-  const { voice, language, personality } = req.body || {}
+  const { voice, language, personality, jobToBeDone, patientContext, careSetting, complianceNotes } = req.body || {}
   try {
-    const result = await createAgent({ voice, language, personality })
+    const result = await createAgent({ voice, language, personality, jobToBeDone, patientContext, careSetting, complianceNotes })
     addEvent('agent.created', { agentId: result.agentId, config: result.config })
     res.json(result)
   } catch (e: any) {
-    res.status(400).json({ error: e.message })
+    addEvent('agent.create.error', { error: e?.message || 'Unknown error', input: { voice, language, personality, jobToBeDone, patientContext, careSetting, complianceNotes } })
+    res.status(400).json({ error: e?.message || 'Failed to create agent' })
   }
 })
 

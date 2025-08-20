@@ -11,7 +11,12 @@ export default function App() {
   const [sessionId, setSessionId] = useState<string>('')
   const [status, setStatus] = useState<'idle' | 'running' | 'stopped'>('idle')
   const [events, setEvents] = useState<EventItem[]>([])
+  const [jobToBeDone, setJobToBeDone] = useState('')
+  const [patientContext, setPatientContext] = useState('')
+  const [careSetting, setCareSetting] = useState<'outpatient' | 'inpatient' | 'virtual'>('outpatient')
+  const [complianceNotes, setComplianceNotes] = useState('')
   const [loading, setLoading] = useState(false)
+  const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null)
 
   const canStart = useMemo(() => !!agentId && status !== 'running', [agentId, status])
   const canStop = useMemo(() => status === 'running', [status])
@@ -28,11 +33,14 @@ export default function App() {
 
   async function onCreate() {
     setLoading(true)
+    setMessage(null)
     try {
-      const res = await createAgent({ voice, language, personality })
+      const res = await createAgent({ voice, language, personality, jobToBeDone, patientContext, careSetting, complianceNotes })
       setAgentId(res.agentId)
       setStatus('idle')
-    } catch (e) {
+      setMessage({ type: 'success', text: `Agent created: ${res.agentId}` })
+    } catch (e: any) {
+      setMessage({ type: 'error', text: e?.message || 'Failed to create agent' })
       console.error(e)
     } finally {
       setLoading(false)
@@ -42,11 +50,14 @@ export default function App() {
   async function onStart() {
     if (!agentId) return
     setLoading(true)
+    setMessage(null)
     try {
       const res = await startAgent(agentId, { source: 'ui' })
       setSessionId(res.sessionId)
       setStatus('running')
-    } catch (e) {
+      setMessage({ type: 'success', text: `Session started: ${res.sessionId}` })
+    } catch (e: any) {
+      setMessage({ type: 'error', text: e?.message || 'Failed to start agent' })
       console.error(e)
     } finally {
       setLoading(false)
@@ -56,10 +67,13 @@ export default function App() {
   async function onStop() {
     if (!agentId) return
     setLoading(true)
+    setMessage(null)
     try {
       await stopAgent(agentId)
       setStatus('stopped')
-    } catch (e) {
+      setMessage({ type: 'success', text: 'Agent stopped' })
+    } catch (e: any) {
+      setMessage({ type: 'error', text: e?.message || 'Failed to stop agent' })
       console.error(e)
     } finally {
       setLoading(false)
@@ -82,11 +96,36 @@ export default function App() {
           Personality
           <input value={personality} onChange={e => setPersonality(e.target.value)} style={{ display: 'block', width: '100%', padding: 8 }} />
         </label>
+        <label>
+          Job To Be Done
+          <input value={jobToBeDone} onChange={e => setJobToBeDone(e.target.value)} style={{ display: 'block', width: '100%', padding: 8 }} />
+        </label>
+        <label>
+          Patient Context
+          <textarea value={patientContext} onChange={e => setPatientContext(e.target.value)} style={{ display: 'block', width: '100%', padding: 8 }} />
+        </label>
+        <label>
+          Care Setting
+          <select value={careSetting} onChange={e => setCareSetting(e.target.value as any)} style={{ display: 'block', width: '100%', padding: 8 }}>
+            <option value="outpatient">Outpatient</option>
+            <option value="inpatient">Inpatient</option>
+            <option value="virtual">Virtual</option>
+          </select>
+        </label>
+        <label>
+          Compliance Notes
+          <textarea value={complianceNotes} onChange={e => setComplianceNotes(e.target.value)} style={{ display: 'block', width: '100%', padding: 8 }} />
+        </label>
         <div style={{ display: 'flex', gap: 8 }}>
-          <button onClick={onCreate} disabled={loading}>Create agent</button>
-          <button onClick={onStart} disabled={loading || !canStart}>Start</button>
-          <button onClick={onStop} disabled={loading || !canStop}>Stop</button>
+          <button onClick={onCreate} disabled={loading}>{loading ? 'Creating…' : 'Create agent'}</button>
+          <button onClick={onStart} disabled={loading || !canStart}>{loading ? 'Please wait…' : 'Start'}</button>
+          <button onClick={onStop} disabled={loading || !canStop}>{loading ? 'Please wait…' : 'Stop'}</button>
         </div>
+        {message && (
+          <div style={{ padding: 8, borderRadius: 6, background: message.type === 'success' ? '#e7f7ec' : '#fdeaea', color: message.type === 'success' ? '#1e7e34' : '#b00020' }}>
+            {message.text}
+          </div>
+        )}
         <div>
           <strong>Agent ID:</strong> {agentId || '-'}
         </div>

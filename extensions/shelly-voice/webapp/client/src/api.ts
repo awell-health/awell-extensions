@@ -1,12 +1,19 @@
 const API = import.meta.env.VITE_API_URL || 'http://localhost:5057/api'
 
-export async function createAgent(body: { voice: string; language: string; personality: string }) {
+export async function createAgent(body: { voice: string; language: string; personality: string; jobToBeDone?: string; patientContext?: string; careSetting?: string; complianceNotes?: string }) {
   const res = await fetch(`${API}/agents`, {
     method: 'POST',
     headers: { 'content-type': 'application/json' },
     body: JSON.stringify(body),
   })
-  if (!res.ok) throw new Error('Failed to create agent')
+  if (!res.ok) {
+    let detail = ''
+    try {
+      const j = await res.json()
+      detail = j?.error ? `: ${j.error}` : ''
+    } catch {}
+    throw new Error(`Failed to create agent${detail}`)
+  }
   return res.json()
 }
 

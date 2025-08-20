@@ -1,25 +1,42 @@
 import { createAgent, startAgent, stopAgent } from '../lib/livekitClient'
 
-describe('livekit wrapper', () => {
-  it('creates agent and returns id', async () => {
-    const r = await createAgent({ voice: 'alice', language: 'en', personality: 'friendly' })
-    expect(r.agentId).toBeDefined()
-    expect(r.config.voice).toBe('alice')
+describe('livekitClient wrapper', () => {
+  it('should create agent with config and return agentId, persisting JTBD fields', async () => {
+    const { agentId, config } = await createAgent({
+      voice: 'alloy',
+      language: 'en',
+      personality: 'friendly',
+      jobToBeDone: 'Intake call',
+      patientContext: 'Age 67, prefers Spanish, CHF',
+      careSetting: 'outpatient',
+      complianceNotes: 'Consent recorded',
+    })
+    expect(agentId).toBeTruthy()
+    expect(config.voice).toBe('alloy')
+    expect(config.language).toBe('en')
+    expect(config.personality).toBe('friendly')
+    expect(config.jobToBeDone).toBe('Intake call')
+    expect(config.patientContext).toContain('Spanish')
+    expect(config.careSetting).toBe('outpatient')
+    expect(config.complianceNotes).toBe('Consent recorded')
   })
 
-  it('starts and stops agent', async () => {
-    const r = await createAgent({ voice: 'bob', language: 'en', personality: 'calm' })
-    const s = await startAgent(
-      { livekitServerUrl: 'http://localhost', livekitApiKey: 'k', livekitApiSecret: 's' },
-      r.agentId,
-      {}
-    )
-    expect(s.sessionId).toBeDefined()
-    expect(s.status).toBe('running')
-    const st = await stopAgent(
-      { livekitServerUrl: 'http://localhost', livekitApiKey: 'k', livekitApiSecret: 's' },
-      r.agentId
-    )
-    expect(st.status).toBe('stopped')
+  it('should start and stop session', async () => {
+    const { agentId } = await createAgent({
+      voice: 'verse',
+      language: 'es',
+      personality: 'calm',
+    })
+    const settings = {
+      livekitServerUrl: 'wss://fake',
+      livekitApiKey: 'key',
+      livekitApiSecret: 'secret',
+    }
+    const start = await startAgent(settings, agentId, { sessionContext: { source: 'test' } })
+    expect(start.sessionId).toBeTruthy()
+    expect(start.status).toBe('running')
+
+    const stop = await stopAgent(settings, agentId)
+    expect(stop.status).toBe('stopped')
   })
 })

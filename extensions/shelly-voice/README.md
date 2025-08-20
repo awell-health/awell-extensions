@@ -1,53 +1,86 @@
-# Shelly Voice (LiveKit) Extension
+# Shelly Voice (LiveKit-based Awell Extension)
 
-Shelly Voice provides a lightweight wrapper around LiveKit to create, start, and stop voice AI agents from Awell. It also ships a minimal webapp for local testing and configuration.
+A lightweight web UI + Node backend that functions as an Awell Extension to configure, deploy, start, and stop LiveKit voice AI agents. Includes a clean wrapper API and integrates with Awell’s orchestration model by exposing agent session events as webhook outputs.
 
-## Settings
-- livekitServerUrl: LiveKit server URL.
-- livekitApiKey: LiveKit API key.
-- livekitApiSecret: LiveKit API secret.
-- defaultVoice: Optional default voice.
-- defaultLanguage: Optional default language.
+## Features
+- Create agents with voice, language, personality, and healthcare JTBD inputs
+- Start/stop agent sessions and view status
+- Event panel listing lifecycle events
+- Webhook endpoint to forward LiveKit events to Awell (optional)
 
-## Actions
-- createAgent
-  - Fields: voice, language, personality
-  - DataPoints: agentId, config, createdAt
-- startAgent
-  - Fields: agentId, sessionContext (JSON)
-  - DataPoints: sessionId, status, startedAt
-- stopAgent
-  - Fields: agentId
-  - DataPoints: status, stoppedAt
+## JTBD-style inputs (healthcare)
+The Create Agent form and action config include these fields:
+- voice (string)
+- language (string)
+- personality (string)
+- jobToBeDone (string) – e.g., Intake call, Pre-op instructions, Care plan review
+- patientContext (text) – e.g., age, language preferences, diagnoses, clinical notes
+- careSetting (enum) – inpatient | outpatient | virtual
+- complianceNotes (text) – e.g., HIPAA considerations, consent/recording flags
 
-## Webhooks
-- sessionEvents
-  - DataPoints: eventType, sessionId, agentId, timestamp, details
+These are persisted into the agent’s config when created and can inform downstream orchestration.
 
-## Local Webapp
-Located at `extensions/shelly-voice/webapp`. It contains a Node backend and React single-page UI for:
-- Creating an agent with voice, language, and personality
-- Starting and stopping the agent
-- Viewing status and event logs
+## Repo structure
+- extensions/shelly-voice
+  - lib/livekitClient.ts – thin wrapper; in-memory demo of agents/sessions
+  - actions/
+    - createAgent
+    - startAgent
+    - stopAgent
+  - webhooks/
+    - sessionEvents – forwards incoming LiveKit events to Awell (optional)
+  - webapp/ – local SPA for testing (excluded from monorepo build)
+    - server/ – Express API adapter
+    - client/ – React + Vite SPA
 
-The backend keeps an in-memory store for agents and sessions suitable for local development.
+## Local development
+Server:
+- cd extensions/shelly-voice/webapp/server
+- cp .env.example .env and set:
+  - PORT=5057
+  - LIVEKIT_URL=wss://shelly-voice-<env>.livekit.cloud
+  - LIVEKIT_API_KEY=…
+  - LIVEKIT_API_SECRET=…
+  - AWELL_WEBHOOK_URL= optional; if set, server forwards events to this URL
+  - CLIENT_ORIGIN=http://localhost:5173 (or your tunnel URL)
+- yarn && yarn dev
 
-### Run locally
-1. From repo root, run:
-   - yarn build
-   - yarn test
-2. Webapp:
-   - Backend:
-     - cd extensions/shelly-voice/webapp/server
-     - cp .env.example .env and set LIVEKIT variables
-     - yarn && yarn dev
-   - Frontend:
-     - cd ../client
-     - cp .env.example .env and set VITE_API_URL
-     - yarn && yarn dev
+Client:
+- cd extensions/shelly-voice/webapp/client
+- cp .env.example .env and set:
+  - VITE_API_URL=http://localhost:5057/api (or your server tunnel URL)
+  - ALLOWED_HOST=<your-tunnel-host>
+- yarn && yarn dev --host
 
-### Add new voices/personalities
-- Update validation options or UI select lists in the webapp client.
-- No code changes are required in actions; values are passed through to LiveKit via the wrapper.
+Notes for tunnels:
+- vite.config.ts uses server.allowedHosts with ALLOWED_HOST. Set this to your public host when exposing the client.
+- The server CORS uses CLIENT_ORIGIN to allow the client origin.
 
-This extension uses in-memory storage for agents and sessions for demonstration purposes.
+## Wrapper API
+- createAgent(config) → { agentId, config }
+- startAgent(settings, agentId, context) → { sessionId, status, context }
+- stopAgent(settings, agentId) → { status }
+
+## HTTP API (server)
+- POST /api/agents – body includes voice, language, personality, and JTBD fields
+- POST /api/agents/:id/start – body { sessionContext?: {...} }
+- POST /api/agents/:id/stop
+- GET /api/events – returns in-memory event log
+- POST /api/webhooks/livekit – ingests and optionally forwards events to AWELL_WEBHOOK_URL
+
+## Awell Integration
+- The Shelly Voice actions expose JTBD inputs in the action configs.
+- The webhook endpoint surfaces LiveKit session events which can be consumed in CareFlows.
+
+## Extending voices/personalities
+- UI: update SPA inputs in webapp/client/src/App.tsx (options or free-form).
+- Actions: update fields validation in actions/createAgent/config/fields.ts.
+- Wrapper: extend AgentConfig in lib/livekitClient.ts if storing additional config.
+
+## Testing
+- Unit tests cover lifecycle and JTBD persistence:
+  - extensions/shelly-voice/__tests__/livekitClient.test.ts
+
+## Security
+- Do not commit LiveKit secrets.
+- Use environment variables for LIVEKIT_API_KEY and LIVEKIT_API_SECRET.

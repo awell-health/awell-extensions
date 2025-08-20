@@ -4,6 +4,10 @@ type AgentConfig = {
   voice: string
   language: string
   personality: string
+  jobToBeDone?: string
+  patientContext?: string
+  careSetting?: 'inpatient' | 'outpatient' | 'virtual'
+  complianceNotes?: string
 }
 
 type Settings = {
