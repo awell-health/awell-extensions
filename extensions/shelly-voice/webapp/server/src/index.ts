@@ -5,7 +5,12 @@ import { env } from './env'
 import { router } from './routes'
 
 const app = express()
-app.use(cors())
+app.use(
+  cors({
+    origin: process.env.CLIENT_ORIGIN || 'http://localhost:5173',
+    credentials: true,
+  })
+)
 app.use(bodyParser.json({ limit: '2mb' }))
 app.use('/api', router)
 
