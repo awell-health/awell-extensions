@@ -52,7 +52,8 @@ Client:
   - ALLOWED_HOST=<your-tunnel-host>
 - yarn && yarn dev --host
 
-Notes for tunnels:
+Notes for tunnels and auth:
+- Do not embed credentials in VITE_API_URL. If your API tunnel is basic-auth protected, set VITE_API_BASIC_AUTH to user:password and keep VITE_API_URL clean (e.g. https://your-api-host/api). The client will send the Authorization header automatically.
 - vite.config.ts uses server.allowedHosts with ALLOWED_HOST. Set this to your public host when exposing the client.
 - The server CORS uses CLIENT_ORIGIN to allow the client origin.
 
