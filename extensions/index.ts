@@ -56,6 +56,7 @@ import { Workramp } from './workramp'
 import { Zendesk } from './zendesk'
 import { zoom } from './zoom'
 import { srfax } from './srfax'
+import { ShellyVoice } from './shelly-voice'
 
 import * as json from './markdown.json'
 
@@ -121,4 +122,5 @@ export const extensions = [
   Zendesk,
   zoom,
   srfax,
+  ShellyVoice,
 ]
