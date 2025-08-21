@@ -36,12 +36,12 @@ describe('bookAppointment.onActivityCreated default prefill', () => {
         fields: { calLink: 'awell/1h' },
         settings: { apiKey: 'abc123' },
         patient: {
-          profile: {
+          profile: ({
             first_name: 'Jane',
             last_name: 'Doe',
             email: 'jane.doe@example.com',
             phone_number: '+1 555 000 1234',
-          },
+          } as any),
         },
       }),
       onComplete,
@@ -90,10 +90,10 @@ describe('bookAppointment.onActivityCreated default prefill', () => {
         fields: { calLink: 'awell/1h' },
         settings: { apiKey: 'abc123' },
         patient: {
-          profile: {
+          profile: ({
             last_name: 'Doe',
             phone_number: '123',
-          },
+          } as any),
         },
       }),
       onComplete,
