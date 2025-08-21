@@ -18,7 +18,7 @@ export const bookAppointment: Action<typeof fields, typeof settings> = {
       mode: 'single',
     },
   },
-  previewable: false, // We don't have Awell Hosted Pages in Preview so cannot be previewed.
+  previewable: false,
   onActivityCreated: async (payload, onComplete, onError) => {
     try {
       validate({
@@ -27,6 +27,29 @@ export const bookAppointment: Action<typeof fields, typeof settings> = {
           fields: FieldsValidationSchema,
         }),
         payload,
+      })
+
+      const profile = (payload as any)?.patient?.profile as
+        | {
+            first_name?: string
+            last_name?: string
+            email?: string
+            phone_number?: string
+          }
+        | undefined
+
+      const first = profile?.first_name?.trim() || ''
+      const last = profile?.last_name?.trim() || ''
+      const name = [first, last].filter(Boolean).join(' ').trim()
+      const email = profile?.email?.trim() || ''
+      const phone = profile?.phone_number?.trim() || ''
+
+      await onComplete({
+        data_points: {
+          defaultName: name,
+          defaultEmail: email,
+          defaultPhone: phone,
+        },
       })
     } catch (err) {
       if (err instanceof ZodError) {
