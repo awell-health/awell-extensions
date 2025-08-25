@@ -94,6 +94,21 @@ Creates a booking and saves new `bookingId` as Data Points. Available fields:
 
 Deletes a Booking with a given ID.
 
+### Prefilling booking fields from Awell profile
+
+When the Book appointment action is created, the extension will read the patient profile values if available:
+- profile.first_name
+- profile.last_name
+- profile.email
+- profile.phone_number
+
+It composes a default name from the first and last name and exposes three data points on the activity:
+- defaultName
+- defaultEmail
+- defaultPhone
+
+Awell Hosted Pages uses these to prefill Cal.com’s booking confirmation fields (name, email, phone). If a patient profile value is missing, the corresponding field remains blank. All prefilled fields are editable by the user at booking time.
+
 ## Pricing
 
 **This extension is free** but keep in mind that you might need a paid plan for Cal.com depending on your needs.
