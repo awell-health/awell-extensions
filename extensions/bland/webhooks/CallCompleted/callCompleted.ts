@@ -47,7 +47,8 @@ export const callCompleted: Webhook<
   }) => {
     const callId = payload?.call_id
     const awellPatientId: string | undefined =
-      payload?.variables?.metadata?.awell_patient_id
+      payload?.variables?.metadata?.awell_patient_id ??
+      payload?.metadata?.awell_patient_id
 
     if (isNil(callId)) {
       await onError({
