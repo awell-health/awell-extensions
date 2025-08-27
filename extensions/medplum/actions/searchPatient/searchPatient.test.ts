@@ -1,5 +1,6 @@
 import { searchPatient } from './searchPatient'
-import { generateTestPayload } from '../../../../src/tests'
+import { generateTestPayload } from '@/tests'
+import { mockSettings } from '../../__mocks__'
 
 jest.mock('@medplum/core', () => {
   // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -10,13 +11,12 @@ jest.mock('@medplum/core', () => {
   }
 })
 
-describe('Search patient', () => {
+describe('Medplum - Search patient', () => {
   const onComplete = jest.fn()
   const onError = jest.fn()
 
   beforeEach(() => {
-    onComplete.mockClear()
-    onError.mockClear()
+    jest.clearAllMocks()
   })
 
   test('Should search for patient by parameter', async () => {
@@ -25,14 +25,10 @@ describe('Search patient', () => {
         parameter: 'identifier',
         value: '12345',
       },
-      settings: {
-        clientId: 'test-client-id',
-        clientSecret: 'test-client-secret',
-        baseUrl: 'https://api.medplum.com/',
-      },
+      settings: mockSettings,
     })
 
-    await searchPatient.onActivityCreated(mockPayload, onComplete, onError)
+    await searchPatient.onActivityCreated!(mockPayload, onComplete, onError)
 
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
