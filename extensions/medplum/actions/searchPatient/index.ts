@@ -1,0 +1,1 @@
+export { searchPatient } from './searchPatient'
