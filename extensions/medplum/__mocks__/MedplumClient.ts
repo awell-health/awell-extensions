@@ -56,4 +56,20 @@ export class MedplumClient {
   )
 
   executeBot = jest.fn(() => 'Bot executed!')
+
+  search = jest.fn((resourceType: string, query: any) => {
+    if (resourceType === 'Patient') {
+      return {
+        resourceType: 'Bundle',
+        type: 'searchset',
+        total: 1,
+        entry: [
+          {
+            resource: { id: 'test-patient-id', ...mockGetPatientResponse }
+          }
+        ]
+      }
+    }
+    return { resourceType: 'Bundle', type: 'searchset', total: 0, entry: [] }
+  })
 }
