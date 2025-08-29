@@ -11,6 +11,10 @@
     "url": "https://github.com/awell-health/awell-extensions/issues"
   },
   "homepage": "https://github.com/awell-health/awell-extensions#readme",
+  "workspaces": [
+    "extensions/*",
+    "packages/*"
+  ],
   "scripts": {
     "clean": "rimraf dist/* && echo 'Cleaned dist/'",
     "compile": "tsc",
