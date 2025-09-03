@@ -1,7 +1,7 @@
-import { type Setting } from '@awell-health/extensions-core'
+import { type Setting, type Settings } from '@awell-health/extensions-core'
 import { z, type ZodTypeAny } from 'zod'
 
-export const settings = {
+export const settings: Settings = {
   salesApiToken: {
     label: 'Sales API token',
     key: 'salesApiToken',
@@ -13,6 +13,7 @@ export const settings = {
   supportSubdomain: {
     label: 'Support subdomain',
     key: 'supportSubdomain',
+    obfuscated: false,
     required: true,
     description:
       'Your Zendesk subdomain (e.g., "acme" for acme.zendesk.com)',
@@ -20,6 +21,7 @@ export const settings = {
   supportEmail: {
     label: 'Support agent email',
     key: 'supportEmail',
+    obfuscated: false,
     required: true,
     description: 'Zendesk agent email used for API access',
   },
@@ -31,7 +33,7 @@ export const settings = {
     description:
       'Create a token in Admin Center → Apps and integrations → Zendesk API',
   },
-} satisfies Record<string, Setting>
+}
 
 export const SalesSettingsValidationSchema = z.object({
   salesApiToken: z.string().nonempty({

@@ -10,7 +10,7 @@ import {
   salesApiErrorToActivityEvent,
 } from '../../client'
 
-export const createTask: Action<typeof fields, typeof settings> = {
+export const createTask: Action<typeof fields, Pick<typeof settings, 'salesApiToken'>> = {
   key: 'createTask',
   title: 'Create task',
   description: 'Creates a new task in Zendesk',

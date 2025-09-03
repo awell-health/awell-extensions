@@ -10,7 +10,7 @@ import {
   salesApiErrorToActivityEvent,
 } from '../../client'
 
-export const completeTask: Action<typeof fields, typeof settings> = {
+export const completeTask: Action<typeof fields, Pick<typeof settings, 'salesApiToken'>> = {
   key: 'completeTask',
   title: 'Complete a task',
   description: 'Completes a task in Zendesk',
