@@ -1,3 +1,7 @@
+declare const Buffer: any
+
+declare const Buffer: any
+
 type CreateTicketInput = {
   external_id?: string
   subject: string
