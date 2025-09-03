@@ -5,4 +5,16 @@ export const dataPoints = {
     key: 'bookingId',
     valueType: 'string',
   },
+  defaultName: {
+    key: 'defaultName',
+    valueType: 'string',
+  },
+  defaultEmail: {
+    key: 'defaultEmail',
+    valueType: 'string',
+  },
+  defaultPhone: {
+    key: 'defaultPhone',
+    valueType: 'string',
+  },
 } satisfies Record<string, DataPointDefinition>
