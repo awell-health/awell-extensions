@@ -2,11 +2,11 @@ import {
   mockedDates,
   mockedTaskData,
   ZendeskClientMockImplementation,
-} from '../../client/__mocks__'
-import { createTask } from '..'
+} from '../../../../zendeskSell/v1/client/__mocks__'
+import { createTask } from '../../../../zendeskSell/v1/actions/createTask'
 import { generateTestPayload } from '@/tests'
 
-jest.mock('../../client')
+jest.mock('../../../../zendeskSell/v1/client')
 
 describe('Create task', () => {
   const onComplete = jest.fn()
