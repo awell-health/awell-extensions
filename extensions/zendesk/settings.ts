@@ -2,14 +2,6 @@ import { type Setting, type Settings } from '@awell-health/extensions-core'
 import { z, type ZodTypeAny } from 'zod'
 
 export const settings: Settings = {
-  salesApiToken: {
-    label: 'Sales API token',
-    key: 'salesApiToken',
-    obfuscated: true,
-    required: true,
-    description:
-      'Visit Zendesk Sales CRM dashboard and go to Settings > Integration > OAuth to enable and create an API token',
-  },
   supportSubdomain: {
     label: 'Support subdomain',
     key: 'supportSubdomain',
@@ -35,13 +27,8 @@ export const settings: Settings = {
   },
 }
 
-export const SalesSettingsValidationSchema = z.object({
-  salesApiToken: z.string().nonempty({
-    message: 'Missing "Sales API token" in the extension settings.',
-  }),
-} satisfies Record<keyof Pick<typeof settings, 'salesApiToken'>, ZodTypeAny>)
 
-export const SupportSettingsValidationSchema = z.object({
+export const SettingsValidationSchema = z.object({
   supportSubdomain: z.string().nonempty({
     message: 'Missing "Support subdomain" in the extension settings.',
   }),
@@ -51,9 +38,4 @@ export const SupportSettingsValidationSchema = z.object({
   supportApiToken: z.string().nonempty({
     message: 'Missing "Support API token" in the extension settings.',
   }),
-} satisfies Record<
-  keyof Pick<typeof settings, 'supportSubdomain' | 'supportEmail' | 'supportApiToken'>,
-  ZodTypeAny
->)
-
-export const SettingsValidationSchema = SalesSettingsValidationSchema
+} satisfies Record<keyof typeof settings, ZodTypeAny>)

@@ -1,6 +1,6 @@
 import { z } from 'zod'
 import { Category, validate, type Action } from '@awell-health/extensions-core'
-import { type settings, SupportSettingsValidationSchema } from '../../../settings'
+import { type settings, SettingsValidationSchema } from '../../../settings'
 import { dataPoints, fields, FieldsValidationSchema } from './config'
 import { ZendeskSupportClient } from '../../client/support'
 
@@ -25,7 +25,7 @@ export const createTicket: Action<typeof fields, typeof settings> = {
       },
     } = validate({
       schema: z.object({
-        settings: SupportSettingsValidationSchema,
+        settings: SettingsValidationSchema,
         fields: FieldsValidationSchema,
       }),
       payload,

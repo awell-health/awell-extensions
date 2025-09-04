@@ -54,6 +54,7 @@ import { Twilio } from './twilio'
 import { WestFax } from './westFax'
 import { Workramp } from './workramp'
 import { Zendesk } from './zendesk'
+import { ZendeskSell } from './zendeskSell'
 import { zoom } from './zoom'
 import { srfax } from './srfax'
 
@@ -119,6 +120,7 @@ export const extensions = [
   WestFax,
   Workramp,
   Zendesk,
+  ZendeskSell,
   zoom,
   srfax,
 ]
