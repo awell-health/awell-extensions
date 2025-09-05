@@ -1,6 +1,6 @@
 {
   "name": "@awell-health/awell-extensions",
-  "version": "2.0.330",
+  "version": "2.0.330-beta.0",
   "packageManager": "yarn@4.5.3",
   "main": "dist/src/index.js",
   "repository": {
@@ -86,7 +86,7 @@
   "dependencies": {
     "@airtop/sdk": "^0.1.44",
     "@awell-health/awell-sdk": "0.1.24",
-    "@awell-health/extensions-core": "1.0.28",
+    "@awell-health/extensions-core": "1.1.1",
     "@awell-health/healthie-sdk": "^0.1.1",
     "@dropbox/sign": "^1.8.0",
     "@hubspot/api-client": "^11.2.0",
