@@ -29,7 +29,7 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["@airtop/sdk", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:0.1.44"],\
           ["@awell-health/awell-sdk", "npm:0.1.24"],\
-          ["@awell-health/extensions-core", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:1.1.1"],\
+          ["@awell-health/extensions-core", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:1.1.2"],\
           ["@awell-health/healthie-sdk", "npm:0.1.1"],\
           ["@dropbox/sign", "npm:1.8.0"],\
           ["@faker-js/faker", "npm:8.4.1"],\
@@ -64,6 +64,7 @@ const RAW_RUNTIME_STATE =
           ["@types/node-fetch", "npm:2.6.11"],\
           ["@types/nodemailer", "npm:6.4.16"],\
           ["@types/pdfmake", "npm:0.2.9"],\
+          ["@types/react", "npm:19.1.12"],\
           ["@types/sanitize-html", "npm:2.13.0"],\
           ["@types/showdown", "npm:2.0.6"],\
           ["@types/uuid", "npm:10.0.0"],\
@@ -427,7 +428,7 @@ const RAW_RUNTIME_STATE =
           ["@awell-health/awell-extensions", "workspace:."],\
           ["@airtop/sdk", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:0.1.44"],\
           ["@awell-health/awell-sdk", "npm:0.1.24"],\
-          ["@awell-health/extensions-core", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:1.1.1"],\
+          ["@awell-health/extensions-core", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:1.1.2"],\
           ["@awell-health/healthie-sdk", "npm:0.1.1"],\
           ["@dropbox/sign", "npm:1.8.0"],\
           ["@faker-js/faker", "npm:8.4.1"],\
@@ -462,6 +463,7 @@ const RAW_RUNTIME_STATE =
           ["@types/node-fetch", "npm:2.6.11"],\
           ["@types/nodemailer", "npm:6.4.16"],\
           ["@types/pdfmake", "npm:0.2.9"],\
+          ["@types/react", "npm:19.1.12"],\
           ["@types/sanitize-html", "npm:2.13.0"],\
           ["@types/showdown", "npm:2.0.6"],\
           ["@types/uuid", "npm:10.0.0"],\
@@ -546,17 +548,17 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["@awell-health/extensions-core", [\
-      ["npm:1.1.1", {\
-        "packageLocation": "./.yarn/cache/@awell-health-extensions-core-npm-1.1.1-bdaddfb642-1e090865ce.zip/node_modules/@awell-health/extensions-core/",\
+      ["npm:1.1.2", {\
+        "packageLocation": "./.yarn/cache/@awell-health-extensions-core-npm-1.1.2-7c39dc8fd1-35ada8ee74.zip/node_modules/@awell-health/extensions-core/",\
         "packageDependencies": [\
-          ["@awell-health/extensions-core", "npm:1.1.1"]\
+          ["@awell-health/extensions-core", "npm:1.1.2"]\
         ],\
         "linkType": "SOFT"\
       }],\
-      ["virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:1.1.1", {\
-        "packageLocation": "./.yarn/__virtual__/@awell-health-extensions-core-virtual-1c82cc4fdf/0/cache/@awell-health-extensions-core-npm-1.1.1-bdaddfb642-1e090865ce.zip/node_modules/@awell-health/extensions-core/",\
+      ["virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:1.1.2", {\
+        "packageLocation": "./.yarn/__virtual__/@awell-health-extensions-core-virtual-80641b8e69/0/cache/@awell-health-extensions-core-npm-1.1.2-7c39dc8fd1-35ada8ee74.zip/node_modules/@awell-health/extensions-core/",\
         "packageDependencies": [\
-          ["@awell-health/extensions-core", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:1.1.1"],\
+          ["@awell-health/extensions-core", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:1.1.2"],\
           ["@awell-health/awell-sdk", "npm:0.1.24"],\
           ["@langchain/core", "npm:0.3.33"],\
           ["@langchain/openai", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:0.3.0"],\
@@ -4940,6 +4942,14 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["@types/react", "npm:18.3.24"],\
           ["@types/prop-types", "npm:15.7.15"],\
+          ["csstype", "npm:3.1.3"]\
+        ],\
+        "linkType": "HARD"\
+      }],\
+      ["npm:19.1.12", {\
+        "packageLocation": "./.yarn/cache/@types-react-npm-19.1.12-d97634a5ed-c03d595b84.zip/node_modules/@types/react/",\
+        "packageDependencies": [\
+          ["@types/react", "npm:19.1.12"],\
           ["csstype", "npm:3.1.3"]\
         ],\
         "linkType": "HARD"\

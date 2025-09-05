@@ -251,7 +251,7 @@ __metadata:
   dependencies:
     "@airtop/sdk": "npm:^0.1.44"
     "@awell-health/awell-sdk": "npm:0.1.24"
-    "@awell-health/extensions-core": "npm:1.1.1"
+    "@awell-health/extensions-core": "npm:1.1.2"
     "@awell-health/healthie-sdk": "npm:^0.1.1"
     "@dropbox/sign": "npm:^1.8.0"
     "@faker-js/faker": "npm:^8.0.2"
@@ -286,6 +286,7 @@ __metadata:
     "@types/node-fetch": "npm:^2.6.2"
     "@types/nodemailer": "npm:^6.4.15"
     "@types/pdfmake": "npm:^0.2.9"
+    "@types/react": "npm:^19.1.12"
     "@types/sanitize-html": "npm:^2.13.0"
     "@types/showdown": "npm:^2.0.0"
     "@types/uuid": "npm:^10.0.0"
@@ -367,9 +368,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@awell-health/extensions-core@npm:1.1.1":
-  version: 1.1.1
-  resolution: "@awell-health/extensions-core@npm:1.1.1"
+"@awell-health/extensions-core@npm:1.1.2":
+  version: 1.1.2
+  resolution: "@awell-health/extensions-core@npm:1.1.2"
   dependencies:
     "@langchain/core": "npm:^0.3.33"
     "@langchain/openai": "npm:^0.3.0"
@@ -384,7 +385,7 @@ __metadata:
     zod-validation-error: "npm:^3.2.0"
   peerDependencies:
     "@awell-health/awell-sdk": "*"
-  checksum: 10/1e090865ceb322f462d68414e8cc7a22b126563c0d3ee9baca289f364441e0d599b47c05a85da96d8bba9eb0eba117ce57305a2c56f6d0ae9905553a46a21460
+  checksum: 10/35ada8ee74bd7f616da883bdedabe0b854e28eff0d06d8faa6c915f1265ddd0c8b30496bddfa490c765a506a53c8159d48a445c6e9a9d31955d2367b8f6c971d
   languageName: node
   linkType: hard
 
@@ -3201,6 +3202,15 @@ __metadata:
     "@types/prop-types": "npm:*"
     csstype: "npm:^3.0.2"
   checksum: 10/3f8529961afa40696f4a677e0f4399cb5da1fca9828c00634f884db261fc29a68af0b0397611fff4dd81847ac85036a1b72e987eafd994cdf4ddb1a1bcce7d61
+  languageName: node
+  linkType: hard
+
+"@types/react@npm:^19.1.12":
+  version: 19.1.12
+  resolution: "@types/react@npm:19.1.12"
+  dependencies:
+    csstype: "npm:^3.0.2"
+  checksum: 10/c03d595b84faecb15079757555c96871e84ea6eef9a5eddb13ec1f648f718f9624bebc4199e86267edb825b23df97758324ea39ff840d9ad328386f96971f588
   languageName: node
   linkType: hard
 

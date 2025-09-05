@@ -3,6 +3,7 @@
       "strict": true,
       "target": "es2018",
       "module": "commonjs",
+      "jsx": "react-jsx",
       "outDir": "dist",
       "sourceMap": true,
       "declaration": true,
@@ -15,7 +16,8 @@
       "lib/**/*.ts",
       "extensions/**/*.ts",
       "src/**/*.ts",
-      "examples/**/*.ts"
+      "examples/**/*.ts",
+      "extensions/**/*.tsx"
     ],
     "exclude": [
       "**/*.test.ts",

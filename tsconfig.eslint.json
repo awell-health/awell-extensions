@@ -1,0 +1,19 @@
+{
+  "extends": "./tsconfig.json",
+  "include": [
+    "lib/**/*.ts",
+    "extensions/**/*.ts",
+    "extensions/**/*.tsx",
+    "src/**/*.ts",
+    "examples/**/*.ts"
+  ],
+  "exclude": [
+    "dist",
+    ".yarn",
+    "**/*.test.ts",
+    "**/__tests__/**",
+    "**/__mocks__/**"
+  ]
+}
+
+
