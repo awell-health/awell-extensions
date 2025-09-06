@@ -1,7 +1,7 @@
 import React from "react";
 import type { ComponentProps } from "@awell-health/extensions-core";
 
-export const FrontendComponent: React.FC<ComponentProps> = ({
+const FrontendComponent: React.FC<ComponentProps> = ({
   activityDetails,
   onSubmit
 }) => {
@@ -15,3 +15,5 @@ export const FrontendComponent: React.FC<ComponentProps> = ({
     </div>
   )
 }
+
+export default FrontendComponent

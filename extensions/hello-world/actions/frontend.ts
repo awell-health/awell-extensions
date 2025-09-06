@@ -6,7 +6,6 @@ import {
 } from '@awell-health/extensions-core'
 import { Category } from '@awell-health/extensions-core'
 import { type settings } from '../settings'
-import { FrontendComponent } from './FrontEndComponent'
 
 const fields = {
   hello: {
@@ -41,5 +40,4 @@ export const frontend: Action<
     void fields
     void settings
   },
-  component: FrontendComponent,
 }

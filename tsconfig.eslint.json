@@ -5,7 +5,9 @@
     "extensions/**/*.ts",
     "extensions/**/*.tsx",
     "src/**/*.ts",
-    "examples/**/*.ts"
+    "examples/**/*.ts",
+    "components/**/*.ts",
+    "components/**/*.tsx"
   ],
   "exclude": [
     "dist",

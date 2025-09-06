@@ -25,6 +25,19 @@
     "prepare": "husky"
   },
   "types": "dist/src/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/src/index.d.ts",
+      "require": "./dist/src/index.js",
+      "import": "./dist/src/index.js"
+    },
+    "./components/*": {
+      "types": "./dist/components/*/index.d.ts",
+      "require": "./dist/components/*/index.js",
+      "import": "./dist/components/*/index.js"
+    },
+    "./package.json": "./package.json"
+  },
   "files": [
     "dist",
     "!**/*.test.ts",

@@ -17,7 +17,9 @@
       "extensions/**/*.ts",
       "src/**/*.ts",
       "examples/**/*.ts",
-      "extensions/**/*.tsx"
+      "components/**/*.ts",
+      "extensions/**/*.tsx",
+      "components/**/*.tsx"
     ],
     "exclude": [
       "**/*.test.ts",
