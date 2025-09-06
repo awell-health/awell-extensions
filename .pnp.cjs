@@ -29,7 +29,7 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["@airtop/sdk", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:0.1.44"],\
           ["@awell-health/awell-sdk", "npm:0.1.24"],\
-          ["@awell-health/extensions-core", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:1.1.2"],\
+          ["@awell-health/extensions-core", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:1.1.3"],\
           ["@awell-health/healthie-sdk", "npm:0.1.1"],\
           ["@dropbox/sign", "npm:1.8.0"],\
           ["@faker-js/faker", "npm:8.4.1"],\
@@ -428,7 +428,7 @@ const RAW_RUNTIME_STATE =
           ["@awell-health/awell-extensions", "workspace:."],\
           ["@airtop/sdk", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:0.1.44"],\
           ["@awell-health/awell-sdk", "npm:0.1.24"],\
-          ["@awell-health/extensions-core", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:1.1.2"],\
+          ["@awell-health/extensions-core", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:1.1.3"],\
           ["@awell-health/healthie-sdk", "npm:0.1.1"],\
           ["@dropbox/sign", "npm:1.8.0"],\
           ["@faker-js/faker", "npm:8.4.1"],\
@@ -548,17 +548,17 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["@awell-health/extensions-core", [\
-      ["npm:1.1.2", {\
-        "packageLocation": "./.yarn/cache/@awell-health-extensions-core-npm-1.1.2-7c39dc8fd1-35ada8ee74.zip/node_modules/@awell-health/extensions-core/",\
+      ["npm:1.1.3", {\
+        "packageLocation": "./.yarn/cache/@awell-health-extensions-core-npm-1.1.3-fc2e4f1f10-5e207e88cd.zip/node_modules/@awell-health/extensions-core/",\
         "packageDependencies": [\
-          ["@awell-health/extensions-core", "npm:1.1.2"]\
+          ["@awell-health/extensions-core", "npm:1.1.3"]\
         ],\
         "linkType": "SOFT"\
       }],\
-      ["virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:1.1.2", {\
-        "packageLocation": "./.yarn/__virtual__/@awell-health-extensions-core-virtual-80641b8e69/0/cache/@awell-health-extensions-core-npm-1.1.2-7c39dc8fd1-35ada8ee74.zip/node_modules/@awell-health/extensions-core/",\
+      ["virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:1.1.3", {\
+        "packageLocation": "./.yarn/__virtual__/@awell-health-extensions-core-virtual-6101aef801/0/cache/@awell-health-extensions-core-npm-1.1.3-fc2e4f1f10-5e207e88cd.zip/node_modules/@awell-health/extensions-core/",\
         "packageDependencies": [\
-          ["@awell-health/extensions-core", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:1.1.2"],\
+          ["@awell-health/extensions-core", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:1.1.3"],\
           ["@awell-health/awell-sdk", "npm:0.1.24"],\
           ["@langchain/core", "npm:0.3.33"],\
           ["@langchain/openai", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:0.3.0"],\
