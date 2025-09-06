@@ -8,11 +8,12 @@
   "include": [
     "lib/**/*.ts",
     "extensions/**/*.ts",
+    "extensions/**/*.tsx",
     "src/**/*.ts",
     "examples/**/*.ts",
     "tests/**/*.ts",
     "**/*.test.ts",
-    "**/__tests__/**/*.mock.ts"
+    "**/__tests__/**/*.mock.ts", "react/hello-world/frontend/FrontEndComponent.tsx",
   ],
   "exclude": [
     "**/scripts/*.ts"
