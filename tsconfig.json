@@ -13,7 +13,7 @@
     "examples/**/*.ts",
     "tests/**/*.ts",
     "**/*.test.ts",
-    "**/__tests__/**/*.mock.ts", "react/hello-world/frontend/FrontEndComponent.tsx",
+    "**/__tests__/**/*.mock.ts"
   ],
   "exclude": [
     "**/scripts/*.ts"
