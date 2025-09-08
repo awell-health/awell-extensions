@@ -34,6 +34,12 @@ export const frontend: Action<
   description: 'This is a dummy Custom Action for extension developers.',
   fields,
   previewable: true,
+  options: {
+    stakeholders: {
+      label: 'Stakeholder',
+      mode: 'single',
+    },
+  },
   dataPoints,
   onEvent: async ({ payload, helpers: { log } }): Promise<void> => {
     log({ payload }, 'Frontend payload')
