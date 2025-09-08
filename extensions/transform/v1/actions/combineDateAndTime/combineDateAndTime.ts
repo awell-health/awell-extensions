@@ -2,8 +2,7 @@ import { type Action } from '@awell-health/extensions-core'
 import { Category, validate } from '@awell-health/extensions-core'
 import { type settings } from '../../../settings'
 import { FieldsValidationSchema, dataPoints, fields } from './config'
-import { fromZodError } from 'zod-validation-error'
-import { z, ZodError } from 'zod'
+import { z } from 'zod'
 import { parse, formatISO, parseISO, isValid } from 'date-fns'
 
 export const combineDateAndTime: Action<
@@ -19,75 +18,50 @@ export const combineDateAndTime: Action<
   dataPoints,
   previewable: true,
   onActivityCreated: async (payload, onComplete, onError) => {
-    try {
-      const {
-        fields: { referenceDate, timeString },
-      } = validate({
-        schema: z.object({
-          fields: FieldsValidationSchema,
-        }),
-        payload,
-      })
+    const {
+      fields: { referenceDate, timeString },
+    } = validate({
+      schema: z.object({
+        fields: FieldsValidationSchema,
+      }),
+      payload,
+    })
 
-      let combinedDate: Date
+    let combinedDate: Date
 
-      const parsedTime = parse(timeString, 'HH:mm:ss', new Date())
-      if (isValid(parsedTime)) {
-        const baseDate = new Date(referenceDate)
-        combinedDate = new Date(baseDate)
-        combinedDate.setHours(parsedTime.getHours())
-        combinedDate.setMinutes(parsedTime.getMinutes())
-        combinedDate.setSeconds(parsedTime.getSeconds())
-        combinedDate.setMilliseconds(0)
-      } else {
-        try {
-          combinedDate = parseISO(timeString)
-          if (!isValid(combinedDate)) {
-            throw new Error('Invalid ISO8601 datetime')
-          }
-        } catch {
-          throw new Error('Invalid time format')
-        }
-      }
-
-      const isoDateTime = formatISO(combinedDate)
-
-      await onComplete({
-        data_points: {
-          combinedDateTime: isoDateTime,
-        },
-      })
-    } catch (err) {
-      if (err instanceof ZodError) {
-        const error = fromZodError(err)
+    const parsedTime = parse(timeString, 'HH:mm:ss', new Date())
+    if (isValid(parsedTime)) {
+      const baseDate = new Date(referenceDate)
+      combinedDate = new Date(baseDate)
+      combinedDate.setHours(parsedTime.getHours())
+      combinedDate.setMinutes(parsedTime.getMinutes())
+      combinedDate.setSeconds(parsedTime.getSeconds())
+      combinedDate.setMilliseconds(0)
+    } else {
+      combinedDate = parseISO(timeString)
+      if (!isValid(combinedDate)) {
         await onError({
           events: [
             {
               date: new Date().toISOString(),
-              text: { en: error.name },
+              text: { en: 'Invalid time format provided' },
               error: {
                 category: 'WRONG_INPUT',
-                message: `${error.message}`,
+                message: 'Time string must be in ISO format HH:mm:ss (e.g., "14:30:00" not "2PM") or ISO8601 datetime with timezone (e.g., "2025-09-06T15:34:44+02:00")',
               },
             },
           ],
         })
         return
       }
-
-      const error = err as Error
-      await onError({
-        events: [
-          {
-            date: new Date().toISOString(),
-            text: { en: 'Something went wrong while orchestration the action' },
-            error: {
-              category: 'SERVER_ERROR',
-              message: error.message,
-            },
-          },
-        ],
-      })
     }
+
+    const isoDateTime = formatISO(combinedDate)
+
+    await onComplete({
+      data_points: {
+        combinedDateTime: isoDateTime,
+      },
+    })
   },
 }

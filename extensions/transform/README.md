@@ -59,7 +59,7 @@ Converts a measurement in feet and inches to just inches.
 
 Combines a reference date with a time string to create a complete datetime in UTC format. This action supports two input formats for the time string:
 
-1. **Simple time format (HH:mm:ss)**: Combines the reference date with the specified time
+1. **Simple time format (HH:mm:ss)**: Combines the reference date with the specified time in ISO format (e.g., "14:30:00" not "2PM")
 2. **Full datetime with timezone**: Accepts ISO8601 datetime strings with timezone offsets and converts them to UTC
 
 **Examples:**
