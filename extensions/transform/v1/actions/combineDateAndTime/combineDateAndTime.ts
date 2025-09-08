@@ -4,7 +4,7 @@ import { type settings } from '../../../settings'
 import { FieldsValidationSchema, dataPoints, fields } from './config'
 import { fromZodError } from 'zod-validation-error'
 import { z, ZodError } from 'zod'
-import { parse, formatISO } from 'date-fns'
+import { parse, formatISO, parseISO, isValid } from 'date-fns'
 
 export const combineDateAndTime: Action<
   typeof fields,
@@ -13,7 +13,7 @@ export const combineDateAndTime: Action<
 > = {
   key: 'combineDateAndTime',
   title: 'Combine date and time',
-  description: 'Combine a reference date with a time string to create an ISO8601 datetime.',
+  description: 'Combine a reference date with a time string to create an ISO8601 datetime in UTC.',
   category: Category.DATA,
   fields,
   dataPoints,
@@ -29,15 +29,26 @@ export const combineDateAndTime: Action<
         payload,
       })
 
-      const baseDate = new Date(referenceDate)
-      
-      const timeDate = parse(timeString, 'HH:mm:ss', new Date())
-      
-      const combinedDate = new Date(baseDate)
-      combinedDate.setHours(timeDate.getHours())
-      combinedDate.setMinutes(timeDate.getMinutes())
-      combinedDate.setSeconds(timeDate.getSeconds())
-      combinedDate.setMilliseconds(0)
+      let combinedDate: Date
+
+      const parsedTime = parse(timeString, 'HH:mm:ss', new Date())
+      if (isValid(parsedTime)) {
+        const baseDate = new Date(referenceDate)
+        combinedDate = new Date(baseDate)
+        combinedDate.setHours(parsedTime.getHours())
+        combinedDate.setMinutes(parsedTime.getMinutes())
+        combinedDate.setSeconds(parsedTime.getSeconds())
+        combinedDate.setMilliseconds(0)
+      } else {
+        try {
+          combinedDate = parseISO(timeString)
+          if (!isValid(combinedDate)) {
+            throw new Error('Invalid ISO8601 datetime')
+          }
+        } catch {
+          throw new Error('Invalid time format')
+        }
+      }
 
       const isoDateTime = formatISO(combinedDate)
 

@@ -9,88 +9,201 @@ describe('Transform - Combine date and time', () => {
     jest.clearAllMocks()
   })
 
-  test('Should combine date and time correctly', async () => {
-    const mockOnActivityCreateParams = generateTestPayload({
-      fields: {
-        referenceDate: '2025-09-13',
-        timeString: '17:45:00',
-      },
-      settings: {},
+  describe('HH:mm:ss time format', () => {
+    test('Should combine date and time correctly', async () => {
+      const mockOnActivityCreateParams = generateTestPayload({
+        fields: {
+          referenceDate: '2025-09-13',
+          timeString: '17:45:00',
+        },
+        settings: {},
+      })
+
+      await combineDateAndTime.onActivityCreated!(
+        mockOnActivityCreateParams,
+        onComplete,
+        onError
+      )
+
+      expect(onComplete).toBeCalledWith({
+        data_points: {
+          combinedDateTime: '2025-09-13T17:45:00Z',
+        },
+      })
     })
 
-    await combineDateAndTime.onActivityCreated!(
-      mockOnActivityCreateParams,
-      onComplete,
-      onError
-    )
+    test('Should handle midnight time correctly', async () => {
+      const mockOnActivityCreateParams = generateTestPayload({
+        fields: {
+          referenceDate: '2025-09-13',
+          timeString: '00:00:00',
+        },
+        settings: {},
+      })
 
-    expect(onComplete).toBeCalledWith({
-      data_points: {
-        combinedDateTime: '2025-09-13T17:45:00Z',
-      },
+      await combineDateAndTime.onActivityCreated!(
+        mockOnActivityCreateParams,
+        onComplete,
+        onError
+      )
+
+      expect(onComplete).toBeCalledWith({
+        data_points: {
+          combinedDateTime: '2025-09-13T00:00:00Z',
+        },
+      })
+    })
+
+    test('Should handle end of day time correctly', async () => {
+      const mockOnActivityCreateParams = generateTestPayload({
+        fields: {
+          referenceDate: '2025-09-13',
+          timeString: '23:59:59',
+        },
+        settings: {},
+      })
+
+      await combineDateAndTime.onActivityCreated!(
+        mockOnActivityCreateParams,
+        onComplete,
+        onError
+      )
+
+      expect(onComplete).toBeCalledWith({
+        data_points: {
+          combinedDateTime: '2025-09-13T23:59:59Z',
+        },
+      })
     })
   })
 
-  test('Should handle invalid time format', async () => {
-    const mockOnActivityCreateParams = generateTestPayload({
-      fields: {
-        referenceDate: '2025-09-13',
-        timeString: '25:70:90',
-      },
-      settings: {},
+  describe('ISO8601 datetime with timezone', () => {
+    test('Should handle timezone-aware datetime correctly (user example)', async () => {
+      const mockOnActivityCreateParams = generateTestPayload({
+        fields: {
+          referenceDate: '2025-09-06',
+          timeString: '2025-09-06T15:34:44+02:00',
+        },
+        settings: {},
+      })
+
+      await combineDateAndTime.onActivityCreated!(
+        mockOnActivityCreateParams,
+        onComplete,
+        onError
+      )
+
+      expect(onComplete).toBeCalledWith({
+        data_points: {
+          combinedDateTime: '2025-09-06T13:34:44Z',
+        },
+      })
     })
 
-    await combineDateAndTime.onActivityCreated!(
-      mockOnActivityCreateParams,
-      onComplete,
-      onError
-    )
+    test('Should handle negative timezone offset', async () => {
+      const mockOnActivityCreateParams = generateTestPayload({
+        fields: {
+          referenceDate: '2025-09-06',
+          timeString: '2025-09-06T10:30:00-05:00',
+        },
+        settings: {},
+      })
 
-    expect(onError).toHaveBeenCalled()
-    expect(onComplete).not.toHaveBeenCalled()
+      await combineDateAndTime.onActivityCreated!(
+        mockOnActivityCreateParams,
+        onComplete,
+        onError
+      )
+
+      expect(onComplete).toBeCalledWith({
+        data_points: {
+          combinedDateTime: '2025-09-06T15:30:00Z',
+        },
+      })
+    })
+
+    test('Should handle UTC timezone', async () => {
+      const mockOnActivityCreateParams = generateTestPayload({
+        fields: {
+          referenceDate: '2025-09-06',
+          timeString: '2025-09-06T12:00:00Z',
+        },
+        settings: {},
+      })
+
+      await combineDateAndTime.onActivityCreated!(
+        mockOnActivityCreateParams,
+        onComplete,
+        onError
+      )
+
+      expect(onComplete).toBeCalledWith({
+        data_points: {
+          combinedDateTime: '2025-09-06T12:00:00Z',
+        },
+      })
+    })
+
+    test('Should handle timezone with milliseconds', async () => {
+      const mockOnActivityCreateParams = generateTestPayload({
+        fields: {
+          referenceDate: '2025-09-06',
+          timeString: '2025-09-06T15:34:44.123+02:00',
+        },
+        settings: {},
+      })
+
+      await combineDateAndTime.onActivityCreated!(
+        mockOnActivityCreateParams,
+        onComplete,
+        onError
+      )
+
+      expect(onComplete).toBeCalledWith({
+        data_points: {
+          combinedDateTime: '2025-09-06T13:34:44Z',
+        },
+      })
+    })
   })
 
-  test('Should handle midnight time correctly', async () => {
-    const mockOnActivityCreateParams = generateTestPayload({
-      fields: {
-        referenceDate: '2025-09-13',
-        timeString: '00:00:00',
-      },
-      settings: {},
+  describe('Error handling', () => {
+    test('Should handle invalid time format', async () => {
+      const mockOnActivityCreateParams = generateTestPayload({
+        fields: {
+          referenceDate: '2025-09-13',
+          timeString: '25:70:90',
+        },
+        settings: {},
+      })
+
+      await combineDateAndTime.onActivityCreated!(
+        mockOnActivityCreateParams,
+        onComplete,
+        onError
+      )
+
+      expect(onError).toHaveBeenCalled()
+      expect(onComplete).not.toHaveBeenCalled()
     })
 
-    await combineDateAndTime.onActivityCreated!(
-      mockOnActivityCreateParams,
-      onComplete,
-      onError
-    )
+    test('Should handle invalid ISO8601 format', async () => {
+      const mockOnActivityCreateParams = generateTestPayload({
+        fields: {
+          referenceDate: '2025-09-13',
+          timeString: 'invalid-datetime-string',
+        },
+        settings: {},
+      })
 
-    expect(onComplete).toBeCalledWith({
-      data_points: {
-        combinedDateTime: '2025-09-13T00:00:00Z',
-      },
-    })
-  })
+      await combineDateAndTime.onActivityCreated!(
+        mockOnActivityCreateParams,
+        onComplete,
+        onError
+      )
 
-  test('Should handle end of day time correctly', async () => {
-    const mockOnActivityCreateParams = generateTestPayload({
-      fields: {
-        referenceDate: '2025-09-13',
-        timeString: '23:59:59',
-      },
-      settings: {},
-    })
-
-    await combineDateAndTime.onActivityCreated!(
-      mockOnActivityCreateParams,
-      onComplete,
-      onError
-    )
-
-    expect(onComplete).toBeCalledWith({
-      data_points: {
-        combinedDateTime: '2025-09-13T23:59:59Z',
-      },
+      expect(onError).toHaveBeenCalled()
+      expect(onComplete).not.toHaveBeenCalled()
     })
   })
 })
