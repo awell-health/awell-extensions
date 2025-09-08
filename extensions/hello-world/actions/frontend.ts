@@ -35,7 +35,7 @@ export const frontend: Action<
   fields,
   previewable: true,
   dataPoints,
-  onEvent: async ({ payload }): Promise<void> => {
-    console.log('payload', payload)
+  onEvent: async ({ payload, helpers: { log } }): Promise<void> => {
+    log({ payload }, 'Frontend payload')
   },
 }
