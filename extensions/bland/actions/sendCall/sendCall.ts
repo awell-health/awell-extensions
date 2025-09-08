@@ -18,7 +18,7 @@ export const sendCall: Action<
   fields,
   previewable: false,
   dataPoints,
-  onEvent: async ({ payload, onComplete }): Promise<void> => {
+  onEvent: async ({ payload, onComplete, helpers: { log } }): Promise<void> => {
     const { fields: allFields, blandSdk } = await validatePayloadAndCreateSdk({
       fieldsSchema: FieldsValidationSchema,
       payload,
@@ -41,9 +41,13 @@ export const sendCall: Action<
       analysis_schema: fields.analysisSchema,
     })
 
-    const { data } = await blandSdk.sendCall({
-      ...sendCallInput,
-    })
+    try {
+      log({ sendCallInput }, 'Sending call to Bland')
+    } catch (err) {
+      console.error('unable to use new helpers.log')
+      console.error(JSON.stringify(err))
+    }
+    const { data } = await blandSdk.sendCall(sendCallInput)
 
     await onComplete({
       data_points: {

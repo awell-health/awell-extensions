@@ -11,6 +11,22 @@ const dataPoints = {
     key: 'callId',
     valueType: 'string',
   },
+  completed: {
+    key: 'completed',
+    valueType: 'boolean',
+  },
+  status: {
+    key: 'status',
+    valueType: 'string',
+  },
+  answeredBy: {
+    key: 'answeredBy',
+    valueType: 'string',
+  },
+  errorMessage: {
+    key: 'errorMessage',
+    valueType: 'string',
+  },
   callObject: {
     key: 'callObject',
     valueType: 'json',
@@ -31,7 +47,8 @@ export const callCompleted: Webhook<
   }) => {
     const callId = payload?.call_id
     const awellPatientId: string | undefined =
-      payload?.variables?.metadata?.awell_patient_id
+      payload?.variables?.metadata?.awell_patient_id ??
+      payload?.metadata?.awell_patient_id
 
     if (isNil(callId)) {
       await onError({
@@ -46,6 +63,33 @@ export const callCompleted: Webhook<
       data_points: {
         callId,
         callObject: JSON.stringify(payload),
+        /**
+         * Whether the call has been completed.
+         * This doesn't tell anything about the outcome of the call. That's what status is for
+         */
+        completed: payload?.completed?.toString() ?? '',
+        /**
+         * The status of the call
+         * completed - Call was successfully completed, this can be both human or voicemail answered (see answered_by for details on who the call was answered by)
+         * failed - Call failed to connect or complete (see error_message for details)
+         * busy - Called number was busy
+         * no-answer - Call was not answered
+         * canceled - Call was canceled before completion
+         * unknown - Status could not be determined
+         */
+        status: payload?.status ?? '',
+        /**
+         * human: The call was answered by a human.
+         * voicemail: The call was answered by an answering machine or voicemail.
+         * unknown: There was not enough audio at the start of the call to make a determination.
+         * no-answer: The call was not answered.
+         * null: Not enabled, or still processing the result.
+         */
+        answeredBy: payload?.answered_by ?? '',
+        /**
+         * If an error occurs, this will contain a description of the error. Otherwise, it will be null.
+         */
+        errorMessage: payload?.error_message ?? '',
       },
       ...(awellPatientId !== undefined && { patient_id: awellPatientId }),
     })
