@@ -22,7 +22,7 @@ describe('Transform - Combine date and time', () => {
       await combineDateAndTime.onActivityCreated!(
         mockOnActivityCreateParams,
         onComplete,
-        onError
+        onError,
       )
 
       expect(onComplete).toBeCalledWith({
@@ -44,7 +44,7 @@ describe('Transform - Combine date and time', () => {
       await combineDateAndTime.onActivityCreated!(
         mockOnActivityCreateParams,
         onComplete,
-        onError
+        onError,
       )
 
       expect(onComplete).toBeCalledWith({
@@ -66,7 +66,7 @@ describe('Transform - Combine date and time', () => {
       await combineDateAndTime.onActivityCreated!(
         mockOnActivityCreateParams,
         onComplete,
-        onError
+        onError,
       )
 
       expect(onComplete).toBeCalledWith({
@@ -90,7 +90,7 @@ describe('Transform - Combine date and time', () => {
       await combineDateAndTime.onActivityCreated!(
         mockOnActivityCreateParams,
         onComplete,
-        onError
+        onError,
       )
 
       expect(onComplete).toBeCalledWith({
@@ -112,7 +112,7 @@ describe('Transform - Combine date and time', () => {
       await combineDateAndTime.onActivityCreated!(
         mockOnActivityCreateParams,
         onComplete,
-        onError
+        onError,
       )
 
       expect(onComplete).toBeCalledWith({
@@ -134,7 +134,7 @@ describe('Transform - Combine date and time', () => {
       await combineDateAndTime.onActivityCreated!(
         mockOnActivityCreateParams,
         onComplete,
-        onError
+        onError,
       )
 
       expect(onComplete).toBeCalledWith({
@@ -156,7 +156,7 @@ describe('Transform - Combine date and time', () => {
       await combineDateAndTime.onActivityCreated!(
         mockOnActivityCreateParams,
         onComplete,
-        onError
+        onError,
       )
 
       expect(onComplete).toBeCalledWith({
@@ -178,7 +178,7 @@ describe('Transform - Combine date and time', () => {
       await combineDateAndTime.onActivityCreated!(
         mockOnActivityCreateParams,
         onComplete,
-        onError
+        onError,
       )
 
       expect(onComplete).toBeCalledWith({
@@ -202,7 +202,7 @@ describe('Transform - Combine date and time', () => {
       await combineDateAndTime.onActivityCreated!(
         mockOnActivityCreateParams,
         onComplete,
-        onError
+        onError,
       )
 
       expect(onError).toHaveBeenCalledWith({
@@ -212,7 +212,8 @@ describe('Transform - Combine date and time', () => {
             text: { en: 'Invalid time string format' },
             error: {
               category: 'WRONG_INPUT',
-              message: 'Time string must be in ISO format HH:mm:ss (e.g., "14:30:00") or valid ISO8601 datetime with timezone (e.g., "2025-09-06T15:34:44+02:00")',
+              message:
+                'Time string must be in ISO format HH:mm:ss (e.g., "14:30:00") or valid ISO8601 datetime with timezone (e.g., "2025-09-06T15:34:44+02:00")',
             },
           },
         ],
@@ -232,7 +233,7 @@ describe('Transform - Combine date and time', () => {
       await combineDateAndTime.onActivityCreated!(
         mockOnActivityCreateParams,
         onComplete,
-        onError
+        onError,
       )
 
       expect(onError).toHaveBeenCalledWith({
@@ -242,13 +243,13 @@ describe('Transform - Combine date and time', () => {
             text: { en: 'Invalid time string format' },
             error: {
               category: 'WRONG_INPUT',
-              message: 'Time string must be in ISO format HH:mm:ss (e.g., "14:30:00") or valid ISO8601 datetime with timezone (e.g., "2025-09-06T15:34:44+02:00")',
+              message:
+                'Time string must be in ISO format HH:mm:ss (e.g., "14:30:00") or valid ISO8601 datetime with timezone (e.g., "2025-09-06T15:34:44+02:00")',
             },
           },
         ],
       })
       expect(onComplete).not.toHaveBeenCalled()
     })
-
   })
 })

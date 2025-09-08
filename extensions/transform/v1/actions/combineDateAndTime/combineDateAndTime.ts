@@ -12,7 +12,8 @@ export const combineDateAndTime: Action<
 > = {
   key: 'combineDateAndTime',
   title: 'Combine date and time',
-  description: 'Combine a reference date with a time string to create an ISO8601 datetime in UTC.',
+  description:
+    'Combine a reference date with a time string to create an ISO8601 datetime in UTC.',
   category: Category.DATA,
   fields,
   dataPoints,
@@ -47,14 +48,15 @@ export const combineDateAndTime: Action<
               text: { en: 'Invalid time string format' },
               error: {
                 category: 'WRONG_INPUT',
-                message: 'Time string must be in ISO format HH:mm:ss (e.g., "14:30:00") or valid ISO8601 datetime with timezone (e.g., "2025-09-06T15:34:44+02:00")',
+                message:
+                  'Time string must be in ISO format HH:mm:ss (e.g., "14:30:00") or valid ISO8601 datetime with timezone (e.g., "2025-09-06T15:34:44+02:00")',
               },
             },
           ],
         })
         return
       }
-      
+
       const baseDate = new Date(referenceDate)
       combinedDate = new Date(baseDate)
       combinedDate.setHours(parsedDateTime.getHours())
