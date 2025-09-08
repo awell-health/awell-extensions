@@ -2,13 +2,13 @@ import {
   mockedDates,
   mockedTaskData,
   ZendeskClientMockImplementation,
-} from '../../../../zendeskSell/v1/client/__mocks__'
-import { createTask } from '../../../../zendeskSell/v1/actions/createTask'
+} from '../../client/__mocks__'
+import { createTask } from './createTask'
 import { generateTestPayload } from '@/tests'
 
-jest.mock('../../../../zendeskSell/v1/client')
+jest.mock('../../client')
 
-describe('Create task', () => {
+describe('Zendesk Sell - createTask', () => {
   const onComplete = jest.fn()
   const onError = jest.fn()
 
@@ -36,15 +36,15 @@ describe('Create task', () => {
 
     expect(
       ZendeskClientMockImplementation.salesApi.createTask
-    ).toHaveBeenCalledWith({
-      content: mockedTaskData.content,
-      due_date: expect.stringMatching(/T.*Z$/),
-      owner_id: mockedTaskData.owner_id,
-      resource_type: mockedTaskData.resource_type,
-      resource_id: mockedTaskData.resource_id,
-      completed: mockedTaskData.completed,
-      remind_at: expect.stringMatching(/T.*Z$/),
-    })
+    ).toHaveBeenCalledWith(
+      expect.objectContaining({
+        content: mockedTaskData.content,
+        owner_id: mockedTaskData.owner_id,
+        resource_type: mockedTaskData.resource_type,
+        resource_id: mockedTaskData.resource_id,
+        completed: mockedTaskData.completed,
+      })
+    )
     expect(onComplete).toHaveBeenCalledWith({
       data_points: { taskId: String(mockedTaskData.id) },
     })

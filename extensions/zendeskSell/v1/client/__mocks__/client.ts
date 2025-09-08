@@ -1,10 +1,8 @@
-import { mockedTaskData } from './testData'
-
 export const ZendeskClientMockImplementation = {
   salesApi: {
     createTask: jest.fn().mockResolvedValue({
       data: {
-        data: { id: mockedTaskData.id },
+        data: { id: 1 },
       },
     }),
     updateTask: jest.fn().mockResolvedValue({}),
