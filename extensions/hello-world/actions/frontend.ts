@@ -35,9 +35,7 @@ export const frontend: Action<
   fields,
   previewable: true,
   dataPoints,
-  onActivityCreated: async (payload, onComplete): Promise<void> => {
-    const { fields, settings } = payload
-    void fields
-    void settings
+  onEvent: async ({ payload }): Promise<void> => {
+    console.log('payload', payload)
   },
 }
