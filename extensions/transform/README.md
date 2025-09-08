@@ -71,16 +71,16 @@ Time string: 17:45:00
 Result: 2025-09-13T17:45:00Z
 ```
 
-**Example 2 - Timezone-aware datetime:**
+**Example 2 - Reference date precedence with timezone-aware datetime:**
 ```
-Reference date: 2025-09-06 (ignored when using full datetime)
+Reference date: 2025-09-01
 Time string: 2025-09-06T15:34:44+02:00
-Result: 2025-09-06T13:34:44Z (converted from +02:00 to UTC)
+Result: 2025-09-01T13:34:44Z (reference date takes precedence, time converted from +02:00 to UTC)
 ```
 
 **Example 3 - Different timezone offset:**
 ```
-Reference date: 2025-09-06 (ignored when using full datetime)
+Reference date: 2025-09-06
 Time string: 2025-09-06T10:30:00-05:00
 Result: 2025-09-06T15:30:00Z (converted from -05:00 to UTC)
 ```
