@@ -16,5 +16,6 @@
   ],
   "exclude": [
     "**/scripts/*.ts"
-  ]
+  ],
+  "compileOnSave": false
 }
