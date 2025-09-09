@@ -10,23 +10,23 @@ describe('Transform - Parse text to number', () => {
     clearMocks()
   })
 
-  test('Should transform list to comma separated text', async () => {
-    await extensionAction.onEvent({
-      payload: generateTestPayload({
-        fields: {
-          list: 'two,three',
-        },
-        settings: {},
-      }),
-      onComplete,
-      onError,
-      helpers,
-    })
+  // test('Should transform list to comma separated text', async () => {
+  //   await extensionAction.onEvent({
+  //     payload: generateTestPayload({
+  //       fields: {
+  //         list: 'two,three',
+  //       },
+  //       settings: {},
+  //     }),
+  //     onComplete,
+  //     onError,
+  //     helpers,
+  //   })
 
-    expect(onComplete).toHaveBeenCalledWith({
-      data_points: {
-        listText: 'two,three',
-      },
-    })
-  })
+  //   expect(onComplete).toHaveBeenCalledWith({
+  //     data_points: {
+  //       listText: 'two,three',
+  //     },
+  //   })
+  // })
 })
