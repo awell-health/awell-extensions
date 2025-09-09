@@ -36,6 +36,10 @@ describe('Medplum - Get patient', () => {
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
         patientData: JSON.stringify(mockGetPatientResponse),
+        patientFirstName: mockGetPatientResponse?.name?.[0]?.given?.[0],
+        patientLastName: mockGetPatientResponse?.name?.[0]?.family,
+        patientDob: mockGetPatientResponse?.birthDate,
+        patientGender: mockGetPatientResponse?.gender,
       },
     })
   })
