@@ -11,6 +11,8 @@ import {
   parseTextToNumber,
   parseUnixTimestampToDate,
   serializeJson,
+  combineDateAndTime,
+  listToCommaSeparatedText,
 } from './v1/actions'
 import { settings } from './settings'
 
@@ -36,6 +38,8 @@ export const Transform: Extension = {
     parseTextToNumber,
     parseUnixTimestampToDate,
     serializeJson,
+    combineDateAndTime,
+    listToCommaSeparatedText,
   },
   settings,
 }

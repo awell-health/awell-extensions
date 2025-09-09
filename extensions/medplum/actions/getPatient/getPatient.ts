@@ -26,9 +26,18 @@ export const getPatient: Action<
 
     const res = await medplumSdk.readResource('Patient', resourceId)
 
+    const patientFirstName = res?.name?.[0]?.given?.[0]
+    const patientLastName = res?.name?.[0]?.family
+    const patientDob = res?.birthDate
+    const patientGender = res?.gender
+
     await onComplete({
       data_points: {
         patientData: JSON.stringify(res),
+        patientFirstName,
+        patientLastName,
+        patientDob,
+        patientGender,
       },
     })
   },

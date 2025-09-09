@@ -54,3 +54,35 @@ outcome       https://your-url.com/hello-world
 ## Feet and inches to inches
 
 Converts a measurement in feet and inches to just inches.
+
+## Combine date and time
+
+Combines a reference date with a time string to create a complete datetime in UTC format. This action supports two input formats for the time string:
+
+1. **Simple time format (HH:mm:ss)**: Combines the reference date with the specified time in ISO format (e.g., "14:30:00" not "2PM")
+2. **Full datetime with timezone**: Accepts ISO8601 datetime strings with timezone offsets and converts them to UTC
+
+**Examples:**
+
+**Example 1 - Simple time combination:**
+```
+Reference date: 2025-09-13
+Time string: 17:45:00
+Result: 2025-09-13T17:45:00Z
+```
+
+**Example 2 - Reference date precedence with timezone-aware datetime:**
+```
+Reference date: 2025-09-01
+Time string: 2025-09-06T15:34:44+02:00
+Result: 2025-09-01T13:34:44Z (reference date takes precedence, time converted from +02:00 to UTC)
+```
+
+**Example 3 - Different timezone offset:**
+```
+Reference date: 2025-09-06
+Time string: 2025-09-06T10:30:00-05:00
+Result: 2025-09-06T15:30:00Z (converted from -05:00 to UTC)
+```
+
+This action is particularly useful for scheduling systems like Bland API where you need to combine dates and times from different sources, or when working with timezone-aware scheduling data that needs to be normalized to UTC.

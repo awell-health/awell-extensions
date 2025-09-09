@@ -3,16 +3,17 @@ name: Publish pre-release package
 on:
   push:
     branches:
-      - "release/*"
+      - 'release/*'
 
 jobs:
   publish-beta:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
-          token: ${{ secrets.CONTENTS_AND_WORKFLOWS_TOKEN }}
+          token: ${{ secrets.VERSION_BUMP_TOKEN }}
+          fetch-depth: 0
 
       - name: Install Node.js
         uses: actions/setup-node@v3
@@ -26,7 +27,7 @@ jobs:
 
       - name: Compile Typescript
         run: yarn build
-      
+
       - name: Setup .yarnrc.yml
         run: |
           yarn config set npmAlwaysAuth true
