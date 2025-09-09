@@ -22,7 +22,7 @@ export const listToCommaSeparatedText: Action<
     await onComplete({
       events: [
         addActivityEventLog({
-          message: JSON.stringify(payload, null, 2),
+          message: JSON.stringify(payload.fields, null, 2),
         }),
       ],
       data_points: {

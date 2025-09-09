@@ -14,5 +14,5 @@ export const fields = {
 
 export const FieldsValidationSchema = z.object({
   // the string array is received as a string in the extension server, so we need to parse it to an array
-  list: z.string().transform((str) => str.split(',').map((s) => s.trim())),
+  list: z.unknown(),
 } satisfies Record<keyof typeof fields, ZodTypeAny>)
