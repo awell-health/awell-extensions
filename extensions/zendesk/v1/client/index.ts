@@ -1,2 +1,2 @@
-export * from './client'
+export * from './support'
 export * from './error'

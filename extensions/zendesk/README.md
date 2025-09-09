@@ -5,18 +5,20 @@ description: Zendesk is a customer service and support platform that provides a 
 
 # Zendesk
 
-Zendesk is a customer service and support platform that provides a suite of tools and software for businesses to manage their customer interactions. It offers a range of customer service solutions, including help desk ticketing systems, customer support and engagement, and self-service options. Zendesk is designed to help companies streamline their customer support processes, improve communication with their customers, and resolve issues more efficiently.
+Zendesk is a customer service and support platform that provides a suite of tools and software for businesses to manage their customer interactions. It offers a range of customer service solutions, including help desk ticketing systems, customer support and engagement, and self-service options.
 
-## Extension settings
+## Extension settings (Support)
 
-In order to set up this extension, you will to authenticate with the Sell API and need an API token. You can visit Zendesk Sales CRM dashboard and go to **Settings > Integration > OAuth** to enable and create an API token. Read more about how to get an access token for the Sell API [here](https://developer.zendesk.com/documentation/sales-crm/first-call/).
+This extension uses the Zendesk Support API. Configure the following settings:
+- Support subdomain (e.g. "acme" for acme.zendesk.com)
+- Support agent email (the agent email associated with the API token)
+- Support API token
 
 ## Custom Actions
 
-### Create task
+### Create ticket
 
-Creates a new task. You can create either a floating task or create a related task and associate it with one of the resource types: Leads, Contacts, Deals.
-
-### Complete task
-
-Marks a task as completed.
+Creates a Zendesk Support ticket using Basic auth with email/token and API token:
+- Maps requester email/name
+- Includes subject and comment body
+- Supports optional external_id and tag (sent as a single tag in the tags array)
