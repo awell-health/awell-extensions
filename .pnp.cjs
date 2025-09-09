@@ -31,6 +31,7 @@ const RAW_RUNTIME_STATE =
           ["@awell-health/awell-sdk", "npm:0.1.24"],\
           ["@awell-health/extensions-core", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:1.1.3"],\
           ["@awell-health/healthie-sdk", "npm:0.1.1"],\
+          ["@calcom/embed-react", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:1.5.3"],\
           ["@dropbox/sign", "npm:1.8.0"],\
           ["@faker-js/faker", "npm:8.4.1"],\
           ["@graphql-codegen/cli", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:3.3.1"],\
@@ -430,6 +431,7 @@ const RAW_RUNTIME_STATE =
           ["@awell-health/awell-sdk", "npm:0.1.24"],\
           ["@awell-health/extensions-core", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:1.1.3"],\
           ["@awell-health/healthie-sdk", "npm:0.1.1"],\
+          ["@calcom/embed-react", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:1.5.3"],\
           ["@dropbox/sign", "npm:1.8.0"],\
           ["@faker-js/faker", "npm:8.4.1"],\
           ["@graphql-codegen/cli", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:3.3.1"],\
@@ -2107,6 +2109,53 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./.yarn/cache/@bcoe-v8-coverage-npm-0.2.3-9e27b3c57e-1a1f0e356a.zip/node_modules/@bcoe/v8-coverage/",\
         "packageDependencies": [\
           ["@bcoe/v8-coverage", "npm:0.2.3"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["@calcom/embed-core", [\
+      ["npm:1.5.3", {\
+        "packageLocation": "./.yarn/cache/@calcom-embed-core-npm-1.5.3-4bb845dc8b-d9f9322eec.zip/node_modules/@calcom/embed-core/",\
+        "packageDependencies": [\
+          ["@calcom/embed-core", "npm:1.5.3"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["@calcom/embed-react", [\
+      ["npm:1.5.3", {\
+        "packageLocation": "./.yarn/cache/@calcom-embed-react-npm-1.5.3-1b9a76910d-fb28a61719.zip/node_modules/@calcom/embed-react/",\
+        "packageDependencies": [\
+          ["@calcom/embed-react", "npm:1.5.3"]\
+        ],\
+        "linkType": "SOFT"\
+      }],\
+      ["virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:1.5.3", {\
+        "packageLocation": "./.yarn/__virtual__/@calcom-embed-react-virtual-c803433b42/0/cache/@calcom-embed-react-npm-1.5.3-1b9a76910d-fb28a61719.zip/node_modules/@calcom/embed-react/",\
+        "packageDependencies": [\
+          ["@calcom/embed-react", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:1.5.3"],\
+          ["@calcom/embed-core", "npm:1.5.3"],\
+          ["@calcom/embed-snippet", "npm:1.3.3"],\
+          ["@types/react", "npm:19.1.12"],\
+          ["@types/react-dom", null],\
+          ["react", null],\
+          ["react-dom", null]\
+        ],\
+        "packagePeers": [\
+          "@types/react-dom",\
+          "@types/react",\
+          "react-dom",\
+          "react"\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["@calcom/embed-snippet", [\
+      ["npm:1.3.3", {\
+        "packageLocation": "./.yarn/cache/@calcom-embed-snippet-npm-1.3.3-31ef6dd511-5dd05b5e9d.zip/node_modules/@calcom/embed-snippet/",\
+        "packageDependencies": [\
+          ["@calcom/embed-snippet", "npm:1.3.3"],\
+          ["@calcom/embed-core", "npm:1.5.3"]\
         ],\
         "linkType": "HARD"\
       }]\

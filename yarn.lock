@@ -253,6 +253,7 @@ __metadata:
     "@awell-health/awell-sdk": "npm:0.1.24"
     "@awell-health/extensions-core": "npm:1.1.3"
     "@awell-health/healthie-sdk": "npm:^0.1.1"
+    "@calcom/embed-react": "npm:^1.5.3"
     "@dropbox/sign": "npm:^1.8.0"
     "@faker-js/faker": "npm:^8.0.2"
     "@graphql-codegen/cli": "npm:^3.2.2"
@@ -1151,6 +1152,35 @@ __metadata:
   version: 0.2.3
   resolution: "@bcoe/v8-coverage@npm:0.2.3"
   checksum: 10/1a1f0e356a3bb30b5f1ced6f79c413e6ebacf130421f15fac5fcd8be5ddf98aedb4404d7f5624e3285b700e041f9ef938321f3ca4d359d5b716f96afa120d88d
+  languageName: node
+  linkType: hard
+
+"@calcom/embed-core@npm:1.5.3":
+  version: 1.5.3
+  resolution: "@calcom/embed-core@npm:1.5.3"
+  checksum: 10/d9f9322eec9b59b8bd2043893ae1b2f1d66f6b74330099d494baad158b095b35f283c054c0dac83ac357853feb56671895745cbb49a18980471f261ab54f9f23
+  languageName: node
+  linkType: hard
+
+"@calcom/embed-react@npm:^1.5.3":
+  version: 1.5.3
+  resolution: "@calcom/embed-react@npm:1.5.3"
+  dependencies:
+    "@calcom/embed-core": "npm:1.5.3"
+    "@calcom/embed-snippet": "npm:1.3.3"
+  peerDependencies:
+    react: ^18.2.0 || ^19.0.0
+    react-dom: ^18.2.0 || ^19.0.0
+  checksum: 10/fb28a6171905080b1ee733bda7bc630652455e4e4ce7a8f1750f10c803d16f1c7370560d681844471b750a0aa1f40192e63a95c4d273a90cf1fa7243be6f88e5
+  languageName: node
+  linkType: hard
+
+"@calcom/embed-snippet@npm:1.3.3":
+  version: 1.3.3
+  resolution: "@calcom/embed-snippet@npm:1.3.3"
+  dependencies:
+    "@calcom/embed-core": "npm:1.5.3"
+  checksum: 10/5dd05b5e9df27f7acb8ef2d9c516ab0ea600ec472e49bbef40081cb629ecc662dfcec207efa039dcddf21c7d2fb6d77384b4f1ec86d32d56aa446f5f2c7bf688
   languageName: node
   linkType: hard
 

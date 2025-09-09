@@ -1,5 +1,6 @@
 import React from 'react'
 import type { ComponentProps } from '@awell-health/extensions-core'
+import Cal, { getCalApi } from '@calcom/embed-react'
 
 interface BookingSuccessfulFunctionProps {
   confirmed?: boolean
@@ -28,30 +29,52 @@ const CalDotComScheduling: React.FC<CalDotComSchedulingProps> = ({
   onBookingSuccessful,
   metadata,
 }) => {
+  const eventListenerRef = React.useRef(false)
+  const calApiRef = React.useRef<any>(null)
+
+  const bookingSuccessfulCallback = (e: { detail: { data: any } }) => {
+    const { data } = e.detail
+    const { confirmed, eventType, date, booking } = data
+    onBookingSuccessful({ confirmed, eventType, date, booking })
+  }
+
+  const initComponent = async () => {
+    const cal = await getCalApi()
+    calApiRef.current = cal
+
+    if (cal && !eventListenerRef.current) {
+      cal('ui', {
+        theme: 'light',
+        styles: { branding: { brandColor: '#000000' } },
+        hideEventTypeDetails,
+      })
+
+      cal('on', {
+        action: 'bookingSuccessful',
+        callback: bookingSuccessfulCallback,
+      })
+
+      eventListenerRef.current = true
+    }
+  }
+
   React.useEffect(() => {
-    const script = document.createElement('script')
-    script.src = 'https://app.cal.com/embed/embed.js'
-    script.async = true
-    document.head.appendChild(script)
+    initComponent()
 
-    const handleMessage = (event: MessageEvent) => {
-      if (event.origin !== 'https://app.cal.com' && event.origin !== 'https://cal.com') return
-      
-      if (event.data?.type === 'CAL:booking_successful') {
-        const { confirmed, eventType, date, booking } = event.data.data
-        onBookingSuccessful({ confirmed, eventType, date, booking })
-      }
-    }
-
-    window.addEventListener('message', handleMessage)
-    
     return () => {
-      window.removeEventListener('message', handleMessage)
-      if (script.parentNode) {
-        script.parentNode.removeChild(script)
+      const cleanup = async () => {
+        const cal = calApiRef.current || (await getCalApi())
+        if (cal && eventListenerRef.current) {
+          cal('off', {
+            action: 'bookingSuccessful',
+            callback: bookingSuccessfulCallback,
+          })
+          eventListenerRef.current = false
+        }
       }
+      cleanup()
     }
-  }, [onBookingSuccessful])
+  }, [hideEventTypeDetails])
 
   let metadataString = ''
   if (metadata) {
@@ -67,12 +90,8 @@ const CalDotComScheduling: React.FC<CalDotComSchedulingProps> = ({
 
   return (
     <div style={{ width: '100%', height: '600px' }}>
-      <div
-        data-cal-link={composedCalLink}
-        data-cal-config={JSON.stringify({
-          layout: 'month_view',
-          hideEventTypeDetails: hideEventTypeDetails
-        })}
+      <Cal
+        calLink={composedCalLink}
         style={{ width: '100%', height: '100%', overflow: 'hidden' }}
       />
     </div>
