@@ -1,9 +1,8 @@
 import { type Action } from '@awell-health/extensions-core'
-import { Category } from '@awell-health/extensions-core'
+import { Category, validate } from '@awell-health/extensions-core'
 import { type settings } from '../../../settings'
-import { dataPoints, fields } from './config'
-import { addActivityEventLog } from '../../../../../src/lib/awell'
-// import { z } from 'zod'
+import { FieldsValidationSchema, dataPoints, fields } from './config'
+import { z } from 'zod'
 
 export const listToCommaSeparatedText: Action<
   typeof fields,
@@ -19,31 +18,20 @@ export const listToCommaSeparatedText: Action<
   dataPoints,
   previewable: true,
   onActivityCreated: async (payload, onComplete) => {
-    await onComplete({
-      events: [
-        addActivityEventLog({
-          message: JSON.stringify(payload.fields, null, 2),
-        }),
-      ],
-      data_points: {
-        listText: 'todo',
-      },
+    const {
+      fields: { list },
+    } = validate({
+      schema: z.object({
+        fields: FieldsValidationSchema,
+      }),
+      payload,
     })
 
-    // const {
-    //   fields: { list },
-    // } = validate({
-    //   schema: z.object({
-    //     fields: FieldsValidationSchema,
-    //   }),
-    //   payload,
-    // })
-
-    // const output = list.join(',')
-    // await onComplete({
-    //   data_points: {
-    //     listText: output,
-    //   },
-    // })
+    const output = list.join(',')
+    await onComplete({
+      data_points: {
+        listText: output,
+      },
+    })
   },
 }
