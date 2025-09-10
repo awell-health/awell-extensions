@@ -7,6 +7,8 @@ import {
   makeStringOptional,
 } from '@awell-health/extensions-core'
 
+const priorityEnum = z.enum(['urgent', 'high', 'normal', 'low'])
+
 export const fields = {
   subject: {
     label: 'Subject',
@@ -37,6 +39,12 @@ export const fields = {
     type: FieldType.STRING,
     required: false,
     description: 'The priority level: urgent, high, normal, or low.',
+    options: {
+      dropdownOptions: Object.values(priorityEnum.enum).map((status) => ({
+        label: status,
+        value: status,
+      })),
+    },
   },
   external_id: {
     label: 'External ID',
@@ -53,8 +61,6 @@ export const fields = {
     description: 'A tag to add to the ticket.',
   },
 } satisfies Record<string, Field>
-
-const priorityEnum = z.enum(['urgent', 'high', 'normal', 'low'])
 
 export const FieldsValidationSchema = z.object({
   subject: z.string().nonempty(),
