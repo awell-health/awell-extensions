@@ -18,3 +18,14 @@ export interface CreateTicketResponse {
     updated_at: string
   }
 }
+
+export interface ZendeskApiErrorResponse {
+  details?: {
+    [key: string]: Array<{
+      type: string
+      description: string
+    }>
+  }
+  description?: string
+  error?: string
+}
