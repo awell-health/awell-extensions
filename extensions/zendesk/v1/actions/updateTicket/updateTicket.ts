@@ -5,7 +5,11 @@ import { Category, validate } from '@awell-health/extensions-core'
 import { SettingsValidationSchema } from '../../../settings'
 import { FieldsValidationSchema, fields } from './config'
 import { makeAPIClient } from '../../client'
-import { isZendeskApiError, zendeskApiErrorToActivityEvent } from '../../client/error'
+import {
+  isZendeskApiError,
+  zendeskApiErrorToActivityEvent,
+} from '../../client/error'
+import { isNil } from 'lodash'
 
 export const updateTicket: Action<typeof fields, typeof settings> = {
   key: 'updateTicket',
@@ -29,19 +33,13 @@ export const updateTicket: Action<typeof fields, typeof settings> = {
 
       const client = makeAPIClient(settings)
 
-      const updateData: any = {}
-      
-      if (comment) {
-        updateData.comment = { body: comment }
-      }
-      if (priority) {
-        updateData.priority = priority
-      }
-      if (status) {
-        updateData.status = status
+      const updateData: any = {
+        ...(!isNil(comment) && { comment: { body: comment } }),
+        ...(!isNil(priority) && { priority }),
+        ...(!isNil(status) && { status }),
       }
 
-      await client.updateTicket(ticket_id, updateData)
+      await client.updateTicket(ticket_id.toString(), updateData)
 
       await onComplete({})
     } catch (err) {
@@ -49,7 +47,8 @@ export const updateTicket: Action<typeof fields, typeof settings> = {
         const events = zendeskApiErrorToActivityEvent(err)
         await onError({ events })
       } else {
-        const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred'
+        const errorMessage =
+          err instanceof Error ? err.message : 'Unknown error occurred'
         await onError({
           events: [
             {
