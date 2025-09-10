@@ -1,5 +1,5 @@
 import { createTicket } from './createTicket'
-import { generateTestPayload } from '@awell-health/extensions-core'
+import { generateTestPayload } from '@/tests'
 
 describe('Create ticket', () => {
   const onComplete = jest.fn()
@@ -13,8 +13,7 @@ describe('Create ticket', () => {
   test('Should create a ticket with required fields', async () => {
     const mockSettings = {
       subdomain: 'test-company',
-      client_id: 'test-client-id',
-      client_secret: 'test-client-secret',
+      access_token: 'test-access-token',
     }
 
     const mockFields = {
@@ -27,7 +26,7 @@ describe('Create ticket', () => {
       settings: mockSettings,
     })
 
-    await createTicket.onActivityCreated(payload, onComplete, onError)
+    await createTicket.onActivityCreated!(payload, onComplete, onError)
 
     expect(onComplete).toHaveBeenCalledWith({
       data_points: expect.objectContaining({
@@ -40,8 +39,7 @@ describe('Create ticket', () => {
   test('Should create a ticket with all optional fields', async () => {
     const mockSettings = {
       subdomain: 'test-company',
-      client_id: 'test-client-id',
-      client_secret: 'test-client-secret',
+      access_token: 'test-access-token',
     }
 
     const mockFields = {
@@ -58,7 +56,7 @@ describe('Create ticket', () => {
       settings: mockSettings,
     })
 
-    await createTicket.onActivityCreated(payload, onComplete, onError)
+    await createTicket.onActivityCreated!(payload, onComplete, onError)
 
     expect(onComplete).toHaveBeenCalledWith({
       data_points: expect.objectContaining({
