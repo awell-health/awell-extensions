@@ -32,6 +32,7 @@ describe('Create ticket', () => {
       client_id: 'test-client-id',
       client_secret: 'test-client-secret',
       auth_url: 'https://test-company.zendesk.com/oauth/tokens',
+      audience: 'https://test-company.zendesk.com',
     }
 
     const mockFields = {
@@ -64,6 +65,7 @@ describe('Create ticket', () => {
       client_id: 'test-client-id',
       client_secret: 'test-client-secret',
       auth_url: 'https://test-company.zendesk.com/oauth/tokens',
+      audience: 'https://test-company.zendesk.com',
     }
 
     const mockFields = {
