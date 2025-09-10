@@ -7,10 +7,10 @@ Zendesk Support is a customer service platform that provides ticketing, knowledg
 To set up this extension, you will need to provide the following:
 
 1. **Zendesk Subdomain:** your Zendesk subdomain (e.g., "company" for company.zendesk.com)
-2. **OAuth Client ID:** the client ID of the OAuth app you created in Zendesk
-3. **OAuth Client Secret:** the client secret of the OAuth app you created in Zendesk
+2. **User Email:** your Zendesk user email address
+3. **API Token:** your Zendesk API token
 
-You'll have to set up an [OAuth app](https://developer.zendesk.com/api-reference/introduction/security-and-auth/#oauth-access-token) in Zendesk to provision a client ID and secret.
+You can generate an API token in your Zendesk admin settings under API > Zendesk API.
 
 ## Actions
 
@@ -31,3 +31,12 @@ Creates a new support ticket in Zendesk with the specified details.
 **Returns:**
 - Ticket ID: The unique identifier of the created ticket
 - Ticket URL: Direct link to the ticket in Zendesk agent interface
+
+### Delete Ticket
+
+Deletes a support ticket in Zendesk. This action permanently removes the ticket from your Zendesk instance.
+
+**Required fields:**
+- Ticket ID: The unique identifier of the ticket to delete
+
+**Note:** This action cannot be undone. Deleted tickets are permanently removed from Zendesk.

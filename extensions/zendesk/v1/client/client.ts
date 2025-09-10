@@ -26,6 +26,10 @@ export class ZendeskAPIClient {
     
     return response.data
   }
+
+  public async deleteTicket(ticketId: string): Promise<void> {
+    await this.client.delete(`/api/v2/tickets/${ticketId}`)
+  }
 }
 
 export const makeAPIClient = (
