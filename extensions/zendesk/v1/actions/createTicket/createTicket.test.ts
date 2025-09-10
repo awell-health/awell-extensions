@@ -1,5 +1,5 @@
-import { createTicket } from './createTicket'
-import { generateTestPayload } from '@/tests'
+import { TestHelpers } from '@awell-health/extensions-core'
+import { createTicket as action } from './createTicket'
 
 const mockTicketResponse = {
   ticket: {
@@ -16,8 +16,13 @@ jest.mock('../../client', () => ({
 }))
 
 describe('Create ticket', () => {
-  const onComplete = jest.fn()
-  const onError = jest.fn()
+  const {
+    extensionAction: createTicket,
+    onComplete,
+    onError,
+    helpers,
+    clearMocks,
+  } = TestHelpers.fromAction(action)
 
   beforeEach(() => {
     jest.clearAllMocks()
@@ -42,12 +47,25 @@ describe('Create ticket', () => {
       tag: undefined,
     }
 
-    const payload = generateTestPayload({
+    const payload = {
       fields: mockFields,
       settings: mockSettings,
-    })
+      pathway: {
+        id: 'test-pathway-id',
+        definition_id: 'test-definition-id',
+        tenant_id: 'test-tenant-id',
+        org_slug: 'test-org-slug',
+        org_id: 'test-org-id',
+      },
+      activity: {
+        id: 'test-activity-id',
+      },
+      patient: {
+        id: 'test-patient-id',
+      },
+    }
 
-    await createTicket.onActivityCreated!(payload, onComplete, onError)
+    await createTicket.onEvent!({ payload, onComplete, onError, helpers })
 
     expect(onComplete).toHaveBeenCalledWith({
       data_points: expect.objectContaining({
@@ -73,12 +91,25 @@ describe('Create ticket', () => {
       tag: 'urgent',
     }
 
-    const payload = generateTestPayload({
+    const payload = {
       fields: mockFields,
       settings: mockSettings,
-    })
+      pathway: {
+        id: 'test-pathway-id',
+        definition_id: 'test-definition-id',
+        tenant_id: 'test-tenant-id',
+        org_slug: 'test-org-slug',
+        org_id: 'test-org-id',
+      },
+      activity: {
+        id: 'test-activity-id',
+      },
+      patient: {
+        id: 'test-patient-id',
+      },
+    }
 
-    await createTicket.onActivityCreated!(payload, onComplete, onError)
+    await createTicket.onEvent!({ payload, onComplete, onError, helpers })
 
     expect(onComplete).toHaveBeenCalledWith({
       data_points: expect.objectContaining({

@@ -5,7 +5,11 @@ import { Category, validate } from '@awell-health/extensions-core'
 import { SettingsValidationSchema } from '../../../settings'
 import { FieldsValidationSchema, fields, dataPoints } from './config'
 import { makeAPIClient } from '../../client'
-import { isZendeskApiError, zendeskApiErrorToActivityEvent } from '../../client/error'
+import {
+  isZendeskApiError,
+  zendeskApiErrorToActivityEvent,
+} from '../../client/error'
+import { isNil } from 'lodash'
 
 export const createTicket: Action<typeof fields, typeof settings> = {
   key: 'createTicket',
@@ -15,7 +19,7 @@ export const createTicket: Action<typeof fields, typeof settings> = {
   fields,
   dataPoints,
   previewable: false,
-  onActivityCreated: async (payload, onComplete, onError) => {
+  onEvent: async ({ payload, onComplete, onError }): Promise<void> => {
     try {
       const {
         settings,
@@ -33,10 +37,10 @@ export const createTicket: Action<typeof fields, typeof settings> = {
       const ticketData = {
         subject,
         comment: { body: comment },
-        ...(group_id && { group_id: Number(group_id) }),
-        ...(priority && { priority }),
-        ...(external_id && { external_id }),
-        ...(tag && { tags: [tag] }),
+        ...(!isNil(group_id) && { group_id: Number(group_id) }),
+        ...(!isNil(priority) && { priority }),
+        ...(!isNil(external_id) && { external_id }),
+        ...(!isNil(tag) && { tags: [tag] }),
       }
 
       const response = await client.createTicket(ticketData)
@@ -52,7 +56,8 @@ export const createTicket: Action<typeof fields, typeof settings> = {
         const events = zendeskApiErrorToActivityEvent(err)
         await onError({ events })
       } else {
-        const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred'
+        const errorMessage =
+          err instanceof Error ? err.message : 'Unknown error occurred'
         await onError({
           events: [
             {
