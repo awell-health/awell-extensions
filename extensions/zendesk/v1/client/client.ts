@@ -1,70 +1,37 @@
-import {
-  APIClient,
-  DataWrapper,
-  type DataWrapperCtor,
-  OAuthClientCredentials,
-} from '@awell-health/extensions-core'
-import { type settings } from '../../settings'
+import axios, { type AxiosInstance, type AxiosResponse } from 'axios'
 import { SettingsValidationSchema } from '../../settings'
 import { type CreateTicketInput, type CreateTicketResponse } from './types'
 
-export class ZendeskDataWrapper extends DataWrapper {
-  public async createTicket(data: CreateTicketInput): Promise<CreateTicketResponse> {
-    return await this.Request<CreateTicketResponse>({
-      method: 'POST',
-      url: '/api/v2/tickets',
-      data: { ticket: data },
-    })
-  }
-}
+export class ZendeskAPIClient {
+  private readonly client: AxiosInstance
 
-interface ZendeskAPIClientConstructorProps {
-  subdomain: string
-  authUrl: string
-  requestConfig: {
-    client_id: string
-    client_secret: string
-    audience?: string
-  }
-}
-
-export class ZendeskAPIClient extends APIClient<ZendeskDataWrapper> {
-  readonly ctor: DataWrapperCtor<ZendeskDataWrapper> = (
-    token: string,
-    baseUrl: string
-  ) => new ZendeskDataWrapper(token, baseUrl)
-
-  public constructor({
-    subdomain,
-    authUrl,
-    requestConfig,
-  }: ZendeskAPIClientConstructorProps) {
-    super({
-      baseUrl: `https://${subdomain}.zendesk.com`,
-      auth: new OAuthClientCredentials({
-        auth_url: authUrl,
-        request_config: requestConfig,
-      }),
+  constructor(subdomain: string, userEmail: string, apiToken: string) {
+    const credentials = `${userEmail}/token:${apiToken}`
+    const encodedCredentials = Buffer.from(credentials).toString('base64')
+    
+    this.client = axios.create({
+      baseURL: `https://${subdomain}.zendesk.com`,
+      headers: {
+        Authorization: `Basic ${encodedCredentials}`,
+        'Content-Type': 'application/json',
+      },
     })
   }
 
   public async createTicket(data: CreateTicketInput): Promise<CreateTicketResponse> {
-    return await this.FetchData(async (dw) => await dw.createTicket(data))
+    const response: AxiosResponse<CreateTicketResponse> = await this.client.post(
+      '/api/v2/tickets',
+      { ticket: data }
+    )
+    
+    return response.data
   }
 }
 
 export const makeAPIClient = (
   payloadSettings: Record<string, string | undefined>
 ): ZendeskAPIClient => {
-  const { subdomain, client_id, client_secret, auth_url, audience } = SettingsValidationSchema.parse(payloadSettings)
+  const { subdomain, user_email, api_token } = SettingsValidationSchema.parse(payloadSettings)
 
-  return new ZendeskAPIClient({
-    subdomain,
-    authUrl: auth_url,
-    requestConfig: {
-      client_id,
-      client_secret,
-      ...(audience && { audience }),
-    },
-  })
+  return new ZendeskAPIClient(subdomain, user_email, api_token)
 }

@@ -1,8 +1,5 @@
-import {
-  type Setting,
-  clientCredentialsSettings,
-} from '@awell-health/extensions-core'
-import { z, type ZodTypeAny } from 'zod'
+import { type Setting } from '@awell-health/extensions-core'
+import { z } from 'zod'
 
 export const settings = {
   subdomain: {
@@ -13,21 +10,30 @@ export const settings = {
     description:
       'Your Zendesk subdomain (e.g., "company" for company.zendesk.com)',
   },
-  ...clientCredentialsSettings,
+  user_email: {
+    label: 'User Email',
+    key: 'user_email',
+    obfuscated: false,
+    required: true,
+    description: 'Your Zendesk user email address',
+  },
+  api_token: {
+    label: 'API Token',
+    key: 'api_token',
+    obfuscated: true,
+    required: true,
+    description: 'Your Zendesk API token',
+  },
 } satisfies Record<string, Setting>
 
 export const SettingsValidationSchema = z.object({
   subdomain: z.string().nonempty({
     message: 'Missing "Zendesk Subdomain" in the extension settings.',
   }),
-  client_id: z.string().nonempty({
-    message: 'Missing "Client ID" in the extension settings.',
+  user_email: z.string().email({
+    message: 'Invalid "User Email" in the extension settings.',
   }),
-  client_secret: z.string().nonempty({
-    message: 'Missing "Client Secret" in the extension settings.',
+  api_token: z.string().nonempty({
+    message: 'Missing "API Token" in the extension settings.',
   }),
-  auth_url: z.string().nonempty({
-    message: 'Missing "Auth URL" in the extension settings.',
-  }),
-  audience: z.string().optional(),
 })
