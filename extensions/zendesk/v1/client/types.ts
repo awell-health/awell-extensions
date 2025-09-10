@@ -19,6 +19,14 @@ export interface CreateTicketResponse {
   }
 }
 
+export interface UpdateTicketInput {
+  comment?: {
+    body: string
+  }
+  priority?: 'urgent' | 'high' | 'normal' | 'low'
+  status?: 'new' | 'open' | 'pending' | 'hold' | 'solved' | 'closed'
+}
+
 export interface ZendeskApiErrorResponse {
   errors: Array<{
     error: {

@@ -1,6 +1,6 @@
 import axios, { type AxiosInstance, type AxiosResponse } from 'axios'
 import { SettingsValidationSchema } from '../../settings'
-import { type CreateTicketInput, type CreateTicketResponse } from './types'
+import { type CreateTicketInput, type CreateTicketResponse, type UpdateTicketInput } from './types'
 
 export class ZendeskAPIClient {
   private readonly client: AxiosInstance
@@ -29,6 +29,10 @@ export class ZendeskAPIClient {
 
   public async deleteTicket(ticketId: string): Promise<void> {
     await this.client.delete(`/api/v2/tickets/${ticketId}`)
+  }
+
+  public async updateTicket(ticketId: string, data: UpdateTicketInput): Promise<void> {
+    await this.client.put(`/api/v2/tickets/${ticketId}`, { ticket: data })
   }
 }
 
