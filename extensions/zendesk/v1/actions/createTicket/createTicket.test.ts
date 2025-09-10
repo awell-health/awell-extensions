@@ -1,13 +1,29 @@
 import { createTicket } from './createTicket'
 import { generateTestPayload } from '@/tests'
 
+const mockTicketResponse = {
+  ticket: {
+    id: 12345,
+  },
+}
+
+const mockZendeskAPIClient = {
+  createTicket: jest.fn().mockResolvedValue(mockTicketResponse),
+}
+
+jest.mock('../../client', () => ({
+  makeAPIClient: jest.fn().mockImplementation(() => mockZendeskAPIClient),
+}))
+
 describe('Create ticket', () => {
   const onComplete = jest.fn()
   const onError = jest.fn()
 
   beforeEach(() => {
+    jest.clearAllMocks()
     onComplete.mockClear()
     onError.mockClear()
+    mockZendeskAPIClient.createTicket.mockResolvedValue(mockTicketResponse)
   })
 
   test('Should create a ticket with required fields', async () => {
