@@ -1,5 +1,5 @@
-import { updateTicket } from './updateTicket'
-import { generateTestPayload } from '@/tests'
+import { TestHelpers } from '@awell-health/extensions-core'
+import { updateTicket as action } from './updateTicket'
 
 const mockZendeskAPIClient = {
   updateTicket: jest.fn().mockResolvedValue(undefined),
@@ -10,13 +10,17 @@ jest.mock('../../client', () => ({
 }))
 
 describe('Update ticket', () => {
-  const onComplete = jest.fn()
-  const onError = jest.fn()
+  const {
+    extensionAction: updateTicket,
+    onComplete,
+    onError,
+    helpers,
+    clearMocks,
+  } = TestHelpers.fromAction(action)
 
   beforeEach(() => {
+    clearMocks()
     jest.clearAllMocks()
-    onComplete.mockClear()
-    onError.mockClear()
     mockZendeskAPIClient.updateTicket.mockResolvedValue(undefined)
   })
 
@@ -34,12 +38,25 @@ describe('Update ticket', () => {
       status: undefined,
     }
 
-    const payload = generateTestPayload({
+    const payload = {
       fields: mockFields,
       settings: mockSettings,
-    })
+      pathway: {
+        id: 'test-pathway-id',
+        definition_id: 'test-definition-id',
+        tenant_id: 'test-tenant-id',
+        org_slug: 'test-org-slug',
+        org_id: 'test-org-id'
+      },
+      activity: {
+        id: 'test-activity-id'
+      },
+      patient: {
+        id: 'test-patient-id'
+      }
+    }
 
-    await updateTicket.onActivityCreated!(payload, onComplete, onError)
+    await updateTicket.onEvent!({ payload, onComplete, onError, helpers })
 
     expect(mockZendeskAPIClient.updateTicket).toHaveBeenCalledWith('123', {
       comment: { body: 'This is an update comment' },
@@ -61,12 +78,25 @@ describe('Update ticket', () => {
       status: 'open',
     }
 
-    const payload = generateTestPayload({
+    const payload = {
       fields: mockFields,
       settings: mockSettings,
-    })
+      pathway: {
+        id: 'test-pathway-id',
+        definition_id: 'test-definition-id',
+        tenant_id: 'test-tenant-id',
+        org_slug: 'test-org-slug',
+        org_id: 'test-org-id'
+      },
+      activity: {
+        id: 'test-activity-id'
+      },
+      patient: {
+        id: 'test-patient-id'
+      }
+    }
 
-    await updateTicket.onActivityCreated!(payload, onComplete, onError)
+    await updateTicket.onEvent!({ payload, onComplete, onError, helpers })
 
     expect(mockZendeskAPIClient.updateTicket).toHaveBeenCalledWith('456', {
       comment: { body: 'Updating ticket with all fields' },
@@ -90,12 +120,25 @@ describe('Update ticket', () => {
       status: 'solved',
     }
 
-    const payload = generateTestPayload({
+    const payload = {
       fields: mockFields,
       settings: mockSettings,
-    })
+      pathway: {
+        id: 'test-pathway-id',
+        definition_id: 'test-definition-id',
+        tenant_id: 'test-tenant-id',
+        org_slug: 'test-org-slug',
+        org_id: 'test-org-id'
+      },
+      activity: {
+        id: 'test-activity-id'
+      },
+      patient: {
+        id: 'test-patient-id'
+      }
+    }
 
-    await updateTicket.onActivityCreated!(payload, onComplete, onError)
+    await updateTicket.onEvent!({ payload, onComplete, onError, helpers })
 
     expect(mockZendeskAPIClient.updateTicket).toHaveBeenCalledWith('789', {
       priority: 'urgent',
@@ -118,15 +161,28 @@ describe('Update ticket', () => {
       status: undefined,
     }
 
-    const payload = generateTestPayload({
+    const payload = {
       fields: mockFields,
       settings: mockSettings,
-    })
+      pathway: {
+        id: 'test-pathway-id',
+        definition_id: 'test-definition-id',
+        tenant_id: 'test-tenant-id',
+        org_slug: 'test-org-slug',
+        org_id: 'test-org-id'
+      },
+      activity: {
+        id: 'test-activity-id'
+      },
+      patient: {
+        id: 'test-patient-id'
+      }
+    }
 
     const apiError = new Error('API Error')
     mockZendeskAPIClient.updateTicket.mockRejectedValue(apiError)
 
-    await updateTicket.onActivityCreated!(payload, onComplete, onError)
+    await updateTicket.onEvent!({ payload, onComplete, onError, helpers })
 
     expect(onError).toHaveBeenCalledWith({
       events: [

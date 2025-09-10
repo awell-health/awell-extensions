@@ -14,7 +14,7 @@ export const updateTicket: Action<typeof fields, typeof settings> = {
   category: Category.CUSTOMER_SUPPORT,
   fields,
   previewable: false,
-  onActivityCreated: async (payload, onComplete, onError) => {
+  onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
     try {
       const {
         settings,
