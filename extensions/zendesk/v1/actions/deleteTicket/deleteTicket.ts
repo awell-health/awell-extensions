@@ -5,7 +5,10 @@ import { Category, validate } from '@awell-health/extensions-core'
 import { SettingsValidationSchema } from '../../../settings'
 import { FieldsValidationSchema, fields } from './config'
 import { makeAPIClient } from '../../client'
-import { isZendeskApiError, zendeskApiErrorToActivityEvent } from '../../client/error'
+import {
+  isZendeskApiError,
+  zendeskApiErrorToActivityEvent,
+} from '../../client/error'
 
 export const deleteTicket: Action<typeof fields, typeof settings> = {
   key: 'deleteTicket',
@@ -14,7 +17,7 @@ export const deleteTicket: Action<typeof fields, typeof settings> = {
   category: Category.CUSTOMER_SUPPORT,
   fields,
   previewable: false,
-  onActivityCreated: async (payload, onComplete, onError) => {
+  onEvent: async ({ payload, onComplete, onError }): Promise<void> => {
     try {
       const {
         settings,
@@ -36,7 +39,8 @@ export const deleteTicket: Action<typeof fields, typeof settings> = {
         const events = zendeskApiErrorToActivityEvent(err)
         await onError({ events })
       } else {
-        const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred'
+        const errorMessage =
+          err instanceof Error ? err.message : 'Unknown error occurred'
         await onError({
           events: [
             {
