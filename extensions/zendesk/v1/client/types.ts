@@ -20,12 +20,27 @@ export interface CreateTicketResponse {
 }
 
 export interface ZendeskApiErrorResponse {
-  details?: {
-    [key: string]: Array<{
+  errors: Array<{
+    error: {
+      resource: string
+      field: string
+      code: string
+      message: string
+      details: string
+    }
+    meta: {
       type: string
-      description: string
-    }>
+      links: {
+        more_info: string
+      }
+    }
+  }>
+  meta: {
+    type: string
+    http_status: string
+    logref: string
+    links: {
+      more_info: string
+    }
   }
-  description?: string
-  error?: string
 }
