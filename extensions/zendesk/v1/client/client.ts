@@ -18,7 +18,7 @@ export class ZendeskAPIClient {
 
   public async createTicket(data: CreateTicketInput): Promise<CreateTicketResponse> {
     const response: AxiosResponse<CreateTicketResponse> = await this.client.post(
-      '/api/v2/tickets.json',
+      '/api/v2/tickets',
       { ticket: data }
     )
     return response.data
