@@ -29,7 +29,9 @@ describe('Create ticket', () => {
   test('Should create a ticket with required fields', async () => {
     const mockSettings = {
       subdomain: 'test-company',
-      access_token: 'test-access-token',
+      client_id: 'test-client-id',
+      client_secret: 'test-client-secret',
+      auth_url: 'https://test-company.zendesk.com/oauth/tokens',
     }
 
     const mockFields = {
@@ -59,7 +61,9 @@ describe('Create ticket', () => {
   test('Should create a ticket with all optional fields', async () => {
     const mockSettings = {
       subdomain: 'test-company',
-      access_token: 'test-access-token',
+      client_id: 'test-client-id',
+      client_secret: 'test-client-secret',
+      auth_url: 'https://test-company.zendesk.com/oauth/tokens',
     }
 
     const mockFields = {
