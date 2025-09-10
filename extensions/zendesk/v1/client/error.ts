@@ -5,16 +5,23 @@ import { z } from 'zod'
 import { type ZendeskApiErrorResponse } from './types'
 
 const zendeskApiErrorSchema = z.object({
-  details: z.record(z.array(z.object({
-    type: z.string(),
-    description: z.string(),
-  }))).optional(),
-  description: z.string().optional(),
-  error: z.string().optional(),
+  errors: z.array(
+    z.object({
+      error: z.object({
+        resource: z.string().optional(),
+        field: z.string().optional(),
+        code: z.string(),
+        message: z.string(),
+        details: z.string().optional(),
+      }),
+      meta: z.object({}),
+    }),
+  ),
+  meta: z.object({}),
 })
 
 export const isZendeskApiError = (
-  error: any
+  error: any,
 ): error is AxiosError<ZendeskApiErrorResponse> => {
   if (isAxiosError(error)) {
     const parseResult = zendeskApiErrorSchema.safeParse(error.response?.data)
@@ -24,40 +31,24 @@ export const isZendeskApiError = (
 }
 
 export const zendeskApiErrorToActivityEvent = (
-  error: AxiosError<ZendeskApiErrorResponse>
+  error: AxiosError<ZendeskApiErrorResponse>,
 ): ActivityEvent[] => {
   const errorData = error.response?.data
 
-  if (isNil(errorData)) {
+  if (isNil(errorData) || errorData.errors?.length === 0) {
     return []
   }
 
-  if (errorData.details && Object.keys(errorData.details).length > 0) {
-    const events: ActivityEvent[] = []
-    Object.entries(errorData.details).forEach(([field, fieldErrors]) => {
-      if (Array.isArray(fieldErrors)) {
-        fieldErrors.forEach((fieldError: { type: string; description: string }) => {
-          events.push({
-            date: new Date().toISOString(),
-            text: { en: `${field}: ${fieldError.description}` },
-            error: {
-              category: 'WRONG_INPUT',
-              message: fieldError.description,
-            },
-          })
-        })
-      }
-    })
-    return events
-  }
-
-  const errorMessage = errorData.error || errorData.description || 'Unknown error'
-  return [{
-    date: new Date().toISOString(),
-    text: { en: `Zendesk API error: ${errorMessage}` },
-    error: {
-      category: error.response?.status && error.response.status >= 400 && error.response.status < 500 ? 'WRONG_INPUT' : 'SERVER_ERROR',
-      message: errorMessage,
-    },
-  }]
+  return errorData.errors.map((error) => {
+    return {
+      date: new Date().toISOString(),
+      text: {
+        en: isNil(error.error.details) ? error.error.code : error.error.message,
+      },
+      error: {
+        category: 'SERVER_ERROR',
+        message: error.error.details ?? error.error.message,
+      },
+    }
+  })
 }
