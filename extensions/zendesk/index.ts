@@ -7,7 +7,7 @@ export const Zendesk: Extension = {
   key: 'zendesk',
   title: 'Zendesk Support',
   icon_url:
-    'https://res.cloudinary.com/da7x4rzl4/image/upload/v1697013804/Awell%20Extensions/zendesk-icon.png',
+    'https://res.cloudinary.com/da7x4rzl4/image/upload/v1697013804/Awell%20Extensions/ezgif.com-webp-to-png.png',
   description:
     'Zendesk Support is a customer service platform that provides ticketing, knowledge base, and customer communication tools.',
   category: Category.CUSTOMER_SUPPORT,

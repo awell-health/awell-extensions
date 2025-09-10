@@ -47,7 +47,7 @@ export const createTicket: Action<typeof fields, typeof settings> = {
 
       await onComplete({
         data_points: {
-          ticketId: String(response.ticket.id),
+          ticketId: response.ticket.id.toString(),
           ticketUrl: `https://${settings.subdomain}.zendesk.com/agent/tickets/${response.ticket.id}`,
         },
       })

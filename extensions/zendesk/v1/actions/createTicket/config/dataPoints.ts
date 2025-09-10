@@ -3,7 +3,7 @@ import { type DataPointDefinition } from '@awell-health/extensions-core'
 export const dataPoints = {
   ticketId: {
     key: 'ticketId',
-    valueType: 'string',
+    valueType: 'number',
   },
   ticketUrl: {
     key: 'ticketUrl',
