@@ -19,6 +19,10 @@ describe('Create ticket', () => {
     const mockFields = {
       subject: 'Test ticket subject',
       comment: 'This is a test ticket comment',
+      group_id: undefined,
+      priority: undefined,
+      external_id: undefined,
+      tag: undefined,
     }
 
     const payload = generateTestPayload({
@@ -45,7 +49,7 @@ describe('Create ticket', () => {
     const mockFields = {
       subject: 'Test ticket subject',
       comment: 'This is a test ticket comment',
-      group_id: '123',
+      group_id: 123,
       priority: 'high',
       external_id: 'ext-123',
       tag: 'urgent',
