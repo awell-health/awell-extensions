@@ -1,6 +1,6 @@
 import { type Action } from '@awell-health/extensions-core'
 import { fields } from './config'
-import { Category , validate } from '@awell-health/extensions-core'
+import { Category, validate } from '@awell-health/extensions-core'
 import { SettingsValidationSchema, type settings } from '../../../settings'
 import mailchimpSdk from '../../../common/sdk/mailchimpSdk'
 import { FieldsValidationSchema } from './config/fields'
@@ -15,7 +15,7 @@ export const sendEmailWithTemplate: Action<typeof fields, typeof settings> = {
   category: Category.COMMUNICATION,
   fields,
   previewable: false,
-  onActivityCreated: async (payload, onComplete, onError) => {
+  onEvent: async ({ payload, onComplete, onError, helpers }) => {
     try {
       const {
         patient: { id: patientId },
@@ -55,7 +55,7 @@ export const sendEmailWithTemplate: Action<typeof fields, typeof settings> = {
     } catch (err) {
       if (err instanceof ZodError) {
         const error = fromZodError(err)
-        console.log(error.message)
+        helpers.log({ error }, 'error', error as Error)
         await onError({
           events: [
             {

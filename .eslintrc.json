@@ -17,7 +17,6 @@
     "ecmaFeatures": { "jsx": true }
   },
   "rules": {
-    "@typescript-eslint/naming-convention": "warn",
     "@typescript-eslint/key-spacing": 0,
     "@typescript-eslint/naming-convention": "off"
   }

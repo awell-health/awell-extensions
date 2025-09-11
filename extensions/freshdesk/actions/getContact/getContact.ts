@@ -19,7 +19,7 @@ export const getContact: Action<
   fields,
   previewable: false,
   dataPoints,
-  onEvent: async ({ payload, onComplete, onError }): Promise<void> => {
+  onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
     const { fields, freshdeskSdk } = await validatePayloadAndCreateSdk({
       fieldsSchema: FieldsValidationSchema,
       payload,
@@ -27,7 +27,7 @@ export const getContact: Action<
 
     try {
       const { data } = await freshdeskSdk.getContact(fields.contactId)
-      console.log(JSON.stringify(data, null, 2))
+      helpers.log({ data }, 'data')
 
       await onComplete({
         data_points: {

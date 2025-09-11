@@ -3,7 +3,6 @@
   "include": [
     "lib/**/*.ts",
     "extensions/**/*.ts",
-    "extensions/**/*.tsx",
     "src/**/*.ts",
     "examples/**/*.ts",
     "components/**/*.ts",

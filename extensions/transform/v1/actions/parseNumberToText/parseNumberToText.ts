@@ -17,7 +17,7 @@ export const parseNumberToText: Action<
   fields,
   dataPoints,
   previewable: true,
-  onActivityCreated: async (payload, onComplete, onError) => {
+  onEvent: async ({ payload, onComplete, onError, helpers }) => {
     try {
       const {
         fields: { number },
@@ -34,7 +34,7 @@ export const parseNumberToText: Action<
         },
       })
     } catch (err) {
-      console.log(err)
+      helpers.log({ err }, 'error', err as Error)
       if (err instanceof ZodError) {
         const error = fromZodError(err)
         await onError({

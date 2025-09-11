@@ -67,17 +67,17 @@ export const startHostedPagesSession: Action<typeof fields, typeof settings> = {
         },
       })
 
-      console.log(stakeholdersInRelease)
+      helpers.log(stakeholdersInRelease, 'stakeholdersInRelease')
 
       const stakeholderMatchId =
         stakeholdersInRelease.stakeholdersByReleaseIds.stakeholders.find(
           (stakeholder) =>
-            stakeholder.label.en.toLowerCase() === normalizedStakeholder
+            stakeholder.label.en.toLowerCase() === normalizedStakeholder,
         )?.id
 
       if (stakeholderMatchId === undefined)
         throw new Error(
-          `Could not find stakeholder ID for ${normalizedStakeholder} in care flow ${careFlowId}`
+          `Could not find stakeholder ID for ${normalizedStakeholder} in care flow ${careFlowId}`,
         )
 
       return stakeholderMatchId

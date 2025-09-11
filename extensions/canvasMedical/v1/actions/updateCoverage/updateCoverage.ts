@@ -21,7 +21,7 @@ export const updateCoverage: Action<typeof fields, typeof settings> = {
   fields,
   dataPoints,
   previewable: true,
-  onActivityCreated: async (payload, onComplete, onError) => {
+  onEvent: async ({ payload, onComplete, onError, helpers }) => {
     try {
       const {
         fields: {
@@ -74,7 +74,7 @@ export const updateCoverage: Action<typeof fields, typeof settings> = {
         },
       })
     } catch (error) {
-      console.log(error)
+      helpers.log({ error }, 'error', error as Error)
       let parsedError
 
       if (isZodError(error)) {

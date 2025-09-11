@@ -8,7 +8,6 @@
   "include": [
     "lib/**/*.ts",
     "extensions/**/*.ts",
-    "extensions/**/*.tsx",
     "src/**/*.ts",
     "examples/**/*.ts",
     "tests/**/*.ts",
