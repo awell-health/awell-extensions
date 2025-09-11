@@ -7,14 +7,20 @@ import {
 } from '@awell-health/extensions-core'
 
 const priorityEnum = z.enum(['urgent', 'high', 'normal', 'low'])
-const statusEnum = z.enum(['new', 'open', 'pending', 'hold', 'solved', 'closed'])
+const statusEnum = z.enum([
+  'new',
+  'open',
+  'pending',
+  'hold',
+  'solved',
+  'closed',
+])
 
 export const fields = {
   ticket_id: {
     label: 'Ticket ID',
     id: 'ticket_id',
-    type: FieldType.STRING,
-    stringType: StringType.TEXT,
+    type: FieldType.NUMERIC,
     required: true,
     description: 'The ID of the ticket to update.',
   },
