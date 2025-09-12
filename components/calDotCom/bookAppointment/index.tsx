@@ -101,6 +101,7 @@ const CalDotComBookAppointmentComponent: React.FC<ComponentProps> = ({
   activityDetails,
   onSubmit,
 }) => {
+  console.log('activityDetails', activityDetails)
   const calLink = activityDetails.fields.find(field => field.id === 'calLink')?.value ?? ''
 
   const handleBookingSuccessful: BookingSuccessfulFunction = ({
@@ -109,6 +110,7 @@ const CalDotComBookAppointmentComponent: React.FC<ComponentProps> = ({
     eventType,
     booking,
   }) => {
+    console.log("bookingSuccessful", confirmed, date, eventType, booking)
     void onSubmit(activityDetails.activity_id, [
       { key: 'booking_confirmed', value: String(confirmed ?? false) },
       { key: 'booking_date', value: String(date ?? '') },
