@@ -111,12 +111,12 @@ const CalDotComBookAppointmentComponent: React.FC<ComponentProps> = ({
     booking,
   }) => {
     console.log("bookingSuccessful", confirmed, date, eventType, booking)
-    void onSubmit(activityDetails.activity_id, [
-      { key: 'booking_confirmed', value: String(confirmed ?? false) },
-      { key: 'booking_date', value: String(date ?? '') },
-      { key: 'event_type', value: JSON.stringify(eventType ?? {}) },
-      { key: 'booking_details', value: JSON.stringify(booking ?? {}) },
-    ])
+    void onSubmit({
+      booking_confirmed: String(confirmed ?? false),
+      booking_date: String(date ?? ''),
+      event_type: JSON.stringify(eventType ?? {}),
+      booking_details: JSON.stringify(booking ?? {}),
+    })
   }
 
   return (
