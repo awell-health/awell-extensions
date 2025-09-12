@@ -20,7 +20,7 @@ interface CalDotComSchedulingProps {
   calLink: string
   onBookingSuccessful: BookingSuccessfulFunction
   hideEventTypeDetails?: boolean
-  metadata?: { [key: string]: string }
+  metadata?: Record<string, string>
 }
 
 const CalDotComScheduling: React.FC<CalDotComSchedulingProps> = ({
@@ -32,20 +32,18 @@ const CalDotComScheduling: React.FC<CalDotComSchedulingProps> = ({
   const eventListenerRef = React.useRef(false)
   const calApiRef = React.useRef<any>(null)
 
-  const bookingSuccessfulCallback = (e: { detail: { data: any } }) => {
+  const bookingSuccessfulCallback = (e: { detail: { data: any } }): void => {
     const { data } = e.detail
     const { confirmed, eventType, date, booking } = data
     onBookingSuccessful({ confirmed, eventType, date, booking })
   }
 
-  const initComponent = async () => {
+  const initComponent = async (): Promise<void> => {
     const cal = await getCalApi()
     calApiRef.current = cal
 
-    if (cal && !eventListenerRef.current) {
+    if (cal != null && !eventListenerRef.current) {
       cal('ui', {
-        theme: 'light',
-        styles: { branding: { brandColor: '#000000' } },
         hideEventTypeDetails,
       })
 
@@ -59,12 +57,13 @@ const CalDotComScheduling: React.FC<CalDotComSchedulingProps> = ({
   }
 
   React.useEffect(() => {
-    initComponent()
+    void initComponent()
 
     return () => {
-      const cleanup = async () => {
-        const cal = calApiRef.current || (await getCalApi())
-        if (cal && eventListenerRef.current) {
+      const cleanup = async (): Promise<void> => {
+        // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+        const cal = calApiRef == null ? (await getCalApi()) : calApiRef.current
+        if (cal != null && eventListenerRef.current) {
           cal('off', {
             action: 'bookingSuccessful',
             callback: bookingSuccessfulCallback,
@@ -72,12 +71,12 @@ const CalDotComScheduling: React.FC<CalDotComSchedulingProps> = ({
           eventListenerRef.current = false
         }
       }
-      cleanup()
+      void cleanup()
     }
   }, [hideEventTypeDetails])
 
   let metadataString = ''
-  if (metadata) {
+  if (metadata != null && Object.keys(metadata).length > 0) {
     metadataString = Object.entries(metadata)
       .map(([key, value]) => `metadata[${key}]=${value}`)
       .join('&')
@@ -85,7 +84,7 @@ const CalDotComScheduling: React.FC<CalDotComSchedulingProps> = ({
 
   const metadataSeparator = calLink.includes('?') ? '&' : '?'
   const composedCalLink = `${calLink}${
-    metadataString ? `${metadataSeparator}${metadataString}` : ''
+    metadataString !== '' ? `${metadataSeparator}${metadataString}` : ''
   }`
 
   return (
@@ -102,7 +101,7 @@ const CalDotComBookAppointmentComponent: React.FC<ComponentProps> = ({
   activityDetails,
   onSubmit,
 }) => {
-  const calLink = activityDetails.fields.find(field => field.id === 'calLink')?.value || ''
+  const calLink = activityDetails.fields.find(field => field.id === 'calLink')?.value ?? ''
 
   const handleBookingSuccessful: BookingSuccessfulFunction = ({
     confirmed,
@@ -111,10 +110,10 @@ const CalDotComBookAppointmentComponent: React.FC<ComponentProps> = ({
     booking,
   }) => {
     void onSubmit(activityDetails.activity_id, [
-      { key: 'booking_confirmed', value: String(confirmed || false) },
-      { key: 'booking_date', value: String(date || '') },
-      { key: 'event_type', value: JSON.stringify(eventType || {}) },
-      { key: 'booking_details', value: JSON.stringify(booking || {}) },
+      { key: 'booking_confirmed', value: String(confirmed ?? false) },
+      { key: 'booking_date', value: String(date ?? '') },
+      { key: 'event_type', value: JSON.stringify(eventType ?? {}) },
+      { key: 'booking_details', value: JSON.stringify(booking ?? {}) },
     ])
   }
 
