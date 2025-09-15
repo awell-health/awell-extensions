@@ -92,7 +92,7 @@ export class EpicFhirR4Client {
           client_assertion: generateJWT(
             this.clientId,
             this.authUrl,
-            this.privateKey,
+            this.privateKey.replace(/\\n/g, '\n'),
           ),
         },
         {
