@@ -1,4 +1,5 @@
 import { generateTestPayload } from '@/tests'
+import { TestHelpers } from '@awell-health/extensions-core'
 import {
   mockedClaimId,
   mockedCreateClaimData,
@@ -13,19 +14,21 @@ jest.mock('../../client', () => ({
 }))
 
 describe('createClaim', () => {
-  const onComplete = jest.fn()
-  const onError = jest.fn()
+  const { onComplete, onError, helpers, clearMocks } =
+    TestHelpers.fromAction(createClaim)
+
   const payload = {
     settings: mockedSettings,
     fields: mockedCreateClaimData,
   }
 
   it('should create claim', async () => {
-    await createClaim.onActivityCreated!(
-      generateTestPayload(payload),
+    await createClaim.onEvent!({
+      payload: generateTestPayload(payload),
       onComplete,
-      onError
-    )
+      onError,
+      helpers,
+    })
     expect(onComplete).toHaveBeenCalledTimes(1)
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
