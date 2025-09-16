@@ -21,6 +21,10 @@ describe('updateCoverage', () => {
     fields: mockedUpdateCoverageData,
   }
 
+  beforeEach(() => {
+    clearMocks()
+  })
+
   it('should update coverage', async () => {
     await updateCoverage.onEvent!({
       payload: generateTestPayload(payload),
