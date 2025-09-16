@@ -14,7 +14,7 @@ export const sendEmail: Action<typeof fields, typeof settings> = {
   category: Category.COMMUNICATION,
   fields,
   previewable: false,
-  onActivityCreated: async (payload, onComplete, onError) => {
+  onEvent: async ({ payload, onComplete, onError, helpers }) => {
     try {
       const {
         patient: { id: patientId },
@@ -53,6 +53,7 @@ export const sendEmail: Action<typeof fields, typeof settings> = {
     } catch (err) {
       if (err instanceof ZodError) {
         const error = fromZodError(err)
+        helpers.log({ error }, 'error', error as Error)
         await onError({
           events: [
             {

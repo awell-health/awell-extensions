@@ -1,12 +1,13 @@
 import { parseNumberToText } from '.'
 import { generateTestPayload } from '@/tests'
+import { TestHelpers } from '@awell-health/extensions-core'
 
 describe('Transform - Parse text to number', () => {
-  const onComplete = jest.fn()
-  const onError = jest.fn()
+  const { onComplete, onError, helpers, clearMocks } =
+    TestHelpers.fromAction(parseNumberToText)
 
   beforeEach(() => {
-    jest.clearAllMocks()
+    clearMocks()
   })
 
   test('Should parse number to text', async () => {
@@ -17,11 +18,12 @@ describe('Transform - Parse text to number', () => {
       settings: {},
     })
 
-    await parseNumberToText.onActivityCreated!(
-      mockOnActivityCreateParams,
+    await parseNumberToText.onEvent!({
+      payload: mockOnActivityCreateParams,
       onComplete,
-      onError
-    )
+      onError,
+      helpers,
+    })
 
     expect(onComplete).toBeCalledWith({
       data_points: {
@@ -38,11 +40,12 @@ describe('Transform - Parse text to number', () => {
       settings: {},
     })
 
-    await parseNumberToText.onActivityCreated!(
-      mockOnActivityCreateParams,
+    await parseNumberToText.onEvent!({
+      payload: mockOnActivityCreateParams,
       onComplete,
-      onError
-    )
+      onError,
+      helpers,
+    })
 
     expect(onComplete).toBeCalledWith({
       data_points: {

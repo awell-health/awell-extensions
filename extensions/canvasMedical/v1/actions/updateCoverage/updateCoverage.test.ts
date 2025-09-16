@@ -6,6 +6,7 @@ import {
   mockedSettings,
 } from '../../client/__mocks__'
 import { updateCoverage } from './updateCoverage'
+import { TestHelpers } from '@awell-health/extensions-core'
 
 jest.mock('../../client', () => ({
   ...jest.requireActual('../../client'),
@@ -13,19 +14,24 @@ jest.mock('../../client', () => ({
 }))
 
 describe('updateCoverage', () => {
-  const onComplete = jest.fn()
-  const onError = jest.fn()
+  const { onComplete, onError, helpers, clearMocks } =
+    TestHelpers.fromAction(updateCoverage)
   const payload = {
     settings: mockedSettings,
     fields: mockedUpdateCoverageData,
   }
 
+  beforeEach(() => {
+    clearMocks()
+  })
+
   it('should update coverage', async () => {
-    await updateCoverage.onActivityCreated!(
-      generateTestPayload(payload),
+    await updateCoverage.onEvent!({
+      payload: generateTestPayload(payload),
       onComplete,
-      onError
-    )
+      onError,
+      helpers,
+    })
     expect(onComplete).toHaveBeenCalledTimes(1)
     expect(onComplete).toHaveBeenCalledWith({
       data_points: { coverageId: mockedCoverageId },

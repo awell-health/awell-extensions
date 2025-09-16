@@ -11,7 +11,7 @@ const FrontendComponent: React.FC<ComponentProps> = ({
       <div>Completing activity id: {activityDetails.activity_id}</div>
       <pre>{JSON.stringify(activityDetails, null, 2)}</pre>
       <input type="text" value={value} onChange={(e) => { setValue(e.target.value) }} />
-      <button onClick={() => { void onSubmit(activityDetails.activity_id, [ { key: 'world', value: String(value) }]) }}>Submit</button>
+      <button onClick={() => { void onSubmit({ world: String(value) }) }}>Submit</button>
     </div>
   )
 }
