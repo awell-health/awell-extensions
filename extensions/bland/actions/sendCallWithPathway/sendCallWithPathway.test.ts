@@ -354,5 +354,37 @@ describe('Bland - Send call with pathway', () => {
         }),
       )
     })
+
+    test('Should work with async completion', async () => {
+      const res = await extensionAction.onEvent({
+        payload: {
+          fields: {
+            ...fields,
+            webhook: 'https://webhook.site/1234567890',
+          },
+          patient: {
+            id: 'patient-id',
+          },
+          pathway: {
+            id: 'pathway-id',
+            definition_id: 'pathway-definition-id',
+            tenant_id: '123',
+          },
+          activity: {
+            id: 'activity-id',
+          },
+          settings: {
+            apiKey: 'api-key',
+          },
+        } as any,
+        onComplete,
+        onError,
+        helpers,
+      })
+
+      expect(sendCallSpy).toHaveBeenCalled(),
+      // Completion happens async via a Webhook from Bland
+      expect(onComplete).not.toHaveBeenCalled()
+    })
   })
 })
