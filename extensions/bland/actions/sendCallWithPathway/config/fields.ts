@@ -341,6 +341,13 @@ export const fields = {
     type: FieldType.JSON,
     required: false,
   },
+  completeExtensionActivityAsync: {
+    id: 'completeExtensionActivityAsync',
+    label: 'Complete extension activity async',
+    description: 'Whether to complete the extension activity async. When true, the extension activity will be completed asynchronously via a webhook.',
+    type: FieldType.BOOLEAN,
+    required: false,
+  },
 } satisfies Record<string, Field>
 
 export const FieldsValidationSchema = z.object({
@@ -397,4 +404,5 @@ export const FieldsValidationSchema = z.object({
   requestData: JsonObjectSchema.optional(),
   analysisSchema: JsonObjectSchema.optional(),
   otherData: JsonObjectSchema.optional(),
+  completeExtensionActivityAsync: z.boolean().default(false),
 } satisfies Record<keyof typeof fields, ZodTypeAny>)

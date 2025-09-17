@@ -287,6 +287,7 @@ describe('Bland - Send call with pathway', () => {
         ],
         geospatial_dialing: 'bd039087-decb-435a-a6e3-ca1ffbf89974',
         precall_dtmf_sequence: '1234567890*#w',
+        completeExtensionActivityAsync: false,
       })
     })
   })
@@ -361,6 +362,7 @@ describe('Bland - Send call with pathway', () => {
           fields: {
             ...fields,
             webhook: 'https://webhook.site/1234567890',
+            completeExtensionActivityAsync: true,
           },
           patient: {
             id: 'patient-id',

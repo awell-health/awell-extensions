@@ -5,7 +5,6 @@ import { type settings } from '../../settings'
 import { fields, FieldsValidationSchema, dataPoints } from './config'
 import { SendCallInputSchema } from '../../api/schema'
 import { addActivityEventLog } from '../../../../src/lib/awell/addEventLog'
-import { isEmpty, isNil } from 'lodash'
 
 export const sendCall: Action<
   typeof fields,
@@ -25,12 +24,12 @@ export const sendCall: Action<
       payload,
     })
 
-    const completeExtensionActivityAsync =
-      !isNil(allFields.webhook) && !isEmpty(allFields.webhook)
-
     const getWebhookUrl = (): string | undefined => {
-      if (completeExtensionActivityAsync) {
-        return `${allFields.webhook ?? ''}?activity_id=${payload.activity.id}`
+      if (
+        allFields.completeExtensionActivityAsync &&
+        allFields.webhook !== undefined
+      ) {
+        return `${allFields.webhook}?activity_id=${payload.activity.id}`
       }
       return undefined
     }
@@ -66,7 +65,7 @@ export const sendCall: Action<
      * If a webhook is provided, we don't need to complete the action
      * as the webhook will handle the completion
      */
-    if (completeExtensionActivityAsync) {
+    if (allFields.completeExtensionActivityAsync) {
       return
     }
 
