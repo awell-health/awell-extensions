@@ -1,6 +1,8 @@
+export { addAdhocTrack } from './addAdhocTrack'
 export { startCareFlow } from './startCareFlow'
 export { updatePatient } from './updatePatient'
 export { stopCareFlow } from './stopCareFlow'
+export { stopTrack } from './stopTrack'
 export { searchPatientsByPatientCode } from './searchPatientsByPatientCode'
 export { isPatientEnrolledInCareFlow } from './isPatientEnrolledInCareFlow'
 export { updateBaselineInfo } from './updateBaselineInfo'
