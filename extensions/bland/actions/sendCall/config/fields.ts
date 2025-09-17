@@ -333,7 +333,7 @@ export const fields = {
       'Any fields you put in here will be sent in the request body of the call, but will be overridden by all other fields above if that field is also set.',
     type: FieldType.JSON,
     required: false,
-  },
+  }
 } satisfies Record<string, Field>
 
 export const FieldsValidationSchema = z.object({

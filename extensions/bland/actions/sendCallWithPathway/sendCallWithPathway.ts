@@ -5,6 +5,7 @@ import { type settings } from '../../settings'
 import { fields, FieldsValidationSchema, dataPoints } from './config'
 import { SendCallInputSchema } from '../../api/schema'
 import { addActivityEventLog } from '../../../../src/lib/awell/addEventLog'
+import { isEmpty, isNil } from 'lodash'
 
 export const sendCallWithPathway: Action<
   typeof fields,
@@ -23,10 +24,22 @@ export const sendCallWithPathway: Action<
       fieldsSchema: FieldsValidationSchema,
       payload,
     })
+
+    const completeExtensionActivityAsync =
+      !isNil(allFields.webhook) && !isEmpty(allFields.webhook)
+
+    const getWebhookUrl = (): string | undefined => {
+      if (completeExtensionActivityAsync) {
+        return `${allFields.webhook ?? ''}?activity_id=${payload.activity.id}`
+      }
+      return undefined
+    }
+
     const { otherData, ...fields } = allFields
     const sendCallInput = SendCallInputSchema.parse({
       ...otherData,
       ...fields,
+      webhook: getWebhookUrl(),
       phone_number: fields.phoneNumber,
       pathway_id: fields.pathwayId,
       request_data: fields.requestData,
@@ -48,6 +61,14 @@ export const sendCallWithPathway: Action<
       console.error(JSON.stringify(err))
     }
     const { data } = await blandSdk.sendCall(sendCallInput)
+
+    /**
+     * If a webhook is provided, we don't need to complete the action
+     * as the webhook will handle the completion
+     */
+    if (completeExtensionActivityAsync) {
+      return
+    }
 
     await onComplete({
       data_points: {
