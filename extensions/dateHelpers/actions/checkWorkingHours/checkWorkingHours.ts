@@ -1,7 +1,7 @@
 import { type Action } from '@awell-health/extensions-core'
 import { Category } from '@awell-health/extensions-core'
-import { getHours, getMinutes } from 'date-fns'
-import { utcToZonedTime } from 'date-fns-tz'
+import { getHours, getMinutes, addDays, setHours, setMinutes } from 'date-fns'
+import { utcToZonedTime, zonedTimeToUtc } from 'date-fns-tz'
 import { type settings } from '../../settings'
 import { dataPoints, fields, FieldsValidationSchema } from './config'
 
@@ -13,7 +13,7 @@ export const checkWorkingHours: Action<
   key: 'checkWorkingHours',
   title: 'Check Working Hours',
   description:
-    'Check if the current time is within working hours and calculate minutes to next working hours if not',
+    'Check if the current time is within working hours and calculate minutes to next working hours as well as the datetime of the next working hours if not',
   category: Category.WORKFLOW,
   fields,
   dataPoints,
@@ -65,17 +65,35 @@ export const checkWorkingHours: Action<
       currentTotalMinutes < endTotalMinutes
 
     let minutesToNextWorkingHours: number | undefined
+    let nextWorkingHoursDatetime: string | undefined
 
     // Calculate minutes to next working hours only if not currently within working hours
     if (!isWithinWorkingHours) {
+      let nextWorkingHoursDate: Date
+
       if (currentTotalMinutes < startTotalMinutes) {
         // Before working hours today
         minutesToNextWorkingHours = startTotalMinutes - currentTotalMinutes
+        // Set the datetime to today at working hours start time
+        nextWorkingHoursDate = setMinutes(
+          setHours(currentTimeInTimezone, startHour),
+          startMinute,
+        )
       } else {
         // After working hours today, so next working hours is tomorrow
         const minutesUntilMidnight = 24 * 60 - currentTotalMinutes
         minutesToNextWorkingHours = minutesUntilMidnight + startTotalMinutes
+        // Set the datetime to tomorrow at working hours start time
+        const tomorrow = addDays(currentTimeInTimezone, 1)
+        nextWorkingHoursDate = setMinutes(
+          setHours(tomorrow, startHour),
+          startMinute,
+        )
       }
+
+      // Convert the zoned time back to UTC for consistent output
+      const nextWorkingHoursUtc = zonedTimeToUtc(nextWorkingHoursDate, timezone)
+      nextWorkingHoursDatetime = nextWorkingHoursUtc.toISOString()
     }
 
     await onComplete({
@@ -85,6 +103,7 @@ export const checkWorkingHours: Action<
           minutesToNextWorkingHours !== undefined
             ? String(minutesToNextWorkingHours)
             : undefined,
+        nextWorkingHoursDatetime,
       },
     })
   },
