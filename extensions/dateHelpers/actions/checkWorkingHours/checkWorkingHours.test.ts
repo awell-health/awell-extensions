@@ -38,6 +38,7 @@ describe('checkWorkingHours', () => {
         data_points: {
           isWithinWorkingHours: 'true',
           minutesToNextWorkingHours: undefined,
+          nextWorkingHoursDatetime: undefined,
         },
       })
       expect(onError).not.toHaveBeenCalled()
@@ -65,6 +66,7 @@ describe('checkWorkingHours', () => {
         data_points: {
           isWithinWorkingHours: 'true',
           minutesToNextWorkingHours: undefined,
+          nextWorkingHoursDatetime: undefined,
         },
       })
     })
@@ -92,6 +94,7 @@ describe('checkWorkingHours', () => {
         data_points: {
           isWithinWorkingHours: 'false',
           minutesToNextWorkingHours: '960', // 16 hours until next day 9:00
+          nextWorkingHoursDatetime: '2024-01-16T09:00:00.000Z', // Next day at 9:00 UTC
         },
       })
     })
@@ -121,6 +124,7 @@ describe('checkWorkingHours', () => {
         data_points: {
           isWithinWorkingHours: 'false',
           minutesToNextWorkingHours: '90', // 1.5 hours = 90 minutes
+          nextWorkingHoursDatetime: '2024-01-15T09:00:00.000Z', // Today at 9:00 UTC
         },
       })
     })
@@ -148,6 +152,7 @@ describe('checkWorkingHours', () => {
         data_points: {
           isWithinWorkingHours: 'false',
           minutesToNextWorkingHours: '180', // 3 hours = 180 minutes
+          nextWorkingHoursDatetime: '2024-01-15T09:00:00.000Z', // Today at 9:00 UTC
         },
       })
     })
@@ -177,6 +182,7 @@ describe('checkWorkingHours', () => {
         data_points: {
           isWithinWorkingHours: 'false',
           minutesToNextWorkingHours: '870', // 5.5 hours until midnight + 9 hours = 14.5 hours = 870 minutes
+          nextWorkingHoursDatetime: '2024-01-16T09:00:00.000Z', // Next day at 9:00 UTC
         },
       })
     })
@@ -204,6 +210,7 @@ describe('checkWorkingHours', () => {
         data_points: {
           isWithinWorkingHours: 'false',
           minutesToNextWorkingHours: '600', // 1 hour until midnight + 9 hours = 10 hours = 600 minutes
+          nextWorkingHoursDatetime: '2024-01-16T09:00:00.000Z', // Next day at 9:00 UTC
         },
       })
     })
@@ -234,6 +241,7 @@ describe('checkWorkingHours', () => {
         data_points: {
           isWithinWorkingHours: 'true',
           minutesToNextWorkingHours: undefined,
+          nextWorkingHoursDatetime: undefined,
         },
       })
     })
@@ -261,6 +269,7 @@ describe('checkWorkingHours', () => {
         data_points: {
           isWithinWorkingHours: 'true',
           minutesToNextWorkingHours: undefined,
+          nextWorkingHoursDatetime: undefined,
         },
       })
     })
@@ -290,6 +299,7 @@ describe('checkWorkingHours', () => {
         data_points: {
           isWithinWorkingHours: 'true',
           minutesToNextWorkingHours: undefined,
+          nextWorkingHoursDatetime: undefined,
         },
       })
     })
@@ -317,6 +327,7 @@ describe('checkWorkingHours', () => {
         data_points: {
           isWithinWorkingHours: 'true',
           minutesToNextWorkingHours: undefined,
+          nextWorkingHoursDatetime: undefined,
         },
       })
     })

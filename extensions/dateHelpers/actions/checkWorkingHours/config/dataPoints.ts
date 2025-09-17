@@ -9,4 +9,8 @@ export const dataPoints = {
     key: 'minutesToNextWorkingHours',
     valueType: 'number',
   },
+  nextWorkingHoursDatetime: {
+    key: 'nextWorkingHoursDatetime',
+    valueType: 'string',
+  },
 } satisfies Record<string, DataPointDefinition>
