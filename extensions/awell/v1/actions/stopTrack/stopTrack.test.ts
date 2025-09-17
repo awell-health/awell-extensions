@@ -49,6 +49,10 @@ describe('Stop track', () => {
 
   beforeEach(() => {
     clearMocks()
+    jest.clearAllMocks()
+    sdkMock.orchestration.query.mockClear()
+    sdkMock.orchestration.mutation.mockClear()
+    helpers.awellSdk = jest.fn().mockResolvedValue(sdkMock)
     sdkMock.orchestration.query.mockResolvedValue({
       pathwayElements: {
         elements: mockPathwayElements,
@@ -123,21 +127,15 @@ describe('Stop track', () => {
     expect(onComplete).toHaveBeenCalledWith({
       events: [
         {
-          activity: {
-            type: 'LOG',
-            log: {
-              message:
-                'Track Test Track 1 with ID track_instance_1 successfully stopped.',
-            },
+          date: expect.any(String),
+          text: {
+            en: 'Track Test Track 1 with ID track_instance_1 successfully stopped.',
           },
         },
         {
-          activity: {
-            type: 'LOG',
-            log: {
-              message:
-                'Track Test Track 2 with ID track_instance_2 successfully stopped.',
-            },
+          date: expect.any(String),
+          text: {
+            en: 'Track Test Track 2 with ID track_instance_2 successfully stopped.',
           },
         },
       ],
@@ -180,12 +178,9 @@ describe('Stop track', () => {
     expect(onComplete).toHaveBeenCalledWith({
       events: [
         {
-          activity: {
-            type: 'LOG',
-            log: {
-              message:
-                'No active track found with definition ID track_def_456 in care flow pathway_123.',
-            },
+          date: expect.any(String),
+          text: {
+            en: 'No active track found with definition ID track_def_456 in care flow pathway_123.',
           },
         },
       ],
@@ -239,12 +234,9 @@ describe('Stop track', () => {
     expect(onComplete).toHaveBeenCalledWith({
       events: [
         {
-          activity: {
-            type: 'LOG',
-            log: {
-              message:
-                'Track Postponed Track with ID track_instance_1 successfully stopped.',
-            },
+          date: expect.any(String),
+          text: {
+            en: 'Track Postponed Track with ID track_instance_1 successfully stopped.',
           },
         },
       ],
