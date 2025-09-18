@@ -138,6 +138,7 @@ describe('Bland.ai - Get call details', () => {
         analysis: JSON.stringify(callData.analysis),
         concatenatedTranscript: callData.concatenated_transcript,
         transcripts: JSON.stringify(callData.transcripts),
+        status: callData.status,
       },
     })
   })

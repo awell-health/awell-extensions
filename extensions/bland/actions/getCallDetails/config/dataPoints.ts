@@ -53,4 +53,8 @@ export const dataPoints = {
     key: 'transcripts',
     valueType: 'json',
   },
+  status: {
+    key: 'status',
+    valueType: 'string',
+  },
 } satisfies Record<string, DataPointDefinition>

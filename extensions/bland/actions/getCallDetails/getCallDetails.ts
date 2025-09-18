@@ -53,6 +53,7 @@ export const getCallDetails: Action<
         transcripts: isNil(data.transcripts)
           ? undefined
           : JSON.stringify(data.transcripts),
+        status: data.status,
       },
     })
   },
