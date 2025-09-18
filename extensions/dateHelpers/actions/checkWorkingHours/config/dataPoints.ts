@@ -11,6 +11,6 @@ export const dataPoints = {
   },
   nextWorkingHoursDatetime: {
     key: 'nextWorkingHoursDatetime',
-    valueType: 'string',
+    valueType: 'date',
   },
 } satisfies Record<string, DataPointDefinition>
