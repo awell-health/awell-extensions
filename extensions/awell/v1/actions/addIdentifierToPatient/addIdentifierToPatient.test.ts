@@ -60,6 +60,7 @@ describe('Add identifier to patient', () => {
           onComplete,
           onError,
           helpers,
+          attempt: 1,
         })
 
         expect(onComplete).toHaveBeenCalledWith({
@@ -118,6 +119,7 @@ describe('Add identifier to patient', () => {
           onComplete,
           onError,
           helpers,
+          attempt: 1,
         })
 
         expect(onComplete).toHaveBeenCalledWith({
@@ -184,6 +186,7 @@ describe('Add identifier to patient', () => {
             onComplete,
             onError,
             helpers,
+            attempt: 1,
           })
 
           expect(onComplete).toHaveBeenCalledWith({
@@ -244,6 +247,7 @@ describe('Add identifier to patient', () => {
             onComplete,
             onError,
             helpers,
+            attempt: 1,
           })
 
           expect(onComplete).toHaveBeenCalledWith({
@@ -296,6 +300,7 @@ describe('Add identifier to patient', () => {
           onComplete,
           onError,
           helpers,
+          attempt: 1,
         })
 
         expect(onError).toHaveBeenCalledWith({
@@ -366,6 +371,7 @@ describe('Add identifier to patient', () => {
         onComplete,
         onError,
         helpers,
+        attempt: 1,
       })
 
       expect(awellSdkMock.orchestration.mutation).toHaveBeenCalledWith({
@@ -440,6 +446,7 @@ describe('Add identifier to patient', () => {
         onComplete,
         onError,
         helpers,
+        attempt: 1,
       })
 
       expect(awellSdkMock.orchestration.mutation).toHaveBeenCalledWith({

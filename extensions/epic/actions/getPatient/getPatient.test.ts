@@ -36,16 +36,22 @@ describe('Epic - Get patient', () => {
               'https://fhir.epic.com/interconnect-fhir-oauth/oauth2/token',
             clientId: 'client-id',
             privateKey: `-----BEGIN PRIVATE KEY-----`,
+            kid: 'kid',
+            jku: 'jku',
           },
         } as any,
         onComplete,
         onError,
         helpers,
+        attempt: 1,
       })
 
       expect(onComplete).toHaveBeenCalledWith({
         data_points: {
           patient: JSON.stringify(FhirPatient),
+          officialGivenName: FhirPatient.name?.[0]?.given?.[0],
+          officialFamilyName: FhirPatient.name?.[0]?.family,
+          birthDate: FhirPatient.birthDate,
         },
       })
     })
@@ -77,11 +83,14 @@ describe('Epic - Get patient', () => {
               'https://fhir.epic.com/interconnect-fhir-oauth/oauth2/token',
             clientId: 'client-id',
             privateKey: `-----BEGIN PRIVATE KEY-----`,
+            kid: 'kid',
+            jku: 'jku',
           },
         } as any,
         onComplete,
         onError,
         helpers,
+        attempt: 1,
       })
 
       expect(onError).toHaveBeenCalledWith({

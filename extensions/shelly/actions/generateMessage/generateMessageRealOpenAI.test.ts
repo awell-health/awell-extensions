@@ -33,7 +33,7 @@ describe.skip('generateMessage - Real OpenAI calls', () => {
       settings: payload.settings,
       helpers,
       payload,
-      modelType: OPENAI_MODELS.GPT4o
+      modelType: OPENAI_MODELS.GPT4o,
     })
 
     await extensionAction.onEvent({
@@ -41,6 +41,7 @@ describe.skip('generateMessage - Real OpenAI calls', () => {
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
 
     expect(onComplete).toHaveBeenCalledWith(
@@ -49,7 +50,7 @@ describe.skip('generateMessage - Real OpenAI calls', () => {
           subject: expect.any(String),
           message: expect.any(String),
         }),
-      })
+      }),
     )
 
     const { subject, message } = onComplete.mock.calls[0][0].data_points
@@ -80,7 +81,7 @@ describe.skip('generateMessage - Real OpenAI calls', () => {
       settings: payload.settings,
       helpers,
       payload,
-      modelType: OPENAI_MODELS.GPT4o
+      modelType: OPENAI_MODELS.GPT4o,
     })
 
     await extensionAction.onEvent({
@@ -88,6 +89,7 @@ describe.skip('generateMessage - Real OpenAI calls', () => {
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
 
     expect(onComplete).toHaveBeenCalledWith(
@@ -96,7 +98,7 @@ describe.skip('generateMessage - Real OpenAI calls', () => {
           subject: expect.any(String),
           message: expect.any(String),
         }),
-      })
+      }),
     )
 
     const { subject, message } = onComplete.mock.calls[0][0].data_points

@@ -8,7 +8,7 @@ jest.mock('../../lib/getTrackData/index', () => {
   const actual = jest.requireActual('../../lib/getTrackData/index')
   return {
     ...actual,
-    getTrackData: jest.fn()
+    getTrackData: jest.fn(),
   }
 })
 
@@ -17,8 +17,8 @@ jest.mock('../../lib/getCareFlowDetails', () => ({
   getCareFlowDetails: jest.fn().mockResolvedValue({
     title: 'AI Actions Check',
     id: 'ty0CmaHm2jlX',
-    version: 6
-  })
+    version: 6,
+  }),
 }))
 
 // Mock createOpenAIModel
@@ -34,8 +34,8 @@ The patient's medication refill request was processed successfully.
 - The request was categorized as a Medication Refill Request
 - Dr. Smith approved and processed the refill for 90 days
 - The prescription was sent to CVS Pharmacy
-- A follow-up blood pressure check was recommended in 30 days`
-      })
+- A follow-up blood pressure check was recommended in 30 days`,
+      }),
     },
     metadata: {
       traceId: 'test-trace-id',
@@ -43,10 +43,10 @@ The patient's medication refill request was processed successfully.
       care_flow_id: 'xQ2P4uBn2cY8',
       activity_id: 'test-activity-id',
       org_slug: 'test-org-slug',
-      org_id: 'test-org-id'
+      org_id: 'test-org-id',
     },
-    callbacks: []
-  })
+    callbacks: [],
+  }),
 }))
 
 describe('summarizeTrackOutcome - Mocked LLM calls', () => {
@@ -62,17 +62,17 @@ describe('summarizeTrackOutcome - Mocked LLM calls', () => {
       definition_id: 'ty0CmaHm2jlX',
       tenant_id: 'test-tenant-id',
       org_slug: 'test-org-slug',
-      org_id: 'test-org-id'
+      org_id: 'test-org-id',
     },
     activity: {
-      id: 'test-activity-id'
+      id: 'test-activity-id',
     },
     fields: {
-      instructions: 'Summarize track outcome.'
+      instructions: 'Summarize track outcome.',
     },
     patient: {
-      id: 'test-patient-id'
-    }
+      id: 'test-patient-id',
+    },
   }
 
   beforeEach(() => {
@@ -86,30 +86,29 @@ describe('summarizeTrackOutcome - Mocked LLM calls', () => {
   it('Should summarize track outcome with LLM and include key information', async () => {
     const summarizeTrackOutcomeWithLLMSpy = jest.spyOn(
       require('./lib/summarizeTrackOutcomeWithLLM'),
-      'summarizeTrackOutcomeWithLLM'
+      'summarizeTrackOutcomeWithLLM',
     )
 
     const awellSdkMock = {
       orchestration: {
-        query: jest.fn()
-          .mockImplementation(({ activity, pathway }) => {
-            if (activity) {
-              return Promise.resolve({
+        query: jest.fn().mockImplementation(({ activity, pathway }) => {
+          if (activity) {
+            return Promise.resolve({
+              activity: {
+                success: true,
                 activity: {
-                  success: true,
-                  activity: {
-                    id: 'test-activity-id',
-                    context: {
-                      track_id: 'test-track-id'
-                    }
-                  }
-                }
-              })
-            }
-            if (pathway) {
-              return Promise.resolve(mockPathwayDetails)
-            }
-          })
+                  id: 'test-activity-id',
+                  context: {
+                    track_id: 'test-track-id',
+                  },
+                },
+              },
+            })
+          }
+          if (pathway) {
+            return Promise.resolve(mockPathwayDetails)
+          }
+        }),
       },
     }
 
@@ -120,6 +119,7 @@ describe('summarizeTrackOutcome - Mocked LLM calls', () => {
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
 
     // Verify the LLM function was called with correct parameters
@@ -131,23 +131,25 @@ describe('summarizeTrackOutcome - Mocked LLM calls', () => {
         traceId: 'test-trace-id',
         care_flow_definition_id: 'ty0CmaHm2jlX',
         care_flow_id: 'xQ2P4uBn2cY8',
-        activity_id: 'test-activity-id'
+        activity_id: 'test-activity-id',
       }),
-      callbacks: expect.any(Array)
+      callbacks: expect.any(Array),
     })
 
     // Verify the disclaimer is included
     const expectedDisclaimerMsg = `<p><strong>Important Notice:</strong> The content provided is an AI-generated summary of version 6 of Care Flow "AI Actions Check" (ID: xQ2P4uBn2cY8).</p>`
-    
+
     // Verify onComplete was called with the expected data
     expect(onComplete).toHaveBeenCalled()
     const summaryData = onComplete.mock.calls[0][0].data_points.outcomeSummary
-    
+
     // Check for disclaimer
     expect(summaryData).toContain(expectedDisclaimerMsg)
-    
+
     // Check for key information from the mock LLM response
-    expect(summaryData).toContain('medication refill request was processed successfully')
+    expect(summaryData).toContain(
+      'medication refill request was processed successfully',
+    )
     expect(summaryData).toContain('Lisinopril 10mg')
     expect(summaryData).toContain('Dr. Smith approved')
     expect(summaryData).toContain('90 days')
@@ -161,8 +163,8 @@ describe('summarizeTrackOutcome - Mocked LLM calls', () => {
   it('Should handle errors when SDK query fails', async () => {
     const awellSdkMock = {
       orchestration: {
-        query: jest.fn().mockRejectedValue(new Error('SDK query failed'))
-      }
+        query: jest.fn().mockRejectedValue(new Error('SDK query failed')),
+      },
     }
 
     helpers.awellSdk = jest.fn().mockResolvedValue(awellSdkMock)
@@ -178,7 +180,8 @@ describe('summarizeTrackOutcome - Mocked LLM calls', () => {
         onComplete,
         onError,
         helpers,
-      })
+        attempt: 1,
+      }),
     ).rejects.toThrow('SDK query failed')
 
     // Verify error handling
@@ -199,15 +202,15 @@ describe('summarizeTrackOutcome - Mocked LLM calls', () => {
                 activity: {
                   id: 'test-activity-id',
                   context: {
-                    track_id: 'test-track-id'
-                  }
-                }
-              }
+                    track_id: 'test-track-id',
+                  },
+                },
+              },
             })
           }
           return Promise.resolve({})
-        })
-      }
+        }),
+      },
     }
 
     helpers.awellSdk = jest.fn().mockResolvedValue(awellSdkMock)
@@ -219,10 +222,11 @@ describe('summarizeTrackOutcome - Mocked LLM calls', () => {
         onComplete,
         onError,
         helpers,
-      })
+        attempt: 1,
+      }),
     ).rejects.toThrow('Failed to get track data')
 
     // Verify error handling
     expect(onComplete).not.toHaveBeenCalled()
   })
-}) 
+})

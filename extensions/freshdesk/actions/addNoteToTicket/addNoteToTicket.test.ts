@@ -38,6 +38,7 @@ describe('Freshdesk - Add note to ticket', () => {
         onComplete,
         onError,
         helpers,
+        attempt: 1,
       })
 
       expect(onComplete).toHaveBeenCalled()
@@ -72,6 +73,7 @@ describe('Freshdesk - Add note to ticket', () => {
         onComplete,
         onError,
         helpers,
+        attempt: 1,
       })
 
       expect(onError).toHaveBeenCalledWith({

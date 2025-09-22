@@ -37,6 +37,7 @@ describe('Freshsales - Get lead', () => {
         onComplete,
         onError,
         helpers,
+        attempt: 1,
       })
 
       expect(onComplete).toHaveBeenCalledWith({
@@ -86,6 +87,7 @@ describe('Freshsales - Get lead', () => {
         onComplete,
         onError,
         helpers,
+        attempt: 1,
       })
 
       expect(onError).toHaveBeenCalledWith({

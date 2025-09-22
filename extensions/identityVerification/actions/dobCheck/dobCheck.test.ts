@@ -21,6 +21,7 @@ describe('Identity verification - DOB check', () => {
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
 
     /**

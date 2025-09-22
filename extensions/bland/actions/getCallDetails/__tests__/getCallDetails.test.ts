@@ -119,6 +119,7 @@ describe('Bland.ai - Get call details', () => {
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
 
     expect(mockedSdk).toHaveBeenCalled()

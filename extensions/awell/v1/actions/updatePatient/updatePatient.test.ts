@@ -73,6 +73,7 @@ describe('Update patient', () => {
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
     expect(onComplete).toHaveBeenCalled()
     expect(onError).not.toHaveBeenCalled()
@@ -103,6 +104,7 @@ describe('Update patient', () => {
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
     await expect(resp).rejects.toThrow(ZodError)
     expect(onComplete).not.toHaveBeenCalled()
@@ -133,6 +135,7 @@ describe('Update patient', () => {
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
     await expect(resp).rejects.toThrow(ZodError)
     expect(onComplete).not.toHaveBeenCalled()

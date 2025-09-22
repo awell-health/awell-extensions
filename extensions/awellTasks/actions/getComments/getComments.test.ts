@@ -36,6 +36,7 @@ describe('Task Service - Get care flow comments', () => {
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
 
     expect(mockedSdk).toHaveBeenCalled()

@@ -107,6 +107,7 @@ describe('Elation - Create patient', () => {
         onComplete,
         onError,
         helpers,
+        attempt: 1,
       })
 
       expect(mockCreatePatient).toHaveBeenCalled()
@@ -152,6 +153,7 @@ describe('Elation - Create patient', () => {
           onComplete,
           onError,
           helpers,
+          attempt: 1,
         })
 
         expect(mockCreatePatient).toHaveBeenCalled()
@@ -205,6 +207,7 @@ describe('Elation - Create patient', () => {
             onComplete,
             onError,
             helpers,
+            attempt: 1,
           }),
         ).rejects.toThrow()
 

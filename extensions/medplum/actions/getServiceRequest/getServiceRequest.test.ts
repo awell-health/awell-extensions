@@ -50,6 +50,7 @@ describe('Medplum - Get service request', () => {
         onComplete,
         onError,
         helpers,
+        attempt: 1,
       })
 
       expect(onComplete).toHaveBeenCalledWith({

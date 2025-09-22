@@ -9,7 +9,7 @@ import { FieldsValidationSchema } from './config'
 jest.mock('../../client')
 
 describe('createMessageThread action', () => {
-  const { extensionAction, onComplete, onError, clearMocks } =
+  const { extensionAction, onComplete, onError, helpers, clearMocks } =
     TestHelpers.fromAction(action)
 
   const mockCreateMessageThread = jest.fn()
@@ -59,7 +59,8 @@ describe('createMessageThread action', () => {
         payload: createTestPayload(validFields),
         onComplete,
         onError,
-        helpers: {} as any,
+        helpers,
+        attempt: 1,
       })
 
       expect(onComplete).toHaveBeenCalledWith({
@@ -88,7 +89,8 @@ describe('createMessageThread action', () => {
         payload,
         onComplete,
         onError,
-        helpers: {} as any,
+        helpers,
+        attempt: 1,
       })
 
       await expect(response).rejects.toThrow(ZodError)
@@ -115,7 +117,8 @@ describe('createMessageThread action', () => {
         payload,
         onComplete,
         onError,
-        helpers: {} as any,
+        helpers,
+        attempt: 1,
       })
 
       await expect(response).rejects.toThrow()

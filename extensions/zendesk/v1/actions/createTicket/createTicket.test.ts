@@ -65,7 +65,13 @@ describe('Create ticket', () => {
       },
     }
 
-    await createTicket.onEvent!({ payload, onComplete, onError, helpers })
+    await createTicket.onEvent!({
+      payload,
+      onComplete,
+      onError,
+      helpers,
+      attempt: 1,
+    })
 
     expect(onComplete).toHaveBeenCalledWith({
       data_points: expect.objectContaining({
@@ -109,7 +115,13 @@ describe('Create ticket', () => {
       },
     }
 
-    await createTicket.onEvent!({ payload, onComplete, onError, helpers })
+    await createTicket.onEvent!({
+      payload,
+      onComplete,
+      onError,
+      helpers,
+      attempt: 1,
+    })
 
     expect(onComplete).toHaveBeenCalledWith({
       data_points: expect.objectContaining({

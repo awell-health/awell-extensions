@@ -41,6 +41,7 @@ describe('HubSpot - Send email with SMTP', () => {
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
 
     expect(mockedHubSpotSmtpSdk).toHaveBeenCalled()

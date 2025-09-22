@@ -27,7 +27,7 @@ describe('REST - POST', () => {
         JSON.stringify({
           success: true,
           message: 'Data received successfully',
-        })
+        }),
       ),
     } satisfies Partial<Response>)
 
@@ -55,6 +55,7 @@ describe('REST - POST', () => {
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
 
     expect(global.fetch).toHaveBeenCalledWith(
@@ -69,7 +70,7 @@ describe('REST - POST', () => {
           ...jsonPayload,
           ...additionalPayload,
         }),
-      })
+      }),
     )
 
     expect(onComplete).toHaveBeenCalledWith({
@@ -115,6 +116,7 @@ describe('REST - POST', () => {
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
 
     expect(global.fetch).toHaveBeenCalledWith(
@@ -129,7 +131,7 @@ describe('REST - POST', () => {
           ...jsonPayload,
           ...additionalPayload,
         }),
-      })
+      }),
     )
 
     expect(onComplete).toHaveBeenCalledWith({
@@ -151,7 +153,7 @@ describe('REST - POST', () => {
       text: jest.fn().mockResolvedValue(
         JSON.stringify({
           message: 'Not found',
-        })
+        }),
       ),
     } satisfies Partial<Response>)
 
@@ -168,7 +170,7 @@ describe('REST - POST', () => {
     await post.onActivityCreated!(
       mockOnActivityCreateParams,
       onComplete,
-      onError
+      onError,
     )
 
     expect(global.fetch).toHaveBeenCalledWith(
@@ -179,7 +181,7 @@ describe('REST - POST', () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({}),
-      })
+      }),
     )
 
     expect(onError).toHaveBeenCalledWith({

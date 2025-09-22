@@ -43,6 +43,7 @@ describe('Awell Extension - Get Data Point Value', () => {
           onComplete,
           onError,
           helpers,
+          attempt: 1,
         })
 
         expect(onComplete).toHaveBeenCalledWith({
@@ -82,6 +83,7 @@ describe('Awell Extension - Get Data Point Value', () => {
           onComplete,
           onError,
           helpers,
+          attempt: 1,
         })
 
         expect(onComplete).toHaveBeenCalledWith({
@@ -121,6 +123,7 @@ describe('Awell Extension - Get Data Point Value', () => {
           onComplete,
           onError,
           helpers,
+          attempt: 1,
         })
 
         expect(onComplete).toHaveBeenCalledWith({
@@ -160,6 +163,7 @@ describe('Awell Extension - Get Data Point Value', () => {
           onComplete,
           onError,
           helpers,
+          attempt: 1,
         })
 
         expect(onComplete).toHaveBeenCalledWith({
@@ -199,6 +203,7 @@ describe('Awell Extension - Get Data Point Value', () => {
           onComplete,
           onError,
           helpers,
+          attempt: 1,
         })
 
         expect(onComplete).toHaveBeenCalledWith({
@@ -238,6 +243,7 @@ describe('Awell Extension - Get Data Point Value', () => {
           onComplete,
           onError,
           helpers,
+          attempt: 1,
         })
 
         expect(onComplete).toHaveBeenCalledWith({
@@ -280,6 +286,7 @@ describe('Awell Extension - Get Data Point Value', () => {
         onComplete,
         onError,
         helpers,
+        attempt: 1,
       })
 
       expect(onComplete).toHaveBeenCalledWith({
@@ -324,6 +331,7 @@ describe('Awell Extension - Get Data Point Value', () => {
         onComplete,
         onError,
         helpers,
+        attempt: 1,
       })
 
       expect(onComplete).not.toHaveBeenCalled()

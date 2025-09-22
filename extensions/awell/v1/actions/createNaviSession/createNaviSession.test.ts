@@ -35,6 +35,7 @@ describe('Create Navi Session', () => {
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
 
     expect(global.fetch).toHaveBeenCalledWith(
@@ -65,6 +66,7 @@ describe('Create Navi Session', () => {
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
 
     expect(onError).toHaveBeenCalled()

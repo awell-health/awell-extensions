@@ -72,6 +72,7 @@ describe('Customer.io - Track person event', () => {
         onComplete,
         onError,
         helpers,
+        attempt: 1,
       })
 
       expect(mockTrackPersonEvent).toHaveBeenCalledWith({
@@ -134,6 +135,7 @@ describe('Customer.io - Track person event', () => {
           onComplete,
           onError,
           helpers,
+          attempt: 1,
         }),
       ).rejects.toThrow()
     })

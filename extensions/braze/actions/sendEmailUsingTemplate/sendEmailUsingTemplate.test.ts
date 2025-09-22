@@ -52,6 +52,7 @@ describe('sendEmailUsingTemplate', () => {
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
 
     expect(mockScheduleEmail).toHaveBeenCalledWith({
@@ -95,6 +96,7 @@ describe('sendEmailUsingTemplate', () => {
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
 
     expect(mockSendMessageImmediately).toHaveBeenCalledWith({

@@ -1,4 +1,4 @@
-import { log, logTwo, frontend } from './actions'
+import { log, logTwo, frontend, failoWorld } from './actions'
 import { type Extension } from '@awell-health/extensions-core'
 import { settings } from './settings'
 import { webhooks } from './webhooks'
@@ -20,6 +20,7 @@ export const HelloWorld: Extension = {
     log,
     logTwo,
     frontend,
+    failoWorld,
   },
   webhooks,
 }

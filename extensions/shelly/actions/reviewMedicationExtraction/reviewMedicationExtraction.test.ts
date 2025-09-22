@@ -23,6 +23,7 @@ describe('Shelly - Review medication extraction', () => {
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
 
     expect(onError).not.toHaveBeenCalled()

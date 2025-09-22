@@ -80,6 +80,7 @@ describe('Stop track', () => {
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
 
     expect(helpers.awellSdk).toHaveBeenCalledTimes(1)
@@ -170,6 +171,7 @@ describe('Stop track', () => {
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
 
     expect(sdkMock.orchestration.query).toHaveBeenCalledTimes(1)
@@ -215,6 +217,7 @@ describe('Stop track', () => {
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
 
     expect(sdkMock.orchestration.mutation).toHaveBeenCalledTimes(1)

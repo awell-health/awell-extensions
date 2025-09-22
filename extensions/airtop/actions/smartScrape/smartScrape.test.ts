@@ -63,6 +63,7 @@ describe('Airtop - Smart Scrape', () => {
         onComplete,
         onError,
         helpers,
+        attempt: 1,
       })
 
       expect(onComplete).toHaveBeenCalledWith({

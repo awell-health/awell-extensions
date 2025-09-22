@@ -92,6 +92,7 @@ describe('listFormAnswers', () => {
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
 
     expect(onComplete).toHaveBeenCalledWith({

@@ -1,0 +1,1 @@
+export { getClinicalNote } from './getClinicalNote'

@@ -38,11 +38,14 @@ describe('Epic - Get appointment', () => {
               'https://fhir.epic.com/interconnect-fhir-oauth/oauth2/token',
             clientId: 'client-id',
             privateKey: `-----BEGIN PRIVATE KEY-----`,
+            kid: 'kid',
+            jku: 'jku',
           },
         } as any,
         onComplete,
         onError,
         helpers,
+        attempt: 1,
       })
 
       expect(onComplete).toHaveBeenCalledWith({
@@ -88,6 +91,7 @@ describe('Epic - Get appointment', () => {
         onComplete,
         onError,
         helpers,
+        attempt: 1,
       })
 
       expect(onError).toHaveBeenCalledWith({

@@ -39,11 +39,14 @@ describe('Epic - Create clinical note', () => {
           authUrl: 'https://fhir.epic.com/interconnect-fhir-oauth/oauth2/token',
           clientId: 'client-id',
           privateKey: `-----BEGIN PRIVATE KEY-----`,
+          kid: 'kid',
+          jku: 'jku',
         },
       } as any,
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
 
     expect(onComplete).toHaveBeenCalled()

@@ -10,7 +10,7 @@ const mockFn = jest
   .mockImplementationOnce(
     jest.fn().mockResolvedValue({
       id: 'F-Pkm3fFMYW-F2o7lSCgU',
-    })
+    }),
   )
 
 describe('Get patient by identifier', () => {
@@ -36,6 +36,7 @@ describe('Get patient by identifier', () => {
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
 
     expect(mockFn).toHaveBeenCalled()

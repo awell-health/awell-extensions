@@ -29,6 +29,7 @@ describe('Add ad hoc track', () => {
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
 
     expect(onComplete).toHaveBeenCalled()

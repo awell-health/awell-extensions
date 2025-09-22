@@ -29,9 +29,17 @@ export const getPatient: Action<
     try {
       const res = await epicFhirR4Sdk.getPatient(resourceId)
 
+      const humanName = res.data.name?.find((name) => name.use === 'official')
+      const officialGivenName = humanName?.given?.[0]
+      const officialFamilyName = humanName?.family
+      const birthDate = res.data.birthDate
+
       await onComplete({
         data_points: {
           patient: JSON.stringify(res.data),
+          officialGivenName,
+          officialFamilyName,
+          birthDate,
         },
       })
     } catch (error) {

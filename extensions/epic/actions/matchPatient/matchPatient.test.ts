@@ -41,11 +41,14 @@ describe('Epic - Match patient', () => {
               'https://fhir.epic.com/interconnect-fhir-oauth/oauth2/token',
             clientId: 'client-id',
             privateKey: `-----BEGIN PRIVATE KEY-----`,
+            kid: 'kid',
+            jku: 'jku',
           },
         } as any,
         onComplete,
         onError,
         helpers,
+        attempt: 1,
       })
 
       expect(onComplete).toHaveBeenCalledWith({
@@ -90,6 +93,7 @@ describe('Epic - Match patient', () => {
           onComplete,
           onError,
           helpers,
+          attempt: 1,
         }),
       ).rejects.toThrow('No match found')
     })

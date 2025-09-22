@@ -5,4 +5,16 @@ export const dataPoints = {
     key: 'patient',
     valueType: 'json',
   },
+  officialGivenName: {
+    key: 'officialGiveName',
+    valueType: 'string',
+  },
+  officialFamilyName: {
+    key: 'officialFamilyName',
+    valueType: 'string',
+  },
+  birthDate: {
+    key: 'birthDate',
+    valueType: 'date',
+  },
 } satisfies Record<string, DataPointDefinition>

@@ -36,6 +36,7 @@ describe('Freshsales - Search contact by email', () => {
         onComplete,
         onError,
         helpers,
+        attempt: 1,
       })
 
       expect(onComplete).toHaveBeenCalledWith({
@@ -88,6 +89,7 @@ describe('Freshsales - Search contact by email', () => {
         onComplete,
         onError,
         helpers,
+        attempt: 1,
       })
 
       expect(onError).toHaveBeenCalledWith({
@@ -131,6 +133,7 @@ describe('Freshsales - Search contact by email', () => {
         onComplete,
         onError,
         helpers,
+        attempt: 1,
       })
 
       expect(onError).toHaveBeenCalledWith({

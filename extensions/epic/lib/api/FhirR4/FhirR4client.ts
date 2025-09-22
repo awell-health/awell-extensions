@@ -17,6 +17,10 @@ import {
   type AppointmentReadInputType,
   type PatientSearchInputType,
   type PatientSearchResponseType,
+  type DocumentReferenceReadInputType,
+  type DocumentReferenceReadResponseType,
+  type BinaryReadResponseType,
+  type BinaryReadInputType,
 } from './schema'
 import { endsWith, isNil } from 'lodash'
 import { generateJWT } from '../auth/generateJWT'
@@ -30,6 +34,9 @@ export class EpicFhirR4Client {
   private readonly authUrl: string
   private readonly clientId: string
   private readonly privateKey: string
+  private readonly kid?: string
+  private readonly jku?: string
+
   private accessToken: string | null = null
   private tokenExpiry: number | null = null // Store token expiry time in UNIX timestamp
 
@@ -38,15 +45,21 @@ export class EpicFhirR4Client {
     authUrl,
     clientId,
     privateKey,
+    kid,
+    jku,
   }: {
     baseUrl: string
     authUrl: string
     clientId: string
     privateKey: string
+    kid?: string
+    jku?: string
   }) {
     this.authUrl = authUrl
     this.clientId = clientId
     this.privateKey = privateKey
+    this.kid = kid
+    this.jku = jku
 
     this.client = axios.create({
       baseURL: new URL(
@@ -89,11 +102,13 @@ export class EpicFhirR4Client {
           grant_type: 'client_credentials',
           client_assertion_type:
             'urn:ietf:params:oauth:client-assertion-type:jwt-bearer',
-          client_assertion: generateJWT(
-            this.clientId,
-            this.authUrl,
-            this.privateKey,
-          ),
+          client_assertion: generateJWT({
+            clientId: this.clientId,
+            tokenEndpoint: this.authUrl,
+            privateKey: this.privateKey,
+            kid: this.kid,
+            jku: this.jku,
+          }),
         },
         {
           headers: {
@@ -182,6 +197,21 @@ export class EpicFhirR4Client {
     return response
   }
 
+  async getDocumentReference(
+    resourceId: DocumentReferenceReadInputType,
+  ): Promise<AxiosResponse<DocumentReferenceReadResponseType>> {
+    const url = new URL(
+      `DocumentReference/${resourceId}`,
+      this.client.defaults.baseURL,
+    )
+
+    const response = await this.client.get<DocumentReferenceReadResponseType>(
+      url.toString(),
+    )
+
+    return response
+  }
+
   async getAppointment(
     resourceId: AppointmentReadInputType,
   ): Promise<AxiosResponse<AppointmentReadResponseType>> {
@@ -193,6 +223,26 @@ export class EpicFhirR4Client {
     const response = await this.client.get<AppointmentReadResponseType>(
       url.toString(),
     )
+
+    return response
+  }
+
+  async getBinary(
+    resourceId: BinaryReadInputType,
+  ): Promise<AxiosResponse<BinaryReadResponseType>> {
+    const url = new URL(`Binary/${resourceId}`, this.client.defaults.baseURL)
+
+    const response = await this.client.get<BinaryReadResponseType>(
+      url.toString(),
+    )
+
+    return response
+  }
+
+  async getMetadata(): Promise<AxiosResponse<unknown>> {
+    const url = new URL(`metadata`, this.client.defaults.baseURL)
+
+    const response = await this.client.get<unknown>(url.toString())
 
     return response
   }

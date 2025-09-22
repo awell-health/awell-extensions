@@ -53,6 +53,7 @@ describe('Healthie - Get password link', () => {
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
 
     expect(mockedHealthieSdk).toHaveBeenCalled()
@@ -93,6 +94,7 @@ describe('Healthie - Get password link', () => {
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
 
     // Ensure the query was called 3 times and succeeded on the third attempt

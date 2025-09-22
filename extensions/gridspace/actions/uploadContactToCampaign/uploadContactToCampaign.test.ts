@@ -35,6 +35,7 @@ describe('uploadContactToCampaign', () => {
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
 
     expect(mockUploadContactsToCampaign).toHaveBeenCalledWith('campaign123', {
@@ -94,6 +95,7 @@ describe('uploadContactToCampaign', () => {
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
 
     expect(onComplete).toHaveBeenCalledWith({
@@ -128,7 +130,8 @@ describe('uploadContactToCampaign', () => {
         onComplete,
         onError,
         helpers,
-      })
+        attempt: 1,
+      }),
     ).rejects.toThrow('API error')
 
     expect(mockUploadContactsToCampaign).toHaveBeenCalled()

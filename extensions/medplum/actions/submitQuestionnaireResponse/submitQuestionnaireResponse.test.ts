@@ -98,6 +98,7 @@ describe('Medplum - Create questionnaire response', () => {
         onComplete,
         onError,
         helpers,
+        attempt: 1,
       })
 
       expect(mockCreateResource).toHaveBeenCalledWith({
@@ -196,6 +197,7 @@ describe('Medplum - Create questionnaire response', () => {
         onComplete,
         onError,
         helpers,
+        attempt: 1,
       })
 
       expect(onError).toHaveBeenCalledWith({

@@ -37,6 +37,7 @@ describe('Task Service - Get last task performer', () => {
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
 
     expect(mockTasksApiClient.getTasks).toHaveBeenCalled()
@@ -77,6 +78,7 @@ describe('Task Service - Get last task performer', () => {
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
 
     expect(onComplete).toHaveBeenCalledWith(

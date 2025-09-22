@@ -45,6 +45,7 @@ describe('Cerner - Get patient encounters', () => {
         onComplete,
         onError,
         helpers,
+        attempt: 1,
       })
 
       expect(onComplete).toHaveBeenCalledWith({
@@ -84,6 +85,7 @@ describe('Cerner - Get patient encounters', () => {
         onComplete,
         onError,
         helpers,
+        attempt: 1,
       })
 
       await expect(res).rejects.toThrow('No encounters found')

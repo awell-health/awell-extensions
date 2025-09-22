@@ -328,6 +328,7 @@ describe('Bland - Send call with pathway', () => {
         onComplete,
         onError,
         helpers,
+        attempt: 1,
       })
 
       expect(sendCallSpy).toHaveBeenCalledWith(
@@ -382,11 +383,12 @@ describe('Bland - Send call with pathway', () => {
         onComplete,
         onError,
         helpers,
+        attempt: 1,
       })
 
       expect(sendCallSpy).toHaveBeenCalled(),
-      // Completion happens async via a Webhook from Bland
-      expect(onComplete).not.toHaveBeenCalled()
+        // Completion happens async via a Webhook from Bland
+        expect(onComplete).not.toHaveBeenCalled()
     })
   })
 })

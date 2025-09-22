@@ -56,6 +56,7 @@ describe('Zoom - Send SMS', () => {
         onComplete,
         onError,
         helpers,
+        attempt: 1,
       })
 
       expect(mockSendSms).toHaveBeenCalledWith({
@@ -100,6 +101,7 @@ describe('Zoom - Send SMS', () => {
           onComplete,
           onError,
           helpers,
+          attempt: 1,
         })
 
         expect(onComplete).not.toHaveBeenCalled()
@@ -149,6 +151,7 @@ describe('Zoom - Send SMS', () => {
             onComplete,
             onError,
             helpers,
+            attempt: 1,
           }),
         ).rejects.toThrow(AxiosError)
       })

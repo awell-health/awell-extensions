@@ -29,7 +29,7 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["@airtop/sdk", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:0.1.44"],\
           ["@awell-health/awell-sdk", "npm:0.1.24"],\
-          ["@awell-health/extensions-core", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:1.1.6"],\
+          ["@awell-health/extensions-core", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:1.1.9"],\
           ["@awell-health/healthie-sdk", "npm:0.1.1"],\
           ["@calcom/embed-react", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:1.5.3"],\
           ["@dropbox/sign", "npm:1.8.0"],\
@@ -429,7 +429,7 @@ const RAW_RUNTIME_STATE =
           ["@awell-health/awell-extensions", "workspace:."],\
           ["@airtop/sdk", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:0.1.44"],\
           ["@awell-health/awell-sdk", "npm:0.1.24"],\
-          ["@awell-health/extensions-core", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:1.1.6"],\
+          ["@awell-health/extensions-core", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:1.1.9"],\
           ["@awell-health/healthie-sdk", "npm:0.1.1"],\
           ["@calcom/embed-react", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:1.5.3"],\
           ["@dropbox/sign", "npm:1.8.0"],\
@@ -550,17 +550,17 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["@awell-health/extensions-core", [\
-      ["npm:1.1.6", {\
-        "packageLocation": "./.yarn/cache/@awell-health-extensions-core-npm-1.1.6-aa1a42276c-569afaf7da.zip/node_modules/@awell-health/extensions-core/",\
+      ["npm:1.1.9", {\
+        "packageLocation": "./.yarn/cache/@awell-health-extensions-core-npm-1.1.9-c5acaad04d-3db73098d6.zip/node_modules/@awell-health/extensions-core/",\
         "packageDependencies": [\
-          ["@awell-health/extensions-core", "npm:1.1.6"]\
+          ["@awell-health/extensions-core", "npm:1.1.9"]\
         ],\
         "linkType": "SOFT"\
       }],\
-      ["virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:1.1.6", {\
-        "packageLocation": "./.yarn/__virtual__/@awell-health-extensions-core-virtual-c54c390006/0/cache/@awell-health-extensions-core-npm-1.1.6-aa1a42276c-569afaf7da.zip/node_modules/@awell-health/extensions-core/",\
+      ["virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:1.1.9", {\
+        "packageLocation": "./.yarn/__virtual__/@awell-health-extensions-core-virtual-cf31374b63/0/cache/@awell-health-extensions-core-npm-1.1.9-c5acaad04d-3db73098d6.zip/node_modules/@awell-health/extensions-core/",\
         "packageDependencies": [\
-          ["@awell-health/extensions-core", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:1.1.6"],\
+          ["@awell-health/extensions-core", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:1.1.9"],\
           ["@awell-health/awell-sdk", "npm:0.1.24"],\
           ["@langchain/core", "npm:0.3.33"],\
           ["@langchain/openai", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:0.3.0"],\

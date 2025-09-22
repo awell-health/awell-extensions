@@ -8,15 +8,33 @@ import jwt from 'jsonwebtoken'
  * @param privateKey - The private key to sign the JWT.
  * @returns The signed JWT.
  */
-export const generateJWT = (
-  clientId: string,
-  tokenEndpoint: string,
-  privateKey: string,
-): string => {
+export const generateJWT = ({
+  clientId,
+  tokenEndpoint,
+  privateKey,
+  kid,
+  jku,
+}: {
+  clientId: string
+  tokenEndpoint: string
+  privateKey: string
+  /**
+   * For apps using JSON Web Key Sets (including dynamically registed clients),
+   * set this value to the kid of the target public key from your key set
+   */
+  kid?: string
+  /**
+   * For apps using JSON Web Key Set URLs,
+   * optionally set this value to the URL you registered on your application
+   */
+  jku?: string
+}): string => {
   const nowInSeconds = Math.floor(Date.now() / 1000)
   const jwtHeader = {
     alg: 'RS384',
     typ: 'JWT',
+    kid,
+    jku,
   }
 
   const jwtPayload = {

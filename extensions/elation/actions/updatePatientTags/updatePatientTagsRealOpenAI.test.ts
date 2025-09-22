@@ -14,15 +14,15 @@ describe.skip('updatePatientTags - Real OpenAI calls', () => {
   beforeEach(() => {
     clearMocks()
     jest.clearAllMocks()
-    
+
     // Ensure API key is always defined
     process.env.OPENAI_API_KEY = process.env.OPENAI_API_KEY || 'test-api-key'
-    
+
     helpers.getOpenAIConfig = jest.fn().mockReturnValue({
       apiKey: process.env.OPENAI_API_KEY,
       temperature: 0,
       maxRetries: 2,
-      timeout: 30000
+      timeout: 30000,
     })
 
     // Mock Elation client with existing tags
@@ -30,9 +30,9 @@ describe.skip('updatePatientTags - Real OpenAI calls', () => {
     mockAPIClient.mockImplementation((settings) => ({
       ...makeAPIClientMockFunc(settings),
       getPatient: jest.fn().mockResolvedValue({
-        tags: ['diabetes', 'hypertension']
+        tags: ['diabetes', 'hypertension'],
       }),
-      updatePatient: jest.fn().mockResolvedValue({})
+      updatePatient: jest.fn().mockResolvedValue({}),
     }))
   })
 
@@ -56,22 +56,23 @@ describe.skip('updatePatientTags - Real OpenAI calls', () => {
           definition_id: '123',
           tenant_id: '123',
           org_slug: 'test-org-slug',
-          org_id: 'test-org-id'
+          org_id: 'test-org-id',
         },
         activity: {
-          id: 'test-activity-id'
+          id: 'test-activity-id',
         },
         patient: {
-          id: 'test-patient-id'
-        }
+          id: 'test-patient-id',
+        },
       },
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
 
     // Wait for all promises to resolve
-    await new Promise(resolve => setTimeout(resolve, 1000))
+    await new Promise((resolve) => setTimeout(resolve, 1000))
 
     expect(onComplete).toHaveBeenCalled()
     expect(onError).not.toHaveBeenCalled()
@@ -83,16 +84,17 @@ describe.skip('updatePatientTags - Real OpenAI calls', () => {
     mockAPIClient.mockImplementation((settings) => ({
       ...makeAPIClientMockFunc(settings),
       getPatient: jest.fn().mockResolvedValue({
-        tags: ['CCM 2 – COPD ', 'Fall Risk']
+        tags: ['CCM 2 – COPD ', 'Fall Risk'],
       }),
-      updatePatient: jest.fn().mockResolvedValue({})
+      updatePatient: jest.fn().mockResolvedValue({}),
     }))
 
     await extensionAction.onEvent({
       payload: {
         fields: {
           patientId: 123,
-          instructions: "Look for a COPD Care Program tag 'CCM 2 – COPD '. If found, remove it. Then add 'CCM 3 – COPD.'. Keep the rest.",
+          instructions:
+            "Look for a COPD Care Program tag 'CCM 2 – COPD '. If found, remove it. Then add 'CCM 3 – COPD.'. Keep the rest.",
         },
         settings: {
           client_id: 'clientId',
@@ -107,21 +109,22 @@ describe.skip('updatePatientTags - Real OpenAI calls', () => {
           definition_id: '123',
           tenant_id: '123',
           org_slug: 'test-org-slug',
-          org_id: 'test-org-id'
+          org_id: 'test-org-id',
         },
         activity: {
-          id: 'test-activity-id'
+          id: 'test-activity-id',
         },
         patient: {
-          id: 'test-patient-id'
-        }
+          id: 'test-patient-id',
+        },
       },
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
 
-    await new Promise(resolve => setTimeout(resolve, 1000))
+    await new Promise((resolve) => setTimeout(resolve, 1000))
     expect(onComplete).toHaveBeenCalled()
     expect(onError).not.toHaveBeenCalled()
   }, 60000)
@@ -132,16 +135,17 @@ describe.skip('updatePatientTags - Real OpenAI calls', () => {
     mockAPIClient.mockImplementation((settings) => ({
       ...makeAPIClientMockFunc(settings),
       getPatient: jest.fn().mockResolvedValue({
-        tags: ['CCM 2 – ASCVD', 'CCM 3 – ASCVD', 'DNR']
+        tags: ['CCM 2 – ASCVD', 'CCM 3 – ASCVD', 'DNR'],
       }),
-      updatePatient: jest.fn().mockResolvedValue({})
+      updatePatient: jest.fn().mockResolvedValue({}),
     }))
 
     await extensionAction.onEvent({
       payload: {
         fields: {
           patientId: 123,
-          instructions: "Remove all ASCVD-related care program tags. Then add 'CCM 3 – ASCVD'. Keep other tags.",
+          instructions:
+            "Remove all ASCVD-related care program tags. Then add 'CCM 3 – ASCVD'. Keep other tags.",
         },
         settings: {
           client_id: 'clientId',
@@ -156,21 +160,22 @@ describe.skip('updatePatientTags - Real OpenAI calls', () => {
           definition_id: '123',
           tenant_id: '123',
           org_slug: 'test-org-slug',
-          org_id: 'test-org-id'
+          org_id: 'test-org-id',
         },
         activity: {
-          id: 'test-activity-id'
+          id: 'test-activity-id',
         },
         patient: {
-          id: 'test-patient-id'
-        }
+          id: 'test-patient-id',
+        },
       },
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
 
-    await new Promise(resolve => setTimeout(resolve, 1000))
+    await new Promise((resolve) => setTimeout(resolve, 1000))
     expect(onComplete).toHaveBeenCalled()
     expect(onError).not.toHaveBeenCalled()
   }, 60000)
@@ -181,16 +186,17 @@ describe.skip('updatePatientTags - Real OpenAI calls', () => {
     mockAPIClient.mockImplementation((settings) => ({
       ...makeAPIClientMockFunc(settings),
       getPatient: jest.fn().mockResolvedValue({
-        tags: ['Mobility Assist', 'No BP in Left Arm']
+        tags: ['Mobility Assist', 'No BP in Left Arm'],
       }),
-      updatePatient: jest.fn().mockResolvedValue({})
+      updatePatient: jest.fn().mockResolvedValue({}),
     }))
 
     await extensionAction.onEvent({
       payload: {
         fields: {
           patientId: 123,
-          instructions: "If 'Mobility Assist' is found, remove it. Then add 'ALF/SNF' if the patient is in a facility. Keep everything else.",
+          instructions:
+            "If 'Mobility Assist' is found, remove it. Then add 'ALF/SNF' if the patient is in a facility. Keep everything else.",
         },
         settings: {
           client_id: 'clientId',
@@ -205,22 +211,23 @@ describe.skip('updatePatientTags - Real OpenAI calls', () => {
           definition_id: '123',
           tenant_id: '123',
           org_slug: 'test-org-slug',
-          org_id: 'test-org-id'
+          org_id: 'test-org-id',
         },
         activity: {
-          id: 'test-activity-id'
+          id: 'test-activity-id',
         },
         patient: {
-          id: 'test-patient-id'
-        }
+          id: 'test-patient-id',
+        },
       },
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
 
-    await new Promise(resolve => setTimeout(resolve, 1000))
+    await new Promise((resolve) => setTimeout(resolve, 1000))
     expect(onComplete).toHaveBeenCalled()
     expect(onError).not.toHaveBeenCalled()
   }, 60000)
-}) 
+})

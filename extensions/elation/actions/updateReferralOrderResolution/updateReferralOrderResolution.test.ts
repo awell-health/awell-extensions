@@ -64,6 +64,7 @@ describe('Elation - Update referral order resolution', () => {
           onComplete,
           onError,
           helpers,
+          attempt: 1,
         })
 
         expect(onError).toHaveBeenCalledWith({
@@ -105,6 +106,7 @@ describe('Elation - Update referral order resolution', () => {
         onComplete,
         onError,
         helpers,
+        attempt: 1,
       })
 
       expect(onError).not.toHaveBeenCalled()
