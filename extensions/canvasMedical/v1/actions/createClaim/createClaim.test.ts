@@ -28,6 +28,7 @@ describe('createClaim', () => {
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
     expect(onComplete).toHaveBeenCalledTimes(1)
     expect(onComplete).toHaveBeenCalledWith({

@@ -66,6 +66,7 @@ describe('Date Helpers - getNextWorkday', () => {
             onComplete,
             onError,
             helpers,
+            attempt: 1,
           })
 
           expect(onComplete).toHaveBeenCalledWith({
@@ -129,6 +130,7 @@ describe('Date Helpers - getNextWorkday', () => {
             onComplete,
             onError,
             helpers,
+            attempt: 1,
           })
 
           expect(onComplete).toHaveBeenCalledWith({
@@ -154,6 +156,7 @@ describe('Date Helpers - getNextWorkday', () => {
         onComplete,
         onError,
         helpers,
+        attempt: 1,
       })
 
       expect(onComplete).toHaveBeenCalledWith({

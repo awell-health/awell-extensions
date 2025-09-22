@@ -94,6 +94,7 @@ describe('SRFax - Get fax document with OCR', () => {
         onComplete,
         onError,
         helpers,
+        attempt: 1,
       })
 
       expect(retrieveFaxSpy).toHaveBeenCalled()

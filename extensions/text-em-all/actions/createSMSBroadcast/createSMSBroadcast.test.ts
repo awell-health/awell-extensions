@@ -43,6 +43,7 @@ describe('CreateSMSBroadcast', () => {
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
 
     expect(mockCreateSMSBroadcast).toHaveBeenCalledWith({

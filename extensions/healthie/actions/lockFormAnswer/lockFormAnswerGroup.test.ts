@@ -43,6 +43,7 @@ describe('Healthie - Lock form answer group', () => {
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
 
     expect(mockedHealthieSdk).toHaveBeenCalled()

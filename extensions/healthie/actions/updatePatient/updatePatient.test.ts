@@ -109,6 +109,7 @@ describe('Healthie - updatePatient', () => {
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
 
     expect(mockedHealthieSdk).toHaveBeenCalled()
@@ -137,6 +138,7 @@ describe('Healthie - updatePatient', () => {
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
 
     expect(mockedHealthieSdk).toHaveBeenCalled()

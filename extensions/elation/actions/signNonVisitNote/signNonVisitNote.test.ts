@@ -66,6 +66,7 @@ describe('Elation - Sign non-visit note', () => {
           onComplete,
           onError,
           helpers,
+          attempt: 1,
         })
 
         expect(onError).toHaveBeenCalledWith({
@@ -113,6 +114,7 @@ describe('Elation - Sign non-visit note', () => {
           onComplete,
           onError,
           helpers,
+          attempt: 1,
         })
 
         expect(onError).toHaveBeenCalledWith({
@@ -158,6 +160,7 @@ describe('Elation - Sign non-visit note', () => {
           onComplete,
           onError,
           helpers,
+          attempt: 1,
         })
 
         expect(onError).toHaveBeenCalledWith({
@@ -198,6 +201,7 @@ describe('Elation - Sign non-visit note', () => {
         onComplete,
         onError,
         helpers,
+        attempt: 1,
       })
 
       expect(onError).not.toHaveBeenCalled()

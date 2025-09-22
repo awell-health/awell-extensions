@@ -37,6 +37,7 @@ describe('Elation - Create Visit Note', () => {
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
 
     expect(onComplete).toHaveBeenCalledWith({
@@ -58,6 +59,7 @@ describe('Elation - Create Visit Note', () => {
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
 
     await expect(resp).rejects.toThrow(ZodError)
@@ -76,6 +78,7 @@ describe('Elation - Create Visit Note', () => {
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
 
     await expect(resp).rejects.toThrow(ZodError)

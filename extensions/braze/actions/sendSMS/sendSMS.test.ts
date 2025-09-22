@@ -39,6 +39,7 @@ describe('sendSMS', () => {
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
 
     expect(mocksendSMS).toHaveBeenCalledWith({

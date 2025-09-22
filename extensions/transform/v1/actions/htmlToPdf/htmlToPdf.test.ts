@@ -35,6 +35,7 @@ describe('Transform - htmlToPdf', () => {
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
 
     expect(htmlToBase64PdfSpy).toHaveBeenCalledWith('hello-world', undefined)
@@ -59,6 +60,7 @@ describe('Transform - htmlToPdf', () => {
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
 
     await expect(resp).rejects.toThrow(ZodError)
@@ -89,6 +91,7 @@ describe('Transform - htmlToPdf', () => {
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
 
     expect(htmlToBase64PdfSpy).toHaveBeenCalledWith('hello-world', options)

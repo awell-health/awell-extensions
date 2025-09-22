@@ -47,7 +47,7 @@ testCases.forEach(({ webhook, payload, sdkMocks, dataPoints }) => {
       const { user_id, data_points } = processWebhook(
         sdkMocks,
         dataPoints,
-        payload.resource_id.toString()
+        payload.resource_id.toString(),
       )
 
       expect(onSuccess).toHaveBeenCalledWith({

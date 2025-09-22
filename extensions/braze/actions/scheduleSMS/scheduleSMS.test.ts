@@ -44,6 +44,7 @@ describe('scheduleSMS', () => {
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
 
     expect(mockScheduleSMS).toHaveBeenCalledWith({

@@ -37,6 +37,7 @@ describe('Elation - Get patient', () => {
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
 
     expect(onComplete).toHaveBeenCalledWith({
@@ -47,7 +48,9 @@ describe('Elation - Get patient', () => {
         sex: patientExample.sex,
         primaryPhysicianId: String(patientExample.primary_physician),
         caregiverPracticeId: String(patientExample.caregiver_practice),
-        preferredServiceLocationId: String(patientExample.preferred_service_location),
+        preferredServiceLocationId: String(
+          patientExample.preferred_service_location,
+        ),
         mobilePhone: '+12133734253',
         email: 'john@doe.com',
         middleName: patientExample.middle_name,
@@ -73,13 +76,14 @@ describe('Elation - Get patient', () => {
     const resp = getPatient.onEvent({
       payload: {
         fields: {
-          patientId: undefined
+          patientId: undefined,
         },
         settings,
       } as any,
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
 
     await expect(resp).rejects.toThrow(ZodError)
@@ -99,6 +103,7 @@ describe('Elation - Get patient', () => {
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
 
     await expect(resp).rejects.toThrow(ZodError)

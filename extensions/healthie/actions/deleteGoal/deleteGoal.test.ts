@@ -43,6 +43,7 @@ describe('Healthie - Delete goal', () => {
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
 
     expect(mockedHealthieSdk).toHaveBeenCalled()

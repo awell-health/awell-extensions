@@ -41,6 +41,7 @@ describe('Cerner - Get encounter', () => {
         onComplete,
         onError,
         helpers,
+        attempt: 1,
       })
 
       expect(onComplete).toHaveBeenCalledWith({
@@ -80,6 +81,7 @@ describe('Cerner - Get encounter', () => {
         onComplete,
         onError,
         helpers,
+        attempt: 1,
       })
 
       expect(onError).toHaveBeenCalledWith({

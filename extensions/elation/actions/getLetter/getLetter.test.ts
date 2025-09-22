@@ -42,6 +42,7 @@ describe('Elation - Get letter', () => {
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
 
     expect(onComplete).toHaveBeenCalledWith({

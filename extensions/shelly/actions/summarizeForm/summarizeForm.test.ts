@@ -11,8 +11,8 @@ jest.mock('../../lib/getCareFlowDetails', () => ({
   getCareFlowDetails: jest.fn().mockResolvedValue({
     title: 'Test Care Flow',
     id: 'whatever',
-    version: 3
-  })
+    version: 3,
+  }),
 }))
 
 // Mock the detectLanguageWithLLM function
@@ -28,17 +28,17 @@ const generateTestPayload = (overrides = {}) => {
       definition_id: 'test-definition-id',
       tenant_id: 'test-tenant-id',
       org_slug: 'test-org-slug',
-      org_id: 'test-org-id'
+      org_id: 'test-org-id',
     },
     activity: {
-      id: 'test-activity-id'
+      id: 'test-activity-id',
     },
     fields: {},
     settings: {},
     patient: {
-      id: 'test-patient-id'
+      id: 'test-patient-id',
     },
-    ...overrides
+    ...overrides,
   }
 }
 
@@ -47,7 +47,8 @@ jest.mock('../../../../src/lib/llm/openai/createOpenAIModel', () => ({
   createOpenAIModel: jest.fn().mockResolvedValue({
     model: {
       invoke: jest.fn().mockResolvedValue({
-        content: 'The patient reported good overall health. They experienced fatigue and headache in the last 7 days. Additionally, they mentioned occasional dizziness when standing up too quickly.',
+        content:
+          'The patient reported good overall health. They experienced fatigue and headache in the last 7 days. Additionally, they mentioned occasional dizziness when standing up too quickly.',
       }),
     },
     metadata: {
@@ -59,9 +60,13 @@ jest.mock('../../../../src/lib/llm/openai/createOpenAIModel', () => ({
 }))
 
 jest.mock('../../lib/summarizeFormWithLLM', () => ({
-  summarizeFormWithLLM: jest.fn().mockImplementation(({ disclaimerMessage, additionalInstructions }) => {
-    return Promise.resolve('The patient reported good overall health. They experienced fatigue and headache in the last 7 days. Additionally, they mentioned occasional dizziness when standing up too quickly.')
-  }),
+  summarizeFormWithLLM: jest
+    .fn()
+    .mockImplementation(({ disclaimerMessage, additionalInstructions }) => {
+      return Promise.resolve(
+        'The patient reported good overall health. They experienced fatigue and headache in the last 7 days. Additionally, they mentioned occasional dizziness when standing up too quickly.',
+      )
+    }),
 }))
 
 describe('summarizeForm - Mocked LLM calls', () => {
@@ -71,7 +76,8 @@ describe('summarizeForm - Mocked LLM calls', () => {
   beforeEach(() => {
     clearMocks()
     jest.clearAllMocks()
-    const mockQuery = jest.fn()
+    const mockQuery = jest
+      .fn()
       // First query: get current activity
       .mockResolvedValueOnce({
         activity: {
@@ -80,29 +86,31 @@ describe('summarizeForm - Mocked LLM calls', () => {
             id: 'X74HeDQ4N0gtdaSEuzF8s',
             date: '2024-09-11T22:56:59.607Z',
             context: {
-              step_id: 'Xkn5dkyPA5uW'
-            }
-          }
-        }
+              step_id: 'Xkn5dkyPA5uW',
+            },
+          },
+        },
       })
       // Second query: get activities in current step
       .mockResolvedValueOnce({
         pathwayStepActivities: {
           success: true,
-          activities: [{
-            id: 'X74HeDQ4N0gtdaSEuzF8s',
-            status: 'DONE',
-            date: '2024-09-11T22:56:58.607Z',
-            object: {
-              id: 'OGhjJKF5LRmo',
-              name: 'Test Form',
-              type: 'FORM'
+          activities: [
+            {
+              id: 'X74HeDQ4N0gtdaSEuzF8s',
+              status: 'DONE',
+              date: '2024-09-11T22:56:58.607Z',
+              object: {
+                id: 'OGhjJKF5LRmo',
+                name: 'Test Form',
+                type: 'FORM',
+              },
+              context: {
+                step_id: 'Xkn5dkyPA5uW',
+              },
             },
-            context: {
-              step_id: 'Xkn5dkyPA5uW'
-            }
-          }]
-        }
+          ],
+        },
       })
       // Third query: get form definition
       .mockResolvedValueOnce({
@@ -115,8 +123,8 @@ describe('summarizeForm - Mocked LLM calls', () => {
 
     helpers.awellSdk = jest.fn().mockReturnValue({
       orchestration: {
-        query: mockQuery
-      }
+        query: mockQuery,
+      },
     })
   })
 
@@ -139,23 +147,27 @@ describe('summarizeForm - Mocked LLM calls', () => {
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
 
     // Verify the summarizeFormWithLLM function was called with the correct disclaimer
     const { summarizeFormWithLLM } = require('../../lib/summarizeFormWithLLM')
     const { detectLanguageWithLLM } = require('../../lib/detectLanguageWithLLM')
-    
+
     // Verify language detection was called
     expect(detectLanguageWithLLM).toHaveBeenCalled()
-    
+
     expect(summarizeFormWithLLM).toHaveBeenCalledWith(
       expect.objectContaining({
-        disclaimerMessage: '**Important Notice:** The content provided is an AI-generated summary of form responses of version 3 of Care Flow "Test Care Flow" (ID: ai4rZaYEocjB).',
-        language: 'English' // Should be the detected language
-      })
+        disclaimerMessage:
+          '**Important Notice:** The content provided is an AI-generated summary of form responses of version 3 of Care Flow "Test Care Flow" (ID: ai4rZaYEocjB).',
+        language: 'English', // Should be the detected language
+      }),
     )
 
-    const expected = await markdownToHtml('The patient reported good overall health. They experienced fatigue and headache in the last 7 days. Additionally, they mentioned occasional dizziness when standing up too quickly.')
+    const expected = await markdownToHtml(
+      'The patient reported good overall health. They experienced fatigue and headache in the last 7 days. Additionally, they mentioned occasional dizziness when standing up too quickly.',
+    )
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
         summary: expected,
@@ -185,25 +197,29 @@ describe('summarizeForm - Mocked LLM calls', () => {
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
 
     // Get references to mocked functions
     const { summarizeFormWithLLM } = require('../../lib/summarizeFormWithLLM')
     const { detectLanguageWithLLM } = require('../../lib/detectLanguageWithLLM')
-    
+
     // Verify language detection was NOT called
     expect(detectLanguageWithLLM).not.toHaveBeenCalled()
-    
+
     // Verify summarizeFormWithLLM was called with the provided language
     expect(summarizeFormWithLLM).toHaveBeenCalledWith(
       expect.objectContaining({
-        disclaimerMessage: '**Important Notice:** The content provided is an AI-generated summary of form responses of version 3 of Care Flow "Test Care Flow" (ID: ai4rZaYEocjB).',
+        disclaimerMessage:
+          '**Important Notice:** The content provided is an AI-generated summary of form responses of version 3 of Care Flow "Test Care Flow" (ID: ai4rZaYEocjB).',
         language: 'Spanish',
-        additionalInstructions: 'Focus on medication details and side effects.'
-      })
+        additionalInstructions: 'Focus on medication details and side effects.',
+      }),
     )
 
-    const expected = await markdownToHtml('The patient reported good overall health. They experienced fatigue and headache in the last 7 days. Additionally, they mentioned occasional dizziness when standing up too quickly.')
+    const expected = await markdownToHtml(
+      'The patient reported good overall health. They experienced fatigue and headache in the last 7 days. Additionally, they mentioned occasional dizziness when standing up too quickly.',
+    )
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
         summary: expected,

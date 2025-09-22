@@ -42,6 +42,7 @@ describe('Epic - Find patient by MRN', () => {
         onComplete,
         onError,
         helpers,
+        attempt: 1,
       })
 
       expect(onComplete).toHaveBeenCalledWith({
@@ -82,6 +83,7 @@ describe('Epic - Find patient by MRN', () => {
           onComplete,
           onError,
           helpers,
+          attempt: 1,
         }),
       ).rejects.toThrow('No patient found')
     })

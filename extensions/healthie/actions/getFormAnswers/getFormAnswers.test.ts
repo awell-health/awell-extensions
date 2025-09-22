@@ -71,6 +71,7 @@ describe('Healthie - Get form answers', () => {
         onComplete,
         onError,
         helpers,
+        attempt: 1,
       })
 
       // Verify that processFormAnswersForSize was called with correct parameters
@@ -110,6 +111,7 @@ describe('Healthie - Get form answers', () => {
         onComplete,
         onError,
         helpers,
+        attempt: 1,
       })
 
       // Verify that processFormAnswersForSize was called with undefined maxSizeKB
@@ -167,6 +169,7 @@ describe('Healthie - Get form answers', () => {
         onComplete,
         onError,
         helpers,
+        attempt: 1,
       })
 
       expect(onComplete).toHaveBeenCalledWith({
@@ -200,6 +203,7 @@ describe('Healthie - Get form answers', () => {
         onComplete,
         onError,
         helpers,
+        attempt: 1,
       })
 
       expect(onError).toHaveBeenCalledWith({
@@ -240,6 +244,7 @@ describe('Healthie - Get form answers', () => {
         onComplete,
         onError,
         helpers,
+        attempt: 1,
       })
 
       expect(onError).toHaveBeenCalledWith({
@@ -278,6 +283,7 @@ describe('Healthie - Get form answers', () => {
         onComplete,
         onError,
         helpers,
+        attempt: 1,
       })
 
       expect(onError).toHaveBeenCalledWith({

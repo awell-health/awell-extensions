@@ -9,12 +9,12 @@ import { detectLanguageWithLLM } from '../../lib/detectLanguageWithLLM'
 
 // Spy on detectLanguageWithLLM to verify it's called
 jest.mock('../../lib/detectLanguageWithLLM', () => {
-  const originalModule = jest.requireActual('../../lib/detectLanguageWithLLM');
+  const originalModule = jest.requireActual('../../lib/detectLanguageWithLLM')
   return {
     ...originalModule,
-    detectLanguageWithLLM: jest.fn(originalModule.detectLanguageWithLLM)
-  };
-});
+    detectLanguageWithLLM: jest.fn(originalModule.detectLanguageWithLLM),
+  }
+})
 
 jest.setTimeout(30000) // Increase timeout for real LLM calls
 
@@ -29,7 +29,7 @@ describe.skip('summarizeFormsInStep - Real OpenAI calls', () => {
       apiKey: process.env.OPENAI_API_KEY,
       temperature: 0,
       maxRetries: 3,
-      timeout: 10000
+      timeout: 10000,
     })
   })
 
@@ -44,10 +44,11 @@ describe.skip('summarizeFormsInStep - Real OpenAI calls', () => {
         summaryFormat: 'Bullet-points',
         language: 'Default',
       },
-      settings: {}
+      settings: {},
     })
 
-    const mockQuery = jest.fn()
+    const mockQuery = jest
+      .fn()
       .mockResolvedValueOnce({
         activity: {
           success: true,
@@ -55,28 +56,30 @@ describe.skip('summarizeFormsInStep - Real OpenAI calls', () => {
             id: 'X74HeDQ4N0gtdaSEuzF8s',
             date: '2024-09-11T22:56:59.607Z',
             context: {
-              step_id: 'Xkn5dkyPA5uW'
-            }
-          }
-        }
+              step_id: 'Xkn5dkyPA5uW',
+            },
+          },
+        },
       })
       .mockResolvedValueOnce({
         pathwayStepActivities: {
           success: true,
-          activities: [{
-            id: 'X74HeDQ4N0gtdaSEuzF8s',
-            status: 'DONE',
-            date: '2024-09-11T22:56:58.607Z',
-            object: {
-              id: 'OGhjJKF5LRmo',
-              name: 'Test Form',
-              type: 'FORM'
+          activities: [
+            {
+              id: 'X74HeDQ4N0gtdaSEuzF8s',
+              status: 'DONE',
+              date: '2024-09-11T22:56:58.607Z',
+              object: {
+                id: 'OGhjJKF5LRmo',
+                name: 'Test Form',
+                type: 'FORM',
+              },
+              context: {
+                step_id: 'Xkn5dkyPA5uW',
+              },
             },
-            context: {
-              step_id: 'Xkn5dkyPA5uW'
-            }
-          }]
-        }
+          ],
+        },
       })
       .mockResolvedValueOnce({
         form: {
@@ -91,12 +94,12 @@ describe.skip('summarizeFormsInStep - Real OpenAI calls', () => {
                 type: 'SELECT',
                 options: [
                   { value: 'excellent', label: 'Excellent' },
-                  { value: 'good', label: 'Good' }
-                ]
-              }
-            ]
-          }
-        }
+                  { value: 'good', label: 'Good' },
+                ],
+              },
+            ],
+          },
+        },
       })
       .mockResolvedValueOnce({
         formResponse: {
@@ -106,17 +109,17 @@ describe.skip('summarizeFormsInStep - Real OpenAI calls', () => {
             answers: [
               {
                 question_id: 'q1',
-                value: 'good'
-              }
-            ]
-          }
-        }
+                value: 'good',
+              },
+            ],
+          },
+        },
       })
 
     helpers.awellSdk = jest.fn().mockReturnValue({
       orchestration: {
-        query: mockQuery
-      }
+        query: mockQuery,
+      },
     })
 
     await extensionAction.onEvent({
@@ -124,6 +127,7 @@ describe.skip('summarizeFormsInStep - Real OpenAI calls', () => {
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
 
     expect(helpers.awellSdk).toHaveBeenCalled()
@@ -132,7 +136,7 @@ describe.skip('summarizeFormsInStep - Real OpenAI calls', () => {
     expect(detectLanguageWithLLM).toHaveBeenCalled()
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
-        summary: expect.stringContaining(DISCLAIMER_MSG_FORM)
+        summary: expect.stringContaining(DISCLAIMER_MSG_FORM),
       },
     })
     expect(onError).not.toHaveBeenCalled()
@@ -149,10 +153,11 @@ describe.skip('summarizeFormsInStep - Real OpenAI calls', () => {
         summaryFormat: 'Text paragraph',
         language: 'French',
       },
-      settings: {}
+      settings: {},
     })
 
-    const mockQuery = jest.fn()
+    const mockQuery = jest
+      .fn()
       .mockResolvedValueOnce({
         activity: {
           success: true,
@@ -160,28 +165,30 @@ describe.skip('summarizeFormsInStep - Real OpenAI calls', () => {
             id: 'X74HeDQ4N0gtdaSEuzF8s',
             date: '2024-09-11T22:56:59.607Z',
             context: {
-              step_id: 'Xkn5dkyPA5uW'
-            }
-          }
-        }
+              step_id: 'Xkn5dkyPA5uW',
+            },
+          },
+        },
       })
       .mockResolvedValueOnce({
         pathwayStepActivities: {
           success: true,
-          activities: [{
-            id: 'X74HeDQ4N0gtdaSEuzF8s',
-            status: 'DONE',
-            date: '2024-09-11T22:56:58.607Z',
-            object: {
-              id: 'OGhjJKF5LRmo',
-              name: 'Test Form',
-              type: 'FORM'
+          activities: [
+            {
+              id: 'X74HeDQ4N0gtdaSEuzF8s',
+              status: 'DONE',
+              date: '2024-09-11T22:56:58.607Z',
+              object: {
+                id: 'OGhjJKF5LRmo',
+                name: 'Test Form',
+                type: 'FORM',
+              },
+              context: {
+                step_id: 'Xkn5dkyPA5uW',
+              },
             },
-            context: {
-              step_id: 'Xkn5dkyPA5uW'
-            }
-          }]
-        }
+          ],
+        },
       })
       .mockResolvedValueOnce({
         form: {
@@ -196,12 +203,12 @@ describe.skip('summarizeFormsInStep - Real OpenAI calls', () => {
                 type: 'SELECT',
                 options: [
                   { value: 'excellent', label: 'Excellent' },
-                  { value: 'good', label: 'Good' }
-                ]
-              }
-            ]
-          }
-        }
+                  { value: 'good', label: 'Good' },
+                ],
+              },
+            ],
+          },
+        },
       })
       .mockResolvedValueOnce({
         formResponse: {
@@ -211,17 +218,17 @@ describe.skip('summarizeFormsInStep - Real OpenAI calls', () => {
             answers: [
               {
                 question_id: 'q1',
-                value: 'good'
-              }
-            ]
-          }
-        }
+                value: 'good',
+              },
+            ],
+          },
+        },
       })
 
     helpers.awellSdk = jest.fn().mockReturnValue({
       orchestration: {
-        query: mockQuery
-      }
+        query: mockQuery,
+      },
     })
 
     await extensionAction.onEvent({
@@ -229,6 +236,7 @@ describe.skip('summarizeFormsInStep - Real OpenAI calls', () => {
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
 
     expect(helpers.awellSdk).toHaveBeenCalled()
@@ -237,7 +245,7 @@ describe.skip('summarizeFormsInStep - Real OpenAI calls', () => {
     expect(detectLanguageWithLLM).not.toHaveBeenCalled()
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
-        summary: expect.stringContaining('Avis Important')
+        summary: expect.stringContaining('Avis Important'),
       },
     })
     expect(onError).not.toHaveBeenCalled()
@@ -254,10 +262,11 @@ describe.skip('summarizeFormsInStep - Real OpenAI calls', () => {
         summaryFormat: 'Bullet-points',
         language: 'Default', // Set to Default to trigger language detection
       },
-      settings: {}
+      settings: {},
     })
 
-    const mockQuery = jest.fn()
+    const mockQuery = jest
+      .fn()
       .mockResolvedValueOnce({
         activity: {
           success: true,
@@ -265,28 +274,30 @@ describe.skip('summarizeFormsInStep - Real OpenAI calls', () => {
             id: 'X74HeDQ4N0gtdaSEuzF8s',
             date: '2024-09-11T22:56:59.607Z',
             context: {
-              step_id: 'Xkn5dkyPA5uW'
-            }
-          }
-        }
+              step_id: 'Xkn5dkyPA5uW',
+            },
+          },
+        },
       })
       .mockResolvedValueOnce({
         pathwayStepActivities: {
           success: true,
-          activities: [{
-            id: 'X74HeDQ4N0gtdaSEuzF8s',
-            status: 'DONE',
-            date: '2024-09-11T22:56:58.607Z',
-            object: {
-              id: 'OGhjJKF5LRmo',
-              name: 'Formulario de Evaluación de Salud',
-              type: 'FORM'
+          activities: [
+            {
+              id: 'X74HeDQ4N0gtdaSEuzF8s',
+              status: 'DONE',
+              date: '2024-09-11T22:56:58.607Z',
+              object: {
+                id: 'OGhjJKF5LRmo',
+                name: 'Formulario de Evaluación de Salud',
+                type: 'FORM',
+              },
+              context: {
+                step_id: 'Xkn5dkyPA5uW',
+              },
             },
-            context: {
-              step_id: 'Xkn5dkyPA5uW'
-            }
-          }]
-        }
+          ],
+        },
       })
       .mockResolvedValueOnce({
         form: {
@@ -301,12 +312,12 @@ describe.skip('summarizeFormsInStep - Real OpenAI calls', () => {
                 type: 'SELECT',
                 options: [
                   { value: 'excelente', label: 'Excelente' },
-                  { value: 'bueno', label: 'Bueno' }
-                ]
-              }
-            ]
-          }
-        }
+                  { value: 'bueno', label: 'Bueno' },
+                ],
+              },
+            ],
+          },
+        },
       })
       .mockResolvedValueOnce({
         formResponse: {
@@ -316,17 +327,17 @@ describe.skip('summarizeFormsInStep - Real OpenAI calls', () => {
             answers: [
               {
                 question_id: 'q1',
-                value: 'bueno'
-              }
-            ]
-          }
-        }
+                value: 'bueno',
+              },
+            ],
+          },
+        },
       })
 
     helpers.awellSdk = jest.fn().mockReturnValue({
       orchestration: {
-        query: mockQuery
-      }
+        query: mockQuery,
+      },
     })
 
     await extensionAction.onEvent({
@@ -334,18 +345,19 @@ describe.skip('summarizeFormsInStep - Real OpenAI calls', () => {
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
 
     expect(helpers.awellSdk).toHaveBeenCalled()
     expect(mockQuery).toHaveBeenCalledTimes(4)
-    
+
     // Verify detectLanguageWithLLM was called
     expect(detectLanguageWithLLM).toHaveBeenCalled()
-    
+
     // The summary should contain Spanish disclaimer
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
-        summary: expect.stringContaining('Aviso Importante')
+        summary: expect.stringContaining('Aviso Importante'),
       },
     })
     expect(onError).not.toHaveBeenCalled()

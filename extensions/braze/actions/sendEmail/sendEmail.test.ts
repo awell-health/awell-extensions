@@ -41,6 +41,7 @@ describe('sendEmail', () => {
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
 
     expect(mockSendEmail).toHaveBeenCalledWith({

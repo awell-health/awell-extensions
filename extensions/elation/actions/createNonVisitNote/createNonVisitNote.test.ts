@@ -88,6 +88,7 @@ describe('Elation - Create non-visit note', () => {
         onComplete,
         onError,
         helpers,
+        attempt: 1,
       })
 
       expect(mockCreateNonVisitNote).toHaveBeenCalledWith(
@@ -116,6 +117,7 @@ describe('Elation - Create non-visit note', () => {
         onComplete,
         onError,
         helpers,
+        attempt: 1,
       })
 
       expect(mockCreateNonVisitNote).toHaveBeenCalledWith(
@@ -144,6 +146,7 @@ describe('Elation - Create non-visit note', () => {
         onComplete,
         onError,
         helpers,
+        attempt: 1,
       })
 
       expect(mockCreateNonVisitNote).toHaveBeenCalledWith(
@@ -178,6 +181,7 @@ describe('Elation - Create non-visit note', () => {
         onComplete,
         onError,
         helpers,
+        attempt: 1,
       })
 
       expect(mockCreateNonVisitNote).toHaveBeenCalled()
@@ -220,6 +224,7 @@ describe('Elation - Create non-visit note', () => {
         onComplete,
         onError,
         helpers,
+        attempt: 1,
       })
 
       expect(onError).toHaveBeenCalledWith({

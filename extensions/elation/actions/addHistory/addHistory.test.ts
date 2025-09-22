@@ -37,6 +37,7 @@ describe('Elation - Add History', () => {
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
     expect(onComplete).toHaveBeenCalledTimes(1)
     expect(onError).not.toHaveBeenCalled()
@@ -54,6 +55,7 @@ describe('Elation - Add History', () => {
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
 
     await expect(resp).rejects.toThrow(ZodError)
@@ -72,6 +74,7 @@ describe('Elation - Add History', () => {
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
 
     await expect(resp).rejects.toThrow(ZodError)
@@ -91,6 +94,7 @@ describe('Elation - Add History', () => {
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
 
     await expect(resp).rejects.toThrow(ZodError)
@@ -110,6 +114,7 @@ describe('Elation - Add History', () => {
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
 
     await expect(resp).rejects.toThrow(ZodError)

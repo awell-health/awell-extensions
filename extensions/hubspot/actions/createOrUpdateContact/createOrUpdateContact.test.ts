@@ -72,6 +72,7 @@ describe('HubSpot - Get contact', () => {
         onComplete,
         onError,
         helpers,
+        attempt: 1,
       })
 
       expect(mockGetById).toHaveBeenCalledWith(
@@ -143,6 +144,7 @@ describe('HubSpot - Get contact', () => {
         onComplete,
         onError,
         helpers,
+        attempt: 1,
       })
 
       expect(mockGetById).toHaveBeenCalledWith(

@@ -55,6 +55,7 @@ describe('Healthie - Create appointment', () => {
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
 
     expect(mockedHealthieSdk).toHaveBeenCalled()

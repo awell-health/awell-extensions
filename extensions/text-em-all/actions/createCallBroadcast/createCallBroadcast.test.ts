@@ -42,6 +42,7 @@ describe('CreateCallBroadcast', () => {
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
 
     expect(mockCreateCallBroadcast).toHaveBeenCalledWith({

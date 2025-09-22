@@ -26,7 +26,7 @@ const dynamicAppointmentsMock = [
     mode: 'VIDEO',
     status: { status: 'Scheduled' },
   },
-];
+]
 
 // Mock modular OpenAI
 jest.mock('openai', () => {
@@ -41,18 +41,19 @@ jest.mock('openai', () => {
                   message: {
                     content: JSON.stringify({
                       appointmentIds: [123, 456],
-                      explanation: 'Both appointments matched the cancellation criteria.',
+                      explanation:
+                        'Both appointments matched the cancellation criteria.',
                     }),
                   },
                 },
               ],
-            });
+            })
           }),
         },
       },
     })),
-  };
-});
+  }
+})
 
 jest.mock('../../client')
 
@@ -120,7 +121,8 @@ describe('cancelAppointments', () => {
           message: {
             content: JSON.stringify({
               appointmentIds: [123, 456],
-              explanation: 'Both appointments matched the cancellation criteria.',
+              explanation:
+                'Both appointments matched the cancellation criteria.',
             }),
           },
         },
@@ -139,30 +141,32 @@ describe('cancelAppointments', () => {
         ...basePayload,
         fields: {
           patientId: '12345',
-          prompt: 'I need to cancel both of my appointments (appointments with ID 123 and 456). Please cancel both of these appointments immediately.',
+          prompt:
+            'I need to cancel both of my appointments (appointments with ID 123 and 456). Please cancel both of these appointments immediately.',
         },
       },
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
 
     // Verify onComplete was called and retrieve its first argument
     expect(onComplete).toHaveBeenCalled()
     const result = onComplete.mock.calls[0][0]
-    
+
     // Check data points structure
     expect(result).toHaveProperty('data_points')
     expect(result.data_points).toHaveProperty('cancelledAppointments')
     expect(result.data_points).toHaveProperty('explanation')
-    
+
     const cancelledData = JSON.parse(result.data_points.cancelledAppointments)
-    
+
     // Check if cancelledData is an array of objects with id property, or array of IDs
     if (Array.isArray(cancelledData) && cancelledData.length > 0) {
       if (typeof cancelledData[0] === 'object' && cancelledData[0] !== null) {
         // It's an array of appointment objects
-        const cancelledIds = cancelledData.map(appt => appt.id)
+        const cancelledIds = cancelledData.map((appt) => appt.id)
         expect(cancelledIds).toContain(123)
         expect(cancelledIds).toContain(456)
         expect(cancelledIds.length).toBe(2)
@@ -173,15 +177,17 @@ describe('cancelAppointments', () => {
         expect(cancelledData.length).toBe(2)
       }
     }
-    
+
     expect(result).toHaveProperty('events')
-    expect(result.events[0].text.en).toContain('appointments for patient 12345 were cancelled')
-    
+    expect(result.events[0].text.en).toContain(
+      'appointments for patient 12345 were cancelled',
+    )
+
     // Validate specific appointments were cancelled via the mock
     expect(cancelledAppointments.has('123')).toBe(true)
     expect(cancelledAppointments.has('456')).toBe(true)
     expect(cancelledAppointments.size).toBe(2)
-    
+
     expect(onError).not.toHaveBeenCalled()
   })
 
@@ -193,7 +199,7 @@ describe('cancelAppointments', () => {
           message: {
             content: JSON.stringify({
               appointmentIds: [123],
-              explanation: "Selected the appointment scheduled for tomorrow.",
+              explanation: 'Selected the appointment scheduled for tomorrow.',
             }),
           },
         },
@@ -218,25 +224,26 @@ describe('cancelAppointments', () => {
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
 
     // Verify onComplete was called and retrieve its first argument
     expect(onComplete).toHaveBeenCalled()
     const result = onComplete.mock.calls[0][0]
-    
+
     // Check data points structure
     expect(result).toHaveProperty('data_points')
     expect(result.data_points).toHaveProperty('cancelledAppointments')
     expect(result.data_points).toHaveProperty('explanation')
-    
+
     // Parse the cancelledAppointments string and verify IDs
     const cancelledData = JSON.parse(result.data_points.cancelledAppointments)
-    
+
     // Check if cancelledData is an array of objects with id property, or array of IDs
     if (Array.isArray(cancelledData) && cancelledData.length > 0) {
       if (typeof cancelledData[0] === 'object' && cancelledData[0] !== null) {
         // It's an array of appointment objects
-        const cancelledIds = cancelledData.map(appt => appt.id)
+        const cancelledIds = cancelledData.map((appt) => appt.id)
         expect(cancelledIds).toContain(123)
         expect(cancelledIds).not.toContain(456)
         expect(cancelledIds.length).toBe(1)
@@ -252,7 +259,7 @@ describe('cancelAppointments', () => {
     expect(cancelledAppointments.has('123')).toBe(true)
     expect(cancelledAppointments.has('456')).toBe(false)
     expect(cancelledAppointments.size).toBe(1)
-    
+
     expect(onError).not.toHaveBeenCalled()
   })
 
@@ -275,19 +282,20 @@ describe('cancelAppointments', () => {
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
 
     // Verify onComplete was called with empty appointments
     expect(onComplete).toHaveBeenCalled()
     const result = onComplete.mock.calls[0][0]
-    
+
     expect(result.data_points.cancelledAppointments).toBe('[]')
     expect(result.data_points.explanation).toContain('No')
-    
+
     // No call to OpenAI should be made
     const openai = require('openai')
     expect(openai.OpenAI).not.toHaveBeenCalled()
-    
+
     expect(onError).not.toHaveBeenCalled()
   })
 
@@ -300,7 +308,8 @@ describe('cancelAppointments', () => {
           message: {
             content: JSON.stringify({
               appointmentIds: [123, 456],
-              explanation: 'Both appointments matched the cancellation criteria.',
+              explanation:
+                'Both appointments matched the cancellation criteria.',
             }),
           },
         },
@@ -333,37 +342,40 @@ describe('cancelAppointments', () => {
         ...basePayload,
         fields: {
           patientId: '12345',
-          prompt: 'I need to cancel both of my appointments (appointments with ID 123 and 456). Please cancel both of these appointments immediately.',
+          prompt:
+            'I need to cancel both of my appointments (appointments with ID 123 and 456). Please cancel both of these appointments immediately.',
         },
       },
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
 
     // Verify onError was called with partial success and failure
     expect(onError).toHaveBeenCalled()
     const errorResult = onError.mock.calls[0][0]
-    
+
     // Check for success and failure events
     expect(errorResult.events.length).toBeGreaterThanOrEqual(2)
-    
+
     // Verify one event mentions successful cancellation
-    const successEvent = errorResult.events.find((e: {text: {en: string}}) => 
-      e.text.en.includes('Successfully cancelled')
+    const successEvent = errorResult.events.find(
+      (e: { text: { en: string } }) =>
+        e.text.en.includes('Successfully cancelled'),
     )
     expect(successEvent).toBeTruthy()
-    
+
     // Verify one event mentions failed cancellation
-    const failureEvent = errorResult.events.find((e: {text: {en: string}}) => 
-      e.text.en.includes('Failed to cancel')
+    const failureEvent = errorResult.events.find(
+      (e: { text: { en: string } }) => e.text.en.includes('Failed to cancel'),
     )
     expect(failureEvent).toBeTruthy()
-    
+
     // Should have attempted to cancel only the first one successfully
     expect(cancelledAppointments.size).toBe(1)
     expect(cancelledAppointments.has('123')).toBe(true)
-    
+
     // Should not have called onComplete
     expect(onComplete).not.toHaveBeenCalled()
   })

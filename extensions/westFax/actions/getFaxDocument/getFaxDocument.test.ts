@@ -37,6 +37,7 @@ describe('WestFax - Get fax document', () => {
         onComplete,
         onError,
         helpers,
+        attempt: 1,
       })
 
       expect(onComplete).toHaveBeenCalledWith({

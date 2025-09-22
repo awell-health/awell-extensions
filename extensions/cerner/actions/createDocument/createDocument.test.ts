@@ -42,6 +42,7 @@ describe('Cerner - Create document', () => {
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
 
     expect(onComplete).toHaveBeenCalledWith({

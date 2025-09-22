@@ -46,6 +46,7 @@ describe('Epic - Match patient', () => {
         onComplete,
         onError,
         helpers,
+        attempt: 1,
       })
 
       expect(onComplete).toHaveBeenCalledWith({
@@ -90,6 +91,7 @@ describe('Epic - Match patient', () => {
           onComplete,
           onError,
           helpers,
+          attempt: 1,
         }),
       ).rejects.toThrow('No match found')
     })
