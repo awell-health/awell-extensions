@@ -41,6 +41,7 @@ export const failoWorld: Action<
     'A test action that fails for a specified number of attempts to test the automated retry mechanism.',
   fields,
   previewable: false,
+  supports_automated_retries: true,
   dataPoints,
   onEvent: async ({ payload, onComplete, onError, attempt }): Promise<void> => {
     const { fields } = payload
