@@ -13,17 +13,17 @@ jest.mock('../../../../src/lib/llm/openai/createOpenAIModel', () => ({
       pipe: jest.fn().mockReturnValue({
         invoke: jest.fn().mockResolvedValue({
           tagsFound: true,
-          explanation: 'Test explanation'
-        })
-      })
+          explanation: 'Test explanation',
+        }),
+      }),
     },
     metadata: {
       care_flow_definition_id: 'whatever',
       care_flow_id: 'test-flow-id',
-      activity_id: 'test-activity-id'
+      activity_id: 'test-activity-id',
     },
-    callbacks: []
-  })
+    callbacks: [],
+  }),
 }))
 
 describe('Elation - Check patient tags', () => {
@@ -49,14 +49,14 @@ describe('Elation - Check patient tags', () => {
       definition_id: '123',
       tenant_id: '123',
       org_slug: 'test-org-slug',
-      org_id: 'test-org-id'
+      org_id: 'test-org-id',
     },
     activity: {
-      id: 'test-activity-id'
+      id: 'test-activity-id',
     },
     patient: {
-      id: 'test-patient-id'
-    }
+      id: 'test-patient-id',
+    },
   }
 
   beforeAll(() => {
@@ -80,11 +80,12 @@ describe('Elation - Check patient tags', () => {
         fields: {
           patientId: 123,
           instructions: 'Check if patient has "Eligible" tag',
-        }
+        },
       },
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
 
     expect(onComplete).toHaveBeenCalledWith({
@@ -108,7 +109,7 @@ describe('Elation - Check patient tags', () => {
     helpers.getOpenAIConfig = jest.fn().mockReturnValue({
       apiKey: 'default-key',
       temperature: 0,
-      maxRetries: 3
+      maxRetries: 3,
     })
 
     await checkPatientTags.onEvent({
@@ -117,11 +118,12 @@ describe('Elation - Check patient tags', () => {
         fields: {
           patientId: 123,
           instructions: 'Check if patient has "Eligible" tag',
-        }
+        },
       },
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
 
     expect(onComplete).toHaveBeenCalledWith({
@@ -140,4 +142,4 @@ describe('Elation - Check patient tags', () => {
     })
     expect(onError).not.toHaveBeenCalled()
   })
-}) 
+})

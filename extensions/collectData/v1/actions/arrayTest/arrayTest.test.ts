@@ -1,12 +1,10 @@
-
-
 import { TestHelpers } from '@awell-health/extensions-core'
 import { arrayTest } from './arrayTest'
 import { generateTestPayload } from '../../../../../tests'
 
-
 describe('arrayTest', () => {
-  const { onComplete, onError, helpers, extensionAction } = TestHelpers.fromAction(arrayTest)
+  const { onComplete, onError, helpers, extensionAction } =
+    TestHelpers.fromAction(arrayTest)
 
   test('should transform and stringify multi-select values', async () => {
     await extensionAction.onEvent({
@@ -22,6 +20,7 @@ describe('arrayTest', () => {
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
 
     expect(onComplete).toHaveBeenCalledWith({

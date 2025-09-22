@@ -5,7 +5,6 @@ import { summarizeCareFlow } from '.'
 import { mockPathwayActivitiesResponse } from './__mocks__/pathwayActivitiesResponse'
 import { DISCLAIMER_MSG } from '../../lib/constants'
 
-
 jest.setTimeout(60000)
 
 describe.skip('summarizeCareFlow - Real OpenAI calls', () => {
@@ -15,39 +14,40 @@ describe.skip('summarizeCareFlow - Real OpenAI calls', () => {
   beforeEach(() => {
     clearMocks()
     jest.clearAllMocks()
-    
+
     // Ensure API key is always defined
     process.env.OPENAI_API_KEY = process.env.OPENAI_API_KEY || 'test-api-key'
-    
+
     helpers.getOpenAIConfig = jest.fn().mockReturnValue({
       apiKey: process.env.OPENAI_API_KEY as string,
       temperature: 0,
       maxRetries: 3,
-      timeout: 10000
+      timeout: 10000,
     })
 
     // Mock the SDK query to return activities
-    const mockQuery = jest.fn()
-      .mockResolvedValueOnce({
-        pathwayActivities: {
-          success: true,
-          activities: [{
+    const mockQuery = jest.fn().mockResolvedValueOnce({
+      pathwayActivities: {
+        success: true,
+        activities: [
+          {
             id: 'test-activity-id',
             status: 'DONE',
             date: '2024-01-01T00:00:00Z',
             object: {
               id: 'test-object-id',
               name: 'Test Activity',
-              type: 'FORM'
-            }
-          }]
-        }
-      })
+              type: 'FORM',
+            },
+          },
+        ],
+      },
+    })
 
     helpers.awellSdk = jest.fn().mockReturnValue({
       orchestration: {
-        query: mockQuery
-      }
+        query: mockQuery,
+      },
     })
   })
 
@@ -58,7 +58,7 @@ describe.skip('summarizeCareFlow - Real OpenAI calls', () => {
 
   afterAll(async () => {
     // Clean up any remaining promises
-    await new Promise(resolve => setTimeout(resolve, 100))
+    await new Promise((resolve) => setTimeout(resolve, 100))
   })
 
   it('Should call the real model using default config', async () => {
@@ -73,15 +73,16 @@ describe.skip('summarizeCareFlow - Real OpenAI calls', () => {
       },
       settings: {}, // Use default config
       activity: {
-        id: 'test-activity-id'
-      }
+        id: 'test-activity-id',
+      },
     })
 
     await extensionAction.onEvent({
       payload,
       onComplete,
       onError,
-      helpers: helpers 
+      helpers,
+      attempt: 1,
     })
 
     expect(onComplete).toHaveBeenCalledWith({
@@ -100,19 +101,21 @@ describe.skip('summarizeCareFlow - Real OpenAI calls', () => {
       },
       fields: {
         stakeholder: 'Clinician',
-        additionalInstructions: 'Focus only on actions completed by the patient.',
+        additionalInstructions:
+          'Focus only on actions completed by the patient.',
       },
       settings: {}, // Use default config
       activity: {
-        id: 'test-activity-id'
-      }
+        id: 'test-activity-id',
+      },
     })
 
     await extensionAction.onEvent({
       payload,
       onComplete,
       onError,
-      helpers: helpers
+      helpers,
+      attempt: 1,
     })
 
     expect(onComplete).toHaveBeenCalledWith({

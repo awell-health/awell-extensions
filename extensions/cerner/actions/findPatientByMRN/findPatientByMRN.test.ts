@@ -40,6 +40,7 @@ describe('Cerner - Find patient by MRN', () => {
         onComplete,
         onError,
         helpers,
+        attempt: 1,
       })
 
       expect(onComplete).toHaveBeenCalledWith({
@@ -78,6 +79,7 @@ describe('Cerner - Find patient by MRN', () => {
           onComplete,
           onError,
           helpers,
+          attempt: 1,
         }),
       ).rejects.toThrow('No patient found')
     })

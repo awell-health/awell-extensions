@@ -45,6 +45,7 @@ describe('Cal.com - Get booking (v2 api)', () => {
         onComplete,
         onError,
         helpers,
+        attempt: 1,
       })
 
       expect(onError).not.toHaveBeenCalled()
@@ -102,6 +103,7 @@ describe('Cal.com - Get booking (v2 api)', () => {
           onComplete,
           onError,
           helpers,
+          attempt: 1,
         })
 
         expect(onComplete).not.toHaveBeenCalled()
@@ -131,6 +133,7 @@ describe('Cal.com - Get booking (v2 api)', () => {
             onComplete,
             onError,
             helpers,
+            attempt: 1,
           }),
         ).rejects.toThrow(AxiosError)
       })

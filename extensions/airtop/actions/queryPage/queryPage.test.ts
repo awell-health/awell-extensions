@@ -60,6 +60,7 @@ describe('Airtop - Query page', () => {
         onComplete,
         onError,
         helpers,
+        attempt: 1,
       })
 
       expect(onComplete).toHaveBeenCalledWith({

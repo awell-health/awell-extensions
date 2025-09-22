@@ -56,6 +56,7 @@ describe.skip('findAppointmentsWithAI - Real OpenAI calls', () => {
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
 
     const data_points = (onComplete.mock.calls[0][0] as any).data_points
@@ -105,6 +106,7 @@ describe.skip('findAppointmentsWithAI - Real OpenAI calls', () => {
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
 
     const data_points = (onComplete.mock.calls[0][0] as any).data_points
@@ -142,6 +144,7 @@ describe.skip('findAppointmentsWithAI - Real OpenAI calls', () => {
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
 
     const data_points = (onComplete.mock.calls[0][0] as any).data_points
@@ -173,6 +176,7 @@ describe.skip('findAppointmentsWithAI - Real OpenAI calls', () => {
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
 
     const data_points = (onComplete.mock.calls[0][0] as any).data_points
@@ -204,6 +208,7 @@ describe.skip('findAppointmentsWithAI - Real OpenAI calls', () => {
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
 
     expect(onComplete).toHaveBeenCalledTimes(1)
@@ -236,6 +241,7 @@ describe.skip('findAppointmentsWithAI - Real OpenAI calls', () => {
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
 
     const data_points = (onComplete.mock.calls[0][0] as any).data_points
@@ -267,6 +273,7 @@ describe.skip('findAppointmentsWithAI - Real OpenAI calls', () => {
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
 
     const data_points = (onComplete.mock.calls[0][0] as any).data_points
@@ -300,6 +307,7 @@ describe.skip('findAppointmentsWithAI - Real OpenAI calls', () => {
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
 
     const data_points = (onComplete.mock.calls[0][0] as any).data_points

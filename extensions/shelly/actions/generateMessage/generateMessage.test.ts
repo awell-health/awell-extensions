@@ -14,7 +14,7 @@ jest.mock('../../../../src/lib/llm/openai/createOpenAIModel', () => ({
         content: JSON.stringify({
           subject: 'Test Subject',
           message: 'This is a test message',
-        })
+        }),
       }),
     } as unknown as ChatOpenAI,
     metadata: {
@@ -23,9 +23,9 @@ jest.mock('../../../../src/lib/llm/openai/createOpenAIModel', () => ({
       activity_id: 'test-activity-id',
       org_slug: 'test-org-slug',
       org_id: 'test-org-id',
-      model: modelType
-    }
-  }))
+      model: modelType,
+    },
+  })),
 }))
 
 describe('generateMessage', () => {
@@ -55,6 +55,7 @@ describe('generateMessage', () => {
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
 
     expect(onComplete).toHaveBeenCalledWith({
@@ -82,6 +83,7 @@ describe('generateMessage', () => {
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
 
     expect(onComplete).toHaveBeenCalledWith({
@@ -105,7 +107,9 @@ describe('generateMessage', () => {
     })
 
     // Mock createOpenAIModel to throw an error for this test
-    const createOpenAIModel = jest.requireMock('../../../../src/lib/llm/openai/createOpenAIModel').createOpenAIModel
+    const createOpenAIModel = jest.requireMock(
+      '../../../../src/lib/llm/openai/createOpenAIModel',
+    ).createOpenAIModel
     createOpenAIModel.mockRejectedValueOnce(new Error('Failed to create model'))
 
     await expect(
@@ -114,7 +118,8 @@ describe('generateMessage', () => {
         onComplete,
         onError,
         helpers,
-      })
+        attempt: 1,
+      }),
     ).rejects.toThrow('Failed to create model')
   })
 })

@@ -50,6 +50,7 @@ describe('Medplum - Get medication request', () => {
         onComplete,
         onError,
         helpers,
+        attempt: 1,
       })
 
       expect(onComplete).toHaveBeenCalledWith({
@@ -59,7 +60,8 @@ describe('Medplum - Get medication request', () => {
           intent: MedicationRequestMock.intent,
           priority: undefined,
           medicationDisplay: 'Nystatin 100,000 u/ml oral suspension',
-          dosageInstructions: '10 drops four times daily - apply in mouth using cotton swab or finger',
+          dosageInstructions:
+            '10 drops four times daily - apply in mouth using cotton swab or finger',
           patientId: 'pat1',
         },
       })

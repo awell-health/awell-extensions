@@ -9,8 +9,8 @@ jest.mock('../../../../src/lib/llm/openai', () => ({
   createOpenAIModel: jest.fn().mockResolvedValue({
     model: {
       invoke: jest.fn().mockResolvedValue({
-        content: 'Mocked care flow summary from LLM'
-      })
+        content: 'Mocked care flow summary from LLM',
+      }),
     },
     metadata: {
       traceId: 'test-trace-id',
@@ -18,9 +18,9 @@ jest.mock('../../../../src/lib/llm/openai', () => ({
       care_flow_id: 'ai4rZaYEocjB',
       activity_id: 'test-activity-id',
       org_slug: 'test-org-slug',
-      org_id: 'test-org-id'
-    }
-  })
+      org_id: 'test-org-id',
+    },
+  }),
 }))
 
 describe('summarizeCareFlow - Mocked LLM calls', () => {
@@ -30,13 +30,13 @@ describe('summarizeCareFlow - Mocked LLM calls', () => {
   beforeEach(() => {
     clearMocks()
     jest.clearAllMocks()
-    jest.spyOn(console, 'error').mockImplementation(() => {})  // Suppress console.error
+    jest.spyOn(console, 'error').mockImplementation(() => {}) // Suppress console.error
   })
 
   it('Should summarize care flow with LLM', async () => {
     const summarizeCareFlowWithLLMSpy = jest.spyOn(
       require('./lib/summarizeCareFlowWithLLM'),
-      'summarizeCareFlowWithLLM'
+      'summarizeCareFlowWithLLM',
     )
 
     const payload = generateTestPayload({
@@ -68,6 +68,7 @@ describe('summarizeCareFlow - Mocked LLM calls', () => {
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
 
     expect(summarizeCareFlowWithLLMSpy).toHaveBeenCalledWith({
@@ -79,7 +80,7 @@ describe('summarizeCareFlow - Mocked LLM calls', () => {
         traceId: 'test-trace-id',
         care_flow_definition_id: 'whatever',
         care_flow_id: 'ai4rZaYEocjB',
-        activity_id: 'test-activity-id'
+        activity_id: 'test-activity-id',
       }),
     })
 
@@ -113,8 +114,8 @@ describe('summarizeCareFlow - Mocked LLM calls', () => {
     // Mock SDK to throw a specific error
     const awellSdkMock = {
       orchestration: {
-        query: jest.fn().mockRejectedValue(new Error('SDK query failed'))
-      }
+        query: jest.fn().mockRejectedValue(new Error('SDK query failed')),
+      },
     }
     helpers.awellSdk = jest.fn().mockResolvedValue(awellSdkMock)
 
@@ -125,7 +126,8 @@ describe('summarizeCareFlow - Mocked LLM calls', () => {
         onComplete,
         onError,
         helpers,
-      })
+        attempt: 1,
+      }),
     ).rejects.toThrow('SDK query failed')
 
     // Verify error handling

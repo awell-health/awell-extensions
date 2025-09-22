@@ -85,6 +85,7 @@ describe('WestFax - Get fax document with OCR', () => {
         onComplete,
         onError,
         helpers,
+        attempt: 1,
       })
 
       expect(onComplete).toHaveBeenCalledWith({

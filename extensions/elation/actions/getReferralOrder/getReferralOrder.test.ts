@@ -38,6 +38,7 @@ describe('Elation - Get referral order', () => {
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
 
     expect(mockedSdk).toHaveBeenCalled()

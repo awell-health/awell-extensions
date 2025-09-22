@@ -52,6 +52,7 @@ describe('HubSpot - Send email with Single Send API', () => {
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
 
     expect(mockedHubSpotSdk).toHaveBeenCalled()

@@ -36,6 +36,7 @@ describe('Send email with template', () => {
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
     expect(onComplete).toHaveBeenCalled()
     expect(onError).not.toHaveBeenCalled()

@@ -24,6 +24,7 @@ describe('Transform - Parse text to phone number', () => {
         onComplete,
         onError,
         helpers,
+        attempt: 1,
       })
 
       expect(onComplete).toHaveBeenCalledWith({
@@ -49,6 +50,7 @@ describe('Transform - Parse text to phone number', () => {
           onComplete,
           onError,
           helpers,
+          attempt: 1,
         })
 
         expect(onComplete).toHaveBeenCalledWith({
@@ -74,6 +76,7 @@ describe('Transform - Parse text to phone number', () => {
             onComplete,
             onError,
             helpers,
+            attempt: 1,
           })
         } catch (error) {
           expect(error).toBeInstanceOf(ZodError)
@@ -106,6 +109,7 @@ describe('Transform - Parse text to phone number', () => {
             onComplete,
             onError,
             helpers,
+            attempt: 1,
           })
         } catch (error) {
           expect(error).toBeInstanceOf(ZodError)
@@ -136,6 +140,7 @@ describe('Transform - Parse text to phone number', () => {
             onComplete,
             onError,
             helpers,
+            attempt: 1,
           })
         } catch (error) {
           expect(error).toBeInstanceOf(ZodError)

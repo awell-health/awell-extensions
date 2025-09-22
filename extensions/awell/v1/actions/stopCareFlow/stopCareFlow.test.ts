@@ -29,6 +29,7 @@ describe('Stop care flow', () => {
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
 
     expect(onComplete).toHaveBeenCalled()

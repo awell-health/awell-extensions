@@ -21,6 +21,7 @@ describe('Transform - Parse text to number', () => {
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
 
     expect(onComplete).toHaveBeenCalledWith({
@@ -41,6 +42,7 @@ describe('Transform - Parse text to number', () => {
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
 
     expect(onComplete).toHaveBeenCalledWith({

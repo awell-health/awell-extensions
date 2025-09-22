@@ -40,6 +40,7 @@ describe('sendCampaign', () => {
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
 
     expect(mockSendCampaign).toHaveBeenCalledWith({
@@ -76,6 +77,7 @@ describe('sendCampaign', () => {
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
 
     expect(mockSendCampaign).toHaveBeenCalledWith({
@@ -108,6 +110,7 @@ describe('sendCampaign', () => {
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
 
     await expect(promise).rejects.toThrow(

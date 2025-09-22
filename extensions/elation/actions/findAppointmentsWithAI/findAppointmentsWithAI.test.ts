@@ -84,6 +84,7 @@ describe('Elation - Find appointments with AI', () => {
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
 
     const data_points = (onComplete.mock.calls[0][0] as any).data_points
@@ -143,6 +144,7 @@ describe('Elation - Find appointments with AI', () => {
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
 
     const data_points = (onComplete.mock.calls[0][0] as any).data_points
@@ -172,6 +174,7 @@ describe('Elation - Find appointments with AI', () => {
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
 
     const data_points = (onComplete.mock.calls[0][0] as any).data_points

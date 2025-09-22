@@ -23,7 +23,8 @@ jest.mock('../../../../src/lib/llm/openai/createOpenAIModel', () => ({
   createOpenAIModel: jest.fn().mockResolvedValue({
     model: {
       invoke: jest.fn().mockResolvedValue({
-        content: 'Summary of multiple forms: Form 1 shows patient reported good health. Form 2 indicates normal vital signs.',
+        content:
+          'Summary of multiple forms: Form 1 shows patient reported good health. Form 2 indicates normal vital signs.',
       }),
     },
     metadata: {
@@ -42,20 +43,22 @@ describe('summarizeFormsInStep - Mocked LLM calls', () => {
   beforeEach(() => {
     clearMocks()
     jest.clearAllMocks()
-    const mockQuery = jest.fn()
+    const mockQuery = jest
+      .fn()
       .mockResolvedValueOnce({
         activity: {
           success: true,
-          activity: mockMultipleFormsPathwayActivitiesResponse.activities[0]
-        }
+          activity: mockMultipleFormsPathwayActivitiesResponse.activities[0],
+        },
       })
       .mockResolvedValueOnce({
         pathwayStepActivities: {
           success: true,
-          activities: mockMultipleFormsPathwayActivitiesResponse.activities.filter(
-            activity => activity.object.type === 'FORM'
-          )
-        }
+          activities:
+            mockMultipleFormsPathwayActivitiesResponse.activities.filter(
+              (activity) => activity.object.type === 'FORM',
+            ),
+        },
       })
       .mockResolvedValueOnce({
         form: mockMultipleFormsDefinitionResponse1,
@@ -72,8 +75,8 @@ describe('summarizeFormsInStep - Mocked LLM calls', () => {
 
     helpers.awellSdk = jest.fn().mockReturnValue({
       orchestration: {
-        query: mockQuery
-      }
+        query: mockQuery,
+      },
     })
   })
 
@@ -97,6 +100,7 @@ describe('summarizeFormsInStep - Mocked LLM calls', () => {
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
 
     expect(helpers.awellSdk).toHaveBeenCalled()
@@ -111,7 +115,7 @@ describe('summarizeFormsInStep - Mocked LLM calls', () => {
   it('Should use language detection when language is Default', async () => {
     // Import the detectLanguageWithLLM function to spy on it
     const { detectLanguageWithLLM } = require('../../lib/detectLanguageWithLLM')
-    
+
     const payload = generateTestPayload({
       pathway: {
         id: 'ai4rZaYEocjB',
@@ -131,6 +135,7 @@ describe('summarizeFormsInStep - Mocked LLM calls', () => {
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
 
     // Verify detectLanguageWithLLM was called
@@ -146,7 +151,7 @@ describe('summarizeFormsInStep - Mocked LLM calls', () => {
   it('Should NOT use language detection when specific language is provided', async () => {
     // Import the detectLanguageWithLLM function to spy on it
     const { detectLanguageWithLLM } = require('../../lib/detectLanguageWithLLM')
-    
+
     const payload = generateTestPayload({
       pathway: {
         id: 'ai4rZaYEocjB',
@@ -166,6 +171,7 @@ describe('summarizeFormsInStep - Mocked LLM calls', () => {
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
 
     // Verify detectLanguageWithLLM was NOT called

@@ -51,6 +51,7 @@ describe('Landing.ai - Document Extraction', () => {
         onComplete,
         onError,
         helpers,
+        attempt: 1,
       })
 
       expect(onComplete).toHaveBeenCalledWith({

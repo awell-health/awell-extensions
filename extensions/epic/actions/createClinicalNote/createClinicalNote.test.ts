@@ -46,6 +46,7 @@ describe('Epic - Create clinical note', () => {
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
 
     expect(onComplete).toHaveBeenCalled()

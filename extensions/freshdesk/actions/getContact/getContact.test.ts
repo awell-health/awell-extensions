@@ -37,6 +37,7 @@ describe('Freshdesk - Get contact', () => {
         onComplete,
         onError,
         helpers,
+        attempt: 1,
       })
 
       expect(onComplete).toHaveBeenCalledWith({
@@ -80,6 +81,7 @@ describe('Freshdesk - Get contact', () => {
         onComplete,
         onError,
         helpers,
+        attempt: 1,
       })
 
       expect(onError).toHaveBeenCalledWith({

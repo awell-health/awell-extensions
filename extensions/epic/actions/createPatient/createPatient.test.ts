@@ -47,6 +47,7 @@ describe('Epic - Create patient', () => {
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
 
     expect(onComplete).toHaveBeenCalledWith({

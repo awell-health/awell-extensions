@@ -32,6 +32,7 @@ describe('checkWorkingHours', () => {
         onComplete,
         onError,
         helpers,
+        attempt: 1,
       })
 
       expect(onComplete).toHaveBeenCalledWith({
@@ -60,6 +61,7 @@ describe('checkWorkingHours', () => {
         onComplete,
         onError,
         helpers,
+        attempt: 1,
       })
 
       expect(onComplete).toHaveBeenCalledWith({
@@ -88,6 +90,7 @@ describe('checkWorkingHours', () => {
         onComplete,
         onError,
         helpers,
+        attempt: 1,
       })
 
       expect(onComplete).toHaveBeenCalledWith({
@@ -118,6 +121,7 @@ describe('checkWorkingHours', () => {
         onComplete,
         onError,
         helpers,
+        attempt: 1,
       })
 
       expect(onComplete).toHaveBeenCalledWith({
@@ -146,6 +150,7 @@ describe('checkWorkingHours', () => {
         onComplete,
         onError,
         helpers,
+        attempt: 1,
       })
 
       expect(onComplete).toHaveBeenCalledWith({
@@ -176,6 +181,7 @@ describe('checkWorkingHours', () => {
         onComplete,
         onError,
         helpers,
+        attempt: 1,
       })
 
       expect(onComplete).toHaveBeenCalledWith({
@@ -204,6 +210,7 @@ describe('checkWorkingHours', () => {
         onComplete,
         onError,
         helpers,
+        attempt: 1,
       })
 
       expect(onComplete).toHaveBeenCalledWith({
@@ -235,6 +242,7 @@ describe('checkWorkingHours', () => {
         onComplete,
         onError,
         helpers,
+        attempt: 1,
       })
 
       expect(onComplete).toHaveBeenCalledWith({
@@ -263,6 +271,7 @@ describe('checkWorkingHours', () => {
         onComplete,
         onError,
         helpers,
+        attempt: 1,
       })
 
       expect(onComplete).toHaveBeenCalledWith({
@@ -293,6 +302,7 @@ describe('checkWorkingHours', () => {
         onComplete,
         onError,
         helpers,
+        attempt: 1,
       })
 
       expect(onComplete).toHaveBeenCalledWith({
@@ -321,6 +331,7 @@ describe('checkWorkingHours', () => {
         onComplete,
         onError,
         helpers,
+        attempt: 1,
       })
 
       expect(onComplete).toHaveBeenCalledWith({
@@ -348,6 +359,7 @@ describe('checkWorkingHours', () => {
           onComplete,
           onError,
           helpers,
+          attempt: 1,
         }),
       ).rejects.toThrow()
 
@@ -370,6 +382,7 @@ describe('checkWorkingHours', () => {
         onComplete,
         onError,
         helpers,
+        attempt: 1,
       })
 
       expect(onError).toHaveBeenCalledWith({
@@ -405,6 +418,7 @@ describe('checkWorkingHours', () => {
         onComplete,
         onError,
         helpers,
+        attempt: 1,
       })
 
       expect(onError).toHaveBeenCalledWith({

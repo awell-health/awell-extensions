@@ -21,7 +21,7 @@ const mockFn = jest
           patient_code: '123',
         },
       },
-    ])
+    ]),
   )
 
 describe('Search patients by patient code', () => {
@@ -49,6 +49,7 @@ describe('Search patients by patient code', () => {
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
 
     expect(mockFn).toHaveBeenCalled()

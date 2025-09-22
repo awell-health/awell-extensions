@@ -63,6 +63,7 @@ describe('Bland.ai - Send call', () => {
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
 
     expect(sendCallSpy).toHaveBeenCalledWith(

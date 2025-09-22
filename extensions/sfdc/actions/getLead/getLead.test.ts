@@ -30,6 +30,7 @@ describe('Salesforce - Get Lead', () => {
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
 
     expect(onComplete).toHaveBeenCalledWith({

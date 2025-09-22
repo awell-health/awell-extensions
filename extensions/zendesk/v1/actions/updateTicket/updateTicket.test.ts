@@ -46,17 +46,23 @@ describe('Update ticket', () => {
         definition_id: 'test-definition-id',
         tenant_id: 'test-tenant-id',
         org_slug: 'test-org-slug',
-        org_id: 'test-org-id'
+        org_id: 'test-org-id',
       },
       activity: {
-        id: 'test-activity-id'
+        id: 'test-activity-id',
       },
       patient: {
-        id: 'test-patient-id'
-      }
+        id: 'test-patient-id',
+      },
     }
 
-    await updateTicket.onEvent!({ payload, onComplete, onError, helpers })
+    await updateTicket.onEvent!({
+      payload,
+      onComplete,
+      onError,
+      helpers,
+      attempt: 1,
+    })
 
     expect(mockZendeskAPIClient.updateTicket).toHaveBeenCalledWith('123', {
       comment: { body: 'This is an update comment' },
@@ -86,17 +92,23 @@ describe('Update ticket', () => {
         definition_id: 'test-definition-id',
         tenant_id: 'test-tenant-id',
         org_slug: 'test-org-slug',
-        org_id: 'test-org-id'
+        org_id: 'test-org-id',
       },
       activity: {
-        id: 'test-activity-id'
+        id: 'test-activity-id',
       },
       patient: {
-        id: 'test-patient-id'
-      }
+        id: 'test-patient-id',
+      },
     }
 
-    await updateTicket.onEvent!({ payload, onComplete, onError, helpers })
+    await updateTicket.onEvent!({
+      payload,
+      onComplete,
+      onError,
+      helpers,
+      attempt: 1,
+    })
 
     expect(mockZendeskAPIClient.updateTicket).toHaveBeenCalledWith('456', {
       comment: { body: 'Updating ticket with all fields' },
@@ -128,17 +140,23 @@ describe('Update ticket', () => {
         definition_id: 'test-definition-id',
         tenant_id: 'test-tenant-id',
         org_slug: 'test-org-slug',
-        org_id: 'test-org-id'
+        org_id: 'test-org-id',
       },
       activity: {
-        id: 'test-activity-id'
+        id: 'test-activity-id',
       },
       patient: {
-        id: 'test-patient-id'
-      }
+        id: 'test-patient-id',
+      },
     }
 
-    await updateTicket.onEvent!({ payload, onComplete, onError, helpers })
+    await updateTicket.onEvent!({
+      payload,
+      onComplete,
+      onError,
+      helpers,
+      attempt: 1,
+    })
 
     expect(mockZendeskAPIClient.updateTicket).toHaveBeenCalledWith('789', {
       priority: 'urgent',
@@ -169,20 +187,26 @@ describe('Update ticket', () => {
         definition_id: 'test-definition-id',
         tenant_id: 'test-tenant-id',
         org_slug: 'test-org-slug',
-        org_id: 'test-org-id'
+        org_id: 'test-org-id',
       },
       activity: {
-        id: 'test-activity-id'
+        id: 'test-activity-id',
       },
       patient: {
-        id: 'test-patient-id'
-      }
+        id: 'test-patient-id',
+      },
     }
 
     const apiError = new Error('API Error')
     mockZendeskAPIClient.updateTicket.mockRejectedValue(apiError)
 
-    await updateTicket.onEvent!({ payload, onComplete, onError, helpers })
+    await updateTicket.onEvent!({
+      payload,
+      onComplete,
+      onError,
+      helpers,
+      attempt: 1,
+    })
 
     expect(onError).toHaveBeenCalledWith({
       events: [

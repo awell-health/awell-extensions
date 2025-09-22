@@ -13,7 +13,6 @@ const tomorrow = addDays(new Date(), 1)
 const dayAfterTomorrow = addDays(new Date(), 2)
 const tomorrowFormatted = format(tomorrow, 'MMMM d, yyyy')
 
-
 const dynamicAppointmentsMock = [
   {
     ...appointmentsMock[0],
@@ -31,13 +30,12 @@ const dynamicAppointmentsMock = [
     mode: 'VIDEO',
     status: { status: 'Scheduled' },
   },
-];
+]
 
 describe.skip('cancelAppointments - Real OpenAI calls', () => {
   const { onComplete, onError, helpers, extensionAction, clearMocks } =
     TestHelpers.fromAction(cancelAppointments)
 
-  
   // Mock for tracking which appointments were cancelled
   const cancelledAppointments = new Set<string>()
 
@@ -111,7 +109,8 @@ describe.skip('cancelAppointments - Real OpenAI calls', () => {
     },
     {
       name: 'cancel video appointments with explicit instruction',
-      prompt: 'I need to cancel my video appointments. These are the appointments with mode set to VIDEO.',
+      prompt:
+        'I need to cancel my video appointments. These are the appointments with mode set to VIDEO.',
       shouldCancel: true,
       expectedCount: 2,
     },
@@ -129,72 +128,83 @@ describe.skip('cancelAppointments - Real OpenAI calls', () => {
     },
   ]
 
-  testCases.forEach(({ name, prompt, shouldCancel, expectedCount, validateIds }) => {
-    test(`Should ${name}`, async () => {
-      await extensionAction.onEvent({
-        payload: {
-          ...basePayload,
-          fields: {
-            patientId: '12345',
-            prompt,
+  testCases.forEach(
+    ({ name, prompt, shouldCancel, expectedCount, validateIds }) => {
+      test(`Should ${name}`, async () => {
+        await extensionAction.onEvent({
+          payload: {
+            ...basePayload,
+            fields: {
+              patientId: '12345',
+              prompt,
+            },
           },
-        },
-        onComplete,
-        onError,
-        helpers,
-      })
+          onComplete,
+          onError,
+          helpers,
+          attempt: 1,
+        })
 
-      // Verify the test completed and onComplete was called
-      expect(onComplete).toHaveBeenCalled()
-      
-      // Get the result data
-      const result = onComplete.mock.calls[0][0]
-      const cancelledAppts = JSON.parse(result.data_points.cancelledAppointments)
-      const explanation = result.data_points.explanation
-      
-      if (shouldCancel) {
-        // Check if appointments were selected for cancellation
-        if (cancelledAppts.length === expectedCount) {
-          // Success case - the expected number of appointments were cancelled
-          expect(result).toEqual(
-            expect.objectContaining({
-              data_points: expect.objectContaining({
-                cancelledAppointments: expect.any(String),
-                explanation: expect.any(String),
-              }),
-              events: [
-                expect.objectContaining({
-                  date: expect.any(String),
-                  text: expect.objectContaining({
-                    en: expect.stringContaining(`appointments for patient 12345 were cancelled`),
-                  }),
+        // Verify the test completed and onComplete was called
+        expect(onComplete).toHaveBeenCalled()
+
+        // Get the result data
+        const result = onComplete.mock.calls[0][0]
+        const cancelledAppts = JSON.parse(
+          result.data_points.cancelledAppointments,
+        )
+        const explanation = result.data_points.explanation
+
+        if (shouldCancel) {
+          // Check if appointments were selected for cancellation
+          if (cancelledAppts.length === expectedCount) {
+            // Success case - the expected number of appointments were cancelled
+            expect(result).toEqual(
+              expect.objectContaining({
+                data_points: expect.objectContaining({
+                  cancelledAppointments: expect.any(String),
+                  explanation: expect.any(String),
                 }),
-              ],
-            })
-          )
+                events: [
+                  expect.objectContaining({
+                    date: expect.any(String),
+                    text: expect.objectContaining({
+                      en: expect.stringContaining(
+                        `appointments for patient 12345 were cancelled`,
+                      ),
+                    }),
+                  }),
+                ],
+              }),
+            )
 
-          if (validateIds) {
-            validateIds()
+            if (validateIds) {
+              validateIds()
+            }
+          } else {
+            // Allow the test to pass if the explanation mentions the appointments correctly
+            const correctIdentification =
+              (name.includes('all') &&
+                explanation.includes('123') &&
+                explanation.includes('456')) ||
+              (name.includes('tomorrow') && explanation.includes('123')) ||
+              (name.includes('video') && explanation.includes('VIDEO'))
+
+            console.log(
+              `Test "${name}" identified appointments but didn't cancel them. This is acceptable for LLM variability.`,
+            )
+            expect(correctIdentification).toBe(true)
           }
         } else {
-          // Allow the test to pass if the explanation mentions the appointments correctly
-          const correctIdentification = 
-            (name.includes('all') && explanation.includes('123') && explanation.includes('456')) ||
-            (name.includes('tomorrow') && explanation.includes('123')) ||
-            (name.includes('video') && explanation.includes('VIDEO'));
-          
-          console.log(`Test "${name}" identified appointments but didn't cancel them. This is acceptable for LLM variability.`);
-          expect(correctIdentification).toBe(true);
+          // For cases where we don't expect to cancel anything
+          expect(cancelledAppts.length).toBe(0)
         }
-      } else {
-        // For cases where we don't expect to cancel anything
-        expect(cancelledAppts.length).toBe(0);
-      }
-      
-      // Error should never be called
-      expect(onError).not.toHaveBeenCalled()
-    })
-  })
+
+        // Error should never be called
+        expect(onError).not.toHaveBeenCalled()
+      })
+    },
+  )
 
   // Test error handling - this doesn't rely on LLM behavior so it should be deterministic
   test('Should handle API errors when cancelling appointments', async () => {
@@ -223,6 +233,7 @@ describe.skip('cancelAppointments - Real OpenAI calls', () => {
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
 
     // Check if we got any error events
@@ -242,19 +253,21 @@ describe.skip('cancelAppointments - Real OpenAI calls', () => {
               }),
             }),
           ]),
-        })
+        }),
       )
-      
+
       // Should have attempted to cancel only the first one successfully
       expect(cancelledAppointments.has('123')).toBe(true)
-      
+
       // onComplete should not be called when onError is called
       expect(onComplete).not.toHaveBeenCalled()
     } else {
       // If the LLM didn't select any appointments, the test should still pass
       // The error handling logic won't be triggered if no appointments are selected
-      console.log("No appointments selected for cancellation in error test - this is acceptable");
-      expect(true).toBe(true);
+      console.log(
+        'No appointments selected for cancellation in error test - this is acceptable',
+      )
+      expect(true).toBe(true)
     }
   }, 120000)
 })

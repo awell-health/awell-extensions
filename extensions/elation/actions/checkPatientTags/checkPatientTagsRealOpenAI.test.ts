@@ -4,7 +4,7 @@ import { makeAPIClientMockFunc } from '../../__mocks__/client'
 import { makeAPIClient } from '../../client'
 import { checkPatientTags } from './checkPatientTags'
 /**
- * NOTE: These tests make real calls to OpenAI and should be run whenever changes are made 
+ * NOTE: These tests make real calls to OpenAI and should be run whenever changes are made
  * to the LLM-related components (prompts, parsing, etc.) to verify the integration continues
  * working as expected.
  */
@@ -30,28 +30,28 @@ describe.skip('checkPatientTags - Real OpenAI calls', () => {
       definition_id: '123',
       tenant_id: '123',
       org_slug: 'test-org-slug',
-      org_id: 'test-org-id'
+      org_id: 'test-org-id',
     },
     activity: {
-      id: 'test-activity-id'
+      id: 'test-activity-id',
     },
     patient: {
-      id: 'test-patient-id'
-    }
+      id: 'test-patient-id',
+    },
   }
 
   beforeEach(() => {
     clearMocks()
     jest.clearAllMocks()
-    
+
     // Ensure API key is always defined
     process.env.OPENAI_API_KEY = process.env.OPENAI_API_KEY || 'test-api-key'
-    
+
     helpers.getOpenAIConfig = jest.fn().mockReturnValue({
       apiKey: process.env.OPENAI_API_KEY,
       temperature: 0,
       maxRetries: 2,
-      timeout: 30000
+      timeout: 30000,
     })
 
     // Mock Elation client with existing tags
@@ -59,8 +59,8 @@ describe.skip('checkPatientTags - Real OpenAI calls', () => {
     mockAPIClient.mockImplementation((settings) => ({
       ...makeAPIClientMockFunc(settings),
       getPatient: jest.fn().mockResolvedValue({
-        tags: ['Eligible', 'Active']
-      })
+        tags: ['Eligible', 'Active'],
+      }),
     }))
   })
 
@@ -71,15 +71,16 @@ describe.skip('checkPatientTags - Real OpenAI calls', () => {
         fields: {
           patientId: 123,
           instructions: 'Check if patient has "Eligible" tag',
-        }
+        },
       },
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
 
     // Wait for all promises to resolve
-    await new Promise(resolve => setTimeout(resolve, 1000))
+    await new Promise((resolve) => setTimeout(resolve, 1000))
 
     expect(onComplete).toHaveBeenCalled()
     expect(onError).not.toHaveBeenCalled()
@@ -91,8 +92,8 @@ describe.skip('checkPatientTags - Real OpenAI calls', () => {
     mockAPIClient.mockImplementation((settings) => ({
       ...makeAPIClientMockFunc(settings),
       getPatient: jest.fn().mockResolvedValue({
-        tags: ['Eligible', 'Active', 'High Risk']
-      })
+        tags: ['Eligible', 'Active', 'High Risk'],
+      }),
     }))
 
     await extensionAction.onEvent({
@@ -100,15 +101,17 @@ describe.skip('checkPatientTags - Real OpenAI calls', () => {
         ...basePayload,
         fields: {
           patientId: 123,
-          instructions: 'Check if patient has both "Eligible" and "High Risk" tags',
-        }
+          instructions:
+            'Check if patient has both "Eligible" and "High Risk" tags',
+        },
       },
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
 
-    await new Promise(resolve => setTimeout(resolve, 1000))
+    await new Promise((resolve) => setTimeout(resolve, 1000))
     expect(onComplete).toHaveBeenCalled()
     expect(onError).not.toHaveBeenCalled()
   }, 60000)
@@ -119,8 +122,8 @@ describe.skip('checkPatientTags - Real OpenAI calls', () => {
     mockAPIClient.mockImplementation((settings) => ({
       ...makeAPIClientMockFunc(settings),
       getPatient: jest.fn().mockResolvedValue({
-        tags: ['Active', 'High Risk']
-      })
+        tags: ['Active', 'High Risk'],
+      }),
     }))
 
     await extensionAction.onEvent({
@@ -129,14 +132,15 @@ describe.skip('checkPatientTags - Real OpenAI calls', () => {
         fields: {
           patientId: 123,
           instructions: 'Check if patient does NOT have "Eligible" tag',
-        }
+        },
       },
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
 
-    await new Promise(resolve => setTimeout(resolve, 1000))
+    await new Promise((resolve) => setTimeout(resolve, 1000))
     expect(onComplete).toHaveBeenCalled()
     expect(onError).not.toHaveBeenCalled()
   }, 60000)
@@ -147,8 +151,8 @@ describe.skip('checkPatientTags - Real OpenAI calls', () => {
     mockAPIClient.mockImplementation((settings) => ({
       ...makeAPIClientMockFunc(settings),
       getPatient: jest.fn().mockResolvedValue({
-        tags: ['High Risk', 'Fall Risk']
-      })
+        tags: ['High Risk', 'Fall Risk'],
+      }),
     }))
 
     await extensionAction.onEvent({
@@ -156,15 +160,17 @@ describe.skip('checkPatientTags - Real OpenAI calls', () => {
         ...basePayload,
         fields: {
           patientId: 123,
-          instructions: 'If patient has "High Risk" tag, then they must also have "Fall Risk" tag',
-        }
+          instructions:
+            'If patient has "High Risk" tag, then they must also have "Fall Risk" tag',
+        },
       },
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
 
-    await new Promise(resolve => setTimeout(resolve, 1000))
+    await new Promise((resolve) => setTimeout(resolve, 1000))
     expect(onComplete).toHaveBeenCalled()
     expect(onError).not.toHaveBeenCalled()
   }, 60000)
@@ -175,8 +181,8 @@ describe.skip('checkPatientTags - Real OpenAI calls', () => {
     mockAPIClient.mockImplementation((settings) => ({
       ...makeAPIClientMockFunc(settings),
       getPatient: jest.fn().mockResolvedValue({
-        tags: []
-      })
+        tags: [],
+      }),
     }))
 
     await extensionAction.onEvent({
@@ -185,14 +191,15 @@ describe.skip('checkPatientTags - Real OpenAI calls', () => {
         fields: {
           patientId: 123,
           instructions: 'Check if patient has "Eligible" tag',
-        }
+        },
       },
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
 
-    await new Promise(resolve => setTimeout(resolve, 1000))
+    await new Promise((resolve) => setTimeout(resolve, 1000))
     expect(onComplete).toHaveBeenCalled()
     expect(onError).not.toHaveBeenCalled()
   }, 60000)
@@ -209,16 +216,17 @@ describe.skip('checkPatientTags - Real OpenAI calls', () => {
           'CCM 2 – ASCVD',
           'CCM 3 – ASCVD',
           'Fall Risk',
-          'High Risk'
-        ]
-      })
+          'High Risk',
+        ],
+      }),
     }))
 
     await extensionAction.onEvent({
       payload: {
         fields: {
           patientId: 123,
-          instructions: 'Check if patient has both COPD and ASCVD care program tags at level 3',
+          instructions:
+            'Check if patient has both COPD and ASCVD care program tags at level 3',
         },
         settings: {
           client_id: 'clientId',
@@ -233,21 +241,22 @@ describe.skip('checkPatientTags - Real OpenAI calls', () => {
           definition_id: '123',
           tenant_id: '123',
           org_slug: 'test-org-slug',
-          org_id: 'test-org-id'
+          org_id: 'test-org-id',
         },
         activity: {
-          id: 'test-activity-id'
+          id: 'test-activity-id',
         },
         patient: {
-          id: 'test-patient-id'
-        }
+          id: 'test-patient-id',
+        },
       },
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
 
-    await new Promise(resolve => setTimeout(resolve, 1000))
+    await new Promise((resolve) => setTimeout(resolve, 1000))
     expect(onComplete).toHaveBeenCalled()
     expect(onError).not.toHaveBeenCalled()
   }, 60000)
@@ -264,16 +273,17 @@ describe.skip('checkPatientTags - Real OpenAI calls', () => {
           'No BP in Left Arm',
           'Fall Risk',
           'High Risk',
-          'DNR'
-        ]
-      })
+          'DNR',
+        ],
+      }),
     }))
 
     await extensionAction.onEvent({
       payload: {
         fields: {
           patientId: 123,
-          instructions: 'Check if patient has facility tag (ALF/SNF) and either Mobility Assist or Fall Risk tag',
+          instructions:
+            'Check if patient has facility tag (ALF/SNF) and either Mobility Assist or Fall Risk tag',
         },
         settings: {
           client_id: 'clientId',
@@ -288,22 +298,23 @@ describe.skip('checkPatientTags - Real OpenAI calls', () => {
           definition_id: '123',
           tenant_id: '123',
           org_slug: 'test-org-slug',
-          org_id: 'test-org-id'
+          org_id: 'test-org-id',
         },
         activity: {
-          id: 'test-activity-id'
+          id: 'test-activity-id',
         },
         patient: {
-          id: 'test-patient-id'
-        }
+          id: 'test-patient-id',
+        },
       },
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
 
-    await new Promise(resolve => setTimeout(resolve, 1000))
+    await new Promise((resolve) => setTimeout(resolve, 1000))
     expect(onComplete).toHaveBeenCalled()
     expect(onError).not.toHaveBeenCalled()
   }, 60000)
-}) 
+})

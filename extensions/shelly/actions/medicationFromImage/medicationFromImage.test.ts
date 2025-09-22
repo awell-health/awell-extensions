@@ -53,6 +53,7 @@ describe('Medication From Image', () => {
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
 
     expect(global.fetch).toHaveBeenCalledWith(
@@ -108,6 +109,7 @@ Extracted Ndcg: 0006-0711-31`,
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
 
     expect(global.fetch).toHaveBeenCalledWith(
@@ -155,6 +157,7 @@ Extracted Ndcg: 0006-0711-31`,
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
 
     expect(global.fetch).toHaveBeenCalledWith(

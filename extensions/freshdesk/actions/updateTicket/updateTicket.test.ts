@@ -46,6 +46,7 @@ describe('Freshdesk - Update ticket', () => {
         onComplete,
         onError,
         helpers,
+        attempt: 1,
       })
 
       expect(onComplete).toHaveBeenCalled()
@@ -79,6 +80,7 @@ describe('Freshdesk - Update ticket', () => {
         onComplete,
         onError,
         helpers,
+        attempt: 1,
       })
 
       expect(onError).toHaveBeenCalledWith({

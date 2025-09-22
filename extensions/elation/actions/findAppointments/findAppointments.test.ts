@@ -8,7 +8,7 @@ import { generateTestPayload } from '../../../../tests/constants'
 jest.mock('../../client')
 
 describe('find appointments', () => {
-  const { extensionAction, onComplete, onError, clearMocks } =
+  const { extensionAction, onComplete, onError, helpers, clearMocks } =
     TestHelpers.fromAction(action)
 
   const mockFindAppointments = jest.fn()
@@ -58,7 +58,8 @@ describe('find appointments', () => {
       }),
       onComplete,
       onError,
-      helpers: {} as any,
+      helpers,
+      attempt: 1,
     })
 
     expect(onComplete).toHaveBeenCalledWith({
@@ -80,7 +81,8 @@ describe('find appointments', () => {
       }),
       onComplete,
       onError,
-      helpers: {} as any,
+      helpers,
+      attempt: 1,
     })
     await expect(resp).rejects.toThrow(ZodError)
   })
@@ -95,7 +97,8 @@ describe('find appointments', () => {
       }),
       onComplete,
       onError,
-      helpers: {} as any,
+      helpers,
+      attempt: 1,
     })
 
     await expect(resp).rejects.toThrow(ZodError)
@@ -111,7 +114,8 @@ describe('find appointments', () => {
       }),
       onComplete,
       onError,
-      helpers: {} as any,
+      helpers,
+      attempt: 1,
     })
 
     expect(onComplete).toHaveBeenCalledWith({

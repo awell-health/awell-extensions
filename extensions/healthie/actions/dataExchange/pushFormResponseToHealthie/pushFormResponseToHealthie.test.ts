@@ -89,6 +89,7 @@ describe('pushFormResponseToHealthie', () => {
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
 
     expect(mockedHealthieSdk).toHaveBeenCalled()
@@ -137,6 +138,7 @@ describe('pushFormResponseToHealthie', () => {
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
 
     expect(mockedHealthieSdk).toHaveBeenCalled()

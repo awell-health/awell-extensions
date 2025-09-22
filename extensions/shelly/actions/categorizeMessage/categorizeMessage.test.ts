@@ -7,7 +7,8 @@ import { ChatOpenAI } from '@langchain/openai'
 jest.mock('@langchain/openai', () => {
   const mockInvoke = jest.fn().mockResolvedValue({
     matched_category: 'None',
-    match_explanation: 'Categorization was ambiguous; we could not find a proper category.'
+    match_explanation:
+      'Categorization was ambiguous; we could not find a proper category.',
   })
 
   const mockChain = {
@@ -37,27 +38,27 @@ describe('categorizeMessage - Mocked LLM calls', () => {
   it('should work', async () => {
     const categorizeMessageWithLLMSpy = jest.spyOn(
       require('./lib/categorizeMessageWithLLM'),
-      'categorizeMessageWithLLM'
+      'categorizeMessageWithLLM',
     )
 
     const payload = generateTestPayload({
       fields: {
         message: 'test message',
-        categories: 'category1,category2'
+        categories: 'category1,category2',
       },
       settings: {
-        openAiApiKey: 'test-key'
+        openAiApiKey: 'test-key',
       },
       pathway: {
         id: 'test-pathway-id',
         definition_id: 'test-def-id',
         tenant_id: 'test-tenant-id',
         org_slug: 'test-org-slug',
-        org_id: 'test-org-id'
+        org_id: 'test-org-id',
       },
       activity: {
-        id: 'test-activity-id'
-      }
+        id: 'test-activity-id',
+      },
     })
 
     await extensionAction.onEvent({
@@ -65,6 +66,7 @@ describe('categorizeMessage - Mocked LLM calls', () => {
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
 
     expect(ChatOpenAI).toHaveBeenCalled()
@@ -78,14 +80,15 @@ describe('categorizeMessage - Mocked LLM calls', () => {
         activity_id: 'test-activity-id',
         tenant_id: 'test-tenant-id',
         org_slug: 'test-org-slug',
-        org_id: 'test-org-id'
+        org_id: 'test-org-id',
       },
     })
 
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
         category: 'None',
-        explanation: '<p>Categorization was ambiguous; we could not find a proper category.</p>',
+        explanation:
+          '<p>Categorization was ambiguous; we could not find a proper category.</p>',
       },
     })
 

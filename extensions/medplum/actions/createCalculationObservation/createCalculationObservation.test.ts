@@ -94,6 +94,7 @@ describe('Medplum - Create calculation observation', () => {
           onComplete,
           onError,
           helpers,
+          attempt: 1,
         })
 
         expect(mockCreateResource).toHaveBeenCalledWith({
@@ -203,6 +204,7 @@ describe('Medplum - Create calculation observation', () => {
           onComplete,
           onError,
           helpers,
+          attempt: 1,
         })
 
         expect(mockCreateResource).toHaveBeenCalledWith({
@@ -322,6 +324,7 @@ describe('Medplum - Create calculation observation', () => {
         onComplete,
         onError,
         helpers,
+        attempt: 1,
       })
 
       expect(onError).toHaveBeenCalledWith({

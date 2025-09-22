@@ -30,6 +30,7 @@ describe('callWithGrace', () => {
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
     expect(mockCallWithGrace).toHaveBeenCalledWith('flowId', {
       first_name: 'John',

@@ -42,6 +42,7 @@ describe('Update baseline info', () => {
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
     expect(onComplete).toHaveBeenCalledTimes(1)
     expect(helpers.awellSdk).toHaveBeenCalledTimes(1)
@@ -62,6 +63,7 @@ describe('Update baseline info', () => {
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
     await expect(resp).rejects.toThrow(ZodError)
     expect(onComplete).not.toHaveBeenCalled()
