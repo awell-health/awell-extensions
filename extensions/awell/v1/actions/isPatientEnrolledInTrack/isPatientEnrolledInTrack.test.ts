@@ -83,6 +83,7 @@ describe('Is patient enrolled in track action', () => {
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
 
     expect(onComplete).toHaveBeenCalledWith({
@@ -130,6 +131,7 @@ describe('Is patient enrolled in track action', () => {
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
 
     expect(onComplete).toHaveBeenCalledWith({
@@ -184,6 +186,7 @@ describe('Is patient enrolled in track action', () => {
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
 
     expect(onComplete).toHaveBeenCalledWith({
@@ -220,6 +223,7 @@ describe('Is patient enrolled in track action', () => {
       onComplete,
       onError,
       helpers,
+      attempt: 1,
     })
 
     expect(sdkMock.orchestration.query).toHaveBeenCalledWith({
