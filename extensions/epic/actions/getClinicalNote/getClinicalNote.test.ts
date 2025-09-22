@@ -20,9 +20,7 @@ describe('Epic - Get clinical note', () => {
       const mockGetDocumentReference = jest
         .fn()
         .mockResolvedValue(GetDocumentReferenceMockResponse)
-      const mockGetBinary = jest
-        .fn()
-        .mockResolvedValue(GetBinaryMockResponse)
+      const mockGetBinary = jest.fn().mockResolvedValue(GetBinaryMockResponse)
       const mockedEpicClient = jest.mocked(EpicFhirR4Client)
 
       mockedEpicClient.mockImplementation(() => {
@@ -50,11 +48,14 @@ describe('Epic - Get clinical note', () => {
         onComplete,
         onError,
         helpers,
+        attempt: 1,
       })
 
       expect(onComplete).toHaveBeenCalledWith({
         data_points: {
-          documentReference: JSON.stringify(GetDocumentReferenceMockResponse.data),
+          documentReference: JSON.stringify(
+            GetDocumentReferenceMockResponse.data,
+          ),
           binary: JSON.stringify(GetBinaryMockResponse.data),
         },
       })
@@ -94,6 +95,7 @@ describe('Epic - Get clinical note', () => {
         onComplete,
         onError,
         helpers,
+        attempt: 1,
       })
 
       expect(onError).toHaveBeenCalledWith({
