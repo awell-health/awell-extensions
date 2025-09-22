@@ -1,12 +1,13 @@
 import { TestHelpers } from '@awell-health/extensions-core'
-import { getPatient as action } from './getPatient'
+import { getClinicalNote as action } from './getClinicalNote'
 import { EpicFhirR4Client } from '../../lib/api/FhirR4'
-import { FhirPatient } from './__testdata__/FhirPatient.mock'
+import { GetDocumentReferenceMockResponse } from './__testdata__/GetDocumentReference.mock'
+import { GetBinaryMockResponse } from './__testdata__/GetBinary.mock'
 import { createAxiosError } from '../../../../tests'
 
 jest.mock('../../lib/api/FhirR4')
 
-describe('Epic - Get patient', () => {
+describe('Epic - Get clinical note', () => {
   const { extensionAction, onComplete, onError, helpers, clearMocks } =
     TestHelpers.fromAction(action)
 
@@ -14,21 +15,27 @@ describe('Epic - Get patient', () => {
     clearMocks()
   })
 
-  describe('When the patient is found', () => {
-    test('Should return the patient', async () => {
-      const mockGetPatient = jest.fn().mockResolvedValue({ data: FhirPatient })
+  describe('When the clinical note is found', () => {
+    test('Should return the clinical note', async () => {
+      const mockGetDocumentReference = jest
+        .fn()
+        .mockResolvedValue(GetDocumentReferenceMockResponse)
+      const mockGetBinary = jest
+        .fn()
+        .mockResolvedValue(GetBinaryMockResponse)
       const mockedEpicClient = jest.mocked(EpicFhirR4Client)
 
       mockedEpicClient.mockImplementation(() => {
         return {
-          getPatient: mockGetPatient,
+          getDocumentReference: mockGetDocumentReference,
+          getBinary: mockGetBinary,
         } as unknown as EpicFhirR4Client
       })
 
       await extensionAction.onEvent({
         payload: {
           fields: {
-            resourceId: 'ePYvjhzgI56-88pdl89yRRQ3',
+            resourceId: 'f1OEwaU.E66RGJ3CLbejHKg4',
           },
           settings: {
             baseUrl: 'https://fhir.epic.com/interconnect-fhir-oauth/api/',
@@ -47,18 +54,16 @@ describe('Epic - Get patient', () => {
 
       expect(onComplete).toHaveBeenCalledWith({
         data_points: {
-          patient: JSON.stringify(FhirPatient),
-          officialGivenName: FhirPatient.name?.[0]?.given?.[0],
-          officialFamilyName: FhirPatient.name?.[0]?.family,
-          birthDate: FhirPatient.birthDate,
+          documentReference: JSON.stringify(GetDocumentReferenceMockResponse.data),
+          binary: JSON.stringify(GetBinaryMockResponse.data),
         },
       })
     })
   })
 
-  describe('When the patient is not found', () => {
+  describe('When the document reference is not found', () => {
     test('Should return an error', async () => {
-      const mockGetPatient = jest
+      const mockGetDocumentReference = jest
         .fn()
         .mockRejectedValue(
           createAxiosError(404, 'Not Found', JSON.stringify({})),
@@ -67,14 +72,14 @@ describe('Epic - Get patient', () => {
 
       mockedEpicClient.mockImplementation(() => {
         return {
-          getPatient: mockGetPatient,
+          getDocumentReference: mockGetDocumentReference,
         } as unknown as EpicFhirR4Client
       })
 
       await extensionAction.onEvent({
         payload: {
           fields: {
-            resourceId: 'ePYvjhzgI56-88pdl89yRRQ3',
+            resourceId: 'f1OEwaU.E66RGJ3CLbejHKg4',
           },
           settings: {
             baseUrl: 'https://fhir.epic.com/interconnect-fhir-oauth/api/',
@@ -95,7 +100,7 @@ describe('Epic - Get patient', () => {
         events: [
           {
             date: expect.any(String),
-            text: { en: 'Patient not found' },
+            text: { en: 'Document reference not found' },
           },
         ],
       })

@@ -4,6 +4,8 @@ import { getAppointment } from './getAppointment'
 import { createClinicalNote } from './createClinicalNote'
 import { matchPatient } from './matchPatient'
 import { findPatientByMRN } from './findPatientByMRN'
+import { getClinicalNote } from './getClinicalNote'
+
 const actions = {
   getPatient,
   getAppointment,
@@ -11,6 +13,7 @@ const actions = {
   createClinicalNote,
   matchPatient,
   findPatientByMRN,
+  getClinicalNote,
 }
 
 export default actions

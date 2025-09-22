@@ -37,6 +37,8 @@ describe('Epic - Find patient by MRN', () => {
               'https://fhir.epic.com/interconnect-fhir-oauth/oauth2/token',
             clientId: 'client-id',
             privateKey: `-----BEGIN PRIVATE KEY-----`,
+            kid: 'kid',
+            jku: 'jku',
           },
         } as any,
         onComplete,

@@ -4,16 +4,17 @@ import { fields, FieldsValidationSchema, dataPoints } from './config'
 import { validatePayloadAndCreateSdks } from '../../lib/validatePayloadAndCreateSdks'
 import { AxiosError } from 'axios'
 import { addActivityEventLog } from '../../../../src/lib/awell'
+import { type BinaryReadResponseType } from '../../lib/api/FhirR4/schema'
 
-export const getPatient: Action<
+export const getClinicalNote: Action<
   typeof fields,
   typeof settings,
   keyof typeof dataPoints
 > = {
-  key: 'getPatient',
+  key: 'getClinicalNote',
   category: Category.EHR_INTEGRATIONS,
-  title: 'Get patient',
-  description: 'Retrieve patient details from Epic',
+  title: 'Get clinical note',
+  description: 'Retrieve clinical note details from Epic',
   fields,
   previewable: false,
   dataPoints,
@@ -27,19 +28,25 @@ export const getPatient: Action<
     })
 
     try {
-      const res = await epicFhirR4Sdk.getPatient(resourceId)
+      const res = await epicFhirR4Sdk.getDocumentReference(resourceId)
+      const binaryContent = res.data.content[1]
+      const binaryId = binaryContent?.attachment?.url?.split('/')[1]
 
-      const humanName = res.data.name?.find((name) => name.use === 'official')
-      const officialGivenName = humanName?.given?.[0]
-      const officialFamilyName = humanName?.family
-      const birthDate = res.data.birthDate
+      const getBinary = async (binaryId?: string): Promise<BinaryReadResponseType | undefined> => {
+        if (binaryId === undefined) {
+          return undefined
+        }
+
+        const binaryRes = await epicFhirR4Sdk.getBinary(binaryId)
+        return binaryRes.data
+      }
+
+      const binary = await getBinary(binaryId)
 
       await onComplete({
         data_points: {
-          patient: JSON.stringify(res.data),
-          officialGivenName,
-          officialFamilyName,
-          birthDate,
+          documentReference: JSON.stringify(res.data),
+          binary: binary !== undefined ? JSON.stringify(binary) : "Binary not found",
         },
       })
     } catch (error) {
@@ -50,7 +57,7 @@ export const getPatient: Action<
           await onError({
             events: [
               addActivityEventLog({
-                message: 'Patient not found',
+                message: 'Document reference not found',
               }),
             ],
           })

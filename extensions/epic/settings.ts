@@ -33,6 +33,20 @@ export const settings = {
     obfuscated: true,
     description: 'The private key of the Epic app used to authenticate.',
   },
+  kid: {
+    key: 'kid',
+    label: 'KID',
+    required: false,
+    obfuscated: false,
+    description: 'For apps using JSON Web Key Sets (including dynamically registed clients), set this value to the kid of the target public key from your key set',
+  },
+  jku: {
+    key: 'jku',
+    label: 'JKU',
+    required: false,
+    obfuscated: false,
+    description: 'For apps using JSON Web Key Set URLs, optionally set this value to the URL you registered on your application',
+  },
 } satisfies Record<string, Setting>
 
 export const SettingsValidationSchema = z.object({
@@ -45,4 +59,6 @@ export const SettingsValidationSchema = z.object({
    * So we need to transform the value to the correct format here.
    */
   privateKey: z.string().min(1).transform(constructPrivateKey),
+  kid: z.string().optional(),
+  jku: z.string().optional(),
 } satisfies Record<keyof typeof settings, ZodTypeAny>)
