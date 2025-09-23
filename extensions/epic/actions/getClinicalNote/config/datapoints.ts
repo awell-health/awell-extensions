@@ -5,8 +5,12 @@ export const dataPoints = {
     key: 'documentReference',
     valueType: 'json',
   },
-  binary: {
-    key: 'binary',
+  binaryContentHtml: {
+    key: 'binaryContentHtml',
+    valueType: 'string',
+  },
+  binaryContentRtf: {
+    key: 'binaryContentRtf',
     valueType: 'string',
   },
 } satisfies Record<string, DataPointDefinition>

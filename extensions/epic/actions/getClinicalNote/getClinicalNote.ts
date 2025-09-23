@@ -29,24 +29,28 @@ export const getClinicalNote: Action<
 
     try {
       const res = await epicFhirR4Sdk.getDocumentReference(resourceId)
-      const binaryContent = res.data.content[1]
-      const binaryId = binaryContent?.attachment?.url?.split('/')[1]
+      const binaryContentHtml = res.data.content.find(content => content.attachment.contentType === 'text/html')
+      const binaryContentRtf = res.data.content.find(content => content.attachment.contentType === 'text/rtf')
+
+      const binaryIdHtml = binaryContentHtml?.attachment?.url?.split('/')[1]
+      const binaryIdRtf = binaryContentRtf?.attachment?.url?.split('/')[1]
 
       const getBinary = async (binaryId?: string): Promise<BinaryReadResponseType | undefined> => {
         if (binaryId === undefined) {
           return undefined
         }
-
         const binaryRes = await epicFhirR4Sdk.getBinary(binaryId)
         return binaryRes.data
       }
 
-      const binary = await getBinary(binaryId)
+      const binaryHtml = await getBinary(binaryIdHtml)
+      const binaryRtf = await getBinary(binaryIdRtf)
 
       await onComplete({
         data_points: {
           documentReference: JSON.stringify(res.data),
-          binary: binary !== undefined ? JSON.stringify(binary) : "Binary not found",
+          binaryContentHtml: binaryHtml !== undefined ? JSON.stringify(binaryHtml) : "Binary not found",
+          binaryContentRtf: binaryRtf !== undefined ? JSON.stringify(binaryRtf) : "Binary not found",
         },
       })
     } catch (error) {

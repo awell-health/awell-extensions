@@ -56,7 +56,8 @@ describe('Epic - Get clinical note', () => {
           documentReference: JSON.stringify(
             GetDocumentReferenceMockResponse.data,
           ),
-          binary: JSON.stringify(GetBinaryMockResponse.data),
+          binaryContentHtml: JSON.stringify(GetBinaryMockResponse.data),
+          binaryContentRtf: "Binary not found",
         },
       })
     })

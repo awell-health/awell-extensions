@@ -212,6 +212,30 @@ export class EpicFhirR4Client {
     return response
   }
 
+  async searchDocumentReferences({
+    patientResourceId,
+    category,
+  }: {
+    patientResourceId: string
+    category?: string
+    startDate?: string
+    endDate?: string
+  }): Promise<AxiosResponse<unknown>> {
+    const url = new URL(`DocumentReference`, this.client.defaults.baseURL)
+
+    const queryParams = new URLSearchParams()
+    queryParams.set('patient', patientResourceId)
+    if (category !== undefined) {
+      queryParams.set('category', category)
+    }
+
+    url.search = queryParams.toString()
+
+    const response = await this.client.get<unknown>(url.toString())
+
+    return response
+  }
+
   async getAppointment(
     resourceId: AppointmentReadInputType,
   ): Promise<AxiosResponse<AppointmentReadResponseType>> {

@@ -134,18 +134,7 @@ export const GetDocumentReferenceMockResponse = {
           code: 'urn:ihe:iti:xds:2017:mimeTypeSufficient',
           display: 'mimeType Sufficient',
         },
-      },
-      {
-        attachment: {
-          contentType: 'text/rtf',
-          url: 'Binary/fKuKS-GnFjPkSYnYLq4EKAjhWrkspV6j2jdSL.E4549g4',
-        },
-        format: {
-          system: 'http://ihe.net/fhir/ValueSet/IHE.FormatCode.codesystem',
-          code: 'urn:ihe:iti:xds:2017:mimeTypeSufficient',
-          display: 'mimeType Sufficient',
-        },
-      },
+      }
     ],
     context: {
       extension: [
