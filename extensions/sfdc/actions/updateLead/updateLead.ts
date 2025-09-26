@@ -16,6 +16,7 @@ export const updateLead: Action<
   description: 'Updates an existing lead object in Salesforce',
   fields,
   previewable: false,
+  supports_automated_retries: true,
   dataPoints,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
     const { fields, salesforceClient } = await validatePayloadAndCreateClient({
