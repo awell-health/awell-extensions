@@ -44,8 +44,8 @@ const { extractDatesFromInstructions } = jest.requireMock(
   '../../lib/extractDatesFromInstructions/extractDatesFromInstructions',
 )
 extractDatesFromInstructions.mockResolvedValue({
-  from: null,
-  to: null,
+  from: '2024-01-15T10:00:00Z',
+  to: '2024-01-17T10:00:00Z',
   instructions: 'Find all appointments',
 })
 
@@ -102,13 +102,13 @@ describe('Elation - Find appointments with AI', () => {
           appointmentCountsByStatus: JSON.stringify({ Scheduled: 2 }),
           appointmentsFound: 'true',
         }),
-        events: [
+        events: expect.arrayContaining([
           expect.objectContaining({
             text: expect.objectContaining({
               en: expect.stringContaining('Found 2 appointments'),
             }),
           }),
-        ],
+        ]),
       }),
     )
   })

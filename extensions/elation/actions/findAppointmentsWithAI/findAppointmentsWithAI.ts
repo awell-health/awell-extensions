@@ -1,5 +1,5 @@
 import { type Action, Category } from '@awell-health/extensions-core'
-import { isAfter, isBefore, parseISO } from 'date-fns'
+import { isAfter, isBefore, isEqual, parseISO } from 'date-fns'
 import { defaultTo, isNil } from 'lodash'
 import { addActivityEventLog } from '../../../../src/lib/awell/addEventLog'
 import { OPENAI_MODELS } from '../../../../src/lib/llm/openai/constants'
@@ -11,6 +11,7 @@ import { findAppointmentsWithLLM } from '../../lib/findAppointmentsWithLLM/findA
 import { type settings } from '../../settings'
 import { FieldsValidationSchema, dataPoints, fields } from './config'
 import { getAppointmentCountsByStatus } from './getAppointmentCountByStatus'
+import { type AppointmentResponse } from '../../types'
 
 export const findAppointmentsWithAI: Action<
   typeof fields,
@@ -73,15 +74,26 @@ export const findAppointmentsWithAI: Action<
 
       const htmlExplanation = await markdownToHtml(explanation)
 
-      // Filter appointments based on LLM's selection
-      const selectedAppointments = appointments.filter(
-        (appointment) =>
-          appointmentIds.includes(appointment.id) &&
-          (isNil(from) ||
-            isAfter(parseISO(appointment.scheduled_date), parseISO(from))) &&
-          (isNil(to) ||
-            isBefore(parseISO(appointment.scheduled_date), parseISO(to))),
+      // Filter appointments based on LLM's selection.
+      // Use inclusive comparison for dates to ensure we don't filter out appointments that are exactly the same as the from or to date.
+      const filter = (appointment: AppointmentResponse): boolean =>
+        appointmentIds.includes(appointment.id) &&
+        (isNil(from) ||
+          isAfter(parseISO(appointment.scheduled_date), parseISO(from)) ||
+          isEqual(parseISO(appointment.scheduled_date), parseISO(from))) &&
+        (isNil(to) ||
+          isBefore(parseISO(appointment.scheduled_date), parseISO(to)) ||
+          isEqual(parseISO(appointment.scheduled_date), parseISO(to)))
+
+      const selectedAppointments = appointments.filter((appointment) =>
+        filter(appointment),
       )
+      const appointmentsFilteredOut = appointments
+        .filter((appointment) => !filter(appointment))
+        .map((appointment) => ({
+          id: appointment.id,
+          date: appointment.scheduled_date,
+        }))
 
       const appointmentCountsByStatus =
         getAppointmentCountsByStatus(selectedAppointments)
@@ -94,7 +106,7 @@ export const findAppointmentsWithAI: Action<
       if (!isNil(from) && !isNil(to)) {
         events.push(
           addActivityEventLog({
-            message: `Narrowed down to ${selectedAppointments.length} appointments scheduled between ${from} and ${to}.`,
+            message: `Narrowed down to ${selectedAppointments.length} appointments scheduled between ${from} and ${to}. Excluded ${appointmentsFilteredOut.length} appointments: ${JSON.stringify(appointmentsFilteredOut)}`,
           }),
         )
       } else if (!isNil(from)) {
