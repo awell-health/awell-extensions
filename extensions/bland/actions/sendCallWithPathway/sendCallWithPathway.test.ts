@@ -357,7 +357,7 @@ describe('Bland - Send call with pathway', () => {
       )
     })
 
-    test('Should work with async completion', async () => {
+    test('Should work with async completion via fields.webhook and completeExtensionActivityAsync', async () => {
       const res = await extensionAction.onEvent({
         payload: {
           fields: {
@@ -386,9 +386,78 @@ describe('Bland - Send call with pathway', () => {
         attempt: 1,
       })
 
-      expect(sendCallSpy).toHaveBeenCalled(),
-        // Completion happens async via a Webhook from Bland
-        expect(onComplete).not.toHaveBeenCalled()
+      expect(sendCallSpy).toHaveBeenCalled()
+      expect(sendCallSpy).toHaveBeenCalledWith(
+        expect.objectContaining({
+          webhook: 'https://webhook.site/1234567890?activity_id=activity-id',
+        }),
+      )
+      // Completion happens async via a Webhook from Bland
+      expect(onComplete).not.toHaveBeenCalled()
+    })
+
+    test('Should use otherData.webhook and call onComplete (no async)', async () => {
+      const res = await extensionAction.onEvent({
+        payload: {
+          fields: {
+            ...fields,
+            otherData: JSON.stringify({
+              webhook: 'https://example.com/otherdata',
+            }),
+          },
+          patient: { id: 'patient-id' },
+          pathway: {
+            id: 'pathway-id',
+            definition_id: 'pathway-definition-id',
+            tenant_id: '123',
+          },
+          activity: { id: 'activity-id' },
+          settings: { apiKey: 'api-key' },
+        } as any,
+        onComplete,
+        onError,
+        helpers,
+        attempt: 1,
+      })
+
+      expect(sendCallSpy).toHaveBeenCalledWith(
+        expect.objectContaining({ webhook: 'https://example.com/otherdata' }),
+      )
+      expect(onComplete).toHaveBeenCalled()
+    })
+
+    test('Should override fields.webhook with otherData.webhook and call onComplete (no async)', async () => {
+      const res = await extensionAction.onEvent({
+        payload: {
+          fields: {
+            ...fields,
+            webhook: 'https://webhook.site/fields',
+            otherData: JSON.stringify({
+              webhook: 'https://webhook.site/otherdata',
+            }),
+            // completeExtensionActivityAsync stays false (default)
+          },
+          patient: { id: 'patient-id' },
+          pathway: {
+            id: 'pathway-id',
+            definition_id: 'pathway-definition-id',
+            tenant_id: '123',
+          },
+          activity: { id: 'activity-id' },
+          settings: { apiKey: 'api-key' },
+        } as any,
+        onComplete,
+        onError,
+        helpers,
+        attempt: 1,
+      })
+
+      // otherData.webhook should override fields.webhook
+      expect(sendCallSpy).toHaveBeenCalledWith(
+        expect.objectContaining({ webhook: 'https://webhook.site/otherdata' }),
+      )
+      // Not async completion => onComplete should be called
+      expect(onComplete).toHaveBeenCalled()
     })
   })
 })

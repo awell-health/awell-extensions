@@ -36,9 +36,9 @@ export const sendCallWithPathway: Action<
 
     const { otherData, ...fields } = allFields
     const sendCallInput = SendCallInputSchema.parse({
-      ...otherData,
       ...fields,
       webhook: getWebhookUrl(),
+      ...otherData, // there was a 'webhook' field in this otherData object
       phone_number: fields.phoneNumber,
       pathway_id: fields.pathwayId,
       request_data: fields.requestData,

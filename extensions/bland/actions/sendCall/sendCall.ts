@@ -38,9 +38,9 @@ export const sendCall: Action<
     // otherData helps us to pass in fields that are not part of the SendCallInputSchema,
     // given bland's schema is updating quickly
     const sendCallInput = SendCallInputSchema.parse({
-      ...otherData,
       ...fields,
       webhook: getWebhookUrl(),
+      ...otherData, // there can be a 'webhook' field in this otherData object, it needs to be able to override the webhook from the fields object
       phone_number: fields.phoneNumber,
       request_data: fields.requestData,
       metadata: {
