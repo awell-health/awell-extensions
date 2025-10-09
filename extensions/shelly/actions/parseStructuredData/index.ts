@@ -1,0 +1,1 @@
+export { parseStructuredData } from './parseStructuredData'
