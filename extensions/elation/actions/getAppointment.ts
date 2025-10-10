@@ -61,6 +61,10 @@ const dataPoints = {
     key: 'status',
     valueType: 'json',
   },
+  statusString: {
+    key: 'status',
+    valueType: 'string',
+  },
   appointment: {
     key: 'appointment',
     valueType: 'json',
@@ -97,6 +101,7 @@ export const getAppointment: Action<
         serviceLocationId: String(appointment.service_location?.id),
         telehealthDetails: appointment.telehealth_details,
         status: JSON.stringify(appointment.status),
+        statusString: appointment.status?.status,
         appointment: JSON.stringify(appointment),
       },
     })
