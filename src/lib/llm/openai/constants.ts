@@ -1,14 +1,24 @@
-/**
- * Default configuration settings for OpenAI model calls.
- * - temperature: 0 (most deterministic outputs)
- * - maxRetries: 3 (automatic retry on transient failures) 
- * - timeout: 10000ms (10 second timeout for responses)
- */
-export const OPENAI_CONFIG = {
-  temperature: 0,
-  maxRetries: 5,
-  timeout: 30000,
-} as const
+import { type ChatOpenAIFields } from '@langchain/openai'
+import { type OpenAIModelType } from './types'
+
+export const getDefaultConfig = (
+  modelType: OpenAIModelType,
+): Partial<ChatOpenAIFields> => {
+  switch (modelType) {
+    case OPENAI_MODELS.GPT5Mini:
+      return {
+        temperature: 1,
+        maxRetries: 5,
+        timeout: 30000,
+      }
+    default:
+      return {
+        temperature: 0,
+        maxRetries: 5,
+        timeout: 30000,
+      }
+  }
+}
 
 /**
  * Simplified model aliases for easier reference in code.
@@ -17,6 +27,7 @@ export const OPENAI_CONFIG = {
 export const OPENAI_MODELS = {
   GPT4o: 'gpt-4o',
   GPT4oMini: 'gpt-4o-mini',
+  GPT5Mini: 'gpt-5-mini',
 } as const
 
 /**
@@ -27,4 +38,5 @@ export const OPENAI_MODELS = {
 export const MODEL_VERSIONS = {
   [OPENAI_MODELS.GPT4o]: 'gpt-4o-2024-08-06',
   [OPENAI_MODELS.GPT4oMini]: 'gpt-4o-mini-2024-07-18',
-} as const 
+  [OPENAI_MODELS.GPT5Mini]: 'gpt-5-mini-2025-08-07',
+} as const
