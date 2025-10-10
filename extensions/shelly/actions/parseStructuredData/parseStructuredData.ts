@@ -66,7 +66,7 @@ export const parseStructuredData: Action<
       settings: {}, // we use built-in API key for OpenAI
       helpers,
       payload,
-      modelType: OPENAI_MODELS.GPT4oMini,
+      modelType: OPENAI_MODELS.GPT5Mini,
     })
 
     // 3. Perform structured data extraction
