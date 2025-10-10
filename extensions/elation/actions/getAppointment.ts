@@ -62,7 +62,7 @@ const dataPoints = {
     valueType: 'json',
   },
   statusString: {
-    key: 'status',
+    key: 'statusString',
     valueType: 'string',
   },
   appointment: {
