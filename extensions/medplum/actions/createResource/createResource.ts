@@ -17,7 +17,7 @@ export const createResource: Action<
   fields,
   previewable: false,
   dataPoints,
-  onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
+  onEvent: async ({ payload, onComplete, onError }): Promise<void> => {
     const {
       fields: input,
       medplumSdk,

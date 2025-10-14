@@ -1,21 +1,29 @@
+import { TestHelpers } from '@awell-health/extensions-core'
 import { createResource } from './createResource'
-import { generateTestPayload } from '@/tests'
-import { mockSettings } from '../../__mocks__'
+import { MedplumClient } from '@medplum/core'
 
-jest.mock('@medplum/core', () => {
-  const { MedplumClient: MedplumMockClient } = require('../../__mocks__')
-
-  return {
-    MedplumClient: MedplumMockClient,
-  }
-})
+jest.mock('@medplum/core')
 
 describe('Medplum - Create resource', () => {
-  const onComplete = jest.fn()
-  const onError = jest.fn()
+  const { extensionAction, onComplete, onError, helpers, clearMocks } =
+    TestHelpers.fromAction(createResource)
+
+  const mockCreateResource = jest.fn()
+  const mockExecuteBatch = jest.fn()
 
   beforeEach(() => {
-    jest.clearAllMocks()
+    clearMocks()
+  })
+
+  beforeAll(() => {
+    const mockedMedplumClient = jest.mocked(MedplumClient)
+    mockedMedplumClient.mockImplementation(() => {
+      return {
+        startClientLogin: jest.fn(),
+        createResource: mockCreateResource,
+        executeBatch: mockExecuteBatch,
+      } as unknown as MedplumClient
+    })
   })
 
   test('Should be defined', () => {
@@ -27,27 +35,34 @@ describe('Medplum - Create resource', () => {
   })
 
   test('Should create a single resource', async () => {
-    const singleResourceJson = JSON.stringify({
+    mockCreateResource.mockResolvedValue({
       resourceType: 'Patient',
+      id: 'patient-123',
       name: [{ family: 'Test', given: ['Patient'] }],
     })
 
-    const mockOnActivityCreateParams = generateTestPayload({
-      fields: {
-        resourceJson: singleResourceJson,
-      },
-      settings: mockSettings,
-    })
-
-    await createResource.onActivityCreated!(
-      mockOnActivityCreateParams,
+    await extensionAction.onEvent({
+      payload: {
+        fields: {
+          resourceJson: JSON.stringify({
+            resourceType: 'Patient',
+            name: [{ family: 'Test', given: ['Patient'] }],
+          }),
+        },
+        settings: {
+          clientId: 'test-client-id',
+          clientSecret: 'test-secret',
+        },
+      } as any,
       onComplete,
-      onError
-    )
+      onError,
+      helpers,
+      attempt: 1,
+    })
 
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
-        resourceId: expect.any(String),
+        resourceId: 'patient-123',
         resourceType: 'Patient',
       },
     })
@@ -55,44 +70,75 @@ describe('Medplum - Create resource', () => {
   })
 
   test('Should create resources from a transaction Bundle', async () => {
-    const bundleJson = JSON.stringify({
+    mockExecuteBatch.mockResolvedValue({
       resourceType: 'Bundle',
-      type: 'transaction',
+      type: 'transaction-response',
+      id: 'bundle-123',
       entry: [
         {
+          response: {
+            status: '201 Created',
+            location: 'Patient/patient-1/_history/1',
+          },
           resource: {
             resourceType: 'Patient',
+            id: 'patient-1',
             name: [{ family: 'Smith' }],
           },
-          request: { method: 'POST', url: 'Patient' },
         },
         {
+          response: {
+            status: '201 Created',
+            location: 'Observation/observation-2/_history/1',
+          },
           resource: {
             resourceType: 'Observation',
+            id: 'observation-2',
             status: 'final',
           },
-          request: { method: 'POST', url: 'Observation' },
         },
       ],
     })
 
-    const mockOnActivityCreateParams = generateTestPayload({
-      fields: {
-        resourceJson: bundleJson,
-      },
-      settings: mockSettings,
-    })
-
-    await createResource.onActivityCreated!(
-      mockOnActivityCreateParams,
+    await extensionAction.onEvent({
+      payload: {
+        fields: {
+          resourceJson: JSON.stringify({
+            resourceType: 'Bundle',
+            type: 'transaction',
+            entry: [
+              {
+                resource: {
+                  resourceType: 'Patient',
+                  name: [{ family: 'Smith' }],
+                },
+                request: { method: 'POST', url: 'Patient' },
+              },
+              {
+                resource: {
+                  resourceType: 'Observation',
+                  status: 'final',
+                },
+                request: { method: 'POST', url: 'Observation' },
+              },
+            ],
+          }),
+        },
+        settings: {
+          clientId: 'test-client-id',
+          clientSecret: 'test-secret',
+        },
+      } as any,
       onComplete,
-      onError
-    )
+      onError,
+      helpers,
+      attempt: 1,
+    })
 
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
-        bundleId: 'bundle-response-123',
-        bundleType: 'transaction',
+        bundleId: 'bundle-123',
+        bundleType: 'transaction-response',
         resourceIds: 'patient-1,observation-2',
       },
     })
@@ -100,20 +146,21 @@ describe('Medplum - Create resource', () => {
   })
 
   test('Should handle invalid JSON', async () => {
-    const invalidJson = 'not valid json'
-
-    const mockOnActivityCreateParams = generateTestPayload({
-      fields: {
-        resourceJson: invalidJson,
-      },
-      settings: mockSettings,
-    })
-
-    await createResource.onActivityCreated!(
-      mockOnActivityCreateParams,
+    await extensionAction.onEvent({
+      payload: {
+        fields: {
+          resourceJson: 'not valid json',
+        },
+        settings: {
+          clientId: 'test-client-id',
+          clientSecret: 'test-secret',
+        },
+      } as any,
       onComplete,
-      onError
-    )
+      onError,
+      helpers,
+      attempt: 1,
+    })
 
     expect(onError).toHaveBeenCalled()
     expect(onComplete).not.toHaveBeenCalled()
