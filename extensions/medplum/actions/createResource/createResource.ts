@@ -36,8 +36,10 @@ export const createResource: Action<
           result.entry
             ?.map((entry) => {
               if (entry.response?.location) {
-                const match = entry.response.location.match(/\/([^/]+)\//)
-                return match ? match[1] : undefined
+                const match = entry.response.location.match(
+                  /(?:^|\/)([^/]+)\/([^/]+)(?:\/|$)/
+                )
+                return match ? match[2] : undefined
               }
               return entry.resource?.id
             })
