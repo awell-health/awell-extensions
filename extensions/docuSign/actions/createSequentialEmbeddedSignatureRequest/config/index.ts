@@ -1,2 +1,2 @@
 export { dataPoints } from './dataPoints'
-export { fields, validateActionFields } from './fields'
+export { fields, FieldsValidationSchema } from './fields'

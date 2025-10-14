@@ -1,3 +1,4 @@
+import { TestHelpers } from '@awell-health/extensions-core'
 import { generateTestPayload } from '@/tests'
 import { createSequentialEmbeddedSignatureRequest } from './createSequentialEmbeddedSignatureRequest'
 
@@ -26,16 +27,16 @@ jest.mock('docusign-esign', () => ({
 }))
 
 describe('createSequentialEmbeddedSignatureRequest', () => {
-  const onComplete = jest.fn()
-  const onError = jest.fn()
+  const { onComplete, onError, helpers, extensionAction, clearMocks } =
+    TestHelpers.fromAction(createSequentialEmbeddedSignatureRequest)
 
   beforeEach(() => {
-    jest.clearAllMocks()
+    clearMocks()
   })
 
   test('Should create sequential embedded signature request successfully', async () => {
-    await createSequentialEmbeddedSignatureRequest.onActivityCreated!(
-      generateTestPayload({
+    await extensionAction.onEvent({
+      payload: generateTestPayload({
         fields: {
           templateId: 'template-123',
           subject: 'Test Subject',
@@ -58,8 +59,10 @@ describe('createSequentialEmbeddedSignatureRequest', () => {
         },
       }),
       onComplete,
-      onError
-    )
+      onError,
+      helpers,
+      attempt: 1,
+    })
 
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {

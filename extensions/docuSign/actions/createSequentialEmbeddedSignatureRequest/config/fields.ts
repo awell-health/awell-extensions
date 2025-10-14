@@ -80,16 +80,9 @@ export const FieldsValidationSchema = z.object({
   message: z.optional(z.string()),
   patientSignerRole: z.string(),
   patientSignerName: z.string(),
-  patientSignerEmail: z.string().email(),
+  patientSignerEmail: z.string(),
   providerSignerRole: z.string(),
   providerSignerName: z.string(),
-  providerSignerEmail: z.string().email(),
+  providerSignerEmail: z.string(),
   providerClientUserId: z.string(),
 } satisfies Record<keyof typeof fields, ZodTypeAny>)
-
-export const validateActionFields = (
-  fields: unknown
-): z.infer<typeof FieldsValidationSchema> => {
-  const parsedData = FieldsValidationSchema.parse(fields)
-  return parsedData
-}
