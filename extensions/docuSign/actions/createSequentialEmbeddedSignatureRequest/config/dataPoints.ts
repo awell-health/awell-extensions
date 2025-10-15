@@ -9,8 +9,4 @@ export const dataPoints = {
     key: 'patientSignUrl',
     valueType: 'string',
   },
-  providerSignUrl: {
-    key: 'providerSignUrl',
-    valueType: 'string',
-  },
 } satisfies Record<string, DataPointDefinition>

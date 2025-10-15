@@ -15,7 +15,7 @@ export const createSequentialEmbeddedSignatureRequest: Action<
   key: 'createSequentialEmbeddedSignatureRequest',
   title: 'Create sequential embedded signature request',
   description:
-    'Create an embedded signature request with sequential signing. The patient signs first (routing order 1), then the provider signs second (routing order 2) on the same tablet device.',
+    'Create an embedded signature request with sequential signing. Adds both patient (routing order 1) and provider (routing order 2) to the envelope, but only generates the patient sign URL. Use "Generate sign URL for existing envelope" action after patient signs to get the provider URL.',
   category: Category.DOCUMENT_MANAGEMENT,
   fields,
   dataPoints,
@@ -115,32 +115,10 @@ export const createSequentialEmbeddedSignatureRequest: Action<
         }
       )
 
-      const providerViewRequest = DocuSignSdk.RecipientViewRequest.constructFromObject({
-        authenticationMethod: 'none',
-        email: providerSignerEmail,
-        userName: providerSignerName,
-        clientUserId: providerClientUserId,
-        returnUrl: replaceStringVariables(returnUrlTemplate, {
-          sessionId: sessionId ?? '',
-          stakeholderId: providerClientUserId,
-          pathwayId,
-          activityId,
-        }),
-      })
-
-      const providerViewResult = await envelopesApi.createRecipientView(
-        accountId,
-        envelopeResult?.envelopeId ?? '',
-        {
-          recipientViewRequest: providerViewRequest,
-        }
-      )
-
       await onComplete({
         data_points: {
           envelopeId: envelopeResult?.envelopeId,
           patientSignUrl: patientViewResult?.url,
-          providerSignUrl: providerViewResult?.url,
         },
       })
     } catch (err) {
