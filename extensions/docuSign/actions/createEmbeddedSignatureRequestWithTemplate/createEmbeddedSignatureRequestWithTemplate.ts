@@ -36,7 +36,6 @@ export const createEmbeddedSignatureRequestWithTemplate: Action<
         templateId,
         subject,
         message,
-        webhook,
       } = validateActionFields(payload.fields)
       const {
         accountId,
@@ -45,6 +44,7 @@ export const createEmbeddedSignatureRequestWithTemplate: Action<
         integrationKey,
         rsaKey,
         userId,
+        webhookUrl,
       } = validateSettings(payload.settings)
 
       const client = await createApiClient({
@@ -61,9 +61,9 @@ export const createEmbeddedSignatureRequestWithTemplate: Action<
         clientUserId: patientId,
       })
 
-      const eventNotification = webhook
+      const eventNotification = webhookUrl
         ? (DocuSignSdk as any).EventNotification.constructFromObject({
-            url: webhook,
+            url: `${webhookUrl}?activity_id=${activityId}`,
             loggingEnabled: true,
             requireAcknowledgment: true,
             envelopeEvents: [
@@ -118,7 +118,6 @@ export const createEmbeddedSignatureRequestWithTemplate: Action<
         data_points: {
           envelopeId: envelopeResult?.envelopeId,
           signUrl: viewRequestResult?.url,
-          webhook: webhook ?? '',
         },
       })
     } catch (err) {

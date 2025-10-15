@@ -47,14 +47,6 @@ export const fields = {
     type: FieldType.STRING,
     required: false,
   },
-  webhook: {
-    id: 'webhook',
-    label: 'Webhook URL',
-    description:
-      'Webhook URL for DocuSign Connect notifications. If provided, the activity_id of the embeddedSigning action will be appended as a query parameter. This enables automatic activity completion when signing is done.',
-    type: FieldType.STRING,
-    required: false,
-  },
 } satisfies Record<string, Field>
 
 export const FieldsValidationSchema = z.object({
@@ -64,7 +56,6 @@ export const FieldsValidationSchema = z.object({
   templateId: z.string(),
   subject: z.optional(z.string()),
   message: z.optional(z.string()),
-  webhook: z.string().url().optional(),
 } satisfies Record<keyof typeof fields, ZodTypeAny>)
 
 export const validateActionFields = (

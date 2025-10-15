@@ -39,24 +39,29 @@ Embedded signing behaves as a blocking action where the action is only completed
 
 **Please note that the signing URL generated in the first step is only valid for 5 minutes and is one-time only.** This means that from as soon as the first action is activated, the user has 5 minutes to complete the signing request. Loading a session by the user also means that sign url is loaded and refreshing the page will cause the link to expire. When the sign URL has expired, the document cannot be signed anymore and the process would have to be repeated.
 
-### Webhook-based completion (Recommended)
+### Webhook-based completion (Automatic)
 
-For reliable activity completion regardless of how the user accesses the signing URL (hosted pages iframe, separate browser tab, mobile device, etc.), you can use DocuSign Connect webhooks.
+The extension supports automatic activity completion via DocuSign Connect webhooks. When configured, this enables reliable completion regardless of how the user accesses the signing URL (hosted pages iframe, separate browser tab, mobile device, etc.).
 
 **Setup:**
 
-1. In the "Create embedded signature request with template" action, provide a **Webhook URL** field. This URL will receive DocuSign Connect notifications when signing events occur.
-2. In the "Embedded signing" action, pass the same **Webhook URL** from the previous action's data points.
-3. Configure your webhook endpoint to handle the following DocuSign events:
+1. In the extension settings, provide a **Webhook URL** (e.g., `https://extensions.awell.health/webhooks/docusign`). This is the Awell extension server webhook endpoint.
+2. The extension will automatically configure DocuSign to send events to this webhook URL for all signature requests.
+3. The webhook handler processes the following DocuSign events:
    - `recipient-completed` - User successfully signed (activity completes with signed=true)
-   - `envelope-completed` - All recipients finished signing (activity completes with signed=true)
+   - `envelope-completed` - All recipients finished signing (activity completes with signed=true)  
    - `recipient-declined` - User declined to sign (activity completes with signed=false)
    - `envelope-voided` - Envelope was cancelled (activity completes with signed=false)
 
 **How it works:**
 
-When a webhook URL is provided, the activity will NOT complete immediately when created. Instead, it remains "active" until DocuSign sends a webhook notification indicating the signing is complete (or declined/voided). The webhook handler will automatically complete the activity with the appropriate status.
+1. When a signature request is created, DocuSign is automatically configured to send events to the webhook URL (with `?activity_id={activityId}` appended)
+2. The embeddedSigning action completes immediately with `signed=false` (for hosted pages compatibility)
+3. When the user signs the document (anywhere - iframe, separate tab, mobile):
+   - **Hosted pages:** The `completeExtensionActivity` mutation updates the activity to `signed=true`
+   - **External signing:** The webhook receives the event and updates the activity to `signed=true`
+4. Either mechanism can complete the activity - first one wins
 
-This approach ensures reliable completion regardless of where the user signs the document, eliminating issues with page reloads, iframe communication, and cross-tab scenarios.
+This dual-completion approach ensures the extension works seamlessly in both hosted pages and external signing scenarios.
 
-**Note:** If no webhook URL is provided, the extension falls back to the legacy behavior where the activity completes immediately and relies on the `completeExtensionActivity` mutation from hosted pages.
+**Note:** If no webhook URL is configured in settings, the extension relies solely on the hosted pages `completeExtensionActivity` mutation. This works for iframe-only scenarios but won't complete if users open the link externally.
