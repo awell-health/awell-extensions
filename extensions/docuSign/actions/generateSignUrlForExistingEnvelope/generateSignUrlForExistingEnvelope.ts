@@ -62,7 +62,7 @@ export const generateSignUrlForExistingEnvelope: Action<
 
       const envelopesApi = new DocuSignSdk.EnvelopesApi(client)
 
-      const templateRole = DocuSignSdk.TemplateRole.constructFromObject({
+      const signer = DocuSignSdk.Signer.constructFromObject({
         email: signerEmail,
         name: signerName,
         roleName: signerRole,
@@ -71,10 +71,10 @@ export const generateSignUrlForExistingEnvelope: Action<
       })
 
       const recipients = DocuSignSdk.Recipients.constructFromObject({
-        signers: [templateRole],
+        signers: [signer],
       })
 
-      await envelopesApi.updateRecipients(accountId, envelopeId, {
+      await envelopesApi.createRecipient(accountId, envelopeId, {
         recipients,
       })
 
