@@ -33,8 +33,8 @@ export const fields = {
 } satisfies Record<string, Field>
 
 export const FieldsValidationSchema = z.object({
-  envelopeId: z.string().min(1, 'Envelope ID is required'),
-  signerName: z.string().min(1, 'Signer name is required'),
-  signerEmail: z.string().email('Invalid email format'),
-  clientUserId: z.string().min(1, 'Client user ID is required'),
+  envelopeId: z.string(),
+  signerName: z.string(),
+  signerEmail: z.string(),
+  clientUserId: z.string(),
 } satisfies Record<keyof typeof fields, ZodTypeAny>)
