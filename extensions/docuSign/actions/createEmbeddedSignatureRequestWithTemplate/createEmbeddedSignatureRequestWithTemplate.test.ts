@@ -40,6 +40,7 @@ describe('Create embedded signature request with template', () => {
           templateId: 'template-1',
           subject: 'DocuSign - local demo',
           message: 'DocuSign - local demo message content',
+          webhook: undefined,
         },
         settings: {
           integrationKey: 'integrationKey',
@@ -58,6 +59,7 @@ describe('Create embedded signature request with template', () => {
       data_points: {
         envelopeId: 'envelope-1',
         signUrl: 'test-url',
+        webhook: '',
       },
     })
     expect(onError).not.toHaveBeenCalled()
