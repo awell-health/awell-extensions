@@ -4,6 +4,7 @@ import {
   createEmbeddedSignatureRequestWithTemplate,
   embeddedSigning,
   createSequentialEmbeddedSignatureRequest,
+  generateSignUrlForExistingEnvelope,
 } from './actions'
 import { settings } from './settings'
 
@@ -21,6 +22,7 @@ export const DocuSign: Extension = {
     createEmbeddedSignatureRequestWithTemplate,
     embeddedSigning,
     createSequentialEmbeddedSignatureRequest,
+    generateSignUrlForExistingEnvelope,
   },
   settings,
 }
