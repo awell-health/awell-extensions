@@ -72,4 +72,22 @@ export class MedplumClient {
     }
     return { resourceType: 'Bundle', type: 'searchset', total: 0, entry: [] }
   })
+
+  executeBatch = jest.fn((bundle: any) => {
+    return {
+      resourceType: 'Bundle',
+      type: bundle.type || 'transaction-response',
+      id: 'bundle-response-123',
+      entry: bundle.entry?.map((entry: any, index: number) => ({
+        response: {
+          status: '201 Created',
+          location: `${entry.resource?.resourceType || 'Resource'}/${entry.resource?.resourceType?.toLowerCase()}-${index + 1}/_history/1`
+        },
+        resource: {
+          ...entry.resource,
+          id: `${entry.resource?.resourceType?.toLowerCase()}-${index + 1}`
+        }
+      })) || []
+    }
+  })
 }
