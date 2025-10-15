@@ -21,6 +21,7 @@ describe('Complete flow action', () => {
           rsaKey: 'xyz123',
           baseApiUrl: 'https://demo.docusign.net',
           returnUrlTemplate: '',
+          webhookUrl: undefined,
         },
       }),
       onComplete,
