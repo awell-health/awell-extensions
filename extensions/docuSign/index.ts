@@ -6,6 +6,7 @@ import {
   createSequentialEmbeddedSignatureRequest,
 } from './actions'
 import { settings } from './settings'
+import { signingCompleted } from './webhooks'
 
 export const DocuSign: Extension = {
   key: 'docuSign',
@@ -23,4 +24,5 @@ export const DocuSign: Extension = {
     createSequentialEmbeddedSignatureRequest,
   },
   settings,
+  webhooks: [signingCompleted],
 }

@@ -9,4 +9,8 @@ export const dataPoints = {
     key: 'signUrl',
     valueType: 'string',
   },
+  webhook: {
+    key: 'webhook',
+    valueType: 'string',
+  },
 } satisfies Record<string, DataPointDefinition>

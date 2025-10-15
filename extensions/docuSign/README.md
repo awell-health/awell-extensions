@@ -32,9 +32,31 @@ Embedded Signing gives users the ability to sign documents directly from Awell H
 
 Embedded signing behaves as a blocking action where the action is only completed when the signature request is effectively signed.
 
-**In order to add embedded signing, you need to add 2 actions to you care flow:**
+**In order to add embedded signing, you need to add 2 actions to your care flow:**
 
 1. First, add the "Create embedded signature request with template" action. This action will create an embedded signature request based on a template and return a **sign URL**.
 2. Second, add the "Embedded signing" action. In this action you will have to configure the **sign URL** you got from the first action.
 
-**Please note that the signing URL generated in the first step is only valid for 5 minutes and is one-time only.** This means that from as soon as the first action is activated, the user has 5 minutes to complete the signing request. Loading a session by the user also means that sign url is loaded and refreshing the page will cause the link to expire. When the sign URL has expired, the document cannot be signed anymore and and the process would have to be repeated.
+**Please note that the signing URL generated in the first step is only valid for 5 minutes and is one-time only.** This means that from as soon as the first action is activated, the user has 5 minutes to complete the signing request. Loading a session by the user also means that sign url is loaded and refreshing the page will cause the link to expire. When the sign URL has expired, the document cannot be signed anymore and the process would have to be repeated.
+
+### Webhook-based completion (Recommended)
+
+For reliable activity completion regardless of how the user accesses the signing URL (hosted pages iframe, separate browser tab, mobile device, etc.), you can use DocuSign Connect webhooks.
+
+**Setup:**
+
+1. In the "Create embedded signature request with template" action, provide a **Webhook URL** field. This URL will receive DocuSign Connect notifications when signing events occur.
+2. In the "Embedded signing" action, pass the same **Webhook URL** from the previous action's data points.
+3. Configure your webhook endpoint to handle the following DocuSign events:
+   - `recipient-completed` - User successfully signed (activity completes with signed=true)
+   - `envelope-completed` - All recipients finished signing (activity completes with signed=true)
+   - `recipient-declined` - User declined to sign (activity completes with signed=false)
+   - `envelope-voided` - Envelope was cancelled (activity completes with signed=false)
+
+**How it works:**
+
+When a webhook URL is provided, the activity will NOT complete immediately when created. Instead, it remains "active" until DocuSign sends a webhook notification indicating the signing is complete (or declined/voided). The webhook handler will automatically complete the activity with the appropriate status.
+
+This approach ensures reliable completion regardless of where the user signs the document, eliminating issues with page reloads, iframe communication, and cross-tab scenarios.
+
+**Note:** If no webhook URL is provided, the extension falls back to the legacy behavior where the activity completes immediately and relies on the `completeExtensionActivity` mutation from hosted pages.

@@ -36,6 +36,7 @@ export const createEmbeddedSignatureRequestWithTemplate: Action<
         templateId,
         subject,
         message,
+        webhook,
       } = validateActionFields(payload.fields)
       const {
         accountId,
@@ -60,12 +61,30 @@ export const createEmbeddedSignatureRequestWithTemplate: Action<
         clientUserId: patientId,
       })
 
+      const eventNotification = webhook
+        ? (DocuSignSdk as any).EventNotification.constructFromObject({
+            url: webhook,
+            loggingEnabled: true,
+            requireAcknowledgment: true,
+            envelopeEvents: [
+              { envelopeEventStatusCode: 'completed' },
+              { envelopeEventStatusCode: 'declined' },
+              { envelopeEventStatusCode: 'voided' },
+            ],
+            recipientEvents: [
+              { recipientEventStatusCode: 'Completed' },
+              { recipientEventStatusCode: 'Declined' },
+            ],
+          })
+        : undefined
+
       const envelope = DocuSignSdk.EnvelopeDefinition.constructFromObject({
         status: 'sent',
         templateId,
         templateRoles: [signer],
         emailSubject: subject,
         emailBlurb: message,
+        eventNotification,
       })
 
       const envelopesApi = new DocuSignSdk.EnvelopesApi(client)
@@ -99,6 +118,7 @@ export const createEmbeddedSignatureRequestWithTemplate: Action<
         data_points: {
           envelopeId: envelopeResult?.envelopeId,
           signUrl: viewRequestResult?.url,
+          webhook: webhook ?? '',
         },
       })
     } catch (err) {
