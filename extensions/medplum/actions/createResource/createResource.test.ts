@@ -49,9 +49,16 @@ describe('Medplum - Create resource', () => {
             name: [{ family: 'Test', given: ['Patient'] }],
           }),
         },
+        pathway: {
+          id: 'some-pathway-id',
+        },
+        activity: {
+          id: 'some-activity-id',
+        },
         settings: {
           clientId: 'test-client-id',
           clientSecret: 'test-secret',
+          baseUrl: '',
         },
       } as any,
       onComplete,
@@ -124,9 +131,16 @@ describe('Medplum - Create resource', () => {
             ],
           }),
         },
+        pathway: {
+          id: 'some-pathway-id',
+        },
+        activity: {
+          id: 'some-activity-id',
+        },
         settings: {
           clientId: 'test-client-id',
           clientSecret: 'test-secret',
+          baseUrl: '',
         },
       } as any,
       onComplete,
@@ -151,9 +165,16 @@ describe('Medplum - Create resource', () => {
         fields: {
           resourceJson: 'not valid json',
         },
+        pathway: {
+          id: 'some-pathway-id',
+        },
+        activity: {
+          id: 'some-activity-id',
+        },
         settings: {
           clientId: 'test-client-id',
           clientSecret: 'test-secret',
+          baseUrl: '',
         },
       } as any,
       onComplete,
