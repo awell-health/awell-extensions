@@ -13,9 +13,9 @@ export const generateSignUrlForExistingEnvelope: Action<
   typeof settings
 > = {
   key: 'generateSignUrlForExistingEnvelope',
-  title: 'Add recipient and generate sign URL',
+  title: 'Generate sign URL for existing envelope',
   description:
-    'Add a recipient to an existing DocuSign envelope and generate their signing URL. Perfect for sequential signing workflows where the first signer completes, then you add the next signer to the same document.',
+    'Generate a signing URL for a recipient that already exists in a DocuSign envelope. Use this after the previous signer completes in a sequential signing workflow.',
   category: Category.DOCUMENT_MANAGEMENT,
   fields,
   dataPoints,
@@ -38,11 +38,9 @@ export const generateSignUrlForExistingEnvelope: Action<
       },
       fields: {
         envelopeId,
-        signerRole,
         signerName,
         signerEmail,
         clientUserId,
-        routingOrder,
       },
     } = validate({
       schema: z.object({
@@ -61,22 +59,6 @@ export const generateSignUrlForExistingEnvelope: Action<
       })
 
       const envelopesApi = new DocuSignSdk.EnvelopesApi(client)
-
-      const signer = DocuSignSdk.Signer.constructFromObject({
-        email: signerEmail,
-        name: signerName,
-        roleName: signerRole,
-        clientUserId,
-        routingOrder,
-      })
-
-      const recipients = DocuSignSdk.Recipients.constructFromObject({
-        signers: [signer],
-      })
-
-      await envelopesApi.createRecipient(accountId, envelopeId, {
-        recipients,
-      })
 
       const viewRequest = DocuSignSdk.RecipientViewRequest.constructFromObject({
         authenticationMethod: 'none',
