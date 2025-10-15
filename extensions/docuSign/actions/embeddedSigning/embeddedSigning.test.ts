@@ -8,7 +8,7 @@ describe('Complete flow action', () => {
     onComplete.mockClear()
   })
 
-  test('Should not call the onComplete callback', async () => {
+  test('Should call the onComplete callback', async () => {
     await embeddedSigning.onActivityCreated!(
       generateTestPayload({
         fields: {
@@ -21,15 +21,17 @@ describe('Complete flow action', () => {
           rsaKey: 'xyz123',
           baseApiUrl: 'https://demo.docusign.net',
           returnUrlTemplate: '',
+          webhookUrl: undefined,
         },
       }),
       onComplete,
       jest.fn()
     )
 
-    /**
-     * Because completion is done in Awell Hosted Pages
-     */
-    expect(onComplete).not.toHaveBeenCalled()
+    expect(onComplete).toHaveBeenCalledWith({
+      data_points: {
+        signed: 'false',
+      },
+    })
   })
 })

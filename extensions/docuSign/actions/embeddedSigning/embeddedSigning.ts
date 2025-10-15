@@ -24,6 +24,12 @@ export const embeddedSigning: Action<typeof fields, typeof settings> = {
   onActivityCreated: async (payload, onComplete, onError) => {
     try {
       validateActionFields(payload.fields)
+      
+      await onComplete({
+        data_points: {
+          signed: String(false),
+        },
+      })
     } catch (err) {
       if (err instanceof ZodError) {
         const error = fromZodError(err)

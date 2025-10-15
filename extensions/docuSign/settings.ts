@@ -51,6 +51,14 @@ export const settings = {
     description:
       'Return URL for your application to which DocuSign will redirect the user after signing the document. Set when you self host your application. You can use {sessionId}, {pathwayId}, {activityId} and {stakeholderId} variables to construct the URL, where variables will be replaced with actual values. Defaults to: "https://goto.development.awell.health/?sessionId={sessionId}".',
   },
+  webhookUrl: {
+    label: 'Webhook URL',
+    key: 'webhookUrl',
+    obfuscated: false,
+    required: false,
+    description:
+      'Webhook URL for DocuSign Connect notifications. When configured, DocuSign will send webhook events to this URL when signing completes, enabling automatic activity completion regardless of where the user signs (hosted pages, separate tab, mobile, etc.). The system will automatically append ?activity_id={activityId} to this URL.',
+  },
 } satisfies Record<string, Setting>
 
 export const SettingsValidationSchema = z.object({
@@ -76,6 +84,14 @@ export const SettingsValidationSchema = z.object({
         return 'https://goto.development.awell.health/?sessionId={sessionId}'
       }
 
+      return value
+    }),
+  webhookUrl: z
+    .union([z.string().url().optional(), z.literal('')])
+    .transform((value) => {
+      if (isNil(value) || value === '') {
+        return undefined
+      }
       return value
     }),
 } satisfies Record<keyof typeof settings, ZodTypeAny>)
