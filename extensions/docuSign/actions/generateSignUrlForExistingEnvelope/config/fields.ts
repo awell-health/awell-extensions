@@ -9,6 +9,13 @@ export const fields = {
     type: FieldType.STRING,
     required: true,
   },
+  signerRole: {
+    id: 'signerRole',
+    label: 'Signer role',
+    description: 'Must match an existing role in the template used to create the envelope. It\'s case-sensitive.',
+    type: FieldType.STRING,
+    required: true,
+  },
   signerName: {
     id: 'signerName',
     label: 'Signer name',
@@ -19,7 +26,7 @@ export const fields = {
   signerEmail: {
     id: 'signerEmail',
     label: 'Signer email',
-    description: 'The email address of the person who will sign the document. Must match the email of a recipient in the envelope.',
+    description: 'The email address of the person who will sign the document.',
     type: FieldType.STRING,
     required: true,
   },
@@ -30,11 +37,20 @@ export const fields = {
     type: FieldType.STRING,
     required: true,
   },
+  routingOrder: {
+    id: 'routingOrder',
+    label: 'Routing order',
+    description: 'The signing order for this recipient. Use "1" for the first signer, "2" for the second, etc. For sequential signing, this determines when the recipient can sign.',
+    type: FieldType.STRING,
+    required: true,
+  },
 } satisfies Record<string, Field>
 
 export const FieldsValidationSchema = z.object({
   envelopeId: z.string(),
+  signerRole: z.string(),
   signerName: z.string(),
   signerEmail: z.string(),
   clientUserId: z.string(),
+  routingOrder: z.string(),
 } satisfies Record<keyof typeof fields, ZodTypeAny>)
