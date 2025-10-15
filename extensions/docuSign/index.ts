@@ -3,6 +3,8 @@ import { AuthorType, Category } from '@awell-health/extensions-core'
 import {
   createEmbeddedSignatureRequestWithTemplate,
   embeddedSigning,
+  createSequentialEmbeddedSignatureRequest,
+  generateSignUrlForExistingEnvelope,
 } from './actions'
 import { settings } from './settings'
 
@@ -19,6 +21,8 @@ export const DocuSign: Extension = {
   actions: {
     createEmbeddedSignatureRequestWithTemplate,
     embeddedSigning,
+    createSequentialEmbeddedSignatureRequest,
+    generateSignUrlForExistingEnvelope,
   },
   settings,
 }
