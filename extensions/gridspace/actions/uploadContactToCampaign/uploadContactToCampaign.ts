@@ -16,7 +16,7 @@ export const uploadContactToCampaign = {
   onEvent: async ({ payload, onComplete }) => {
     const { pathway, patient, activity } = payload
     const {
-      fields: { campaignId, data, phoneNumber, serviceTermsReviewed },
+      fields: { campaignId, data, phoneNumber, serviceTermsReviewed = true },
       settings: { accountId, clientSecret },
     } = validate({
       schema: z.object({ fields: FieldsSchema, settings: SettingsSchema }),
