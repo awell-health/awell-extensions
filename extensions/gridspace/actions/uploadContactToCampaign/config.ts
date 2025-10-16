@@ -23,6 +23,14 @@ export const fields = {
     required: true,
     description: 'The phone number to call.',
   },
+  serviceTermsReviewed: {
+    id: 'serviceTermsReviewed',
+    label: 'Service Terms Reviewed',
+    type: FieldType.BOOLEAN,
+    required: false,
+    description:
+      'Affirmation that the Terms of Service for contacts made via Autodialer campaigns have been reviewed. Defaults to true.',
+  },
   data: {
     id: 'data',
     label: 'Data',
@@ -47,6 +55,7 @@ export const dataPoints = {
 export const FieldsSchema = z.object({
   campaignId: z.string(),
   phoneNumber: z.string(),
+  serviceTermsReviewed: z.boolean().optional(),
   data: z.string().transform((str, ctx): Record<string, string> => {
     if (isNil(str) || isEmpty(str)) {
       return {}
