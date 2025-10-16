@@ -16,7 +16,7 @@ export const uploadContactToCampaign = {
   onEvent: async ({ payload, onComplete }) => {
     const { pathway, patient, activity } = payload
     const {
-      fields: { campaignId, data, phoneNumber },
+      fields: { campaignId, data, phoneNumber, serviceTermsReviewed },
       settings: { accountId, clientSecret },
     } = validate({
       schema: z.object({ fields: FieldsSchema, settings: SettingsSchema }),
@@ -41,11 +41,12 @@ export const uploadContactToCampaign = {
       column_names: columnNames,
       phone_number_column_name: 'phone_number',
       contact_rows: [contactRow],
+      service_terms_reviewed: serviceTermsReviewed,
     }
 
     const { num_uploaded_contacts = 0 } = await client.uploadContactsToCampaign(
       campaignId,
-      requestBody
+      requestBody,
     )
 
     const event_text =

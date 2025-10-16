@@ -26,6 +26,7 @@ describe('uploadContactToCampaign', () => {
           campaignId: 'campaign123',
           data: JSON.stringify({ first_name: 'John', last_name: 'Doe' }),
           phoneNumber: '15552223333',
+          serviceTermsReviewed: true,
         },
         settings: {
           accountId: 'someAccountId',
@@ -60,6 +61,7 @@ describe('uploadContactToCampaign', () => {
           'test-patient',
         ],
       ],
+      service_terms_reviewed: true,
     })
 
     expect(onComplete).toHaveBeenCalledWith({
@@ -86,6 +88,7 @@ describe('uploadContactToCampaign', () => {
           campaignId: 'campaign123',
           data: JSON.stringify({ first_name: 'John', last_name: 'Doe' }),
           phoneNumber: '15552223333',
+          serviceTermsReviewed: false,
         },
         settings: {
           accountId: 'someAccountId',
@@ -121,6 +124,7 @@ describe('uploadContactToCampaign', () => {
             campaignId: 'campaign123',
             data: JSON.stringify({ first_name: 'John', last_name: 'Doe' }),
             phoneNumber: '15552223333',
+            serviceTermsReviewed: true,
           },
           settings: {
             accountId: 'someAccountId',
