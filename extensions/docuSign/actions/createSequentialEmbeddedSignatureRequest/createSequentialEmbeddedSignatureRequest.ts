@@ -15,7 +15,7 @@ export const createSequentialEmbeddedSignatureRequest: Action<
   key: 'createSequentialEmbeddedSignatureRequest',
   title: 'Create sequential embedded signature request',
   description:
-    'Create an embedded signature request with sequential signing. Adds both patient (routing order 1) and provider (routing order 2) to the envelope, but only generates the patient sign URL. Use "Generate sign URL for existing envelope" action after patient signs to get the provider URL.',
+    'Create an embedded signature request with sequential signing. Adds both Recipient 1 (routing order 1) and Recipient 2 (routing order 2) to the envelope, but only generates the Recipient 1 sign URL. Use "Generate sign URL for existing envelope" action after Recipient 1 signs to get the Recipient 2 URL.',
   category: Category.DOCUMENT_MANAGEMENT,
   fields,
   dataPoints,
