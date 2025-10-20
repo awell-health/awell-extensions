@@ -7,6 +7,7 @@ import {
   generateSignUrlForExistingEnvelope,
 } from './actions'
 import { settings } from './settings'
+import { signingCompleted } from './webhooks'
 
 export const DocuSign: Extension = {
   key: 'docuSign',
@@ -25,4 +26,5 @@ export const DocuSign: Extension = {
     generateSignUrlForExistingEnvelope,
   },
   settings,
+  webhooks: [signingCompleted],
 }
