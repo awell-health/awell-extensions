@@ -21,4 +21,8 @@ export const dataPoints = {
     key: 'resourceIds',
     valueType: 'string',
   },
+  resourcesCreated: {
+    key: 'resourcesCreated',
+    valueType: 'json',
+  },
 } satisfies Record<string, DataPointDefinition>
