@@ -10,7 +10,7 @@ jest.mock('docusign-esign', () => ({
   })),
   EnvelopesApi: jest.fn(() => ({
     createEnvelope: jest.fn(() => ({ envelopeId: 'envelope-123' })),
-    createRecipientView: jest.fn(() => Promise.resolve({ url: 'patient-sign-url' })),
+    createRecipientView: jest.fn(() => Promise.resolve({ url: 'https://docusign.com/recipient1-sign-url' })),
   })),
   TemplateRole: {
     constructFromObject: jest.fn((args: any) => args),
@@ -64,7 +64,7 @@ describe('createSequentialEmbeddedSignatureRequest', () => {
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
         envelopeId: 'envelope-123',
-        patientSignUrl: 'patient-sign-url',
+        recipient1SignUrl: 'https://docusign.com/recipient1-sign-url',
       },
     })
     expect(onError).not.toHaveBeenCalled()

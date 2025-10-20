@@ -5,8 +5,8 @@ export const dataPoints = {
     key: 'envelopeId',
     valueType: 'string',
   },
-  patientSignUrl: {
-    key: 'patientSignUrl',
+  recipient1SignUrl: {
+    key: 'recipient1SignUrl',
     valueType: 'string',
   },
 } satisfies Record<string, DataPointDefinition>

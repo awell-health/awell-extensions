@@ -63,7 +63,7 @@ export const createSequentialEmbeddedSignatureRequest: Action<
       baseUrl: baseApiUrl,
     })
 
-    const patientSigner = DocuSignSdk.TemplateRole.constructFromObject({
+    const recipient1Signer = DocuSignSdk.TemplateRole.constructFromObject({
       email: patientSignerEmail,
       name: patientSignerName,
       roleName: patientSignerRole,
@@ -71,7 +71,7 @@ export const createSequentialEmbeddedSignatureRequest: Action<
       routingOrder: '1',
     })
 
-    const providerSigner = DocuSignSdk.TemplateRole.constructFromObject({
+    const recipient2Signer = DocuSignSdk.TemplateRole.constructFromObject({
       email: providerSignerEmail,
       name: providerSignerName,
       roleName: providerSignerRole,
@@ -82,7 +82,7 @@ export const createSequentialEmbeddedSignatureRequest: Action<
     const envelope = DocuSignSdk.EnvelopeDefinition.constructFromObject({
       status: 'sent',
       templateId,
-      templateRoles: [patientSigner, providerSigner],
+      templateRoles: [recipient1Signer, recipient2Signer],
       emailSubject: subject,
       emailBlurb: message,
     })
@@ -94,7 +94,7 @@ export const createSequentialEmbeddedSignatureRequest: Action<
         envelopeDefinition: envelope,
       })
 
-      const patientViewRequest = DocuSignSdk.RecipientViewRequest.constructFromObject({
+      const recipient1ViewRequest = DocuSignSdk.RecipientViewRequest.constructFromObject({
         authenticationMethod: 'none',
         email: patientSignerEmail,
         userName: patientSignerName,
@@ -107,18 +107,18 @@ export const createSequentialEmbeddedSignatureRequest: Action<
         }),
       })
 
-      const patientViewResult = await envelopesApi.createRecipientView(
+      const recipient1ViewResult = await envelopesApi.createRecipientView(
         accountId,
         envelopeResult?.envelopeId ?? '',
         {
-          recipientViewRequest: patientViewRequest,
+          recipientViewRequest: recipient1ViewRequest,
         }
       )
 
       await onComplete({
         data_points: {
           envelopeId: envelopeResult?.envelopeId,
-          patientSignUrl: patientViewResult?.url,
+          recipient1SignUrl: recipient1ViewResult?.url,
         },
       })
     } catch (err) {
