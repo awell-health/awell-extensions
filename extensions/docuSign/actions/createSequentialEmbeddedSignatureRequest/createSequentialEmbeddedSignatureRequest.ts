@@ -118,7 +118,7 @@ export const createSequentialEmbeddedSignatureRequest: Action<
       await onComplete({
         data_points: {
           envelopeId: envelopeResult?.envelopeId,
-          patientSignUrl: patientViewResult?.url,
+          recipient1SignUrl: patientViewResult?.url,
         },
       })
     } catch (err) {
