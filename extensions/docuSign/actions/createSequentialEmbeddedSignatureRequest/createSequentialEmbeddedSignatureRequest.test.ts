@@ -64,7 +64,7 @@ describe('createSequentialEmbeddedSignatureRequest', () => {
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
         envelopeId: 'envelope-123',
-        patientSignUrl: 'patient-sign-url',
+        recipient1SignUrl: 'patient-sign-url',
       },
     })
     expect(onError).not.toHaveBeenCalled()
