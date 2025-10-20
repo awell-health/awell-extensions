@@ -154,6 +154,20 @@ describe('Medplum - Create resource', () => {
         bundleId: 'bundle-123',
         bundleType: 'transaction-response',
         resourceIds: 'patient-1,observation-2',
+        resourcesCreated: JSON.stringify([
+          {
+            id: 'patient-1',
+            resourceType: 'Patient',
+            status: '201 Created',
+            location: 'Patient/patient-1',
+          },
+          {
+            id: 'observation-2',
+            resourceType: 'Observation',
+            status: '201 Created',
+            location: 'Observation/observation-2',
+          },
+        ]),
       },
     })
     expect(onError).not.toHaveBeenCalled()
