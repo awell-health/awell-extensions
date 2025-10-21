@@ -14,6 +14,9 @@ describe('Medplum - Create resource', () => {
 
   beforeEach(() => {
     clearMocks()
+    mockCreateResource.mockClear()
+    mockExecuteBatch.mockClear()
+    mockSearch.mockClear()
   })
 
   beforeAll(() => {
