@@ -11,9 +11,9 @@ export const createResource: Action<
 > = {
   key: 'createResource',
   category: Category.EHR_INTEGRATIONS,
-  title: 'Create resource',
+  title: 'Find or create resource',
   description:
-    'Create any FHIR resource in Medplum. Supports single resources or FHIR Bundles (transaction/batch) for creating multiple resources atomically.',
+    'Find or create any FHIR resource in Medplum. Optionally search for existing resources by type and identifier before creating. Supports single resources or FHIR Bundles (transaction/batch) for creating multiple resources atomically.',
   fields,
   previewable: false,
   dataPoints,
@@ -28,6 +28,36 @@ export const createResource: Action<
 
     try {
       const resourceData = JSON.parse(input.resourceJson)
+
+      const shouldSearch =
+        input.searchResourceType && input.searchIdentifier
+
+      if (shouldSearch && input.searchResourceType && input.searchIdentifier) {
+        const searchParams: Record<string, string> = {
+          identifier: input.searchIdentifier,
+        }
+
+        const searchBundle = await medplumSdk.search(
+          input.searchResourceType as any,
+          searchParams
+        )
+
+        if (searchBundle.entry && searchBundle.entry.length > 0) {
+          const latestResource =
+            searchBundle.entry[searchBundle.entry.length - 1].resource
+
+          if (latestResource) {
+            await onComplete({
+              data_points: {
+                resourceId: latestResource.id ?? '',
+                resourceType: latestResource.resourceType,
+                wasResourceFound: 'true',
+              },
+            })
+            return
+          }
+        }
+      }
 
       if (resourceData.resourceType === 'Bundle') {
         const result = await medplumSdk.executeBatch(resourceData as Bundle)
@@ -89,6 +119,7 @@ export const createResource: Action<
             resourceIds,
             bundleType: result.type ?? '',
             resourcesCreated: JSON.stringify(resourcesCreated),
+            wasResourceFound: 'false',
           },
         })
       }else {
@@ -98,6 +129,7 @@ export const createResource: Action<
           data_points: {
             resourceId: result.id ?? '',
             resourceType: result.resourceType,
+            wasResourceFound: 'false',
           },
         })
       }

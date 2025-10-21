@@ -25,4 +25,8 @@ export const dataPoints = {
     key: 'resourcesCreated',
     valueType: 'json',
   },
+  wasResourceFound: {
+    key: 'wasResourceFound',
+    valueType: 'boolean',
+  },
 } satisfies Record<string, DataPointDefinition>
