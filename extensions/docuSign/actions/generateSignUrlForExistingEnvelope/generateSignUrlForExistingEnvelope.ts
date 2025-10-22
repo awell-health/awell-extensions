@@ -84,6 +84,8 @@ export const generateSignUrlForExistingEnvelope: Action<
       await onComplete({
         data_points: {
           signUrl: viewResult?.url,
+          clientUserId,
+          envelopeId,
         },
       })
     } catch (err) {
