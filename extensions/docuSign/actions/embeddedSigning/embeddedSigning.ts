@@ -10,7 +10,7 @@ export const embeddedSigning: Action<typeof fields, typeof settings> = {
   key: 'embeddedSigning',
   title: 'Embedded signing',
   description:
-    'Let a stakeholder sign an embedded signature request with Awell Hosted Pages.',
+    'Let a stakeholder sign an embedded signature request with Awell Hosted Pages. This action will remain active until the stakeholder completes signing in the hosted pages interface.',
   category: Category.DOCUMENT_MANAGEMENT,
   fields,
   dataPoints,
@@ -24,6 +24,7 @@ export const embeddedSigning: Action<typeof fields, typeof settings> = {
   onActivityCreated: async (payload, onComplete, onError) => {
     try {
       validateActionFields(payload.fields)
+
     } catch (err) {
       if (err instanceof ZodError) {
         const error = fromZodError(err)
@@ -47,7 +48,7 @@ export const embeddedSigning: Action<typeof fields, typeof settings> = {
         events: [
           {
             date: new Date().toISOString(),
-            text: { en: 'Something went wrong while orchestration the action' },
+            text: { en: 'Something went wrong while orchestrating the action' },
             error: {
               category: 'SERVER_ERROR',
               message: error.message,
