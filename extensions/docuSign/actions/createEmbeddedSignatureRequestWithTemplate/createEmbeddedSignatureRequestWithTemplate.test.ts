@@ -1,6 +1,14 @@
 import { generateTestPayload } from '@/tests'
 import { createEmbeddedSignatureRequestWithTemplate } from './createEmbeddedSignatureRequestWithTemplate'
 
+const MOCK_RSA_PRIVATE_KEY = `-----BEGIN PRIVATE KEY-----
+MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQC7VJTUt9Us8cKj
+MzEfYyjiWA4R4/M2bS1+fWIcPm15j9zB/FbeJ+MPA3mg+pKv1HWHZrPNX4tKHHtd
+SdJYk1FCHSxqpoQYhD5L4aLn+KWfqwZqcAOCAQ==
+-----END PRIVATE KEY-----`
+
+const MOCK_RSA_PRIVATE_KEY_BASE64 = Buffer.from(MOCK_RSA_PRIVATE_KEY).toString('base64')
+
 jest.mock('docusign-esign', () => ({
   ApiClient: jest.fn(() => ({
     setBasePath: jest.fn(),
@@ -45,7 +53,7 @@ describe('Create embedded signature request with template', () => {
           integrationKey: 'integrationKey',
           accountId: 'accountId',
           userId: 'userId',
-          rsaKey: 'rsaKey',
+          rsaKey: MOCK_RSA_PRIVATE_KEY_BASE64,
           baseApiUrl: undefined,
           returnUrlTemplate: undefined,
         },

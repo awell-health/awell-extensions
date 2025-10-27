@@ -33,7 +33,7 @@ export const settings = {
     obfuscated: true,
     required: true,
     description:
-      "This is for the integration key you obtained above and can also be created on the Apps and Keys page. You only need the private key, and it can only be copied once. Make sure to retain it for your records. Provide it in Base64 format - if you copy the key as is, it will not be valid as newlines and formatting won't be persisted.",
+      "This is for the integration key you obtained above and can also be created on the Apps and Keys page. You only need the private key, and it can only be copied once. Make sure to retain it for your records. Provide it in Base64 format - you must base64-encode the entire PEM file including the -----BEGIN PRIVATE KEY----- and -----END PRIVATE KEY----- header/footer lines and all newlines. Do not paste the raw PEM text directly. Example: base64 encode the full PEM file content to ensure proper formatting is preserved.",
   },
   baseApiUrl: {
     label: 'Base API URL (DocuSign)',
