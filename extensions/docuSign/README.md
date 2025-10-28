@@ -32,9 +32,36 @@ Embedded Signing gives users the ability to sign documents directly from Awell H
 
 Embedded signing behaves as a blocking action where the action is only completed when the signature request is effectively signed.
 
-**In order to add embedded signing, you need to add 2 actions to you care flow:**
+**In order to add embedded signing, you need to add 2 actions to your care flow:**
 
 1. First, add the "Create embedded signature request with template" action. This action will create an embedded signature request based on a template and return a **sign URL**.
 2. Second, add the "Embedded signing" action. In this action you will have to configure the **sign URL** you got from the first action.
 
-**Please note that the signing URL generated in the first step is only valid for 5 minutes and is one-time only.** This means that from as soon as the first action is activated, the user has 5 minutes to complete the signing request. Loading a session by the user also means that sign url is loaded and refreshing the page will cause the link to expire. When the sign URL has expired, the document cannot be signed anymore and and the process would have to be repeated.
+**Please note that the signing URL generated in the first step is only valid for 5 minutes and is one-time only.** This means that from as soon as the first action is activated, the user has 5 minutes to complete the signing request. Loading a session by the user also means that sign url is loaded and refreshing the page will cause the link to expire. When the sign URL has expired, the document cannot be signed anymore and the process would have to be repeated.
+
+### Webhook-based completion (Automatic)
+
+The extension supports automatic activity completion via DocuSign Connect webhooks. When configured, this enables reliable completion regardless of how the user accesses the signing URL (hosted pages iframe, separate browser tab, mobile device, etc.).
+
+**Setup:**
+
+1. In the extension settings, provide a **Webhook URL** (e.g., `https://extensions.awell.health/webhooks/docusign`). This is the Awell extension server webhook endpoint.
+2. The extension will automatically configure DocuSign to send events to this webhook URL for all signature requests.
+3. The webhook handler processes the following DocuSign events:
+   - `recipient-completed` - User successfully signed (activity completes with signed=true)
+   - `envelope-completed` - All recipients finished signing (activity completes with signed=true)  
+   - `recipient-declined` - User declined to sign (activity completes with signed=false)
+   - `envelope-voided` - Envelope was cancelled (activity completes with signed=false)
+
+**How it works:**
+
+1. When a signature request is created, DocuSign is automatically configured to send events to the webhook URL (with `?activity_id={activityId}` appended)
+2. The embeddedSigning action completes immediately with `signed=false` (for hosted pages compatibility)
+3. When the user signs the document (anywhere - iframe, separate tab, mobile):
+   - **Hosted pages:** The `completeExtensionActivity` mutation updates the activity to `signed=true`
+   - **External signing:** The webhook receives the event and updates the activity to `signed=true`
+4. Either mechanism can complete the activity - first one wins
+
+This dual-completion approach ensures the extension works seamlessly in both hosted pages and external signing scenarios.
+
+**Note:** If no webhook URL is configured in settings, the extension relies solely on the hosted pages `completeExtensionActivity` mutation. This works for iframe-only scenarios but won't complete if users open the link externally.

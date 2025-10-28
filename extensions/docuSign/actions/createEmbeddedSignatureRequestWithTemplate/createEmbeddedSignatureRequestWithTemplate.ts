@@ -44,6 +44,7 @@ export const createEmbeddedSignatureRequestWithTemplate: Action<
         integrationKey,
         rsaKey,
         userId,
+        webhookUrl,
       } = validateSettings(payload.settings)
 
       const client = await createApiClient({
@@ -60,12 +61,30 @@ export const createEmbeddedSignatureRequestWithTemplate: Action<
         clientUserId: patientId,
       })
 
+      const eventNotification = webhookUrl
+        ? (DocuSignSdk as any).EventNotification.constructFromObject({
+            url: `${webhookUrl}?activity_id=${activityId}`,
+            loggingEnabled: true,
+            requireAcknowledgment: true,
+            envelopeEvents: [
+              { envelopeEventStatusCode: 'completed' },
+              { envelopeEventStatusCode: 'declined' },
+              { envelopeEventStatusCode: 'voided' },
+            ],
+            recipientEvents: [
+              { recipientEventStatusCode: 'Completed' },
+              { recipientEventStatusCode: 'Declined' },
+            ],
+          })
+        : undefined
+
       const envelope = DocuSignSdk.EnvelopeDefinition.constructFromObject({
         status: 'sent',
         templateId,
         templateRoles: [signer],
         emailSubject: subject,
         emailBlurb: message,
+        eventNotification,
       })
 
       const envelopesApi = new DocuSignSdk.EnvelopesApi(client)

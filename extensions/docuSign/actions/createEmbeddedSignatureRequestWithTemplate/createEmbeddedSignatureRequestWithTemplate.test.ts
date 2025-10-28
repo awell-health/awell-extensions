@@ -48,6 +48,7 @@ describe('Create embedded signature request with template', () => {
           rsaKey: 'rsaKey',
           baseApiUrl: undefined,
           returnUrlTemplate: undefined,
+          webhookUrl: undefined,
         },
       }),
       onComplete,
