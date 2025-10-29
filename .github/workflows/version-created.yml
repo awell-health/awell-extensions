@@ -30,6 +30,10 @@ jobs:
       - name: Compile Typescript
         run: yarn build
 
+      - name: Setup .yarnrc.yml
+        run: |
+          yarn config set npmAlwaysAuth true
+
       - name: Publish to NPM Registry
         run: |
           yarn npm publish --access public
