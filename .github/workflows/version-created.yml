@@ -4,6 +4,10 @@ on:
   create:
     tags: ['*']
 
+permissions:
+  id-token: write  # Required for OIDC
+  contents: read
+
 jobs:
   publish:
     runs-on: ubuntu-latest
@@ -25,13 +29,6 @@ jobs:
 
       - name: Compile Typescript
         run: yarn build
-
-      - name: Setup .yarnrc.yml
-        run: |
-          yarn config set npmAlwaysAuth true
-          yarn config set npmAuthToken $NPM_AUTH_TOKEN
-        env:
-          NPM_AUTH_TOKEN: ${{ secrets.NPM_AWELL_EXTENSIONS_CI }}
 
       - name: Publish to NPM Registry
         run: |
