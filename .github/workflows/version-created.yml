@@ -33,7 +33,10 @@ jobs:
       - name: Setup .yarnrc.yml
         run: |
           yarn config set npmAlwaysAuth true
-
+          yarn config set npmAuthToken $NPM_AUTH_TOKEN
+        env:
+          NPM_AUTH_TOKEN: ${{ secrets.NPM_AWELL_HEALTH_PUBLISHER }}
+  
       - name: Publish to NPM Registry
         run: |
           yarn npm publish --access public
