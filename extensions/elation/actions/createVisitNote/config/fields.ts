@@ -1,5 +1,5 @@
 import {
-  Field,
+  type Field,
   FieldType,
   NumericIdSchema,
 } from '@awell-health/extensions-core'
@@ -8,22 +8,22 @@ import z, { type ZodTypeAny } from 'zod'
 /**
  * Available Templates
  *
- * The action currently supports only the "Complete H&P (1 col)" template.
+ * The action currently supports "Complete H&P (1 col)" and "Simple" templates.
  *
  * For a complete list of available templates and their descriptions, refer to the external documentation:
  * https://docs.elationhealth.com/reference/the-visit-note-object#allowed-values
  */
-export const templateType = z.enum(['Complete H&P (1 col)'])
+export const templateType = z.enum(['Complete H&P (1 col)', 'Simple'])
 
 /**
  * Available Bullet Categories
  *
- * The action currently supports only the "ROS" (Review of Systems) bullet category.
+ * The action currently supports "ROS" (Review of Systems) and "Narrative" bullet categories.
  *
  * For a complete list of bullet categories and their descriptions, refer to the external documentation:
  * https://docs.elationhealth.com/reference/the-visit-note-object#allowed-values
  */
-export const bulletCategory = z.enum(['ROS'])
+export const bulletCategory = z.enum(['ROS', 'Narrative'])
 
 export const fields = {
   patientId: {
@@ -37,7 +37,7 @@ export const fields = {
     id: 'template',
     label: 'Template',
     description:
-      'Visit note template. Currently we only support Complete H&P (1 col).',
+      'Visit note template. Supports "Complete H&P (1 col)" and "Simple".',
     type: FieldType.STRING,
     required: true,
     options: {
@@ -50,7 +50,7 @@ export const fields = {
   category: {
     id: 'category',
     label: 'Category',
-    description: 'Bullet category. Currently we only support ROS.',
+    description: 'Bullet category. Supports "ROS" and "Narrative".',
     type: FieldType.STRING,
     required: true,
     options: {

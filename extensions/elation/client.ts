@@ -37,6 +37,7 @@ import {
   type AddAllergyResponseType,
   type CreateVisitNoteInputType,
   type CreateVisitNoteResponseType,
+  type UpdateVisitNoteInputType,
   type PharmacyResponse,
   type AddVitalsInputType,
   type AddVitalsResponseType,
@@ -355,6 +356,18 @@ export class ElationDataWrapper extends DataWrapper {
     return res
   }
 
+  public async updateVisitNote(
+    id: number,
+    obj: UpdateVisitNoteInputType,
+  ): Promise<CreateVisitNoteResponseType> {
+    return await this.Request<CreateVisitNoteResponseType>({
+      // PATCH - makes all fields optional in Elation (PUT requires all fields)
+      method: 'PATCH',
+      url: `/visit_notes/${id}`,
+      data: obj,
+    })
+  }
+
   public async addVitals(
     obj: AddVitalsInputType,
   ): Promise<AddVitalsResponseType> {
@@ -632,6 +645,13 @@ export class ElationAPIClient extends APIClient<ElationDataWrapper> {
     obj: CreateVisitNoteInputType,
   ): Promise<CreateVisitNoteResponseType> {
     return await this.FetchData(async (dw) => await dw.createVisitNote(obj))
+  }
+
+  public async updateVisitNote(
+    id: number,
+    obj: UpdateVisitNoteInputType,
+  ): Promise<CreateVisitNoteResponseType> {
+    return await this.FetchData(async (dw) => await dw.updateVisitNote(id, obj))
   }
 
   public async addVitals(

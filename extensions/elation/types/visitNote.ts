@@ -17,7 +17,7 @@ export const CreateVisitNoteInputSchema = z
         text: z.string(),
         author: NumericIdSchema,
         category: bulletCategory,
-      })
+      }),
     ),
     type: z.string().optional(),
     confidential: z.boolean().optional(),
@@ -30,4 +30,8 @@ export type CreateVisitNoteInputType = z.infer<
 
 export interface CreateVisitNoteResponseType extends CreateVisitNoteInputType {
   id: number
+}
+
+export type UpdateVisitNoteInputType = Partial<CreateVisitNoteInputType> & {
+  signed_by?: number
 }

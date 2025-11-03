@@ -29,6 +29,7 @@ import { getReferralOrder } from './getReferralOrder'
 import { findFutureAppointment } from './findFutureAppointment'
 import { findAppointmentsWithAI } from './findAppointmentsWithAI'
 import { signNonVisitNote } from './signNonVisitNote/signNonVisitNote'
+import { signVisitNote } from './signVisitNote/signVisitNote'
 import { updateReferralOrderResolution } from './updateReferralOrderResolution'
 import { cancelAppointments } from './cancelAppointments/cancelAppointments'
 
@@ -64,6 +65,7 @@ export const actions = {
   findFutureAppointment,
   findAppointmentsWithAI,
   signNonVisitNote,
+  signVisitNote,
   updateReferralOrderResolution,
   cancelAppointments,
 }

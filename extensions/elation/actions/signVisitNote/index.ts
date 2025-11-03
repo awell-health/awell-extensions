@@ -1,0 +1,1 @@
+export { signVisitNote } from './signVisitNote'
