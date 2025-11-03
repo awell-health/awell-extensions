@@ -1,10 +1,9 @@
-import { z } from 'zod'
-import { type Action, Category, validate } from '@awell-health/extensions-core'
-import { SettingsValidationSchema, type settings } from '../../settings'
+import { type Action, Category } from '@awell-health/extensions-core'
 import { makeAPIClient } from '../../client'
-import { fields, FieldsValidationSchema, dataPoints } from './config'
+import { type settings } from '../../settings'
 import { elationMobilePhoneToE164 } from '../../utils/elationMobilePhoneToE164'
 import { getLastEmail } from '../../utils/getLastEmail'
+import { FieldsValidationSchema, dataPoints, fields } from './config'
 
 export const getPatient: Action<
   typeof fields,
@@ -17,6 +16,7 @@ export const getPatient: Action<
   description: 'Retrieve a patient profile using Elation`s patient API.',
   fields,
   previewable: true,
+  supports_automated_retries: true,
   dataPoints,
   onEvent: async ({ payload, onComplete }): Promise<void> => {
     const fields = FieldsValidationSchema.parse(payload.fields)

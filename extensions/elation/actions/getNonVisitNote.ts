@@ -66,6 +66,7 @@ export const getNonVisitNote: Action<
   description: "Get a Non-Visit Note using Elation's patient API.",
   fields,
   previewable: true,
+  supports_automated_retries: true,
   dataPoints,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
     try {
