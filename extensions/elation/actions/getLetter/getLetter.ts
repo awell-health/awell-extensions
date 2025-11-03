@@ -14,6 +14,7 @@ export const getLetter: Action<
   description: 'Retrieve a letter from Elation.',
   fields,
   previewable: true,
+  supports_automated_retries: true,
   dataPoints,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
     const { letterId } = FieldsValidationSchema.parse(payload.fields)

@@ -17,6 +17,7 @@ export const getPhysician: Action<
   description: "Retrieve a physician using Elation's patient API.",
   fields,
   previewable: true,
+  supports_automated_retries: true,
   dataPoints,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
     try {

@@ -17,6 +17,7 @@ export const findAppointments: Action<
     'Retrieve appointments for a given patient, physician, practice, and/or times',
   fields,
   previewable: true,
+  supports_automated_retries: true,
   dataPoints,
   onEvent: async ({ payload, onComplete }): Promise<void> => {
     const { fields, settings } = validate({

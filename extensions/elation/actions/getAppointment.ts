@@ -82,6 +82,7 @@ export const getAppointment: Action<
   description: "Retrieve an appointment using Elation's scheduling API.",
   fields,
   previewable: true,
+  supports_automated_retries: true,
   dataPoints,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
     const appointmentId = NumericIdSchema.parse(payload.fields.appointmentId)

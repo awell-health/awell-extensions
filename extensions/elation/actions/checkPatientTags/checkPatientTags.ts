@@ -26,6 +26,7 @@ export const checkPatientTags: Action<
   description: 'Verify if patient tags in Elation match the given instruction.',
   fields,
   previewable: false,
+  supports_automated_retries: true,
   dataPoints,
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
     // 1. Validate input and initialize API client
@@ -68,4 +69,4 @@ export const checkPatientTags: Action<
       ],
     })
   },
-} 
+}

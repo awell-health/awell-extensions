@@ -23,6 +23,7 @@ export const findFutureAppointment: Action<
   description: 'Find a future appointment in Elation.',
   fields,
   previewable: false,
+  supports_automated_retries: true,
   dataPoints,
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
     // 1. Validate input
@@ -83,7 +84,7 @@ export const findFutureAppointment: Action<
     )
 
     const filteredAppointmentIds = filteredAppointments.map(
-      (appointment) => appointment.id
+      (appointment) => appointment.id,
     )
 
     // Handle case where no appointments were found after filtering

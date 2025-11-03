@@ -14,6 +14,7 @@ export const getReferralOrder: Action<
   description: 'Retrieve a referral order from Elation.',
   fields,
   previewable: true,
+  supports_automated_retries: true,
   dataPoints,
   onEvent: async ({ payload, onComplete, onError }): Promise<void> => {
     const { referralOrderId } = FieldsValidationSchema.parse(payload.fields)

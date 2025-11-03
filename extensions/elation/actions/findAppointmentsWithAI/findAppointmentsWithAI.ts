@@ -24,6 +24,7 @@ export const findAppointmentsWithAI: Action<
   description: 'Find all appointments for a patient using natural language.',
   fields,
   previewable: false,
+  supports_automated_retries: true,
   dataPoints,
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
     const { prompt, patientId } = FieldsValidationSchema.parse(payload.fields)

@@ -16,6 +16,7 @@ export const getPharmacy: Action<typeof elationFields, typeof settings> = {
   description: "Retrieve a pharmacy profile using Elation's pharmacies API",
   fields: elationFields,
   previewable: true,
+  supports_automated_retries: true,
   dataPoints,
   onEvent: async ({ payload, onComplete }): Promise<void> => {
     const { fields, settings } = validate({
