@@ -65,6 +65,8 @@ describe('createSequentialEmbeddedSignatureRequest', () => {
       data_points: {
         envelopeId: 'envelope-123',
         recipient1SignUrl: 'https://docusign.com/recipient1-sign-url',
+        recipient1ClientUserId: 'test-patient',
+        recipient2ClientUserId: 'provider-123',
       },
     })
     expect(onError).not.toHaveBeenCalled()

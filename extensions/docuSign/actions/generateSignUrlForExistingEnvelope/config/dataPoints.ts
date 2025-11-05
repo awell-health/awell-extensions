@@ -5,4 +5,12 @@ export const dataPoints = {
     key: 'signUrl',
     valueType: 'string',
   },
+  clientUserId: {
+    key: 'clientUserId',
+    valueType: 'string',
+  },
+  envelopeId: {
+    key: 'envelopeId',
+    valueType: 'string',
+  },
 } satisfies Record<string, DataPointDefinition>

@@ -13,6 +13,8 @@ describe('Complete flow action', () => {
       generateTestPayload({
         fields: {
           signUrl: 'https://demo.docusign.net',
+          envelopeId: 'envelope-123',
+          clientUserId: 'client-123',
         },
         settings: {
           integrationKey: 'xyz123',
