@@ -9,4 +9,8 @@ export const dataPoints = {
     key: 'success',
     valueType: 'boolean',
   },
+  code: {
+    key: 'code',
+    valueType: 'string',
+  },
 } satisfies Record<string, DataPointDefinition>
