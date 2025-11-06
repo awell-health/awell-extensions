@@ -84,7 +84,7 @@ describe('Zoom - Send SMS', () => {
         })
       })
 
-      test('It should call the onError callback', async () => {
+      test('It should call onComplete with failure code', async () => {
         await extensionAction.onEvent({
           payload: {
             fields: {
@@ -104,8 +104,13 @@ describe('Zoom - Send SMS', () => {
           attempt: 1,
         })
 
-        expect(onComplete).not.toHaveBeenCalled()
-        expect(onError).toHaveBeenCalledWith({
+        expect(onError).not.toHaveBeenCalled()
+        expect(onComplete).toHaveBeenCalledWith({
+          data_points: {
+            code: 'INVALID_CONSUMER_NUMBER_FORMAT',
+            success: 'false',
+            messageId: null,
+          },
           events: [
             {
               date: expect.any(String),
