@@ -7,7 +7,8 @@ export const fields = {
   careflowId: {
     id: 'careflowId',
     label: 'Care flow ID',
-    description: 'The ID of the care flow to update the baseline info for. When not provided, the baseline info will be updated for the current care flow.',
+    description:
+      'The ID of the care flow to update the baseline info for. When not provided, the baseline info will be updated for the current care flow.',
     type: FieldType.STRING,
     required: false,
   },
@@ -31,12 +32,17 @@ export const fields = {
 } satisfies Record<string, Field>
 
 export const FieldsValidationSchema = z.object({
-  careflowId: z.string().optional().transform((str) => {
-    if (isNil(str) || isEmpty(str)) {
-      return undefined
-    }
-    return str
-  }),
+  careflowId: z
+    .string()
+    .trim()
+    .optional()
+    .transform((str) => {
+      const trimmed = isNil(str) ? str : str.trim()
+      if (isNil(trimmed) || isEmpty(trimmed)) {
+        return undefined
+      }
+      return trimmed
+    }),
   baselineInfo: z
     .optional(z.string())
     .transform((str, ctx): BaselineInfoInput[] => {
