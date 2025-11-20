@@ -20,8 +20,8 @@ export const updateBaselineInfo: Action<typeof fields, typeof settings> = {
   previewable: false,
   onEvent: async ({ payload, onComplete, helpers }): Promise<void> => {
     const {
-      fields: { baselineInfo },
-      pathway: { id: pathwayId },
+      fields: { careflowId: externalCareflowId, baselineInfo },
+      pathway: { id: currentCareflowId },
     } = validate({
       schema: z.object({
         fields: FieldsValidationSchema,
@@ -36,7 +36,7 @@ export const updateBaselineInfo: Action<typeof fields, typeof settings> = {
       updateBaselineInfo: {
         __args: {
           input: {
-            pathway_id: pathwayId,
+            pathway_id: externalCareflowId ?? currentCareflowId,
             baseline_info: baselineInfo,
           },
         },
