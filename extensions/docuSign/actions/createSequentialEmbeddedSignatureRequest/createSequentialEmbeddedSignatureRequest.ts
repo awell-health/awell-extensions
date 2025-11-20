@@ -119,6 +119,8 @@ export const createSequentialEmbeddedSignatureRequest: Action<
         data_points: {
           envelopeId: envelopeResult?.envelopeId,
           recipient1SignUrl: recipient1ViewResult?.url,
+          recipient1ClientUserId: patientId,
+          recipient2ClientUserId: providerClientUserId,
         },
       })
     } catch (err) {
