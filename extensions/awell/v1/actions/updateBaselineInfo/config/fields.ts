@@ -4,6 +4,14 @@ import { type BaselineInfoInput } from '../../../gql/graphql'
 import { isEmpty, isNil } from 'lodash'
 
 export const fields = {
+  careflowId: {
+    id: 'careflowId',
+    label: 'Care flow ID',
+    description:
+      'The ID of the care flow to update the baseline info for. When not provided, the baseline info will be updated for the current care flow.',
+    type: FieldType.STRING,
+    required: false,
+  },
   baselineInfo: {
     id: 'baselineInfo',
     label: 'Baseline info',
@@ -24,6 +32,17 @@ export const fields = {
 } satisfies Record<string, Field>
 
 export const FieldsValidationSchema = z.object({
+  careflowId: z
+    .string()
+    .trim()
+    .optional()
+    .transform((str) => {
+      const trimmed = isNil(str) ? str : str.trim()
+      if (isNil(trimmed) || isEmpty(trimmed)) {
+        return undefined
+      }
+      return trimmed
+    }),
   baselineInfo: z
     .optional(z.string())
     .transform((str, ctx): BaselineInfoInput[] => {
