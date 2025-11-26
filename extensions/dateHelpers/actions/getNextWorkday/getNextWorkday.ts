@@ -130,8 +130,8 @@ export const getNextWorkday: Action<
       holidays.push(observedFixed(year, 10, 11))
       // Thanksgiving (4th Thursday of November)
       holidays.push(nthWeekdayOfMonth(year, 10, 4, 4))
-      // Christmas Eve (Dec 24, observed)
-      holidays.push(observedFixed(year, 11, 24))
+      // Christmas Eve (Dec 24, fixed - no observed rollover, only a holiday when it falls on a weekday)
+      holidays.push(makeDateUTC(year, 11, 24))
       // Christmas Day (Dec 25, observed)
       holidays.push(observedFixed(year, 11, 25))
 

@@ -402,6 +402,28 @@ describe('Date Helpers - getNextWorkday', () => {
       })
     })
 
+    it('Christmas Eve 2027 (Fri Dec 24, 2027) should skip to Monday Dec 27', async () => {
+      await extensionAction.onEvent({
+        payload: generateTestPayload({
+          fields: {
+            referenceDate: '2027-12-24T12:30:00.000Z', // Christmas Eve (Friday)
+          },
+          settings: {},
+        }),
+        onComplete,
+        onError,
+        helpers,
+        attempt: 1,
+      })
+
+      expect(onComplete).toHaveBeenCalledWith({
+        data_points: {
+          nextWorkday: '2027-12-27T00:00:00.000Z', // Monday after Christmas weekend
+          referenceDateIsWeekday: 'false',
+        },
+      })
+    })
+
     it('Observed holiday on Friday when Independence Day (2026-07-04) falls on Saturday should skip to Monday', async () => {
       await extensionAction.onEvent({
         payload: generateTestPayload({
