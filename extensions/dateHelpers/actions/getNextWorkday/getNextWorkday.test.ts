@@ -180,9 +180,9 @@ describe('Date Helpers - getNextWorkday', () => {
           expectedReferenceDateIsWeekday: false,
         },
         {
-          today: '2025-12-24T12:00:00.000Z', // Christmas Eve
-          expected: '2025-12-24T00:00:00.000Z',
-          expectedReferenceDateIsWeekday: true,
+          today: '2025-12-24T12:00:00.000Z', // Christmas Eve (holiday)
+          expected: '2025-12-26T00:00:00.000Z', // Skip Christmas Eve and Christmas Day
+          expectedReferenceDateIsWeekday: false,
         },
         {
           today: '2025-12-31T12:00:00.000Z', // Dec 31
@@ -376,6 +376,50 @@ describe('Date Helpers - getNextWorkday', () => {
         data_points: {
           nextWorkday: '2025-11-26T00:00:00.000Z',
           referenceDateIsWeekday: 'true',
+        },
+      })
+    })
+
+    it('Christmas Eve 2025 (Wed Dec 24, 2025) should be skipped as a holiday', async () => {
+      await extensionAction.onEvent({
+        payload: generateTestPayload({
+          fields: {
+            referenceDate: '2025-12-24T12:30:00.000Z', // Christmas Eve (Wednesday)
+          },
+          settings: {},
+        }),
+        onComplete,
+        onError,
+        helpers,
+        attempt: 1,
+      })
+
+      expect(onComplete).toHaveBeenCalledWith({
+        data_points: {
+          nextWorkday: '2025-12-26T00:00:00.000Z', // Friday after Christmas
+          referenceDateIsWeekday: 'false',
+        },
+      })
+    })
+
+    it('Christmas Eve 2027 (Fri Dec 24, 2027) should skip to Monday Dec 27', async () => {
+      await extensionAction.onEvent({
+        payload: generateTestPayload({
+          fields: {
+            referenceDate: '2027-12-24T12:30:00.000Z', // Christmas Eve (Friday)
+          },
+          settings: {},
+        }),
+        onComplete,
+        onError,
+        helpers,
+        attempt: 1,
+      })
+
+      expect(onComplete).toHaveBeenCalledWith({
+        data_points: {
+          nextWorkday: '2027-12-27T00:00:00.000Z', // Monday after Christmas weekend
+          referenceDateIsWeekday: 'false',
         },
       })
     })
