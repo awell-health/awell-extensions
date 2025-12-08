@@ -17,6 +17,7 @@ export const getComments: Action<
   fields,
   previewable: true,
   dataPoints,
+  supports_automated_retries: true,
   onEvent: async ({ payload, onComplete }): Promise<void> => {
     const { taskSdk, pathway } = await validatePayloadAndCreateSdk({
       fieldsSchema: FieldsValidationSchema,
