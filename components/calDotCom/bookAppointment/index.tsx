@@ -106,7 +106,7 @@ const CalDotComBookAppointmentComponent: React.FC<ComponentProps> = ({
 }) => {
   console.log('activityDetails', activityDetails)
   const calLink = activityDetails.fields.find(field => field.id === 'calLink')?.value ?? ''
-  const calOrigin = activityDetails.fields.find(field => field.id === 'calOrigin')?.value
+  const calOrigin = activityDetails.fields.find(field => field.id === 'customDomain')?.value
   
   const handleBookingSuccessful: BookingSuccessfulFunction = ({
     confirmed,
