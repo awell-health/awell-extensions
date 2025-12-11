@@ -30,7 +30,7 @@ describe('Cal.com GetBooking action', () => {
           fields: {
             bookingId: faker.string.uuid(),
           },
-          settings: { apiKey: '', calOrigin: undefined },
+          settings: { apiKey: '', customDomain: undefined },
         }),
         onComplete,
         onError,
@@ -47,7 +47,7 @@ describe('Cal.com GetBooking action', () => {
           fields: {
             bookingId: '',
           },
-          settings: { apiKey: faker.string.uuid(), calOrigin: undefined },
+          settings: { apiKey: faker.string.uuid(), customDomain: undefined },
         }),
         onComplete,
         onError,
@@ -144,7 +144,7 @@ describe('Cal.com GetBooking action', () => {
           fields: {
             bookingId: faker.string.uuid(),
           },
-          settings: { apiKey: faker.string.uuid(), calOrigin: undefined },
+          settings: { apiKey: faker.string.uuid(), customDomain: undefined },
         }),
         onComplete,
         onError,
@@ -192,7 +192,7 @@ describe('Cal.com GetBooking action', () => {
           fields: {
             bookingId: faker.string.uuid(),
           },
-          settings: { apiKey: faker.string.uuid(), calOrigin: undefined },
+          settings: { apiKey: faker.string.uuid(), customDomain: undefined },
         }),
         onComplete,
         onError,
