@@ -22,6 +22,7 @@ describe('Update booking', () => {
     },
     settings: {
       apiKey: 'abc123',
+      customDomain: undefined,
     },
   })
 

@@ -16,6 +16,7 @@ describe('Simple book appointment action', () => {
         },
         settings: {
           apiKey: 'abc123',
+          customDomain: undefined,
         },
       }),
       onComplete,
