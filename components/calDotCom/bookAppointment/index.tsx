@@ -18,6 +18,7 @@ type BookingSuccessfulFunction = ({
 
 interface CalDotComSchedulingProps {
   calLink: string
+  calOrigin?: string
   onBookingSuccessful: BookingSuccessfulFunction
   hideEventTypeDetails?: boolean
   metadata?: Record<string, string>
@@ -25,6 +26,7 @@ interface CalDotComSchedulingProps {
 
 const CalDotComScheduling: React.FC<CalDotComSchedulingProps> = ({
   calLink,
+  calOrigin,
   hideEventTypeDetails = false,
   onBookingSuccessful,
   metadata,
@@ -91,6 +93,7 @@ const CalDotComScheduling: React.FC<CalDotComSchedulingProps> = ({
     <div style={{ width: '100%', height: '600px' }}>
       <Cal
         calLink={composedCalLink}
+        calOrigin={calOrigin}
         style={{ width: '100%', height: '100%', overflow: 'hidden' }}
       />
     </div>
@@ -103,7 +106,8 @@ const CalDotComBookAppointmentComponent: React.FC<ComponentProps> = ({
 }) => {
   console.log('activityDetails', activityDetails)
   const calLink = activityDetails.fields.find(field => field.id === 'calLink')?.value ?? ''
-
+  const calOrigin = activityDetails.fields.find(field => field.id === 'calOrigin')?.value
+  
   const handleBookingSuccessful: BookingSuccessfulFunction = ({
     confirmed,
     date,
@@ -123,6 +127,7 @@ const CalDotComBookAppointmentComponent: React.FC<ComponentProps> = ({
     <div>
       <CalDotComScheduling
         calLink={calLink}
+        calOrigin={calOrigin}
         onBookingSuccessful={handleBookingSuccessful}
         hideEventTypeDetails={false}
       />
