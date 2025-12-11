@@ -88,6 +88,7 @@ const CalDotComScheduling: React.FC<CalDotComSchedulingProps> = ({
   const composedCalLink = `${calLink}${
     metadataString !== '' ? `${metadataSeparator}${metadataString}` : ''
   }`
+  
 
   return (
     <div style={{ width: '100%', height: '600px' }}>
@@ -106,8 +107,17 @@ const CalDotComBookAppointmentComponent: React.FC<ComponentProps> = ({
 }) => {
   console.log('activityDetails', activityDetails)
   const calLink = activityDetails.fields.find(field => field.id === 'calLink')?.value ?? ''
-  const calOrigin = activityDetails.fields.find(field => field.id === 'customDomain')?.value
-  
+  const customDomain = activityDetails.fields.find(field => field.id === 'customDomain')?.value
+  let calOrigin: string | undefined
+  if (typeof customDomain === 'string' && customDomain !== '') {
+    if (customDomain.startsWith('https://')) {
+      calOrigin = customDomain
+    } else {
+      calOrigin = `https://${customDomain}.cal.com`
+    }
+  } else {
+    calOrigin = undefined
+  }
   const handleBookingSuccessful: BookingSuccessfulFunction = ({
     confirmed,
     date,
