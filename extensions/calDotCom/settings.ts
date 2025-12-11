@@ -21,5 +21,5 @@ export const settings = {
 
 export const SettingsValidationSchema = z.object({
   apiKey: z.string().min(1),
-  customDomain: z.string().url().optional(),
+  customDomain: z.string().optional(),
 } satisfies Record<keyof typeof settings, z.ZodTypeAny>)
