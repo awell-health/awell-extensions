@@ -1,11 +1,14 @@
 name: New version created
 
 on:
-  create:
-    tags: ['*']
+  push:
+    tags:
+      - '*'
+    branches-ignore:
+      - 'release/*'
 
 permissions:
-  id-token: write  # Required for OIDC
+  id-token: write # Required for OIDC
   contents: read
 
 jobs:
@@ -36,7 +39,7 @@ jobs:
           yarn config set npmAuthToken $NPM_AUTH_TOKEN
         env:
           NPM_AUTH_TOKEN: ${{ secrets.NPM_AWELL_HEALTH_PUBLISHER }}
-  
+
       - name: Publish to NPM Registry
         run: |
           yarn npm publish --access public
