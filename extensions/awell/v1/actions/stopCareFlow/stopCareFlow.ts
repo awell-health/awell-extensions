@@ -18,8 +18,8 @@ export const stopCareFlow: Action<typeof fields, typeof settings> = {
   previewable: false, // We don't have pathways in Preview, only cases.
   onEvent: async ({ payload, onComplete, helpers }): Promise<void> => {
     const {
-      fields: { reason },
-      pathway: { id: pathwayId },
+      fields: { careFlowIds, reason },
+      pathway: { id: currentCareFlowId },
     } = validate({
       schema: z.object({
         fields: FieldsValidationSchema,
@@ -29,25 +29,51 @@ export const stopCareFlow: Action<typeof fields, typeof settings> = {
     })
 
     const awellSdk = await helpers.awellSdk()
-    await awellSdk.orchestration.mutation({
-      stopPathway: {
-        __args: {
-          input: {
-            pathway_id: pathwayId,
-            reason,
+    const events = []
+    if (careFlowIds.length > 0) {
+      for (const careFlowId of careFlowIds) {
+        await awellSdk.orchestration.mutation({
+          stopPathway: {
+            __args: {
+              input: {
+                pathway_id: careFlowId,
+                reason,
+              },
+            },
+            code: true,
+            success: true,
           },
+        })
+        events.push(
+          addActivityEventLog({
+            message: `Care flow ${careFlowId} successfully stopped.`,
+          }),
+        )
+        // wait 1 second for rate limiting
+        await new Promise((resolve) => setTimeout(resolve, 1000))
+      }
+    } else {
+      await awellSdk.orchestration.mutation({
+        stopPathway: {
+          __args: {
+            input: {
+              pathway_id: currentCareFlowId,
+              reason,
+            },
+          },
+          code: true,
+          success: true,
         },
-        code: true,
-        success: true,
-      },
-    })
+      })
+      events.push(
+        addActivityEventLog({
+          message: `Care flow ${currentCareFlowId} successfully stopped.`,
+        }),
+      )
+    }
 
     await onComplete({
-      events: [
-        addActivityEventLog({
-          message: `Care flow successfully stopped.`,
-        }),
-      ],
+      events,
     })
   },
 }
