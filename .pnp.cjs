@@ -70,6 +70,7 @@ const RAW_RUNTIME_STATE =
           ["@types/showdown", "npm:2.0.6"],\
           ["@types/uuid", "npm:10.0.0"],\
           ["@types/xml2js", "npm:0.4.14"],\
+          ["@types/yargs", "npm:17.0.35"],\
           ["@typescript-eslint/eslint-plugin", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:5.62.0"],\
           ["@yarnpkg/sdks", "npm:3.2.0"],\
           ["algoliasearch", "npm:5.24.0"],\
@@ -128,6 +129,7 @@ const RAW_RUNTIME_STATE =
           ["tzdata", "npm:1.0.43"],\
           ["uuid", "npm:10.0.0"],\
           ["xml2js", "npm:0.6.2"],\
+          ["yargs", "npm:17.7.2"],\
           ["zod", "npm:3.24.1"],\
           ["zod-validation-error", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:3.4.0"]\
         ],\
@@ -470,6 +472,7 @@ const RAW_RUNTIME_STATE =
           ["@types/showdown", "npm:2.0.6"],\
           ["@types/uuid", "npm:10.0.0"],\
           ["@types/xml2js", "npm:0.4.14"],\
+          ["@types/yargs", "npm:17.0.35"],\
           ["@typescript-eslint/eslint-plugin", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:5.62.0"],\
           ["@yarnpkg/sdks", "npm:3.2.0"],\
           ["algoliasearch", "npm:5.24.0"],\
@@ -528,6 +531,7 @@ const RAW_RUNTIME_STATE =
           ["tzdata", "npm:1.0.43"],\
           ["uuid", "npm:10.0.0"],\
           ["xml2js", "npm:0.6.2"],\
+          ["yargs", "npm:17.7.2"],\
           ["zod", "npm:3.24.1"],\
           ["zod-validation-error", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:3.4.0"]\
         ],\
@@ -5153,6 +5157,14 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./.yarn/cache/@types-yargs-npm-17.0.33-1d6cca6a2e-16f6681bf4.zip/node_modules/@types/yargs/",\
         "packageDependencies": [\
           ["@types/yargs", "npm:17.0.33"],\
+          ["@types/yargs-parser", "npm:21.0.3"]\
+        ],\
+        "linkType": "HARD"\
+      }],\
+      ["npm:17.0.35", {\
+        "packageLocation": "./.yarn/cache/@types-yargs-npm-17.0.35-c5495bc7ea-47bcd4476a.zip/node_modules/@types/yargs/",\
+        "packageDependencies": [\
+          ["@types/yargs", "npm:17.0.35"],\
           ["@types/yargs-parser", "npm:21.0.3"]\
         ],\
         "linkType": "HARD"\

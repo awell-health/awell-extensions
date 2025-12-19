@@ -6,7 +6,8 @@
     "src/**/*.ts",
     "examples/**/*.ts",
     "components/**/*.ts",
-    "components/**/*.tsx"
+    "components/**/*.tsx",
+    "scripts/**/*.ts"
   ],
   "exclude": [
     "dist",
