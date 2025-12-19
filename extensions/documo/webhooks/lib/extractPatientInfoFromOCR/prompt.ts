@@ -25,15 +25,19 @@ IMPORTANT EXTRACTION RULES:
    - The patient's phone number (mobile preferred, then home)
    - Fax numbers (DO NOT use these as patient phone)
    - Office/clinic phone numbers (DO NOT use these as patient phone)
-3. For date of birth, convert to YYYY-MM-DD format if possible.
-4. For insurance information, extract:
+3. For phone numbers, format in E.164 format assuming US country code (+1).
+   - Example: (415) 555-1234 → +14155551234
+   - Example: 415-555-1234 → +14155551234
+   - Only include digits after the +1 prefix (no spaces, dashes, or parentheses)
+4. For date of birth, convert to YYYY-MM-DD format if possible.
+5. For insurance information, extract:
    - Insurance company/plan name
    - Policy/Member ID number
    - Group number (if present)
    - Policy holder name (if different from patient)
-5. For referring physician, extract their full name as shown.
-6. If information cannot be found, use null for that field.
-7. Do not guess or infer information that is not clearly stated.
+6. For referring physician, extract their full name as shown.
+7. If information cannot be found, use null for that field.
+8. Do not guess or infer information that is not clearly stated.
 
 CONFIDENCE GUIDELINES:
 - 90-100: All fields clearly found with unambiguous values
@@ -47,7 +51,7 @@ Respond exclusively with a valid JSON object containing these keys:
 - patient_last_name: string | null (patient's last/family name)
 - patient_full_name: string | null (full name as written in document)
 - patient_dob: string | null (date of birth in YYYY-MM-DD format)
-- patient_phone: string | null (patient's phone number, prefer mobile, NEVER use fax numbers)
+- patient_phone: string | null (patient's phone in E.164 format e.g. +14155551234, prefer mobile, NEVER use fax numbers)
 - insurance_name: string | null (insurance company or plan name)
 - insurance_policy_number: string | null (policy/member ID)
 - insurance_group_number: string | null (group number if present)

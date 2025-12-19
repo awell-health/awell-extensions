@@ -24,7 +24,7 @@ export const PatientInfoSchema = z.object({
   patient_phone: z
     .string()
     .nullable()
-    .describe("Patient's phone number (mobile preferred)"),
+    .describe("Patient's phone number in E.164 format (e.g. +14155551234)"),
   insurance_name: z
     .string()
     .nullable()
