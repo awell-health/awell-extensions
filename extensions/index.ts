@@ -15,6 +15,7 @@ import { CollectData } from './collectData'
 import { customerIo } from './customerIo'
 import { dateHelpers } from './dateHelpers'
 import { dockHealth } from './dockHealth'
+import { Documo } from './documo'
 import { DocuSign } from './docuSign'
 import { DropboxSign } from './dropboxSign'
 import { Elation } from './elation'
@@ -82,6 +83,7 @@ export const extensions = [
   dateHelpers,
   dockHealth,
   DocuSign,
+  Documo,
   DropboxSign,
   Elation,
   epic,
