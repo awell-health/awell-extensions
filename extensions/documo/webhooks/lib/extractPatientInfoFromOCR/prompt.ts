@@ -52,6 +52,7 @@ Respond exclusively with a valid JSON object containing these keys:
 - patient_full_name: string | null (full name as written in document)
 - patient_dob: string | null (date of birth in YYYY-MM-DD format)
 - patient_phone: string | null (patient's phone in E.164 format e.g. +14155551234, prefer mobile, NEVER use fax numbers)
+- patient_state: string | null (patient's state of residence, use 2-letter US state code e.g. CA, NY, TX)
 - insurance_name: string | null (insurance company or plan name)
 - insurance_policy_number: string | null (policy/member ID)
 - insurance_group_number: string | null (group number if present)
@@ -63,4 +64,3 @@ Respond exclusively with a valid JSON object containing these keys:
 OCR Text from Document:
 {ocrText}
 `)
-

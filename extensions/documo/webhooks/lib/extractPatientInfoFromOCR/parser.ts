@@ -25,6 +25,12 @@ export const PatientInfoSchema = z.object({
     .string()
     .nullable()
     .describe("Patient's phone number in E.164 format (e.g. +14155551234)"),
+  patient_state: z
+    .string()
+    .nullable()
+    .describe(
+      "Patient's state of residence (2-letter US state code e.g. CA, NY, TX)",
+    ),
   insurance_name: z
     .string()
     .nullable()
