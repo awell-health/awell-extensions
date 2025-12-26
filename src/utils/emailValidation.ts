@@ -14,6 +14,7 @@ export const emailSchema = z
  */
 export const optionalEmailSchema = z
   .string()
+  .trim()
   .optional()
   .refine(
     (val) =>
