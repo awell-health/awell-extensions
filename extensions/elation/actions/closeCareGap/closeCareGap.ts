@@ -14,7 +14,7 @@ export const closeCareGap: Action<
   title: 'Close care gap',
   description: 'Close a care gap in Elation.',
   fields,
-  previewable: false,
+  previewable: true,
   dataPoints,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
     const {

@@ -15,7 +15,7 @@ export const getLastTaskPerformer: Action<
   title: 'Get last task performer',
   description: 'Retrieves the performer of the last task.',
   fields,
-  previewable: true,
+  previewable: false,
   dataPoints,
   supports_automated_retries: true,
   onEvent: async ({ payload, onComplete, onError }): Promise<void> => {

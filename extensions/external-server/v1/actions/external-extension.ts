@@ -64,7 +64,7 @@ export const externalServer: Action<
   category: Category.DATA,
   fields,
   dataPoints,
-  previewable: true,
+  previewable: false,
   onActivityCreated: async (payload, onComplete, onError) => {
     const { fields, settings } = PayloadSchema.parse(payload)
     const clientPayload = fields.input ?? { fields: {}, settings: {} }

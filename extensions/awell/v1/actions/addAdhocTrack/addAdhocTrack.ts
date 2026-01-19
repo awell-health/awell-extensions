@@ -15,7 +15,7 @@ export const addAdhocTrack: Action<typeof fields, typeof settings> = {
   title: 'Add ad hoc track',
   description: 'Add a pre-configured ad hoc track to a patient care flow.',
   fields,
-  previewable: false, // We don't have pathways in Preview, only cases.
+  previewable: false,
   onEvent: async ({ payload, onComplete, helpers }): Promise<void> => {
     const {
       fields: { trackId },

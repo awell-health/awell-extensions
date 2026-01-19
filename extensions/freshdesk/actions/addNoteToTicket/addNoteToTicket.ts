@@ -16,7 +16,7 @@ export const addNoteToTicket: Action<
   title: 'Add note to ticket',
   description: 'Add a note to a ticket in Freshdesk.',
   fields,
-  previewable: false,
+  previewable: true,
   dataPoints,
   onEvent: async ({ payload, onComplete, onError }): Promise<void> => {
     const { fields, freshdeskSdk } = await validatePayloadAndCreateSdk({

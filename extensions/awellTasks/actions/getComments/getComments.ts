@@ -15,7 +15,7 @@ export const getComments: Action<
   title: 'Get comments',
   description: 'Retrieves all comments in a care flow.',
   fields,
-  previewable: true,
+  previewable: false,
   dataPoints,
   supports_automated_retries: true,
   onEvent: async ({ payload, onComplete }): Promise<void> => {

@@ -18,7 +18,7 @@ export const uploadSingleFile: Action<typeof fields, typeof settings> = {
     },
   },
   dataPoints,
-  previewable: false, // We don't have Awell Hosted Pages in Preview so cannot be previewed.
+  previewable: false,
   onActivityCreated: async (payload, onComplete, onError) => {
     try {
       validate({

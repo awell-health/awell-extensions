@@ -17,7 +17,7 @@ export const activateUser: Action<typeof fields, typeof settings> = {
   description: 'Activates a user using the Chat API.',
   category: Category.COMMUNICATION,
   fields,
-  previewable: false,
+  previewable: true,
   onActivityCreated: async (payload, onComplete, onError) => {
     try {
       const {

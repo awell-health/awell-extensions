@@ -17,7 +17,7 @@ export const searchContactByEmail: Action<
   title: 'Search contact by email',
   description: 'Search a contact by email from Freshsales.',
   fields,
-  previewable: false,
+  previewable: true,
   dataPoints,
   onEvent: async ({ payload, onComplete, onError }): Promise<void> => {
     const { fields, freshsalesSdk } = await validatePayloadAndCreateSdk({

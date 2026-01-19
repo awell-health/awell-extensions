@@ -33,7 +33,7 @@ export const logTwo: Action<
   title: 'Log a second time',
   description: 'This is a dummy Custom Action for extension developers.',
   fields,
-  previewable: true,
+  previewable: false,
   dataPoints,
   onActivityCreated: async (payload, onComplete): Promise<void> => {
     const { fields } = payload

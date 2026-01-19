@@ -16,7 +16,7 @@ export const completeTask: Action<typeof fields, typeof settings> = {
   description: 'Completes a task in Zendesk',
   category: Category.CUSTOMER_SUPPORT,
   fields,
-  previewable: false,
+  previewable: true,
   onActivityCreated: async (payload, onComplete, onError) => {
     try {
       const {

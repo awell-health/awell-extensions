@@ -16,7 +16,7 @@ export const sendCall: Action<
   title: 'Send call',
   description: 'Send an AI phone call with a custom objective and actions.',
   fields,
-  previewable: false,
+  previewable: true,
   dataPoints,
   onEvent: async ({ payload, onComplete, helpers: { log } }): Promise<void> => {
     const { fields: allFields, blandSdk } = await validatePayloadAndCreateSdk({

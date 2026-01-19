@@ -25,7 +25,7 @@ export const sendSmsDuringBusinessHours: Action<
   category: Category.COMMUNICATION,
   fields,
   dataPoints,
-  previewable: false,
+  previewable: true,
   onActivityCreated: async (payload, onComplete, onError) => {
     try {
       const {

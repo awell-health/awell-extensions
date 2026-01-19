@@ -15,7 +15,7 @@ export const getPatient: Action<
   title: 'Get patient',
   description: 'Retrieve patient details from Epic',
   fields,
-  previewable: false,
+  previewable: true,
   dataPoints,
   onEvent: async ({ payload, onComplete, onError }): Promise<void> => {
     const {

@@ -16,7 +16,7 @@ export const documentExtraction: Action<
   title: 'Document extraction',
   description: 'Extract structured data from documents and images',
   fields,
-  previewable: false,
+  previewable: true,
   dataPoints,
   onEvent: async ({ payload, onComplete, onError }): Promise<void> => {
     const { fields, landingAiSdk } = await validatePayloadAndCreateSdk({

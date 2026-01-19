@@ -16,7 +16,7 @@ export const createSMSBroadcast: Action<
   category: Category.COMMUNICATION,
   fields,
   dataPoints,
-  previewable: false,
+  previewable: true,
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
     const {
       fields: {

@@ -13,7 +13,7 @@ export const createCustomer: Action<
   title: 'Create customer',
   description: 'Create a customer in Stripe',
   fields,
-  previewable: false,
+  previewable: true,
   dataPoints,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
     const {

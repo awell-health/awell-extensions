@@ -16,7 +16,7 @@ export const deleteTicket: Action<typeof fields, typeof settings> = {
   description: 'Deletes a support ticket in Zendesk',
   category: Category.CUSTOMER_SUPPORT,
   fields,
-  previewable: false,
+  previewable: true,
   onEvent: async ({ payload, onComplete, onError }): Promise<void> => {
     try {
       const {

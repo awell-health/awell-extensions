@@ -13,7 +13,7 @@ export const sendEmailWithSmtp: Action<
   title: 'Send email (SMTP)',
   description: 'Send email with SMTP',
   fields,
-  previewable: false,
+  previewable: true,
   dataPoints,
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
     const { hubSpotSmtpSdk, fields } = await validatePayloadAndCreateSdks({

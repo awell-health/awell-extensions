@@ -14,7 +14,7 @@ export const createCareGap: Action<
   title: 'Create care gap',
   description: 'Create a care gap in Elation.',
   fields,
-  previewable: false,
+  previewable: true,
   dataPoints,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
     const {

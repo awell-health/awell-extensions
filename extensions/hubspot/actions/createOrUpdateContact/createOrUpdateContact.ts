@@ -21,7 +21,7 @@ export const createOrUpdateContact: Action<
   title: 'Create or update contact',
   description: 'Create or update a contact in HubSpot',
   fields,
-  previewable: false,
+  previewable: true,
   dataPoints,
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
     const eventLogs: ActivityEvent[] = []

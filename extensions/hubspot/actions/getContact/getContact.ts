@@ -13,7 +13,7 @@ export const getcontact: Action<
   title: 'Get contact',
   description: 'Retrieve the contact details from HubSpot',
   fields,
-  previewable: false,
+  previewable: true,
   dataPoints,
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
     const { hubSpotSdk, fields } = await validatePayloadAndCreateSdks({

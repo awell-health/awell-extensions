@@ -23,7 +23,7 @@ export const generateDynamicUrl: Action<
   category: Category.DATA,
   fields,
   dataPoints,
-  previewable: true,
+  previewable: false,
   onActivityCreated: async (payload, onComplete, onError) => {
     try {
       const {

@@ -12,7 +12,7 @@ export const sendSms: Action<typeof fields, typeof settings> = {
   description: 'Sends SMS using Infobip',
   category: Category.COMMUNICATION,
   fields,
-  previewable: false,
+  previewable: true,
   onActivityCreated: async (payload, onComplete, onError) => {
     try {
       const {

@@ -13,7 +13,7 @@ export const getDataPointValue: Action<typeof fields, typeof settings> = {
   description: 'Get the value of a data point',
   fields,
   dataPoints,
-  previewable: true,
+  previewable: false,
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
     const {
       fields: { careFlowId, dataPointDefinitionId },

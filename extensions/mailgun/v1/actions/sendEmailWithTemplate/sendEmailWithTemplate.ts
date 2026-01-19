@@ -15,6 +15,7 @@ export const sendEmailWithTemplate: Action<typeof fields, typeof settings> = {
   description: 'Send an email based on a template.',
   category: Category.COMMUNICATION,
   fields,
+  previewable: true,
   onActivityCreated: async (payload, onComplete, onError) => {
     try {
       const { to, subject, template, variables } = validateActionFields(
@@ -30,7 +31,7 @@ export const sendEmailWithTemplate: Action<typeof fields, typeof settings> = {
       })
 
       const res = await mg.messages.create(domain, {
-        from: `${fromName} <${fromEmail}>`,
+        from: `${fromName} <${fromEmail as string}>`,
         to,
         subject,
         template,

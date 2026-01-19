@@ -17,7 +17,7 @@ export const deactivateUser: Action<typeof fields, typeof settings> = {
   description: 'Deactivates a user using the Chat API.',
   category: Category.COMMUNICATION,
   fields,
-  previewable: false,
+  previewable: true,
   onActivityCreated: async (payload, onComplete, onError) => {
     try {
       const {

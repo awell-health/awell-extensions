@@ -16,7 +16,7 @@ export const getCurrentCareflowId: Action<typeof fields, typeof settings> = {
     'Get the current care flow ID',
   fields,
   dataPoints,
-  previewable: false, // We don't have pathways in Preview, only cases.
+  previewable: false,
   onEvent: async ({ payload, onComplete, helpers }): Promise<void> => {
     const {
       pathway: { id: currentCareflowId, definition_id: currentCareflowDefinitionId },

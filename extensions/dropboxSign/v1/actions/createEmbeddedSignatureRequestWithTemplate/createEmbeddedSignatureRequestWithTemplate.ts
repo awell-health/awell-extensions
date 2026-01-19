@@ -24,7 +24,7 @@ export const createEmbeddedSignatureRequestWithTemplate: Action<
   category: Category.DOCUMENT_MANAGEMENT,
   fields,
   dataPoints,
-  previewable: true,
+  previewable: false,
   onActivityCreated: async (payload, onComplete, onError) => {
     try {
       const {

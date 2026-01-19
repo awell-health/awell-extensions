@@ -19,7 +19,7 @@ export const createSequentialEmbeddedSignatureRequest: Action<
   category: Category.DOCUMENT_MANAGEMENT,
   fields,
   dataPoints,
-  previewable: true,
+  previewable: false,
   onEvent: async ({ payload, onComplete, onError }): Promise<void> => {
     const {
       patient: { id: patientId },

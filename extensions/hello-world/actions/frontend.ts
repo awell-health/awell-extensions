@@ -33,7 +33,7 @@ export const frontend: Action<
   title: 'Frontend',
   description: 'This is a dummy Custom Action for extension developers.',
   fields,
-  previewable: true,
+  previewable: false,
   options: {
     stakeholders: {
       label: 'Stakeholder',

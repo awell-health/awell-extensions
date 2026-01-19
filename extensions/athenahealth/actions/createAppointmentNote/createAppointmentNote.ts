@@ -14,7 +14,7 @@ export const createAppointmentNote: Action<
   title: 'Create appointment note',
   description: 'Creates a note for a specific appointment',
   fields,
-  previewable: false,
+  previewable: true,
   dataPoints,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
     const {

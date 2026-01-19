@@ -16,7 +16,7 @@ export const sendCallWithPathway: Action<
   title: 'Send call with pathway',
   description: 'Send an AI phone call based on a pathway',
   fields,
-  previewable: false,
+  previewable: true,
   dataPoints,
   onEvent: async ({ payload, onComplete, helpers: { log } }): Promise<void> => {
     const { fields: allFields, blandSdk } = await validatePayloadAndCreateSdk({

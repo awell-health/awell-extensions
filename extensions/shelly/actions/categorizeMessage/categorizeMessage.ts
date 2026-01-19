@@ -26,7 +26,7 @@ export const categorizeMessage: Action<
   description:
     'Categorizes messages into predefined categories with explanation.',
   fields,
-  previewable: false,
+  previewable: true,
   dataPoints,
 
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {

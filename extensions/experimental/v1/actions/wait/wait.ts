@@ -11,7 +11,7 @@ export const wait: Action<typeof fields, typeof settings> = {
   description: 'Wait n number of seconds before completing',
   fields,
   dataPoints,
-  previewable: false,
+  previewable: true,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
     const {
       fields: { seconds },

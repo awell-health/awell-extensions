@@ -49,7 +49,7 @@ export const mtls: Action<
   category: Category.DATA,
   fields,
   dataPoints,
-  previewable: true,
+  previewable: false,
   onEvent: async ({ payload, onComplete, onError, helpers }) => {
     if (isNil(helpers)) {
       throw new Error('Helpers are not provided')

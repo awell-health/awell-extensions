@@ -25,7 +25,7 @@ export const checkPatientTags: Action<
   title: '✨ Check Patient Tags',
   description: 'Verify if patient tags in Elation match the given instruction.',
   fields,
-  previewable: false,
+  previewable: true,
   supports_automated_retries: true,
   dataPoints,
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {

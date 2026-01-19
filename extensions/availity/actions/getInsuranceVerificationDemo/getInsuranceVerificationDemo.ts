@@ -15,7 +15,7 @@ export const getInsuranceVerificationDemo: Action<
   description:
     'This is a dummy action that either returns a verified or unverified status.',
   fields,
-  previewable: false,
+  previewable: true,
   dataPoints,
   onEvent: async ({ payload, onComplete }): Promise<void> => {
     const options = [true, false]

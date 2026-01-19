@@ -15,7 +15,7 @@ export const signNonVisitNote: Action<
   title: 'Sign non-visit note',
   description: 'Sign a non-visit note in Elation.',
   fields,
-  previewable: false,
+  previewable: true,
   dataPoints,
   onEvent: async ({ payload, onComplete, onError }): Promise<void> => {
     const { nonVisitNoteId, signedBy } = FieldsValidationSchema.parse(

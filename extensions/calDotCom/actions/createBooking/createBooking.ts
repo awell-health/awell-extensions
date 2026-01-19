@@ -13,7 +13,7 @@ export const createBooking: Action<typeof fields, typeof settings> = {
   category: Category.SCHEDULING,
   fields,
   dataPoints,
-  previewable: false,
+  previewable: true,
   onActivityCreated: async (payload, onComplete, onError) => {
     try {
       const {

@@ -17,7 +17,7 @@ export const matchPatient: Action<
   title: 'Match patient',
   description: 'Match patient to existing patient in Epic',
   fields,
-  previewable: false,
+  previewable: true,
   dataPoints,
   onEvent: async ({ payload, onComplete, onError }): Promise<void> => {
     const {

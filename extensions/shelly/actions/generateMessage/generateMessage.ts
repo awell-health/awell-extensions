@@ -24,7 +24,7 @@ export const generateMessage: Action<
   title: 'Generate Message (Beta)',
   description: 'Generate a personalized message',
   fields,
-  previewable: false,
+  previewable: true,
   dataPoints,
 
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {

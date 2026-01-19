@@ -15,7 +15,7 @@ export const queryPage: Action<
   title: 'Query web page with LLM',
   description: 'Query a web page using LLMs with Airtop’s.',
   fields,
-  previewable: false,
+  previewable: true,
   dataPoints,
   onEvent: async ({ payload, onComplete, onError }): Promise<void> => {
     const { fields, airtopSdk } = await validatePayloadAndCreateSdk({

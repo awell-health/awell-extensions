@@ -14,7 +14,7 @@ export const smartScrape: Action<
   title: 'Smart Scrape a web page',
   description: 'Scrape a web page with Airtop.',
   fields,
-  previewable: false,
+  previewable: true,
   dataPoints,
   onEvent: async ({ payload, onComplete, onError }): Promise<void> => {
     const { fields, airtopSdk } = await validatePayloadAndCreateSdk({

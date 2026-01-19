@@ -14,7 +14,7 @@ export const getLead: Action<
   title: 'Get lead',
   description: 'Retrieve a Lead from Salesforce',
   fields,
-  previewable: false,
+  previewable: true,
   dataPoints,
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
     const { fields, salesforceClient } = await validatePayloadAndCreateClient({

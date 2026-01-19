@@ -19,10 +19,9 @@ export const generateSignUrlForExistingEnvelope: Action<
   category: Category.DOCUMENT_MANAGEMENT,
   fields,
   dataPoints,
-  previewable: true,
+  previewable: false,
   onEvent: async ({ payload, onComplete, onError }): Promise<void> => {
     const {
-      patient: { id: patientId },
       pathway: { id: pathwayId },
       activity: { id: activityId, sessionId },
     } = payload

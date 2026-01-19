@@ -17,7 +17,7 @@ export const createPatient: Action<
   title: 'Create patient',
   description: 'Create a patient in Epic',
   fields,
-  previewable: false,
+  previewable: true,
   dataPoints,
   onEvent: async ({ payload, onComplete, onError }): Promise<void> => {
     const {
