@@ -17,7 +17,7 @@ export const getContact: Action<
   title: 'Get contact',
   description: 'Get a contact from Freshdesk.',
   fields,
-  previewable: false,
+  previewable: true,
   dataPoints,
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
     const { fields, freshdeskSdk } = await validatePayloadAndCreateSdk({

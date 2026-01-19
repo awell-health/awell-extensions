@@ -27,7 +27,7 @@ export const parseStructuredData: Action<
   description:
     'Extracts structured data from unstructured text messages using a provided JSON schema.',
   fields,
-  previewable: false,
+  previewable: true,
   dataPoints,
 
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {

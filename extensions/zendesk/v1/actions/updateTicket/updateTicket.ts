@@ -17,7 +17,7 @@ export const updateTicket: Action<typeof fields, typeof settings> = {
   description: 'Updates an existing support ticket in Zendesk',
   category: Category.CUSTOMER_SUPPORT,
   fields,
-  previewable: false,
+  previewable: true,
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
     try {
       const {

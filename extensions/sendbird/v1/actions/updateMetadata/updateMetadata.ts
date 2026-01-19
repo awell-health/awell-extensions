@@ -17,7 +17,7 @@ export const updateMetadata: Action<typeof fields, typeof settings> = {
   description: 'Updates user metadata using Chat API.',
   category: Category.COMMUNICATION,
   fields,
-  previewable: false,
+  previewable: true,
   onActivityCreated: async (payload, onComplete, onError) => {
     try {
       const {

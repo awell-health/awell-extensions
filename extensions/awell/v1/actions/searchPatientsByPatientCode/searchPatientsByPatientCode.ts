@@ -17,7 +17,7 @@ export const searchPatientsByPatientCode: Action<
     "Search whether the current patient already exists. Search happens based on the `patient_code` field which is taken from the patient's profile.",
   fields,
   dataPoints,
-  previewable: false, // We don't have patients in Preview, only cases.
+  previewable: true,
   onEvent: async ({ payload, onComplete, helpers }): Promise<void> => {
     const {
       patient: {

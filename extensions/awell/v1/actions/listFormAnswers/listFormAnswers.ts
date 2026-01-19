@@ -16,7 +16,7 @@ export const listFormAnswers: Action<typeof fields, typeof settings> = {
   description: 'List form answers',
   fields,
   dataPoints,
-  previewable: true,
+  previewable: false,
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
     const {
       fields: {

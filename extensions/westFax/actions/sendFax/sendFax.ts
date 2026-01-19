@@ -16,7 +16,7 @@ export const sendFax: Action<typeof fields, typeof settings> = {
   description: 'Send fax with WestFax.',
   fields,
   dataPoints,
-  previewable: false,
+  previewable: true,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
     const { fields, settings } = validate({
       schema: z.object({

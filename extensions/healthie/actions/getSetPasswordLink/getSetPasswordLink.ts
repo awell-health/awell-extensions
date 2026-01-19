@@ -11,7 +11,7 @@ export const getSetPasswordLink: Action<typeof fields, typeof settings> = {
   title: 'Get set password link',
   description: 'Get the set password link for a patient',
   fields,
-  previewable: false,
+  previewable: true,
   dataPoints,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
     const MAX_RETRIES = 3

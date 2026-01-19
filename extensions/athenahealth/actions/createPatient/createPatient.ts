@@ -13,7 +13,7 @@ export const createPatient: Action<
   title: 'Create patient',
   description: 'Create a patient in athena',
   fields,
-  previewable: false,
+  previewable: true,
   dataPoints,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
     const {

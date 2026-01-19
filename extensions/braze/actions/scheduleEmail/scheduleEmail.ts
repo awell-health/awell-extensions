@@ -13,7 +13,7 @@ export const scheduleEmail = {
   category: Category.COMMUNICATION,
   fields,
   dataPoints,
-  previewable: false,
+  previewable: true,
   onEvent: async ({ payload, onComplete, onError, helpers }) => {
     const {
       brazeClient,

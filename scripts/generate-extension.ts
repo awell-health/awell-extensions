@@ -227,7 +227,7 @@ export const helloWorld: Action<
   title: 'Hello World',
   description: 'A simple hello world action that logs a message.',
   fields,
-  previewable: true,
+  previewable: false,
   dataPoints,
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
     const { fields } = payload

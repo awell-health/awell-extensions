@@ -14,7 +14,7 @@ export const getAppointment: Action<
   title: 'Get appointment',
   description: 'Retrieve appointment details from Athena',
   fields,
-  previewable: false,
+  previewable: true,
   dataPoints,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
     const {

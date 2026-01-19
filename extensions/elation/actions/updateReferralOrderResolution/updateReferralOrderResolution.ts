@@ -15,7 +15,7 @@ export const updateReferralOrderResolution: Action<
   title: 'Update referral order resolution',
   description: 'Update the resolution of a referral order in Elation.',
   fields,
-  previewable: false,
+  previewable: true,
   dataPoints,
   onEvent: async ({ payload, onComplete, onError }): Promise<void> => {
     const { referralOrderId, resolutionState, resolvingDocument } =

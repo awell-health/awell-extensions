@@ -13,7 +13,7 @@ export const sendEmailWithSingleSendApi: Action<
   title: 'Send email (Single Send API)',
   description: 'Send email with the Single Send API',
   fields,
-  previewable: false,
+  previewable: true,
   dataPoints,
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
     const { hubSpotSdk, fields, activity } = await validatePayloadAndCreateSdks(

@@ -17,7 +17,7 @@ export const updateTicket: Action<typeof fields, typeof settings> = {
   description: 'Update a ticket using the Desk API.',
   category: Category.COMMUNICATION,
   fields,
-  previewable: false,
+  previewable: true,
   onActivityCreated: async (payload, onComplete, onError) => {
     try {
       const {

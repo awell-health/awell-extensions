@@ -36,7 +36,7 @@ export const isPatientEnrolledInCareFlow: Action<
     'Checks whether the patient is already enrolled in the current care flow definition.',
   fields,
   dataPoints,
-  previewable: false, // We don't have patients and pathways in Preview, only cases.
+  previewable: false,
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
     const {
       patient: { id: patientId },

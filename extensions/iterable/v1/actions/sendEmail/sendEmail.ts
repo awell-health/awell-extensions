@@ -12,7 +12,7 @@ export const sendEmail: Action<typeof fields, typeof settings> = {
   description: 'Send an email to a specific email address.',
   category: Category.COMMUNICATION,
   fields,
-  previewable: false,
+  previewable: true,
   onActivityCreated: async (payload, onComplete, onError) => {
     const {
       settings: { apiKey },

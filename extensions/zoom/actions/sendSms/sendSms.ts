@@ -52,7 +52,7 @@ export const sendSms: Action<
   title: 'Send SMS',
   description: 'Send an SMS',
   fields,
-  previewable: false,
+  previewable: true,
   dataPoints,
   onEvent: async ({ payload, onComplete, onError }): Promise<void> => {
     const { fields, zoomSdk } = await validatePayloadAndCreateSdk({

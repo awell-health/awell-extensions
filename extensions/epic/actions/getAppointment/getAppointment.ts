@@ -15,7 +15,7 @@ export const getAppointment: Action<
   title: 'Get appointment',
   description: 'Retrieve appointment details from Epic',
   fields,
-  previewable: false,
+  previewable: true,
   dataPoints,
   onEvent: async ({ payload, onComplete, onError }): Promise<void> => {
     const {

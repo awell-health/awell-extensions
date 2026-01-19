@@ -16,7 +16,7 @@ export const listToCommaSeparatedText: Action<
   category: Category.DATA,
   fields,
   dataPoints,
-  previewable: true,
+  previewable: false,
   onActivityCreated: async (payload, onComplete) => {
     const {
       fields: { list },

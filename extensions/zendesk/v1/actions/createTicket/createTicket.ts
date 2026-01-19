@@ -18,7 +18,7 @@ export const createTicket: Action<typeof fields, typeof settings> = {
   category: Category.CUSTOMER_SUPPORT,
   fields,
   dataPoints,
-  previewable: false,
+  previewable: true,
   onEvent: async ({ payload, onComplete, onError }): Promise<void> => {
     try {
       const {

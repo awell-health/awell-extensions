@@ -14,7 +14,7 @@ export const getPatient: Action<
   title: 'Get patient',
   description: 'Retrieve patient details from Athena',
   fields,
-  previewable: false,
+  previewable: true,
   dataPoints,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
     const {

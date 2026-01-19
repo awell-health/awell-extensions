@@ -23,7 +23,7 @@ export const createAppointment: Action<
   description: 'Create a 1:1 appointment in Healthie.',
   fields,
   dataPoints,
-  previewable: false,
+  previewable: true,
   onEvent: async ({ payload, onComplete, onError, helpers }) => {
     const { fields, healthieSdk } = await validatePayloadAndCreateSdk({
       fieldsSchema: FieldsValidationSchema,

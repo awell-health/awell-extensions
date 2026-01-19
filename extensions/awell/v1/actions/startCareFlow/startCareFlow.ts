@@ -18,7 +18,7 @@ export const startCareFlow: Action<typeof fields, typeof settings> = {
     'Start a new care flow for the patient currently enrolled in the care flow.',
   fields,
   dataPoints,
-  previewable: false, // We don't have pathways in Preview, only cases.
+  previewable: false,
   onEvent: async ({ payload, onComplete, helpers }): Promise<void> => {
     const {
       fields: { pathwayDefinitionId, baselineInfo },

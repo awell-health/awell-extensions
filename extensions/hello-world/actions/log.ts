@@ -55,7 +55,7 @@ export const log: Action<
   title: 'Log hello world',
   description: 'This is a dummy Custom Action for extension developers.',
   fields,
-  previewable: true,
+  previewable: false,
   dataPoints,
   onActivityCreated: async (payload, onComplete): Promise<void> => {
     const { fields, settings } = payload

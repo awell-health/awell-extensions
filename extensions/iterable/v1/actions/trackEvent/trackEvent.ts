@@ -12,7 +12,7 @@ export const trackEvent: Action<typeof fields, typeof settings> = {
   description: 'Track an event in Iterable',
   category: Category.COMMUNICATION,
   fields,
-  previewable: false,
+  previewable: true,
   onActivityCreated: async (payload, onComplete, onError) => {
     const {
       settings: { apiKey },

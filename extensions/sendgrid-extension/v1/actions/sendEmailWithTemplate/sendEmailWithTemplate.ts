@@ -19,7 +19,7 @@ export const sendEmailWithTemplate: Action<typeof fields, typeof settings> = {
     'Send an email based on a template to a recipient of your choice.',
   category: Category.COMMUNICATION,
   fields,
-  previewable: true,
+  previewable: false,
   onActivityCreated: async (payload, onComplete, onError) => {
     try {
       const {

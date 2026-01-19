@@ -15,7 +15,7 @@ export const stopCareFlow: Action<typeof fields, typeof settings> = {
   title: 'Stop care flow',
   description: 'Stop the care flow the patient is currently enrolled.',
   fields,
-  previewable: false, // We don't have pathways in Preview, only cases.
+  previewable: false,
   onEvent: async ({ payload, onComplete, helpers }): Promise<void> => {
     const {
       fields: { careFlowIds, reason },

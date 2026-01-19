@@ -40,6 +40,7 @@ export const patientSmsNotification: Action<typeof fields, typeof settings> = {
   category: Category.COMMUNICATION,
   description: 'Send an SMS message to the patient enrolled in this care flow.',
   fields,
+  previewable: true,
   onActivityCreated: async (payload, onComplete, onError) => {
     try {
       const {

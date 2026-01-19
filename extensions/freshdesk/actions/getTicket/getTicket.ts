@@ -21,7 +21,7 @@ export const getTicket: Action<
   title: 'Get ticket',
   description: 'Get a ticket from Freshdesk.',
   fields,
-  previewable: false,
+  previewable: true,
   dataPoints,
   onEvent: async ({ payload, onComplete, onError }): Promise<void> => {
     const { fields, freshdeskSdk } = await validatePayloadAndCreateSdk({

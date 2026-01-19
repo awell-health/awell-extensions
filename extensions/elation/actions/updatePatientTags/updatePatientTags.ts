@@ -26,7 +26,7 @@ export const updatePatientTags: Action<
   title: '✨ Update Patient Tags',
   description: 'Update patient tags in Elation.',
   fields,
-  previewable: false,
+  previewable: true,
   dataPoints,
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
     // 1. Validate input and initialize API client

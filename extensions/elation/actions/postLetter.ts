@@ -83,7 +83,7 @@ export const postLetter: Action<
   title: 'Post letter',
   description: "Post a letter using Elation's patient API.",
   fields,
-  previewable: false,
+  previewable: true,
   dataPoints,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
     try {

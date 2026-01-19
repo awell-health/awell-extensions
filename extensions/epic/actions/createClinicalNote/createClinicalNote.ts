@@ -17,7 +17,7 @@ export const createClinicalNote: Action<
   title: 'Create clinical note',
   description: 'Create a clinical note in Epic',
   fields,
-  previewable: false,
+  previewable: true,
   dataPoints,
   onEvent: async ({ payload, onComplete, onError }): Promise<void> => {
     const {

@@ -12,7 +12,7 @@ export const sendEmail: Action<typeof fields, typeof settings> = {
   description: 'Sends email using Infobip',
   category: Category.COMMUNICATION,
   fields,
-  previewable: false,
+  previewable: true,
   onActivityCreated: async (payload, onComplete, onError) => {
     try {
       const {

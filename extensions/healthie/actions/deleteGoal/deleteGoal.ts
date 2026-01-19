@@ -10,7 +10,7 @@ export const deleteGoal: Action<typeof fields, typeof settings> = {
   title: 'Delete goal',
   description: 'Delete a goal for a patient in Healthie',
   fields,
-  previewable: false,
+  previewable: true,
   dataPoints,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
     const { fields, healthieSdk } = await validatePayloadAndCreateSdk({

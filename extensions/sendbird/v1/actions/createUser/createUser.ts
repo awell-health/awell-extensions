@@ -20,7 +20,7 @@ export const createUser: Action<typeof fields, typeof settings> = {
   category: Category.COMMUNICATION,
   fields,
   dataPoints,
-  previewable: false,
+  previewable: true,
   onActivityCreated: async (payload, onComplete, onError) => {
     try {
       const {

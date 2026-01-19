@@ -14,7 +14,7 @@ export const getFaxDocument: Action<typeof fields, typeof settings> = {
   description: 'Get fax document with WestFax.',
   fields,
   dataPoints,
-  previewable: false,
+  previewable: true,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
     const { fields, westFaxSdk } = await validatePayloadAndCreateSdk({
       fieldsSchema: FieldsValidationSchema,

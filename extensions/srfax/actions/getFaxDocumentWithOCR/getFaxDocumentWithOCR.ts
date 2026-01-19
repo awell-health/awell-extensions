@@ -17,7 +17,7 @@ export const getFaxDocumentWithOCR: Action<typeof fields, typeof settings> = {
   description: 'Get fax document with SRFax and extract structured data with OCR',
   fields,
   dataPoints,
-  previewable: false,
+  previewable: true,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
     const { fields, srfaxSdk } = await validatePayloadAndCreateSdk({
       fieldsSchema: FieldsValidationSchema,

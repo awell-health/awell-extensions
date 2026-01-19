@@ -22,7 +22,7 @@ export const findFutureAppointment: Action<
   title: '✨ Find Future Appointment',
   description: 'Find a future appointment in Elation.',
   fields,
-  previewable: false,
+  previewable: true,
   supports_automated_retries: true,
   dataPoints,
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {

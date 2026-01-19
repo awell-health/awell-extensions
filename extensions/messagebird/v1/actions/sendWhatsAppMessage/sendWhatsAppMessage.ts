@@ -11,7 +11,7 @@ export const sendWhatsAppMessage: Action<typeof fields, typeof settings> = {
   description: 'Send a WhatsApp message to a recipient of your choice.',
   category: Category.COMMUNICATION,
   fields,
-  previewable: false,
+  previewable: true,
   onActivityCreated: async (payload, onComplete, onError) => {
     const {
       fields: { from, to, content },

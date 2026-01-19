@@ -14,7 +14,7 @@ export const addClinicalDocument: Action<
   title: 'Add clinical document to chart',
   description: 'Add clinical document to patient chart',
   fields,
-  previewable: false,
+  previewable: true,
   dataPoints,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
     const {

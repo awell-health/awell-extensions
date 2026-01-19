@@ -17,7 +17,7 @@ export const updateUser: Action<typeof fields, typeof settings> = {
   description: 'Updates a user using the Chat API.',
   category: Category.COMMUNICATION,
   fields,
-  previewable: false,
+  previewable: true,
   onActivityCreated: async (payload, onComplete, onError) => {
     try {
       const {

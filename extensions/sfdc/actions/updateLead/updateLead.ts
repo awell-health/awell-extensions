@@ -15,7 +15,7 @@ export const updateLead: Action<
   title: 'Update lead',
   description: 'Updates an existing lead object in Salesforce',
   fields,
-  previewable: false,
+  previewable: true,
   supports_automated_retries: true,
   dataPoints,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {

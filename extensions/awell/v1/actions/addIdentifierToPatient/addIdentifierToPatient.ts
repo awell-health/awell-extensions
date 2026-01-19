@@ -17,7 +17,7 @@ export const addIdentifierToPatient: Action<typeof fields, typeof settings> = {
   description: "Add a new identifier to the patient's profile",
   fields,
   dataPoints,
-  previewable: false, // Patients are not available in Preview; only cases.
+  previewable: false,
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
     // Validate and extract the `system` and `value` fields and `currentPatientId` from the payload
     const {

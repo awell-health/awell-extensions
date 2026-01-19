@@ -18,7 +18,7 @@ export const getLead: Action<
   title: 'Get lead',
   description: 'Get a lead from Freshsales.',
   fields,
-  previewable: false,
+  previewable: true,
   dataPoints,
   onEvent: async ({ payload, onComplete, onError }): Promise<void> => {
     const { fields, freshsalesSdk } = await validatePayloadAndCreateSdk({

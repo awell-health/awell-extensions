@@ -15,7 +15,7 @@ export const getPatientByIdentifier: Action<typeof fields, typeof settings> = {
     'Retrieve a patient based on the provided identifier system and value',
   fields,
   dataPoints,
-  previewable: false, // We don't have patients in Preview, only cases.
+  previewable: true,
   onEvent: async ({
     payload,
     onComplete,

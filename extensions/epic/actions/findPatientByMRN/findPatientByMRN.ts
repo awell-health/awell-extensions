@@ -15,7 +15,7 @@ export const findPatientByMRN: Action<
   title: 'Find patient by MRN',
   description: 'Find patient by MRN in Epic',
   fields,
-  previewable: false,
+  previewable: true,
   dataPoints,
   onEvent: async ({ payload, onComplete, onError }): Promise<void> => {
     const {

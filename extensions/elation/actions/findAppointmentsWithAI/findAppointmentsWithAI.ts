@@ -23,7 +23,7 @@ export const findAppointmentsWithAI: Action<
   title: '✨ Find Appointments',
   description: 'Find all appointments for a patient using natural language.',
   fields,
-  previewable: false,
+  previewable: true,
   supports_automated_retries: true,
   dataPoints,
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {

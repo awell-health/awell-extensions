@@ -14,7 +14,7 @@ export const createTask: Action<
   title: 'Create task',
   description: 'Create a Task in Dock Health',
   fields,
-  previewable: false,
+  previewable: true,
   dataPoints,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
     const { fields, dockClient } = await validatePayloadAndCreateClient({

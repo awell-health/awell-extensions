@@ -99,7 +99,7 @@ export const createLabOrder: Action<
   description:
     'A lab order represents an order for a patient to perform some lab tests for a vendor.',
   fields,
-  previewable: false,
+  previewable: true,
   dataPoints,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
     try {

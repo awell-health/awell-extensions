@@ -17,7 +17,7 @@ export const htmlToPdf: Action<
   category: Category.DATA,
   fields,
   dataPoints,
-  previewable: true,
+  previewable: false,
   onEvent: async ({ payload, onComplete }) => {
     const {
       fields: { htmlString, options },

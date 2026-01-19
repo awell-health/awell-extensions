@@ -21,7 +21,7 @@ export const cancelAppointments: Action<
   title: '✨ Cancel Appointments',
   description: 'Cancel appointments for a patient using natural language.',
   fields,
-  previewable: false,
+  previewable: true,
   dataPoints,
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
     const { prompt, patientId } = FieldsValidationSchema.parse(payload.fields)

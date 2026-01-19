@@ -17,7 +17,7 @@ export const createDocument: Action<
   title: 'Create document',
   description: 'Create a document in Cerner',
   fields,
-  previewable: false,
+  previewable: true,
   dataPoints,
   onEvent: async ({ payload, onComplete, onError }): Promise<void> => {
     const {

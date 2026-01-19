@@ -12,7 +12,7 @@ export const deleteBooking: Action<typeof fields, typeof settings> = {
   description: 'Deletes Booking in Cal.com',
   category: Category.SCHEDULING,
   fields,
-  previewable: false,
+  previewable: true,
   onActivityCreated: async (payload, onComplete, onError) => {
     try {
       const {
