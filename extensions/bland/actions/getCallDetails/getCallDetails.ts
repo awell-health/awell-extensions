@@ -18,6 +18,7 @@ export const getCallDetails: Action<
   fields,
   previewable: true,
   dataPoints,
+  supports_automated_retries: true,
   onEvent: async ({ payload, onComplete }): Promise<void> => {
     const { fields, blandSdk } = await validatePayloadAndCreateSdk({
       fieldsSchema: FieldsValidationSchema,
