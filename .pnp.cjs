@@ -49,6 +49,7 @@ const RAW_RUNTIME_STATE =
           ["@sendgrid/client", "npm:7.7.0"],\
           ["@sendgrid/helpers", "npm:7.7.0"],\
           ["@sendgrid/mail", "npm:7.7.0"],\
+          ["@slack/web-api", "npm:7.13.0"],\
           ["@types/body-parser", "npm:1.19.5"],\
           ["@types/crypto-js", "npm:4.2.2"],\
           ["@types/docusign-esign", "npm:5.19.6"],\
@@ -451,6 +452,7 @@ const RAW_RUNTIME_STATE =
           ["@sendgrid/client", "npm:7.7.0"],\
           ["@sendgrid/helpers", "npm:7.7.0"],\
           ["@sendgrid/mail", "npm:7.7.0"],\
+          ["@slack/web-api", "npm:7.13.0"],\
           ["@types/body-parser", "npm:1.19.5"],\
           ["@types/crypto-js", "npm:4.2.2"],\
           ["@types/docusign-esign", "npm:5.19.6"],\
@@ -4509,6 +4511,46 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
+    ["@slack/logger", [\
+      ["npm:4.0.0", {\
+        "packageLocation": "./.yarn/cache/@slack-logger-npm-4.0.0-09863c307a-dc79e9d203.zip/node_modules/@slack/logger/",\
+        "packageDependencies": [\
+          ["@slack/logger", "npm:4.0.0"],\
+          ["@types/node", "npm:25.0.10"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["@slack/types", [\
+      ["npm:2.19.0", {\
+        "packageLocation": "./.yarn/cache/@slack-types-npm-2.19.0-35faa80fe6-d5fbc22714.zip/node_modules/@slack/types/",\
+        "packageDependencies": [\
+          ["@slack/types", "npm:2.19.0"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["@slack/web-api", [\
+      ["npm:7.13.0", {\
+        "packageLocation": "./.yarn/cache/@slack-web-api-npm-7.13.0-e198e2fe65-9e254c372f.zip/node_modules/@slack/web-api/",\
+        "packageDependencies": [\
+          ["@slack/web-api", "npm:7.13.0"],\
+          ["@slack/logger", "npm:4.0.0"],\
+          ["@slack/types", "npm:2.19.0"],\
+          ["@types/node", "npm:25.0.10"],\
+          ["@types/retry", "npm:0.12.0"],\
+          ["axios", "npm:1.11.0"],\
+          ["eventemitter3", "npm:5.0.1"],\
+          ["form-data", "npm:4.0.4"],\
+          ["is-electron", "npm:2.2.2"],\
+          ["is-stream", "npm:2.0.1"],\
+          ["p-queue", "npm:6.6.2"],\
+          ["p-retry", "npm:4.6.2"],\
+          ["retry", "npm:0.13.1"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
     ["@szmarczak/http-timer", [\
       ["npm:4.0.6", {\
         "packageLocation": "./.yarn/cache/@szmarczak-http-timer-npm-4.0.6-6ace00d82d-c29df3bcec.zip/node_modules/@szmarczak/http-timer/",\
@@ -4907,6 +4949,14 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["@types/node", "npm:22.5.5"],\
           ["undici-types", "npm:6.19.8"]\
+        ],\
+        "linkType": "HARD"\
+      }],\
+      ["npm:25.0.10", {\
+        "packageLocation": "./.yarn/cache/@types-node-npm-25.0.10-cffc0b5e50-e5fc1fe0e5.zip/node_modules/@types/node/",\
+        "packageDependencies": [\
+          ["@types/node", "npm:25.0.10"],\
+          ["undici-types", "npm:7.16.0"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -10626,6 +10676,15 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["is-date-object", "npm:1.0.5"],\
           ["has-tostringtag", "npm:1.0.2"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["is-electron", [\
+      ["npm:2.2.2", {\
+        "packageLocation": "./.yarn/cache/is-electron-npm-2.2.2-f91452a3d8-de5aa8bd8d.zip/node_modules/is-electron/",\
+        "packageDependencies": [\
+          ["is-electron", "npm:2.2.2"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -16411,6 +16470,13 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./.yarn/cache/undici-types-npm-6.19.8-9f12285b7a-cf0b48ed4f.zip/node_modules/undici-types/",\
         "packageDependencies": [\
           ["undici-types", "npm:6.19.8"]\
+        ],\
+        "linkType": "HARD"\
+      }],\
+      ["npm:7.16.0", {\
+        "packageLocation": "./.yarn/cache/undici-types-npm-7.16.0-0e23b08124-db43439f69.zip/node_modules/undici-types/",\
+        "packageDependencies": [\
+          ["undici-types", "npm:7.16.0"]\
         ],\
         "linkType": "HARD"\
       }]\

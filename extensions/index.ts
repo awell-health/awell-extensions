@@ -45,6 +45,7 @@ import { Sendbird } from './sendbird'
 import { Sendgrid } from './sendgrid-extension'
 import { sfdc } from './sfdc'
 import { shelly } from './shelly'
+import { Slack } from './slack'
 import { stedi } from './stedi'
 import { stripe } from './stripe'
 import { TalkDesk } from './talkDesk'
@@ -112,6 +113,7 @@ export const extensions = [
   Sendgrid,
   sfdc,
   shelly,
+  Slack,
   stedi,
   stripe,
   TalkDesk,

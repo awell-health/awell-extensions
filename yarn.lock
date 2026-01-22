@@ -271,6 +271,7 @@ __metadata:
     "@sendgrid/client": "npm:^7.7.0"
     "@sendgrid/helpers": "npm:^7.7.0"
     "@sendgrid/mail": "npm:^7.7.0"
+    "@slack/web-api": "npm:^7.13.0"
     "@types/body-parser": "npm:^1.19.3"
     "@types/crypto-js": "npm:^4.2.2"
     "@types/docusign-esign": "npm:^5.19.0"
@@ -2814,6 +2815,42 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@slack/logger@npm:^4.0.0":
+  version: 4.0.0
+  resolution: "@slack/logger@npm:4.0.0"
+  dependencies:
+    "@types/node": "npm:>=18.0.0"
+  checksum: 10/dc79e9d2032c4bf9ce01d96cc72882f003dd376d036f172d4169662cfc2c9b384a80d5546b06021578dd473e7059f064303f0ba851eeb153387f2081a1e3062e
+  languageName: node
+  linkType: hard
+
+"@slack/types@npm:^2.18.0":
+  version: 2.19.0
+  resolution: "@slack/types@npm:2.19.0"
+  checksum: 10/d5fbc227147b32a964072cb46e2c328b896507a374194532ddf594e18e4ccc2afe9f31f2b92d14ace43ef856b22979523e565616be2c87a2dc6c575d4f919fd0
+  languageName: node
+  linkType: hard
+
+"@slack/web-api@npm:^7.13.0":
+  version: 7.13.0
+  resolution: "@slack/web-api@npm:7.13.0"
+  dependencies:
+    "@slack/logger": "npm:^4.0.0"
+    "@slack/types": "npm:^2.18.0"
+    "@types/node": "npm:>=18.0.0"
+    "@types/retry": "npm:0.12.0"
+    axios: "npm:^1.11.0"
+    eventemitter3: "npm:^5.0.1"
+    form-data: "npm:^4.0.4"
+    is-electron: "npm:2.2.2"
+    is-stream: "npm:^2"
+    p-queue: "npm:^6"
+    p-retry: "npm:^4"
+    retry: "npm:^0.13.1"
+  checksum: 10/9e254c372f1b4c3255acd317805f9dfabd38e90d0d8e96f2f79a35957d40d88eed5ba09ec59ae0838dbec32f99bd65ff2773c3528e44cd7aea273dd5e1fd3b82
+  languageName: node
+  linkType: hard
+
 "@szmarczak/http-timer@npm:^4.0.5":
   version: 4.0.6
   resolution: "@szmarczak/http-timer@npm:4.0.6"
@@ -3159,6 +3196,15 @@ __metadata:
   dependencies:
     undici-types: "npm:~6.19.2"
   checksum: 10/172d02c8e6d921699edcf559c28b3805616bd6481af1b3cb0299f89ad9a6f33b71050434c06ce7b503166054a26275344187c443f99f745d0b12601372452f19
+  languageName: node
+  linkType: hard
+
+"@types/node@npm:>=18.0.0":
+  version: 25.0.10
+  resolution: "@types/node@npm:25.0.10"
+  dependencies:
+    undici-types: "npm:~7.16.0"
+  checksum: 10/e5fc1fe0e585957f91ff3ad8ee01b051ce0c9da9658c5ba68d11d557522450783ab61ac2778355e8f566b83bc3bd18e78576569162e9729ed52af36999f81c9a
   languageName: node
   linkType: hard
 
@@ -7955,6 +8001,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"is-electron@npm:2.2.2":
+  version: 2.2.2
+  resolution: "is-electron@npm:2.2.2"
+  checksum: 10/de5aa8bd8d72c96675b8d0f93fab4cc21f62be5440f65bc05c61338ca27bd851a64200f31f1bf9facbaa01b3dbfed7997b2186741d84b93b63e0aff1db6a9494
+  languageName: node
+  linkType: hard
+
 "is-extendable@npm:^0.1.0":
   version: 0.1.1
   resolution: "is-extendable@npm:0.1.1"
@@ -8110,7 +8163,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"is-stream@npm:^2.0.0":
+"is-stream@npm:^2, is-stream@npm:^2.0.0":
   version: 2.0.1
   resolution: "is-stream@npm:2.0.1"
   checksum: 10/b8e05ccdf96ac330ea83c12450304d4a591f9958c11fd17bed240af8d5ffe08aedafa4c0f4cfccd4d28dc9d4d129daca1023633d5c11601a6cbc77521f6fae66
@@ -10633,7 +10686,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"p-queue@npm:^6.6.2":
+"p-queue@npm:^6, p-queue@npm:^6.6.2":
   version: 6.6.2
   resolution: "p-queue@npm:6.6.2"
   dependencies:
@@ -10643,7 +10696,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"p-retry@npm:4":
+"p-retry@npm:4, p-retry@npm:^4":
   version: 4.6.2
   resolution: "p-retry@npm:4.6.2"
   dependencies:
@@ -12950,6 +13003,13 @@ __metadata:
   version: 6.19.8
   resolution: "undici-types@npm:6.19.8"
   checksum: 10/cf0b48ed4fc99baf56584afa91aaffa5010c268b8842f62e02f752df209e3dea138b372a60a963b3b2576ed932f32329ce7ddb9cb5f27a6c83040d8cd74b7a70
+  languageName: node
+  linkType: hard
+
+"undici-types@npm:~7.16.0":
+  version: 7.16.0
+  resolution: "undici-types@npm:7.16.0"
+  checksum: 10/db43439f69c2d94cc29f75cbfe9de86df87061d6b0c577ebe9bb3255f49b22c50162a7d7eb413b0458b6510b8ca299ac7cff38c3a29fbd31af9f504bcf7fbc0d
   languageName: node
   linkType: hard
 
