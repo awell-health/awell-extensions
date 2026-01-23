@@ -2,9 +2,11 @@ import { sendMessageToChannel as actionObject } from './sendMessageToChannel'
 import { generateTestPayload } from '@/tests'
 import { ZodError } from 'zod'
 import { TestHelpers } from '@awell-health/extensions-core'
-import { mockPostMessage } from '../../../client/__mocks__/slackClient'
+import { SlackClient } from '../../../client/slackClient'
 
 jest.mock('../../../client/slackClient')
+
+const MockedSlackClient = SlackClient as jest.MockedClass<typeof SlackClient>
 
 describe('Send Message to Channel action', () => {
   const { onComplete, onError, helpers, clearMocks, extensionAction: sendMessageToChannel } = TestHelpers.fromAction(actionObject)
@@ -136,7 +138,8 @@ describe('Send Message to Channel action', () => {
       attempt: 1,
     })
 
-    expect(mockPostMessage).toHaveBeenCalledWith({
+    const mockInstance = MockedSlackClient.mock.results[0].value
+    expect(mockInstance.postMessage).toHaveBeenCalledWith({
       channel: '#general',
       text: 'Hello from care flow!\n\n<https://care.sandbox.awellhealth.com/pathway/pathway-id/activity-feed|View Care Flow>',
     })
@@ -162,7 +165,8 @@ describe('Send Message to Channel action', () => {
       attempt: 1,
     })
 
-    expect(mockPostMessage).toHaveBeenCalledWith({
+    const mockInstance = MockedSlackClient.mock.results[0].value
+    expect(mockInstance.postMessage).toHaveBeenCalledWith({
       channel: '#general',
       text: 'Hello from care flow!\n\n<https://care.awellhealth.com/pathway/pathway-id/activity-feed|View Care Flow>',
     })
