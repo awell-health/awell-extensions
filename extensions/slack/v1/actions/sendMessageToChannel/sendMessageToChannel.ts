@@ -9,6 +9,12 @@ import {
   mapSlackErrorToActivityEvent,
 } from '../../../client'
 
+const getCareFlowUrl = (pathwayId: string): string => {
+  const environment = process.env.AWELL_ENVIRONMENT ?? ''
+  const envDomain = environment !== '' ? `.${environment}` : ''
+  return `https://care${envDomain}.awellhealth.com/pathway/${pathwayId}/activity-feed`
+}
+
 export const sendMessageToChannel: Action<
   typeof fields,
   typeof settings,
@@ -36,9 +42,12 @@ export const sendMessageToChannel: Action<
 
       const slackClient = new SlackClient({ botToken })
 
+      const careFlowUrl = getCareFlowUrl(payload.pathway.id)
+      const messageWithLink = `${message}\n\n<${careFlowUrl}|View Care Flow>`
+
       const response = await slackClient.postMessage({
         channel,
-        text: message,
+        text: messageWithLink,
       })
 
       await onComplete({
