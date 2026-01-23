@@ -21,7 +21,7 @@ export const sendMessageToChannel: Action<
   fields,
   dataPoints,
   previewable: true,
-  onActivityCreated: async (payload, onComplete, onError) => {
+  onEvent: async ({ payload, onComplete, onError }) => {
     try {
       const {
         settings: { botToken },
