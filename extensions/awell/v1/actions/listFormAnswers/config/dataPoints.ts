@@ -5,4 +5,8 @@ export const dataPoints = {
     key: 'output',
     valueType: 'string',
   },
+  numberOfFormsCaptured: {
+    key: 'numberOfFormsCaptured',
+    valueType: 'number',
+  },
 } satisfies Record<string, DataPointDefinition>
