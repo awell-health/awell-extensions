@@ -13,10 +13,12 @@ export const mockPathwayActivitiesResponse = {
         step_id: 'Xkn5dkyPA5uW',
       },
     },
+    // Note: form_activity_2 appears BEFORE form_activity_1 in the array,
+    // but has a LATER date - tests that ascending sort returns form_activity_1 first
     {
       id: 'form_activity_2',
       status: 'DONE',
-      date: '2024-09-11T22:56:08.315Z',
+      date: '2024-09-11T22:56:10.000Z', // Later (newer)
       object: {
         id: 'form_2',
         type: 'FORM',
@@ -28,7 +30,7 @@ export const mockPathwayActivitiesResponse = {
     {
       id: 'form_activity_1',
       status: 'DONE',
-      date: '2024-09-11T22:56:08.315Z',
+      date: '2024-09-11T22:56:08.315Z', // Earlier (older)
       object: {
         id: 'form_1',
         type: 'FORM',

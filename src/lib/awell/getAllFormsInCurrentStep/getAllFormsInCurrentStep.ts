@@ -86,13 +86,16 @@ export const getAllFormsInCurrentStep: GetAllFormsInCurrentStep = async ({
     },
   })
 
+  // Filter and sort by date in ascending order (chronological)
   const formActivitiesInCurrentStep =
-    activities.pathwayStepActivities.activities.filter(
-      (a) =>
-        a.object.type === 'FORM' &&
-        a.status === 'DONE' &&
-        a.date <= currentActivity.date,
-    )
+    activities.pathwayStepActivities.activities
+      .filter(
+        (a) =>
+          a.object.type === 'FORM' &&
+          a.status === 'DONE' &&
+          a.date <= currentActivity.date,
+      )
+      .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
 
   if (isEmpty(formActivitiesInCurrentStep)) return []
 

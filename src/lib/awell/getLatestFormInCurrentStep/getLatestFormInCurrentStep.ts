@@ -70,13 +70,16 @@ export const getLatestFormInCurrentStep: GetLatestFormInCurrentStepType =
       },
     })
 
+    // Capture completed form activities and sort by date in descending order
     const formActivitiesInCurrentStep =
-      activitiesInCurrentStepResponse.pathwayStepActivities.activities.filter(
-        (a) =>
-          a.object.type === 'FORM' &&
-          a.status === 'DONE' &&
-          a.date <= currentActivity.date,
-      )
+      activitiesInCurrentStepResponse.pathwayStepActivities.activities
+        .filter(
+          (a) =>
+            a.object.type === 'FORM' &&
+            a.status === 'DONE' &&
+            a.date <= currentActivity.date,
+        )
+        .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
 
     // Grab the most recent form activity
     const formActivity = formActivitiesInCurrentStep[0]

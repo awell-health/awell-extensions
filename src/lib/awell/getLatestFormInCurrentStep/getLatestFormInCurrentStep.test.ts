@@ -4,6 +4,7 @@ import {
   mockFormResponseResponse,
   mockFormDefinitionResponse,
   mockPathwayStepActivitiesResponse,
+  mockPathwayStepActivitiesWithMultipleFormsResponse,
   mockCurrentActivityResponse,
 } from './__testdata__'
 
@@ -26,10 +27,10 @@ describe('getLatestFormInCurrentStep', () => {
     awellSdkMock = new AwellSdk({
       apiKey: 'mock-api-key',
     }) as jest.Mocked<AwellSdk>
+  })
 
+  test('Should return the latest form in the current step', async () => {
     const mockQuery = awellSdkMock.orchestration.query as jest.Mock
-
-    // Mock the query results for each call
     mockQuery
       .mockResolvedValueOnce({
         activity: mockCurrentActivityResponse,
@@ -39,9 +40,7 @@ describe('getLatestFormInCurrentStep', () => {
       })
       .mockResolvedValueOnce({ form: mockFormDefinitionResponse })
       .mockResolvedValueOnce({ formResponse: mockFormResponseResponse })
-  })
 
-  test('Should return the latest form in the current step', async () => {
     const result = await getLatestFormInCurrentStep({
       awellSdk: awellSdkMock,
       pathwayId: 'whatever',
@@ -55,5 +54,30 @@ describe('getLatestFormInCurrentStep', () => {
       formDefinition: mockFormDefinitionResponse.form,
       formResponse: mockFormResponseResponse.response,
     })
+  })
+
+  test('Should return the most recent form when multiple forms exist (sorted by date descending)', async () => {
+    const mockQuery = awellSdkMock.orchestration.query as jest.Mock
+    mockQuery
+      .mockResolvedValueOnce({
+        activity: mockCurrentActivityResponse,
+      })
+      .mockResolvedValueOnce({
+        // Activities are in ascending order (oldest first) in the mock
+        pathwayStepActivities: mockPathwayStepActivitiesWithMultipleFormsResponse,
+      })
+      .mockResolvedValueOnce({ form: mockFormDefinitionResponse })
+      .mockResolvedValueOnce({ formResponse: mockFormResponseResponse })
+
+    const result = await getLatestFormInCurrentStep({
+      awellSdk: awellSdkMock,
+      pathwayId: 'whatever',
+      activityId: 'X74HeDQ4N0gtdaSEuzF8s',
+    })
+
+    expect(awellSdkMock.orchestration.query).toHaveBeenCalledTimes(4)
+    // Should return the latest form (1 day ago), NOT the oldest (3 days ago)
+    expect(result.formActivityId).toBe('latestFormActivityId')
+    expect(result.formId).toBe('latestFormId')
   })
 })

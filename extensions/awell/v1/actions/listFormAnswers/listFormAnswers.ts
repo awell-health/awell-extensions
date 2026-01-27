@@ -87,13 +87,15 @@ const getFormsInTrack = async ({
     },
   })
 
-  const formActivitiesInTrack =
-    activitiesResponse.pathwayActivities.activities.filter(
+  // Filter and sort by date in ascending order (chronological)
+  const formActivitiesInTrack = activitiesResponse.pathwayActivities.activities
+    .filter(
       (a) =>
         a.object.type === 'FORM' &&
         a.status === 'DONE' &&
         a.date <= currentActivity.date,
     )
+    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
 
   if (formActivitiesInTrack.length === 0) {
     return []
@@ -208,8 +210,11 @@ export const listFormAnswers: Action<typeof fields, typeof settings> = {
         })
 
         if (formSelection === 'Latest') {
-          // Get only the most recent form (first one since they're sorted by date desc)
-          forms = allFormsInTrack.length > 0 ? [allFormsInTrack[0]] : []
+          // Get only the most recent form (last one since they're sorted by date ascending)
+          forms =
+            allFormsInTrack.length > 0
+              ? [allFormsInTrack[allFormsInTrack.length - 1]]
+              : []
         } else {
           forms = allFormsInTrack
         }

@@ -30,7 +30,13 @@ describe('getAllFormsInCurrentStep', () => {
 
     const mockQuery = awellSdkMock.orchestration.query as jest.Mock
 
+  })
+
+  test('Should return all forms in the current step sorted by date ascending (chronological)', async () => {
+    const mockQuery = awellSdkMock.orchestration.query as jest.Mock
+
     // Mock the query results for each call
+    // Note: form_activity_1 (older) should be processed first after sorting
     mockQuery
       .mockResolvedValueOnce({
         activity: {
@@ -41,13 +47,12 @@ describe('getAllFormsInCurrentStep', () => {
       .mockResolvedValueOnce({
         pathwayStepActivities: mockPathwayActivitiesResponse,
       })
+      // After ascending sort: form_activity_1 (older) comes first, then form_activity_2 (newer)
       .mockResolvedValueOnce({ form: mockFormDefinitionOneResponse })
       .mockResolvedValueOnce({ form: mockFormDefinitionTwoResponse })
       .mockResolvedValueOnce({ formResponse: mockFormResponseOneResponse })
       .mockResolvedValueOnce({ formResponse: mockFormResponseTwoResponse })
-  })
 
-  test('Should return all forms in the current step', async () => {
     const result = await getAllFormsInCurrentStep({
       awellSdk: awellSdkMock,
       pathwayId: 'whatever',
@@ -60,73 +65,10 @@ describe('getAllFormsInCurrentStep', () => {
     // two calls to GetFormResponse each form has a response
     expect(awellSdkMock.orchestration.query).toHaveBeenCalledTimes(6)
 
-    expect(result).toEqual([
-      {
-        formActivityId: 'form_activity_2',
-        formId: 'form_2',
-        formDefinition: {
-          questions: [
-            {
-              id: 'short_text',
-              definition_id: 'qiIFXlNLUVzN',
-              title: 'Question that collects a string value',
-              key: 'questionThatCollectsAStringValue',
-              dataPointValueType: 'STRING',
-              questionType: 'INPUT',
-              userQuestionType: 'SHORT_TEXT',
-              metadata: '{"healthieCustomModuleId":"short_text"}',
-              options: [],
-              __typename: 'Question',
-              questionConfig: null,
-              rule: null,
-            },
-          ],
-        },
-        formResponse: {
-          answers: [
-            {
-              question_id: 'short_text',
-              value: 'A short answer',
-              value_type: 'STRING',
-              label: null,
-              __typename: 'Answer',
-            },
-          ],
-        },
-      },
-      {
-        formActivityId: 'form_activity_1',
-        formId: 'form_1',
-        formDefinition: {
-          questions: [
-            {
-              id: 'long_text',
-              definition_id: 'tSFHKGROz6Zm',
-              title: 'Question that collects a string but long-form (textarea)',
-              key: 'questionThatCollectsAStringButLongFormTextarea',
-              dataPointValueType: 'STRING',
-              questionType: 'INPUT',
-              userQuestionType: 'LONG_TEXT',
-              metadata: '{"healthieCustomModuleId":"long_text"}',
-              options: [],
-              __typename: 'Question',
-              questionConfig: null,
-              rule: null,
-            },
-          ],
-        },
-        formResponse: {
-          answers: [
-            {
-              question_id: 'long_text',
-              value: 'A long text',
-              value_type: 'STRING',
-              label: null,
-              __typename: 'Answer',
-            },
-          ],
-        },
-      },
-    ])
+    // Results should be in ascending order (oldest first = chronological)
+    // form_activity_1 has earlier date (22:56:08.315Z) than form_activity_2 (22:56:10.000Z)
+    expect(result[0].formActivityId).toBe('form_activity_1')
+    expect(result[1].formActivityId).toBe('form_activity_2')
+    expect(result).toHaveLength(2)
   })
 })

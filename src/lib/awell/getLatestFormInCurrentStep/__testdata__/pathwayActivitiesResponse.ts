@@ -66,3 +66,56 @@ export const mockPathwayStepActivitiesResponse = {
     },
   ],
 } satisfies DeepPartial<ActivitiesPayload>
+
+/**
+ * Mock data with multiple form activities in ASCENDING order (oldest first).
+ * This tests that the sorting logic correctly returns the most recent form.
+ */
+export const mockPathwayStepActivitiesWithMultipleFormsResponse = {
+  success: true,
+  activities: [
+    { ...mockCurrentActivityResponse.activity },
+    // Oldest form - 3 days ago (listed FIRST to test sorting)
+    {
+      id: 'oldestFormActivityId',
+      status: 'DONE',
+      date: subDays(today, 3).toISOString(),
+      object: {
+        id: 'oldestFormId',
+        name: 'Oldest Form',
+        type: 'FORM',
+      },
+      context: {
+        step_id: stepId,
+      },
+    },
+    // Middle form - 2 days ago
+    {
+      id: 'middleFormActivityId',
+      status: 'DONE',
+      date: subDays(today, 2).toISOString(),
+      object: {
+        id: 'middleFormId',
+        name: 'Middle Form',
+        type: 'FORM',
+      },
+      context: {
+        step_id: stepId,
+      },
+    },
+    // Most recent form - 1 day ago (listed LAST to test sorting)
+    {
+      id: 'latestFormActivityId',
+      status: 'DONE',
+      date: subDays(today, 1).toISOString(),
+      object: {
+        id: 'latestFormId',
+        name: 'Latest Form',
+        type: 'FORM',
+      },
+      context: {
+        step_id: stepId,
+      },
+    },
+  ],
+} satisfies DeepPartial<ActivitiesPayload>
