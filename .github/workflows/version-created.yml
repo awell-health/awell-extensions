@@ -1,9 +1,8 @@
-name: New version created
+name: Publish Release
 
 on:
-  push:
-    tags:
-      - '*'
+  release:
+    types: [published]
 
 permissions:
   id-token: write # Required for OIDC
@@ -14,25 +13,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
-          token: ${{secrets.VERSION_BUMP_TOKEN}}
-          fetch-depth: 0
-
-      - name: Check if tag is on main branch
-        id: check_branch
-        run: |
-          TAG_COMMIT=$(git rev-parse HEAD)
-          if git branch -r --contains "$TAG_COMMIT" | grep -q 'origin/main'; then
-            echo "on_main=true" >> "$GITHUB_OUTPUT"
-            echo "Tag is on main branch. Proceeding with publish."
-          else
-            echo "on_main=false" >> "$GITHUB_OUTPUT"
-            echo "Tag is not on main branch. Skipping publish."
-          fi
+          token: ${{ secrets.VERSION_BUMP_TOKEN }}
 
       - name: Install Node.js
-        if: steps.check_branch.outputs.on_main == 'true'
         uses: actions/setup-node@v3
         with:
           node-version: '18'
@@ -40,15 +25,12 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Install dependencies
-        if: steps.check_branch.outputs.on_main == 'true'
         run: yarn
 
       - name: Compile Typescript
-        if: steps.check_branch.outputs.on_main == 'true'
         run: yarn build
 
       - name: Setup .yarnrc.yml
-        if: steps.check_branch.outputs.on_main == 'true'
         run: |
           yarn config set npmAlwaysAuth true
           yarn config set npmAuthToken $NPM_AUTH_TOKEN
@@ -56,12 +38,10 @@ jobs:
           NPM_AUTH_TOKEN: ${{ secrets.NPM_AWELL_HEALTH_PUBLISHER }}
 
       - name: Publish to NPM Registry
-        if: steps.check_branch.outputs.on_main == 'true'
         run: |
           yarn npm publish --access public
 
       - name: Redeploy the extension server
-        if: steps.check_branch.outputs.on_main == 'true'
         run: |
           CURRENT_VERSION=$(cat package.json | jq -r '.version')
           curl -L \

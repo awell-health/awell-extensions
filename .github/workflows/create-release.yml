@@ -1,0 +1,77 @@
+name: Create Release
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  create-release:
+    runs-on: ubuntu-latest
+    # Skip if this is a version bump commit from this workflow
+    if: "!startsWith(github.event.head_commit.message, 'chore: release v')"
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.VERSION_BUMP_TOKEN }}
+          fetch-depth: 0
+
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: yarn
+
+      - name: Get current version
+        id: current_version
+        run: |
+          current=$(cat package.json | jq -r '.version')
+          echo "version=$current" >> "$GITHUB_OUTPUT"
+
+      - name: Bump version
+        id: bump_version
+        run: |
+          yarn version -i patch
+          new_version=$(cat package.json | jq -r '.version')
+          echo "version=$new_version" >> "$GITHUB_OUTPUT"
+
+      - name: Generate changelog
+        run: |
+          # Get the previous tag
+          previous_tag=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+          
+          if [ -z "$previous_tag" ]; then
+            # No previous tag, get all commits
+            git log --pretty=format:"- %s (%h)" --no-merges | head -50 > changelog.txt
+          else
+            # Get commits since last tag
+            git log ${previous_tag}..HEAD --pretty=format:"- %s (%h)" --no-merges > changelog.txt
+          fi
+
+      - name: Commit version bump
+        run: |
+          git config --global user.name "Awell CI"
+          git config --global user.email "ci@awellhealth.com"
+          git add package.json .yarn/versions
+          git commit -m "chore: release v${{ steps.bump_version.outputs.version }}"
+          git push
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.VERSION_BUMP_TOKEN }}
+        run: |
+          changelog=$(cat changelog.txt)
+          
+          gh release create "v${{ steps.bump_version.outputs.version }}" \
+            --title "v${{ steps.bump_version.outputs.version }}" \
+            --notes "## What's Changed
+
+          $changelog
+
+          **Full Changelog**: https://github.com/${{ github.repository }}/compare/v${{ steps.current_version.outputs.version }}...v${{ steps.bump_version.outputs.version }}"
