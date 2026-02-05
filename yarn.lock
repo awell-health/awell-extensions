@@ -251,7 +251,7 @@ __metadata:
   dependencies:
     "@airtop/sdk": "npm:^0.1.44"
     "@awell-health/awell-sdk": "npm:0.1.24"
-    "@awell-health/extensions-core": "npm:1.1.9"
+    "@awell-health/extensions-core": "npm:1.1.11"
     "@awell-health/healthie-sdk": "npm:^0.1.1"
     "@calcom/embed-react": "npm:^1.5.3"
     "@dropbox/sign": "npm:^1.8.0"
@@ -372,9 +372,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@awell-health/extensions-core@npm:1.1.9":
-  version: 1.1.9
-  resolution: "@awell-health/extensions-core@npm:1.1.9"
+"@awell-health/extensions-core@npm:1.1.11":
+  version: 1.1.11
+  resolution: "@awell-health/extensions-core@npm:1.1.11"
   dependencies:
     "@langchain/core": "npm:^0.3.33"
     "@langchain/openai": "npm:^0.3.0"
@@ -389,7 +389,7 @@ __metadata:
     zod-validation-error: "npm:^3.2.0"
   peerDependencies:
     "@awell-health/awell-sdk": "*"
-  checksum: 10/3db73098d6094fca4e9bcea892673d2a4a0e81a050a8f48702df1716ed719f2540c3ec7e7e7d071fbd98df680ea52e1ca0dc024d233a9c4b641e3d58f87fb544
+  checksum: 10/a1d84d342dae48f34ab5462f089efbcb92898f4cd908db35522dd52aa1bb3d0d8d1c310d5b4ae880573f0d7086693b2c34762ef9b2d8bf562deeb57cf5de944a
   languageName: node
   linkType: hard
 
