@@ -54,6 +54,21 @@ export const fields = {
   },
 } satisfies Fields
 
+/**
+ * Result types for SMS broadcast creation.
+ * - 'sent': Broadcast created successfully, message sent to carrier
+ * - 'invalid_number': Phone number is invalid or recipient cannot receive texts (opted out, etc.)
+ * - 'failed': Other API errors
+ */
+export const DeliveryResultType = {
+  SENT: 'sent',
+  INVALID_NUMBER: 'invalid_number',
+  FAILED: 'failed',
+} as const
+
+export type DeliveryResult =
+  (typeof DeliveryResultType)[keyof typeof DeliveryResultType]
+
 export const dataPoints = {
   broadcastId: {
     key: 'broadcastId',
@@ -73,6 +88,25 @@ export const dataPoints = {
   },
   broadcastStartDate: {
     key: 'broadcastStartDate',
+    valueType: 'string',
+  },
+  /**
+   * The result of the SMS broadcast creation.
+   * Possible values:
+   * - 'sent': Broadcast created, message sent to carrier for delivery
+   * - 'invalid_number': Phone number is invalid or recipient cannot receive texts
+   * - 'failed': Other API errors
+   */
+  deliveryResult: {
+    key: 'deliveryResult',
+    valueType: 'string',
+  },
+  /**
+   * Additional details about the result.
+   * Contains the error message from Text-Em-All for failed requests.
+   */
+  deliveryResultDetails: {
+    key: 'deliveryResultDetails',
     valueType: 'string',
   },
 } satisfies Record<string, DataPointDefinition>

@@ -1,6 +1,9 @@
 import { type AxiosResponse } from 'axios'
 
-export const CreateSMSBroadcastMockResponse = {
+/**
+ * Mock response for successful broadcast creation.
+ */
+export const CreateSMSBroadcastSuccessMockResponse = {
   status: 200,
   statusText: 'OK',
   headers: {
@@ -37,21 +40,44 @@ export const CreateSMSBroadcastMockResponse = {
       State: null,
       Permissions: null,
     },
-    RetryTimes: 1,
-    CallThrottle: 0,
-    LivePersonTotal: 0,
-    AnsweringMachineTotal: 0,
-    BusyNoAnswerTotal: 0,
-    InvalidNumberTotal: 0,
-    SurveyResponseTotal: 0,
-    TransferTotal: 0,
-    SurveyResponses: null,
-    MaxMessageLength: 30,
-    MessageRecordingInstruction: null,
-    EstimatedDuration: 0,
-    EstimatedCompletion: null,
-    ExcludedDaysIgnored: false,
-    CallingWindowIgnored: false,
-    NotEnoughTimeToComplete: false,
+  },
+} satisfies Partial<AxiosResponse>
+
+/**
+ * Mock response for invalid/opted-out phone number.
+ * ErrorCode 3005 = NoValidBroadcastContacts
+ */
+export const InvalidNumberMockResponse = {
+  status: 400,
+  statusText: 'Bad Request',
+  data: {
+    ErrorCode: 3005,
+    ErrorName: 'NoValidBroadcastContacts',
+    ErrorType: 'Informational',
+    Message:
+      'Unable to create broadcast. None of the contacts are able to receive text messages.',
+  },
+} satisfies Partial<AxiosResponse>
+
+/**
+ * Mock response for rate limiting (429).
+ */
+export const RateLimitMockResponse = {
+  status: 429,
+  statusText: 'Too Many Requests',
+  data: {},
+} satisfies Partial<AxiosResponse>
+
+/**
+ * Mock response for generic API error.
+ */
+export const GenericErrorMockResponse = {
+  status: 400,
+  statusText: 'Bad Request',
+  data: {
+    ErrorCode: 9999,
+    ErrorName: 'SomeOtherError',
+    ErrorType: 'Error',
+    Message: 'Something went wrong',
   },
 } satisfies Partial<AxiosResponse>
