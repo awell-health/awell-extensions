@@ -91,6 +91,7 @@ export const createSMSBroadcast: Action<
           },
         ],
         data_points: {
+          success: 'true',
           broadcastId: data.BroadcastID.toString(),
           broadcastStatus: data.BroadcastStatus,
           uriBroadcastDetails: data.UriBroadcastDetails,
@@ -140,6 +141,7 @@ export const createSMSBroadcast: Action<
           },
         ],
         data_points: {
+          success: 'false',
           broadcastId: '',
           broadcastStatus: '',
           uriBroadcastDetails: '',

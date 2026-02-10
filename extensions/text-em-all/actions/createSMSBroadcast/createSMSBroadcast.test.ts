@@ -66,6 +66,7 @@ describe('CreateSMSBroadcast', () => {
     expect(onComplete).toHaveBeenCalledWith(
       expect.objectContaining({
         data_points: expect.objectContaining({
+          success: 'true',
           broadcastId: '10006607',
           deliveryResult: DeliveryResultType.SENT,
           deliveryResultDetails: 'Message sent to carrier for delivery',
@@ -98,6 +99,7 @@ describe('CreateSMSBroadcast', () => {
     expect(onComplete).toHaveBeenCalledWith(
       expect.objectContaining({
         data_points: expect.objectContaining({
+          success: 'false',
           deliveryResult: DeliveryResultType.INVALID_NUMBER,
           deliveryResultDetails:
             'Unable to create broadcast. None of the contacts are able to receive text messages.',
@@ -165,6 +167,7 @@ describe('CreateSMSBroadcast', () => {
     expect(onComplete).toHaveBeenCalledWith(
       expect.objectContaining({
         data_points: expect.objectContaining({
+          success: 'false',
           deliveryResult: DeliveryResultType.FAILED,
           deliveryResultDetails: 'Something went wrong',
         }),

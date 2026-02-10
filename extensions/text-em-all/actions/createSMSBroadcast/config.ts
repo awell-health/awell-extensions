@@ -70,6 +70,14 @@ export type DeliveryResult =
   (typeof DeliveryResultType)[keyof typeof DeliveryResultType]
 
 export const dataPoints = {
+  /**
+   * Whether the SMS was sent successfully.
+   * true = message sent to carrier, false = failed (invalid number, opted out, etc.)
+   */
+  success: {
+    key: 'success',
+    valueType: 'boolean',
+  },
   broadcastId: {
     key: 'broadcastId',
     valueType: 'number',
