@@ -24,9 +24,37 @@ export const fields = {
     label: 'Phone Number',
     type: FieldType.STRING,
     stringType: StringType.PHONE,
-    required: true,
+    required: false,
     description:
-      'The primary phone number of the recipient. Must be a valid North American Numbering Plan (NANP) phone number.',
+      'The primary phone number of the recipient. Must be a valid NANP phone number. If omitted, falls back to the patient mobile phone from their profile.',
+  },
+  firstName: {
+    id: 'firstName',
+    label: 'First Name',
+    type: FieldType.STRING,
+    required: false,
+    description: 'The first name of the contact. If omitted, falls back to the patient first name from their profile.',
+  },
+  lastName: {
+    id: 'lastName',
+    label: 'Last Name',
+    type: FieldType.STRING,
+    required: false,
+    description: 'The last name of the contact. If omitted, falls back to the patient last name from their profile.',
+  },
+  notes: {
+    id: 'notes',
+    label: 'Notes',
+    type: FieldType.STRING,
+    required: false,
+    description: 'Notes about the contact (e.g., "Eligibility form from Awell").',
+  },
+  integrationData: {
+    id: 'integrationData',
+    label: 'Integration Data',
+    type: FieldType.STRING,
+    required: false,
+    description: 'Extra field for integration information.',
   },
   textMessage: {
     id: 'textMessage',
@@ -51,6 +79,14 @@ export const fields = {
     required: false,
     description:
       'The time the broadcast should start. Will default to start immediately. If provided must be a datetime as ISO 8601 string and time to send the message in UTC',
+  },
+  checkCallingWindow: {
+    id: 'checkCallingWindow',
+    label: 'Check Calling Window',
+    type: FieldType.BOOLEAN,
+    required: false,
+    description:
+      'Whether to enforce the calling window restrictions. Defaults to false.',
   },
 } satisfies Fields
 
@@ -119,18 +155,46 @@ export const dataPoints = {
   },
 } satisfies Record<string, DataPointDefinition>
 
+/** Schema for raw field extraction (no transforms, just type checking) */
 export const FieldsSchema = z.object({
   broadcastName: z.string(),
-  phoneNumber: z.string().transform((phone) => {
-    const parsedNumber = parsePhoneNumber(phone)
-    return parsedNumber.format('NATIONAL') // Returns "(XXX) XXX-XXXX" NANP format
-  }),
+  phoneNumber: z.string().optional(),
+  firstName: z.string().optional(),
+  lastName: z.string().optional(),
+  notes: z.string().optional(),
+  integrationData: z.string().optional(),
   textMessage: z.string(),
   textNumberID: z.number().optional(),
-  startDate: DateTimeSchema.optional().transform((date) => {
-    if (isNil(date) || date === '') return undefined
-    // format is required: 2/1/2020 1:15PM',
-    return format(new Date(date), 'M/d/yyyy h:mmaa')
-  }),
+  startDate: DateTimeSchema.optional(),
+  checkCallingWindow: z.boolean().optional().default(false),
 })
 export type ActionFields = z.infer<typeof FieldsSchema>
+
+/**
+ * Schema for the final resolved broadcast input — after patient profile
+ * fallbacks have been applied. This is where all transforms and
+ * required-field checks live so everything is validated in one pass.
+ */
+export const BroadcastInputSchema = z.object({
+  broadcastName: z.string(),
+  phoneNumber: z.string().transform((phone) => {
+    const parsed = parsePhoneNumber(phone)
+    return parsed.format('NATIONAL') // "(XXX) XXX-XXXX" NANP format
+  }),
+  firstName: z.string().optional(),
+  lastName: z.string().optional(),
+  notes: z.string().optional(),
+  integrationData: z.string().optional(),
+  textMessage: z.string(),
+  textNumberID: z.number().optional(),
+  startDate: z
+    .string()
+    .optional()
+    .transform((date) => {
+      if (isNil(date) || date === '') return undefined
+      // format required by Text-Em-All: '2/1/2020 1:15PM'
+      return format(new Date(date), 'M/d/yyyy h:mmaa')
+    }),
+  checkCallingWindow: z.boolean(),
+})
+export type BroadcastInput = z.infer<typeof BroadcastInputSchema>

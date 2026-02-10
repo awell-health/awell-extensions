@@ -4,10 +4,12 @@ import {
   fields,
   dataPoints,
   FieldsSchema,
+  BroadcastInputSchema,
   DeliveryResultType,
 } from './config'
 import { type settings, SettingsSchema } from '../../settings'
 import { TextEmAllClient } from '../../lib'
+import { isEmpty } from 'lodash'
 
 /**
  * Known Text-Em-All error codes and their meanings.
@@ -19,19 +21,26 @@ const ERROR_CODES = {
 /**
  * Determines the delivery result based on an error response.
  */
-function getResultFromError(errorCode?: number, errorName?: string, message?: string): {
+function getResultFromError(
+  errorCode?: number,
+  errorName?: string,
+  message?: string,
+): {
   result: string
   details: string
 } {
-  // Handle known error codes
-  if (errorCode === ERROR_CODES.NO_VALID_CONTACTS || errorName === 'NoValidBroadcastContacts') {
+  if (
+    errorCode === ERROR_CODES.NO_VALID_CONTACTS ||
+    errorName === 'NoValidBroadcastContacts'
+  ) {
     return {
       result: DeliveryResultType.INVALID_NUMBER,
-      details: message ?? 'Phone number is invalid or recipient cannot receive text messages',
+      details:
+        message ??
+        'Phone number is invalid or recipient cannot receive text messages',
     }
   }
 
-  // Default for unknown errors
   return {
     result: DeliveryResultType.FAILED,
     details: message ?? 'Broadcast creation failed',
@@ -51,31 +60,111 @@ export const createSMSBroadcast: Action<
   fields,
   dataPoints,
   previewable: true,
-  onEvent: async ({ payload, onComplete, onError }): Promise<void> => {
-    const {
-      fields: {
-        broadcastName: BroadcastName,
-        phoneNumber,
-        textMessage: TextMessage,
-        textNumberID: TextNumberID,
-        startDate: StartDate,
-      },
-      settings,
-    } = validate({
+  onEvent: async ({
+    payload,
+    onComplete,
+    onError,
+    helpers: { log },
+  }): Promise<void> => {
+    // Step 1: Extract raw field values and settings
+    const { fields: rawFields, settings } = validate({
       schema: z.object({ fields: FieldsSchema, settings: SettingsSchema }),
       payload,
     })
 
-    const client = new TextEmAllClient(settings)
-    const request = {
-      BroadcastName,
-      BroadcastType: 'SMS',
-      TextMessage,
-      TextNumberID,
-      StartDate,
-      Contacts: [{ PrimaryPhone: phoneNumber }],
+    const patientProfile = payload.patient?.profile
+
+    // Step 2: Resolve values — fields take priority, patient profile is fallback
+    let phoneNumber = rawFields.phoneNumber
+    if (isEmpty(phoneNumber)) {
+      phoneNumber =
+        (patientProfile?.mobile_phone as string | undefined) ??
+        (patientProfile?.phone as string | undefined)
+      if (isEmpty(phoneNumber)) {
+        await onError({
+          events: [
+            {
+              date: new Date().toISOString(),
+              text: {
+                en: 'No phone number provided and no mobile phone found on patient profile.',
+              },
+              error: {
+                category: 'WRONG_INPUT',
+                message:
+                  'No phone number provided and no mobile phone found on patient profile',
+              },
+            },
+          ],
+        })
+        return
+      }
+      log(
+        { source: 'patient_profile', field: 'mobile_phone' },
+        'Phone number not provided — using patient profile mobile phone',
+      )
     }
 
+    let firstName = rawFields.firstName
+    if (isEmpty(firstName) && !isEmpty(patientProfile?.first_name)) {
+      firstName = patientProfile?.first_name as string
+      log(
+        { source: 'patient_profile', field: 'first_name' },
+        'First name not provided — using patient profile first name',
+      )
+    }
+
+    let lastName = rawFields.lastName
+    if (isEmpty(lastName) && !isEmpty(patientProfile?.last_name)) {
+      lastName = patientProfile?.last_name as string
+      log(
+        { source: 'patient_profile', field: 'last_name' },
+        'Last name not provided — using patient profile last name',
+      )
+    }
+
+    // Step 3: Validate the resolved input (NANP phone format, date transform, etc.)
+    const input = BroadcastInputSchema.parse({
+      broadcastName: rawFields.broadcastName,
+      phoneNumber,
+      firstName,
+      lastName,
+      notes: rawFields.notes,
+      integrationData: rawFields.integrationData,
+      textMessage: rawFields.textMessage,
+      textNumberID: rawFields.textNumberID,
+      startDate: rawFields.startDate,
+      checkCallingWindow: rawFields.checkCallingWindow,
+    })
+
+    // Step 4: Build the API request
+    const contact: Record<string, string> = {
+      PrimaryPhone: input.phoneNumber,
+    }
+    if (!isEmpty(input.firstName)) {
+      contact.FirstName = input.firstName as string
+    }
+    if (!isEmpty(input.lastName)) {
+      contact.LastName = input.lastName as string
+    }
+    if (!isEmpty(input.notes)) {
+      contact.Notes = input.notes as string
+    }
+    if (!isEmpty(input.integrationData)) {
+      contact.IntegrationData = input.integrationData as string
+    }
+
+    const request = {
+      BroadcastName: input.broadcastName,
+      BroadcastType: 'SMS',
+      TextMessage: input.textMessage,
+      TextNumberID: input.textNumberID,
+      StartDate: input.startDate,
+      CheckCallingWindow: input.checkCallingWindow,
+      Contacts: [contact],
+    }
+
+    // Step 5: Send to Text-Em-All
+    const client = new TextEmAllClient(settings)
     const resp = await client.createBroadcast(request)
     const data = resp.data
 
@@ -85,9 +174,7 @@ export const createSMSBroadcast: Action<
         events: [
           {
             date: new Date().toISOString(),
-            text: {
-              en: `SMS broadcast created successfully`,
-            },
+            text: { en: 'SMS broadcast created successfully' },
           },
         ],
         data_points: {
@@ -104,7 +191,7 @@ export const createSMSBroadcast: Action<
       return
     }
 
-    // Handle rate limiting (429)
+    // Rate limiting (429) — transient, retry may help
     if (resp.status === 429) {
       await onError({
         events: [
@@ -121,23 +208,24 @@ export const createSMSBroadcast: Action<
       return
     }
 
-    // Handle API errors (400, etc.) - these are valid results, not failures
+    // API errors (400, etc.) — valid triage data, not a retry candidate
     if ('ErrorCode' in data || 'ErrorName' in data || 'Message' in data) {
-      const errorData = data as { ErrorCode?: number; ErrorName?: string; Message?: string }
+      const errorData = data as {
+        ErrorCode?: number
+        ErrorName?: string
+        Message?: string
+      }
       const { result, details } = getResultFromError(
         errorData.ErrorCode,
         errorData.ErrorName,
         errorData.Message,
       )
 
-      // Return as success with the error result - this is valid triage data
       await onComplete({
         events: [
           {
             date: new Date().toISOString(),
-            text: {
-              en: `SMS broadcast result: ${result} - ${details}`,
-            },
+            text: { en: `SMS broadcast result: ${result} - ${details}` },
           },
         ],
         data_points: {

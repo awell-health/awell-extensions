@@ -58,6 +58,7 @@ describe('CreateSMSBroadcast', () => {
       BroadcastName: 'testBroadcast',
       BroadcastType: 'SMS',
       StartDate: '3/3/2025 10:00AM',
+      CheckCallingWindow: false,
       Contacts: [{ PrimaryPhone: '(555) 555-0123' }],
       TextMessage: 'This is a test text message. Please reply.',
       TextNumberID: 1234567890,
@@ -171,6 +172,167 @@ describe('CreateSMSBroadcast', () => {
           deliveryResult: DeliveryResultType.FAILED,
           deliveryResultDetails: 'Something went wrong',
         }),
+      }),
+    )
+  })
+
+  it('should include contact fields when provided', async () => {
+    const mockCreateBroadcast = jest
+      .fn()
+      .mockResolvedValue(CreateSMSBroadcastSuccessMockResponse)
+
+    const mockedTextEmAllClient = jest.mocked(TextEmAllClient)
+    mockedTextEmAllClient.mockImplementation(() => {
+      return {
+        createBroadcast: mockCreateBroadcast,
+      } as unknown as TextEmAllClient
+    })
+
+    const payloadWithContactFields = generateTestPayload({
+      fields: {
+        broadcastName: 'testBroadcast',
+        phoneNumber: '+15555550123',
+        firstName: 'John',
+        lastName: 'Doe',
+        notes: 'Eligibility form from Awell',
+        integrationData: 'patient-123',
+        textMessage: 'This is a test text message.',
+        checkCallingWindow: true,
+      },
+      settings: {
+        customerKey: 'someCustomerKey',
+        customerSecret: 'someCustomerSecret',
+        token: 'someToken',
+        baseUrl: 'https://staging-rest.call-em-all.com/v1',
+      },
+    })
+
+    await extensionAction.onEvent({
+      payload: payloadWithContactFields,
+      onComplete,
+      onError,
+      helpers,
+      attempt: 1,
+    })
+
+    expect(mockCreateBroadcast).toHaveBeenCalledWith({
+      BroadcastName: 'testBroadcast',
+      BroadcastType: 'SMS',
+      CheckCallingWindow: true,
+      Contacts: [
+        {
+          PrimaryPhone: '(555) 555-0123',
+          FirstName: 'John',
+          LastName: 'Doe',
+          Notes: 'Eligibility form from Awell',
+          IntegrationData: 'patient-123',
+        },
+      ],
+      TextMessage: 'This is a test text message.',
+      TextNumberID: undefined,
+      StartDate: undefined,
+    })
+    expect(onError).not.toHaveBeenCalled()
+    expect(onComplete).toHaveBeenCalled()
+  })
+
+  it('should fall back to patient profile for phone, first name, and last name', async () => {
+    const mockCreateBroadcast = jest
+      .fn()
+      .mockResolvedValue(CreateSMSBroadcastSuccessMockResponse)
+
+    const mockedTextEmAllClient = jest.mocked(TextEmAllClient)
+    mockedTextEmAllClient.mockImplementation(() => {
+      return {
+        createBroadcast: mockCreateBroadcast,
+      } as unknown as TextEmAllClient
+    })
+
+    const payloadWithPatientProfile = generateTestPayload({
+      patient: {
+        id: 'test-patient',
+        profile: {
+          first_name: 'Jane',
+          last_name: 'Smith',
+          mobile_phone: '+15551234567',
+        },
+      },
+      fields: {
+        broadcastName: 'testBroadcast',
+        textMessage: 'Hello from Awell',
+      },
+      settings: {
+        customerKey: 'someCustomerKey',
+        customerSecret: 'someCustomerSecret',
+        token: 'someToken',
+        baseUrl: 'https://staging-rest.call-em-all.com/v1',
+      },
+    })
+
+    await extensionAction.onEvent({
+      payload: payloadWithPatientProfile,
+      onComplete,
+      onError,
+      helpers,
+      attempt: 1,
+    })
+
+    // Patient profile phone (+15551234567) should be formatted to NANP
+    expect(mockCreateBroadcast).toHaveBeenCalledWith(
+      expect.objectContaining({
+        Contacts: [
+          expect.objectContaining({
+            PrimaryPhone: '(555) 123-4567',
+            FirstName: 'Jane',
+            LastName: 'Smith',
+          }),
+        ],
+      }),
+    )
+    expect(helpers.log).toHaveBeenCalledTimes(3)
+    expect(onError).not.toHaveBeenCalled()
+    expect(onComplete).toHaveBeenCalled()
+  })
+
+  it('should error when no phone number is provided and patient profile has none', async () => {
+    const mockedTextEmAllClient = jest.mocked(TextEmAllClient)
+    mockedTextEmAllClient.mockImplementation(() => {
+      return {
+        createBroadcast: jest.fn(),
+      } as unknown as TextEmAllClient
+    })
+
+    const payloadNoPhone = generateTestPayload({
+      fields: {
+        broadcastName: 'testBroadcast',
+        textMessage: 'Hello',
+      },
+      settings: {
+        customerKey: 'someCustomerKey',
+        customerSecret: 'someCustomerSecret',
+        token: 'someToken',
+        baseUrl: 'https://staging-rest.call-em-all.com/v1',
+      },
+    })
+
+    await extensionAction.onEvent({
+      payload: payloadNoPhone,
+      onComplete,
+      onError,
+      helpers,
+      attempt: 1,
+    })
+
+    expect(onComplete).not.toHaveBeenCalled()
+    expect(onError).toHaveBeenCalledWith(
+      expect.objectContaining({
+        events: expect.arrayContaining([
+          expect.objectContaining({
+            error: expect.objectContaining({
+              category: 'WRONG_INPUT',
+            }),
+          }),
+        ]),
       }),
     )
   })
