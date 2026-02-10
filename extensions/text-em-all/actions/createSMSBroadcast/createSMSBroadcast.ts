@@ -77,9 +77,7 @@ export const createSMSBroadcast: Action<
     // Step 2: Resolve values — fields take priority, patient profile is fallback
     let phoneNumber = rawFields.phoneNumber
     if (isEmpty(phoneNumber)) {
-      phoneNumber =
-        (patientProfile?.mobile_phone as string | undefined) ??
-        (patientProfile?.phone as string | undefined)
+      phoneNumber = patientProfile?.mobile_phone ?? patientProfile?.phone
       if (isEmpty(phoneNumber)) {
         await onError({
           events: [
