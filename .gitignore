@@ -29,3 +29,5 @@ dist/*
 
 # Zed editor
 .zed
+
+.playwright-mcp/
