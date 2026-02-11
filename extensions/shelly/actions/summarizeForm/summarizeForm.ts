@@ -4,8 +4,15 @@ import { detectLanguageWithLLM } from '../../lib/detectLanguageWithLLM'
 import { createOpenAIModel } from '../../../../src/lib/llm/openai/createOpenAIModel'
 import { OPENAI_MODELS } from '../../../../src/lib/llm/openai/constants'
 import { fields, dataPoints, FieldsValidationSchema } from './config'
-import { getFormResponseText } from '../../lib/getFormResponseText'
-import { getLatestFormInCurrentStep } from '../../../../src/lib/awell'
+import {
+  getFormResponseText,
+  getResponsesForAllForms,
+} from '../../lib/getFormResponseText'
+import {
+  getLatestFormInCurrentStep,
+  getAllFormsInCurrentStep,
+  getFormsInTrack,
+} from '../../../../src/lib/awell'
 import { markdownToHtml } from '../../../../src/utils'
 import { getCareFlowDetails } from '../../lib/getCareFlowDetails'
 import { isNil } from 'lodash'
@@ -17,6 +24,9 @@ import { isNil } from 'lodash'
  * 1. Generate a concise summary in specified format and language
  * 2. Includes appropriate disclaimer
  *
+ * Supports configurable scope (Step or Track) and form selection (Latest or All),
+ * matching the behavior of the listFormAnswers action.
+ *
  * @returns HTML-formatted summary
  */
 export const summarizeForm: Action<
@@ -27,16 +37,21 @@ export const summarizeForm: Action<
   key: 'summarizeForm',
   category: Category.WORKFLOW,
   title: 'Summarize Form',
-  description: 'Summarize the response of a last form in a step with AI.',
+  description:
+    'Summarize form responses with AI. Defaults to the latest form in the current step, but can summarize all forms in the step or across the track.',
   fields,
   previewable: false,
   dataPoints,
 
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
     // 1. Validate input fields
-    const { summaryFormat, language, additionalInstructions } = FieldsValidationSchema.parse(
-      payload.fields,
-    )
+    const {
+      scope,
+      formSelection,
+      summaryFormat,
+      language,
+      additionalInstructions,
+    } = FieldsValidationSchema.parse(payload.fields)
 
     // 2. Initialize OpenAI model with metadata
     const { model, metadata, callbacks } = await createOpenAIModel({
@@ -50,30 +65,97 @@ export const summarizeForm: Action<
     const awellSdk = await helpers.awellSdk()
 
     // Get care flow details for the disclaimer
-    const careFlowDetails = await getCareFlowDetails(awellSdk, payload.pathway.id)
-    
-    // 3. Get form data
-    const { formDefinition, formResponse } = await getLatestFormInCurrentStep({
+    const careFlowDetails = await getCareFlowDetails(
       awellSdk,
-      pathwayId: payload.pathway.id,
-      activityId: payload.activity.id,
-    })
+      payload.pathway.id,
+    )
 
-    const { result: formData } = getFormResponseText({
-      formDefinition,
-      formResponse,
-    })
+    // 3. Get form data based on scope and formSelection
+    let formData: string
+
+    if (scope === 'Step') {
+      if (formSelection === 'Latest') {
+        // Single latest form in step (original behavior)
+        const { formDefinition, formResponse } =
+          await getLatestFormInCurrentStep({
+            awellSdk,
+            pathwayId: payload.pathway.id,
+            activityId: payload.activity.id,
+          })
+
+        const { result } = getFormResponseText({
+          formDefinition,
+          formResponse,
+        })
+        formData = result
+      } else {
+        // All forms in step
+        const formsData = await getAllFormsInCurrentStep({
+          awellSdk,
+          pathwayId: payload.pathway.id,
+          activityId: payload.activity.id,
+        })
+
+        const { result } = getResponsesForAllForms({ formsData })
+        formData = result
+      }
+    } else {
+      // scope === 'Track'
+      const allFormsInTrack = await getFormsInTrack({
+        awellSdk,
+        pathwayId: payload.pathway.id,
+        activityId: payload.activity.id,
+      })
+
+      if (formSelection === 'Latest') {
+        // Latest form in track
+        if (allFormsInTrack.length === 0) {
+          formData = ''
+        } else {
+          const latestForm = allFormsInTrack[allFormsInTrack.length - 1]
+          const { result } = getFormResponseText({
+            formDefinition: latestForm.formDefinition,
+            formResponse: latestForm.formResponse,
+          })
+          formData = result
+        }
+      } else {
+        // All forms in track
+        const { result } = getResponsesForAllForms({
+          formsData: allFormsInTrack,
+        })
+        formData = result
+      }
+    }
+
+    if (formData === '') {
+      await onError({
+        events: [
+          {
+            date: new Date().toISOString(),
+            text: {
+              en: `No completed form found in the current ${scope.toLowerCase()}`,
+            },
+            error: {
+              category: 'WRONG_INPUT',
+              message: `No completed form found in the current ${scope.toLowerCase()}`,
+            },
+          },
+        ],
+      })
+      return
+    }
 
     // Create disclaimer message based on version availability
-    let disclaimerMessage = '';
+    let disclaimerMessage = ''
     if (!isNil(careFlowDetails.version)) {
-      disclaimerMessage = `**Important Notice:** The content provided is an AI-generated summary of form responses of version ${careFlowDetails.version} of Care Flow "${careFlowDetails.title}" (ID: ${payload.pathway.id}).`;
+      disclaimerMessage = `**Important Notice:** The content provided is an AI-generated summary of form responses of version ${careFlowDetails.version} of Care Flow "${careFlowDetails.title}" (ID: ${payload.pathway.id}).`
     } else {
-      disclaimerMessage = `**Important Notice:** The content provided is an AI-generated summary of form responses of Care Flow "${careFlowDetails.title}" (ID: ${payload.pathway.id}).`;
+      disclaimerMessage = `**Important Notice:** The content provided is an AI-generated summary of form responses of Care Flow "${careFlowDetails.title}" (ID: ${payload.pathway.id}).`
     }
-    
+
     let summaryLanguage = language
-    
+
     if (language === 'Default') {
       try {
         summaryLanguage = await detectLanguageWithLLM({

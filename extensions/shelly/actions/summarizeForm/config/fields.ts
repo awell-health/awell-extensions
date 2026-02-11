@@ -6,7 +6,43 @@ export enum SummaryFormatEnum {
   TEXT_PARAGRAPH = 'Text paragraph',
 }
 
+const ScopeEnum = z.enum(['Step', 'Track'])
+export type ScopeType = z.infer<typeof ScopeEnum>
+
+const FormSelectionEnum = z.enum(['Latest', 'All'])
+export type FormSelectionType = z.infer<typeof FormSelectionEnum>
+
 export const fields = {
+  scope: {
+    id: 'scope',
+    label: 'Scope',
+    description:
+      'The scope in which to look for forms. Default is "Step" (current step only).',
+    type: FieldType.STRING,
+    required: false,
+    options: {
+      dropdownOptions: Object.values(ScopeEnum.enum).map((scope) => ({
+        label: scope,
+        value: scope,
+      })),
+    },
+  },
+  formSelection: {
+    id: 'formSelection',
+    label: 'Form selection',
+    description:
+      'Whether to summarize the most recent form or all forms in the scope. Default is "Latest".',
+    type: FieldType.STRING,
+    required: false,
+    options: {
+      dropdownOptions: Object.values(FormSelectionEnum.enum).map(
+        (selection) => ({
+          label: selection,
+          value: selection,
+        }),
+      ),
+    },
+  },
   summaryFormat: {
     id: 'summaryFormat',
     label: 'Summary Format',
@@ -41,6 +77,8 @@ export const fields = {
 
 // Step 3: Define the validation schema using zod
 export const FieldsValidationSchema = z.object({
+  scope: ScopeEnum.default('Step'),
+  formSelection: FormSelectionEnum.default('Latest'),
   summaryFormat: z
     .enum([SummaryFormatEnum.BULLET_POINTS, SummaryFormatEnum.TEXT_PARAGRAPH])
     .optional()
