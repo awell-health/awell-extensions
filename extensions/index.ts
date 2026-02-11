@@ -38,7 +38,7 @@ import { Mailgun } from './mailgun'
 import { MathExtension } from './math'
 import { Medplum } from './medplum'
 import { MessageBird } from './messagebird'
-// import { Metriport } from './metriport'
+import { Metriport } from './metriport'
 import { nexuzhealth } from './nexuzhealth'
 import { rest } from './rest'
 import { Sendbird } from './sendbird'
@@ -106,7 +106,7 @@ export const extensions = [
   MathExtension,
   MessageBird,
   Medplum,
-  // Metriport,
+  Metriport,
   nexuzhealth,
   rest,
   Sendbird,

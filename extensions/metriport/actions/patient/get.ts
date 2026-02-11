@@ -6,7 +6,6 @@ import { handleErrorMessage } from '../../shared/errorHandler'
 import { getFields } from './fields'
 import { stringId } from '../../validation/generic.zod'
 import { patientDataPoints } from './dataPoints'
-import { isNil } from 'lodash'
 
 export const getPatient: Action<
   typeof getFields,
@@ -27,20 +26,16 @@ export const getPatient: Action<
       const api = createMetriportApi(payload.settings)
       const patient = await api.getPatient(patientId)
 
-      if (isNil(patient.personalIdentifiers)) {
-        throw new Error('Patient does not have any personal identifiers.')
-      }
+      const address = Array.isArray(patient.address)
+        ? patient.address[0]
+        : patient.address
 
-      if (Array.isArray(patient.address)) {
-        patient.address = patient.address[0]
-      }
+      const contact = Array.isArray(patient.contact)
+        ? patient.contact[0]
+        : patient.contact
 
-      if (Array.isArray(patient.contact)) {
-        patient.contact = patient.contact[0]
-      }
-
-      const driversLicense = patient.personalIdentifiers.find(
-        (id: any) => id.type === 'driversLicense',
+      const driversLicense = (patient.personalIdentifiers ?? []).find(
+        (id) => id.type === 'driversLicense',
       )
 
       await onComplete({
@@ -51,14 +46,14 @@ export const getPatient: Action<
           genderAtBirth: patient.genderAtBirth,
           driversLicenseValue: driversLicense?.value,
           driversLicenseState: driversLicense?.state,
-          addressLine1: patient.address.addressLine1,
-          addressLine2: patient.address.addressLine2,
-          city: patient.address.city,
-          state: patient.address.state,
-          zip: patient.address.zip,
-          country: patient.address.country,
-          phone: patient.contact?.phone,
-          email: patient.contact?.email,
+          addressLine1: address?.addressLine1,
+          addressLine2: address?.addressLine2,
+          city: address?.city,
+          state: address?.state,
+          zip: address?.zip,
+          country: address?.country,
+          phone: contact?.phone ?? undefined,
+          email: contact?.email ?? undefined,
         },
       })
     } catch (err) {
