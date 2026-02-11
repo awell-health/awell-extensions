@@ -69,6 +69,204 @@ jest.mock('../../lib/summarizeFormWithLLM', () => ({
     }),
 }))
 
+/**
+ * Helper to build a mockQuery for Step-scoped tests (getLatestFormInCurrentStep).
+ * Returns queries for: activity → stepActivities → formDefinition → formResponse
+ */
+const buildStepMockQuery = () =>
+  jest
+    .fn()
+    // First query: get current activity
+    .mockResolvedValueOnce({
+      activity: {
+        success: true,
+        activity: {
+          id: 'X74HeDQ4N0gtdaSEuzF8s',
+          date: '2024-09-11T22:56:59.607Z',
+          context: {
+            step_id: 'Xkn5dkyPA5uW',
+          },
+        },
+      },
+    })
+    // Second query: get activities in current step
+    .mockResolvedValueOnce({
+      pathwayStepActivities: {
+        success: true,
+        activities: [
+          {
+            id: 'X74HeDQ4N0gtdaSEuzF8s',
+            status: 'DONE',
+            date: '2024-09-11T22:56:58.607Z',
+            object: {
+              id: 'OGhjJKF5LRmo',
+              name: 'Test Form',
+              type: 'FORM',
+            },
+            context: {
+              step_id: 'Xkn5dkyPA5uW',
+            },
+          },
+        ],
+      },
+    })
+    // Third query: get form definition
+    .mockResolvedValueOnce({
+      form: mockFormDefinitionResponse,
+    })
+    // Fourth query: get form response
+    .mockResolvedValueOnce({
+      formResponse: mockFormResponseResponse,
+    })
+
+/**
+ * Helper to build a mockQuery for Step + All (getAllFormsInCurrentStep).
+ *
+ * NOTE: Promise.all causes interleaved query ordering — all definition queries
+ * fire before any response queries, so mock order is:
+ * activity → stepActivities → formDef1 → formDef2 → formResp1 → formResp2
+ */
+const buildStepAllMockQuery = () =>
+  jest
+    .fn()
+    // First query: get current activity
+    .mockResolvedValueOnce({
+      activity: {
+        success: true,
+        activity: {
+          id: 'X74HeDQ4N0gtdaSEuzF8s',
+          date: '2024-09-11T22:56:59.607Z',
+          context: {
+            step_id: 'Xkn5dkyPA5uW',
+          },
+        },
+      },
+    })
+    // Second query: get activities in current step (two forms)
+    .mockResolvedValueOnce({
+      pathwayStepActivities: {
+        success: true,
+        activities: [
+          {
+            id: 'form-activity-1',
+            status: 'DONE',
+            date: '2024-09-11T22:55:00.000Z',
+            object: {
+              id: 'form-1',
+              name: 'Form A',
+              type: 'FORM',
+            },
+            context: {
+              step_id: 'Xkn5dkyPA5uW',
+            },
+          },
+          {
+            id: 'form-activity-2',
+            status: 'DONE',
+            date: '2024-09-11T22:56:00.000Z',
+            object: {
+              id: 'form-2',
+              name: 'Form B',
+              type: 'FORM',
+            },
+            context: {
+              step_id: 'Xkn5dkyPA5uW',
+            },
+          },
+        ],
+      },
+    })
+    // All form definitions fire first (Promise.all interleaving)
+    .mockResolvedValueOnce({ form: mockFormDefinitionResponse })
+    .mockResolvedValueOnce({ form: mockFormDefinitionResponse })
+    // Then all form responses
+    .mockResolvedValueOnce({ formResponse: mockFormResponseResponse })
+    .mockResolvedValueOnce({ formResponse: mockFormResponseResponse })
+
+/**
+ * Helper to build a mockQuery for Track-scoped tests (getFormsInTrack).
+ *
+ * NOTE: Promise.all causes interleaved query ordering — all definition queries
+ * fire before any response queries, so mock order is:
+ * activity → pathwayActivities → formDef1 → ... → formDefN → formResp1 → ... → formRespN
+ */
+const buildTrackMockQuery = (formCount: number) => {
+  const mock = jest.fn()
+
+  // First query: get current activity (to find track_id)
+  mock.mockResolvedValueOnce({
+    activity: {
+      success: true,
+      activity: {
+        id: 'X74HeDQ4N0gtdaSEuzF8s',
+        date: '2024-09-11T22:56:59.607Z',
+        context: {
+          track_id: 'track-1',
+        },
+      },
+    },
+  })
+
+  // Second query: get all activities in track
+  const activities = Array.from({ length: formCount }, (_, i) => ({
+    id: `form-activity-${i + 1}`,
+    status: 'DONE',
+    date: `2024-09-11T22:5${i}:00.000Z`,
+    object: {
+      id: `form-${i + 1}`,
+      name: `Track Form ${i + 1}`,
+      type: 'FORM',
+    },
+  }))
+
+  mock.mockResolvedValueOnce({
+    pathwayActivities: {
+      success: true,
+      activities,
+    },
+  })
+
+  // All form definitions fire first (Promise.all interleaving)
+  for (let i = 0; i < formCount; i++) {
+    mock.mockResolvedValueOnce({ form: mockFormDefinitionResponse })
+  }
+  // Then all form responses
+  for (let i = 0; i < formCount; i++) {
+    mock.mockResolvedValueOnce({ formResponse: mockFormResponseResponse })
+  }
+
+  return mock
+}
+
+/**
+ * Helper to build a Track mockQuery that returns zero forms.
+ */
+const buildTrackEmptyMockQuery = () => {
+  const mock = jest.fn()
+
+  mock.mockResolvedValueOnce({
+    activity: {
+      success: true,
+      activity: {
+        id: 'X74HeDQ4N0gtdaSEuzF8s',
+        date: '2024-09-11T22:56:59.607Z',
+        context: {
+          track_id: 'track-1',
+        },
+      },
+    },
+  })
+
+  mock.mockResolvedValueOnce({
+    pathwayActivities: {
+      success: true,
+      activities: [],
+    },
+  })
+
+  return mock
+}
+
 describe('summarizeForm - Mocked LLM calls', () => {
   const { onComplete, onError, helpers, extensionAction, clearMocks } =
     TestHelpers.fromAction(summarizeForm)
@@ -76,156 +274,288 @@ describe('summarizeForm - Mocked LLM calls', () => {
   beforeEach(() => {
     clearMocks()
     jest.clearAllMocks()
-    const mockQuery = jest
-      .fn()
-      // First query: get current activity
-      .mockResolvedValueOnce({
-        activity: {
-          success: true,
-          activity: {
-            id: 'X74HeDQ4N0gtdaSEuzF8s',
-            date: '2024-09-11T22:56:59.607Z',
-            context: {
-              step_id: 'Xkn5dkyPA5uW',
-            },
-          },
+  })
+
+  describe('scope=Step, formSelection=Latest (default)', () => {
+    beforeEach(() => {
+      helpers.awellSdk = jest.fn().mockReturnValue({
+        orchestration: { query: buildStepMockQuery() },
+      })
+    })
+
+    it('Should summarize form with LLM', async () => {
+      const payload = generateTestPayload({
+        pathway: {
+          id: 'ai4rZaYEocjB',
+          definition_id: 'whatever',
         },
-      })
-      // Second query: get activities in current step
-      .mockResolvedValueOnce({
-        pathwayStepActivities: {
-          success: true,
-          activities: [
-            {
-              id: 'X74HeDQ4N0gtdaSEuzF8s',
-              status: 'DONE',
-              date: '2024-09-11T22:56:58.607Z',
-              object: {
-                id: 'OGhjJKF5LRmo',
-                name: 'Test Form',
-                type: 'FORM',
-              },
-              context: {
-                step_id: 'Xkn5dkyPA5uW',
-              },
-            },
-          ],
+        activity: { id: 'X74HeDQ4N0gtdaSEuzF8s' },
+        fields: {
+          summaryFormat: 'Bullet-points',
+          language: 'Default',
         },
-      })
-      // Third query: get form definition
-      .mockResolvedValueOnce({
-        form: mockFormDefinitionResponse,
-      })
-      // Fourth query: get form response
-      .mockResolvedValueOnce({
-        formResponse: mockFormResponseResponse,
+        settings: {},
       })
 
-    helpers.awellSdk = jest.fn().mockReturnValue({
-      orchestration: {
-        query: mockQuery,
-      },
+      await extensionAction.onEvent({
+        payload,
+        onComplete,
+        onError,
+        helpers,
+        attempt: 1,
+      })
+
+      const { summarizeFormWithLLM } = require('../../lib/summarizeFormWithLLM')
+      const { detectLanguageWithLLM } = require('../../lib/detectLanguageWithLLM')
+
+      expect(detectLanguageWithLLM).toHaveBeenCalled()
+
+      expect(summarizeFormWithLLM).toHaveBeenCalledWith(
+        expect.objectContaining({
+          disclaimerMessage:
+            '**Important Notice:** The content provided is an AI-generated summary of form responses of version 3 of Care Flow "Test Care Flow" (ID: ai4rZaYEocjB).',
+          language: 'English',
+        }),
+      )
+
+      const expected = await markdownToHtml(
+        'The patient reported good overall health. They experienced fatigue and headache in the last 7 days. Additionally, they mentioned occasional dizziness when standing up too quickly.',
+      )
+      expect(onComplete).toHaveBeenCalledWith({
+        data_points: {
+          summary: expected,
+        },
+      })
+
+      expect(onError).not.toHaveBeenCalled()
+    })
+
+    it('Should NOT use language detection when specific language is provided', async () => {
+      const payload = generateTestPayload({
+        pathway: {
+          id: 'ai4rZaYEocjB',
+          definition_id: 'whatever',
+        },
+        activity: { id: 'X74HeDQ4N0gtdaSEuzF8s' },
+        fields: {
+          summaryFormat: 'Bullet-points',
+          language: 'Spanish',
+          additionalInstructions: 'Focus on medication details and side effects.',
+        },
+        settings: {},
+      })
+
+      await extensionAction.onEvent({
+        payload,
+        onComplete,
+        onError,
+        helpers,
+        attempt: 1,
+      })
+
+      const { summarizeFormWithLLM } = require('../../lib/summarizeFormWithLLM')
+      const { detectLanguageWithLLM } = require('../../lib/detectLanguageWithLLM')
+
+      expect(detectLanguageWithLLM).not.toHaveBeenCalled()
+
+      expect(summarizeFormWithLLM).toHaveBeenCalledWith(
+        expect.objectContaining({
+          disclaimerMessage:
+            '**Important Notice:** The content provided is an AI-generated summary of form responses of version 3 of Care Flow "Test Care Flow" (ID: ai4rZaYEocjB).',
+          language: 'Spanish',
+          additionalInstructions: 'Focus on medication details and side effects.',
+        }),
+      )
+
+      const expected = await markdownToHtml(
+        'The patient reported good overall health. They experienced fatigue and headache in the last 7 days. Additionally, they mentioned occasional dizziness when standing up too quickly.',
+      )
+      expect(onComplete).toHaveBeenCalledWith({
+        data_points: {
+          summary: expected,
+        },
+      })
+
+      expect(onError).not.toHaveBeenCalled()
     })
   })
 
-  it('Should summarize form with LLM', async () => {
-    const payload = generateTestPayload({
-      pathway: {
-        id: 'ai4rZaYEocjB',
-        definition_id: 'whatever',
-      },
-      activity: { id: 'X74HeDQ4N0gtdaSEuzF8s' },
-      fields: {
-        summaryFormat: 'Bullet-points',
-        language: 'Default',
-      },
-      settings: {},
+  describe('scope=Step, formSelection=All', () => {
+    beforeEach(() => {
+      helpers.awellSdk = jest.fn().mockReturnValue({
+        orchestration: { query: buildStepAllMockQuery() },
+      })
     })
 
-    await extensionAction.onEvent({
-      payload,
-      onComplete,
-      onError,
-      helpers,
-      attempt: 1,
+    it('Should summarize all forms in the step', async () => {
+      const payload = generateTestPayload({
+        pathway: {
+          id: 'ai4rZaYEocjB',
+          definition_id: 'whatever',
+        },
+        activity: { id: 'X74HeDQ4N0gtdaSEuzF8s' },
+        fields: {
+          scope: 'Step',
+          formSelection: 'All',
+          summaryFormat: 'Bullet-points',
+          language: 'English',
+        },
+        settings: {},
+      })
+
+      await extensionAction.onEvent({
+        payload,
+        onComplete,
+        onError,
+        helpers,
+        attempt: 1,
+      })
+
+      const { summarizeFormWithLLM } = require('../../lib/summarizeFormWithLLM')
+
+      // formData should contain text from both forms
+      expect(summarizeFormWithLLM).toHaveBeenCalledWith(
+        expect.objectContaining({
+          formData: expect.stringContaining('Next Form'),
+        }),
+      )
+
+      expect(onComplete).toHaveBeenCalled()
+      expect(onError).not.toHaveBeenCalled()
     })
-
-    // Verify the summarizeFormWithLLM function was called with the correct disclaimer
-    const { summarizeFormWithLLM } = require('../../lib/summarizeFormWithLLM')
-    const { detectLanguageWithLLM } = require('../../lib/detectLanguageWithLLM')
-
-    // Verify language detection was called
-    expect(detectLanguageWithLLM).toHaveBeenCalled()
-
-    expect(summarizeFormWithLLM).toHaveBeenCalledWith(
-      expect.objectContaining({
-        disclaimerMessage:
-          '**Important Notice:** The content provided is an AI-generated summary of form responses of version 3 of Care Flow "Test Care Flow" (ID: ai4rZaYEocjB).',
-        language: 'English', // Should be the detected language
-      }),
-    )
-
-    const expected = await markdownToHtml(
-      'The patient reported good overall health. They experienced fatigue and headache in the last 7 days. Additionally, they mentioned occasional dizziness when standing up too quickly.',
-    )
-    expect(onComplete).toHaveBeenCalledWith({
-      data_points: {
-        summary: expected,
-      },
-    })
-
-    expect(onError).not.toHaveBeenCalled()
   })
 
-  it('Should NOT use language detection when specific language is provided', async () => {
-    const payload = generateTestPayload({
-      pathway: {
-        id: 'ai4rZaYEocjB',
-        definition_id: 'whatever',
-      },
-      activity: { id: 'X74HeDQ4N0gtdaSEuzF8s' },
-      fields: {
-        summaryFormat: 'Bullet-points',
-        language: 'Spanish', // Specific language
-        additionalInstructions: 'Focus on medication details and side effects.',
-      },
-      settings: {},
+  describe('scope=Track, formSelection=Latest', () => {
+    beforeEach(() => {
+      helpers.awellSdk = jest.fn().mockReturnValue({
+        orchestration: { query: buildTrackMockQuery(2) },
+      })
     })
 
-    await extensionAction.onEvent({
-      payload,
-      onComplete,
-      onError,
-      helpers,
-      attempt: 1,
+    it('Should summarize only the latest form in the track', async () => {
+      const payload = generateTestPayload({
+        pathway: {
+          id: 'ai4rZaYEocjB',
+          definition_id: 'whatever',
+        },
+        activity: { id: 'X74HeDQ4N0gtdaSEuzF8s' },
+        fields: {
+          scope: 'Track',
+          formSelection: 'Latest',
+          summaryFormat: 'Text paragraph',
+          language: 'English',
+        },
+        settings: {},
+      })
+
+      await extensionAction.onEvent({
+        payload,
+        onComplete,
+        onError,
+        helpers,
+        attempt: 1,
+      })
+
+      const { summarizeFormWithLLM } = require('../../lib/summarizeFormWithLLM')
+
+      // Should summarize a single form (no "Next Form" separator)
+      expect(summarizeFormWithLLM).toHaveBeenCalledWith(
+        expect.objectContaining({
+          formData: expect.not.stringContaining('Next Form'),
+        }),
+      )
+
+      expect(onComplete).toHaveBeenCalled()
+      expect(onError).not.toHaveBeenCalled()
+    })
+  })
+
+  describe('scope=Track, formSelection=All', () => {
+    beforeEach(() => {
+      helpers.awellSdk = jest.fn().mockReturnValue({
+        orchestration: { query: buildTrackMockQuery(3) },
+      })
     })
 
-    // Get references to mocked functions
-    const { summarizeFormWithLLM } = require('../../lib/summarizeFormWithLLM')
-    const { detectLanguageWithLLM } = require('../../lib/detectLanguageWithLLM')
+    it('Should summarize all forms in the track', async () => {
+      const payload = generateTestPayload({
+        pathway: {
+          id: 'ai4rZaYEocjB',
+          definition_id: 'whatever',
+        },
+        activity: { id: 'X74HeDQ4N0gtdaSEuzF8s' },
+        fields: {
+          scope: 'Track',
+          formSelection: 'All',
+          summaryFormat: 'Bullet-points',
+          language: 'English',
+        },
+        settings: {},
+      })
 
-    // Verify language detection was NOT called
-    expect(detectLanguageWithLLM).not.toHaveBeenCalled()
+      await extensionAction.onEvent({
+        payload,
+        onComplete,
+        onError,
+        helpers,
+        attempt: 1,
+      })
 
-    // Verify summarizeFormWithLLM was called with the provided language
-    expect(summarizeFormWithLLM).toHaveBeenCalledWith(
-      expect.objectContaining({
-        disclaimerMessage:
-          '**Important Notice:** The content provided is an AI-generated summary of form responses of version 3 of Care Flow "Test Care Flow" (ID: ai4rZaYEocjB).',
-        language: 'Spanish',
-        additionalInstructions: 'Focus on medication details and side effects.',
-      }),
-    )
+      const { summarizeFormWithLLM } = require('../../lib/summarizeFormWithLLM')
 
-    const expected = await markdownToHtml(
-      'The patient reported good overall health. They experienced fatigue and headache in the last 7 days. Additionally, they mentioned occasional dizziness when standing up too quickly.',
-    )
-    expect(onComplete).toHaveBeenCalledWith({
-      data_points: {
-        summary: expected,
-      },
+      // formData should contain text from multiple forms
+      expect(summarizeFormWithLLM).toHaveBeenCalledWith(
+        expect.objectContaining({
+          formData: expect.stringContaining('Next Form'),
+        }),
+      )
+
+      expect(onComplete).toHaveBeenCalled()
+      expect(onError).not.toHaveBeenCalled()
+    })
+  })
+
+  describe('no forms found', () => {
+    beforeEach(() => {
+      helpers.awellSdk = jest.fn().mockReturnValue({
+        orchestration: { query: buildTrackEmptyMockQuery() },
+      })
     })
 
-    expect(onError).not.toHaveBeenCalled()
+    it('Should call onError when no forms are found in the track', async () => {
+      const payload = generateTestPayload({
+        pathway: {
+          id: 'ai4rZaYEocjB',
+          definition_id: 'whatever',
+        },
+        activity: { id: 'X74HeDQ4N0gtdaSEuzF8s' },
+        fields: {
+          scope: 'Track',
+          formSelection: 'Latest',
+          language: 'English',
+        },
+        settings: {},
+      })
+
+      await extensionAction.onEvent({
+        payload,
+        onComplete,
+        onError,
+        helpers,
+        attempt: 1,
+      })
+
+      expect(onError).toHaveBeenCalledWith(
+        expect.objectContaining({
+          events: expect.arrayContaining([
+            expect.objectContaining({
+              text: { en: 'No completed form found in the current track' },
+            }),
+          ]),
+        }),
+      )
+
+      expect(onComplete).not.toHaveBeenCalled()
+    })
   })
 })
