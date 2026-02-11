@@ -11,6 +11,24 @@ export const listFields = {
   },
 } satisfies Record<string, Field>
 
+export const queryFields = {
+  patientId: {
+    id: 'patientId',
+    label: 'Patient ID',
+    description:
+      'The ID of the Patient for which to query Documents across HIEs',
+    type: FieldType.STRING,
+    required: true,
+  },
+  facilityId: {
+    id: 'facilityId',
+    label: 'Facility ID',
+    description:
+      'The facility providing the NPI to support this operation. Optional if the patient has only one facility.',
+    type: FieldType.STRING,
+  },
+} satisfies Record<string, Field>
+
 export const getUrlFields = {
   fileName: {
     id: 'fileName',
