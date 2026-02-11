@@ -4050,6 +4050,7 @@ const RAW_RUNTIME_STATE =
           ["axios", "npm:1.13.5"],\
           ["dayjs", "npm:1.11.19"],\
           ["dotenv", "npm:16.4.7"],\
+          ["http-status", "npm:2.1.0"],\
           ["semver", "npm:7.7.4"],\
           ["validator", "npm:13.15.26"],\
           ["zod", "npm:3.24.1"]\
@@ -10424,6 +10425,13 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./.yarn/cache/http-status-npm-1.7.4-bbe8693c7b-6b510d2532.zip/node_modules/http-status/",\
         "packageDependencies": [\
           ["http-status", "npm:1.7.4"]\
+        ],\
+        "linkType": "HARD"\
+      }],\
+      ["npm:2.1.0", {\
+        "packageLocation": "./.yarn/cache/http-status-npm-2.1.0-63ac106f5d-0d978e31ae.zip/node_modules/http-status/",\
+        "packageDependencies": [\
+          ["http-status", "npm:2.1.0"]\
         ],\
         "linkType": "HARD"\
       }]\

@@ -7758,6 +7758,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"http-status@npm:*":
+  version: 2.1.0
+  resolution: "http-status@npm:2.1.0"
+  checksum: 10/0d978e31ae5794a63dbdda2067cd19f279b06d26056e65757bc8e3936f5206feb0a9178c20269648cd5dbf86dd3cc0a276fd4c202502066222dd0b6ce527a399
+  languageName: node
+  linkType: hard
+
 "http-status@npm:~1.7.0":
   version: 1.7.4
   resolution: "http-status@npm:1.7.4"
