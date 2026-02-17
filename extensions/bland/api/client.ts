@@ -4,6 +4,8 @@ import {
   type SendCallInputType,
   type GetCallDetailsInputType,
   type GetCallDetailsResponseType,
+  type StopActiveCallInputType,
+  type StopActiveCallResponseType,
 } from './schema'
 
 export class BlandApiClient {
@@ -35,6 +37,16 @@ export class BlandApiClient {
   ): Promise<AxiosResponse<GetCallDetailsResponseType>> {
     const response = await this.client.get<GetCallDetailsResponseType>(
       `/calls/${input.call_id}`
+    )
+
+    return response
+  }
+
+  async stopActiveCall(
+    input: StopActiveCallInputType
+  ): Promise<AxiosResponse<StopActiveCallResponseType>> {
+    const response = await this.client.post<StopActiveCallResponseType>(
+      `/calls/${input.call_id}/stop`
     )
 
     return response
