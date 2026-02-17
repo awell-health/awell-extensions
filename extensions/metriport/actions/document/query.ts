@@ -3,12 +3,12 @@ import { Category } from '@awell-health/extensions-core'
 import { type settings } from '../../settings'
 import { createMetriportApi } from '../../client'
 import { handleErrorMessage } from '../../shared/errorHandler'
-import { listFields } from './fields'
+import { queryFields } from './fields'
 import { startQuerySchema } from './validation'
 import { documentQueryDataPoints as dataPoints } from './dataPoints'
 
 export const queryDocs: Action<
-  typeof listFields,
+  typeof queryFields,
   typeof settings,
   keyof typeof dataPoints
 > = {
@@ -17,7 +17,7 @@ export const queryDocs: Action<
   title: 'Start Document Query',
   description:
     'Triggers a document query for the specified patient across HIEs.',
-  fields: listFields,
+  fields: queryFields,
   previewable: true,
   dataPoints,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {

@@ -112,6 +112,7 @@
     "@langchain/openai": "^0.3.0",
     "@mailchimp/mailchimp_transactional": "^1.0.50",
     "@medplum/core": "^3.1.4",
+    "@metriport/api-sdk": "^18.8.1",
     "@sendgrid/client": "^7.7.0",
     "@sendgrid/helpers": "^7.7.0",
     "@sendgrid/mail": "^7.7.0",
