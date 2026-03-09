@@ -12,6 +12,9 @@ import { optionalEmailSchema } from '../../../../../../src/utils/emailValidation
 
 const SexEnum = z.enum([Sex.Female, Sex.Male, Sex.NotKnown])
 
+const stripCountryCodeOnly = (val: unknown): unknown =>
+  typeof val === 'string' && /^\+\d{1,4}$/.test(val.trim()) ? undefined : val
+
 export const fields = {
   patientCode: {
     id: 'patientCode',
@@ -134,8 +137,11 @@ export const FieldsValidationSchema = z.object({
   lastName: z.optional(z.string().trim()),
   birthDate: z.optional(z.coerce.date().transform((date) => formatISO(date))),
   email: optionalEmailSchema,
-  phone: E164PhoneValidationOptionalSchema,
-  mobilePhone: E164PhoneValidationOptionalSchema,
+  phone: z.preprocess(stripCountryCodeOnly, E164PhoneValidationOptionalSchema),
+  mobilePhone: z.preprocess(
+    stripCountryCodeOnly,
+    E164PhoneValidationOptionalSchema,
+  ),
   street: z.optional(z.string().trim()),
   state: z.optional(z.string().trim()),
   country: z.optional(z.string().trim()),

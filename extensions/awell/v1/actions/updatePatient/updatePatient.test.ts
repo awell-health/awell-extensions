@@ -110,6 +110,54 @@ describe('Update patient', () => {
     expect(onComplete).not.toHaveBeenCalled()
   })
 
+  test('Should succeed when phone/mobilePhone contain only a country code (stripped to undefined)', async () => {
+    await extensionAction.onEvent({
+      payload: generateTestPayload({
+        fields: {
+          patientCode: undefined,
+          firstName: 'John',
+          lastName: 'Doe',
+          birthDate: undefined,
+          email: undefined,
+          phone: '+1',
+          mobilePhone: '+44',
+          street: undefined,
+          state: undefined,
+          country: undefined,
+          city: undefined,
+          zip: undefined,
+          preferredLanguage: undefined,
+          sex: undefined,
+          nationalRegistryNumber: undefined,
+        },
+        settings: {},
+      }),
+      onComplete,
+      onError,
+      helpers,
+      attempt: 1,
+    })
+    expect(onComplete).toHaveBeenCalled()
+    expect(onError).not.toHaveBeenCalled()
+  })
+
+  describe('phone validation schema', () => {
+    test('Should strip a country-code-only value to undefined', () => {
+      expect(FieldsValidationSchema.shape.phone.parse('+1')).toBeUndefined()
+      expect(FieldsValidationSchema.shape.phone.parse('+44')).toBeUndefined()
+      expect(FieldsValidationSchema.shape.phone.parse('+353')).toBeUndefined()
+      expect(
+        FieldsValidationSchema.shape.mobilePhone.parse('+1'),
+      ).toBeUndefined()
+    })
+
+    test('Should pass through a valid E.164 phone number', () => {
+      expect(FieldsValidationSchema.shape.phone.parse('+14155552671')).toBe(
+        '+14155552671',
+      )
+    })
+  })
+
   test('Should call onError when phone is not a possible phone number', async () => {
     const resp = extensionAction.onEvent({
       payload: generateTestPayload({
