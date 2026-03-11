@@ -25,6 +25,7 @@ import { ExternalServer } from './external-server'
 import { Formsort } from './formsort'
 import { freshdesk } from './freshdesk'
 import { freshsales } from './freshsales'
+import { GuidewayCare } from './guidewayCare'
 import { Gridspace } from './gridspace'
 import { Healthie } from './healthie'
 import { HelloWorld } from './hello-world'
@@ -94,6 +95,7 @@ export const extensions = [
   freshdesk,
   freshsales,
   Gridspace,
+  GuidewayCare,
   Healthie,
   HelloWorld,
   hubspot,
@@ -127,4 +129,5 @@ export const extensions = [
   Zendesk,
   zoom,
   srfax,
+  GuidewayCare,
 ]
