@@ -66,7 +66,7 @@ export const mockTrackData = {
           },
           indirect_object: {
             type: 'PLUGIN',
-            name: 'Shelly (Beta)'
+            name: 'Shelly'
           },
           data_points: [
             {
