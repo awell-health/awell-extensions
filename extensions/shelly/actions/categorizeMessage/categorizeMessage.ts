@@ -22,7 +22,7 @@ export const categorizeMessage: Action<
 > = {
   key: 'categorizeMessage',
   category: Category.WORKFLOW,
-  title: 'Categorize Message (Beta)',
+  title: 'Categorize Message',
   description:
     'Categorizes messages into predefined categories with explanation.',
   fields,

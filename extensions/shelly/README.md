@@ -7,13 +7,11 @@ description: Smart tools to help with communication, information, and summaries 
 
 Shelly provides a set of smart tools that use artificial intelligence (most precisely Large Language Models) to help automate tasks and manage information within your care flow.
 
-Actions labeled as Beta are still experimental and should not be used for production use cases. They are safe for demo and experimenting. Others are production ready - go ahead and use them.
-
 ## Actions
 
 Below is a detailed look at each tool Shelly offers, what it needs to work, what it gives you back, and how to use it best.
 
-### Categorize Message (Beta)
+### Categorize Message
 
 This tool automatically analyzes and categorizes incoming messages based on a set of predefined categories that you specify. It's particularly useful for triaging patient communications and routing them to the appropriate part of your care flow based on content and urgency.
 
@@ -41,7 +39,7 @@ Output:
   Explanation: "This message clearly states a need for medication refill, specifically for Lisinopril. The patient provides prescription details and mentions having no side effects or issues. The communication is straightforward and fits perfectly into the 'Medication Refill Request' category as the patient is explicitly asking for a prescription renewal rather than scheduling an appointment, reporting symptoms, asking about insurance, or expressing an urgent concern."
 ```
 
-### Generate Message (Beta)
+### Generate Message
 
 This tool creates contextually appropriate, personalized communications for patients or healthcare team members based on specific clinical situations and communication needs.
 
@@ -72,7 +70,7 @@ Output:
   Message: "<p>Dear Emma,</p><p>This is a friendly reminder about your upcoming appointment:</p><p><strong>Date:</strong> July 15, 2023<br><strong>Time:</strong> 2:30 PM<br><strong>Provider:</strong> Dr. Sarah Chen<br><strong>Type:</strong> Annual Physical Exam</p><p><strong>Important Preparation Instructions:</strong></p><ul><li>Please fast for 8 hours before your appointment (water is permitted)</li><li>Arrive 15 minutes early to complete any necessary paperwork</li><li>Bring your identification and insurance information</li></ul><p>We look forward to seeing you!</p><p>Best regards,<br>The Care Team</p>"
 ```
 
-### Medication From Image (Beta)
+### Medication From Image (Experimental)
 
 This tool uses advanced image processing and AI to extract structured medication information from images of prescription labels, medication packaging, or pill bottles.
 
@@ -123,7 +121,7 @@ This tool enables qualified clinical staff to review, validate, and if necessary
 - Corrections made during review are captured for quality improvement.
 - Consider implementing this as part of a medication reconciliation workflow.
 
-### Summarize Care Flow (Beta)
+### Summarize Care Flow
 
 This tool generates comprehensive, contextualized summaries of a patient's progress through their care flow, highlighting key activities, routes taken, and outcomes.
 

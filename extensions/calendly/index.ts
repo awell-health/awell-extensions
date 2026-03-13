@@ -7,7 +7,7 @@ export const Calendly: Extension = {
   key: 'calendly',
   title: 'Calendly',
   icon_url:
-    'https://asset.cloudinary.com/da7x4rzl4/e3feb49a5ef3ccd2951bf93aea0a1552',
+    'https://res.cloudinary.com/da7x4rzl4/image/upload/v1773330172/calendly-logo_mtaoa1.png',
   description:
     '** In beta ** Enable scheduling in your care flows with Calendly.',
   category: Category.SCHEDULING,

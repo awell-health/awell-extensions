@@ -23,7 +23,7 @@ export const parseStructuredData: Action<
 > = {
   key: 'parseStructuredData',
   category: Category.WORKFLOW,
-  title: 'Parse Structured Data (Beta)',
+  title: 'Parse Structured Data',
   description:
     'Extracts structured data from unstructured text messages using a provided JSON schema.',
   fields,
