@@ -112,9 +112,7 @@ export const FieldsValidationSchema = z.object({
         // as "no update" rather than sending an invalid value to the API.
         // This prevents validation failures (e.g. empty string failing
         // telephone E.164 validation) from blocking the entire update.
-        const filtered = parsedJson.filter(
-          (item: { value: string }) => item.value !== '',
-        )
+        const filtered = parsedJson.filter((item) => item.value)
 
         if (isEmpty(filtered)) {
           ctx.addIssue({
