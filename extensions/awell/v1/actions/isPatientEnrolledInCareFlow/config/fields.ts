@@ -3,6 +3,8 @@ import { z, type ZodTypeAny } from 'zod'
 import { FieldType, type Field } from '@awell-health/extensions-core'
 import { enumPathwayStatus, type PathwayStatus } from '@awell-health/awell-sdk'
 
+const DEFAULT_PATHWAY_STATUSES: PathwayStatus[] = [enumPathwayStatus.active as PathwayStatus]
+
 export const fields = {
   pathwayStatus: {
     id: 'pathwayStatus',
@@ -44,19 +46,19 @@ export const fields = {
 } satisfies Record<string, Field>
 
 export const FieldsValidationSchema = z.object({
-  pathwayStatus: z.optional(
-    z
-      .string()
-      .transform((chars) => chars.replace(/\s/g, '')) // Make sure all white spaces are stripped
-      .transform((chars) => chars.split(','))
-      .transform((strArray) => {
-        const possibleStatuses = Object.values(enumPathwayStatus)
+  pathwayStatus: z
+    .optional(z.string())
+    .transform((chars) => (chars ?? '').replace(/\s/g, '')) // Make sure all white spaces are stripped
+    .transform((chars) => chars.split(','))
+    .transform((strArray) => {
+      const possibleStatuses = Object.values(enumPathwayStatus)
 
-        return strArray.filter((str) =>
-          possibleStatuses.includes(str as PathwayStatus),
-        ) as PathwayStatus[]
-      }),
-  ),
+      const filtered = strArray.filter((str) =>
+        possibleStatuses.includes(str as PathwayStatus),
+      ) as PathwayStatus[]
+
+      return filtered.length > 0 ? filtered : DEFAULT_PATHWAY_STATUSES
+    }),
   careFlowDefinitionIds: z.optional(
     z
       .string()

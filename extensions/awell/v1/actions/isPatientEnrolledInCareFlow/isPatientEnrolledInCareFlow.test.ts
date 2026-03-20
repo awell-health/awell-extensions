@@ -92,6 +92,43 @@ describe('Is patient already enrolled in care flow action', () => {
           ])
         }).not.toThrow(ZodError)
       })
+
+      test('Empty string defaults to active status', () => {
+        const res = FieldsValidationSchema.safeParse({
+          pathwayStatus: '',
+        })
+
+        expect(res.success).toBe(true)
+        if (res.success) {
+          expect(res.data.pathwayStatus).toEqual([PathwayStatus.Active])
+        }
+      })
+
+      test('Undefined defaults to active status', () => {
+        const res = FieldsValidationSchema.safeParse({
+          pathwayStatus: undefined,
+        })
+
+        expect(res.success).toBe(true)
+        if (res.success) {
+          expect(res.data.pathwayStatus).toEqual([PathwayStatus.Active])
+        }
+      })
+
+      test('pathwayStatus is always an array', () => {
+        const inputs = [undefined, '', 'active', 'active,completed']
+        for (const input of inputs) {
+          const res = FieldsValidationSchema.safeParse({
+            pathwayStatus: input,
+          })
+
+          expect(res.success).toBe(true)
+          if (res.success) {
+            expect(Array.isArray(res.data.pathwayStatus)).toBe(true)
+            expect(res.data.pathwayStatus.length).toBeGreaterThan(0)
+          }
+        }
+      })
     })
   })
 
