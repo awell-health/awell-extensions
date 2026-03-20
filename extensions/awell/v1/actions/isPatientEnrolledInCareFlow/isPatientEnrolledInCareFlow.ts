@@ -12,6 +12,7 @@ import { z } from 'zod'
 import { type PatientPathway } from '@awell-health/awell-sdk'
 import { isEmpty, isNil } from 'lodash'
 import { addActivityEventLog } from '../../../../../src/lib/awell/addEventLog'
+import { PathwayStatus } from '../../gql/graphql'
 
 const isWithinDayRange = (startDateIso: string, dayRange: number): boolean => {
   const startDate = new Date(startDateIso)
@@ -60,8 +61,8 @@ export const isPatientEnrolledInCareFlow: Action<
           patient_id: patientId,
           filters: {
             status: {
-              in: pathwayStatus,
-            },
+              in: pathwayStatus ?? [PathwayStatus.Active]
+            }
           },
         },
         patientPathways: {
