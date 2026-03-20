@@ -60,9 +60,9 @@ export const isPatientEnrolledInCareFlow: Action<
         __args: {
           patient_id: patientId,
           filters: {
-            status: {
-              in: pathwayStatus ?? [PathwayStatus.Active]
-            }
+              status: {
+                in: !isNil(pathwayStatus) && !isEmpty(pathwayStatus) ? pathwayStatus : [PathwayStatus.Active]
+              }
           },
         },
         patientPathways: {

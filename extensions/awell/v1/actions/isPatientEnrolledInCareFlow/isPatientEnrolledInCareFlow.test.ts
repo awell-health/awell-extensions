@@ -156,6 +156,100 @@ describe('Is patient already enrolled in care flow action', () => {
     expect(onError).not.toHaveBeenCalled()
   })
 
+  test('Should default to filtering by active status when pathwayStatus is empty string', async () => {
+    const sdkMock = {
+      orchestration: {
+        query: jest.fn().mockResolvedValue({
+          patientPathways: {
+            patientPathways: [],
+          },
+        }),
+      },
+    }
+
+    helpers.awellSdk = jest.fn().mockResolvedValue(sdkMock)
+
+    await isPatientEnrolledInCareFlow.onEvent({
+      payload: generateTestPayload({
+        pathway: {
+          id: 'pathway-instance-id-1',
+          definition_id: 'pathway-definition-1',
+          tenant_id: '123',
+        },
+        fields: {
+          pathwayStatus: '',
+          careFlowDefinitionIds: undefined,
+        },
+        settings: {},
+      }),
+      onComplete,
+      onError,
+      helpers,
+      attempt: 1,
+    })
+
+    expect(sdkMock.orchestration.query).toHaveBeenCalledWith(
+      expect.objectContaining({
+        patientPathways: expect.objectContaining({
+          __args: expect.objectContaining({
+            filters: {
+              status: {
+                in: [PathwayStatus.Active],
+              },
+            },
+          }),
+        }),
+      }),
+    )
+  })
+
+  test('Should default to filtering by active status when pathwayStatus is undefined', async () => {
+    const sdkMock = {
+      orchestration: {
+        query: jest.fn().mockResolvedValue({
+          patientPathways: {
+            patientPathways: [],
+          },
+        }),
+      },
+    }
+
+    helpers.awellSdk = jest.fn().mockResolvedValue(sdkMock)
+
+    await isPatientEnrolledInCareFlow.onEvent({
+      payload: generateTestPayload({
+        pathway: {
+          id: 'pathway-instance-id-1',
+          definition_id: 'pathway-definition-1',
+          tenant_id: '123',
+        },
+        fields: {
+          pathwayStatus: undefined,
+          careFlowDefinitionIds: undefined,
+        },
+        settings: {},
+      }),
+      onComplete,
+      onError,
+      helpers,
+      attempt: 1,
+    })
+
+    expect(sdkMock.orchestration.query).toHaveBeenCalledWith(
+      expect.objectContaining({
+        patientPathways: expect.objectContaining({
+          __args: expect.objectContaining({
+            filters: {
+              status: {
+                in: [PathwayStatus.Active],
+              },
+            },
+          }),
+        }),
+      }),
+    )
+  })
+
   test('Should call the onComplete callback and return false if patient is not yet enrolled in another care flow with same care flow definition id', async () => {
     const sdkMock = {
       orchestration: {
