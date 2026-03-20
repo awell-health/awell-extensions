@@ -47,7 +47,7 @@ export const FieldsValidationSchema = z.object({
   pathwayStatus: z.optional(
     z
       .string()
-      .transform((chars) => chars.replace(/\s/g, '')) // Make sure all white spaces are stripped
+      .transform((chars) => chars.replace(/[\s"]/g, '')) // Strip whitespace and quotation marks
       .transform((chars) => chars.split(','))
       .transform((strArray) => {
         const possibleStatuses = Object.values(enumPathwayStatus)
