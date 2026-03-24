@@ -92,6 +92,40 @@ describe('Is patient already enrolled in care flow action', () => {
           ])
         }).not.toThrow(ZodError)
       })
+
+      test('Pathway statuses with quotation marks are accepted', () => {
+        expect(() => {
+          const res = FieldsValidationSchema.safeParse({
+            pathwayStatus: '"active"',
+          })
+
+          if (!res.success) {
+            console.log(JSON.stringify(res.error, null, 2))
+            throw new Error()
+          }
+
+          expect(res.data.pathwayStatus).toEqual([PathwayStatus.Active])
+        }).not.toThrow(ZodError)
+      })
+
+      test('Multiple pathway statuses with quotation marks are accepted', () => {
+        expect(() => {
+          const res = FieldsValidationSchema.safeParse({
+            pathwayStatus: '"active","completed","stopped"',
+          })
+
+          if (!res.success) {
+            console.log(JSON.stringify(res.error, null, 2))
+            throw new Error()
+          }
+
+          expect(res.data.pathwayStatus).toEqual([
+            PathwayStatus.Active,
+            PathwayStatus.Completed,
+            PathwayStatus.Stopped,
+          ])
+        }).not.toThrow(ZodError)
+      })
     })
   })
 
