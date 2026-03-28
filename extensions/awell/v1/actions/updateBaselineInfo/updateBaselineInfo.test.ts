@@ -124,4 +124,84 @@ describe('Update baseline info', () => {
     await expect(resp).rejects.toThrow(ZodError)
     expect(onComplete).not.toHaveBeenCalled()
   })
+
+  test('Should filter out entries with empty string values and still update remaining datapoints', async () => {
+    await extensionAction.onEvent({
+      payload: generateTestPayload({
+        fields: {
+          baselineInfo: JSON.stringify([
+            {
+              data_point_definition_id: 'name-id',
+              value: 'patient',
+            },
+            {
+              data_point_definition_id: 'phone-id',
+              value: '',
+            },
+            {
+              data_point_definition_id: 'notes-id',
+              value: 'Not provided',
+            },
+          ]),
+        },
+        settings: {},
+        pathway: {
+          id: 'a-pathway-id',
+        },
+      }),
+      onComplete,
+      onError,
+      helpers,
+      attempt: 1,
+    })
+
+    expect(sdkMock.orchestration.mutation).toHaveBeenCalledTimes(1)
+    expect(sdkMock.orchestration.mutation).toHaveBeenCalledWith({
+      updateBaselineInfo: expect.objectContaining({
+        __args: {
+          input: {
+            pathway_id: 'a-pathway-id',
+            baseline_info: [
+              {
+                data_point_definition_id: 'name-id',
+                value: 'patient',
+              },
+              {
+                data_point_definition_id: 'notes-id',
+                value: 'Not provided',
+              },
+            ],
+          },
+        },
+      }),
+    })
+
+    expect(onComplete).toHaveBeenCalledTimes(1)
+    expect(onError).not.toHaveBeenCalled()
+  })
+
+  test('Should throw an error when all entries have empty string values', async () => {
+    const resp = extensionAction.onEvent({
+      payload: generateTestPayload({
+        fields: {
+          baselineInfo: JSON.stringify([
+            {
+              data_point_definition_id: 'phone-id',
+              value: '',
+            },
+          ]),
+        },
+        settings: {},
+        pathway: {
+          id: 'a-pathway-id',
+        },
+      }),
+      onComplete,
+      onError,
+      helpers,
+      attempt: 1,
+    })
+    await expect(resp).rejects.toThrow(ZodError)
+    expect(onComplete).not.toHaveBeenCalled()
+  })
 })
