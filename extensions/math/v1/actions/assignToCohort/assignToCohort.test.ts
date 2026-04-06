@@ -296,7 +296,8 @@ describe('Assign to cohort', () => {
             text: { en: 'ZodValidationError' },
             error: {
               category: 'WRONG_INPUT',
-              message: expect.stringContaining('input'),
+              message:
+                'Validation error: String must contain at least 1 character(s) at "fields.input"',
             },
           }),
         ],
@@ -319,7 +320,8 @@ describe('Assign to cohort', () => {
             text: { en: 'ZodValidationError' },
             error: {
               category: 'WRONG_INPUT',
-              message: expect.stringContaining('input'),
+              message:
+                'Validation error: Required at "fields.input"',
             },
           }),
         ],
@@ -342,7 +344,8 @@ describe('Assign to cohort', () => {
             text: { en: 'ZodValidationError' },
             error: {
               category: 'WRONG_INPUT',
-              message: expect.stringContaining('numberOfCohorts'),
+              message:
+                'Validation error: Expected number, received nan at "fields.numberOfCohorts"',
             },
           }),
         ],
@@ -365,7 +368,8 @@ describe('Assign to cohort', () => {
             text: { en: 'ZodValidationError' },
             error: {
               category: 'WRONG_INPUT',
-              message: expect.stringContaining('numberOfCohorts'),
+              message:
+                'Validation error: Number must be greater than or equal to 1 at "fields.numberOfCohorts"',
             },
           }),
         ],
@@ -388,7 +392,8 @@ describe('Assign to cohort', () => {
             text: { en: 'ZodValidationError' },
             error: {
               category: 'WRONG_INPUT',
-              message: expect.stringContaining('numberOfCohorts'),
+              message:
+                'Validation error: Number must be greater than or equal to 1 at "fields.numberOfCohorts"',
             },
           }),
         ],
