@@ -5,6 +5,7 @@ import {
   multiply,
   subtract,
   divide,
+  assignToCohort,
 } from './v1/actions'
 import { type Extension } from '@awell-health/extensions-core'
 import { settings } from './settings'
@@ -29,5 +30,6 @@ export const MathExtension: Extension = {
     sum,
     divide,
     multiply,
+    assignToCohort,
   },
 }
