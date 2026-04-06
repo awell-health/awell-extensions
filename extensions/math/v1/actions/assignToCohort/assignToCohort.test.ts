@@ -280,7 +280,7 @@ describe('Assign to cohort', () => {
   })
 
   describe('Validation errors', () => {
-    test('Should call onError when input is empty', async () => {
+    test('Should call onError with WRONG_INPUT when input is empty', async () => {
       const payload = generateTestPayload({
         fields: { input: '', numberOfCohorts: 3 },
         settings: {},
@@ -288,10 +288,22 @@ describe('Assign to cohort', () => {
 
       await assignToCohort.onActivityCreated!(payload, onComplete, onError)
 
-      expect(onError).toHaveBeenCalled()
+      expect(onComplete).not.toHaveBeenCalled()
+      expect(onError).toHaveBeenCalledWith({
+        events: [
+          expect.objectContaining({
+            date: expect.any(String),
+            text: { en: 'ZodValidationError' },
+            error: {
+              category: 'WRONG_INPUT',
+              message: expect.stringContaining('input'),
+            },
+          }),
+        ],
+      })
     })
 
-    test('Should call onError when input is undefined', async () => {
+    test('Should call onError with WRONG_INPUT when input is undefined', async () => {
       const payload = generateTestPayload({
         fields: { input: undefined, numberOfCohorts: 3 },
         settings: {},
@@ -299,10 +311,22 @@ describe('Assign to cohort', () => {
 
       await assignToCohort.onActivityCreated!(payload, onComplete, onError)
 
-      expect(onError).toHaveBeenCalled()
+      expect(onComplete).not.toHaveBeenCalled()
+      expect(onError).toHaveBeenCalledWith({
+        events: [
+          expect.objectContaining({
+            date: expect.any(String),
+            text: { en: 'ZodValidationError' },
+            error: {
+              category: 'WRONG_INPUT',
+              message: expect.stringContaining('input'),
+            },
+          }),
+        ],
+      })
     })
 
-    test('Should call onError when numberOfCohorts is undefined', async () => {
+    test('Should call onError with WRONG_INPUT when numberOfCohorts is undefined', async () => {
       const payload = generateTestPayload({
         fields: { input: 'patient-123', numberOfCohorts: undefined },
         settings: {},
@@ -310,10 +334,22 @@ describe('Assign to cohort', () => {
 
       await assignToCohort.onActivityCreated!(payload, onComplete, onError)
 
-      expect(onError).toHaveBeenCalled()
+      expect(onComplete).not.toHaveBeenCalled()
+      expect(onError).toHaveBeenCalledWith({
+        events: [
+          expect.objectContaining({
+            date: expect.any(String),
+            text: { en: 'ZodValidationError' },
+            error: {
+              category: 'WRONG_INPUT',
+              message: expect.stringContaining('numberOfCohorts'),
+            },
+          }),
+        ],
+      })
     })
 
-    test('Should call onError when numberOfCohorts is 0', async () => {
+    test('Should call onError with WRONG_INPUT when numberOfCohorts is 0', async () => {
       const payload = generateTestPayload({
         fields: { input: 'patient-123', numberOfCohorts: 0 },
         settings: {},
@@ -321,10 +357,22 @@ describe('Assign to cohort', () => {
 
       await assignToCohort.onActivityCreated!(payload, onComplete, onError)
 
-      expect(onError).toHaveBeenCalled()
+      expect(onComplete).not.toHaveBeenCalled()
+      expect(onError).toHaveBeenCalledWith({
+        events: [
+          expect.objectContaining({
+            date: expect.any(String),
+            text: { en: 'ZodValidationError' },
+            error: {
+              category: 'WRONG_INPUT',
+              message: expect.stringContaining('numberOfCohorts'),
+            },
+          }),
+        ],
+      })
     })
 
-    test('Should call onError when numberOfCohorts is negative', async () => {
+    test('Should call onError with WRONG_INPUT when numberOfCohorts is negative', async () => {
       const payload = generateTestPayload({
         fields: { input: 'patient-123', numberOfCohorts: -1 },
         settings: {},
@@ -332,7 +380,19 @@ describe('Assign to cohort', () => {
 
       await assignToCohort.onActivityCreated!(payload, onComplete, onError)
 
-      expect(onError).toHaveBeenCalled()
+      expect(onComplete).not.toHaveBeenCalled()
+      expect(onError).toHaveBeenCalledWith({
+        events: [
+          expect.objectContaining({
+            date: expect.any(String),
+            text: { en: 'ZodValidationError' },
+            error: {
+              category: 'WRONG_INPUT',
+              message: expect.stringContaining('numberOfCohorts'),
+            },
+          }),
+        ],
+      })
     })
   })
 })
