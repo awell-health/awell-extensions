@@ -28,6 +28,19 @@ Divide two numbers.
 
 Generates a random (whole) number that falls between the ranges of two numbers [min, max].
 
+### Assign to cohort
+
+Deterministically assign any string value (e.g. patient ID, email, UUID) to a cohort number between 1 and a given number of cohorts. The same input will always produce the same cohort, making this action ideal for A/B testing and patient randomization.
+
+**Inputs:**
+- **Input value**: Any string used to determine the cohort assignment.
+- **Number of cohorts**: The total number of cohorts to distribute inputs across (must be >= 1).
+
+**Output:**
+- **Cohort number**: An integer between 1 and the number of cohorts (inclusive).
+
+> **Note:** When the number of cohorts changes, a patient's assigned cohort may change because the underlying hash modulo base changes. This action does not guarantee cohort stability across different values of the number of cohorts.
+
 ### Calculate date difference
 
 Calculate the difference between two dates where "date left" is the minuend and "date right" the subtrahend.
