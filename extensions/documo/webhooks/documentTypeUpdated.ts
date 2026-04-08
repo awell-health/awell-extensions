@@ -102,7 +102,7 @@ export const documentTypeUpdated: Webhook<
 
     await onSuccess({
       data_points: {
-        webhookData: JSON.stringify(parsed),
+        webhookData: JSON.stringify(payload),
         documentId: parsed.document.id,
         workspaceId: parsed.workspace.id,
         documentName: parsed.document.name,
