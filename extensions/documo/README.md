@@ -2,6 +2,7 @@
 title: Documo
 description: Documo extension for Awell
 ---
+
 # Documo extension
 
 Documo extension for Awell that integrates with Documo's intelligent document processing platform.
@@ -13,6 +14,7 @@ Documo extension for Awell that integrates with Documo's intelligent document pr
 Triggered when OCR processing completes on a document. Uses an LLM to extract patient information from the OCR text.
 
 **Data Points:**
+
 - `webhookData` - Full webhook payload (JSON)
 - `extractedInfo` - Extracted patient information (JSON)
 
@@ -22,28 +24,45 @@ Triggered when a field value is assigned to a document. Extracts patient and pro
 
 **Data Points:**
 
-| Data Point | Type | Description |
-|------------|------|-------------|
-| `webhookData` | json | Full webhook payload |
-| `patientFirstName` | string | Patient's first name |
-| `patientLastName` | string | Patient's last name |
-| `patientZipCode` | string | Patient's zip code |
-| `patientIdentifiers` | json | Array of patient identifiers (e.g., MRN, insurance ID) |
-| `patientMobilePhone` | string | Patient's phone number |
-| `receivingProviderFullName` | string | Name of the receiving provider |
+| Data Point                  | Type   | Description                                            |
+| --------------------------- | ------ | ------------------------------------------------------ |
+| `webhookData`               | json   | Full webhook payload                                   |
+| `patientFirstName`          | string | Patient's first name                                   |
+| `patientLastName`           | string | Patient's last name                                    |
+| `patientZipCode`            | string | Patient's zip code                                     |
+| `patientIdentifiers`        | json   | Array of patient identifiers (e.g., MRN, insurance ID) |
+| `patientMobilePhone`        | string | Patient's phone number                                 |
+| `receivingProviderFullName` | string | Name of the receiving provider                         |
 
 **Field Mappings:**
 
 The webhook maps Documo field names to data points:
 
-| Documo Field Name | Data Point |
-|-------------------|------------|
-| Patient First Name | `patientFirstName` |
-| Patient Last Name | `patientLastName` |
-| Patient Zip Code | `patientZipCode` |
-| Patient Identifiers | `patientIdentifiers` |
-| Patient Phone Number | `patientMobilePhone` |
+| Documo Field Name            | Data Point                  |
+| ---------------------------- | --------------------------- |
+| Patient First Name           | `patientFirstName`          |
+| Patient Last Name            | `patientLastName`           |
+| Patient Zip Code             | `patientZipCode`            |
+| Patient Identifiers          | `patientIdentifiers`        |
+| Patient Phone Number         | `patientMobilePhone`        |
 | Receiving Provider Full Name | `receivingProviderFullName` |
+
+### Document Type Updated
+
+Triggered when a document type is updated in Documo.
+
+**Data Points:**
+
+| Data Point     | Type   | Description                                 |
+| -------------- | ------ | ------------------------------------------- |
+| `webhookData`  | json   | Full webhook payload                        |
+| `documentId`   | string | Document ID                                 |
+| `workspaceId`  | string | Workspace ID                                |
+| `documentName` | string | Document name                               |
+| `sourceType`   | string | Source type (upload, fax, or email)         |
+| `typeName`     | string | Document type name (e.g., "admission form") |
+| `typeId`       | string | Document type ID                            |
+| `userEmail`    | string | Email of the user who updated the type      |
 
 ## Settings
 
