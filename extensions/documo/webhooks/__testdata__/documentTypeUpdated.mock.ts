@@ -85,7 +85,8 @@ export const minimalPayload: DocumentTypeUpdatedPayload = {
 }
 
 /**
- * Mock payload where user fields are empty to test fallback behavior
+ * Mock payload with user set to null — invalid per the Documo API schema.
+ * Used to verify that Zod parsing rejects malformed payloads at the boundary.
  */
 export const withoutUserPayload = {
   workspace: {
@@ -120,4 +121,4 @@ export const withoutUserPayload = {
     locked: false,
   },
   user: null,
-} as unknown as DocumentTypeUpdatedPayload
+}

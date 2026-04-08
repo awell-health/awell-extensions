@@ -1,3 +1,4 @@
+import { z } from 'zod'
 import {
   type DataPointDefinition,
   type Webhook,
@@ -38,52 +39,56 @@ const dataPoints = {
   },
 } satisfies Record<string, DataPointDefinition>
 
-interface WorkspaceInfo {
-  id: string
-  accountId: string
-  name: string
-  createdAt: string
-  updatedAt: string
-}
+const WorkspaceSchema = z.object({
+  id: z.string(),
+  accountId: z.string(),
+  name: z.string(),
+  createdAt: z.string(),
+  updatedAt: z.string(),
+})
 
-interface DocumentInfo {
-  id: string
-  workspaceId: string
-  name: string
-  sourceType: string
-  sourceId: string
-  from: string | null
-  to: string | null
-  createdAt: string
-  updatedAt: string
-  addedAt: string
-  pagesCount: number
-  typeId: string
-  statusId: string
-  isUploading: boolean
-}
+const DocumentSchema = z.object({
+  id: z.string(),
+  workspaceId: z.string(),
+  name: z.string(),
+  sourceType: z.string(),
+  sourceId: z.string(),
+  from: z.string().nullable(),
+  to: z.string().nullable(),
+  createdAt: z.string(),
+  updatedAt: z.string(),
+  addedAt: z.string(),
+  pagesCount: z.number(),
+  typeId: z.string(),
+  statusId: z.string(),
+  isUploading: z.boolean(),
+})
 
-interface TypeInfo {
-  id: string
-  name: string
-  accountId: string
-  createdAt: string
-  updatedAt: string
-  locked: boolean
-}
+const TypeSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  accountId: z.string(),
+  createdAt: z.string(),
+  updatedAt: z.string(),
+  locked: z.boolean(),
+})
 
-interface UserInfo {
-  uuid: string
-  accountId: string
-  email: string
-}
+const UserSchema = z.object({
+  uuid: z.string(),
+  accountId: z.string(),
+  email: z.string(),
+})
 
-export interface DocumentTypeUpdatedPayload {
-  workspace: WorkspaceInfo
-  document: DocumentInfo
-  type: TypeInfo
-  user: UserInfo
-}
+const DocumentTypeUpdatedPayloadSchema = z.object({
+  workspace: WorkspaceSchema,
+  document: DocumentSchema,
+  type: TypeSchema,
+  user: UserSchema,
+})
+
+export type DocumentTypeUpdatedPayload = z.infer<
+  typeof DocumentTypeUpdatedPayloadSchema
+>
 
 export const documentTypeUpdated: Webhook<
   keyof typeof dataPoints,
@@ -93,16 +98,18 @@ export const documentTypeUpdated: Webhook<
   description: 'Triggered when a document type is updated in Documo.',
   dataPoints,
   onEvent: async ({ payload: { payload }, onSuccess }) => {
+    const parsed = DocumentTypeUpdatedPayloadSchema.parse(payload)
+
     await onSuccess({
       data_points: {
-        webhookData: JSON.stringify(payload),
-        documentId: payload.document?.id ?? '',
-        workspaceId: payload.workspace?.id ?? '',
-        documentName: payload.document?.name ?? '',
-        sourceType: payload.document?.sourceType ?? '',
-        typeName: payload.type?.name ?? '',
-        typeId: payload.type?.id ?? '',
-        userEmail: payload.user?.email ?? '',
+        webhookData: JSON.stringify(parsed),
+        documentId: parsed.document.id,
+        workspaceId: parsed.workspace.id,
+        documentName: parsed.document.name,
+        sourceType: parsed.document.sourceType,
+        typeName: parsed.type.name,
+        typeId: parsed.type.id,
+        userEmail: parsed.user.email,
       },
     })
   },
