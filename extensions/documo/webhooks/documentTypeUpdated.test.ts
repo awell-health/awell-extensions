@@ -2,7 +2,7 @@ import { TestHelpers } from '@awell-health/extensions-core'
 import { documentTypeUpdated as webhook } from './documentTypeUpdated'
 import {
   fullPayload,
-  minimalPayload,
+  alternateTypePayload,
   withoutUserPayload,
 } from './__testdata__/documentTypeUpdated.mock'
 
@@ -31,24 +31,24 @@ describe('Documo - Webhook - Document Type Updated', () => {
       expect(onSuccess).toHaveBeenCalledWith({
         data_points: {
           webhookData: JSON.stringify(fullPayload),
-          documentId: '22222222-2222-2222-2222-222222222222',
-          workspaceId: '00000000-0000-0000-0000-000000000000',
-          documentName: 'patient-intake-form.pdf',
-          sourceType: 'fax',
-          typeName: 'admission form',
-          typeId: '33333333-3333-3333-3333-333333333333',
-          userEmail: 'admin@example.com',
+          documentId: '39960bdb-c1c8-464d-bbb0-343e6be551bf',
+          workspaceId: '41da08f1-f736-479e-a146-4ade8888fff9',
+          documentName: '',
+          sourceType: '',
+          typeName: 'Other',
+          typeId: '6d3ad756-7e43-43a7-ab4b-0af67ab2ba44',
+          userEmail: 'jonathan@awellhealth.com',
         },
       })
       expect(onError).not.toHaveBeenCalled()
     })
   })
 
-  describe('When payload has minimal/nullable fields', () => {
-    it('should extract data points with defaults for missing fields', async () => {
+  describe('When payload has a different type', () => {
+    it('should extract data points correctly', async () => {
       await extensionWebhook.onEvent!({
         payload: {
-          payload: minimalPayload,
+          payload: alternateTypePayload,
           settings: {},
           rawBody: Buffer.from(''),
           headers: {},
@@ -60,11 +60,11 @@ describe('Documo - Webhook - Document Type Updated', () => {
 
       expect(onSuccess).toHaveBeenCalledWith({
         data_points: {
-          webhookData: JSON.stringify(minimalPayload),
+          webhookData: JSON.stringify(alternateTypePayload),
           documentId: '22222222-2222-2222-2222-222222222222',
-          workspaceId: '00000000-0000-0000-0000-000000000000',
-          documentName: 'minimal-doc.pdf',
-          sourceType: 'upload',
+          workspaceId: '41da08f1-f736-479e-a146-4ade8888fff9',
+          documentName: '',
+          sourceType: '',
           typeName: 'admission form',
           typeId: '33333333-3333-3333-3333-333333333333',
           userEmail: 'admin@example.com',
@@ -111,8 +111,9 @@ describe('Documo - Webhook - Document Type Updated', () => {
       const callArgs = onSuccess.mock.calls[0][0]
       const webhookData = JSON.parse(callArgs.data_points.webhookData)
 
-      expect(webhookData.workspace).toEqual(fullPayload.workspace)
-      expect(webhookData.document).toEqual(fullPayload.document)
+      expect(webhookData.accountId).toBe(fullPayload.accountId)
+      expect(webhookData.workspaceId).toBe(fullPayload.workspaceId)
+      expect(webhookData.documentId).toBe(fullPayload.documentId)
       expect(webhookData.type).toEqual(fullPayload.type)
       expect(webhookData.user).toEqual(fullPayload.user)
     })
