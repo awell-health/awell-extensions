@@ -17,14 +17,6 @@ const dataPoints = {
     key: 'workspaceId',
     valueType: 'string',
   },
-  documentName: {
-    key: 'documentName',
-    valueType: 'string',
-  },
-  sourceType: {
-    key: 'sourceType',
-    valueType: 'string',
-  },
   typeName: {
     key: 'typeName',
     valueType: 'string',
@@ -76,8 +68,6 @@ export const documentTypeUpdated: Webhook<
         webhookData: JSON.stringify(payload),
         documentId: parsed.documentId,
         workspaceId: parsed.workspaceId,
-        documentName: '',
-        sourceType: '',
         typeName: parsed.type.name,
         typeId: parsed.type.id,
         userEmail: parsed.user.email,
