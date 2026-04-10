@@ -1,86 +1,36 @@
 import { type DocumentTypeUpdatedPayload } from '../documentTypeUpdated'
 
 /**
- * Mock payload with all fields populated
+ * Mock payload matching the real Documo document-type.updated webhook payload
  */
 export const fullPayload: DocumentTypeUpdatedPayload = {
-  workspace: {
-    id: '00000000-0000-0000-0000-000000000000',
-    accountId: 'account-111',
-    name: 'Test Workspace',
-    createdAt: '2025-01-01T00:00:00.000Z',
-    updatedAt: '2025-06-15T12:00:00.000Z',
-  },
-  document: {
-    id: '22222222-2222-2222-2222-222222222222',
-    workspaceId: '00000000-0000-0000-0000-000000000000',
-    name: 'patient-intake-form.pdf',
-    sourceType: 'fax',
-    sourceId: 'source-fax-001',
-    from: '+15551234567',
-    to: '+15559876543',
-    createdAt: '2025-06-15T10:00:00.000Z',
-    updatedAt: '2025-06-15T12:30:00.000Z',
-    addedAt: '2025-06-15T10:00:00.000Z',
-    pagesCount: 3,
-    typeId: '33333333-3333-3333-3333-333333333333',
-    statusId: 'status-active',
-    isUploading: false,
+  accountId: 'c6c25094-c753-4712-9a13-f883839e7a55',
+  workspaceId: '41da08f1-f736-479e-a146-4ade8888fff9',
+  documentId: '39960bdb-c1c8-464d-bbb0-343e6be551bf',
+  user: {
+    id: 'd86e651c-e562-4ab5-a288-47883fc9b774',
+    email: 'jonathan@awellhealth.com',
   },
   type: {
-    id: '33333333-3333-3333-3333-333333333333',
-    name: 'admission form',
-    accountId: 'account-111',
-    createdAt: '2025-01-01T00:00:00.000Z',
-    updatedAt: '2025-06-15T12:30:00.000Z',
-    locked: false,
-  },
-  user: {
-    uuid: '44444444-4444-4444-4444-444444444444',
-    accountId: 'account-111',
-    email: 'admin@example.com',
+    id: '6d3ad756-7e43-43a7-ab4b-0af67ab2ba44',
+    name: 'Other',
   },
 }
 
 /**
- * Mock payload where optional/nullable fields are null or missing
+ * Mock payload with different type name
  */
-export const minimalPayload: DocumentTypeUpdatedPayload = {
-  workspace: {
-    id: '00000000-0000-0000-0000-000000000000',
-    accountId: 'account-111',
-    name: 'Test Workspace',
-    createdAt: '2025-01-01T00:00:00.000Z',
-    updatedAt: '2025-06-15T12:00:00.000Z',
-  },
-  document: {
-    id: '22222222-2222-2222-2222-222222222222',
-    workspaceId: '00000000-0000-0000-0000-000000000000',
-    name: 'minimal-doc.pdf',
-    sourceType: 'upload',
-    sourceId: 'source-upload-001',
-    from: null,
-    to: null,
-    createdAt: '2025-06-15T10:00:00.000Z',
-    updatedAt: '2025-06-15T12:30:00.000Z',
-    addedAt: '2025-06-15T10:00:00.000Z',
-    pagesCount: 1,
-    typeId: '33333333-3333-3333-3333-333333333333',
-    statusId: 'status-active',
-    isUploading: false,
+export const alternateTypePayload: DocumentTypeUpdatedPayload = {
+  accountId: 'c6c25094-c753-4712-9a13-f883839e7a55',
+  workspaceId: '41da08f1-f736-479e-a146-4ade8888fff9',
+  documentId: '22222222-2222-2222-2222-222222222222',
+  user: {
+    id: '44444444-4444-4444-4444-444444444444',
+    email: 'admin@example.com',
   },
   type: {
     id: '33333333-3333-3333-3333-333333333333',
     name: 'admission form',
-    accountId: 'account-111',
-    createdAt: '2025-01-01T00:00:00.000Z',
-    updatedAt: '2025-06-15T12:30:00.000Z',
-    locked: false,
-  },
-  user: {
-    uuid: '44444444-4444-4444-4444-444444444444',
-    accountId: 'account-111',
-    email: 'admin@example.com',
   },
 }
 
@@ -89,36 +39,12 @@ export const minimalPayload: DocumentTypeUpdatedPayload = {
  * Used to verify that Zod parsing rejects malformed payloads at the boundary.
  */
 export const withoutUserPayload = {
-  workspace: {
-    id: '00000000-0000-0000-0000-000000000000',
-    accountId: 'account-111',
-    name: 'Test Workspace',
-    createdAt: '2025-01-01T00:00:00.000Z',
-    updatedAt: '2025-06-15T12:00:00.000Z',
-  },
-  document: {
-    id: '22222222-2222-2222-2222-222222222222',
-    workspaceId: '00000000-0000-0000-0000-000000000000',
-    name: 'no-user-doc.pdf',
-    sourceType: 'email',
-    sourceId: 'source-email-001',
-    from: null,
-    to: null,
-    createdAt: '2025-06-15T10:00:00.000Z',
-    updatedAt: '2025-06-15T12:30:00.000Z',
-    addedAt: '2025-06-15T10:00:00.000Z',
-    pagesCount: 2,
-    typeId: '33333333-3333-3333-3333-333333333333',
-    statusId: 'status-active',
-    isUploading: false,
-  },
-  type: {
-    id: '33333333-3333-3333-3333-333333333333',
-    name: 'admission form',
-    accountId: 'account-111',
-    createdAt: '2025-01-01T00:00:00.000Z',
-    updatedAt: '2025-06-15T12:30:00.000Z',
-    locked: false,
-  },
+  accountId: 'c6c25094-c753-4712-9a13-f883839e7a55',
+  workspaceId: '41da08f1-f736-479e-a146-4ade8888fff9',
+  documentId: '39960bdb-c1c8-464d-bbb0-343e6be551bf',
   user: null,
+  type: {
+    id: '6d3ad756-7e43-43a7-ab4b-0af67ab2ba44',
+    name: 'Other',
+  },
 }
