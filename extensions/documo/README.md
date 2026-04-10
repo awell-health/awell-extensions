@@ -53,16 +53,14 @@ Triggered when a document type is updated in Documo.
 
 **Data Points:**
 
-| Data Point     | Type   | Description                                 |
-| -------------- | ------ | ------------------------------------------- |
-| `webhookData`  | json   | Full webhook payload                        |
-| `documentId`   | string | Document ID                                 |
-| `workspaceId`  | string | Workspace ID                                |
-| `documentName` | string | Document name                               |
-| `sourceType`   | string | Source type (upload, fax, or email)         |
-| `typeName`     | string | Document type name (e.g., "admission form") |
-| `typeId`       | string | Document type ID                            |
-| `userEmail`    | string | Email of the user who updated the type      |
+| Data Point    | Type   | Description                            |
+| ------------- | ------ | -------------------------------------- |
+| `webhookData` | json   | Full webhook payload                   |
+| `documentId`  | string | Document ID                            |
+| `workspaceId` | string | Workspace ID                           |
+| `typeName`    | string | Document type name (e.g., "Other")     |
+| `typeId`      | string | Document type ID                       |
+| `userEmail`   | string | Email of the user who updated the type |
 
 ## Settings
 
