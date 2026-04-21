@@ -15,6 +15,7 @@ export const stopTrack: Action<typeof fields, typeof settings> = {
   description: 'Stop a track in a patient care flow (pathway).',
   fields,
   previewable: false, // We don't have pathways in Preview, only cases.
+  supports_automated_retries: true,
   onEvent: async ({ payload, onComplete, helpers }): Promise<void> => {
     const {
       fields: { trackDefinitionId },
