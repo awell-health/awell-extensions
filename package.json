@@ -119,7 +119,7 @@
     "@slack/web-api": "^7.13.0",
     "@types/json-schema": "^7.0.15",
     "api": "^6.0.0",
-    "axios": "1.15.1",
+    "axios": "^1.15.2",
     "body-parser": "1.20.4",
     "cheerio": "1.1.0",
     "crypto-js": "^4.2.0",
@@ -164,7 +164,7 @@
     "yaml": "2.8.3",
     "brace-expansion": "2.1.0",
     "@langchain/core": "0.3.80",
-    "axios": "0.31.1",
-    "langsmith": "0.5.19"
+    "langsmith": "0.5.19",
+    "axios": "^1.15.2"
   }
 }
