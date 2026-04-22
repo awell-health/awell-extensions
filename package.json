@@ -162,6 +162,9 @@
     "@fastify/busboy": "3.2.0",
     "follow-redirects": "1.16.0",
     "yaml": "2.8.3",
-    "brace-expansion": "2.1.0"
+    "brace-expansion": "2.1.0",
+    "@langchain/core": "0.3.80",
+    "axios": "0.31.1",
+    "langsmith": "0.5.19"
   }
 }
