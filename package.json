@@ -165,6 +165,7 @@
     "brace-expansion": "2.1.0",
     "@langchain/core": "0.3.80",
     "langsmith": "0.5.19",
-    "axios": "^1.15.2"
+    "axios": "^1.15.2",
+    "fast-xml-parser": "5.7.0"
   }
 }
