@@ -264,7 +264,7 @@ __metadata:
     "@graphql-typed-document-node/core": "npm:^3.1.2"
     "@hubspot/api-client": "npm:^11.2.0"
     "@langchain/core": "npm:0.3.80"
-    "@langchain/openai": "npm:^0.3.0"
+    "@langchain/openai": "npm:0.5.13"
     "@mailchimp/mailchimp_transactional": "npm:^1.0.50"
     "@medplum/core": "npm:^3.1.4"
     "@medplum/fhirtypes": "npm:^3.1.4"
@@ -339,7 +339,7 @@ __metadata:
     node-fetch: "npm:2"
     nodemailer: "npm:8.0.5"
     oauth-1.0a: "npm:^2.2.6"
-    openai: "npm:^4.59.0"
+    openai: "npm:^4.104.0"
     prettier: "npm:^3.4.2"
     rimraf: "npm:^4.1.2"
     sanitize-html: "npm:^2.13.0"
@@ -354,7 +354,7 @@ __metadata:
     uuid: "npm:^10.0.0"
     xml2js: "npm:^0.6.2"
     yargs: "npm:^17.7.2"
-    zod: "npm:^3.24.1"
+    zod: "npm:^3.25.32"
     zod-validation-error: "npm:^3.2.0"
   languageName: unknown
   linkType: soft
@@ -2371,6 +2371,19 @@ __metadata:
     zod: "npm:^3.22.4"
     zod-to-json-schema: "npm:^3.22.3"
   checksum: 10/08b99289af3430a270569a01056224978ad946bb89da7f3c44dc7a0f2882c7ebf5da1d311f82a4d8bdf0b53acff5ff475bc22b9ee752a3ff87b01f6e5dd0cc7f
+  languageName: node
+  linkType: hard
+
+"@langchain/openai@npm:0.5.13":
+  version: 0.5.13
+  resolution: "@langchain/openai@npm:0.5.13"
+  dependencies:
+    js-tiktoken: "npm:^1.0.12"
+    openai: "npm:^4.96.0"
+    zod: "npm:3.25.32"
+  peerDependencies:
+    "@langchain/core": ">=0.3.58 <0.4.0"
+  checksum: 10/caecc2599dc2d0e10e1d1f0735479d12ea615e7c814c0b98722a9167df9c5d856697be111e5a0c86fb99c5f9afb96c60c080525c88c943e397321c4d123b57f5
   languageName: node
   linkType: hard
 
@@ -10725,7 +10738,32 @@ __metadata:
   languageName: node
   linkType: hard
 
-"openai@npm:^4.57.3, openai@npm:^4.59.0":
+"openai@npm:^4.104.0, openai@npm:^4.96.0":
+  version: 4.104.0
+  resolution: "openai@npm:4.104.0"
+  dependencies:
+    "@types/node": "npm:^18.11.18"
+    "@types/node-fetch": "npm:^2.6.4"
+    abort-controller: "npm:^3.0.0"
+    agentkeepalive: "npm:^4.2.1"
+    form-data-encoder: "npm:1.7.2"
+    formdata-node: "npm:^4.3.2"
+    node-fetch: "npm:^2.6.7"
+  peerDependencies:
+    ws: ^8.18.0
+    zod: ^3.23.8
+  peerDependenciesMeta:
+    ws:
+      optional: true
+    zod:
+      optional: true
+  bin:
+    openai: bin/cli
+  checksum: 10/e1bdfea7b58f6d6cc0c2787254e9ae0395c7cb78b6ad4383c2777fd929ff43d2cb614c12ff7aaef04e260a6b48f3bc15f3c864abb9df35cfc7594e6aa46d4858
+  languageName: node
+  linkType: hard
+
+"openai@npm:^4.57.3":
   version: 4.62.1
   resolution: "openai@npm:4.62.1"
   dependencies:
@@ -13875,9 +13913,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"zod@npm:^3.24.1":
-  version: 3.24.1
-  resolution: "zod@npm:3.24.1"
-  checksum: 10/54e25956495dec22acb9399c168c6ba657ff279801a7fcd0530c414d867f1dcca279335e160af9b138dd70c332e17d548be4bc4d2f7eaf627dead50d914fec27
+"zod@npm:^3.25.32":
+  version: 3.25.76
+  resolution: "zod@npm:3.25.76"
+  checksum: 10/f0c963ec40cd96858451d1690404d603d36507c1fc9682f2dae59ab38b578687d542708a7fdbf645f77926f78c9ed558f57c3d3aa226c285f798df0c4da16995
   languageName: node
   linkType: hard

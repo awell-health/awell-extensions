@@ -21,14 +21,14 @@ export const checkTagsWithLLM = async (props: CheckTagsWithLLMProps): Promise<Ch
       existingTags: JSON.stringify(existingTags),
       instructions
     })
-    const result = await chain.invoke(
-      formattedPrompt, 
-      { 
-        metadata, 
+    const result = (await chain.invoke(
+      formattedPrompt,
+      {
+        metadata,
         runName: 'ElationCheckPatientTags',
         callbacks
       }
-    )
+    )) as CheckTagsOutput
 
     return {
       tagsFound: result.tagsFound,

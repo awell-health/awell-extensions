@@ -9,9 +9,11 @@ import { z } from 'zod'
  *   match_explanation: string // Brief explanation of the categorization
  * }
  */
-export const parser = StructuredOutputParser.fromZodSchema(
-  z.object({
-    matched_category: z.string().optional().default('None'),
-    match_explanation: z.string(),
-  })
-) 
+const categorizeSchema = z.object({
+  matched_category: z.string().optional().default('None'),
+  match_explanation: z.string(),
+})
+
+export type CategorizeOutput = z.infer<typeof categorizeSchema>
+
+export const parser = StructuredOutputParser.fromZodSchema(categorizeSchema)

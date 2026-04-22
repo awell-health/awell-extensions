@@ -1,4 +1,4 @@
-import { parser } from './parser'
+import { parser, type GeneratedMessage } from './parser'
 import { systemPrompt } from './prompt'
 import { type ChatOpenAI } from '@langchain/openai'
 import { type AIActionMetadata } from '../../../../../../src/lib/llm/openai/types'
@@ -52,10 +52,10 @@ export const generateMessageWithLLM = async ({
   
   while (retries < MAX_RETRIES) { // Sometimes the LLM returns a non-JSON response
     try {
-      const generated_message = await structured_output_chain.invoke(
+      const generated_message = (await structured_output_chain.invoke(
         prompt,
         { metadata, runName: 'ShellyGenerateMessage', callbacks }
-      )
+      )) as Partial<GeneratedMessage> & { content?: unknown }
       subject = generated_message.subject ?? ''
       message = generated_message.message ?? ''
 

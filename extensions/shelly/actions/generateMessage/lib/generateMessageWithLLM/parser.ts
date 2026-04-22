@@ -12,4 +12,6 @@ export const messageSchema = z.object({
   message: z.string(),
 })
 
-export const parser = StructuredOutputParser.fromZodSchema(messageSchema) 
+export type GeneratedMessage = z.infer<typeof messageSchema>
+
+export const parser = StructuredOutputParser.fromZodSchema(messageSchema)

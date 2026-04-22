@@ -6,7 +6,7 @@ import {
   type EvaluatorT,
 } from 'langsmith/evaluation'
 import { OPENAI_MODELS } from '../../../../src/lib/llm/openai'
-import { parser } from './parser'
+import { parser, type InstructionsWithDatesExtracted } from './parser'
 import { systemPrompt } from './prompt'
 
 import { differenceInMinutes, parseISO } from 'date-fns'
@@ -40,12 +40,12 @@ async function wrapper(inputs: Inputs): Promise<Outputs> {
 
   const chain = model.pipe(parser)
 
-  const result = await chain.invoke(
+  const result = (await chain.invoke(
     await systemPrompt.format({
       currentDateTime: inputs.reference_date,
       prompt: inputs.instructions,
     }),
-  )
+  )) as InstructionsWithDatesExtracted
 
   return {
     from: result.from,

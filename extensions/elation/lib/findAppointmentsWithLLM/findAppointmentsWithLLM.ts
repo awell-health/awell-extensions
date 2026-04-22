@@ -29,7 +29,7 @@ export const findAppointmentsWithLLM = async ({
       ? systemPromptWithDates
       : systemPromptWithoutDates
 
-    const result = await chain.invoke(
+    const result = (await chain.invoke(
       await systemPrompt.format({
         currentDateTime: new Date().toISOString(),
         appointments: formattedAppointments,
@@ -40,7 +40,7 @@ export const findAppointmentsWithLLM = async ({
         runName: 'ElationFindAppointmentsWithLLM',
         callbacks,
       },
-    )
+    )) as AppointmentsFromLLM
 
     return {
       appointmentIds: result.appointmentIds,

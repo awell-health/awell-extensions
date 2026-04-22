@@ -1,4 +1,4 @@
-import { parser } from './parser'
+import { parser, type ParseStructuredDataOutput } from './parser'
 import { systemPrompt } from './prompt'
 import { type ChatOpenAI } from '@langchain/openai'
 import { type AIActionMetadata } from '../../../../../../src/lib/llm/openai/types'
@@ -52,13 +52,13 @@ export const parseStructuredDataWithLLM = async ({
 
   const chain = model.pipe(parser)
 
-  let result
+  let result: ParseStructuredDataOutput
   try {
-    result = await chain.invoke(prompt, {
+    result = (await chain.invoke(prompt, {
       metadata,
       runName: 'ShellyParseStructuredData',
       callbacks,
-    })
+    })) as ParseStructuredDataOutput
   } catch (error) {
     throw new Error(
       'Failed to parse structured data from the message due to an internal error.',

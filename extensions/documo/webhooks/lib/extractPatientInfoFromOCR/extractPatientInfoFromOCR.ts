@@ -82,9 +82,9 @@ export async function extractPatientInfoFromOCR(
 
   for (let attempt = 0; attempt < MAX_RETRIES; attempt++) {
     try {
-      result = await chain.invoke(prompt, {
+      result = (await chain.invoke(prompt, {
         runName: 'DocumoExtractPatientInfo',
-      })
+      })) as PatientInfo
       break // Success, exit retry loop
     } catch (error) {
       lastError = error instanceof Error ? error : new Error(String(error))

@@ -20,7 +20,7 @@ export const extractDatesFromInstructions = async ({
   const chain = model.pipe(parser)
 
   try {
-    const result = await chain.invoke(
+    const result = (await chain.invoke(
       await systemPrompt.format({
         currentDateTime: new Date().toISOString(),
         prompt,
@@ -30,7 +30,7 @@ export const extractDatesFromInstructions = async ({
         runName: 'ElationExtractDatesFromInstructions',
         callbacks,
       },
-    )
+    )) as InstructionsWithDatesExtracted
 
     return {
       from: result.from,

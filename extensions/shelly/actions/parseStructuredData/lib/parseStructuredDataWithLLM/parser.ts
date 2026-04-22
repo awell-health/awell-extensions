@@ -10,18 +10,20 @@ import { z } from 'zod'
  *   extraction_explanation: string        // Brief explanation of the extraction
  * }
  */
-export const parser = StructuredOutputParser.fromZodSchema(
-  z.object({
-    extracted_data: z
-      .record(z.any())
-      .describe('Extracted data matching the schema'),
-    confidence_level: z
-      .number()
-      .min(0)
-      .max(100)
-      .describe('Confidence level of the extraction (0-100)'),
-    extraction_explanation: z
-      .string()
-      .describe('Brief explanation of the extraction process'),
-  }),
-)
+const parseStructuredDataSchema = z.object({
+  extracted_data: z
+    .record(z.any())
+    .describe('Extracted data matching the schema'),
+  confidence_level: z
+    .number()
+    .min(0)
+    .max(100)
+    .describe('Confidence level of the extraction (0-100)'),
+  extraction_explanation: z
+    .string()
+    .describe('Brief explanation of the extraction process'),
+})
+
+export type ParseStructuredDataOutput = z.infer<typeof parseStructuredDataSchema>
+
+export const parser = StructuredOutputParser.fromZodSchema(parseStructuredDataSchema)
