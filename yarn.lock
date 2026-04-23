@@ -250,7 +250,7 @@ __metadata:
   resolution: "@awell-health/awell-extensions@workspace:."
   dependencies:
     "@airtop/sdk": "npm:^0.1.44"
-    "@awell-health/awell-sdk": "npm:0.1.24"
+    "@awell-health/awell-sdk": "npm:0.1.29"
     "@awell-health/extensions-core": "npm:1.1.11"
     "@awell-health/healthie-sdk": "npm:^0.1.1"
     "@calcom/embed-react": "npm:^1.5.3"
@@ -359,17 +359,17 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@awell-health/awell-sdk@npm:0.1.24":
-  version: 0.1.24
-  resolution: "@awell-health/awell-sdk@npm:0.1.24"
+"@awell-health/awell-sdk@npm:0.1.29":
+  version: 0.1.29
+  resolution: "@awell-health/awell-sdk@npm:0.1.29"
   dependencies:
     "@genql/cli": "npm:^6.3.3"
     "@medplum/fhirtypes": "npm:^3.1.8"
     crypto: "npm:^1.0.1"
     date-fns: "npm:^4.1.0"
     jsdom: "npm:^26.0.0"
-    lodash: "npm:^4.17.21"
-  checksum: 10/70f37217e8f651b4aa9a1c1bdac6e3061785fc225d85525534671f1ccca574b27f24249528c030c9833c130a5700dc0df0863c5dc08da59fa9ae467769d26492
+    lodash: "npm:4.18.1"
+  checksum: 10/b61e001aaf2079704376855362aefd97161af4662c7e1744556c445765800cf031ea35fee83522b2ba4fecef174b41fe4c82fe74e6216a25375d5e2754ce54a9
   languageName: node
   linkType: hard
 
