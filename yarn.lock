@@ -1325,13 +1325,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@fastify/busboy@npm:3.2.0":
-  version: 3.2.0
-  resolution: "@fastify/busboy@npm:3.2.0"
-  checksum: 10/7d42b23eed18b1aaf2d2b1c77a5b76ec3606d59f5ddec31c04b144536be57478ed0c73e04768f11535b11a37b48aaaa0aed4904d5f18391ff90045c258e41acc
-  languageName: node
-  linkType: hard
-
 "@genql/cli@npm:^6.3.3":
   version: 6.3.3
   resolution: "@genql/cli@npm:6.3.3"
@@ -13204,19 +13197,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"undici@npm:^5.22.0":
-  version: 5.29.0
-  resolution: "undici@npm:5.29.0"
-  dependencies:
-    "@fastify/busboy": "npm:^2.0.0"
-  checksum: 10/0ceca8924a32acdcc0cfb8dd2d368c217840970aa3f5e314fc169608474be6341c5b8e50cad7bd257dbe3b4e432bc5d0a0d000f83644b54fa11a48735ec52b93
-  languageName: node
-  linkType: hard
-
-"undici@npm:^7.10.0":
-  version: 7.25.0
-  resolution: "undici@npm:7.25.0"
-  checksum: 10/038d3568c72bb976e3cc389284f7f1cc64cd70d578300e4676a449fbcb624a35fe99ac127b5f3729f18b8246d6c090444ab61b1b67736bb88f52a3e913d76bf8
+"undici@npm:7.24.1":
+  version: 7.24.1
+  resolution: "undici@npm:7.24.1"
+  checksum: 10/0af4ec2fc2ae50b1d0636895793ea2274a89a7cd445690089a1b957c4ac4a0336e48ab9ac48a4e8f5023d4b5eab56368c3f17c75d6b4c81b4281b674d1e60c9f
   languageName: node
   linkType: hard
 
