@@ -1,5 +1,5 @@
+import { randomUUID } from 'crypto'
 import { type ExtractMedicationResponse } from '../../types'
-import { v4 as uuidv4 } from 'uuid'
 import { isEmpty } from 'lodash'
 
 export class FetchError extends Error {
@@ -36,7 +36,7 @@ export class MedicationExtractorApi {
     }
   }): Promise<ExtractMedicationResponse> {
     const url = this.constructUrl(`/medication_extractor/`)
-    const request_id = uuidv4()
+    const request_id = randomUUID()
 
     const response = await fetch(url, {
       method: 'POST',

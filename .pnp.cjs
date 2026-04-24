@@ -70,7 +70,6 @@ const RAW_RUNTIME_STATE =
           ["@types/react", "npm:19.1.12"],\
           ["@types/sanitize-html", "npm:2.13.0"],\
           ["@types/showdown", "npm:2.0.6"],\
-          ["@types/uuid", "npm:10.0.0"],\
           ["@types/xml2js", "npm:0.4.14"],\
           ["@types/yargs", "npm:17.0.35"],\
           ["@typescript-eslint/eslint-plugin", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:5.62.0"],\
@@ -129,7 +128,6 @@ const RAW_RUNTIME_STATE =
           ["twilio", "npm:5.8.0"],\
           ["typescript", "patch:typescript@npm%3A5.7.2#optional!builtin<compat/typescript>::version=5.7.2&hash=5786d5"],\
           ["tzdata", "npm:1.0.43"],\
-          ["uuid", "npm:10.0.0"],\
           ["xml2js", "npm:0.6.2"],\
           ["yargs", "npm:17.7.2"],\
           ["zod", "npm:3.25.76"],\
@@ -474,7 +472,6 @@ const RAW_RUNTIME_STATE =
           ["@types/react", "npm:19.1.12"],\
           ["@types/sanitize-html", "npm:2.13.0"],\
           ["@types/showdown", "npm:2.0.6"],\
-          ["@types/uuid", "npm:10.0.0"],\
           ["@types/xml2js", "npm:0.4.14"],\
           ["@types/yargs", "npm:17.0.35"],\
           ["@typescript-eslint/eslint-plugin", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:5.62.0"],\
@@ -533,7 +530,6 @@ const RAW_RUNTIME_STATE =
           ["twilio", "npm:5.8.0"],\
           ["typescript", "patch:typescript@npm%3A5.7.2#optional!builtin<compat/typescript>::version=5.7.2&hash=5786d5"],\
           ["tzdata", "npm:1.0.43"],\
-          ["uuid", "npm:10.0.0"],\
           ["xml2js", "npm:0.6.2"],\
           ["yargs", "npm:17.7.2"],\
           ["zod", "npm:3.25.76"],\
@@ -2380,15 +2376,6 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
-    ["@fastify/busboy", [\
-      ["npm:3.2.0", {\
-        "packageLocation": "./.yarn/cache/@fastify-busboy-npm-3.2.0-bacf4ba193-7d42b23eed.zip/node_modules/@fastify/busboy/",\
-        "packageDependencies": [\
-          ["@fastify/busboy", "npm:3.2.0"]\
-        ],\
-        "linkType": "HARD"\
-      }]\
-    ]],\
     ["@genql/cli", [\
       ["npm:6.3.3", {\
         "packageLocation": "./.yarn/cache/@genql-cli-npm-6.3.3-a91cc08ed1-cd0aae1474.zip/node_modules/@genql/cli/",\
@@ -2406,7 +2393,7 @@ const RAW_RUNTIME_STATE =
           ["prettier", "npm:2.8.8"],\
           ["qs", "npm:6.15.1"],\
           ["rimraf", "npm:2.7.1"],\
-          ["undici", "npm:5.29.0"],\
+          ["undici", "npm:7.24.1"],\
           ["yargs", "npm:15.4.1"]\
         ],\
         "linkType": "HARD"\
@@ -5301,15 +5288,6 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
-    ["@types/uuid", [\
-      ["npm:10.0.0", {\
-        "packageLocation": "./.yarn/cache/@types-uuid-npm-10.0.0-9ac1066765-e3958f8b0f.zip/node_modules/@types/uuid/",\
-        "packageDependencies": [\
-          ["@types/uuid", "npm:10.0.0"]\
-        ],\
-        "linkType": "HARD"\
-      }]\
-    ]],\
     ["@types/ws", [\
       ["npm:8.5.12", {\
         "packageLocation": "./.yarn/cache/@types-ws-npm-8.5.12-90c42288cf-d8a3ddfb5f.zip/node_modules/@types/ws/",\
@@ -6960,7 +6938,7 @@ const RAW_RUNTIME_STATE =
           ["parse5", "npm:7.3.0"],\
           ["parse5-htmlparser2-tree-adapter", "npm:7.1.0"],\
           ["parse5-parser-stream", "npm:7.1.2"],\
-          ["undici", "npm:7.25.0"],\
+          ["undici", "npm:7.24.1"],\
           ["whatwg-mimetype", "npm:4.0.0"]\
         ],\
         "linkType": "HARD"\
@@ -13323,7 +13301,7 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["native-fetch", "virtual:a91cc08ed157b315d14e34b18bfe78c118f1dcc3183d1ba53647e9d69d972158c82f7946b0b70b315d6d25f8330d7bd2ea52ac85eca411fa66e9266d657dee96#npm:4.0.2"],\
           ["@types/undici", null],\
-          ["undici", "npm:5.29.0"]\
+          ["undici", "npm:7.24.1"]\
         ],\
         "packagePeers": [\
           "@types/undici",\
@@ -16691,18 +16669,10 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["undici", [\
-      ["npm:5.29.0", {\
-        "packageLocation": "./.yarn/cache/undici-npm-5.29.0-caeb96c8ee-0ceca8924a.zip/node_modules/undici/",\
+      ["npm:7.24.1", {\
+        "packageLocation": "./.yarn/cache/undici-npm-7.24.1-61a70612f5-0af4ec2fc2.zip/node_modules/undici/",\
         "packageDependencies": [\
-          ["undici", "npm:5.29.0"],\
-          ["@fastify/busboy", "npm:3.2.0"]\
-        ],\
-        "linkType": "HARD"\
-      }],\
-      ["npm:7.25.0", {\
-        "packageLocation": "./.yarn/cache/undici-npm-7.25.0-06372b6dbc-038d3568c7.zip/node_modules/undici/",\
-        "packageDependencies": [\
-          ["undici", "npm:7.25.0"]\
+          ["undici", "npm:7.24.1"]\
         ],\
         "linkType": "HARD"\
       }]\

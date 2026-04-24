@@ -72,7 +72,6 @@
     "@types/react": "^19.1.12",
     "@types/sanitize-html": "^2.13.0",
     "@types/showdown": "^2.0.0",
-    "@types/uuid": "^10.0.0",
     "@types/xml2js": "^0.4.12",
     "@types/yargs": "^17.0.32",
     "@typescript-eslint/eslint-plugin": "^5.52.0",
@@ -151,7 +150,6 @@
     "stripe": "^15.5.0",
     "twilio": "^5.8.0",
     "tzdata": "^1.0.43",
-    "uuid": "14.0.0",
     "xml2js": "^0.6.2",
     "zod": "^3.25.32",
     "zod-validation-error": "^3.2.0"
