@@ -175,7 +175,7 @@ export const generateFormOutput = (opts: {
       ) {
         const escapedDescription =
           opts.awellSdk.utils.awell.slateToEscapedJsString(
-            questionDefinition.title,
+            questionDefinition.title_html ?? questionDefinition.title ?? '',
           )
         formAnswers.push(escapedDescription)
         return
