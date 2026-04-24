@@ -135,6 +135,91 @@ describe('Medplum - Create questionnaire response', () => {
     })
   })
 
+  describe('When Medplum SDK call fails', () => {
+    test('Should call onError with a descriptive message', async () => {
+      const mockedMedplumClient = jest.mocked(MedplumClient)
+      mockedMedplumClient.mockImplementation(() => {
+        return {
+          startClientLogin: jest.fn(),
+          createResourceIfNoneExist: jest
+            .fn()
+            .mockRejectedValue(new Error('Internal server error')),
+          createResource: jest.fn(),
+        } as unknown as MedplumClient
+      })
+      const awellSdkMock = {
+        orchestration: {
+          query: jest.fn().mockResolvedValue({
+            activity: {
+              activity: {
+                date: new Date().toISOString(),
+                context: {
+                  step_id: 'some-step-id',
+                },
+              },
+            },
+            pathwayStepActivities: {
+              activities: [
+                {
+                  id: 'form',
+                  status: 'DONE',
+                  date: subDays(new Date(), 1).toISOString(),
+                  object: {
+                    name: 'Simple form',
+                    type: 'FORM',
+                  },
+                  context: {
+                    step_id: 'some-step-id',
+                  },
+                },
+              ],
+            },
+            form: simpleFormMockResponse,
+            formResponse: simpleFormResponseMockResponse,
+          }),
+        },
+        utils: new AwellSdk({
+          environment: 'sandbox',
+          apiKey: 'sth',
+        }).utils,
+      }
+
+      helpers.awellSdk = jest.fn().mockResolvedValue(awellSdkMock)
+
+      await extensionAction.onEvent({
+        payload: {
+          fields: {
+            patientId: '5d1e74dd-6b92-43e6-ab07-e55d1033fbb6',
+            questionnaireResponseId: 'abc',
+          },
+          pathway: {
+            id: '3P9PnTa50RD8',
+          },
+          activity: {
+            id: 'uHiNInqiX-rhfnJEl0mcE',
+          },
+          settings: mockSettings,
+        } as any,
+        onComplete,
+        onError,
+        helpers,
+        attempt: 1,
+      })
+
+      expect(onComplete).not.toHaveBeenCalled()
+      expect(onError).toHaveBeenCalledWith({
+        events: [
+          {
+            date: expect.any(String),
+            text: {
+              en: 'Failed to submit questionnaire response: Internal server error',
+            },
+          },
+        ],
+      })
+    })
+  })
+
   describe('When no (completed) form activity is found in the current step', () => {
     test('Should call onError', async () => {
       const awellSdkMock = {
