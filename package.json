@@ -1,6 +1,6 @@
 {
   "name": "@awell-health/awell-extensions",
-  "version": "2.1.113",
+  "version": "2.1.112",
   "packageManager": "yarn@4.5.3",
   "main": "dist/src/index.js",
   "repository": {
@@ -151,7 +151,7 @@
     "stripe": "^15.5.0",
     "twilio": "^5.8.0",
     "tzdata": "^1.0.43",
-    "uuid": "^10.0.0",
+    "uuid": "14.0.0",
     "xml2js": "^0.6.2",
     "zod": "^3.25.32",
     "zod-validation-error": "^3.2.0"
