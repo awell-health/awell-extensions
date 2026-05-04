@@ -36,12 +36,31 @@ export const sendCallWithPathway: Action<
     }
 
     const { otherData, ...fields } = allFields
+
+    // TEMPORARY: remap a specific pathway_id to a new one. Remove once the
+    // upstream caller is updated to send the new id directly.
+    const PATHWAY_ID_OVERRIDES: Record<string, string> = {
+      '5c7b1835-63e6-4a3a-a60c-7f30b9cb7244':
+        '23b4bee6-0fba-4d1c-b719-1248c400a2e7',
+    }
+    const resolvedPathwayId =
+      PATHWAY_ID_OVERRIDES[fields.pathwayId] ?? fields.pathwayId
+    if (resolvedPathwayId !== fields.pathwayId) {
+      log(
+        {
+          originalPathwayId: fields.pathwayId,
+          resolvedPathwayId,
+        },
+        'Applied temporary pathway_id override',
+      )
+    }
+
     const sendCallInput = SendCallInputSchema.parse({
       ...fields,
       webhook: getWebhookUrl(),
       ...otherData, // there was a 'webhook' field in this otherData object
       phone_number: fields.phoneNumber,
-      pathway_id: fields.pathwayId,
+      pathway_id: resolvedPathwayId,
       request_data: fields.requestData,
       metadata: {
         ...fields.metadata,
