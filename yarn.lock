@@ -352,7 +352,7 @@ __metadata:
     tzdata: "npm:^1.0.43"
     xml2js: "npm:^0.6.2"
     yargs: "npm:^17.7.2"
-    zod: "npm:^3.25.32"
+    zod: "npm:4.4.0"
     zod-validation-error: "npm:^3.2.0"
   languageName: unknown
   linkType: soft

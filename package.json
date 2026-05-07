@@ -151,7 +151,7 @@
     "twilio": "^5.8.0",
     "tzdata": "^1.0.43",
     "xml2js": "^0.6.2",
-    "zod": "^3.25.32",
+    "zod": "4.4.0",
     "zod-validation-error": "^3.2.0"
   },
   "resolutions": {
