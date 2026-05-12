@@ -165,7 +165,6 @@
     "langsmith": "0.5.19",
     "axios": "^1.15.2",
     "fast-xml-parser": "5.7.0",
-    "undici": "7.24.1",
-    "fast-uri": "3.1.2"
+    "undici": "7.24.1"
   }
 }
