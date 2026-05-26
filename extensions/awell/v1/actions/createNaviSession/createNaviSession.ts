@@ -13,6 +13,7 @@ export const createNaviSession: Action<typeof fields, typeof settings> = {
   fields,
   dataPoints,
   previewable: false,
+  supports_automated_retries: true,
   onEvent: async ({ payload, onComplete, onError }): Promise<void> => {
     const {
       fields: { stakeholderId, exp },

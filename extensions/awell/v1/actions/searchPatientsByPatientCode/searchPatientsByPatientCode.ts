@@ -18,6 +18,7 @@ export const searchPatientsByPatientCode: Action<
   fields,
   dataPoints,
   previewable: true,
+  supports_automated_retries: true,
   onEvent: async ({ payload, onComplete, helpers }): Promise<void> => {
     const {
       patient: {

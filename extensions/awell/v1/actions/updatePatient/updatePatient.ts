@@ -16,6 +16,7 @@ export const updatePatient: Action<typeof fields, typeof settings> = {
   description: 'Update the current patient with new data.',
   fields,
   previewable: false,
+  supports_automated_retries: true,
   onEvent: async ({ payload, onComplete, helpers }): Promise<void> => {
     const {
       fields: {

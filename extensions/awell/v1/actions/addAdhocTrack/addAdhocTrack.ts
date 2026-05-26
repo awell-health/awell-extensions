@@ -16,6 +16,7 @@ export const addAdhocTrack: Action<typeof fields, typeof settings> = {
   description: 'Add a pre-configured ad hoc track to a patient care flow.',
   fields,
   previewable: false,
+  supports_automated_retries: true,
   onEvent: async ({ payload, onComplete, helpers }): Promise<void> => {
     const {
       fields: { trackId },
