@@ -16,6 +16,7 @@ export const getPatientByIdentifier: Action<typeof fields, typeof settings> = {
   fields,
   dataPoints,
   previewable: true,
+  supports_automated_retries: true,
   onEvent: async ({
     payload,
     onComplete,

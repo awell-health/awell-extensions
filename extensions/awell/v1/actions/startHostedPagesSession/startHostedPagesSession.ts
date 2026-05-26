@@ -17,6 +17,7 @@ export const startHostedPagesSession: Action<typeof fields, typeof settings> = {
   fields,
   dataPoints,
   previewable: false,
+  supports_automated_retries: true,
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
     const {
       fields: { careFlowId, stakeholder },

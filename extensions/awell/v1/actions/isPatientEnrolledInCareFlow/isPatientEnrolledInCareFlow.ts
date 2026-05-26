@@ -37,6 +37,7 @@ export const isPatientEnrolledInCareFlow: Action<
   fields,
   dataPoints,
   previewable: false,
+  supports_automated_retries: true,
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
     const {
       patient: { id: patientId },

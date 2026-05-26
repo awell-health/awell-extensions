@@ -18,6 +18,7 @@ export const updateBaselineInfo: Action<typeof fields, typeof settings> = {
   fields,
   dataPoints,
   previewable: false,
+  supports_automated_retries: true,
   onEvent: async ({ payload, onComplete, helpers }): Promise<void> => {
     const {
       fields: { careflowId: externalCareflowId, baselineInfo },
