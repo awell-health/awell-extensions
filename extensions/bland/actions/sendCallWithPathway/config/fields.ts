@@ -155,7 +155,7 @@ export const fields = {
     id: 'language',
     label: 'Language',
     description:
-      'Optimizes every part of our API for that language - transcription, speech, and other inner workings.',
+      'Optimizes transcription, speech, and other inner workings for the specified language. Enter a 2-letter ISO 639-1 code in lowercase, for example: en, es, fr. Defaults to English if not set.',
     type: FieldType.STRING,
     required: false,
   },
