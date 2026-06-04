@@ -16,6 +16,7 @@ import {
   listFormAnswers,
   createNaviSession,
   getCurrentCareflowId,
+  showQRCode,
 } from './v1/actions'
 import { type Extension } from '@awell-health/extensions-core'
 import { settings } from './settings'
@@ -51,6 +52,7 @@ export const Awell: Extension = {
     listFormAnswers,
     createNaviSession,
     getCurrentCareflowId,
+    showQRCode,
   },
   webhooks,
 }
