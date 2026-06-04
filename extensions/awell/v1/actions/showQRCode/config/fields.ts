@@ -10,8 +10,16 @@ export const fields = {
     type: FieldType.STRING,
     required: true,
   },
+  label: {
+    id: 'label',
+    label: 'Description',
+    description: 'Enter the description to show above the QR code.',
+    type: FieldType.STRING,
+    required: false,
+  },
 } satisfies Record<string, Field>
 
 export const FieldsValidationSchema = z.object({
   url: z.string().url(),
+  label: z.string().optional(),
 } satisfies Record<keyof typeof fields, ZodTypeAny>)

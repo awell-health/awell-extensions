@@ -8,6 +8,8 @@ const ShowQRCodeComponent: React.FC<ComponentProps> = ({
 }) => {
   const url =
     activityDetails.fields.find((field) => field.id === 'url')?.value ?? ''
+  const label =
+    activityDetails.fields.find((field) => field.id === 'label')?.value ?? ''
 
   const [qrCodeImageUrl, setQrCodeImageUrl] = useState<string>()
 
@@ -30,9 +32,11 @@ const ShowQRCodeComponent: React.FC<ComponentProps> = ({
         textAlign: 'center',
       }}
     >
-      <p style={{ margin: 0, fontSize: '16px', maxWidth: '320px' }}>
-        Show this QR code to your home nurse to give them access to their tasks.
-      </p>
+      {label !== '' && (
+        <p style={{ margin: 0, fontSize: '16px', maxWidth: '320px' }}>
+          {label}
+        </p>
+      )}
       {qrCodeImageUrl !== undefined ? (
         <img src={qrCodeImageUrl} alt="QR code" />
       ) : (
