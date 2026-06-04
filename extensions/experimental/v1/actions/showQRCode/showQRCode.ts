@@ -12,13 +12,12 @@ export const showQRCode: Action<typeof fields, typeof settings> = {
   fields,
   dataPoints,
   previewable: false,
-  supports_automated_retries: false,
-  onEvent: async ({ payload, onComplete }): Promise<void> => {
+  onActivityCreated: async (payload, _onComplete, onError): Promise<void> => {
     validate({
       schema: z.object({ fields: FieldsValidationSchema }),
       payload,
     })
 
-    await onComplete({ data_points: {} })
+    // Completion happens in Hosted Pages when the patient clicks Done
   },
 }
