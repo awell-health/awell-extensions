@@ -4,6 +4,7 @@ import {
   patientRecommendation,
   redirect,
   returnObject,
+  showQRCode,
 } from './v1/actions'
 import { type Extension } from '@awell-health/extensions-core'
 import { settings } from './settings'
@@ -27,5 +28,6 @@ export const Experimental: Extension = {
     patientRecommendation,
     redirect,
     returnObject,
+    showQRCode,
   },
 }

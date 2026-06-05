@@ -289,6 +289,7 @@ __metadata:
     "@types/node-fetch": "npm:^2.6.2"
     "@types/nodemailer": "npm:^6.4.15"
     "@types/pdfmake": "npm:^0.2.9"
+    "@types/qrcode": "npm:^1.5.5"
     "@types/react": "npm:^19.1.12"
     "@types/sanitize-html": "npm:^2.13.0"
     "@types/showdown": "npm:^2.0.0"
@@ -340,6 +341,7 @@ __metadata:
     oauth-1.0a: "npm:^2.2.6"
     openai: "npm:^4.104.0"
     prettier: "npm:^3.4.2"
+    qrcode: "npm:^1.5.3"
     rimraf: "npm:^4.1.2"
     sanitize-html: "npm:^2.13.0"
     showdown: "npm:^2.1.0"
@@ -3345,6 +3347,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/qrcode@npm:^1.5.5":
+  version: 1.5.6
+  resolution: "@types/qrcode@npm:1.5.6"
+  dependencies:
+    "@types/node": "npm:*"
+  checksum: 10/61aa00ba56a874a71a82006a55715d2ff2dc65689b582314c6f955c72c830938c93d0ee1e3376d370a1dcd6bac61b05afe75ad8d1f4a47ebcdd6344d39f70847
+  languageName: node
+  linkType: hard
+
 "@types/qs@npm:*":
   version: 6.9.16
   resolution: "@types/qs@npm:6.9.16"
@@ -5667,6 +5678,13 @@ __metadata:
   version: 5.2.0
   resolution: "diff@npm:5.2.0"
   checksum: 10/01b7b440f83a997350a988e9d2f558366c0f90f15be19f4aa7f1bb3109a4e153dfc3b9fbf78e14ea725717017407eeaa2271e3896374a0181e8f52445740846d
+  languageName: node
+  linkType: hard
+
+"dijkstrajs@npm:^1.0.1":
+  version: 1.0.3
+  resolution: "dijkstrajs@npm:1.0.3"
+  checksum: 10/0d8429699a6d5897ed371de494ef3c7072e8052b42abbd978e686a9b8689e70af005fa3e93e93263ee3653673ff5f89c36db830a57ae7c2e088cb9c496307507
   languageName: node
   linkType: hard
 
@@ -11168,6 +11186,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"pngjs@npm:^5.0.0":
+  version: 5.0.0
+  resolution: "pngjs@npm:5.0.0"
+  checksum: 10/345781644740779752505af2fea3e9043f6c7cc349b18e1fb8842796360d1624791f0c24d33c0f27b05658373f90ffaa177a849e932e5fea1f540cef3975f3c9
+  languageName: node
+  linkType: hard
+
 "possible-typed-array-names@npm:^1.0.0":
   version: 1.0.0
   resolution: "possible-typed-array-names@npm:1.0.0"
@@ -11340,6 +11365,19 @@ __metadata:
   version: 1.1.3
   resolution: "pvutils@npm:1.1.3"
   checksum: 10/e5201b8f78ece68eae414a938c844bc45fb3f0de298178eed1775a217eedfd897c4346e5e54f410bb4d7466e09ceb262e85f20fd64239b8bb2595f14c52fa95e
+  languageName: node
+  linkType: hard
+
+"qrcode@npm:^1.5.3":
+  version: 1.5.4
+  resolution: "qrcode@npm:1.5.4"
+  dependencies:
+    dijkstrajs: "npm:^1.0.1"
+    pngjs: "npm:^5.0.0"
+    yargs: "npm:^15.3.1"
+  bin:
+    qrcode: bin/qrcode
+  checksum: 10/9a1b61760e4ea334545a0f54bbc11c537aba0a17cf52cab9fa1b07f8a1337eed0bc6f7fde41b197f2c82c249bc48728983bfaf861bb7ecb29dc597b2ae33c424
   languageName: node
   linkType: hard
 

@@ -1,0 +1,1 @@
+export { showQRCode } from './showQRCode'
