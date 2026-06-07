@@ -2,7 +2,7 @@ import 'dotenv/config'
 import { summarizeCareFlowWithLLM } from './summarizeCareFlowWithLLM'
 import { ChatOpenAI } from '@langchain/openai'
 import { AIMessageChunk } from '@langchain/core/messages'
-import { mockPathwayActivitiesResponse } from '../../__mocks__/pathwayActivitiesResponse'
+import { mockCareflowActivitiesResponse } from '../../__mocks__/careflowActivitiesResponse'
 import { systemPrompt } from './prompt'
 
 // Describe the test suite
@@ -21,7 +21,7 @@ describe('summarizeCareFlowWithLLM', () => {
     mockModel.invoke.mockResolvedValueOnce(new AIMessageChunk(mockedSummary))
 
     // Prepare test data
-    const careFlowData = mockPathwayActivitiesResponse.activities
+    const careFlowData = mockCareflowActivitiesResponse.activities
       .map((activity) => {
         const { date, status, object, context } = activity
         return `Date: ${date}\nStatus: ${status}\nType: ${object.type}\nStep ID: ${context.step_id ?? 'N/A'}`

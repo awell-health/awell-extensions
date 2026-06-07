@@ -2,7 +2,7 @@ import 'dotenv/config'
 import { TestHelpers } from '@awell-health/extensions-core'
 import { generateTestPayload } from '@/tests'
 import { summarizeCareFlow } from '.'
-import { mockPathwayActivitiesResponse } from './__mocks__/pathwayActivitiesResponse'
+import { mockCareflowActivitiesResponse } from './__mocks__/careflowActivitiesResponse'
 import { DISCLAIMER_MSG } from '../../lib/constants'
 
 jest.setTimeout(60000)
@@ -27,7 +27,7 @@ describe.skip('summarizeCareFlow - Real OpenAI calls', () => {
 
     // Mock the SDK query to return activities
     const mockQuery = jest.fn().mockResolvedValueOnce({
-      pathwayActivities: {
+      careflowActivities: {
         success: true,
         activities: [
           {

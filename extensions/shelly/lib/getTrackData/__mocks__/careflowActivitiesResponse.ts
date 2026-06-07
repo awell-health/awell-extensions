@@ -1,4 +1,4 @@
-export const mockPathwayActivitiesResponse = {
+export const mockCareflowActivitiesResponse = {
   activities: [
     {
       id: 'activity-1',

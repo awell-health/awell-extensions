@@ -188,7 +188,7 @@ const buildStepAllMockQuery = () =>
  *
  * NOTE: Promise.all causes interleaved query ordering — all definition queries
  * fire before any response queries, so mock order is:
- * activity → pathwayActivities → formDef1 → ... → formDefN → formResp1 → ... → formRespN
+ * activity → careflowActivities → formDef1 → ... → formDefN → formResp1 → ... → formRespN
  */
 const buildTrackMockQuery = (formCount: number) => {
   const mock = jest.fn()
@@ -220,7 +220,7 @@ const buildTrackMockQuery = (formCount: number) => {
   }))
 
   mock.mockResolvedValueOnce({
-    pathwayActivities: {
+    careflowActivities: {
       success: true,
       activities,
     },
@@ -258,7 +258,7 @@ const buildTrackEmptyMockQuery = () => {
   })
 
   mock.mockResolvedValueOnce({
-    pathwayActivities: {
+    careflowActivities: {
       success: true,
       activities: [],
     },

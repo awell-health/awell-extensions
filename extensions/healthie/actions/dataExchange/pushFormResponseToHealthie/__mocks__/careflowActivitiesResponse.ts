@@ -1,4 +1,4 @@
-export const mockPathwayActivitiesResponse = {
+export const mockCareflowActivitiesResponse = {
   success: true,
   activities: [
     {

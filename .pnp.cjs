@@ -28,7 +28,7 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./",\
         "packageDependencies": [\
           ["@airtop/sdk", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:0.1.44"],\
-          ["@awell-health/awell-sdk", "npm:0.1.29"],\
+          ["@awell-health/awell-sdk", "npm:0.1.31"],\
           ["@awell-health/extensions-core", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:1.1.11"],\
           ["@awell-health/healthie-sdk", "npm:0.1.1"],\
           ["@calcom/embed-react", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:1.5.3"],\
@@ -103,7 +103,7 @@ const RAW_RUNTIME_STATE =
           ["husky", "npm:9.1.7"],\
           ["jest", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:29.7.0"],\
           ["jest-fetch-mock", "npm:3.0.3"],\
-          ["jsdom", "virtual:32e168bad9d1777a5824169b899bceec25ee861bb23c1e808600e0b971f54c8f7be988d0fa85178f0889148efb85d917efdb493f99f48edfe0f89e1ed4c1f30a#npm:26.0.0"],\
+          ["jsdom", "virtual:9d1b2aabf149b619df3527f13405310f3066fbe5a0dbfddf872e3f681685b74c1d6a169b93ec1eae9d08c4319a295fa1741dc02155d0f5026e13d67edc02a1dc#npm:26.0.0"],\
           ["jsonpath", "npm:1.1.1"],\
           ["jsonwebtoken", "npm:9.0.2"],\
           ["langchain", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:0.3.37"],\
@@ -432,7 +432,7 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["@awell-health/awell-extensions", "workspace:."],\
           ["@airtop/sdk", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:0.1.44"],\
-          ["@awell-health/awell-sdk", "npm:0.1.29"],\
+          ["@awell-health/awell-sdk", "npm:0.1.31"],\
           ["@awell-health/extensions-core", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:1.1.11"],\
           ["@awell-health/healthie-sdk", "npm:0.1.1"],\
           ["@calcom/embed-react", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:1.5.3"],\
@@ -507,7 +507,7 @@ const RAW_RUNTIME_STATE =
           ["husky", "npm:9.1.7"],\
           ["jest", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:29.7.0"],\
           ["jest-fetch-mock", "npm:3.0.3"],\
-          ["jsdom", "virtual:32e168bad9d1777a5824169b899bceec25ee861bb23c1e808600e0b971f54c8f7be988d0fa85178f0889148efb85d917efdb493f99f48edfe0f89e1ed4c1f30a#npm:26.0.0"],\
+          ["jsdom", "virtual:9d1b2aabf149b619df3527f13405310f3066fbe5a0dbfddf872e3f681685b74c1d6a169b93ec1eae9d08c4319a295fa1741dc02155d0f5026e13d67edc02a1dc#npm:26.0.0"],\
           ["jsonpath", "npm:1.1.1"],\
           ["jsonwebtoken", "npm:9.0.2"],\
           ["langchain", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:0.3.37"],\
@@ -543,15 +543,15 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["@awell-health/awell-sdk", [\
-      ["npm:0.1.29", {\
-        "packageLocation": "./.yarn/cache/@awell-health-awell-sdk-npm-0.1.29-32e168bad9-b61e001aaf.zip/node_modules/@awell-health/awell-sdk/",\
+      ["npm:0.1.31", {\
+        "packageLocation": "./.yarn/cache/@awell-health-awell-sdk-npm-0.1.31-9d1b2aabf1-8561ff436e.zip/node_modules/@awell-health/awell-sdk/",\
         "packageDependencies": [\
-          ["@awell-health/awell-sdk", "npm:0.1.29"],\
+          ["@awell-health/awell-sdk", "npm:0.1.31"],\
           ["@genql/cli", "npm:6.3.3"],\
           ["@medplum/fhirtypes", "npm:3.2.14"],\
           ["crypto", "npm:1.0.1"],\
           ["date-fns", "npm:4.1.0"],\
-          ["jsdom", "virtual:32e168bad9d1777a5824169b899bceec25ee861bb23c1e808600e0b971f54c8f7be988d0fa85178f0889148efb85d917efdb493f99f48edfe0f89e1ed4c1f30a#npm:26.0.0"],\
+          ["jsdom", "virtual:9d1b2aabf149b619df3527f13405310f3066fbe5a0dbfddf872e3f681685b74c1d6a169b93ec1eae9d08c4319a295fa1741dc02155d0f5026e13d67edc02a1dc#npm:26.0.0"],\
           ["lodash", "npm:4.18.1"]\
         ],\
         "linkType": "HARD"\
@@ -569,7 +569,7 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./.yarn/__virtual__/@awell-health-extensions-core-virtual-18bb0ee481/0/cache/@awell-health-extensions-core-npm-1.1.11-f53e3709d4-a1d84d342d.zip/node_modules/@awell-health/extensions-core/",\
         "packageDependencies": [\
           ["@awell-health/extensions-core", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:1.1.11"],\
-          ["@awell-health/awell-sdk", "npm:0.1.29"],\
+          ["@awell-health/awell-sdk", "npm:0.1.31"],\
           ["@langchain/core", "npm:0.3.80"],\
           ["@langchain/openai", "virtual:18bb0ee481c83a90ccfcfab0d85ede1b3c19a5a3aaebcf3077256af59ef4052b23b2ce9932db1c0f8b500fd3e81107807f0699c95cd736fcbb895bbd6d923c4c#npm:0.3.0"],\
           ["@types/awell-health__awell-sdk", null],\
@@ -3315,7 +3315,7 @@ const RAW_RUNTIME_STATE =
           ["isomorphic-ws", "virtual:1df138c7da413b16a0890e3c1801befbf099aec1361b44ec2842b975cc2ea858c28a08010f73b3d8b92c26d87bd26c5307daa374f8f38ffc90ac5a0c932ddd52#npm:5.0.0"],\
           ["tslib", "npm:2.7.0"],\
           ["value-or-promise", "npm:1.0.12"],\
-          ["ws", "virtual:c939764abbbdef0f6c3824ed26a32a792cba63e53f9fc116e51e29d262812cb97370305d592225734c643882aaeaeb794c933a9c42d41b44039f63b9a83526c3#npm:8.18.0"]\
+          ["ws", "virtual:be052ca5f45a15dae75188a0d241e72a3ad426f40465778db9ff84b830cf7d3f325015a8935c6baec2bf8de61a461e07544833ddf6ac7a3d5192f44691dca275#npm:8.18.0"]\
         ],\
         "packagePeers": [\
           "@types/graphql",\
@@ -11159,7 +11159,7 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["isomorphic-ws", "virtual:1df138c7da413b16a0890e3c1801befbf099aec1361b44ec2842b975cc2ea858c28a08010f73b3d8b92c26d87bd26c5307daa374f8f38ffc90ac5a0c932ddd52#npm:5.0.0"],\
           ["@types/ws", "npm:8.5.12"],\
-          ["ws", "virtual:c939764abbbdef0f6c3824ed26a32a792cba63e53f9fc116e51e29d262812cb97370305d592225734c643882aaeaeb794c933a9c42d41b44039f63b9a83526c3#npm:8.18.0"]\
+          ["ws", "virtual:be052ca5f45a15dae75188a0d241e72a3ad426f40465778db9ff84b830cf7d3f325015a8935c6baec2bf8de61a461e07544833ddf6ac7a3d5192f44691dca275#npm:8.18.0"]\
         ],\
         "packagePeers": [\
           "@types/ws",\
@@ -11912,10 +11912,10 @@ const RAW_RUNTIME_STATE =
         ],\
         "linkType": "SOFT"\
       }],\
-      ["virtual:32e168bad9d1777a5824169b899bceec25ee861bb23c1e808600e0b971f54c8f7be988d0fa85178f0889148efb85d917efdb493f99f48edfe0f89e1ed4c1f30a#npm:26.0.0", {\
-        "packageLocation": "./.yarn/__virtual__/jsdom-virtual-c939764abb/0/cache/jsdom-npm-26.0.0-01acafd498-8c230ee465.zip/node_modules/jsdom/",\
+      ["virtual:9d1b2aabf149b619df3527f13405310f3066fbe5a0dbfddf872e3f681685b74c1d6a169b93ec1eae9d08c4319a295fa1741dc02155d0f5026e13d67edc02a1dc#npm:26.0.0", {\
+        "packageLocation": "./.yarn/__virtual__/jsdom-virtual-be052ca5f4/0/cache/jsdom-npm-26.0.0-01acafd498-8c230ee465.zip/node_modules/jsdom/",\
         "packageDependencies": [\
-          ["jsdom", "virtual:32e168bad9d1777a5824169b899bceec25ee861bb23c1e808600e0b971f54c8f7be988d0fa85178f0889148efb85d917efdb493f99f48edfe0f89e1ed4c1f30a#npm:26.0.0"],\
+          ["jsdom", "virtual:9d1b2aabf149b619df3527f13405310f3066fbe5a0dbfddf872e3f681685b74c1d6a169b93ec1eae9d08c4319a295fa1741dc02155d0f5026e13d67edc02a1dc#npm:26.0.0"],\
           ["@types/canvas", null],\
           ["canvas", null],\
           ["cssstyle", "npm:4.2.1"],\
@@ -11937,7 +11937,7 @@ const RAW_RUNTIME_STATE =
           ["whatwg-encoding", "npm:3.1.1"],\
           ["whatwg-mimetype", "npm:4.0.0"],\
           ["whatwg-url", "npm:14.1.0"],\
-          ["ws", "virtual:c939764abbbdef0f6c3824ed26a32a792cba63e53f9fc116e51e29d262812cb97370305d592225734c643882aaeaeb794c933a9c42d41b44039f63b9a83526c3#npm:8.18.0"],\
+          ["ws", "virtual:be052ca5f45a15dae75188a0d241e72a3ad426f40465778db9ff84b830cf7d3f325015a8935c6baec2bf8de61a461e07544833ddf6ac7a3d5192f44691dca275#npm:8.18.0"],\
           ["xml-name-validator", "npm:5.0.0"]\
         ],\
         "packagePeers": [\
@@ -17296,10 +17296,10 @@ const RAW_RUNTIME_STATE =
         ],\
         "linkType": "HARD"\
       }],\
-      ["virtual:c939764abbbdef0f6c3824ed26a32a792cba63e53f9fc116e51e29d262812cb97370305d592225734c643882aaeaeb794c933a9c42d41b44039f63b9a83526c3#npm:8.18.0", {\
-        "packageLocation": "./.yarn/__virtual__/ws-virtual-ce870da37f/0/cache/ws-npm-8.18.0-56f68bc4d6-70dfe53f23.zip/node_modules/ws/",\
+      ["virtual:be052ca5f45a15dae75188a0d241e72a3ad426f40465778db9ff84b830cf7d3f325015a8935c6baec2bf8de61a461e07544833ddf6ac7a3d5192f44691dca275#npm:8.18.0", {\
+        "packageLocation": "./.yarn/__virtual__/ws-virtual-6ba2e25552/0/cache/ws-npm-8.18.0-56f68bc4d6-70dfe53f23.zip/node_modules/ws/",\
         "packageDependencies": [\
-          ["ws", "virtual:c939764abbbdef0f6c3824ed26a32a792cba63e53f9fc116e51e29d262812cb97370305d592225734c643882aaeaeb794c933a9c42d41b44039f63b9a83526c3#npm:8.18.0"],\
+          ["ws", "virtual:be052ca5f45a15dae75188a0d241e72a3ad426f40465778db9ff84b830cf7d3f325015a8935c6baec2bf8de61a461e07544833ddf6ac7a3d5192f44691dca275#npm:8.18.0"],\
           ["@types/bufferutil", null],\
           ["@types/utf-8-validate", null],\
           ["bufferutil", null],\

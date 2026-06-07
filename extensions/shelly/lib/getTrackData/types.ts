@@ -183,7 +183,7 @@ export interface DataPointsResponse {
  */
 export interface CombinedQueryResponse {
   pathwayElements?: ElementsResponse
-  pathwayActivities?: ActivitiesResponse
+  careflowActivities?: ActivitiesResponse
   pathwayDataPoints?: DataPointsResponse
 }
 

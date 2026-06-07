@@ -3,7 +3,7 @@ import { AwellSdk } from '@awell-health/awell-sdk'
 import {
   mockPathwayResponse,
   mockPathwayElementsResponse,
-  mockPathwayActivitiesResponse,
+  mockCareflowActivitiesResponse,
   mockPathwayDataPointsResponse,
   mockFormDefinitionResponse,
   mockFormResponseResponse,
@@ -51,7 +51,7 @@ describe('getTrackData', () => {
     mockQuery.mockResolvedValueOnce({
       pathway: mockPathwayResponse,
       pathwayElements: mockPathwayElementsResponse,
-      pathwayActivities: mockPathwayActivitiesResponse,
+      careflowActivities: mockCareflowActivitiesResponse,
       pathwayDataPoints: mockPathwayDataPointsResponse
     })
 
@@ -75,8 +75,8 @@ describe('getTrackData', () => {
     const firstCallArgs = (awellSdkMock.orchestration.query as jest.Mock).mock.calls[0][0]
     expect(firstCallArgs).toHaveProperty('pathwayElements.__args.pathway_id', 'test-pathway-id')
     expect(firstCallArgs).toHaveProperty('pathwayElements.__args.track_id', 'test-track-id')
-    expect(firstCallArgs).toHaveProperty('pathwayActivities.__args.pathway_id', 'test-pathway-id')
-    expect(firstCallArgs).toHaveProperty('pathwayActivities.__args.track_id', 'test-track-id')
+    expect(firstCallArgs).toHaveProperty('careflowActivities.__args.pathway_id', 'test-pathway-id')
+    expect(firstCallArgs).toHaveProperty('careflowActivities.__args.filters.track_id', 'test-track-id')
     expect(firstCallArgs).toHaveProperty('pathwayDataPoints.__args.pathway_id', 'test-pathway-id')
 
     // Verify the structure of the result
@@ -124,7 +124,7 @@ describe('getTrackData', () => {
     mockQuery.mockResolvedValueOnce({
       pathway: { pathway: { tracks: [] } },
       pathwayElements: { elements: [] },
-      pathwayActivities: { activities: [] },
+      careflowActivities: { activities: [] },
       pathwayDataPoints: { dataPoints: [] }
     })
 
@@ -170,9 +170,9 @@ describe('getTrackData', () => {
     
     // Add an activity with a later date that should be filtered out
     const modifiedActivitiesResponse = {
-      ...mockPathwayActivitiesResponse,
+      ...mockCareflowActivitiesResponse,
       activities: [
-        ...mockPathwayActivitiesResponse.activities,
+        ...mockCareflowActivitiesResponse.activities,
         {
           id: 'activity-5',
           date: '2023-01-05T10:00:00.000Z', // Later than our cutoff date
@@ -189,7 +189,7 @@ describe('getTrackData', () => {
     mockQuery.mockResolvedValueOnce({
       pathway: mockPathwayResponse,
       pathwayElements: mockPathwayElementsResponse,
-      pathwayActivities: modifiedActivitiesResponse,
+      careflowActivities: modifiedActivitiesResponse,
       pathwayDataPoints: mockPathwayDataPointsResponse
     })
     
@@ -204,7 +204,7 @@ describe('getTrackData', () => {
     // Verify the track_id is being passed to the SDK query
     const firstCallArgs = (awellSdkMock.orchestration.query as jest.Mock).mock.calls[0][0]
     expect(firstCallArgs).toHaveProperty('pathwayElements.__args.track_id', 'test-track-id')
-    expect(firstCallArgs).toHaveProperty('pathwayActivities.__args.track_id', 'test-track-id')
+    expect(firstCallArgs).toHaveProperty('careflowActivities.__args.filters.track_id', 'test-track-id')
 
     // Should only include activities up to activity-3's date
     const allActivities = result.steps.flatMap(step => step.activities)
@@ -227,9 +227,9 @@ describe('getTrackData', () => {
     
     // Add message activity to the activities response
     const activitiesWithMessage = {
-      ...mockPathwayActivitiesResponse,
+      ...mockCareflowActivitiesResponse,
       activities: [
-        ...mockPathwayActivitiesResponse.activities,
+        ...mockCareflowActivitiesResponse.activities,
         mockMessageActivityWithId
       ]
     }
@@ -238,7 +238,7 @@ describe('getTrackData', () => {
     mockQuery.mockResolvedValueOnce({
       pathway: mockPathwayResponse,
       pathwayElements: mockPathwayElementsResponse,
-      pathwayActivities: activitiesWithMessage,
+      careflowActivities: activitiesWithMessage,
       pathwayDataPoints: mockPathwayDataPointsResponse
     })
     
@@ -278,9 +278,9 @@ describe('getTrackData', () => {
     
     // Add message activity without ID to the activities response
     const activitiesWithoutMessageId = {
-      ...mockPathwayActivitiesResponse,
+      ...mockCareflowActivitiesResponse,
       activities: [
-        ...mockPathwayActivitiesResponse.activities,
+        ...mockCareflowActivitiesResponse.activities,
         mockMessageActivityWithoutId
       ]
     }
@@ -289,7 +289,7 @@ describe('getTrackData', () => {
     mockQuery.mockResolvedValueOnce({
       pathway: mockPathwayResponse,
       pathwayElements: mockPathwayElementsResponse,
-      pathwayActivities: activitiesWithoutMessageId,
+      careflowActivities: activitiesWithoutMessageId,
       pathwayDataPoints: mockPathwayDataPointsResponse
     })
     
@@ -327,9 +327,9 @@ describe('getTrackData', () => {
     
     // Add message activity to the activities response
     const activitiesWithMessage = {
-      ...mockPathwayActivitiesResponse,
+      ...mockCareflowActivitiesResponse,
       activities: [
-        ...mockPathwayActivitiesResponse.activities,
+        ...mockCareflowActivitiesResponse.activities,
         mockMessageActivityWithId
       ]
     }
@@ -338,7 +338,7 @@ describe('getTrackData', () => {
     mockQuery.mockResolvedValueOnce({
       pathway: mockPathwayResponse,
       pathwayElements: mockPathwayElementsResponse,
-      pathwayActivities: activitiesWithMessage,
+      careflowActivities: activitiesWithMessage,
       pathwayDataPoints: mockPathwayDataPointsResponse
     })
     
@@ -390,9 +390,9 @@ describe('getTrackData', () => {
     
     // Add message activity to the activities response
     const activitiesWithMessage = {
-      ...mockPathwayActivitiesResponse,
+      ...mockCareflowActivitiesResponse,
       activities: [
-        ...mockPathwayActivitiesResponse.activities,
+        ...mockCareflowActivitiesResponse.activities,
         mockMessageActivityWithId
       ]
     }
@@ -401,7 +401,7 @@ describe('getTrackData', () => {
     mockQuery.mockResolvedValueOnce({
       pathway: mockPathwayResponse,
       pathwayElements: mockPathwayElementsResponse,
-      pathwayActivities: activitiesWithMessage,
+      careflowActivities: activitiesWithMessage,
       pathwayDataPoints: mockPathwayDataPointsResponse
     })
     

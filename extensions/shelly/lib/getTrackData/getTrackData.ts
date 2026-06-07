@@ -36,10 +36,10 @@ export const getTrackData = async ({
   const combinedQuery = await fetchAllTrackData(awellSdk, pathwayId, trackId);
 
   // Log query results 'size'
-  console.log(`Track data fetched for care flow ${pathwayId}, track ${trackId} with ${combinedQuery.pathwayActivities?.activities?.length ?? 0} activities (limit is set to 500), ${combinedQuery.pathwayElements?.elements?.length ?? 0} elements`);
+  console.log(`Track data fetched for care flow ${pathwayId}, track ${trackId} with ${combinedQuery.careflowActivities?.activities?.length ?? 0} activities (limit is set to 500), ${combinedQuery.pathwayElements?.elements?.length ?? 0} elements`);
 
   // 2. Find current activity cutoff date
-  const activities = combinedQuery.pathwayActivities?.activities ?? [];
+  const activities = combinedQuery.careflowActivities?.activities ?? [];
   const currentActivity = activities.find(activity => activity.id === currentActivityId);
   const currentActivityDate = currentActivity?.date ?? '';
 
@@ -121,10 +121,10 @@ async function fetchAllTrackData(
           }
         }
       },
-      pathwayActivities: { // actually track activities
+      careflowActivities: {
         __args: {
           pathway_id: pathwayId,
-          track_id: trackId,
+          filters: { track_id: trackId },
           pagination: { offset: 0, count: 500 } // we should never get more than 500 activities, if there is a track with more than I would say it is justified to cut them off
         },
         activities: {

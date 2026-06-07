@@ -1465,7 +1465,7 @@ export type Query = {
   myPathways: PathwaysPayload
   myPendingActivities: ActivitiesPayload
   pathway: PathwayPayload
-  pathwayActivities: ActivitiesPayload
+  careflowActivities: ActivitiesPayload
   pathwayDataPointDefinitions: PathwayDataPointDefinitionsPayload
   pathwayElements: ElementsPayload
   pathwayFacts: OrchestrationFactsPayload
@@ -1590,9 +1590,27 @@ export type QueryPathwayArgs = {
   id: Scalars['String']['input']
 }
 
-export type QueryPathwayActivitiesArgs = {
+export type FilterCareflowActivitiesParams = {
+  action?: InputMaybe<Array<Scalars['String']['input']>>
+  activity_status?: InputMaybe<Array<Scalars['String']['input']>>
+  activity_type?: InputMaybe<Array<Scalars['String']['input']>>
+  date_range?: InputMaybe<DateRangeInput>
+  hide_system_activities?: InputMaybe<Scalars['Boolean']['input']>
+  reference_id?: InputMaybe<Scalars['String']['input']>
+  stakeholders?: InputMaybe<Array<Scalars['String']['input']>>
+  track_id?: InputMaybe<Scalars['String']['input']>
+}
+
+export type DateRangeInput = {
+  from?: InputMaybe<Scalars['String']['input']>
+  to?: InputMaybe<Scalars['String']['input']>
+}
+
+export type QueryCareflowActivitiesArgs = {
+  filters?: InputMaybe<FilterCareflowActivitiesParams>
   pagination?: InputMaybe<PaginationParams>
   pathway_id: Scalars['String']['input']
+  skip_enrichment?: InputMaybe<Scalars['Boolean']['input']>
   sorting?: InputMaybe<SortingParams>
 }
 

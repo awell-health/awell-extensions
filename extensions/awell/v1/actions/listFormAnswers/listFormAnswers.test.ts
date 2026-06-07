@@ -478,10 +478,10 @@ Answer 2`,
             },
           })
         }
-        // Handle pathwayActivities query (for track)
-        if (query.pathwayActivities) {
+        // Handle careflowActivities query (for track)
+        if (query.careflowActivities) {
           return Promise.resolve({
-            pathwayActivities: {
+            careflowActivities: {
               success: true,
               activities: [
                 {
@@ -593,10 +593,10 @@ Track Answer`,
             },
           })
         }
-        // Handle pathwayActivities query (for track)
-        if (query.pathwayActivities) {
+        // Handle careflowActivities query (for track)
+        if (query.careflowActivities) {
           return Promise.resolve({
-            pathwayActivities: {
+            careflowActivities: {
               success: true,
               activities: [
                 {
@@ -748,7 +748,7 @@ A2`,
               },
             })
             .mockResolvedValueOnce({
-              pathwayActivities: {
+              careflowActivities: {
                 success: true,
                 activities: [], // No forms in track
               },
