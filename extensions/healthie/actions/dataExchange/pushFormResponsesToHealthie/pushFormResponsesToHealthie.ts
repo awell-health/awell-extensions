@@ -47,6 +47,7 @@ export const pushFormResponsesToHealthie: Action<
       awellSdk,
       pathwayId: pathway.id,
       activityId: activity.id,
+      log: helpers.log,
     })
 
     const formDataWithHealthieFormAnswers = formsData.map((formData) => {
@@ -129,6 +130,10 @@ export const pushFormResponsesToHealthie: Action<
         events: getSubActivityLogs(mergedOmittedFormAnswers),
       })
     } catch (error) {
+      helpers.log(
+        { id: activity.id, pathwayId: pathway.id, error },
+        'error when pushing form responses to Healthie',
+      )
       if (error instanceof HealthieError) {
         const errors = mapHealthieToActivityError(error.errors)
         await onError({
