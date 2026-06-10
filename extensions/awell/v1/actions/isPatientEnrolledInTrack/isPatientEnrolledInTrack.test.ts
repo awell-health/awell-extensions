@@ -1,6 +1,5 @@
 import { TestHelpers } from '@awell-health/extensions-core'
 import { generateTestPayload } from '../../../../../tests/constants'
-import { ElementStatus } from '../../gql/graphql'
 import { isPatientEnrolledInTrack as actionInterface } from './isPatientEnrolledInTrack'
 import { FieldsValidationSchema } from './config'
 
@@ -43,21 +42,29 @@ describe('Is patient enrolled in track action', () => {
             tracks: [
               {
                 definition_id: 'test-track-definition-id',
-                status: ElementStatus.Active,
+                status: 'active',
                 start_date: '2023-01-01T00:00:00Z',
                 end_date: null,
               },
               {
                 definition_id: 'test-track-definition-id',
-                status: ElementStatus.Done,
+                status: 'completed',
                 start_date: '2022-12-01T00:00:00Z',
                 end_date: '2022-12-31T23:59:59Z',
               },
               {
                 definition_id: 'test-track-definition-id',
-                status: ElementStatus.Scheduled,
-                start_date: '2024-01-01T00:00:00Z',
+                status: 'active',
+                start_date: '2023-06-01T00:00:00Z',
                 end_date: null,
+              },
+            ],
+          },
+          scheduledTracksForPathway: {
+            scheduled_tracks: [
+              {
+                track_definition_id: 'test-track-definition-id',
+                scheduled_date: '2024-01-01T00:00:00Z',
               },
             ],
           },
@@ -102,11 +109,14 @@ describe('Is patient enrolled in track action', () => {
             tracks: [
               {
                 definition_id: 'different-track-definition-id',
-                status: ElementStatus.Active,
+                status: 'active',
                 start_date: '2023-01-01T00:00:00Z',
                 end_date: null,
               },
             ],
+          },
+          scheduledTracksForPathway: {
+            scheduled_tracks: [],
           },
         }),
       },
@@ -146,18 +156,17 @@ describe('Is patient enrolled in track action', () => {
       orchestration: {
         query: jest.fn().mockResolvedValue({
           careflowTracks: {
-            tracks: [
+            tracks: [],
+          },
+          scheduledTracksForPathway: {
+            scheduled_tracks: [
               {
-                definition_id: 'test-track-definition-id',
-                status: ElementStatus.Scheduled,
-                start_date: '2024-03-01T00:00:00Z',
-                end_date: null,
+                track_definition_id: 'test-track-definition-id',
+                scheduled_date: '2024-03-01T00:00:00Z',
               },
               {
-                definition_id: 'test-track-definition-id',
-                status: ElementStatus.Scheduled,
-                start_date: '2024-01-01T00:00:00Z', // Earlier date
-                end_date: null,
+                track_definition_id: 'test-track-definition-id',
+                scheduled_date: '2024-01-01T00:00:00Z', // Earlier date
               },
             ],
           },
@@ -198,6 +207,7 @@ describe('Is patient enrolled in track action', () => {
       orchestration: {
         query: jest.fn().mockResolvedValue({
           careflowTracks: { tracks: [] },
+          scheduledTracksForPathway: { scheduled_tracks: [] },
         }),
       },
     }
@@ -224,17 +234,22 @@ describe('Is patient enrolled in track action', () => {
       careflowTracks: {
         __args: {
           careflow_id: 'test-pathway-id',
-          statuses: [
-            ElementStatus.Active,
-            ElementStatus.Done,
-            ElementStatus.Scheduled,
-          ],
+          statuses: ['active', 'completed'],
         },
         tracks: {
           definition_id: true,
           status: true,
           start_date: true,
           end_date: true,
+        },
+      },
+      scheduledTracksForPathway: {
+        __args: {
+          pathway_id: 'test-pathway-id',
+        },
+        scheduled_tracks: {
+          track_definition_id: true,
+          scheduled_date: true,
         },
       },
     })
