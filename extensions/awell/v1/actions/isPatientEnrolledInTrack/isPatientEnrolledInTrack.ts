@@ -35,16 +35,12 @@ export const isPatientEnrolledInTrack: Action<typeof fields, typeof settings> =
       })
 
       const sdk = await helpers.awellSdk()
-
+      // status can be ['active', 'completed', 'stopped', 'discarded']
       const tracksResponse = await sdk.orchestration.query({
         careflowTracks: {
           __args: {
             careflow_id: pathwayId,
-            statuses: [
-              ElementStatus.Active,
-              ElementStatus.Done,
-              ElementStatus.Scheduled,
-            ],
+            statuses: ['active', 'completed'],
           },
           tracks: {
             definition_id: true,
@@ -63,14 +59,14 @@ export const isPatientEnrolledInTrack: Action<typeof fields, typeof settings> =
       // Find if the patient has been enrolled in the track
       const hasBeenEnrolledInTrack = trackElements.some(
         (track) =>
-          track.status === ElementStatus.Done &&
+          track.status === 'completed' &&
           track.end_date !== null &&
           track.end_date !== undefined,
       )
 
       // Find if the patient is currently enrolled in the track
       const isEnrolledInTrack = trackElements.some(
-        (track) => track.status === ElementStatus.Active,
+        (track) => track.status === 'active',
       )
 
       // Find if the patient is scheduled to be enrolled in the track
