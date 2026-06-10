@@ -11,6 +11,12 @@ export const showQRCode: Action<typeof fields, typeof settings> = {
     'Display a QR code in Hosted Pages. The patient can show the code to another person (e.g. a home nurse) to give them access to their own Hosted Pages session.',
   fields,
   dataPoints,
+  options: {
+    stakeholders: {
+      label: 'Stakeholder',
+      mode: 'single',
+    },
+  },
   previewable: false,
   onActivityCreated: async (payload, _onComplete, onError): Promise<void> => {
     validate({
