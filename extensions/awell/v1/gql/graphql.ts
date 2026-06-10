@@ -1467,7 +1467,6 @@ export type Query = {
   pathway: PathwayPayload
   careflowActivities: ActivitiesPayload
   pathwayDataPointDefinitions: PathwayDataPointDefinitionsPayload
-  pathwayElements: ElementsPayload
   pathwayFacts: OrchestrationFactsPayload
   pathwayStepActivities: ActivitiesPayload
   pathways: PathwaysPayload
@@ -1618,10 +1617,6 @@ export type QueryPathwayDataPointDefinitionsArgs = {
   filters?: InputMaybe<FilterPathwayDataPointDefinitionsParams>
   pathway_definition_id?: InputMaybe<Scalars['String']['input']>
   release_id: Scalars['String']['input']
-}
-
-export type QueryPathwayElementsArgs = {
-  pathway_id: Scalars['String']['input']
 }
 
 export type QueryPathwayFactsArgs = {
