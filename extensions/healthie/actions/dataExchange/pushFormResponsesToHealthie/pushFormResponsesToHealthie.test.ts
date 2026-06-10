@@ -7,7 +7,7 @@ import {
   mockFormDefinitionTwoResponse,
   mockFormResponseOneResponse,
   mockFormResponseTwoResponse,
-  mockPathwayActivitiesResponse,
+  mockCareflowActivitiesResponse,
 } from './__mocks__'
 
 jest.mock('@awell-health/healthie-sdk', () => ({
@@ -38,12 +38,12 @@ describe('pushFormResponsesToHealthie', () => {
         .fn()
         .mockResolvedValueOnce({
           activity: {
-            activity: mockPathwayActivitiesResponse.activities[0],
+            activity: mockCareflowActivitiesResponse.activities[0],
             success: true,
           },
         })
         .mockResolvedValueOnce({
-          pathwayStepActivities: mockPathwayActivitiesResponse,
+          pathwayStepActivities: mockCareflowActivitiesResponse,
         })
         .mockResolvedValueOnce({
           form: mockFormDefinitionOneResponse,

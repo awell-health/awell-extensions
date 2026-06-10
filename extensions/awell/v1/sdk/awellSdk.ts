@@ -15,7 +15,7 @@ import {
   type PatientPayload,
   type AddIdentifierToPatientInput,
   type Maybe,
-  type QueryPathwayActivitiesArgs,
+  type QueryCareflowActivitiesArgs,
   type Activity,
   type ActivitiesPayload,
   type QueryFormArgs,
@@ -38,7 +38,7 @@ import {
   updateBaselineInfoMutation,
   getPatientByIdentifierQuery,
   addIdentifierToPatientMutation,
-  GetPathwayActivitiesQuery,
+  GetCareflowActivitiesQuery,
   GetFormQuery,
   GetFormResponseQuery,
   GetCalculationResultsQuery,
@@ -183,18 +183,18 @@ export default class AwellSdk {
     throw new Error('Failed to add identifier to patient.')
   }
 
-  async getPathwayActivities(
-    input: QueryPathwayActivitiesArgs
+  async getCareflowActivities(
+    input: QueryCareflowActivitiesArgs
   ): Promise<Activity[]> {
     const data = await this.client.request<{
-      pathwayActivities: ActivitiesPayload
-    }>(GetPathwayActivitiesQuery, input)
+      careflowActivities: ActivitiesPayload
+    }>(GetCareflowActivitiesQuery, input)
 
-    if (data.pathwayActivities.success) {
-      return data.pathwayActivities.activities
+    if (data.careflowActivities.success) {
+      return data.careflowActivities.activities
     }
 
-    throw new Error('Retrieving pathway activities failed')
+    throw new Error('Retrieving care flow activities failed')
   }
 
   async getForm(input: QueryFormArgs): Promise<Form> {

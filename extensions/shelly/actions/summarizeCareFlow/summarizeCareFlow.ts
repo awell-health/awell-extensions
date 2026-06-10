@@ -36,10 +36,10 @@ export const summarizeCareFlow: Action<
     const awellSdk = await helpers.awellSdk()
 
     /**
-     * Limitation: this query is paginated so we might not get all pathway activities - which is ok for now
+     * Limitation: this query is paginated so we might not get all care flow activities - which is ok for now
      */
-    const pathwayActivitesUntilNow = await awellSdk.orchestration.query({
-      pathwayActivities: {
+    const careflowActivitiesUntilNow = await awellSdk.orchestration.query({
+      careflowActivities: {
         __args: {
           pathway_id: pathway.id,
           pagination: { offset: 0, count: 500 },
@@ -75,7 +75,7 @@ export const summarizeCareFlow: Action<
     const summary = await summarizeCareFlowWithLLM({
       model,
       careFlowActivities: JSON.stringify(
-        pathwayActivitesUntilNow.pathwayActivities.activities,
+        careflowActivitiesUntilNow.careflowActivities.activities,
         null,
         2,
       ),

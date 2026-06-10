@@ -1,6 +1,6 @@
 export * from './pathwayResponse'
 export * from './pathwayElementsResponse'
-export * from './pathwayActivitiesResponse'
+export * from './careflowActivitiesResponse'
 export * from './pathwayDataPointsResponse'
 export * from './formDefinitionResponse'
 export * from './formResponseResponse'

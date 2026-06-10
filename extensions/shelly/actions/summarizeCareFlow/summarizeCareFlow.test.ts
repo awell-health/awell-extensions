@@ -1,7 +1,7 @@
 import { TestHelpers } from '@awell-health/extensions-core'
 import { generateTestPayload } from '@/tests'
 import { summarizeCareFlow } from '.'
-import { mockPathwayActivitiesResponse } from './__mocks__/pathwayActivitiesResponse'
+import { mockCareflowActivitiesResponse } from './__mocks__/careflowActivitiesResponse'
 import { DISCLAIMER_MSG } from '../../lib/constants'
 
 // Mock createOpenAIModel
@@ -56,7 +56,7 @@ describe('summarizeCareFlow - Mocked LLM calls', () => {
     const awellSdkMock = {
       orchestration: {
         query: jest.fn().mockResolvedValue({
-          pathwayActivities: mockPathwayActivitiesResponse,
+          careflowActivities: mockCareflowActivitiesResponse,
         }),
       },
     }

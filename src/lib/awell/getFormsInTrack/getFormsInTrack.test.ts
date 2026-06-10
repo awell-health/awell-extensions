@@ -48,7 +48,7 @@ describe('getFormsInTrack', () => {
       })
       // Second query: get all activities in the track
       .mockResolvedValueOnce({
-        pathwayActivities: mockTrackActivitiesResponse,
+        careflowActivities: mockTrackActivitiesResponse,
       })
       // Form definitions fire first (Promise.all interleaving)
       .mockResolvedValueOnce({ form: mockFormDefinitionOneResponse })
@@ -63,7 +63,7 @@ describe('getFormsInTrack', () => {
       activityId: 'X74HeDQ4N0gtdaSEuzF8s',
     })
 
-    // 1 activity + 1 pathwayActivities + 2 formDef + 2 formResp = 6
+    // 1 activity + 1 careflowActivities + 2 formDef + 2 formResp = 6
     expect(awellSdkMock.orchestration.query).toHaveBeenCalledTimes(6)
 
     // Should return 2 forms (ACTIVE and future forms filtered out)
@@ -93,7 +93,7 @@ describe('getFormsInTrack', () => {
         },
       })
       .mockResolvedValueOnce({
-        pathwayActivities: {
+        careflowActivities: {
           success: true,
           activities: [],
         },
@@ -106,7 +106,7 @@ describe('getFormsInTrack', () => {
     })
 
     expect(result).toHaveLength(0)
-    // Should only make 2 queries (activity + pathwayActivities), no form fetches
+    // Should only make 2 queries (activity + careflowActivities), no form fetches
     expect(awellSdkMock.orchestration.query).toHaveBeenCalledTimes(2)
   })
 

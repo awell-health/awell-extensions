@@ -3,7 +3,7 @@ import { TestHelpers } from '@awell-health/extensions-core'
 import { summarizeForm } from '.'
 import { mockFormDefinitionResponse } from './__mocks__/formDefinitionResponse'
 import { mockFormResponseResponse } from './__mocks__/formResponseResponse'
-import { mockPathwayActivitiesResponse } from './__mocks__/pathwayActivitiesResponse'
+import { mockCareflowActivitiesResponse } from './__mocks__/careflowActivitiesResponse'
 import { detectLanguageWithLLM } from '../../lib/detectLanguageWithLLM'
 
 // Spy on detectLanguageWithLLM to verify it's called

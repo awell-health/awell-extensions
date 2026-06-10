@@ -1,4 +1,4 @@
-export const mockPathwayActivitiesResponse = {
+export const mockCareflowActivitiesResponse = {
   success: true,
   activities: [
     {
@@ -14,11 +14,23 @@ export const mockPathwayActivitiesResponse = {
       },
     },
     {
-      id: 'RhRQqdbrnSptV3twx7QtV',
+      id: 'form_acitity_2',
       status: 'DONE',
       date: '2024-09-11T22:56:08.315Z',
       object: {
-        id: 'OGhjJKF5LRmo',
+        id: 'form_2',
+        type: 'FORM',
+      },
+      context: {
+        step_id: 'Xkn5dkyPA5uW',
+      },
+    },
+    {
+      id: 'form_acitity_1',
+      status: 'DONE',
+      date: '2024-09-11T22:56:08.315Z',
+      object: {
+        id: 'form_1',
         type: 'FORM',
       },
       context: {

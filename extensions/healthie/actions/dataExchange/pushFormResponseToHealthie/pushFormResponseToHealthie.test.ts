@@ -5,7 +5,7 @@ import { HealthieSdk } from '@awell-health/healthie-sdk'
 import {
   mockFormDefinitionResponse,
   mockFormResponseResponse,
-  mockPathwayActivitiesResponse,
+  mockCareflowActivitiesResponse,
 } from './__mocks__'
 
 jest.mock('@awell-health/healthie-sdk', () => ({
@@ -41,7 +41,7 @@ describe('pushFormResponseToHealthie', () => {
             },
           },
         },
-        pathwayStepActivities: mockPathwayActivitiesResponse,
+        pathwayStepActivities: mockCareflowActivitiesResponse,
         form: mockFormDefinitionResponse,
         formResponse: mockFormResponseResponse,
       }),
