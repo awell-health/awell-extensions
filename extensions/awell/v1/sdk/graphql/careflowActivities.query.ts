@@ -1,6 +1,6 @@
-export const GetPathwayActivitiesQuery = `
-query GetPathwayActivities($pathway_id: String!) {
-    pathwayActivities(pathway_id: $pathway_id) {
+export const GetCareflowActivitiesQuery = `
+query GetCareflowActivities($pathway_id: String!) {
+    careflowActivities(pathway_id: $pathway_id) {
         success
         activities {
             id

@@ -6,14 +6,30 @@ import {
 } from '@awell-health/awell-sdk'
 import { isEmpty, isNil } from 'lodash'
 
+type Log = (
+  data: Record<string, unknown>,
+  message: string,
+  error?: Error,
+) => void
+
+const logDebug = (
+  log: Log | undefined,
+  message: string,
+  data: Record<string, unknown>,
+): void => {
+  log?.(data, `[getAllFormsInCurrentStep] ${message}`)
+}
+
 type GetAllFormsInCurrentStep = ({
   awellSdk,
   pathwayId,
   activityId,
+  log,
 }: {
   awellSdk: AwellSdk
   pathwayId: string
   activityId: string
+  log?: Log
 }) => Promise<
   Array<{
     formActivityId: string
@@ -27,6 +43,7 @@ export const getAllFormsInCurrentStep: GetAllFormsInCurrentStep = async ({
   awellSdk,
   pathwayId,
   activityId,
+  log,
 }) => {
   const activity_response = await awellSdk.orchestration
     .query({
@@ -50,19 +67,46 @@ export const getAllFormsInCurrentStep: GetAllFormsInCurrentStep = async ({
       },
     })
     .catch((error) => {
-      console.error(`Failed to fetch activity ${activityId}`, error)
+      logDebug(log, 'Failed to fetch activity', {
+        activityId,
+        pathwayId,
+        error,
+      })
       throw new Error(`Failed to fetch activity ${activityId}`)
     })
 
   const currentActivity = activity_response?.activity?.activity
 
-  if (isNil(currentActivity) || !activity_response.activity.success)
+  if (isNil(currentActivity) || !activity_response.activity.success) {
+    logDebug(log, 'Activity query did not return a successful activity', {
+      activityId,
+      pathwayId,
+      activityResponse: JSON.stringify(activity_response),
+    })
     throw new Error(`Failed to fetch activity ${activityId}`)
+  }
+
+  logDebug(log, 'Fetched current activity', {
+    activityId: currentActivity.id,
+    status: currentActivity.status,
+    date: currentActivity.date,
+    objectId: currentActivity.object.id,
+    objectType: currentActivity.object.type,
+    stepId: currentActivity.context?.step_id,
+  })
 
   const currentStepId = currentActivity.context?.step_id
 
-  if (isNil(currentStepId))
-    throw new Error('Could not find step ID of the current activity')
+  if (isNil(currentStepId)) {
+    logDebug(log, 'Could not find step ID of the current activity', {
+      activityId,
+      pathwayId,
+      currentActivity: JSON.stringify(currentActivity),
+    })
+    throw new Error(
+      `Could not find step ID of the current activity for activity ${activityId}`,
+    )
+  }
 
   const activities = await awellSdk.orchestration.query({
     pathwayStepActivities: {
@@ -86,6 +130,13 @@ export const getAllFormsInCurrentStep: GetAllFormsInCurrentStep = async ({
     },
   })
 
+  logDebug(log, 'Fetched pathway step activities', {
+    activityId,
+    pathwayId,
+    stepId: currentStepId,
+    totalActivities: activities.pathwayStepActivities.activities.length,
+  })
+
   // Filter and sort by date in ascending order (chronological)
   const formActivitiesInCurrentStep =
     activities.pathwayStepActivities.activities
@@ -96,6 +147,17 @@ export const getAllFormsInCurrentStep: GetAllFormsInCurrentStep = async ({
           a.date <= currentActivity.date,
       )
       .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+
+  logDebug(log, 'Selected completed form activities in current step', {
+    activityId,
+    pathwayId,
+    stepId: currentStepId,
+    selectedForms: formActivitiesInCurrentStep.map((formActivity) => ({
+      formActivityId: formActivity.id,
+      formId: formActivity.object.id,
+      date: formActivity.date,
+    })),
+  })
 
   if (isEmpty(formActivitiesInCurrentStep)) return []
 
@@ -119,6 +181,13 @@ export const getAllFormsInCurrentStep: GetAllFormsInCurrentStep = async ({
       },
     })
 
+    logDebug(log, 'Fetched form definition', {
+      activityId,
+      formActivityId: formActivity.id,
+      formId: formActivity.object.id,
+      questionCount: formDefinition.form.form?.questions.length ?? 0,
+    })
+
     const formResponse = await awellSdk.orchestration.query({
       formResponse: {
         __args: {
@@ -131,6 +200,13 @@ export const getAllFormsInCurrentStep: GetAllFormsInCurrentStep = async ({
           },
         },
       },
+    })
+
+    logDebug(log, 'Fetched form response', {
+      activityId,
+      formActivityId: formActivity.id,
+      formId: formActivity.object.id,
+      answerCount: formResponse.formResponse.response.answers.length,
     })
 
     return {

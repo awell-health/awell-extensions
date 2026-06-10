@@ -1,4 +1,13 @@
-import { type AwellSdk, type Activity, type Element, type PathwayContext, type Answer, type Option, type Question, type Form, type DataPoint } from '@awell-health/awell-sdk'
+import {
+  type AwellSdk,
+  type Activity,
+  type PathwayContext,
+  type Answer,
+  type Option,
+  type Question,
+  type Form,
+  type DataPoint,
+} from '@awell-health/awell-sdk'
 
 /**
  * Input parameters for getTrackData function
@@ -35,7 +44,7 @@ export interface TrackStep {
 
 /**
  * Extended activity interface that includes all relevant activity data.
- * This makes it easier and more efficient for the LLM to process activities without 
+ * This makes it easier and more efficient for the LLM to process activities without
  * needing to look for details in different data places.
  */
 export interface ExtendedActivity {
@@ -64,31 +73,23 @@ export interface ExtendedActivity {
   }>
 }
 
-/**
- * Using the SDK Element type with optional fields to pick and choose the fields we need
- * with additional context needed to 'organize' the data
- */
-export type ElementResponse = Pick<Element, 
-  'id' | 'name' | 'start_date' | 'end_date' | 'status' | 'type'
-> & {
+export interface StepResponse {
+  id: string
+  name: string
+  start_date?: string
+  end_date?: string | null
+  status: string
   label?: {
     text?: string
   }
-  context?: Pick<PathwayContext, 'step_id' | 'track_id'>
-}
-
-/**
- * Response wrapper for custom elements data
- */
-export interface ElementsResponse {
-  elements?: ElementResponse[]
 }
 
 /**
  * Custom Activity type with selected fields from SDK's Activity.
  * Includes additional fields for our needs and makes some fields optional.
  */
-export type ActivityResponse = Pick<Activity, 
+export type ActivityResponse = Pick<
+  Activity,
   'id' | 'date' | 'action' | 'status' | 'resolution'
 > & {
   subject: Pick<Activity['subject'], 'type' | 'name'>
@@ -97,6 +98,9 @@ export type ActivityResponse = Pick<Activity,
   form?: {
     id?: string
     title?: string
+  }
+  label?: {
+    text?: string
   }
   context?: Pick<PathwayContext, 'track_id' | 'step_id'>
 }
@@ -111,7 +115,10 @@ export interface ActivitiesResponse {
 /**
  * Pick and choose the fields we need from the SDK's Answer type
  */
-export type FormResponseAnswer = Pick<Answer, 'question_id' | 'value' | 'label' | 'value_type'>
+export type FormResponseAnswer = Pick<
+  Answer,
+  'question_id' | 'value' | 'label' | 'value_type'
+>
 
 /**
  * Custom structure to organize form responses by activity.
@@ -134,7 +141,10 @@ export type FormQuestionOption = Pick<Option, 'label' | 'value'> & {
  * Pick and choose the fields we need from the SDK's Question type
  * with additional context needed to 'organize' the data
  */
-export type FormQuestion = Pick<Question, 'id' | 'key' | 'title' | 'userQuestionType'> & {
+export type FormQuestion = Pick<
+  Question,
+  'id' | 'key' | 'title' | 'userQuestionType'
+> & {
   options?: FormQuestionOption[]
 }
 
@@ -142,7 +152,10 @@ export type FormQuestion = Pick<Question, 'id' | 'key' | 'title' | 'userQuestion
  * Pick and choose the fields we need from the SDK's Form type
  * with additional questions to combine question/asnwers easier
  */
-export type FormDefinition = Pick<Form, 'id' | 'title' | 'key' | 'definition_id' | 'release_id'> & {
+export type FormDefinition = Pick<
+  Form,
+  'id' | 'title' | 'key' | 'definition_id' | 'release_id'
+> & {
   questions: FormQuestion[]
 }
 
@@ -159,13 +172,21 @@ export interface FormDefinitionResponse {
  * Map type for organizing form responses by activity and form ID.
  * First key is activity ID, second key is form ID.
  */
-export type FormResponsesMap = Record<string, Record<string, FormResponseData>>;
+export type FormResponsesMap = Record<string, Record<string, FormResponseData>>
 
 /**
  * Extended data point interface with additional fields to enrich the data with definition key and title
  */
-export type ExtendedDataPoint = Pick<DataPoint, 
-  'id' | 'data_set_id' | 'key' | 'serialized_value' | 'data_point_definition_id' | 'date' | 'valueType' | 'activity_id'
+export type ExtendedDataPoint = Pick<
+  DataPoint,
+  | 'id'
+  | 'data_set_id'
+  | 'key'
+  | 'serialized_value'
+  | 'data_point_definition_id'
+  | 'date'
+  | 'valueType'
+  | 'activity_id'
 > & {
   // Custom fields not in SDK:
   definitionKey?: string
@@ -182,8 +203,7 @@ export interface DataPointsResponse {
  * in a single, easy-to-process format.
  */
 export interface CombinedQueryResponse {
-  pathwayElements?: ElementsResponse
-  pathwayActivities?: ActivitiesResponse
+  careflowActivities?: ActivitiesResponse
   pathwayDataPoints?: DataPointsResponse
 }
 
@@ -200,4 +220,4 @@ export interface MessageResponse {
       body?: string
     }
   }
-} 
+}

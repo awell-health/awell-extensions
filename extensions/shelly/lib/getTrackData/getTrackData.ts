@@ -4,14 +4,14 @@ import type {
   GetTrackDataInput,
   GetTrackDataOutput,
   ActivityResponse,
-  ElementResponse,
   ExtendedDataPoint,
   FormResponsesMap,
   MessageResponse,
   CombinedQueryResponse,
   FormDefinitionResponse,
   ExtendedActivity,
-  FormResponseAnswer
+  FormResponseAnswer,
+  StepResponse,
 } from './types'
 
 /**
@@ -25,107 +25,119 @@ export const getTrackData = async ({
   trackId,
   currentActivityId,
 }: GetTrackDataInput): Promise<GetTrackDataOutput> => {
-  const startTime = Date.now();
+  const startTime = Date.now()
 
   // Validate empty strings
-  if (isEmpty(pathwayId)) throw new Error('PathwayId is required');
-  if (isEmpty(trackId)) throw new Error('TrackId is required');
-  if (isEmpty(currentActivityId)) throw new Error('CurrentActivityId is required');
+  if (isEmpty(pathwayId)) throw new Error('PathwayId is required')
+  if (isEmpty(trackId)) throw new Error('TrackId is required')
+  if (isEmpty(currentActivityId))
+    throw new Error('CurrentActivityId is required')
 
   // 1. Make a single combined query for all track data needed
-  const combinedQuery = await fetchAllTrackData(awellSdk, pathwayId, trackId);
+  const combinedQuery = await fetchAllTrackData(awellSdk, pathwayId, trackId)
 
   // Log query results 'size'
-  console.log(`Track data fetched for care flow ${pathwayId}, track ${trackId} with ${combinedQuery.pathwayActivities?.activities?.length ?? 0} activities (limit is set to 500), ${combinedQuery.pathwayElements?.elements?.length ?? 0} elements`);
+  const activityCount: number =
+    combinedQuery.careflowActivities?.activities?.length ?? 0
+  console.log(
+    `Track data fetched for care flow ${pathwayId}, track ${trackId} with ${activityCount} activities (limit is set to 500)`,
+  )
 
   // 2. Find current activity cutoff date
-  const activities = combinedQuery.pathwayActivities?.activities ?? [];
-  const currentActivity = activities.find(activity => activity.id === currentActivityId);
-  const currentActivityDate = currentActivity?.date ?? '';
+  const activities = combinedQuery.careflowActivities?.activities ?? []
+  const currentActivity = activities.find(
+    (activity) => activity.id === currentActivityId,
+  )
+  const currentActivityDate = currentActivity?.date ?? ''
 
   // 3. Filter activities by date cutoff
-  const filteredActivities = filterActivitiesByDate(activities, currentActivityDate);
+  const filteredActivities = filterActivitiesByDate(
+    activities,
+    currentActivityDate,
+  )
 
-  // 4. Get all steps
-  const elements = combinedQuery.pathwayElements?.elements ?? [];
-  const trackSteps = filterStepElements(elements);
+  // 4. Derive steps from the activity stream
+  const trackSteps = buildStepSummaries(filteredActivities)
 
   // 5. Process data points for activities
-  const dataPoints = combinedQuery.pathwayDataPoints?.dataPoints ?? [];
-  const activityDataPointsMap = createDataPointsMap(dataPoints);
+  const dataPoints = combinedQuery.pathwayDataPoints?.dataPoints ?? []
+  const activityDataPointsMap = createDataPointsMap(dataPoints)
 
   // 6. Extract activities with forms for processing
-  const activitiesWithForms = extractActivitiesWithForms(filteredActivities);
-  console.log(`Processing ${activitiesWithForms.length} forms for care flow ${pathwayId}, track ${trackId}`);
+  const activitiesWithForms = extractActivitiesWithForms(filteredActivities)
+  console.log(
+    `Processing ${activitiesWithForms.length} forms for care flow ${pathwayId}, track ${trackId}`,
+  )
 
   // 7. Process form definitions and responses
-  const { formDefinitionsMap, formResponsesMap } = 
-    await processFormDefinitionsAndResponses(awellSdk, pathwayId, activitiesWithForms);
+  const { formDefinitionsMap, formResponsesMap } =
+    await processFormDefinitionsAndResponses(
+      awellSdk,
+      pathwayId,
+      activitiesWithForms,
+    )
 
   // 8. Try to extract message activities and fetch message content, but continue if it fails
-  let messageContentsMap = new Map<string, { subject?: string; body?: string }>();
+  let messageContentsMap = new Map<
+    string,
+    { subject?: string; body?: string }
+  >()
   try {
-    const messageActivities = extractMessageActivities(filteredActivities);
-    console.log(`Processing ${messageActivities.length} messages for care flow ${pathwayId}, track ${trackId}`);
-    messageContentsMap = await fetchMessageContents(awellSdk, messageActivities);
+    const messageActivities = extractMessageActivities(filteredActivities)
+    console.log(
+      `Processing ${messageActivities.length} messages for care flow ${pathwayId}, track ${trackId}`,
+    )
+    messageContentsMap = await fetchMessageContents(awellSdk, messageActivities)
   } catch (error) {
-    console.error(`Failed to process messages for care flow ${pathwayId}, track ${trackId}: ${error instanceof Error ? error.message : String(error)}`);
+    console.error(
+      `Failed to process messages for care flow ${pathwayId}, track ${trackId}: ${error instanceof Error ? error.message : String(error)}`,
+    )
     // Log error and continue without message data
   }
 
   // 9. Finally process steps with activities
-  const processedSteps = trackSteps.map(step => 
-    processStep(step, filteredActivities, activityDataPointsMap, formDefinitionsMap, formResponsesMap, messageContentsMap)
-  );
+  const processedSteps = trackSteps.map((step) =>
+    processStep(
+      step,
+      filteredActivities,
+      activityDataPointsMap,
+      formDefinitionsMap,
+      formResponsesMap,
+      messageContentsMap,
+    ),
+  )
 
   // Log completion time
-  const processingTime = Date.now() - startTime;
-  console.log(`Completed processing track data for care flow ${pathwayId}, track ${trackId} in ${processingTime}ms`);
+  const processingTime = Date.now() - startTime
+  console.log(
+    `Completed processing track data for care flow ${pathwayId}, track ${trackId} in ${processingTime}ms`,
+  )
 
   return {
-    steps: processedSteps
-  };
-};
+    steps: processedSteps,
+  }
+}
 
 /**
  * Fetch all track data in a single combined query
  */
 async function fetchAllTrackData(
-  awellSdk: AwellSdk, 
+  awellSdk: AwellSdk,
   pathwayId: string,
-  trackId: string
+  trackId: string,
 ): Promise<CombinedQueryResponse> {
   try {
-    console.log(`Starting track data query for care flow ${pathwayId}, track ${trackId} (activity limit: 500)`);
-    const queryStartTime = Date.now();
+    console.log(
+      `Starting track data query for care flow ${pathwayId}, track ${trackId} (activity limit: 500)`,
+    )
+    const queryStartTime = Date.now()
 
-    const result = await awellSdk.orchestration.query({
-      pathwayElements: {  // actually track elements 
-        __args: { 
-          pathway_id: pathwayId,
-          track_id: trackId 
-        },
-        elements: {
-          id: true,
-          name: true,
-          label: {
-            text: true
-          },
-          start_date: true,
-          end_date: true,
-          status: true,
-          type: true,
-          context: {
-            step_id: true,
-            track_id: true
-          }
-        }
-      },
-      pathwayActivities: { // actually track activities
+    const result = (await awellSdk.orchestration.query({
+      careflowActivities: {
         __args: {
           pathway_id: pathwayId,
-          track_id: trackId,
-          pagination: { offset: 0, count: 500 } // we should never get more than 500 activities, if there is a track with more than I would say it is justified to cut them off
+          filters: { track_id: trackId },
+          pagination: { offset: 0, count: 500 }, // we should never get more than 500 activities, if there is a track with more than I would say it is justified to cut them off
         },
         activities: {
           id: true,
@@ -134,19 +146,22 @@ async function fetchAllTrackData(
           status: true,
           resolution: true,
           subject: { type: true, name: true },
-          object: { 
-            type: true, 
+          object: {
+            type: true,
             name: true,
-            id: true // id field to get message ID
+            id: true, // id field to get message ID
           },
           indirect_object: { type: true, name: true },
           form: {
             id: true,
-            title: true
+            title: true,
           },
           track: { id: true, title: true },
-          context: { track_id: true, step_id: true }
-        }
+          label: {
+            text: true,
+          },
+          context: { track_id: true, step_id: true },
+        },
       },
       pathwayDataPoints: {
         __args: {
@@ -162,16 +177,20 @@ async function fetchAllTrackData(
           valueType: true,
           activity_id: true,
         },
-      }
-    }) as CombinedQueryResponse;
+      },
+    })) as CombinedQueryResponse
 
-    const queryTime = Date.now() - queryStartTime;
-    console.log(`Completed track data query for care flow ${pathwayId}, track ${trackId} in ${queryTime}ms`);
+    const queryTime = Date.now() - queryStartTime
+    console.log(
+      `Completed track data query for care flow ${pathwayId}, track ${trackId} in ${queryTime}ms`,
+    )
 
-    return result;
+    return result
   } catch (error) {
-    console.error(`Failed to fetch track data for care flow ${pathwayId}, track ${trackId}: ${error instanceof Error ? error.message : String(error)}`);
-    throw error;
+    console.error(
+      `Failed to fetch track data for care flow ${pathwayId}, track ${trackId}: ${error instanceof Error ? error.message : String(error)}`,
+    )
+    throw error
   }
 }
 
@@ -179,74 +198,156 @@ async function fetchAllTrackData(
  * Filter activities by date (keeping those before or equal to current activity date)
  */
 function filterActivitiesByDate(
-  activities: ActivityResponse[], 
-  currentActivityDate: string
+  activities: ActivityResponse[],
+  currentActivityDate: string,
 ): ActivityResponse[] {
   if (isEmpty(currentActivityDate)) {
     // If there's no date cutoff, return all activities sorted by date
-    return activities.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+    return activities.sort(
+      (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime(),
+    )
   }
-  
+
   return activities
-    .filter(activity => activity.date <= currentActivityDate)
-    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+    .filter((activity) => activity.date <= currentActivityDate)
+    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
 }
 
-/**
- * Filter elements that are steps
- */
-function filterStepElements(
-  elements: ElementResponse[]
-): ElementResponse[] {
-  return elements.filter(element => {
-    if (isNil(element.type) || isEmpty(element.type)) return false;
-    return element.type === 'STEP';
-  });
+function buildStepSummaries(activities: ActivityResponse[]): StepResponse[] {
+  const activitiesByStep = new Map<string, ActivityResponse[]>()
+
+  activities.forEach((activity) => {
+    const stepId = activity.context?.step_id
+    if (isNil(stepId) || isEmpty(stepId)) return
+
+    if (!activitiesByStep.has(stepId)) {
+      activitiesByStep.set(stepId, [])
+    }
+
+    activitiesByStep.get(stepId)?.push(activity)
+  })
+
+  return Array.from(activitiesByStep.entries())
+    .map(([stepId, stepActivities]) => {
+      const sortedActivities = stepActivities.sort(
+        (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime(),
+      )
+      const stepLifecycleActivities = sortedActivities.filter(
+        (activity) => activity.object?.type === 'STEP',
+      )
+      const firstActivity = sortedActivities[0]
+      const firstStepActivity = stepLifecycleActivities[0] ?? firstActivity
+      const latestStepActivity =
+        stepLifecycleActivities[stepLifecycleActivities.length - 1] ??
+        firstActivity
+      const status = deriveStepStatus(latestStepActivity)
+
+      return {
+        id: stepId,
+        name:
+          firstStepActivity.object?.type === 'STEP'
+            ? firstStepActivity.object.name
+            : `Step ${stepId}`,
+        label: {
+          text:
+            firstStepActivity.label?.text ??
+            (firstStepActivity.object?.type === 'STEP'
+              ? firstStepActivity.object.name
+              : ''),
+        },
+        start_date: firstStepActivity.date,
+        end_date: isTerminalStepStatus(status) ? latestStepActivity.date : null,
+        status,
+      }
+    })
+    .sort(
+      (a, b) =>
+        new Date(a.start_date ?? '').getTime() -
+        new Date(b.start_date ?? '').getTime(),
+    )
+}
+
+function deriveStepStatus(activity: ActivityResponse): string {
+  switch (activity.action) {
+    case 'COMPLETE':
+      return 'DONE'
+    case 'STOPPED':
+      return 'STOPPED'
+    case 'DISCARDED':
+      return 'DISCARDED'
+    case 'EXPIRED':
+      return 'EXPIRED'
+    case 'SKIPPED':
+      return 'SKIPPED'
+    case 'POSTPONED':
+      return 'POSTPONED'
+    case 'ACTIVATE':
+      return 'ACTIVE'
+    case 'SCHEDULED':
+      return 'SCHEDULED'
+    default:
+      return activity.status
+  }
+}
+
+function isTerminalStepStatus(status: string): boolean {
+  return ['DONE', 'STOPPED', 'DISCARDED', 'EXPIRED', 'SKIPPED'].includes(status)
 }
 
 /**
  * Create a map of activity ID to data points for faster lookup
  */
-function createDataPointsMap(dataPoints: ExtendedDataPoint[]): Map<string, ExtendedDataPoint[]> {
-  const activityDataPointsMap = new Map<string, ExtendedDataPoint[]>();
-  
-  dataPoints.forEach(dataPoint => {
-    if (typeof dataPoint.activity_id === 'string' && dataPoint.activity_id !== '') {
+function createDataPointsMap(
+  dataPoints: ExtendedDataPoint[],
+): Map<string, ExtendedDataPoint[]> {
+  const activityDataPointsMap = new Map<string, ExtendedDataPoint[]>()
+
+  dataPoints.forEach((dataPoint) => {
+    if (
+      typeof dataPoint.activity_id === 'string' &&
+      dataPoint.activity_id !== ''
+    ) {
       if (!activityDataPointsMap.has(dataPoint.activity_id)) {
-        activityDataPointsMap.set(dataPoint.activity_id, []);
+        activityDataPointsMap.set(dataPoint.activity_id, [])
       }
-      
+
       // Add enhanced data point with improved title detection
-      const enhancedDataPoint = { ...dataPoint };
-      
+      const enhancedDataPoint = { ...dataPoint }
+
       // Apply pattern-based mappings for titles for easier LLM reasoning
-      if (typeof dataPoint.data_point_definition_id === 'string' && dataPoint.data_point_definition_id !== '') {
+      if (
+        typeof dataPoint.data_point_definition_id === 'string' &&
+        dataPoint.data_point_definition_id !== ''
+      ) {
         if (dataPoint.data_point_definition_id.endsWith('-ACTIVATION')) {
-          enhancedDataPoint.definitionTitle = 'Activation Date';
+          enhancedDataPoint.definitionTitle = 'Activation Date'
         } else if (dataPoint.data_point_definition_id.endsWith('-COMPLETION')) {
-          enhancedDataPoint.definitionTitle = 'Completion Date';
+          enhancedDataPoint.definitionTitle = 'Completion Date'
         }
       }
-      
-      activityDataPointsMap.get(dataPoint.activity_id)?.push(enhancedDataPoint);
+
+      activityDataPointsMap.get(dataPoint.activity_id)?.push(enhancedDataPoint)
     }
-  });
-  
-  return activityDataPointsMap;
+  })
+
+  return activityDataPointsMap
 }
 
 /**
  * Extract activities with forms for processing
  */
 function extractActivitiesWithForms(
-  activities: ActivityResponse[]
+  activities: ActivityResponse[],
 ): Array<{ activityId: string; formId: string }> {
   return activities
-    .filter(activity => typeof activity.form?.id === 'string' && activity.form.id !== '')
-    .map(activity => ({
+    .filter(
+      (activity) =>
+        typeof activity.form?.id === 'string' && activity.form.id !== '',
+    )
+    .map((activity) => ({
       activityId: activity.id,
-      formId: activity.form?.id as string
-    }));
+      formId: activity.form?.id as string,
+    }))
 }
 
 /**
@@ -254,32 +355,38 @@ function extractActivitiesWithForms(
  */
 async function processFormDefinitionsAndResponses(
   awellSdk: AwellSdk,
-  pathwayId: string, 
-  activitiesWithForms: Array<{ activityId: string; formId: string }>
-): Promise<{ 
-  formDefinitionsMap: Map<string, any>; 
-  formResponsesMap: FormResponsesMap 
+  pathwayId: string,
+  activitiesWithForms: Array<{ activityId: string; formId: string }>,
+): Promise<{
+  formDefinitionsMap: Map<string, any>
+  formResponsesMap: FormResponsesMap
 }> {
-  const formDefinitionsMap = new Map<string, any>();
-  const formResponsesMap: FormResponsesMap = {};
-  
+  const formDefinitionsMap = new Map<string, any>()
+  const formResponsesMap: FormResponsesMap = {}
+
   if (activitiesWithForms.length === 0) {
-    return { formDefinitionsMap, formResponsesMap };
+    return { formDefinitionsMap, formResponsesMap }
   }
-  
+
   // Prepare queries in batches to avoid overloading
-  const batchSize = 5;
-  const batches = [];
-  
+  const batchSize = 5
+  const batches = []
+
   for (let i = 0; i < activitiesWithForms.length; i += batchSize) {
-    batches.push(activitiesWithForms.slice(i, i + batchSize));
+    batches.push(activitiesWithForms.slice(i, i + batchSize))
   }
-  
+
   for (const batch of batches) {
-    await processBatch(awellSdk, pathwayId, batch, formDefinitionsMap, formResponsesMap);
+    await processBatch(
+      awellSdk,
+      pathwayId,
+      batch,
+      formDefinitionsMap,
+      formResponsesMap,
+    )
   }
-  
-  return { formDefinitionsMap, formResponsesMap };
+
+  return { formDefinitionsMap, formResponsesMap }
 }
 
 /**
@@ -290,7 +397,7 @@ async function processBatch(
   pathwayId: string,
   batch: Array<{ activityId: string; formId: string }>,
   formDefinitionsMap: Map<string, any>,
-  formResponsesMap: FormResponsesMap
+  formResponsesMap: FormResponsesMap,
 ): Promise<void> {
   try {
     // Create an array of promises for form definitions and responses
@@ -298,7 +405,7 @@ async function processBatch(
       try {
         // Only fetch form definition if we haven't already
         if (!formDefinitionsMap.has(formId)) {
-          return await awellSdk.orchestration.query({
+          return (await awellSdk.orchestration.query({
             form: {
               __args: {
                 id: formId,
@@ -323,71 +430,75 @@ async function processBatch(
                 },
               },
             },
-          }) as unknown as FormDefinitionResponse;
+          })) as unknown as FormDefinitionResponse
         }
-        return null;
+        return null
       } catch (error) {
-        return null;
+        return null
       }
-    });
-    
+    })
+
     const formResponsePromises = batch.map(async ({ activityId }) => {
       try {
         return await awellSdk.orchestration.query({
           formResponse: {
             __args: {
               pathway_id: pathwayId,
-              activity_id: activityId
+              activity_id: activityId,
             },
             response: {
               answers: {
                 question_id: true,
                 value: true,
                 label: true,
-                value_type: true
-              }
-            }
-          }
-        });
+                value_type: true,
+              },
+            },
+          },
+        })
       } catch (error) {
-        return null;
+        return null
       }
-    });
-    
+    })
+
     // Await all promises in the batch
-    const formDefinitionResults = await Promise.all(formDefinitionPromises);
-    const formResponseResults = await Promise.all(formResponsePromises);
-    
+    const formDefinitionResults = await Promise.all(formDefinitionPromises)
+    const formResponseResults = await Promise.all(formResponsePromises)
+
     // Process form definitions
     formDefinitionResults.forEach((result: any, index: number) => {
       if (!isNil(result) && !isNil(get(result, 'form.form'))) {
-        const { formId } = batch[index];
-        formDefinitionsMap.set(formId, get(result, 'form.form'));
+        const { formId } = batch[index]
+        formDefinitionsMap.set(formId, get(result, 'form.form'))
       }
-    });
-    
+    })
+
     // Process form responses
     batch.forEach(({ activityId, formId }, index) => {
-      const result = formResponseResults[index];
+      const result = formResponseResults[index]
       if (!isNil(result) && !isNil(get(result, 'formResponse.response'))) {
-        const responseData = result.formResponse.response;
-        
+        const responseData = result.formResponse.response
+
         // Create the map entry if it doesn't exist
         if (!Object.prototype.hasOwnProperty.call(formResponsesMap, formId)) {
-          formResponsesMap[formId] = {};
+          formResponsesMap[formId] = {}
         }
-        
-        const answers = Array.isArray(responseData.answers) ? responseData.answers : [];
-        
+
+        const answers = Array.isArray(responseData.answers)
+          ? responseData.answers
+          : []
+
         formResponsesMap[formId][activityId] = {
           activity_id: activityId,
           form_id: formId,
-          answers: answers as FormResponseAnswer[]
-        };
+          answers: answers as FormResponseAnswer[],
+        }
       }
-    });
+    })
   } catch (error) {
-    console.warn(`Partial form data processed for batch of ${batch.length} forms: ${error instanceof Error ? error.message : String(error)}`);
+    console.warn(
+      `Partial form data processed for batch of ${batch.length} forms: ${error instanceof Error ? error.message : String(error)}`,
+    )
     // Continue with partial data rather than failing completely
   }
 }
@@ -395,35 +506,40 @@ async function processBatch(
 /**
  * Extract activities that are messages
  */
-function extractMessageActivities(
-  activities: ActivityResponse[]
-): Array<{ activityId: string; messageId: string; fallbackSubject?: string; fallbackBody?: string }> {
+function extractMessageActivities(activities: ActivityResponse[]): Array<{
+  activityId: string
+  messageId: string
+  fallbackSubject?: string
+  fallbackBody?: string
+}> {
   const messageActivities = activities
-    .filter(activity => {
-      return !isNil(activity.object) && 
-             typeof activity.object.type === 'string' && 
-             activity.object.type === 'MESSAGE' &&
-             !isNil(activity.object.id) &&
-             !isEmpty(activity.object.id);
+    .filter((activity) => {
+      return (
+        !isNil(activity.object) &&
+        typeof activity.object.type === 'string' &&
+        activity.object.type === 'MESSAGE' &&
+        !isNil(activity.object.id) &&
+        !isEmpty(activity.object.id)
+      )
     })
-    .map(activity => {
-      const messageId = activity.object.id as string;
-      
+    .map((activity) => {
+      const messageId = activity.object.id as string
+
       // Extract fallback content from activity if available
-      let fallbackSubject = '';
+      let fallbackSubject = ''
       if (!isNil(activity.object.name) && !isEmpty(activity.object.name)) {
-        fallbackSubject = activity.object.name;
+        fallbackSubject = activity.object.name
       }
-      
+
       return {
         activityId: activity.id,
         messageId,
         fallbackSubject,
-        fallbackBody: ''
-      };
-    });
-  
-  return messageActivities;
+        fallbackBody: '',
+      }
+    })
+
+  return messageActivities
 }
 
 /**
@@ -431,95 +547,115 @@ function extractMessageActivities(
  */
 async function fetchMessageContents(
   awellSdk: AwellSdk,
-  messageActivities: Array<{ activityId: string; messageId: string; fallbackSubject?: string; fallbackBody?: string }>
+  messageActivities: Array<{
+    activityId: string
+    messageId: string
+    fallbackSubject?: string
+    fallbackBody?: string
+  }>,
 ): Promise<Map<string, { subject?: string; body?: string }>> {
-  const messageContentsMap = new Map<string, { subject?: string; body?: string }>();
-  
+  const messageContentsMap = new Map<
+    string,
+    { subject?: string; body?: string }
+  >()
+
   if (messageActivities.length === 0) {
-    return messageContentsMap;
+    return messageContentsMap
   }
-  
+
   // Process in batches to avoid overloading
-  const batchSize = 5;
-  const batches = [];
-  
+  const batchSize = 5
+  const batches = []
+
   for (let i = 0; i < messageActivities.length; i += batchSize) {
-    batches.push(messageActivities.slice(i, i + batchSize));
+    batches.push(messageActivities.slice(i, i + batchSize))
   }
-  
+
   for (const batch of batches) {
-    await Promise.all(batch.map(async ({ activityId, messageId, fallbackSubject, fallbackBody }) => {
-      try {
-        const response = await awellSdk.orchestration.query({
-          message: {
-            __args: {
-              id: messageId
-            },
-            message: {
-              id: true,
-              subject: true,
-              body: true
+    await Promise.all(
+      batch.map(
+        async ({ activityId, messageId, fallbackSubject, fallbackBody }) => {
+          try {
+            const response = (await awellSdk.orchestration.query({
+              message: {
+                __args: {
+                  id: messageId,
+                },
+                message: {
+                  id: true,
+                  subject: true,
+                  body: true,
+                },
+              },
+            })) as MessageResponse
+
+            if (
+              !isNil(response) &&
+              !isNil(response.message) &&
+              !isNil(response.message.message)
+            ) {
+              messageContentsMap.set(activityId, {
+                subject: response.message.message.subject,
+                body: response.message.message.body,
+              })
+            } else {
+              // Use fallback content if available
+              const hasFallbackSubject =
+                !isNil(fallbackSubject) && !isEmpty(fallbackSubject)
+              const hasFallbackBody =
+                !isNil(fallbackBody) && !isEmpty(fallbackBody)
+
+              if (hasFallbackSubject || hasFallbackBody) {
+                messageContentsMap.set(activityId, {
+                  subject: fallbackSubject,
+                  body: fallbackBody,
+                })
+              }
+            }
+          } catch (error) {
+            // Use fallback content if available after error
+            const hasFallbackSubject =
+              !isNil(fallbackSubject) && !isEmpty(fallbackSubject)
+            const hasFallbackBody =
+              !isNil(fallbackBody) && !isEmpty(fallbackBody)
+
+            if (hasFallbackSubject || hasFallbackBody) {
+              messageContentsMap.set(activityId, {
+                subject: fallbackSubject,
+                body: fallbackBody,
+              })
             }
           }
-        }) as MessageResponse;
-        
-        if (!isNil(response) && 
-            !isNil(response.message) && 
-            !isNil(response.message.message)) {
-          messageContentsMap.set(activityId, {
-            subject: response.message.message.subject,
-            body: response.message.message.body
-          });
-        } else {
-          // Use fallback content if available
-          const hasFallbackSubject = !isNil(fallbackSubject) && !isEmpty(fallbackSubject);
-          const hasFallbackBody = !isNil(fallbackBody) && !isEmpty(fallbackBody);
-          
-          if (hasFallbackSubject || hasFallbackBody) {
-            messageContentsMap.set(activityId, {
-              subject: fallbackSubject,
-              body: fallbackBody
-            });
-          }
-        }
-      } catch (error) {
-        // Use fallback content if available after error
-        const hasFallbackSubject = !isNil(fallbackSubject) && !isEmpty(fallbackSubject);
-        const hasFallbackBody = !isNil(fallbackBody) && !isEmpty(fallbackBody);
-        
-        if (hasFallbackSubject || hasFallbackBody) {
-          messageContentsMap.set(activityId, {
-            subject: fallbackSubject,
-            body: fallbackBody
-          });
-        }
-      }
-    }));
+        },
+      ),
+    )
   }
-  
-  return messageContentsMap;
+
+  return messageContentsMap
 }
 
 /**
  * Process a step with its activities
  */
 function processStep(
-  step: ElementResponse,
+  step: StepResponse,
   trackActivities: ActivityResponse[],
   activityDataPointsMap: Map<string, ExtendedDataPoint[]>,
   formDefinitionsMap: Map<string, any>,
   formResponsesMap: FormResponsesMap,
-  messageContentsMap: Map<string, { subject?: string; body?: string }>
+  messageContentsMap: Map<string, { subject?: string; body?: string }>,
 ): GetTrackDataOutput['steps'][0] {
   const stepActivities = trackActivities
-    .filter(activity => activity.context?.step_id === step.id)
-    .map(activity => processActivity(
-      activity, 
-      activityDataPointsMap, 
-      formDefinitionsMap, 
-      formResponsesMap,
-      messageContentsMap
-    ));
+    .filter((activity) => activity.context?.step_id === step.id)
+    .map((activity) =>
+      processActivity(
+        activity,
+        activityDataPointsMap,
+        formDefinitionsMap,
+        formResponsesMap,
+        messageContentsMap,
+      ),
+    )
 
   return {
     name: step.name,
@@ -527,8 +663,8 @@ function processStep(
     status: step.status,
     start_date: step.start_date,
     end_date: step.end_date,
-    activities: stepActivities
-  };
+    activities: stepActivities,
+  }
 }
 
 /**
@@ -539,7 +675,7 @@ function processActivity(
   activityDataPointsMap: Map<string, ExtendedDataPoint[]>,
   formDefinitionsMap: Map<string, any>,
   formResponsesMap: FormResponsesMap,
-  messageContentsMap: Map<string, { subject?: string; body?: string }>
+  messageContentsMap: Map<string, { subject?: string; body?: string }>,
 ): ExtendedActivity {
   const baseActivity: ExtendedActivity = {
     date: activity.date,
@@ -548,35 +684,42 @@ function processActivity(
     resolution: activity.resolution,
     subject: {
       type: activity.subject.type,
-      name: activity.subject.name
+      name: activity.subject.name,
     },
     object: {
       type: activity.object.type,
-      name: activity.object.name
-    }
-  };
+      name: activity.object.name,
+    },
+  }
 
   // Add indirect object if it exists
-  if (!isNil(activity.indirect_object?.type) && 
-      !isEmpty(activity.indirect_object?.type) && 
-      !isNil(activity.indirect_object?.name) &&
-      !isEmpty(activity.indirect_object?.name)) {
+  if (
+    !isNil(activity.indirect_object?.type) &&
+    !isEmpty(activity.indirect_object?.type) &&
+    !isNil(activity.indirect_object?.name) &&
+    !isEmpty(activity.indirect_object?.name)
+  ) {
     baseActivity.indirect_object = {
       type: activity.indirect_object.type,
-      name: activity.indirect_object.name
-    };
+      name: activity.indirect_object.name,
+    }
   }
 
   // Process message if exists
-  processActivityMessage(baseActivity, activity, messageContentsMap);
-  
-  // Process form if exists
-  processActivityForm(baseActivity, activity, formDefinitionsMap, formResponsesMap);
-  
-  // Process data points
-  processActivityDataPoints(baseActivity, activity, activityDataPointsMap);
+  processActivityMessage(baseActivity, activity, messageContentsMap)
 
-  return baseActivity;
+  // Process form if exists
+  processActivityForm(
+    baseActivity,
+    activity,
+    formDefinitionsMap,
+    formResponsesMap,
+  )
+
+  // Process data points
+  processActivityDataPoints(baseActivity, activity, activityDataPointsMap)
+
+  return baseActivity
 }
 
 /**
@@ -585,15 +728,15 @@ function processActivity(
 function processActivityMessage(
   baseActivity: ExtendedActivity,
   activity: ActivityResponse,
-  messageContentsMap: Map<string, { subject?: string; body?: string }>
+  messageContentsMap: Map<string, { subject?: string; body?: string }>,
 ): void {
   if (messageContentsMap.has(activity.id)) {
-    const messageContent = messageContentsMap.get(activity.id);
+    const messageContent = messageContentsMap.get(activity.id)
     if (!isNil(messageContent)) {
       baseActivity.message = {
         subject: messageContent.subject,
-        body: messageContent.body
-      };
+        body: messageContent.body,
+      }
     }
   }
 }
@@ -605,66 +748,84 @@ function processActivityForm(
   baseActivity: ExtendedActivity,
   activity: ActivityResponse,
   formDefinitionsMap: Map<string, any>,
-  formResponsesMap: FormResponsesMap
+  formResponsesMap: FormResponsesMap,
 ): void {
-  if (isNil(activity.form) || isNil(activity.form.id) || activity.form.id === '') {
-    return;
+  if (
+    isNil(activity.form) ||
+    isNil(activity.form.id) ||
+    activity.form.id === ''
+  ) {
+    return
   }
 
-  const formId = activity.form.id;
-  const formTitle = typeof activity.form.title === 'string' && !isEmpty(activity.form.title)
-    ? activity.form.title 
-    : 'Untitled Form';
-  
+  const formId = activity.form.id
+  const formTitle =
+    typeof activity.form.title === 'string' && !isEmpty(activity.form.title)
+      ? activity.form.title
+      : 'Untitled Form'
+
   // Check if we have form responses for this activity
-  const hasFormResponses = Object.prototype.hasOwnProperty.call(formResponsesMap, formId) && 
-                          Object.prototype.hasOwnProperty.call(formResponsesMap[formId], activity.id);
-  
+  const hasFormResponses =
+    Object.prototype.hasOwnProperty.call(formResponsesMap, formId) &&
+    Object.prototype.hasOwnProperty.call(formResponsesMap[formId], activity.id)
+
   if (hasFormResponses) {
-    const formResponseData = formResponsesMap[formId][activity.id];
-    const formDefinition = formDefinitionsMap.get(formId);
-    
+    const formResponseData = formResponsesMap[formId][activity.id]
+    const formDefinition = formDefinitionsMap.get(formId)
+
     // Create form with responses
     if (!isNil(formDefinition)) {
       // Map questions to their answers with proper formatting
       baseActivity.form = {
         title: formTitle,
-        questions: formResponseData.answers.map(answer => {
-          const question = formDefinition.questions.find((q: any) => q.id === answer.question_id);
-          let responseText = answer.value ?? 'No response';
-          
+        questions: formResponseData.answers.map((answer) => {
+          const question = formDefinition.questions.find(
+            (q: any) => q.id === answer.question_id,
+          )
+          let responseText = answer.value ?? 'No response'
+
           // Handle different question types
           if (!isNil(question)) {
             if (question.userQuestionType === 'YES_NO') {
-              responseText = responseText === '1' ? 'Yes' : responseText === '0' ? 'No' : 'No response';
-            } else if (question.userQuestionType === 'MULTIPLE_CHOICE' && 
-                      typeof answer.value === 'string' && !isEmpty(answer.value)) {
-              const option = question.options?.find((opt: any) => opt.value_string === answer.value);
-              responseText = option?.label ?? responseText;
+              responseText =
+                responseText === '1'
+                  ? 'Yes'
+                  : responseText === '0'
+                    ? 'No'
+                    : 'No response'
+            } else if (
+              question.userQuestionType === 'MULTIPLE_CHOICE' &&
+              typeof answer.value === 'string' &&
+              !isEmpty(answer.value)
+            ) {
+              const option = question.options?.find(
+                (opt: any) => opt.value_string === answer.value,
+              )
+              responseText = option?.label ?? responseText
             }
           }
-          
+
           return {
             title: question?.title ?? answer.question_id,
-            response: responseText
-          };
-        })
-      };
+            response: responseText,
+          }
+        }),
+      }
     } else {
       // Fallback if form definition not available
       baseActivity.form = {
         title: formTitle,
-        questions: formResponseData.answers.map(answer => ({
+        questions: formResponseData.answers.map((answer) => ({
           title: answer.question_id,
-          response: answer.value ?? 'No response'
-        }))
-      };
+          response: answer.value ?? 'No response',
+        })),
+      }
     }
   } else {
     // Just include the form title if no responses
     baseActivity.form = {
-      title: formTitle
-    };
+      title: formTitle,
+    }
   }
 }
 
@@ -674,34 +835,39 @@ function processActivityForm(
 function processActivityDataPoints(
   baseActivity: ExtendedActivity,
   activity: ActivityResponse,
-  activityDataPointsMap: Map<string, ExtendedDataPoint[]>
+  activityDataPointsMap: Map<string, ExtendedDataPoint[]>,
 ): void {
-  const activityDataPoints = activityDataPointsMap.get(activity.id);
+  const activityDataPoints = activityDataPointsMap.get(activity.id)
   if (isNil(activityDataPoints) || activityDataPoints.length === 0) {
-    return;
+    return
   }
 
   // Determine which data points to include
-  let dataPointsToInclude: ExtendedDataPoint[] = [];
-  
-  const hasForm = !isNil(activity.form) && !isEmpty(get(activity.form, 'id'));
+  let dataPointsToInclude: ExtendedDataPoint[] = []
+
+  const hasForm = !isNil(activity.form) && !isEmpty(get(activity.form, 'id'))
   if (hasForm) {
     // If this activity has a form, only include activation data points, as questions/answers will be processed separately
-    dataPointsToInclude = activityDataPoints.filter(dp => 
-      !isNil(dp) && !isNil(dp.data_point_definition_id) && 
-      dp.data_point_definition_id.endsWith('-ACTIVATION')
-    );
+    dataPointsToInclude = activityDataPoints.filter(
+      (dp) =>
+        !isNil(dp) &&
+        !isNil(dp.data_point_definition_id) &&
+        dp.data_point_definition_id.endsWith('-ACTIVATION'),
+    )
   } else {
     // If this activity doesn't have a form, include all data points
-    dataPointsToInclude = activityDataPoints;
+    dataPointsToInclude = activityDataPoints
   }
-  
+
   if (dataPointsToInclude.length > 0) {
-    baseActivity.data_points = dataPointsToInclude.map(dp => ({
+    baseActivity.data_points = dataPointsToInclude.map((dp) => ({
       value: dp.serialized_value,
-      title: !isNil(dp.definitionTitle) ? dp.definitionTitle : (!isNil(dp.key) ? dp.key : dp.data_point_definition_id),
-      date: dp.date
-    }));
+      title: !isNil(dp.definitionTitle)
+        ? dp.definitionTitle
+        : !isNil(dp.key)
+          ? dp.key
+          : dp.data_point_definition_id,
+      date: dp.date,
+    }))
   }
 }
-

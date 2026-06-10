@@ -82,7 +82,12 @@ const buildStepMockQuery = () =>
         success: true,
         activity: {
           id: 'X74HeDQ4N0gtdaSEuzF8s',
+          status: 'DONE',
           date: '2024-09-11T22:56:59.607Z',
+          object: {
+            id: 'OGhjJKF5LRmo',
+            type: 'FORM',
+          },
           context: {
             step_id: 'Xkn5dkyPA5uW',
           },
@@ -135,7 +140,12 @@ const buildStepAllMockQuery = () =>
         success: true,
         activity: {
           id: 'X74HeDQ4N0gtdaSEuzF8s',
+          status: 'DONE',
           date: '2024-09-11T22:56:59.607Z',
+          object: {
+            id: 'form-2',
+            type: 'FORM',
+          },
           context: {
             step_id: 'Xkn5dkyPA5uW',
           },
@@ -188,7 +198,7 @@ const buildStepAllMockQuery = () =>
  *
  * NOTE: Promise.all causes interleaved query ordering — all definition queries
  * fire before any response queries, so mock order is:
- * activity → pathwayActivities → formDef1 → ... → formDefN → formResp1 → ... → formRespN
+ * activity → careflowActivities → formDef1 → ... → formDefN → formResp1 → ... → formRespN
  */
 const buildTrackMockQuery = (formCount: number) => {
   const mock = jest.fn()
@@ -220,7 +230,7 @@ const buildTrackMockQuery = (formCount: number) => {
   }))
 
   mock.mockResolvedValueOnce({
-    pathwayActivities: {
+    careflowActivities: {
       success: true,
       activities,
     },
@@ -258,7 +268,7 @@ const buildTrackEmptyMockQuery = () => {
   })
 
   mock.mockResolvedValueOnce({
-    pathwayActivities: {
+    careflowActivities: {
       success: true,
       activities: [],
     },
@@ -306,7 +316,9 @@ describe('summarizeForm - Mocked LLM calls', () => {
       })
 
       const { summarizeFormWithLLM } = require('../../lib/summarizeFormWithLLM')
-      const { detectLanguageWithLLM } = require('../../lib/detectLanguageWithLLM')
+      const {
+        detectLanguageWithLLM,
+      } = require('../../lib/detectLanguageWithLLM')
 
       expect(detectLanguageWithLLM).toHaveBeenCalled()
 
@@ -340,7 +352,8 @@ describe('summarizeForm - Mocked LLM calls', () => {
         fields: {
           summaryFormat: 'Bullet-points',
           language: 'Spanish',
-          additionalInstructions: 'Focus on medication details and side effects.',
+          additionalInstructions:
+            'Focus on medication details and side effects.',
         },
         settings: {},
       })
@@ -354,7 +367,9 @@ describe('summarizeForm - Mocked LLM calls', () => {
       })
 
       const { summarizeFormWithLLM } = require('../../lib/summarizeFormWithLLM')
-      const { detectLanguageWithLLM } = require('../../lib/detectLanguageWithLLM')
+      const {
+        detectLanguageWithLLM,
+      } = require('../../lib/detectLanguageWithLLM')
 
       expect(detectLanguageWithLLM).not.toHaveBeenCalled()
 
@@ -363,7 +378,8 @@ describe('summarizeForm - Mocked LLM calls', () => {
           disclaimerMessage:
             '**Important Notice:** The content provided is an AI-generated summary of form responses of version 3 of Care Flow "Test Care Flow" (ID: ai4rZaYEocjB).',
           language: 'Spanish',
-          additionalInstructions: 'Focus on medication details and side effects.',
+          additionalInstructions:
+            'Focus on medication details and side effects.',
         }),
       )
 

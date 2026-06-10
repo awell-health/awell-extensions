@@ -47,9 +47,26 @@ export const pushFormResponsesToHealthie: Action<
       awellSdk,
       pathwayId: pathway.id,
       activityId: activity.id,
+      log: helpers.log,
     })
 
+    helpers.log(
+      {
+        activityId: activity.id,
+        formsData,
+      },
+      '[pushFormResponsesToHealthie] Forms data',
+    )
+
     const formDataWithHealthieFormAnswers = formsData.map((formData) => {
+      helpers.log(
+        {
+          activityId: activity.id,
+          formActivityId: formData.formActivityId,
+          formId: formData.formId,
+        },
+        '[pushFormResponsesToHealthie] Mapping Awell form response to Healthie form answers',
+      )
       const { formAnswers: healthieFormAnswerInputs, omittedFormAnswers } =
         awellSdk.utils.healthie.awellFormResponseToHealthieFormAnswers({
           awellFormDefinition: formData.formDefinition,
@@ -70,8 +87,25 @@ export const pushFormResponsesToHealthie: Action<
       ({ omittedFormAnswers }) => omittedFormAnswers,
     )
 
+    helpers.log(
+      {
+        activityId: activity.id,
+        mergedHealthieFormAnswers,
+        mergedOmittedFormAnswers,
+      },
+      '[pushFormResponsesToHealthie] Merged Healthie form answers and omitted form answers',
+    )
+
     // indicates whether to make form values editable in Healthie
     const lock = defaultTo(fields.lockFormAnswerGroup, false)
+
+    helpers.log(
+      {
+        activityId: activity.id,
+        lock,
+      },
+      '[pushFormResponsesToHealthie] Indicates whether to make form values editable in Healthie',
+    )
 
     /**
      * Temporary log event to see the form answers we post to Healthie
@@ -81,6 +115,14 @@ export const pushFormResponsesToHealthie: Action<
     const healthieFormAnswersLog = addActivityEventLog({
       message: `Form answers:\n${JSON.stringify(mergedHealthieFormAnswers, null, 2)}`,
     })
+
+    helpers.log(
+      {
+        activityId: activity.id,
+        healthieFormAnswersLog,
+      },
+      '[pushFormResponsesToHealthie] Healthie form answers log',
+    )
 
     try {
       const res = await healthieSdk.client.mutation({
@@ -104,8 +146,16 @@ export const pushFormResponsesToHealthie: Action<
       const formAnswerGroupId =
         res?.createFormAnswerGroup?.form_answer_group?.id
 
-      if (isEmpty(formAnswerGroupId))
+      if (isEmpty(formAnswerGroupId)) {
+        helpers.log(
+          {
+            activityId: activity.id,
+            formAnswerGroupId,
+          },
+          '[pushFormResponsesToHealthie] Form answer group ID is empty',
+        )
         throw new HealthieFormResponseNotCreated(res)
+      }
 
       // separate call to lock the form if needed
       if (lock && formAnswerGroupId !== undefined) {
@@ -129,6 +179,10 @@ export const pushFormResponsesToHealthie: Action<
         events: getSubActivityLogs(mergedOmittedFormAnswers),
       })
     } catch (error) {
+      helpers.log(
+        { activityId: activity.id, pathwayId: pathway.id, error },
+        '[pushFormResponsesToHealthie] Error when pushing form responses to Healthie',
+      )
       if (error instanceof HealthieError) {
         const errors = mapHealthieToActivityError(error.errors)
         await onError({

@@ -1,1 +1,1 @@
-export { mockPathwayActivitiesResponse } from './pathwayActivitiesResponse'
+export { mockCareflowActivitiesResponse } from './careflowActivitiesResponse'

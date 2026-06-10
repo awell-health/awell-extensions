@@ -55,10 +55,10 @@ export const getFormsInTrack: GetFormsInTrack = async ({
 
   // Get all activities in the track
   const activitiesResponse = await awellSdk.orchestration.query({
-    pathwayActivities: {
+    careflowActivities: {
       __args: {
         pathway_id: pathwayId,
-        track_id: trackId,
+        filters: { track_id: trackId },
         pagination: { offset: 0, count: 500 },
       },
       success: true,
@@ -76,7 +76,7 @@ export const getFormsInTrack: GetFormsInTrack = async ({
   })
 
   // Filter and sort by date in ascending order (chronological)
-  const formActivitiesInTrack = activitiesResponse.pathwayActivities.activities
+  const formActivitiesInTrack = activitiesResponse.careflowActivities.activities
     .filter(
       (a) =>
         a.object.type === 'FORM' &&

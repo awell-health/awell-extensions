@@ -5,7 +5,7 @@ import {
   mockFormDefinitionTwoResponse,
   mockFormResponseOneResponse,
   mockFormResponseTwoResponse,
-  mockPathwayActivitiesResponse,
+  mockCareflowActivitiesResponse,
 } from './__testdata__'
 
 jest.mock('@awell-health/awell-sdk', () => {
@@ -40,12 +40,12 @@ describe('getAllFormsInCurrentStep', () => {
     mockQuery
       .mockResolvedValueOnce({
         activity: {
-          activity: mockPathwayActivitiesResponse.activities[0],
+          activity: mockCareflowActivitiesResponse.activities[0],
           success: true,
         },
       })
       .mockResolvedValueOnce({
-        pathwayStepActivities: mockPathwayActivitiesResponse,
+        pathwayStepActivities: mockCareflowActivitiesResponse,
       })
       // After ascending sort: form_activity_1 (older) comes first, then form_activity_2 (newer)
       .mockResolvedValueOnce({ form: mockFormDefinitionOneResponse })
@@ -60,7 +60,7 @@ describe('getAllFormsInCurrentStep', () => {
     })
 
     // on call to get activity
-    // one call to GetPathwayActivities
+    // one call to GetCareflowActivities
     // two calls to GetFormResponse because the step of interest has 2 form definitions
     // two calls to GetFormResponse each form has a response
     expect(awellSdkMock.orchestration.query).toHaveBeenCalledTimes(6)
