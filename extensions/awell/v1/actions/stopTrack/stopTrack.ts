@@ -29,7 +29,7 @@ export const stopTrack: Action<typeof fields, typeof settings> = {
     })
 
     const awellSdk = await helpers.awellSdk()
-    const stoppableTrackStatuses = ['ACTIVE', 'SCHEDULED', 'POSTPONED']
+    const stoppableTrackStatuses = ['active']
     const tracksResponse = await awellSdk.orchestration.query({
       careflowTracks: {
         __args: {

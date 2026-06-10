@@ -8,7 +8,6 @@ import {
   dataPoints,
 } from './config'
 import z from 'zod'
-import { ElementStatus } from '../../gql/graphql'
 import { isNil } from 'lodash'
 
 export const isPatientEnrolledInTrack: Action<typeof fields, typeof settings> =
@@ -35,22 +34,27 @@ export const isPatientEnrolledInTrack: Action<typeof fields, typeof settings> =
       })
 
       const sdk = await helpers.awellSdk()
-
+      // status can be ['active', 'completed', 'stopped', 'discarded']
       const tracksResponse = await sdk.orchestration.query({
         careflowTracks: {
           __args: {
             careflow_id: pathwayId,
-            statuses: [
-              ElementStatus.Active,
-              ElementStatus.Done,
-              ElementStatus.Scheduled,
-            ],
+            statuses: ['active', 'completed'],
           },
           tracks: {
             definition_id: true,
             status: true,
             start_date: true,
             end_date: true,
+          },
+        },
+        scheduledTracksForPathway: {
+          __args: {
+            pathway_id: pathwayId,
+          },
+          scheduled_tracks: {
+            track_definition_id: true,
+            scheduled_date: true,
           },
         },
       })
@@ -63,40 +67,39 @@ export const isPatientEnrolledInTrack: Action<typeof fields, typeof settings> =
       // Find if the patient has been enrolled in the track
       const hasBeenEnrolledInTrack = trackElements.some(
         (track) =>
-          track.status === ElementStatus.Done &&
+          track.status === 'completed' &&
           track.end_date !== null &&
           track.end_date !== undefined,
       )
 
       // Find if the patient is currently enrolled in the track
       const isEnrolledInTrack = trackElements.some(
-        (track) => track.status === ElementStatus.Active,
+        (track) => track.status === 'active',
       )
+
+      const scheduledTracks =
+        tracksResponse.scheduledTracksForPathway?.scheduled_tracks?.filter(
+          (track) => track.track_definition_id === trackDefinitionId,
+        ) ?? []
 
       // Find if the patient is scheduled to be enrolled in the track
-      const trackIsScheduled = trackElements.some(
-        (track) => track.status === ElementStatus.Scheduled,
-      )
-
-      // Find the earliest scheduled date among scheduled tracks
-      const scheduledTracks = trackElements.filter(
-        (track) => track.status === ElementStatus.Scheduled,
-      )
+      const trackIsScheduled = scheduledTracks.length > 0
 
       let trackScheduledDate: string | null = null
 
       if (scheduledTracks.length > 0) {
-        // Find the earliest start_date among scheduled tracks
+        // Find the earliest scheduled_date among queued scheduled tracks.
         const earliestScheduledTrack = scheduledTracks.reduce(
           (earliest, current) => {
-            if (isNil(earliest.start_date)) return current
-            if (isNil(current.start_date)) return earliest
-            return new Date(current.start_date) < new Date(earliest.start_date)
+            if (isNil(earliest.scheduled_date)) return current
+            if (isNil(current.scheduled_date)) return earliest
+            return new Date(current.scheduled_date) <
+              new Date(earliest.scheduled_date)
               ? current
               : earliest
           },
         )
-        trackScheduledDate = earliestScheduledTrack.start_date
+        trackScheduledDate = earliestScheduledTrack.scheduled_date
       }
 
       await onComplete({

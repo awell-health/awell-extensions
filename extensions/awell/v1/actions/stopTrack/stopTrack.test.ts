@@ -11,21 +11,15 @@ describe('Stop track', () => {
   const mockCareflowTracks = [
     {
       id: 'track_instance_1',
-      status: 'ACTIVE',
+      status: 'active',
       definition_id: 'track_def_123',
       title: 'Test Track 1',
     },
     {
       id: 'track_instance_2',
-      status: 'SCHEDULED',
-      definition_id: 'track_def_123',
+      status: 'active',
+      definition_id: 'track_def_456',
       title: 'Test Track 2',
-    },
-    {
-      id: 'track_instance_3',
-      status: 'COMPLETED',
-      definition_id: 'track_def_123',
-      title: 'Test Track 3',
     },
   ]
 
@@ -88,7 +82,7 @@ describe('Stop track', () => {
       careflowTracks: {
         __args: {
           careflow_id: 'pathway_123',
-          statuses: ['ACTIVE', 'SCHEDULED', 'POSTPONED'],
+          statuses: ['active'],
         },
         tracks: {
           id: true,
@@ -99,8 +93,8 @@ describe('Stop track', () => {
       },
     })
 
-    // Should call mutation twice - once for each active/scheduled track
-    expect(sdkMock.orchestration.mutation).toHaveBeenCalledTimes(2)
+    // Should call mutation once, only for the active track.
+    expect(sdkMock.orchestration.mutation).toHaveBeenCalledTimes(1)
     expect(sdkMock.orchestration.mutation).toHaveBeenCalledWith({
       stopTrack: {
         __args: {
@@ -113,31 +107,12 @@ describe('Stop track', () => {
         success: true,
       },
     })
-    expect(sdkMock.orchestration.mutation).toHaveBeenCalledWith({
-      stopTrack: {
-        __args: {
-          input: {
-            track_id: 'track_instance_2',
-            pathway_id: 'pathway_123',
-          },
-        },
-        code: true,
-        success: true,
-      },
-    })
-
     expect(onComplete).toHaveBeenCalledWith({
       events: [
         {
           date: expect.any(String),
           text: {
             en: 'Track Test Track 1 with ID track_instance_1 successfully stopped.',
-          },
-        },
-        {
-          date: expect.any(String),
-          text: {
-            en: 'Track Test Track 2 with ID track_instance_2 successfully stopped.',
           },
         },
       ],
@@ -151,7 +126,7 @@ describe('Stop track', () => {
         tracks: [
           {
             id: 'track_instance_1',
-            status: 'COMPLETED',
+            status: 'completed',
             definition_id: 'track_def_123',
             title: 'Completed Track',
           },
@@ -191,15 +166,15 @@ describe('Stop track', () => {
     expect(onError).not.toHaveBeenCalled()
   })
 
-  test('Should handle postponed tracks as active tracks', async () => {
+  test('Should not stop active tracks for a different definition', async () => {
     sdkMock.orchestration.query.mockResolvedValue({
       careflowTracks: {
         tracks: [
           {
             id: 'track_instance_1',
-            status: 'POSTPONED',
-            definition_id: 'track_def_123',
-            title: 'Postponed Track',
+            status: 'active',
+            definition_id: 'track_def_456',
+            title: 'Different Track',
           },
         ],
       },
@@ -221,26 +196,28 @@ describe('Stop track', () => {
       attempt: 1,
     })
 
-    expect(sdkMock.orchestration.mutation).toHaveBeenCalledTimes(1)
-    expect(sdkMock.orchestration.mutation).toHaveBeenCalledWith({
-      stopTrack: {
+    expect(sdkMock.orchestration.query).toHaveBeenCalledWith({
+      careflowTracks: {
         __args: {
-          input: {
-            track_id: 'track_instance_1',
-            pathway_id: 'pathway_123',
-          },
+          careflow_id: 'pathway_123',
+          statuses: ['active'],
         },
-        code: true,
-        success: true,
+        tracks: {
+          id: true,
+          status: true,
+          definition_id: true,
+          title: true,
+        },
       },
     })
+    expect(sdkMock.orchestration.mutation).not.toHaveBeenCalled()
 
     expect(onComplete).toHaveBeenCalledWith({
       events: [
         {
           date: expect.any(String),
           text: {
-            en: 'Track Postponed Track with ID track_instance_1 successfully stopped.',
+            en: 'No active track found with definition ID track_def_123 in care flow pathway_123.',
           },
         },
       ],
