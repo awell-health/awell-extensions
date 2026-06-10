@@ -1,6 +1,6 @@
 import { TestHelpers } from '@awell-health/extensions-core'
 import { generateTestPayload } from '../../../../../tests/constants'
-import { ElementStatus, ElementType } from '../../gql/graphql'
+import { ElementStatus } from '../../gql/graphql'
 import { isPatientEnrolledInTrack as actionInterface } from './isPatientEnrolledInTrack'
 import { FieldsValidationSchema } from './config'
 
@@ -39,25 +39,22 @@ describe('Is patient enrolled in track action', () => {
     const sdkMock = {
       orchestration: {
         query: jest.fn().mockResolvedValue({
-          pathwayElements: {
-            elements: [
+          careflowTracks: {
+            tracks: [
               {
                 definition_id: 'test-track-definition-id',
-                type: ElementType.Track,
                 status: ElementStatus.Active,
                 start_date: '2023-01-01T00:00:00Z',
                 end_date: null,
               },
               {
                 definition_id: 'test-track-definition-id',
-                type: ElementType.Track,
                 status: ElementStatus.Done,
                 start_date: '2022-12-01T00:00:00Z',
                 end_date: '2022-12-31T23:59:59Z',
               },
               {
                 definition_id: 'test-track-definition-id',
-                type: ElementType.Track,
                 status: ElementStatus.Scheduled,
                 start_date: '2024-01-01T00:00:00Z',
                 end_date: null,
@@ -101,11 +98,10 @@ describe('Is patient enrolled in track action', () => {
     const sdkMock = {
       orchestration: {
         query: jest.fn().mockResolvedValue({
-          pathwayElements: {
-            elements: [
+          careflowTracks: {
+            tracks: [
               {
                 definition_id: 'different-track-definition-id',
-                type: ElementType.Track,
                 status: ElementStatus.Active,
                 start_date: '2023-01-01T00:00:00Z',
                 end_date: null,
@@ -149,18 +145,16 @@ describe('Is patient enrolled in track action', () => {
     const sdkMock = {
       orchestration: {
         query: jest.fn().mockResolvedValue({
-          pathwayElements: {
-            elements: [
+          careflowTracks: {
+            tracks: [
               {
                 definition_id: 'test-track-definition-id',
-                type: ElementType.Track,
                 status: ElementStatus.Scheduled,
                 start_date: '2024-03-01T00:00:00Z',
                 end_date: null,
               },
               {
                 definition_id: 'test-track-definition-id',
-                type: ElementType.Track,
                 status: ElementStatus.Scheduled,
                 start_date: '2024-01-01T00:00:00Z', // Earlier date
                 end_date: null,
@@ -199,11 +193,11 @@ describe('Is patient enrolled in track action', () => {
     })
   })
 
-  test('Should call pathwayElements query with correct parameters', async () => {
+  test('Should call careflowTracks query with correct parameters', async () => {
     const sdkMock = {
       orchestration: {
         query: jest.fn().mockResolvedValue({
-          pathwayElements: { elements: [] },
+          careflowTracks: { tracks: [] },
         }),
       },
     }
@@ -227,13 +221,17 @@ describe('Is patient enrolled in track action', () => {
     })
 
     expect(sdkMock.orchestration.query).toHaveBeenCalledWith({
-      pathwayElements: {
+      careflowTracks: {
         __args: {
-          pathway_id: 'test-pathway-id',
+          careflow_id: 'test-pathway-id',
+          statuses: [
+            ElementStatus.Active,
+            ElementStatus.Done,
+            ElementStatus.Scheduled,
+          ],
         },
-        elements: {
+        tracks: {
           definition_id: true,
-          type: true,
           status: true,
           start_date: true,
           end_date: true,

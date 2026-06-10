@@ -29,26 +29,27 @@ export const stopTrack: Action<typeof fields, typeof settings> = {
     })
 
     const awellSdk = await helpers.awellSdk()
-    const elementsResponse = await awellSdk.orchestration.query({
-      pathwayElements: {
+    const stoppableTrackStatuses = ['ACTIVE', 'SCHEDULED', 'POSTPONED']
+    const tracksResponse = await awellSdk.orchestration.query({
+      careflowTracks: {
         __args: {
-          pathway_id: careFlowId,
+          careflow_id: careFlowId,
+          statuses: stoppableTrackStatuses,
         },
-        elements: {
+        tracks: {
           id: true,
           status: true,
           definition_id: true,
-          name: true,
+          title: true,
         },
       },
     })
-    const activeTracks = elementsResponse.pathwayElements?.elements?.filter(
-      (element) =>
-        element.definition_id === trackDefinitionId &&
-        (element.status === 'ACTIVE' ||
-          element.status === 'SCHEDULED' ||
-          element.status === 'POSTPONED'),
-    )
+    const activeTracks =
+      tracksResponse.careflowTracks?.tracks?.filter(
+        (track) =>
+          track.definition_id === trackDefinitionId &&
+          stoppableTrackStatuses.includes(track.status),
+      ) ?? []
     if (activeTracks.length > 0) {
       const events = []
       for (const activeTrack of activeTracks) {
@@ -66,7 +67,7 @@ export const stopTrack: Action<typeof fields, typeof settings> = {
         })
         events.push(
           addActivityEventLog({
-            message: `Track ${activeTrack.name} with ID ${activeTrack.id} successfully stopped.`,
+            message: `Track ${activeTrack.title} with ID ${activeTrack.id} successfully stopped.`,
           }),
         )
       }

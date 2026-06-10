@@ -8,7 +8,7 @@ import {
   dataPoints,
 } from './config'
 import z from 'zod'
-import { ElementType, ElementStatus } from '../../gql/graphql'
+import { ElementStatus } from '../../gql/graphql'
 import { isNil } from 'lodash'
 
 export const isPatientEnrolledInTrack: Action<typeof fields, typeof settings> =
@@ -36,14 +36,18 @@ export const isPatientEnrolledInTrack: Action<typeof fields, typeof settings> =
 
       const sdk = await helpers.awellSdk()
 
-      const elementsResponse = await sdk.orchestration.query({
-        pathwayElements: {
+      const tracksResponse = await sdk.orchestration.query({
+        careflowTracks: {
           __args: {
-            pathway_id: pathwayId,
+            careflow_id: pathwayId,
+            statuses: [
+              ElementStatus.Active,
+              ElementStatus.Done,
+              ElementStatus.Scheduled,
+            ],
           },
-          elements: {
+          tracks: {
             definition_id: true,
-            type: true,
             status: true,
             start_date: true,
             end_date: true,
@@ -51,12 +55,9 @@ export const isPatientEnrolledInTrack: Action<typeof fields, typeof settings> =
         },
       })
 
-      // Filter for track elements that match the specified definition ID
       const trackElements =
-        elementsResponse.pathwayElements?.elements?.filter(
-          (element) =>
-            element.type === ElementType.Track &&
-            element.definition_id === trackDefinitionId,
+        tracksResponse.careflowTracks?.tracks?.filter(
+          (track) => track.definition_id === trackDefinitionId,
         ) ?? []
 
       // Find if the patient has been enrolled in the track
