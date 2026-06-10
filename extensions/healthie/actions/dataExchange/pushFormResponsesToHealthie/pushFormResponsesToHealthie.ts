@@ -50,6 +50,14 @@ export const pushFormResponsesToHealthie: Action<
       log: helpers.log,
     })
 
+    helpers.log(
+      {
+        activityId: activity.id,
+        formsData,
+      },
+      '[pushFormResponsesToHealthie] Forms data',
+    )
+
     const formDataWithHealthieFormAnswers = formsData.map((formData) => {
       helpers.log(
         {
