@@ -8,32 +8,32 @@ describe('Stop track', () => {
   const { onComplete, onError, helpers, extensionAction, clearMocks } =
     TestHelpers.fromAction(stopTrack)
 
-  const mockPathwayElements = [
+  const mockCareflowTracks = [
     {
       id: 'track_instance_1',
       status: 'ACTIVE',
       definition_id: 'track_def_123',
-      name: 'Test Track 1',
+      title: 'Test Track 1',
     },
     {
       id: 'track_instance_2',
       status: 'SCHEDULED',
       definition_id: 'track_def_123',
-      name: 'Test Track 2',
+      title: 'Test Track 2',
     },
     {
       id: 'track_instance_3',
       status: 'COMPLETED',
       definition_id: 'track_def_123',
-      name: 'Test Track 3',
+      title: 'Test Track 3',
     },
   ]
 
   const sdkMock = {
     orchestration: {
       query: jest.fn().mockResolvedValue({
-        pathwayElements: {
-          elements: mockPathwayElements,
+        careflowTracks: {
+          tracks: mockCareflowTracks,
         },
       }),
       mutation: jest.fn().mockResolvedValue({
@@ -54,8 +54,8 @@ describe('Stop track', () => {
     sdkMock.orchestration.mutation.mockClear()
     helpers.awellSdk = jest.fn().mockResolvedValue(sdkMock)
     sdkMock.orchestration.query.mockResolvedValue({
-      pathwayElements: {
-        elements: mockPathwayElements,
+      careflowTracks: {
+        tracks: mockCareflowTracks,
       },
     })
     sdkMock.orchestration.mutation.mockResolvedValue({
@@ -85,15 +85,16 @@ describe('Stop track', () => {
 
     expect(helpers.awellSdk).toHaveBeenCalledTimes(1)
     expect(sdkMock.orchestration.query).toHaveBeenCalledWith({
-      pathwayElements: {
+      careflowTracks: {
         __args: {
-          pathway_id: 'pathway_123',
+          careflow_id: 'pathway_123',
+          statuses: ['ACTIVE', 'SCHEDULED', 'POSTPONED'],
         },
-        elements: {
+        tracks: {
           id: true,
           status: true,
           definition_id: true,
-          name: true,
+          title: true,
         },
       },
     })
@@ -146,13 +147,13 @@ describe('Stop track', () => {
 
   test('Should handle case when no active tracks are found', async () => {
     sdkMock.orchestration.query.mockResolvedValue({
-      pathwayElements: {
-        elements: [
+      careflowTracks: {
+        tracks: [
           {
             id: 'track_instance_1',
             status: 'COMPLETED',
             definition_id: 'track_def_123',
-            name: 'Completed Track',
+            title: 'Completed Track',
           },
         ],
       },
@@ -192,13 +193,13 @@ describe('Stop track', () => {
 
   test('Should handle postponed tracks as active tracks', async () => {
     sdkMock.orchestration.query.mockResolvedValue({
-      pathwayElements: {
-        elements: [
+      careflowTracks: {
+        tracks: [
           {
             id: 'track_instance_1',
             status: 'POSTPONED',
             definition_id: 'track_def_123',
-            name: 'Postponed Track',
+            title: 'Postponed Track',
           },
         ],
       },

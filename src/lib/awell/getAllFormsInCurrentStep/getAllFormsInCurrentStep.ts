@@ -131,6 +131,7 @@ export const getAllFormsInCurrentStep: GetAllFormsInCurrentStep = async ({
   })
 
   logDebug(log, 'Fetched pathway step activities', {
+    activityId,
     pathwayId,
     stepId: currentStepId,
     totalActivities: activities.pathwayStepActivities.activities.length,
@@ -181,6 +182,7 @@ export const getAllFormsInCurrentStep: GetAllFormsInCurrentStep = async ({
     })
 
     logDebug(log, 'Fetched form definition', {
+      activityId,
       formActivityId: formActivity.id,
       formId: formActivity.object.id,
       questionCount: formDefinition.form.form?.questions.length ?? 0,
@@ -201,6 +203,7 @@ export const getAllFormsInCurrentStep: GetAllFormsInCurrentStep = async ({
     })
 
     logDebug(log, 'Fetched form response', {
+      activityId,
       formActivityId: formActivity.id,
       formId: formActivity.object.id,
       answerCount: formResponse.formResponse.response.answers.length,
