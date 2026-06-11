@@ -55,6 +55,8 @@ export const getCallDetails: Action<
           ? undefined
           : JSON.stringify(data.transcripts),
         status: data.status,
+        answeredBy: data.answered_by ?? '',
+        errorMessage: data.error_message ?? '',
       },
     })
   },

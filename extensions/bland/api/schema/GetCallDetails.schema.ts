@@ -20,7 +20,7 @@ export const GetCallDetailsResponseSchema = z.object({
   max_duration: z.number(),
   error_message: z.string().nullable(),
   variables: z.record(z.string(), z.unknown()),
-  answered_by: z.string(),
+  answered_by: z.string().nullable(),
   record: z.boolean(),
   recording_url: z.string().nullable(),
   metadata: z.record(z.string(), z.unknown()),
