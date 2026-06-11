@@ -57,4 +57,12 @@ export const dataPoints = {
     key: 'status',
     valueType: 'string',
   },
+  answeredBy: {
+    key: 'answeredBy',
+    valueType: 'string',
+  },
+  errorMessage: {
+    key: 'errorMessage',
+    valueType: 'string',
+  },
 } satisfies Record<string, DataPointDefinition>
