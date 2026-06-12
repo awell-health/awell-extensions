@@ -1,7 +1,6 @@
 import { type Action } from '@awell-health/extensions-core'
 import { Category, validate } from '@awell-health/extensions-core'
 import { z } from 'zod'
-import { isNil } from 'lodash'
 import { settings as settingsDefinition, SettingsValidationSchema } from '../../settings'
 import { FieldsValidationSchema, dataPoints, fields } from './config'
 
@@ -29,7 +28,7 @@ export const createTask: Action<
           requester,
           launchUrl,
         },
-        settings: { apiUrl, apiKey },
+        settings: { apiUrl, tasksIngestToken },
       } = validate({
         schema: z.object({
           fields: FieldsValidationSchema,
@@ -42,15 +41,15 @@ export const createTask: Action<
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          ...(isNil(apiKey) ? {} : { 'x-demo-key': apiKey }),
+          Authorization: `Bearer ${tasksIngestToken}`,
         },
         body: JSON.stringify({
-          patientId,
-          patientName,
+          patient_id: patientId,
+          patient_name: patientName,
           title,
           description,
           requester: requester ?? 'ZTOP',
-          launchUrl,
+          launch_url: launchUrl,
         }),
       })
 

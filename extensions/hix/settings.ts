@@ -10,17 +10,17 @@ export const settings = {
     description:
       'The full URL of the HiX task endpoint (e.g. the "incoming-task" endpoint of the demo environment).',
   },
-  apiKey: {
-    label: 'API key',
-    key: 'apiKey',
+  tasksIngestToken: {
+    label: 'Tasks ingest token',
+    key: 'tasksIngestToken',
     obfuscated: true,
-    required: false,
+    required: true,
     description:
-      'Optional shared secret, sent as the "x-demo-key" header on every request.',
+      'Bearer token sent as the "Authorization" header on every request. Must match the TASKS_INGEST_TOKEN secret configured on the endpoint.',
   },
 } satisfies Record<string, Setting>
 
 export const SettingsValidationSchema = z.object({
   apiUrl: z.string().url({ message: 'API URL must be a valid URL' }),
-  apiKey: z.string().optional(),
+  tasksIngestToken: z.string().min(1),
 } satisfies Record<keyof typeof settings, ZodTypeAny>)
