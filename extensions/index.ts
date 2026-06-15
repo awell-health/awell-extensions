@@ -27,6 +27,7 @@ import { freshdesk } from './freshdesk'
 import { freshsales } from './freshsales'
 import { Gridspace } from './gridspace'
 import { Healthie } from './healthie'
+import { hix } from './hix'
 import { HelloWorld } from './hello-world'
 import { hubspot } from './hubspot'
 import { identityVerification } from './identityVerification'
@@ -95,6 +96,7 @@ export const extensions = [
   freshsales,
   Gridspace,
   Healthie,
+  hix,
   HelloWorld,
   hubspot,
   identityVerification,
