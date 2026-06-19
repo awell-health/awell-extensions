@@ -10,7 +10,7 @@ export const fields = {
     label: 'Communication Objective',
     description:
       'Provide the main purpose of the message. Add any important message context.',
-    type: FieldType.STRING,
+    type: FieldType.TEXT,
     required: true,
   },
   personalizationInput: {
@@ -18,7 +18,7 @@ export const fields = {
     label: 'Personalization Input',
     description:
       '[Optional] Specify the personalization input for the message (name, age, gender, date of the last checkup, etc). This is used to personalize the message to the recipient.',
-    type: FieldType.STRING,
+    type: FieldType.TEXT,
     required: false,
   },
   stakeholder: {

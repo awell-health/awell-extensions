@@ -7,7 +7,7 @@ export const fields = {
     label: 'Additional instructions',
     description:
       'Specify additional instructions for summarization, for example format, length, what to focus on etc. If not specified, default instructions will be used.',
-    type: FieldType.STRING,
+    type: FieldType.TEXT,
     required: false,
   },
   stakeholder: {
