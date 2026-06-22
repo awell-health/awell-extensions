@@ -79,17 +79,18 @@ const languageDetectionEvaluator = async ({
   outputs,
 }: EvaluatorInput): Promise<EvaluatorOutput> => {
   const detectedLanguage = outputs?.detectedLanguage as string
-  
+
   // Check if language is detected and not empty
-  const isDetected = typeof detectedLanguage === 'string' && detectedLanguage.trim().length > 0
-  
-  return { 
-    key: 'language_detected', 
+  const isDetected =
+    typeof detectedLanguage === 'string' && detectedLanguage.trim().length > 0
+
+  return {
+    key: 'language_detected',
     score: isDetected ? 1 : 0,
     metadata: {
       detectedLanguage,
-      isDetected
-    }
+      isDetected,
+    },
   }
 }
 
@@ -130,7 +131,7 @@ const detectLanguageWithLLMWrapper = async (
     settings: payload.settings,
     helpers,
     payload,
-    modelType: OPENAI_MODELS.GPT4o,
+    modelType: OPENAI_MODELS.GPT5Mini,
   })
 
   const detectedLanguage = await detectLanguageWithLLM({
@@ -162,7 +163,9 @@ const runEvaluation = async (): Promise<void> => {
     const resultsArray = Array.isArray(results) ? results : [results]
     const experimentId = resultsArray[0]?.run?.run_id as string
 
-    console.log('\n✨ Experiment Run Complete! Actual evaluation is running in LangSmith via custom evaluator.')
+    console.log(
+      '\n✨ Experiment Run Complete! Actual evaluation is running in LangSmith via custom evaluator.',
+    )
     console.log('View detailed results in LangSmith:')
     console.log(`https://smith.langchain.com/runs/${experimentId}`)
   } catch (error) {
@@ -172,4 +175,4 @@ const runEvaluation = async (): Promise<void> => {
 }
 
 // Execute the evaluation
-void runEvaluation() 
+void runEvaluation()

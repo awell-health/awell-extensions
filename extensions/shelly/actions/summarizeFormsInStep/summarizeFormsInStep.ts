@@ -33,7 +33,7 @@ export const summarizeFormsInStep: Action<
       settings: {}, // we use built-in API key for OpenAI
       helpers,
       payload,
-      modelType: OPENAI_MODELS.GPT4o,
+      modelType: OPENAI_MODELS.GPT5Mini,
       hideDataForTracing: true, // Hide input and output data when tracing
     })
 
@@ -51,7 +51,7 @@ export const summarizeFormsInStep: Action<
 
     // Determine which language to use for summarization
     let summaryLanguage = language
-    
+
     // If language is set to 'Default', detect the language
     if (language === 'Default') {
       try {

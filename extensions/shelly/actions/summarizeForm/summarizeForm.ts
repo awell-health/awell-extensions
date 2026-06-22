@@ -58,7 +58,7 @@ export const summarizeForm: Action<
       settings: {}, // we use built-in API key for OpenAI
       helpers,
       payload,
-      modelType: OPENAI_MODELS.GPT4o,
+      modelType: OPENAI_MODELS.GPT5Mini,
       hideDataForTracing: true, // Hide input and output data when tracing
     })
 

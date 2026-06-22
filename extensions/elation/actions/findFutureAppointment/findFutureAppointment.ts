@@ -52,7 +52,7 @@ export const findFutureAppointment: Action<
       settings: {}, // we use built-in API key for OpenAI
       helpers,
       payload,
-      modelType: OPENAI_MODELS.GPT4o,
+      modelType: OPENAI_MODELS.GPT5Mini,
     })
 
     // 4. Extract date information from the prompt

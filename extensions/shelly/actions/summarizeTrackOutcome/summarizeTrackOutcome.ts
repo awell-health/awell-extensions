@@ -18,7 +18,8 @@ export const summarizeTrackOutcome: Action<
   key: 'summarizeTrackOutcome',
   category: Category.WORKFLOW,
   title: 'Summarize Track Outcome',
-  description: 'Summarize the care flow track outcome and activities that led to the outcome',
+  description:
+    'Summarize the care flow track outcome and activities that led to the outcome',
   fields,
   previewable: false,
   dataPoints,
@@ -33,29 +34,28 @@ export const summarizeTrackOutcome: Action<
       settings: {}, // we use built-in API key for OpenAI
       helpers,
       payload,
-      modelType: OPENAI_MODELS.GPT4o,
-      hideDataForTracing: false, // IMPORTANT: set to true if there is a use case that might include PHI 
+      modelType: OPENAI_MODELS.GPT5Mini,
+      hideDataForTracing: false, // IMPORTANT: set to true if there is a use case that might include PHI
     })
 
     const awellSdk = await helpers.awellSdk()
 
     // Get activity details to find track_id
     const activityId = payload.activity.id
-    const activityDetails = await awellSdk.orchestration
-      .query({
+    const activityDetails = await awellSdk.orchestration.query({
+      activity: {
+        __args: {
+          id: activityId,
+        },
+        success: true,
         activity: {
-          __args: {
-            id: activityId,
-          },
-          success: true,
-          activity: {
-            id: true,
-            context: {
-              track_id: true,
-            },
+          id: true,
+          context: {
+            track_id: true,
           },
         },
-      })
+      },
+    })
 
     const currentActivity = activityDetails?.activity?.activity
 
@@ -88,13 +88,13 @@ export const summarizeTrackOutcome: Action<
 
     // Get care flow details for the disclaimer
     const careFlowDetails = await getCareFlowDetails(awellSdk, pathway.id)
-    
+
     // Create version string if version is available
-    let disclaimerMsg = '';
+    let disclaimerMsg = ''
     if (!isNil(careFlowDetails.version)) {
-      disclaimerMsg = `**Important Notice:** The content provided is an AI-generated summary of version ${careFlowDetails.version} of Care Flow "${careFlowDetails.title}" (ID: ${pathway.id}).`;
+      disclaimerMsg = `**Important Notice:** The content provided is an AI-generated summary of version ${careFlowDetails.version} of Care Flow "${careFlowDetails.title}" (ID: ${pathway.id}).`
     } else {
-      disclaimerMsg = `**Important Notice:** The content provided is an AI-generated summary of Care Flow "${careFlowDetails.title}" (ID: ${pathway.id}).`;
+      disclaimerMsg = `**Important Notice:** The content provided is an AI-generated summary of Care Flow "${careFlowDetails.title}" (ID: ${pathway.id}).`
     }
 
     const htmlSummary = await markdownToHtml(`${disclaimerMsg}\n\n${summary}`)
@@ -105,9 +105,9 @@ export const summarizeTrackOutcome: Action<
       },
       events: [
         addActivityEventLog({
-          message: `Processing track data with ${trackData.steps.length} steps and ${trackData.steps.flatMap(step => step.activities).length} total activities (hard limit is 500)`,
+          message: `Processing track data with ${trackData.steps.length} steps and ${trackData.steps.flatMap((step) => step.activities).length} total activities (hard limit is 500)`,
         }),
       ],
     })
   },
-} 
+}

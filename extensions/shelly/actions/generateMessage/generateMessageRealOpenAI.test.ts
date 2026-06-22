@@ -33,7 +33,7 @@ describe.skip('generateMessage - Real OpenAI calls', () => {
       settings: payload.settings,
       helpers,
       payload,
-      modelType: OPENAI_MODELS.GPT4o,
+      modelType: OPENAI_MODELS.GPT5Mini,
     })
 
     await extensionAction.onEvent({
@@ -81,7 +81,7 @@ describe.skip('generateMessage - Real OpenAI calls', () => {
       settings: payload.settings,
       helpers,
       payload,
-      modelType: OPENAI_MODELS.GPT4o,
+      modelType: OPENAI_MODELS.GPT5Mini,
     })
 
     await extensionAction.onEvent({

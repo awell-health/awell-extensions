@@ -41,7 +41,7 @@ export const generateMessage: Action<
       settings: {}, // we use built-in API key for OpenAI
       helpers,
       payload,
-      modelType: OPENAI_MODELS.GPT4o, // Using GPT4 for high-quality message generation
+      modelType: OPENAI_MODELS.GPT5Mini, // Using GPT-5 Mini for message generation
     })
 
     // 3. Generate message

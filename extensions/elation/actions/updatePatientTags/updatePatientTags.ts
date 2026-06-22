@@ -44,7 +44,7 @@ export const updatePatientTags: Action<
       settings: {}, // we use built-in API key for OpenAI
       helpers,
       payload,
-      modelType: OPENAI_MODELS.GPT4o,
+      modelType: OPENAI_MODELS.GPT5Mini,
     })
 
     // 4. Generate updated tags
