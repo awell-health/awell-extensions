@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { StructuredOutputParser } from 'langchain/output_parsers'
+import { StructuredOutputParser } from '@langchain/core/output_parsers'
 
 export const CheckTagsOutputSchema = z.object({
   tagsFound: z.boolean(),
@@ -8,4 +8,6 @@ export const CheckTagsOutputSchema = z.object({
 
 export type CheckTagsOutput = z.infer<typeof CheckTagsOutputSchema>
 
-export const parser = StructuredOutputParser.fromZodSchema(CheckTagsOutputSchema) 
+export const parser = StructuredOutputParser.fromZodSchema(
+  CheckTagsOutputSchema,
+)

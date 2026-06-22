@@ -83,17 +83,17 @@ const summaryProvidedEvaluator = async ({
   outputs,
 }: EvaluatorInput): Promise<EvaluatorOutput> => {
   const summary = outputs?.summary as string
-  
+
   // Check if summary is provided and not empty
   const isProvided = typeof summary === 'string' && summary.trim().length > 0
-  
-  return { 
-    key: 'summary_provided', 
+
+  return {
+    key: 'summary_provided',
     score: isProvided ? 1 : 0,
     metadata: {
       summaryLength: typeof summary === 'string' ? summary.length : 0,
-      hasSummary: isProvided
-    }
+      hasSummary: isProvided,
+    },
   }
 }
 
@@ -137,7 +137,7 @@ const summarizeFormWithLLMWrapper = async (
     settings: payload.settings,
     helpers,
     payload,
-    modelType: OPENAI_MODELS.GPT4o,
+    modelType: OPENAI_MODELS.GPT5Mini,
   })
 
   const summary = await summarizeFormWithLLM({
@@ -172,7 +172,9 @@ const runEvaluation = async (): Promise<void> => {
     const resultsArray = Array.isArray(results) ? results : [results]
     const experimentId = resultsArray[0]?.run?.run_id as string
 
-    console.log('\n✨ Experiment Run Complete! Actual evaluation is running in LangSmith via LLM as judges.')
+    console.log(
+      '\n✨ Experiment Run Complete! Actual evaluation is running in LangSmith via LLM as judges.',
+    )
     console.log('View detailed results in LangSmith:')
     console.log(`https://smith.langchain.com/runs/${experimentId}`)
   } catch (error) {
@@ -182,4 +184,4 @@ const runEvaluation = async (): Promise<void> => {
 }
 
 // Execute the evaluation
-void runEvaluation() 
+void runEvaluation()

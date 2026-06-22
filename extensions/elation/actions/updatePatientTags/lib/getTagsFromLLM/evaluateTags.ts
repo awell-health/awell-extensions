@@ -132,7 +132,7 @@ const getTagsFromLLMWrapper = async (
     settings: payload.settings,
     helpers,
     payload,
-    modelType: OPENAI_MODELS.GPT4o,
+    modelType: OPENAI_MODELS.GPT5Mini,
   })
 
   return await getTagsFromLLM({

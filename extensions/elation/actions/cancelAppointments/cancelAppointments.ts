@@ -59,7 +59,7 @@ export const cancelAppointments: Action<
         settings: {}, // we use built-in API key for OpenAI
         helpers,
         payload,
-        modelType: OPENAI_MODELS.GPT4o,
+        modelType: OPENAI_MODELS.GPT5Mini,
       })
 
       // Extract date information from the prompt
@@ -88,11 +88,11 @@ export const cancelAppointments: Action<
           (isNil(from) ||
             isAfter(parseISO(appointment.scheduled_date), parseISO(from))) &&
           (isNil(to) ||
-            isBefore(parseISO(appointment.scheduled_date), parseISO(to)))
+            isBefore(parseISO(appointment.scheduled_date), parseISO(to))),
       )
 
       const appointmentIdsToCancel = appointmentsToCancel.map(
-        (appointment) => appointment.id
+        (appointment) => appointment.id,
       )
 
       // If no appointments match the criteria after filtering, return early
@@ -100,8 +100,10 @@ export const cancelAppointments: Action<
         await onComplete({
           data_points: {
             cancelledAppointments: JSON.stringify([]),
-            explanation: isNil(htmlExplanation) ? 'No matching appointments found to cancel.' : htmlExplanation,
-          }
+            explanation: isNil(htmlExplanation)
+              ? 'No matching appointments found to cancel.'
+              : htmlExplanation,
+          },
         })
         return
       }
@@ -112,13 +114,13 @@ export const cancelAppointments: Action<
           try {
             // Find the original appointment to get all its fields
             const appointmentToCancel = appointmentsToCancel.find(
-              (appointment) => appointment.id === appointmentId
+              (appointment) => appointment.id === appointmentId,
             )
-            
+
             if (isNil(appointmentToCancel)) {
               throw new Error(`Appointment ${appointmentId} not found`)
             }
-            
+
             // Elation API requires all these fields in the update request, as their API doesn't support partial updates.
             // We need to include the original values for fields we don't want to change (known limitation in their API).
             // The API only allows status_detail for 'Not Seen' status, not for 'Cancelled'.
@@ -126,7 +128,7 @@ export const cancelAppointments: Action<
               status: {
                 status: 'Cancelled' as const,
                 status_date: new Date().toISOString(),
-                room: appointmentToCancel.status?.room  // Keep the original room value if any
+                room: appointmentToCancel.status?.room, // Keep the original room value if any
               },
               service_location: appointmentToCancel.service_location?.id,
               patient: appointmentToCancel.patient,
@@ -136,14 +138,17 @@ export const cancelAppointments: Action<
               reason: appointmentToCancel.reason,
               duration: appointmentToCancel.duration,
             }
-            
+
             await api.updateAppointment(appointmentId, updateData)
             return { appointmentId, status: 'success' }
           } catch (error) {
-            console.error(`Error canceling appointment ${appointmentId}:`, error)
+            console.error(
+              `Error canceling appointment ${appointmentId}:`,
+              error,
+            )
             return { appointmentId, status: 'error' }
           }
-        })
+        }),
       )
 
       const failedCancellations = trace.filter((t) => t.status === 'error')

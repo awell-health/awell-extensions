@@ -1,4 +1,4 @@
-import { StructuredOutputParser } from 'langchain/output_parsers'
+import { StructuredOutputParser } from '@langchain/core/output_parsers'
 import { z } from 'zod'
 
 /**
@@ -24,6 +24,10 @@ const parseStructuredDataSchema = z.object({
     .describe('Brief explanation of the extraction process'),
 })
 
-export type ParseStructuredDataOutput = z.infer<typeof parseStructuredDataSchema>
+export type ParseStructuredDataOutput = z.infer<
+  typeof parseStructuredDataSchema
+>
 
-export const parser = StructuredOutputParser.fromZodSchema(parseStructuredDataSchema)
+export const parser = StructuredOutputParser.fromZodSchema(
+  parseStructuredDataSchema,
+)

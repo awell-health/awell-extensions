@@ -25,8 +25,6 @@ export const getDefaultConfig = (
  * Use these constants instead of raw strings when specifying models.
  */
 export const OPENAI_MODELS = {
-  GPT4o: 'gpt-4o',
-  GPT4oMini: 'gpt-4o-mini',
   GPT5Mini: 'gpt-5-mini',
 } as const
 
@@ -36,7 +34,5 @@ export const OPENAI_MODELS = {
  * consistent behavior over time as models are updated.
  */
 export const MODEL_VERSIONS = {
-  [OPENAI_MODELS.GPT4o]: 'gpt-4o-2024-08-06',
-  [OPENAI_MODELS.GPT4oMini]: 'gpt-4o-mini-2024-07-18',
   [OPENAI_MODELS.GPT5Mini]: 'gpt-5-mini-2025-08-07',
 } as const

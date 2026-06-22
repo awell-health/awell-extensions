@@ -83,23 +83,25 @@ const appointmentsMatchEvaluator = async ({
   outputs,
   referenceOutputs,
 }: EvaluatorInput): Promise<EvaluatorOutput> => {
-  
   const generatedAppointmentIds = outputs?.appointmentIds as number[]
-  const expectedAppointmentIds = referenceOutputs?.expected_output_appointment_ids as number[]
+  const expectedAppointmentIds =
+    referenceOutputs?.expected_output_appointment_ids as number[]
 
   const isEqual =
     Array.isArray(generatedAppointmentIds) &&
     Array.isArray(expectedAppointmentIds) &&
     generatedAppointmentIds.length === expectedAppointmentIds.length &&
-    generatedAppointmentIds.every((id, index) => id === expectedAppointmentIds[index])
+    generatedAppointmentIds.every(
+      (id, index) => id === expectedAppointmentIds[index],
+    )
 
-  return { 
-    key: 'appointments_match', 
+  return {
+    key: 'appointments_match',
     score: isEqual ? 1 : 0,
     metadata: {
       generatedIds: generatedAppointmentIds,
-      expectedIds: expectedAppointmentIds
-    }
+      expectedIds: expectedAppointmentIds,
+    },
   }
 }
 
@@ -141,7 +143,7 @@ const findAppointmentsWithLLMWrapper = async (
     settings: payload.settings,
     helpers,
     payload,
-    modelType: OPENAI_MODELS.GPT4o,
+    modelType: OPENAI_MODELS.GPT5Mini,
   })
 
   return await findAppointmentsWithLLM({

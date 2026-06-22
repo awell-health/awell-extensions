@@ -82,17 +82,17 @@ const summaryProvidedEvaluator = async ({
   outputs,
 }: EvaluatorInput): Promise<EvaluatorOutput> => {
   const summary = outputs?.summary as string
-  
+
   // Check if summary is provided and not empty
   const isProvided = typeof summary === 'string' && summary.trim().length > 0
-  
-  return { 
-    key: 'summary_provided', 
+
+  return {
+    key: 'summary_provided',
     score: isProvided ? 1 : 0,
     metadata: {
       summaryLength: typeof summary === 'string' ? summary.length : 0,
-      hasSummary: isProvided
-    }
+      hasSummary: isProvided,
+    },
   }
 }
 
@@ -133,7 +133,7 @@ const summarizeTrackOutcomeWithLLMWrapper = async (
     settings: payload.settings,
     helpers,
     payload,
-    modelType: OPENAI_MODELS.GPT4o,
+    modelType: OPENAI_MODELS.GPT5Mini,
   })
 
   const summary = await summarizeTrackOutcomeWithLLM({
@@ -175,4 +175,4 @@ const runEvaluation = async (): Promise<void> => {
 }
 
 // Execute the evaluation
-void runEvaluation() 
+void runEvaluation()

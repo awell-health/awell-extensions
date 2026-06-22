@@ -61,8 +61,8 @@ export async function extractPatientInfoFromOCR(
 
   // Initialize the model
   const model = new ChatOpenAI({
-    modelName: 'gpt-4o-mini-2024-07-18',
-    openAIApiKey: apiKey,
+    model: 'gpt-5-mini-2025-08-07',
+    apiKey,
     temperature: 0, // Deterministic output for data extraction
     maxRetries: 5,
     timeout: 60000, // 60 second timeout for potentially long documents
@@ -82,9 +82,9 @@ export async function extractPatientInfoFromOCR(
 
   for (let attempt = 0; attempt < MAX_RETRIES; attempt++) {
     try {
-      result = (await chain.invoke(prompt, {
+      result = await chain.invoke(prompt, {
         runName: 'DocumoExtractPatientInfo',
-      })) as PatientInfo
+      })
       break // Success, exit retry loop
     } catch (error) {
       lastError = error instanceof Error ? error : new Error(String(error))

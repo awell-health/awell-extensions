@@ -19,7 +19,7 @@ import { type CreateOpenAIModelConfig, type OpenAIModelConfig } from './types'
  *   settings,
  *   helpers,
  *   payload,
- *   modelType: OPENAI_MODELS.GPT4oMini,
+ *   modelType: OPENAI_MODELS.GPT5Mini,
  *   hideDataForTracing: true
  * })
  * ```
@@ -28,7 +28,7 @@ export const createOpenAIModel = async ({
   settings = {},
   helpers,
   payload,
-  modelType = OPENAI_MODELS.GPT4oMini,
+  modelType = OPENAI_MODELS.GPT5Mini,
   hideDataForTracing = false,
 }: CreateOpenAIModelConfig & {
   hideDataForTracing?: boolean
@@ -42,8 +42,8 @@ export const createOpenAIModel = async ({
   }
 
   const model = new ChatOpenAI({
-    modelName: MODEL_VERSIONS[modelType],
-    openAIApiKey: apiKey,
+    model: MODEL_VERSIONS[modelType],
+    apiKey,
     ...getDefaultConfig(modelType),
   })
 

@@ -88,9 +88,9 @@ const tagCheckEvaluator = async ({
 
   // console.log('Comparing results:', { generatedResult, expectedResult }); // Debug log
 
-  return { 
-    key: 'tag_check_match', 
-    score: generatedResult === expectedResult ? 1 : 0 
+  return {
+    key: 'tag_check_match',
+    score: generatedResult === expectedResult ? 1 : 0,
   }
 }
 
@@ -132,7 +132,7 @@ const checkTagsWithLLMWrapper = async (
     settings: payload.settings,
     helpers,
     payload,
-    modelType: OPENAI_MODELS.GPT4o,
+    modelType: OPENAI_MODELS.GPT5Mini,
   })
 
   return await checkTagsWithLLM({

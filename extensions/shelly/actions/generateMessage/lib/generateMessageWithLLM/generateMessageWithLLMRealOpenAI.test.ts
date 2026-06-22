@@ -1,7 +1,7 @@
 import 'dotenv/config'
 import { generateMessageWithLLM } from '.'
 import { createOpenAIModel } from '../../../../../../src/lib/llm/openai/createOpenAIModel'
-import { OPENAI_MODELS } from '../../../../../../src/lib/llm/openai/constants'        
+import { OPENAI_MODELS } from '../../../../../../src/lib/llm/openai/constants'
 import { type AIActionMetadata } from '../../../../../../src/lib/llm/openai/types'
 
 jest.setTimeout(60000) // Increases timeout to 60 seconds for all tests in this file
@@ -14,7 +14,7 @@ describe.skip('generateMessageWithLLM with real OpenAI', () => {
       settings: {
         openAiApiKey: process.env.OPENAI_API_KEY,
       },
-      modelType: OPENAI_MODELS.GPT4o,
+      modelType: OPENAI_MODELS.GPT5Mini,
       helpers: {
         getOpenAIConfig: () => ({ apiKey: process.env.OPENAI_API_KEY ?? '' }),
       },
@@ -30,11 +30,13 @@ describe.skip('generateMessageWithLLM with real OpenAI', () => {
   it('should generate a message for a patient appointment reminder', async () => {
     const result = await generateMessageWithLLM({
       model: model.model,
-      communicationObjective: 'Remind patient of upcoming appointment. Ask patient to arrive 15 minutes early',
-      personalizationInput: 'Patient Name: John, Appointment Time: 2:00 PM tomorrow',
+      communicationObjective:
+        'Remind patient of upcoming appointment. Ask patient to arrive 15 minutes early',
+      personalizationInput:
+        'Patient Name: John, Appointment Time: 2:00 PM tomorrow',
       stakeholder: 'Patient',
       language: 'English',
-      metadata: model.metadata
+      metadata: model.metadata,
     })
 
     expect(result).toHaveProperty('subject')
@@ -48,11 +50,12 @@ describe.skip('generateMessageWithLLM with real OpenAI', () => {
   it('should generate a message for medication instructions', async () => {
     const result = await generateMessageWithLLM({
       model: model.model,
-      communicationObjective: 'Provide medication instructions. Emphasize the importance of blood pressure monitoring',
+      communicationObjective:
+        'Provide medication instructions. Emphasize the importance of blood pressure monitoring',
       personalizationInput: 'Patient Name: Sarah, Medication: Lisinopril',
       stakeholder: 'Patient',
       language: 'English',
-      metadata: model.metadata
+      metadata: model.metadata,
     })
 
     expect(result).toHaveProperty('subject')
@@ -66,11 +69,13 @@ describe.skip('generateMessageWithLLM with real OpenAI', () => {
   it('should generate a message in Spanish', async () => {
     const result = await generateMessageWithLLM({
       model: model.model,
-      communicationObjective: 'Remind patient of upcoming appointment. Ask patient to arrive 15 minutes early',
-      personalizationInput: 'Patient Name: Carlos, Appointment Time: 10:00 AM tomorrow',
+      communicationObjective:
+        'Remind patient of upcoming appointment. Ask patient to arrive 15 minutes early',
+      personalizationInput:
+        'Patient Name: Carlos, Appointment Time: 10:00 AM tomorrow',
       stakeholder: 'Patient',
       language: 'Spanish',
-      metadata: model.metadata
+      metadata: model.metadata,
     })
 
     expect(result).toHaveProperty('subject')

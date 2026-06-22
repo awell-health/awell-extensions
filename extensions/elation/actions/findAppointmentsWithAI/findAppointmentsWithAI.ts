@@ -33,7 +33,7 @@ export const findAppointmentsWithAI: Action<
     try {
       // Initialize OpenAI model for natural language processing
       const { model, metadata, callbacks } = await createOpenAIModel({
-        modelType: OPENAI_MODELS.GPT4o,
+        modelType: OPENAI_MODELS.GPT5Mini,
         settings: {},
         helpers,
         payload,

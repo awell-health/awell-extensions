@@ -34,8 +34,8 @@ interface Outputs {
 // The SDK will automatically send the inputs from the dataset to your target function
 async function wrapper(inputs: Inputs): Promise<Outputs> {
   const model = new ChatOpenAI({
-    modelName: OPENAI_MODELS.GPT4o,
-    openAIApiKey: process.env.OPENAI_API_KEY,
+    model: OPENAI_MODELS.GPT5Mini,
+    apiKey: process.env.OPENAI_API_KEY,
   })
 
   const chain = model.pipe(parser)
