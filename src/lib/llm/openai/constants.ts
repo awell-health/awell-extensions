@@ -14,7 +14,7 @@ export const getDefaultConfig = (
     default:
       return {
         temperature: 0,
-        maxRetries: 1,
+        maxRetries: 3,
         timeout: 30000,
       }
   }
