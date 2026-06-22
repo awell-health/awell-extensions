@@ -8,13 +8,13 @@ export const getDefaultConfig = (
     case OPENAI_MODELS.GPT5Mini:
       return {
         temperature: 1,
-        maxRetries: 5,
+        maxRetries: 1,
         timeout: 30000,
       }
     default:
       return {
         temperature: 0,
-        maxRetries: 5,
+        maxRetries: 1,
         timeout: 30000,
       }
   }
