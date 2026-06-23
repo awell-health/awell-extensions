@@ -45,7 +45,7 @@ const DocumentTypeUpdatedPayloadSchema = z.object({
   accountId: z.string(),
   workspaceId: z.string(),
   documentId: z.string(),
-  user: UserSchema,
+  user: UserSchema.nullable(),
   type: TypeSchema,
 })
 
@@ -70,7 +70,7 @@ export const documentTypeUpdated: Webhook<
         workspaceId: parsed.workspaceId,
         typeName: parsed.type.name,
         typeId: parsed.type.id,
-        userEmail: parsed.user.email,
+        userEmail: parsed.user?.email ?? '',
       },
     })
   },
