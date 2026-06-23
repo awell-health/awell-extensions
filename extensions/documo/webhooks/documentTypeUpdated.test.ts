@@ -70,23 +70,31 @@ describe('Documo - Webhook - Document Type Updated', () => {
     })
   })
 
-  describe('When payload has no user (invalid per schema)', () => {
-    it('should throw a ZodError during parsing', async () => {
-      await expect(
-        extensionWebhook.onEvent!({
-          payload: {
-            payload: withoutUserPayload,
-            settings: {},
-            rawBody: Buffer.from(''),
-            headers: {},
-          },
-          onSuccess,
-          onError,
-          helpers,
-        }),
-      ).rejects.toThrow()
+  describe('When payload has no user', () => {
+    it('should extract data points and set userEmail to an empty string', async () => {
+      await extensionWebhook.onEvent!({
+        payload: {
+          payload: withoutUserPayload,
+          settings: {},
+          rawBody: Buffer.from(''),
+          headers: {},
+        },
+        onSuccess,
+        onError,
+        helpers,
+      })
 
-      expect(onSuccess).not.toHaveBeenCalled()
+      expect(onSuccess).toHaveBeenCalledWith({
+        data_points: {
+          webhookData: JSON.stringify(withoutUserPayload),
+          documentId: '39960bdb-c1c8-464d-bbb0-343e6be551bf',
+          workspaceId: '41da08f1-f736-479e-a146-4ade8888fff9',
+          typeName: 'Other',
+          typeId: '6d3ad756-7e43-43a7-ab4b-0af67ab2ba44',
+          userEmail: '',
+        },
+      })
+      expect(onError).not.toHaveBeenCalled()
     })
   })
 

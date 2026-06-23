@@ -35,8 +35,8 @@ export const alternateTypePayload: DocumentTypeUpdatedPayload = {
 }
 
 /**
- * Mock payload with user set to null — invalid per the Documo API schema.
- * Used to verify that Zod parsing rejects malformed payloads at the boundary.
+ * Mock payload with user set to null.
+ * Documo can send this when the type update is not associated with a user.
  */
 export const withoutUserPayload = {
   accountId: 'c6c25094-c753-4712-9a13-f883839e7a55',
