@@ -106,7 +106,7 @@
     "@awell-health/healthie-sdk": "^0.1.1",
     "@calcom/embed-react": "^1.5.3",
     "@dropbox/sign": "^1.8.0",
-    "@hubspot/api-client": "^11.2.0",
+    "@hubspot/api-client": "^13.5.0",
     "@langchain/core": "1.2.0",
     "@langchain/openai": "1.5.1",
     "@mailchimp/mailchimp_transactional": "^1.0.50",

@@ -262,7 +262,7 @@ __metadata:
     "@graphql-codegen/typescript-operations": "npm:^3.0.2"
     "@graphql-tools/apollo-engine-loader": "npm:^7.3.26"
     "@graphql-typed-document-node/core": "npm:^3.1.2"
-    "@hubspot/api-client": "npm:^11.2.0"
+    "@hubspot/api-client": "npm:^13.5.0"
     "@langchain/core": "npm:1.2.0"
     "@langchain/openai": "npm:1.5.1"
     "@mailchimp/mailchimp_transactional": "npm:^1.0.50"
@@ -1938,19 +1938,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@hubspot/api-client@npm:^11.2.0":
-  version: 11.2.0
-  resolution: "@hubspot/api-client@npm:11.2.0"
+"@hubspot/api-client@npm:^13.5.0":
+  version: 13.5.0
+  resolution: "@hubspot/api-client@npm:13.5.0"
   dependencies:
-    "@types/node-fetch": "npm:^2.5.7"
+    "@types/node": "npm:*"
+    "@types/node-fetch": "npm:^2.6.13"
     bottleneck: "npm:^2.19.5"
     es6-promise: "npm:^4.2.4"
-    form-data: "npm:^2.5.0"
-    lodash.get: "npm:^4.4.2"
+    form-data: "npm:^4.0.4"
     lodash.merge: "npm:^4.6.2"
     node-fetch: "npm:^2.6.0"
-    url-parse: "npm:^1.4.3"
-  checksum: 10/821d46cda09c296fa546ad62ba4c581f9586404f2efff6fa3f311cab71870d9141350c01ee268fbec4606e36f3c1d5430793a021d37d28c17ee64a2171c634a8
+  checksum: 10/e477aa2ec65c7070f36d289058f85aa36052961adea82fb10fe300a189b7a12e53af14c68f7dd136f0a3aa501ae0d8b20965eeee8fdc1e2a357753c79c23adf7
   languageName: node
   linkType: hard
 
@@ -3223,7 +3222,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node-fetch@npm:^2.5.7, @types/node-fetch@npm:^2.6.2":
+"@types/node-fetch@npm:^2.6.13":
+  version: 2.6.13
+  resolution: "@types/node-fetch@npm:2.6.13"
+  dependencies:
+    "@types/node": "npm:*"
+    form-data: "npm:^4.0.4"
+  checksum: 10/944d52214791ebba482ca1393a4f0d62b0dbac5f7343ff42c128b75d5356d8bcefd4df77771b55c1acd19d118e16e9bd5d2792819c51bc13402d1c87c0975435
+  languageName: node
+  linkType: hard
+
+"@types/node-fetch@npm:^2.6.2":
   version: 2.6.11
   resolution: "@types/node-fetch@npm:2.6.11"
   dependencies:
@@ -7004,20 +7013,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"form-data@npm:^2.5.0":
-  version: 2.5.5
-  resolution: "form-data@npm:2.5.5"
-  dependencies:
-    asynckit: "npm:^0.4.0"
-    combined-stream: "npm:^1.0.8"
-    es-set-tostringtag: "npm:^2.1.0"
-    hasown: "npm:^2.0.2"
-    mime-types: "npm:^2.1.35"
-    safe-buffer: "npm:^5.2.1"
-  checksum: 10/4b6a8d07bb67089da41048e734215f68317a8e29dd5385a972bf5c458a023313c69d3b5d6b8baafbb7f808fa9881e0e2e030ffe61e096b3ddc894c516401271d
-  languageName: node
-  linkType: hard
-
 "form-data@npm:^3.0.0":
   version: 3.0.4
   resolution: "form-data@npm:3.0.4"
@@ -9422,7 +9417,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lodash.get@npm:^4.4.2, lodash.get@npm:~4.4.2":
+"lodash.get@npm:~4.4.2":
   version: 4.4.2
   resolution: "lodash.get@npm:4.4.2"
   checksum: 10/2a4925f6e89bc2c010a77a802d1ba357e17ed1ea03c2ddf6a146429f2856a216663e694a6aa3549a318cbbba3fd8b7decb392db457e6ac0b83dc745ed0a17380
@@ -11207,13 +11202,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"querystringify@npm:^2.1.1":
-  version: 2.2.0
-  resolution: "querystringify@npm:2.2.0"
-  checksum: 10/46ab16f252fd892fc29d6af60966d338cdfeea68a231e9457631ffd22d67cec1e00141e0a5236a2eb16c0d7d74175d9ec1d6f963660c6f2b1c2fc85b194c5680
-  languageName: node
-  linkType: hard
-
 "queue-microtask@npm:^1.2.2":
   version: 1.2.3
   resolution: "queue-microtask@npm:1.2.3"
@@ -11407,13 +11395,6 @@ __metadata:
   version: 2.0.0
   resolution: "require-main-filename@npm:2.0.0"
   checksum: 10/8604a570c06a69c9d939275becc33a65676529e1c3e5a9f42d58471674df79357872b96d70bb93a0380a62d60dc9031c98b1a9dad98c946ffdd61b7ac0c8cedd
-  languageName: node
-  linkType: hard
-
-"requires-port@npm:^1.0.0":
-  version: 1.0.0
-  resolution: "requires-port@npm:1.0.0"
-  checksum: 10/878880ee78ccdce372784f62f52a272048e2d0827c29ae31e7f99da18b62a2b9463ea03a75f277352f4697c100183debb0532371ad515a2d49d4bfe596dd4c20
   languageName: node
   linkType: hard
 
@@ -13120,16 +13101,6 @@ __metadata:
   version: 4.0.1
   resolution: "url-join@npm:4.0.1"
   checksum: 10/b53b256a9a36ed6b0f6768101e78ca97f32d7b935283fd29ce19d0bbfb6f88aa80aa6c03fd87f2f8978ab463a6539f597a63051e7086f3379685319a7495f709
-  languageName: node
-  linkType: hard
-
-"url-parse@npm:^1.4.3":
-  version: 1.5.10
-  resolution: "url-parse@npm:1.5.10"
-  dependencies:
-    querystringify: "npm:^2.1.1"
-    requires-port: "npm:^1.0.0"
-  checksum: 10/c9e96bc8c5b34e9f05ddfeffc12f6aadecbb0d971b3cc26015b58d5b44676a99f50d5aeb1e5c9e61fa4d49961ae3ab1ae997369ed44da51b2f5ac010d188e6ad
   languageName: node
   linkType: hard
 

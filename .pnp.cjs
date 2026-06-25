@@ -40,7 +40,7 @@ const RAW_RUNTIME_STATE =
           ["@graphql-codegen/typescript-operations", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:3.0.4"],\
           ["@graphql-tools/apollo-engine-loader", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:7.3.26"],\
           ["@graphql-typed-document-node/core", "virtual:59c276aa517e7eece9b42c9ca677cfc463202227c49b72eb9628ab5409de25886e6a64d32aaab7e2700a825599bd4032ab3aba0073f8dc2a6b74ffd967e262ef#npm:3.2.0"],\
-          ["@hubspot/api-client", "npm:11.2.0"],\
+          ["@hubspot/api-client", "npm:13.5.0"],\
           ["@langchain/core", "npm:1.2.0"],\
           ["@langchain/openai", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:1.5.1"],\
           ["@mailchimp/mailchimp_transactional", "npm:1.0.59"],\
@@ -113,7 +113,7 @@ const RAW_RUNTIME_STATE =
           ["mailgun.js", "npm:8.2.2"],\
           ["marked", "npm:14.1.2"],\
           ["messagebird", "npm:4.0.1"],\
-          ["node-fetch", "virtual:67a4556f0ed6123f505a64afe957c4b01723f4071e8c26bf643cd1a06641bc0b5f76dd835419691dcbce85729d487b8bcfc7faf79afef587517fb21a0b33abd6#npm:2.7.0"],\
+          ["node-fetch", "virtual:c099ff5cad2c1998475bd3924f716530c21a8127f4cb5936141076e8719cc53840d06c2bb6facd28973e32a8f8db48d6b73bcc5d72c360d190867d72e9dc8edb#npm:2.7.0"],\
           ["nodemailer", "npm:8.0.5"],\
           ["oauth-1.0a", "npm:2.2.6"],\
           ["openai", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:6.44.0"],\
@@ -157,7 +157,7 @@ const RAW_RUNTIME_STATE =
           ["form-data", "npm:4.0.5"],\
           ["formdata-node", "npm:6.0.3"],\
           ["js-base64", "npm:3.7.7"],\
-          ["node-fetch", "virtual:67a4556f0ed6123f505a64afe957c4b01723f4071e8c26bf643cd1a06641bc0b5f76dd835419691dcbce85729d487b8bcfc7faf79afef587517fb21a0b33abd6#npm:2.7.0"],\
+          ["node-fetch", "virtual:c099ff5cad2c1998475bd3924f716530c21a8127f4cb5936141076e8719cc53840d06c2bb6facd28973e32a8f8db48d6b73bcc5d72c360d190867d72e9dc8edb#npm:2.7.0"],\
           ["playwright", null],\
           ["puppeteer", null],\
           ["qs", "npm:6.15.1"],\
@@ -406,7 +406,7 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./.yarn/cache/@ardatan-sync-fetch-npm-0.0.1-77efa386d1-ee21741bad.zip/node_modules/@ardatan/sync-fetch/",\
         "packageDependencies": [\
           ["@ardatan/sync-fetch", "npm:0.0.1"],\
-          ["node-fetch", "virtual:67a4556f0ed6123f505a64afe957c4b01723f4071e8c26bf643cd1a06641bc0b5f76dd835419691dcbce85729d487b8bcfc7faf79afef587517fb21a0b33abd6#npm:2.7.0"]\
+          ["node-fetch", "virtual:c099ff5cad2c1998475bd3924f716530c21a8127f4cb5936141076e8719cc53840d06c2bb6facd28973e32a8f8db48d6b73bcc5d72c360d190867d72e9dc8edb#npm:2.7.0"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -443,7 +443,7 @@ const RAW_RUNTIME_STATE =
           ["@graphql-codegen/typescript-operations", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:3.0.4"],\
           ["@graphql-tools/apollo-engine-loader", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:7.3.26"],\
           ["@graphql-typed-document-node/core", "virtual:59c276aa517e7eece9b42c9ca677cfc463202227c49b72eb9628ab5409de25886e6a64d32aaab7e2700a825599bd4032ab3aba0073f8dc2a6b74ffd967e262ef#npm:3.2.0"],\
-          ["@hubspot/api-client", "npm:11.2.0"],\
+          ["@hubspot/api-client", "npm:13.5.0"],\
           ["@langchain/core", "npm:1.2.0"],\
           ["@langchain/openai", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:1.5.1"],\
           ["@mailchimp/mailchimp_transactional", "npm:1.0.59"],\
@@ -516,7 +516,7 @@ const RAW_RUNTIME_STATE =
           ["mailgun.js", "npm:8.2.2"],\
           ["marked", "npm:14.1.2"],\
           ["messagebird", "npm:4.0.1"],\
-          ["node-fetch", "virtual:67a4556f0ed6123f505a64afe957c4b01723f4071e8c26bf643cd1a06641bc0b5f76dd835419691dcbce85729d487b8bcfc7faf79afef587517fb21a0b33abd6#npm:2.7.0"],\
+          ["node-fetch", "virtual:c099ff5cad2c1998475bd3924f716530c21a8127f4cb5936141076e8719cc53840d06c2bb6facd28973e32a8f8db48d6b73bcc5d72c360d190867d72e9dc8edb#npm:2.7.0"],\
           ["nodemailer", "npm:8.0.5"],\
           ["oauth-1.0a", "npm:2.2.6"],\
           ["openai", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:6.44.0"],\
@@ -3418,18 +3418,17 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["@hubspot/api-client", [\
-      ["npm:11.2.0", {\
-        "packageLocation": "./.yarn/cache/@hubspot-api-client-npm-11.2.0-67a4556f0e-821d46cda0.zip/node_modules/@hubspot/api-client/",\
+      ["npm:13.5.0", {\
+        "packageLocation": "./.yarn/cache/@hubspot-api-client-npm-13.5.0-c099ff5cad-e477aa2ec6.zip/node_modules/@hubspot/api-client/",\
         "packageDependencies": [\
-          ["@hubspot/api-client", "npm:11.2.0"],\
-          ["@types/node-fetch", "npm:2.6.11"],\
+          ["@hubspot/api-client", "npm:13.5.0"],\
+          ["@types/node", "npm:22.5.5"],\
+          ["@types/node-fetch", "npm:2.6.13"],\
           ["bottleneck", "npm:2.19.5"],\
           ["es6-promise", "npm:4.2.8"],\
-          ["form-data", "npm:2.5.5"],\
-          ["lodash.get", "npm:4.4.2"],\
+          ["form-data", "npm:4.0.5"],\
           ["lodash.merge", "npm:4.6.2"],\
-          ["node-fetch", "virtual:67a4556f0ed6123f505a64afe957c4b01723f4071e8c26bf643cd1a06641bc0b5f76dd835419691dcbce85729d487b8bcfc7faf79afef587517fb21a0b33abd6#npm:2.7.0"],\
-          ["url-parse", "npm:1.5.10"]\
+          ["node-fetch", "virtual:c099ff5cad2c1998475bd3924f716530c21a8127f4cb5936141076e8719cc53840d06c2bb6facd28973e32a8f8db48d6b73bcc5d72c360d190867d72e9dc8edb#npm:2.7.0"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -5010,6 +5009,15 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./.yarn/cache/@types-node-fetch-npm-2.6.11-55289bb1a8-c416df8f18.zip/node_modules/@types/node-fetch/",\
         "packageDependencies": [\
           ["@types/node-fetch", "npm:2.6.11"],\
+          ["@types/node", "npm:22.5.5"],\
+          ["form-data", "npm:4.0.5"]\
+        ],\
+        "linkType": "HARD"\
+      }],\
+      ["npm:2.6.13", {\
+        "packageLocation": "./.yarn/cache/@types-node-fetch-npm-2.6.13-eb2c52495a-944d522147.zip/node_modules/@types/node-fetch/",\
+        "packageDependencies": [\
+          ["@types/node-fetch", "npm:2.6.13"],\
           ["@types/node", "npm:22.5.5"],\
           ["form-data", "npm:4.0.5"]\
         ],\
@@ -7373,7 +7381,7 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./.yarn/cache/cross-fetch-npm-3.1.8-71c3c05709-ac8c4ca87d.zip/node_modules/cross-fetch/",\
         "packageDependencies": [\
           ["cross-fetch", "npm:3.1.8"],\
-          ["node-fetch", "virtual:67a4556f0ed6123f505a64afe957c4b01723f4071e8c26bf643cd1a06641bc0b5f76dd835419691dcbce85729d487b8bcfc7faf79afef587517fb21a0b33abd6#npm:2.7.0"]\
+          ["node-fetch", "virtual:c099ff5cad2c1998475bd3924f716530c21a8127f4cb5936141076e8719cc53840d06c2bb6facd28973e32a8f8db48d6b73bcc5d72c360d190867d72e9dc8edb#npm:2.7.0"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -9527,19 +9535,6 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["form-data", [\
-      ["npm:2.5.5", {\
-        "packageLocation": "./.yarn/cache/form-data-npm-2.5.5-6d03de6baf-4b6a8d07bb.zip/node_modules/form-data/",\
-        "packageDependencies": [\
-          ["form-data", "npm:2.5.5"],\
-          ["asynckit", "npm:0.4.0"],\
-          ["combined-stream", "npm:1.0.8"],\
-          ["es-set-tostringtag", "npm:2.1.0"],\
-          ["hasown", "npm:2.0.2"],\
-          ["mime-types", "npm:2.1.35"],\
-          ["safe-buffer", "npm:5.2.1"]\
-        ],\
-        "linkType": "HARD"\
-      }],\
       ["npm:3.0.4", {\
         "packageLocation": "./.yarn/cache/form-data-npm-3.0.4-2a63eafd8b-68e4598e55.zip/node_modules/form-data/",\
         "packageDependencies": [\
@@ -11038,7 +11033,7 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./.yarn/cache/isomorphic-fetch-npm-3.0.0-bce711adff-568fe03075.zip/node_modules/isomorphic-fetch/",\
         "packageDependencies": [\
           ["isomorphic-fetch", "npm:3.0.0"],\
-          ["node-fetch", "virtual:67a4556f0ed6123f505a64afe957c4b01723f4071e8c26bf643cd1a06641bc0b5f76dd835419691dcbce85729d487b8bcfc7faf79afef587517fb21a0b33abd6#npm:2.7.0"],\
+          ["node-fetch", "virtual:c099ff5cad2c1998475bd3924f716530c21a8127f4cb5936141076e8719cc53840d06c2bb6facd28973e32a8f8db48d6b73bcc5d72c360d190867d72e9dc8edb#npm:2.7.0"],\
           ["whatwg-fetch", "npm:3.6.20"]\
         ],\
         "linkType": "HARD"\
@@ -13213,10 +13208,10 @@ const RAW_RUNTIME_STATE =
         ],\
         "linkType": "SOFT"\
       }],\
-      ["virtual:67a4556f0ed6123f505a64afe957c4b01723f4071e8c26bf643cd1a06641bc0b5f76dd835419691dcbce85729d487b8bcfc7faf79afef587517fb21a0b33abd6#npm:2.7.0", {\
-        "packageLocation": "./.yarn/__virtual__/node-fetch-virtual-dff91d4098/0/cache/node-fetch-npm-2.7.0-587d57004e-b24f8a3dc9.zip/node_modules/node-fetch/",\
+      ["virtual:c099ff5cad2c1998475bd3924f716530c21a8127f4cb5936141076e8719cc53840d06c2bb6facd28973e32a8f8db48d6b73bcc5d72c360d190867d72e9dc8edb#npm:2.7.0", {\
+        "packageLocation": "./.yarn/__virtual__/node-fetch-virtual-7f2c9dcd0e/0/cache/node-fetch-npm-2.7.0-587d57004e-b24f8a3dc9.zip/node_modules/node-fetch/",\
         "packageDependencies": [\
-          ["node-fetch", "virtual:67a4556f0ed6123f505a64afe957c4b01723f4071e8c26bf643cd1a06641bc0b5f76dd835419691dcbce85729d487b8bcfc7faf79afef587517fb21a0b33abd6#npm:2.7.0"],\
+          ["node-fetch", "virtual:c099ff5cad2c1998475bd3924f716530c21a8127f4cb5936141076e8719cc53840d06c2bb6facd28973e32a8f8db48d6b73bcc5d72c360d190867d72e9dc8edb#npm:2.7.0"],\
           ["@types/encoding", null],\
           ["encoding", null],\
           ["whatwg-url", "npm:5.0.0"]\
@@ -13425,7 +13420,7 @@ const RAW_RUNTIME_STATE =
           ["@readme/openapi-parser", "virtual:fe4185562861b288e891596bc624059df4f6c98cabbfb5cda160c9b4d2f7a919a9959d5bbc27b38a6bb1d9bd6ec4762d4870473b6fad5cfe586c5d3bf2c98194#npm:2.6.0"],\
           ["@readme/postman-to-openapi", "npm:4.1.0"],\
           ["js-yaml", "npm:4.1.1"],\
-          ["node-fetch", "virtual:67a4556f0ed6123f505a64afe957c4b01723f4071e8c26bf643cd1a06641bc0b5f76dd835419691dcbce85729d487b8bcfc7faf79afef587517fb21a0b33abd6#npm:2.7.0"],\
+          ["node-fetch", "virtual:c099ff5cad2c1998475bd3924f716530c21a8127f4cb5936141076e8719cc53840d06c2bb6facd28973e32a8f8db48d6b73bcc5d72c360d190867d72e9dc8edb#npm:2.7.0"],\
           ["openapi-types", "npm:12.1.3"],\
           ["swagger2openapi", "npm:7.0.8"]\
         ],\
@@ -14389,15 +14384,6 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
-    ["querystringify", [\
-      ["npm:2.2.0", {\
-        "packageLocation": "./.yarn/cache/querystringify-npm-2.2.0-4e77c9f606-46ab16f252.zip/node_modules/querystringify/",\
-        "packageDependencies": [\
-          ["querystringify", "npm:2.2.0"]\
-        ],\
-        "linkType": "HARD"\
-      }]\
-    ]],\
     ["queue", [\
       ["npm:6.0.2", {\
         "packageLocation": "./.yarn/cache/queue-npm-6.0.2-ebbcf599cf-3437954ef1.zip/node_modules/queue/",\
@@ -14627,15 +14613,6 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./.yarn/cache/require-main-filename-npm-2.0.0-03eef65c84-8604a570c0.zip/node_modules/require-main-filename/",\
         "packageDependencies": [\
           ["require-main-filename", "npm:2.0.0"]\
-        ],\
-        "linkType": "HARD"\
-      }]\
-    ]],\
-    ["requires-port", [\
-      ["npm:1.0.0", {\
-        "packageLocation": "./.yarn/cache/requires-port-npm-1.0.0-fd036b488a-878880ee78.zip/node_modules/requires-port/",\
-        "packageDependencies": [\
-          ["requires-port", "npm:1.0.0"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -15711,7 +15688,7 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["swagger2openapi", "npm:7.0.8"],\
           ["call-me-maybe", "npm:1.0.2"],\
-          ["node-fetch", "virtual:67a4556f0ed6123f505a64afe957c4b01723f4071e8c26bf643cd1a06641bc0b5f76dd835419691dcbce85729d487b8bcfc7faf79afef587517fb21a0b33abd6#npm:2.7.0"],\
+          ["node-fetch", "virtual:c099ff5cad2c1998475bd3924f716530c21a8127f4cb5936141076e8719cc53840d06c2bb6facd28973e32a8f8db48d6b73bcc5d72c360d190867d72e9dc8edb#npm:2.7.0"],\
           ["node-fetch-h2", "npm:2.3.0"],\
           ["node-readfiles", "npm:0.2.0"],\
           ["oas-kit-common", "npm:1.0.8"],\
@@ -16590,17 +16567,6 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./.yarn/cache/url-join-npm-4.0.1-e1f4415722-b53b256a9a.zip/node_modules/url-join/",\
         "packageDependencies": [\
           ["url-join", "npm:4.0.1"]\
-        ],\
-        "linkType": "HARD"\
-      }]\
-    ]],\
-    ["url-parse", [\
-      ["npm:1.5.10", {\
-        "packageLocation": "./.yarn/cache/url-parse-npm-1.5.10-64fa2bcd6d-c9e96bc8c5.zip/node_modules/url-parse/",\
-        "packageDependencies": [\
-          ["url-parse", "npm:1.5.10"],\
-          ["querystringify", "npm:2.2.0"],\
-          ["requires-port", "npm:1.0.0"]\
         ],\
         "linkType": "HARD"\
       }]\
