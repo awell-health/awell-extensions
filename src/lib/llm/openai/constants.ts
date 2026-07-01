@@ -9,13 +9,16 @@ export const getDefaultConfig = (
       return {
         temperature: 1,
         maxRetries: 3,
-        timeout: 30000,
+        // 60s per-request ceiling. gpt-5-mini is a reasoning model and a single
+        // generation can exceed the previous 30s limit, causing every retry to
+        // time out and the action to fail after ~2min. See summarizeForm.
+        timeout: 60000,
       }
     default:
       return {
         temperature: 0,
         maxRetries: 3,
-        timeout: 30000,
+        timeout: 60000,
       }
   }
 }

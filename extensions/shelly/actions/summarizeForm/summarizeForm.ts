@@ -60,6 +60,10 @@ export const summarizeForm: Action<
       payload,
       modelType: OPENAI_MODELS.GPT5Mini,
       hideDataForTracing: true, // Hide input and output data when tracing
+      // Summarizing a form is a low-complexity task, so we cap reasoning effort
+      // to keep gpt-5-mini latency well under the request timeout. Scoped to this
+      // action so other extensions keep the model's default reasoning quality.
+      modelConfigOverrides: { reasoning: { effort: 'low' } },
     })
 
     const awellSdk = await helpers.awellSdk()

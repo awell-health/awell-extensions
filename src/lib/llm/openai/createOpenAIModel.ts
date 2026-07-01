@@ -29,6 +29,7 @@ export const createOpenAIModel = async ({
   helpers,
   payload,
   modelType = OPENAI_MODELS.GPT5Mini,
+  modelConfigOverrides,
   hideDataForTracing = false,
 }: CreateOpenAIModelConfig & {
   hideDataForTracing?: boolean
@@ -42,9 +43,11 @@ export const createOpenAIModel = async ({
   }
 
   const model = new ChatOpenAI({
+    ...getDefaultConfig(modelType),
+    ...modelConfigOverrides,
+    // model and apiKey are enforced last so per-action overrides cannot change them
     model: MODEL_VERSIONS[modelType],
     apiKey,
-    ...getDefaultConfig(modelType),
   })
 
   let callbacks
