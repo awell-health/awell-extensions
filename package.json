@@ -19,11 +19,13 @@
     "start": "node dist/src/index.js",
     "lint": "eslint \"**/*.{ts,tsx}\"",
     "test": "jest --verbose --testPathIgnorePatterns '.*\\.local\\.test\\.ts$'",
+    "test-file": "jest --verbose --testPathIgnorePatterns='.*\\.local\\.test\\.ts$' --testPathPattern",
     "test-local": "jest --verbose",
     "prepack": "yarn build",
     "test-server": "ts-node-dev --respawn --transpile-only ./src/test-server.ts",
     "prepare": "husky",
-    "generate-extension": "ts-node ./scripts/generate-extension.ts"
+    "generate-extension": "ts-node ./scripts/generate-extension.ts",
+    "cli": "ts-node --transpile-only ./cli/src/index.ts"
   },
   "types": "dist/src/index.d.ts",
   "exports": {

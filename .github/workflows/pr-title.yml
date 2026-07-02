@@ -1,0 +1,51 @@
+name: PR title
+
+# Enforces conventional-commit PR titles per PR-CONVENTIONS.md §3.
+# Because PRs are squash-merged, the PR title becomes the commit subject on main,
+# so this check protects git history, not just PR aesthetics.
+#
+# Required format: <type>(<scope>): <imperative description>
+#   type  = feat | fix | chore | docs | test
+#   scope = optional, extension key when applicable (e.g. (bland), (healthie))
+#
+# Examples that pass:
+#   feat(hix): add ChipSoft HiX extension
+#   fix(bland): return early from callCompleted webhook when call_id is missing
+#   chore: remove hix extension (moved to extension-nimble)
+#   docs(bland): clarify language field format and default
+
+on:
+  pull_request:
+    types: [opened, edited, reopened, synchronize]
+    branches:
+      - "main"
+      - "release/*"
+
+jobs:
+  pr-title:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validate PR title
+        env:
+          TITLE: ${{ github.event.pull_request.title }}
+        run: |
+          set -euo pipefail
+          pattern='^(feat|fix|chore|docs|test)(\([^/]+\))?: .+'
+          if ! echo "$TITLE" | grep -Eq "$pattern"; then
+            echo "❌ PR title does not match conventional-commit format."
+            echo
+            echo "   Got:        $TITLE"
+            echo "   Expected:   <type>(<scope>): <imperative description>"
+            echo "   type  = feat | fix | chore | docs | test"
+            echo "   scope = optional, extension key when applicable"
+            echo
+            echo "   Examples:"
+            echo "     feat(hix): add ChipSoft HiX extension"
+            echo "     fix(bland): return early from callCompleted webhook when call_id is missing"
+            echo "     chore: remove hix extension (moved to extension-nimble)"
+            echo "     docs(bland): clarify language field format and default"
+            echo
+            echo "   See PR-CONVENTIONS.md §3."
+            exit 1
+          fi
+          echo "✅ PR title conforms: $TITLE"

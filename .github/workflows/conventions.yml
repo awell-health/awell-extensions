@@ -1,0 +1,31 @@
+name: Repo conventions
+
+# Deterministic enforcement of SKILL.md and PR-CONVENTIONS.md rules on every PR.
+# Runs .github/scripts/check-repo-conventions.sh against the PR's diff.
+
+on:
+  pull_request:
+    branches:
+      - "main"
+      - "release/*"
+
+jobs:
+  conventions:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # need full history to diff against the base branch
+
+      - name: Resolve base branch
+        id: base
+        run: |
+          if [ "${{ github.base_ref }}" = "main" ]; then
+            echo "diff_range=origin/main...HEAD" >> "$GITHUB_OUTPUT"
+          else
+            echo "diff_range=origin/${{ github.base_ref }}...HEAD" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Run convention checks
+        run: .github/scripts/check-repo-conventions.sh "${{ steps.base.outputs.diff_range }}"
