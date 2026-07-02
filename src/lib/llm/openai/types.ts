@@ -1,9 +1,9 @@
-import type { ChatOpenAI } from '@langchain/openai'
+import type { ChatOpenAI, ChatOpenAIFields } from '@langchain/openai'
 import type { OPENAI_MODELS } from './constants'
-import type { BaseCallbackHandler } from "@langchain/core/callbacks/base"
+import type { BaseCallbackHandler } from '@langchain/core/callbacks/base'
 
 // This ensures modelType only accepts the exact values from OPENAI_MODELS
-export type OpenAIModelType = typeof OPENAI_MODELS[keyof typeof OPENAI_MODELS]
+export type OpenAIModelType = (typeof OPENAI_MODELS)[keyof typeof OPENAI_MODELS]
 
 // Define the minimal structure we need from the pathway
 interface MinimalPathway {
@@ -36,9 +36,19 @@ export interface CreateOpenAIModelConfig {
     getOpenAIConfig: () => { apiKey: string }
   }
   /** Payload containing the minimal required information */
-  payload: RequiredPayloadProperties & Record<string, any>  // Changed to be more permissive
+  payload: RequiredPayloadProperties & Record<string, any> // Changed to be more permissive
   /** Which OpenAI model to use */
   modelType?: OpenAIModelType
+  /**
+   * Optional per-action overrides merged into the ChatOpenAI constructor on top
+   * of the model defaults from `getDefaultConfig`. Use this to tune behaviour for
+   * a single action (e.g. `{ reasoning: { effort: 'low' } }` to reduce latency)
+   * without affecting the shared defaults used by other extensions.
+   *
+   * Note: `model` and `apiKey` are always enforced by the factory and cannot be
+   * overridden here.
+   */
+  modelConfigOverrides?: Partial<ChatOpenAIFields>
 }
 
 /**
@@ -46,7 +56,7 @@ export interface CreateOpenAIModelConfig {
  * Used for LangSmith tracing and analytics
  */
 export interface AIActionMetadata {
-  activity_id: string,
+  activity_id: string
   care_flow_definition_id: string
   care_flow_id: string
   tenant_id: string
@@ -60,7 +70,7 @@ export interface OpenAIModelConfig {
   model: ChatOpenAI
   /** Tracing metadata for LangChain calls */
   metadata: {
-    activity_id: string,
+    activity_id: string
     care_flow_definition_id: string
     care_flow_id: string
     tenant_id: string

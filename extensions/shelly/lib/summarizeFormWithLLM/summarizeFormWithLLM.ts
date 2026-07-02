@@ -1,7 +1,7 @@
 import { systemPromptBulletPoints, systemPromptTextParagraph } from './prompt'
 import { type ChatOpenAI } from '@langchain/openai'
 import { type AIActionMetadata } from '../../../../src/lib/llm/openai/types'
-import type { BaseCallbackHandler } from "@langchain/core/callbacks/base"
+import type { BaseCallbackHandler } from '@langchain/core/callbacks/base'
 
 /**
  * Uses LLM to summarize form data in a specified format and language.
@@ -9,7 +9,7 @@ import type { BaseCallbackHandler } from "@langchain/core/callbacks/base"
  * 1. Formats prompt with form data and preferences
  * 2. Runs LLM with appropriate system prompt
  * 3. Returns formatted summary with disclaimer
- * 
+ *
  * @example
  * const result = await summarizeFormWithLLM({
  *   model,
@@ -40,29 +40,34 @@ export const summarizeFormWithLLM = async ({
   metadata: AIActionMetadata
   callbacks?: BaseCallbackHandler[]
 }): Promise<string> => {
-  const systemPrompt = summaryFormat === 'Bullet-points' ? systemPromptBulletPoints : 
-                      summaryFormat === 'Text paragraph' ? systemPromptTextParagraph :
-                      systemPromptBulletPoints // Default to bullet points if unknown format
+  const systemPrompt =
+    summaryFormat === 'Bullet-points'
+      ? systemPromptBulletPoints
+      : summaryFormat === 'Text paragraph'
+        ? systemPromptTextParagraph
+        : systemPromptBulletPoints // Default to bullet points if unknown format
 
   const prompt = await systemPrompt.format({
     language,
     input: formData,
     disclaimerMessage,
-    additionalInstructions: additionalInstructions ?? 'No additional instructions',
+    additionalInstructions:
+      additionalInstructions ?? 'No additional instructions',
   })
 
   try {
-    const result = await model.invoke(
-      prompt,
-      { 
-        metadata, 
-        runName: 'ShellySummarizeForm',
-        callbacks
-      }
-    )
+    const result = await model.invoke(prompt, {
+      metadata,
+      runName: 'ShellySummarizeForm',
+      callbacks,
+    })
 
     return result.content as string
   } catch (error) {
-    throw new Error('Failed to generate form summary')
+    // Preserve the underlying error (e.g. OpenAI TimeoutError) as the cause so it
+    // surfaces in logs/traces instead of being masked by the generic message.
+    const wrappedError = new Error('Failed to generate form summary')
+    ;(wrappedError as Error & { cause?: unknown }).cause = error
+    throw wrappedError
   }
 }
