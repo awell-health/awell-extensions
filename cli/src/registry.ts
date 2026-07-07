@@ -1,10 +1,19 @@
-import { extensions } from '../../extensions'
 import type { Extension, Action, Webhook } from '@awell-health/extensions-core'
 
-export const listExtensions = (): Extension[] => extensions
+// The CLI is registry-agnostic: the composition root (src/index.ts) injects the
+// concrete extension registry via setRegistry() at startup. Keeping the CLI logic
+// decoupled from any specific repo means it can later be extracted into its own
+// package that receives a registry from whatever consumes it.
+let registry: Extension[] = []
+
+export const setRegistry = (extensions: Extension[]): void => {
+  registry = extensions
+}
+
+export const listExtensions = (): Extension[] => registry
 
 export const findExtension = (key: string): Extension | undefined =>
-  extensions.find((e) => e.key === key)
+  registry.find((e) => e.key === key)
 
 export const findAction = (
   extensionKey: string,

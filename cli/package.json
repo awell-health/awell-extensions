@@ -1,0 +1,16 @@
+{
+  "name": "@awell-health/extension-cli",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Dev CLI to list, describe, and run Awell extensions against their real handlers. Currently consumed in-repo (the entry point in src/index.ts wires in this repo's extension registry); the dependency surface below is declared here so the tool can be extracted into its own package later.",
+  "dependencies": {
+    "@awell-health/extensions-core": "1.1.17",
+    "yargs": "*"
+  },
+  "devDependencies": {
+    "@types/node": "*",
+    "@types/yargs": "*",
+    "ts-node": "*",
+    "typescript": "*"
+  }
+}

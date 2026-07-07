@@ -4,6 +4,12 @@ import { readFileSync } from 'fs'
 import { cmdList, cmdEnv, cmdDoctor, cmdSetup, cmdDescribe } from './commands'
 import { runAction } from './run/action'
 import { replayWebhook } from './run/webhook'
+import { extensions } from '../../extensions'
+import { setRegistry } from './registry'
+
+// Composition root: this is the only place that knows about *this* repo's
+// extensions. Everything else in the CLI works off the injected registry.
+setRegistry(extensions)
 
 const parseJsonArg = (
   arg: string | undefined,
