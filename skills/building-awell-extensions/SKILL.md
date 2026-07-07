@@ -526,7 +526,7 @@ Some extensions (Stripe, simple reads) skip explicit `try/catch` and let all err
 
 ## 8.5 Verify at runtime with the CLI (`yarn cli`)
 
-`yarn test` proves your code behaves against **mocks**; it does **not** prove the extension actually runs. After `yarn build`, close the loop with the CLI — execute the real handler and observe actual `data_points`/`events`. The full runtime-testing workflow (discover keys with `list`/`describe`, run with `run`/`webhook replay`, and interpret the structured `error` object) lives in the **`testing-awell-extensions` skill** (`TESTING.md`) — use it rather than duplicating those steps here.
+`yarn test` proves your code behaves against **mocks**; it does **not** prove the extension actually runs. After `yarn build`, close the loop with the CLI — execute the real handler and observe actual `data_points`/`events`. The full runtime-testing workflow (discover keys with `list`/`describe`, run with `run`/`webhook replay`, and interpret the structured `error` object) lives in the **[`testing-awell-extensions`](../testing-awell-extensions/SKILL.md) skill** — use it rather than duplicating those steps here.
 
 Minimum loop when finishing an extension (detail in the testing skill):
 
@@ -584,7 +584,7 @@ Sends a message via Vendor.
 - [ ] `yarn test` succeeds
 - [ ] Registered extension appears in `yarn cli list` with the expected action/webhook keys
 - [ ] Smoke-tested at runtime with `yarn cli run <ext>/<action>` (real handler execution, not just mocks); webhooks exercised with `yarn cli webhook replay`
-- [ ] Branch + PR conventions in [`PR-CONVENTIONS.md`](./PR-CONVENTIONS.md) followed (branch name, PR title `type(scope): imperative`, body has `## Summary` + `## Test plan`, **no manual `package.json` version bump**)
+- [ ] Branch + PR conventions in [`pr-conventions`](../pr-conventions/SKILL.md) followed (branch name, PR title `type(scope): imperative`, body has `## Summary` + `## Test plan`, **no manual `package.json` version bump**)
 
 ---
 
@@ -672,13 +672,13 @@ Frontmatter + setup + per-action docs (condensed from vendor docs — do not cop
 
 Register in `extensions/index.ts` if the scaffold didn't. Run `yarn build && yarn test`. Fix lints/tests.
 
-Then verify at **runtime** — static checks and mocked tests do not prove it runs. **Switch to the `testing-awell-extensions` skill** (`TESTING.md`) to close the loop: `yarn cli list` (registered as planned?) → `yarn cli describe <ext>/<action>` (fields/settings) → `yarn cli doctor <ext>` (credentials) → `yarn cli run …` / `webhook replay` (execute the real handler, read `status`/`data_points`/`events`/`error`).
+Then verify at **runtime** — static checks and mocked tests do not prove it runs. **Switch to the [`testing-awell-extensions`](../testing-awell-extensions/SKILL.md) skill** to close the loop: `yarn cli list` (registered as planned?) → `yarn cli describe <ext>/<action>` (fields/settings) → `yarn cli doctor <ext>` (credentials) → `yarn cli run …` / `webhook replay` (execute the real handler, read `status`/`data_points`/`events`/`error`).
 
 Feed any runtime failure back into the **validation-retry loop** below, exactly like a build/test failure.
 
 ### Step 12 — Self-review against the checklist in §10, then open a PR
 
-**Branch + PR title + PR body conventions live in the `pr-conventions` skill ([`PR-CONVENTIONS.md`](./PR-CONVENTIONS.md)).** Switch to it when creating the branch and PR. Quick version: branch `feat/<extensionKey>-<short-desc>` or `fix/<extensionKey>-<short-desc>`; PR title `feat(<extensionKey>): <imperative description>`; body has `## Summary` + `## Test plan`; open against `main`; do NOT bump `package.json` version (CI auto-bumps on merge).
+**Branch + PR title + PR body conventions live in the [`pr-conventions`](../pr-conventions/SKILL.md) skill.** Switch to it when creating the branch and PR. Quick version: branch `feat/<extensionKey>-<short-desc>` or `fix/<extensionKey>-<short-desc>`; PR title `feat(<extensionKey>): <imperative description>`; body has `## Summary` + `## Test plan`; open against `main`; do NOT bump `package.json` version (CI auto-bumps on merge).
 
 ### Validation-retry loop (apply to your own work)
 

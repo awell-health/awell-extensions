@@ -16,7 +16,7 @@ allowed-tools: Read, Grep, Glob, Bash(git status), Bash(git diff:*), Bash(git lo
 >
 > **Scope:** Branch creation, commit messages, PR titles, PR bodies, pre-PR verification, and the `gh pr create` command for this repo. **Do NOT use this skill for** version bumps (CI auto-bumps on merge), release PRs (`release/*` branches are owned by the release workflow), or Dependabot/Aikido-style automated dependency PRs.
 >
-> **Companion skill:** `SKILL.md` (extension building). When you finish building an extension, follow this skill to ship it.
+> **Companion skill:** [`building-awell-extensions`](../building-awell-extensions/SKILL.md) (extension building). When you finish building an extension, follow this skill to ship it.
 
 Derived from analysing the last ~200 PRs and ~50 commits on `main` in this repo.
 
@@ -158,7 +158,7 @@ No in-repo PR template exists. Use this structure:
 | Bug fix with non-obvious root cause | `## Context` and `## Root cause` sections before `## Summary` |
 | Breaking change | A `## Breaking changes` section listing affected extension keys / data points / setting keys, and note the major-version impact |
 | New extension | `## Actions added` listing each action key + one-line description |
-| Webhook added | `## Webhooks added` + note about signature verification (see SKILL.md §5.1) |
+| Webhook added | `## Webhooks added` + note about signature verification (see [`building-awell-extensions`](../building-awell-extensions/SKILL.md) §5.1) |
 | Follow-up work needed | `## Note / follow-up` with concrete next steps |
 
 **Examples of body styles (from real PRs):**

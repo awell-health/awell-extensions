@@ -1,6 +1,6 @@
 name: PR title
 
-# Enforces conventional-commit PR titles per PR-CONVENTIONS.md §3.
+# Enforces conventional-commit PR titles per skills/pr-conventions/SKILL.md §3.
 # Because PRs are squash-merged, the PR title becomes the commit subject on main,
 # so this check protects git history, not just PR aesthetics.
 #
@@ -45,7 +45,7 @@ jobs:
             echo "     chore: remove hix extension (moved to extension-nimble)"
             echo "     docs(bland): clarify language field format and default"
             echo
-            echo "   See PR-CONVENTIONS.md §3."
+            echo "   See skills/pr-conventions/SKILL.md §3."
             exit 1
           fi
           echo "✅ PR title conforms: $TITLE"

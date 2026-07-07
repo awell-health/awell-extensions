@@ -1,7 +1,8 @@
 import { type ActivityEvent } from '@awell-health/extensions-core'
 
 /**
- * How the agent should react to a failure. Mirrors §7 of SKILL.md:
+ * How the agent should react to a failure. Mirrors §7 of
+ * skills/building-awell-extensions/SKILL.md:
  * only transient (SERVER_ERROR) failures are worth retrying unchanged.
  */
 export type ErrorClass = 'transient' | 'validation' | 'business' | 'config'
@@ -31,7 +32,8 @@ export interface ActionResult {
 
 /**
  * Map a framework error category to a recovery classification. Aligned with the
- * four-way taxonomy in SKILL.md §7: only SERVER_ERROR is retryable.
+ * four-way taxonomy in skills/building-awell-extensions/SKILL.md §7: only
+ * SERVER_ERROR is retryable.
  */
 export const classifyErrorCategory = (
   category: string,

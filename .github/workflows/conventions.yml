@@ -1,6 +1,7 @@
 name: Repo conventions
 
-# Deterministic enforcement of SKILL.md and PR-CONVENTIONS.md rules on every PR.
+# Deterministic enforcement of the skills/ conventions (building-awell-extensions
+# and pr-conventions SKILL.md rules) on every PR.
 # Runs .github/scripts/check-repo-conventions.sh against the PR's diff.
 
 on:
