@@ -9,7 +9,6 @@ description: >-
   webhooks, error mapping) → test → run/verify with the CLI → PR. Do NOT use for
   unrelated repo work (src/lib/, the extensions-core framework, CI config, or
   root dependency changes without an extension need).
-argument-hint: <vendor name> + what the extension should do (action/webhook); attach or link the vendor API docs
 allowed-tools: Read, Grep, Glob, Edit, Write, Agent, Bash(yarn build), Bash(yarn compile), Bash(yarn test), Bash(yarn test-file:*), Bash(yarn test-local), Bash(yarn lint), Bash(yarn generate-extension:*), Bash(yarn cli:*)
 ---
 
@@ -18,8 +17,6 @@ allowed-tools: Read, Grep, Glob, Edit, Write, Agent, Bash(yarn build), Bash(yarn
 > **Purpose:** Take a vendor's API docs + a user's intent ("I want an action that does X") and produce a correctly-structured, working Awell extension — or addition to an existing one — in this repo.
 >
 > **Scope:** Building/editing extensions under `extensions/`. **Do NOT use this skill for** unrelated repo work (modifying `src/lib/`, the `extensions-core` framework itself, CI config, or root `package.json` deps without an explicit extension need). **Do NOT use this skill to** generate a JSON manifest, a per-extension `package.json`, or `onActivityCreated` handlers for new code — these are deprecated/wrong patterns.
-
-This skill is derived from analysing 15 existing extensions (slack, hubspot, stripe, healthie, elation, epic, twilio, bland, sendgrid-extension, docuSign, dropboxSign, calDotCom, medplum, metriport, athenahealth). Follow it precisely.
 
 ---
 
@@ -57,7 +54,7 @@ Use this table to route. Do not read the whole file before deciding.
 | Async action → webhook completion | Vendor callback URL with `activity_id` | §4.5 | `extensions/bland` | `extensions/bland/webhooks/CallCompleted` |
 | Polling / async job status | Per vendor | §4 + loop | `extensions/sendgrid-extension/v1/actions/importStatus`, `extensions/metriport` consolidated query | — |
 
-**Tool-trimming when reading vendor API docs:** extract only the endpoint(s), field(s), and error codes needed for the user's requested action. Do not mirror the vendor's entire API surface into the extension — each action is a thin, purpose-built slice. Adding "everything the API can do" is an anti-pattern.
+**Tool-trimming when reading vendor API docs:** extract only the endpoint(s), field(s), and error codes needed for the user's requested action. Do not mirror the vendor's entire API surface into the extension — each action is a thin, purpose-built slice. Adding "everything the API can do" is an anti-pattern. **Default to delegating the doc read to a subagent** — you can't judge a doc's size without opening it, so don't pull it into your own context to "check." If the docs are a link or file, hand the **URL/path** to a subagent (hub-and-spoke, §11 Step 2) and have it return only the slice you need — endpoints, request/response fields, auth scheme, error codes. Read inline only when the user has already pasted a short excerpt.
 
 ---
 
@@ -98,69 +95,33 @@ yarn generate-extension
 ```
 
 It creates the layout above and registers the extension in `extensions/index.ts`.
+Treat the output as a starting point, not a finished extension — it hardcodes
+placeholders and omits some required pieces. Each section below calls out what to
+fix or add after scaffolding (manifest → §2, settings validation → §3).
 
 ---
 
 ## 2. The `Extension` manifest (`index.ts`)
 
-```ts
-import { type Extension, Category, AuthorType } from '@awell-health/extensions-core'
-import { settings } from './settings'
-import * as actions from './actions'            // OR: import { actions } from './actions'
-import { webhooks } from './webhooks'           // omit if none
+After scaffolding (§1), fix the manifest's placeholders and add the fields the
+generator doesn't emit:
 
-export const MyExtension: Extension = {
-  key: 'myExtension',                            // unique camelCase slug
-  title: 'My Extension',
-  description: 'One-line description for the marketplace.',
-  icon_url: 'https://res.cloudinary.com/...',   // hosted icon
-  category: Category.COMMUNICATION,              // pick from Category enum
-  author: { authorType: AuthorType.AWELL },      // or { authorType: AuthorType.EXTERNAL, authorName: 'Vendor' }
-  settings,
-  actions,                                       // Record<string, Action>
-  webhooks,                                      // optional Webhook[]
-  // identifier?: { system: 'https://vendor.com/' }  // set for EHRs that expose a stable patient ID system
-  // timers?: [...]                                    // only if you implement async action completion via timer
-}
-```
+- **`category`** — the scaffolder hardcodes `Category.DEMO`; change to the closest `Category` value (see §0).
+- **`icon_url`** — the scaffolder uses the Awell logo; replace with the hosted vendor icon.
+- **`author`** — defaults to `AuthorType.AWELL`; use `{ authorType: AuthorType.EXTERNAL, authorName: 'Vendor' }` for third-party-built.
+- **`identifier?`** — add for EHRs that expose a stable patient-ID system, e.g. `{ system: 'https://vendor.com/' }`. *(not scaffolded)*
+- **`timers?`** — add only if the extension implements async action completion via a timer. *(not scaffolded)*
 
-Register it in `extensions/index.ts`:
-
-```ts
-import { MyExtension } from './myExtension'
-export const extensions = [ /* ... */, MyExtension ]
-```
+`extensions/elation/index.ts` uses both `identifier` and `timers` — copy it when you need them.
 
 ---
 
 ## 3. Settings (`settings.ts`)
 
-```ts
-import { type Setting } from '@awell-health/extensions-core'
-import { z } from 'zod'
-
-export const settings = {
-  apiKey: {
-    key: 'apiKey',
-    label: 'API Key',
-    obfuscated: true,                  // true for any secret
-    required: true,
-    description: 'Your vendor API key (found at ...).',
-  },
-  baseUrl: {
-    key: 'baseUrl',
-    label: 'Base URL',
-    obfuscated: false,
-    required: false,
-    description: 'Override the default base URL (for sandbox/testing).',
-  },
-} satisfies Record<string, Setting>
-
-export const SettingsValidationSchema = z.object({
-  apiKey: z.string().min(1, { message: 'API key is required' }),
-  baseUrl: z.string().url().optional(),
-})
-```
+The scaffolder emits the settings metadata object but **not** the
+`SettingsValidationSchema` (Zod), which is REQUIRED (§1) — add it, keeping its keys
+in sync with the settings object (§0, dual validation). Copy the dual pattern from
+`extensions/bland/settings.ts`.
 
 Conventions:
 - One setting per credential or per-tenant config value (API key, account SID, OAuth client_id/secret, base URL, mode toggle).

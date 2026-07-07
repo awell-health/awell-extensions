@@ -6,7 +6,6 @@ description: >-
   interpret failures. Use whenever the task is "test / run / try / verify / debug
   extension X" or "does action Y work". For BUILDING or editing an extension, use
   the building-awell-extensions skill instead.
-argument-hint: <extension>/<action-or-webhook> to test (e.g. slack/sendMessageToChannel)
 allowed-tools: Read, Grep, Glob, Bash(yarn cli:*), Bash(yarn test), Bash(yarn test-file:*), Bash(yarn test-local), Bash(yarn build), Bash(yarn compile)
 ---
 

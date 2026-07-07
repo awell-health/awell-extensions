@@ -6,7 +6,6 @@ description: >-
   create a branch, write a commit, or open/title a PR here — for ANY change, not
   just extensions. Do NOT use for version bumps (CI auto-bumps on merge), release
   PRs (release/* is owned by the release workflow), or automated dependency PRs.
-argument-hint: a short description of what you changed (used to name the branch and PR)
 allowed-tools: Read, Grep, Glob, Bash(git status), Bash(git diff:*), Bash(git log:*), Bash(git branch:*), Bash(git checkout:*), Bash(git switch:*), Bash(git add:*), Bash(git commit:*)
 ---
 
