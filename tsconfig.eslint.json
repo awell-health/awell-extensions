@@ -7,7 +7,8 @@
     "examples/**/*.ts",
     "components/**/*.ts",
     "components/**/*.tsx",
-    "scripts/**/*.ts"
+    "scripts/**/*.ts",
+    "cli/**/*.ts"
   ],
   "exclude": [
     "dist",
