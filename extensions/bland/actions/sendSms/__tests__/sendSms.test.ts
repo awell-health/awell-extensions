@@ -108,4 +108,65 @@ describe('Bland.ai - Send SMS', () => {
     })
     expect(onComplete).not.toHaveBeenCalled()
   })
+
+  test('Should map a 4xx HTTP error to a non-retryable BAD_REQUEST', async () => {
+    sendSmsMock.mockRejectedValueOnce({
+      isAxiosError: true,
+      message: 'Request failed with status code 403',
+      response: {
+        status: 403,
+        data: {
+          data: null,
+          errors: [
+            {
+              message: 'This feature is only available for enterprise users',
+              error: 'ENTERPRISE_REQUIRED',
+            },
+          ],
+        },
+      },
+    })
+
+    await extensionAction.onEvent({
+      payload: basePayload,
+      onComplete,
+      onError,
+      helpers,
+      attempt: 1,
+    })
+
+    expect(onError).toHaveBeenCalledWith({
+      events: [
+        expect.objectContaining({
+          error: expect.objectContaining({ category: 'BAD_REQUEST' }),
+        }),
+      ],
+    })
+    expect(onComplete).not.toHaveBeenCalled()
+  })
+
+  test('Should map a 5xx HTTP error to a retryable SERVER_ERROR', async () => {
+    sendSmsMock.mockRejectedValueOnce({
+      isAxiosError: true,
+      message: 'Request failed with status code 502',
+      response: { status: 502, data: { message: 'Bad gateway' } },
+    })
+
+    await extensionAction.onEvent({
+      payload: basePayload,
+      onComplete,
+      onError,
+      helpers,
+      attempt: 1,
+    })
+
+    expect(onError).toHaveBeenCalledWith({
+      events: [
+        expect.objectContaining({
+          error: expect.objectContaining({ category: 'SERVER_ERROR' }),
+        }),
+      ],
+    })
+    expect(onComplete).not.toHaveBeenCalled()
+  })
 })

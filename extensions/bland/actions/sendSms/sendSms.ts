@@ -5,6 +5,7 @@ import { type settings } from '../../settings'
 import { fields, FieldsValidationSchema, dataPoints } from './config'
 import { SendSmsInputSchema } from '../../api/schema'
 import { addActivityEventLog } from '../../../../src/lib/awell/addEventLog'
+import { mapBlandErrorToActivityEvent } from '../../lib/errors'
 
 export const sendSms: Action<
   typeof fields,
@@ -80,11 +81,25 @@ export const sendSms: Action<
       console.error(JSON.stringify(err))
     }
 
-    const { data: responseBody } = await blandSdk.sendSms(
-      sendSmsInput,
-      // Idempotency key keeps automated retries from double-sending.
-      payload.activity.id
-    )
+    let responseBody
+    try {
+      const response = await blandSdk.sendSms(
+        sendSmsInput,
+        // Idempotency key keeps automated retries from double-sending.
+        payload.activity.id
+      )
+      responseBody = response.data
+    } catch (err) {
+      // Map known Bland/Axios HTTP errors (e.g. 403 ENTERPRISE_REQUIRED) to the
+      // right category. 4xx -> BAD_REQUEST (non-retryable), 5xx/network ->
+      // SERVER_ERROR (retryable). Anything unknown is re-thrown.
+      const event = mapBlandErrorToActivityEvent(err)
+      if (event === undefined) {
+        throw err
+      }
+      await onError({ events: [event] })
+      return
+    }
 
     if (!isNil(responseBody.errors) && !isEmpty(responseBody.errors)) {
       const message = JSON.stringify(responseBody.errors)
