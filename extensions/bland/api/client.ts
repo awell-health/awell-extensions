@@ -2,6 +2,8 @@ import axios, { type AxiosResponse, type AxiosInstance } from 'axios'
 import {
   type SendCallResponseType,
   type SendCallInputType,
+  type SendSmsResponseType,
+  type SendSmsInputType,
   type GetCallDetailsInputType,
   type GetCallDetailsResponseType,
   type StopActiveCallInputType,
@@ -27,6 +29,21 @@ export class BlandApiClient {
     const response = await this.client.post<SendCallResponseType>(
       `/calls`,
       input
+    )
+
+    return response
+  }
+
+  async sendSms(
+    input: SendSmsInputType,
+    idempotencyKey?: string
+  ): Promise<AxiosResponse<SendSmsResponseType>> {
+    const response = await this.client.post<SendSmsResponseType>(
+      `/sms/send`,
+      input,
+      idempotencyKey !== undefined
+        ? { headers: { idempotency_key: idempotencyKey } }
+        : undefined
     )
 
     return response

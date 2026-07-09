@@ -68,3 +68,22 @@ When retrieving the call details, Bland will return data about the call in the f
 ### Get call details
 
 Retrieve the details of a call based on the provider call ID.
+
+### Send SMS
+
+Send an SMS message from an agent to a user. This creates or resumes a conversation and triggers the associated processing workflow.
+
+> SMS is an Enterprise-only Bland feature. Contact your Bland representative for access.
+
+**Inputs:**
+
+- `to` (phone, required) – the E.164 number receiving the message.
+- `agentNumber` (phone, required) – the E.164 number sending the message; must belong to the authenticated account.
+- `text` (text, optional) – the message body. If omitted, Bland generates a response from the conversation's configured pathway/prompt.
+- Optional overrides: `newConversation`, `personaId`, `personaVersion`, `personaSettings`, `pathwayId`, `pathwayVersion`, `startNodeId`, `webhook`, `requestData`, `metadata`, `outcomeIds`, `citationSchemaIds`, `channel`, `contentSid`, `contentVariables`, `timeOut`, `timeoutMessage`, `warningTime`, `warningMessage`, and an `otherData` JSON escape hatch.
+
+**Data points:** `conversationId`, `workflowId`, `messageId`, `message`.
+
+The action injects the Awell patient/care-flow/activity IDs into `request_data` so they are returned in Bland's webhook payloads, and sends an idempotency key (the activity ID) so automated retries never double-send.
+
+[Also see Bland documentation.](https://docs.bland.ai/api-v1/post/sms-send)
