@@ -2,5 +2,5 @@
 
 ## July 2026
 
-- Add `enrollment` webhook: an enrollment trigger for Metriport real-time patient (ADT) notifications that distinguishes between admit (`adt`) and `discharge` events and exposes the FHIR Encounter Bundle.
+- Add `enrollment` webhook: an enrollment trigger for Metriport real-time patient notifications that distinguishes between admit (`adt`, from `patient.admit`) and `discharge` (from `medical.discharge-summary`) events, exposing the FHIR Encounter Bundle and discharge summary respectively.
 - Add optional `Webhook Key` setting used to verify incoming webhook requests via the `x-webhook-key` header.

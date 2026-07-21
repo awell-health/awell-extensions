@@ -48,19 +48,26 @@ const admitPayload = {
   },
 }
 
-const dischargePayload = {
+const dischargeSummaryBundle = {
+  resourceType: 'Bundle',
+  type: 'searchset',
+  entry: [{ resource: { resourceType: 'Composition', id: 'discharge-1' } }],
+}
+
+const dischargeSummaryPayload = {
   meta: {
     messageId: 'msg-2',
     when: '2026-07-22T10:00:00.000Z',
-    type: MetriportWebhookType.PatientDischarge,
+    type: MetriportWebhookType.DischargeSummary,
   },
-  payload: {
-    url: 'https://example.com/bundle',
-    patientId: 'patient-123',
-    externalId: 'external-abc',
-    admitTimestamp: '2026-07-21T09:00:00.000Z',
-    dischargeTimestamp: '2026-07-22T09:00:00.000Z',
-  },
+  patients: [
+    {
+      patientId: 'patient-123',
+      externalId: 'external-abc',
+      status: 'completed',
+      bundle: dischargeSummaryBundle,
+    },
+  ],
 }
 
 describe('Metriport - Webhook - Enrollment', () => {
@@ -88,20 +95,23 @@ describe('Metriport - Webhook - Enrollment', () => {
   }
 
   describe('When an admit (adt) event is received', () => {
-    test('Should enroll the patient with eventType "adt"', async () => {
+    test('Should enroll the patient with eventType "adt" and the Encounter Bundle', async () => {
       await invoke(admitPayload)
 
       expect(onError).not.toHaveBeenCalled()
+      expect(mockedFetchEncounterBundle).toHaveBeenCalledWith(
+        'https://example.com/bundle',
+      )
       expect(onSuccess).toHaveBeenCalledWith({
         data_points: {
           eventType: 'adt',
           metriportPatientId: 'patient-123',
-          messageId: 'msg-1',
           externalId: 'external-abc',
           admitTimestamp: '2026-07-21T09:00:00.000Z',
-          dischargeTimestamp: '',
           whenSourceSent: '2026-07-21T09:30:00.000Z',
+          messageId: 'msg-1',
           encounterBundle: JSON.stringify(encounterBundle),
+          dischargeSummary: '',
         },
         patient_identifier: {
           system: METRIPORT_PATIENT_IDENTIFIER_SYSTEM,
@@ -111,26 +121,79 @@ describe('Metriport - Webhook - Enrollment', () => {
     })
   })
 
-  describe('When a discharge event is received', () => {
-    test('Should enroll the patient with eventType "discharge"', async () => {
-      await invoke(dischargePayload)
+  describe('When a discharge summary event is received with an inline bundle', () => {
+    test('Should enroll the patient with eventType "discharge" and the inline bundle', async () => {
+      await invoke(dischargeSummaryPayload)
 
       expect(onError).not.toHaveBeenCalled()
+      // Inline bundle: no fetch required.
+      expect(mockedFetchEncounterBundle).not.toHaveBeenCalled()
       expect(onSuccess).toHaveBeenCalledWith({
         data_points: {
           eventType: 'discharge',
           metriportPatientId: 'patient-123',
-          messageId: 'msg-2',
           externalId: 'external-abc',
-          admitTimestamp: '2026-07-21T09:00:00.000Z',
-          dischargeTimestamp: '2026-07-22T09:00:00.000Z',
+          admitTimestamp: '',
           whenSourceSent: '',
-          encounterBundle: JSON.stringify(encounterBundle),
+          messageId: 'msg-2',
+          encounterBundle: '',
+          dischargeSummary: JSON.stringify(dischargeSummaryBundle),
         },
         patient_identifier: {
           system: METRIPORT_PATIENT_IDENTIFIER_SYSTEM,
           value: 'patient-123',
         },
+      })
+    })
+  })
+
+  describe('When a discharge summary event references a URL', () => {
+    test('Should fetch the bundle from the URL', async () => {
+      await invoke({
+        meta: {
+          messageId: 'msg-3',
+          when: '2026-07-22T10:00:00.000Z',
+          type: MetriportWebhookType.DischargeSummary,
+        },
+        patients: [
+          {
+            patientId: 'patient-456',
+            status: 'completed',
+            url: 'https://example.com/discharge-summary',
+          },
+        ],
+      })
+
+      expect(onError).not.toHaveBeenCalled()
+      expect(mockedFetchEncounterBundle).toHaveBeenCalledWith(
+        'https://example.com/discharge-summary',
+      )
+      const call = onSuccess.mock.calls[0][0]
+      expect(call.data_points.eventType).toBe('discharge')
+      expect(call.data_points.metriportPatientId).toBe('patient-456')
+      expect(call.data_points.dischargeSummary).toBe(
+        JSON.stringify(encounterBundle),
+      )
+    })
+  })
+
+  describe('When a discharge summary event has neither bundle nor URL', () => {
+    test('Should still enroll and capture the raw patient entry', async () => {
+      await invoke({
+        meta: {
+          messageId: 'msg-4',
+          when: '2026-07-22T10:00:00.000Z',
+          type: MetriportWebhookType.DischargeSummary,
+        },
+        patients: [{ patientId: 'patient-789', status: 'completed' }],
+      })
+
+      expect(onError).not.toHaveBeenCalled()
+      const call = onSuccess.mock.calls[0][0]
+      expect(call.data_points.metriportPatientId).toBe('patient-789')
+      expect(JSON.parse(call.data_points.dischargeSummary)).toMatchObject({
+        patientId: 'patient-789',
+        status: 'completed',
       })
     })
   })
@@ -169,8 +232,8 @@ describe('Metriport - Webhook - Enrollment', () => {
     })
   })
 
-  describe('When a transfer event is received', () => {
-    test('Should acknowledge with 200 and not enroll', async () => {
+  describe('When an unhandled ADT event is received', () => {
+    test('Should acknowledge a transfer with 200 and not enroll', async () => {
       await invoke({
         meta: {
           messageId: 'msg-transfer',
@@ -189,6 +252,30 @@ describe('Metriport - Webhook - Enrollment', () => {
         response: {
           statusCode: 200,
           message: `Ignoring unhandled event type: ${MetriportWebhookType.PatientTransfer}`,
+        },
+      })
+    })
+
+    test('Should acknowledge a patient.discharge ADT notification with 200 and not enroll', async () => {
+      await invoke({
+        meta: {
+          messageId: 'msg-adt-discharge',
+          when: '2026-07-21T10:00:00.000Z',
+          type: MetriportWebhookType.PatientDischarge,
+        },
+        payload: {
+          url: 'https://example.com/bundle',
+          patientId: 'patient-123',
+          admitTimestamp: '2026-07-21T09:00:00.000Z',
+          dischargeTimestamp: '2026-07-22T09:00:00.000Z',
+        },
+      })
+
+      expect(onSuccess).not.toHaveBeenCalled()
+      expect(onError).toHaveBeenCalledWith({
+        response: {
+          statusCode: 200,
+          message: `Ignoring unhandled event type: ${MetriportWebhookType.PatientDischarge}`,
         },
       })
     })

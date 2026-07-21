@@ -18,6 +18,22 @@ const adtEventPayloadSchema = z.object({
   whenSourceSent: z.string().optional(),
 })
 
+/**
+ * A patient entry as sent by the `medical.*` webhook family. Only `patientId`
+ * is required; everything else is optional and unknown fields are preserved
+ * (`passthrough`) since the discharge summary event is undocumented.
+ */
+const medicalPatientEntrySchema = z
+  .object({
+    patientId: z.string(),
+    externalId: z.string().optional(),
+    additionalIds: z.record(z.array(z.string())).optional(),
+    status: z.string().optional(),
+    bundle: z.unknown().optional(),
+    url: z.string().url().optional(),
+  })
+  .passthrough()
+
 const patientAdmitWebhookSchema = z.object({
   meta: metaSchema.extend({
     type: z.literal(MetriportWebhookType.PatientAdmit),
@@ -41,6 +57,14 @@ const patientTransferWebhookSchema = z.object({
   payload: adtEventPayloadSchema,
 })
 
+const dischargeSummaryWebhookSchema = z.object({
+  meta: metaSchema.extend({
+    type: z.literal(MetriportWebhookType.DischargeSummary),
+  }),
+  patients: z.array(medicalPatientEntrySchema).optional(),
+  payload: adtEventPayloadSchema.partial().optional(),
+})
+
 const pingWebhookSchema = z.object({
   meta: metaSchema.extend({
     type: z.literal(MetriportWebhookType.Ping),
@@ -56,6 +80,7 @@ export const webhookPayloadSchema = z.union([
   patientAdmitWebhookSchema,
   patientDischargeWebhookSchema,
   patientTransferWebhookSchema,
+  dischargeSummaryWebhookSchema,
   pingWebhookSchema,
 ])
 

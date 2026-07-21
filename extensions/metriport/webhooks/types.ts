@@ -3,22 +3,30 @@ import { type Bundle } from '@medplum/fhirtypes'
 /**
  * The type of Metriport real-time patient notification.
  *
- * Metriport delivers HL7v2 ADT notifications as one of the following webhook
- * types. See:
+ * Metriport delivers HL7v2 ADT notifications under the `patient.*` family and
+ * document/data notifications under the `medical.*` family. See:
  * https://docs.metriport.com/medical-api/handling-data/realtime-patient-notifications
  */
 export enum MetriportWebhookType {
   Ping = 'ping',
+  /** HL7 ADT^A01 admit notification (Encounter Bundle via a pre-signed URL). */
   PatientAdmit = 'patient.admit',
+  /** HL7 ADT^A03 discharge notification. */
   PatientDischarge = 'patient.discharge',
+  /** HL7 ADT^A02 transfer notification. */
   PatientTransfer = 'patient.transfer',
+  /**
+   * Discharge summary notification. Currently undocumented by Metriport but
+   * modelled on the published `medical.*` webhook family (a `patients` array).
+   */
+  DischargeSummary = 'medical.discharge-summary',
 }
 
 /**
  * The event type surfaced to the care flow as a data point so it can be
- * distinguished on. We are interested in two of them for enrollment:
- *  - `adt`: the patient was admitted (HL7 ADT^A01)
- *  - `discharge`: the patient was discharged (HL7 ADT^A03)
+ * distinguished on. We enroll on two of them:
+ *  - `adt`: the patient was admitted (`patient.admit`, HL7 ADT^A01)
+ *  - `discharge`: a discharge summary was produced (`medical.discharge-summary`)
  */
 export enum EnrollmentEventType {
   Adt = 'adt',
@@ -53,6 +61,22 @@ export interface MetriportAdtEventPayload {
   whenSourceSent?: string
 }
 
+/**
+ * A single patient entry as delivered by the `medical.*` webhook family. The
+ * discharge summary FHIR data may be embedded inline (`bundle`, as in
+ * `medical.consolidated-data`) or referenced by a pre-signed `url`. Unknown
+ * fields are preserved so nothing is lost while the event is undocumented.
+ */
+export interface MetriportMedicalPatientEntry {
+  patientId: string
+  externalId?: string
+  additionalIds?: Record<string, string[]>
+  status?: string
+  bundle?: Bundle
+  url?: string
+  [key: string]: unknown
+}
+
 export interface MetriportPatientAdmitWebhook {
   meta: MetriportWebhookMeta & { type: MetriportWebhookType.PatientAdmit }
   payload: MetriportAdtEventPayload
@@ -66,6 +90,13 @@ export interface MetriportPatientDischargeWebhook {
 export interface MetriportPatientTransferWebhook {
   meta: MetriportWebhookMeta & { type: MetriportWebhookType.PatientTransfer }
   payload: MetriportAdtEventPayload
+}
+
+export interface MetriportDischargeSummaryWebhook {
+  meta: MetriportWebhookMeta & { type: MetriportWebhookType.DischargeSummary }
+  patients?: MetriportMedicalPatientEntry[]
+  /** Some notifications may carry a single top-level payload instead. */
+  payload?: MetriportAdtEventPayload
 }
 
 export interface MetriportPingWebhook {
@@ -82,10 +113,11 @@ export type MetriportEnrollmentWebhookPayload =
   | MetriportPatientAdmitWebhook
   | MetriportPatientDischargeWebhook
   | MetriportPatientTransferWebhook
+  | MetriportDischargeSummaryWebhook
   | MetriportPingWebhook
 
 /**
- * The FHIR Encounter Bundle referenced by the notification `url`.
+ * The FHIR Encounter Bundle referenced by an ADT notification `url`.
  * https://docs.metriport.com/medical-api/handling-data/patient-encounter-bundle
  */
 export type EncounterBundle = Bundle
