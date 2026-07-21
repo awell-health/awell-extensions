@@ -1,3 +1,5 @@
 export * from './SendCall.schema'
 export * from './GetCallDetails.schema'
 export * from './StopActiveCall.schema'
+export * from './SendSms.schema'
+export * from './CreateSmsConversation.schema'
