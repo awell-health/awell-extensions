@@ -2,7 +2,6 @@ import * as z from 'zod'
 import { optionalEmailSchema } from '../../../../src/utils/emailValidation'
 import {
   genderAtBirthSchema,
-  addressSchema,
   usStateForAddressSchema,
 } from '@metriport/api-sdk'
 
@@ -30,3 +29,13 @@ export const patientUpdateSchema = z
     id: z.string().min(1),
   })
   .merge(patientCreateSchema)
+
+export const enrollRealTimeMonitoringSchema = patientCreateSchema.merge(
+  z.object({
+    cohortId: z.string().min(1),
+  }),
+)
+
+export type EnrollRealTimeMonitoring = z.infer<
+  typeof enrollRealTimeMonitoringSchema
+>

@@ -25,6 +25,12 @@ Creates a Patient in Metriport for the specified Facility where the Patient is r
 
 Visit [endpoint docs](https://docs.metriport.com/medical-api/api-reference/patient/create-patient) for more info.
 
+## Enroll Real-time Monitoring
+
+Creates a Patient in Metriport for the specified Facility and enrolls them in real-time monitoring by adding them to the provided cohort.
+
+Visit [endpoint docs](https://docs.metriport.com/medical-api/api-reference/patient/create-patient) for more info.
+
 ## Update Patient
 
 Updates the specified Patient.

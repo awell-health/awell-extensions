@@ -1,6 +1,7 @@
 import { getPatient } from './patient/get'
 import { updatePatient } from './patient/update'
 import { createPatient } from './patient/create'
+import { enrollRealTimeMonitoring } from './patient/enrollRealTimeMonitoring'
 import { deletePatient } from './patient/delete'
 import { listDocuments } from './document/list'
 import { queryDocs } from './document/query'
@@ -12,6 +13,7 @@ import { getConsolidatedQueryStatus } from './consolidated/getConsolidatedQueryS
 export const actions = {
   getPatient,
   createPatient,
+  enrollRealTimeMonitoring,
   updatePatient,
   deletePatient,
   listDocuments,
