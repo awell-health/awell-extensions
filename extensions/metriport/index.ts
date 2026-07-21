@@ -2,7 +2,7 @@ import { actions } from './actions'
 import { type Extension } from '@awell-health/extensions-core'
 import { settings } from './settings'
 import { AuthorType, Category } from '@awell-health/extensions-core'
-// import { webhooks } from './webhooks'
+import { webhooks } from './webhooks'
 
 export const Metriport: Extension = {
   key: 'metriport',
@@ -18,5 +18,5 @@ export const Metriport: Extension = {
   },
   settings,
   actions,
-  // webhooks,
+  webhooks,
 }

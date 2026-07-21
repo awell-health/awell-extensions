@@ -67,6 +67,38 @@ Visit [endpoint docs](https://docs.metriport.com/medical-api/api-reference/docum
 
 **NOTE: This endpoint returns a URL which you can use to download the specified Document using the file name provided from the List Documents endpoint.**
 
-## More Info
+# Webhooks
+
+## Enrollment
+
+An enrollment trigger that starts a care flow when Metriport sends a [real-time patient (ADT) notification](https://docs.metriport.com/medical-api/handling-data/realtime-patient-notifications).
+
+Metriport POSTs every notification type to the same endpoint, so this webhook discriminates on the notification type and only enrolls on **admit** and **discharge** events:
+
+- `patient.admit` → surfaced as `eventType` = `adt` (HL7 ADT^A01)
+- `patient.discharge` → surfaced as `eventType` = `discharge` (HL7 ADT^A03)
+
+Use the `eventType` data point in your care flow to branch on admit vs discharge. Other notification types (e.g. `patient.transfer`) and verification `ping` requests are acknowledged with a `200` but do not enroll a patient.
+
+When the notification is received, the webhook downloads the [FHIR Encounter Bundle](https://docs.metriport.com/medical-api/handling-data/patient-encounter-bundle) from the pre-signed URL on the payload (valid for 10 minutes) and exposes it on the `encounterBundle` data point. If the bundle cannot be downloaded, enrollment still proceeds without it.
+
+### Data points
+
+| Data point | Type | Description |
+| --- | --- | --- |
+| `eventType` | string | `adt` (admit) or `discharge` |
+| `metriportPatientId` | string | The Metriport patient ID (also used as the patient identifier for enrollment) |
+| `externalId` | string | Your external patient ID, if provided to Metriport |
+| `admitTimestamp` | date | When the patient was admitted |
+| `dischargeTimestamp` | date | When the patient was discharged (discharge events only) |
+| `whenSourceSent` | date | When the source sent the notification, if available |
+| `messageId` | string | The Metriport message ID for the notification |
+| `encounterBundle` | json | The FHIR Encounter Bundle for the notification |
+
+### Verifying incoming requests
+
+Optionally set the **Webhook Key** setting to the webhook key from the Developers tab of the Metriport dashboard. When set, incoming requests must include a matching `x-webhook-key` header or they are rejected with a `401`. When left empty, requests are not verified.
+
+# More Info
 
 For more information on how to integrate with Metriport please visit our [Medical API docs](https://docs.metriport.com/medical-api/getting-started/quickstart)

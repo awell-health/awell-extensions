@@ -15,4 +15,12 @@ export const settings = {
     description: 'The base URL of the Metriport Medical API.',
     required: false,
   },
+  webhookKey: {
+    key: 'webhookKey',
+    label: 'Webhook Key',
+    obfuscated: true,
+    description:
+      'The Metriport webhook key used to verify incoming webhook requests (sent in the `x-webhook-key` header). Found in the Developers tab of the Metriport dashboard. When left empty, incoming webhook requests are not verified.',
+    required: false,
+  },
 } satisfies Record<string, Setting>
