@@ -88,4 +88,37 @@ describe('Bland.ai - Send SMS', () => {
 
     expect(onComplete).toHaveBeenCalled()
   })
+
+  test('Should append activity_id to the webhook URL', async () => {
+    await sendSms.onEvent({
+      payload: {
+        fields: {
+          userNumber: '+12223334444',
+          agentNumber: '+18162392019',
+          agentMessage: 'Hello from Awell',
+          webhook: 'https://example.com/webhooks/bland/sms',
+        },
+        settings: {
+          apiKey: 'api-key',
+        },
+        patient: { id: 'patient-id' },
+        pathway: { id: 'pathway-id', definition_id: 'definition-id' },
+        activity: { id: 'activity-id' },
+      } as any,
+      onComplete,
+      onError,
+      helpers,
+      attempt: 1,
+    })
+
+    const sdkInstance =
+      mockedSdk.mock.results[mockedSdk.mock.results.length - 1].value
+    expect(sdkInstance.sendSms).toHaveBeenCalledWith(
+      expect.objectContaining({
+        webhook:
+          'https://example.com/webhooks/bland/sms?activity_id=activity-id',
+      }),
+    )
+    expect(onComplete).toHaveBeenCalled()
+  })
 })
