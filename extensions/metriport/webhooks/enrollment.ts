@@ -1,6 +1,7 @@
 import { isNil } from 'lodash'
 import { ZodError } from 'zod'
 import { fromZodError } from 'zod-validation-error'
+import { MetriportMedicalApi } from '@metriport/api-sdk'
 import {
   type DataPointDefinition,
   type Webhook,
@@ -145,23 +146,36 @@ export const enrollment: Webhook<
     'Enrolls a patient when Metriport sends a real-time notification. Distinguishes between admit (`adt`, from `patient.admit`) and `discharge` (from `medical.discharge-summary`) events via the `eventType` data point.',
   dataPoints,
   onEvent: async ({
-    payload: { payload, headers, settings },
+    payload: { payload, rawBody, headers, settings },
     onSuccess,
     onError,
   }) => {
     try {
-      // Verify the webhook key when one is configured.
+      // Verify the Metriport webhook signature when a webhook key is configured.
+      // Metriport signs each request with an HMAC-SHA256 of the raw request body
+      // using the webhook key, delivered in the `x-metriport-signature` header.
+      // The hash must be computed over the raw body (never the re-serialized
+      // payload), so we use `rawBody` here.
+      // https://docs.metriport.com/medical-api/getting-started/webhooks#authentication
       const { webhookKey } = settings
       if (!isNil(webhookKey) && webhookKey.length > 0) {
-        const providedKeyHeader = headers['x-webhook-key']
-        const providedKey = Array.isArray(providedKeyHeader)
-          ? providedKeyHeader[0]
-          : providedKeyHeader
-        if (providedKey !== webhookKey) {
+        const signatureHeader = headers['x-metriport-signature']
+        const signature = Array.isArray(signatureHeader)
+          ? signatureHeader[0]
+          : signatureHeader
+        const isValidSignature =
+          !isNil(signature) &&
+          signature.length > 0 &&
+          MetriportMedicalApi.verifyWebhookSignature(
+            webhookKey,
+            rawBody,
+            signature,
+          )
+        if (!isValidSignature) {
           await onError({
             response: {
               statusCode: 401,
-              message: 'Invalid or missing x-webhook-key header',
+              message: 'Invalid or missing x-metriport-signature header',
             },
           })
           return

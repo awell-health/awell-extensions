@@ -95,7 +95,7 @@ Use the `eventType` data point in your care flow to branch on admit vs discharge
 
 ### Verifying incoming requests
 
-Optionally set the **Webhook Key** setting to the webhook key from the Developers tab of the Metriport dashboard. When set, incoming requests must include a matching `x-webhook-key` header or they are rejected with a `401`. When left empty, requests are not verified.
+Optionally set the **Webhook Key** setting to the webhook key from the Metriport dashboard (Settings/Developers tab). Metriport [authenticates each webhook](https://docs.metriport.com/medical-api/getting-started/webhooks#authentication) with an HMAC-SHA256 signature of the raw request body, keyed with your webhook key and sent in the `x-metriport-signature` header. When the setting is populated, the webhook recomputes the HMAC over the raw body and rejects any request whose signature is missing or does not match (`401`). When left empty, requests are not verified.
 
 # More Info
 

@@ -1,3 +1,4 @@
+import crypto from 'crypto'
 import { TestHelpers } from '@awell-health/extensions-core'
 import {
   enrollment as webhook,
@@ -5,6 +6,9 @@ import {
 } from './enrollment'
 import { fetchEncounterBundle } from './encounterBundle'
 import { MetriportWebhookType, type EncounterBundle } from './types'
+
+const sign = (key: string, body: string): string =>
+  crypto.createHmac('sha256', key).update(body).digest('hex')
 
 jest.mock('./encounterBundle')
 
@@ -281,14 +285,16 @@ describe('Metriport - Webhook - Enrollment', () => {
     })
   })
 
-  describe('When a webhook key is configured', () => {
-    test('Should reject requests with a missing or invalid key', async () => {
+  describe('When a webhook key is configured (HMAC signature verification)', () => {
+    const rawBody = Buffer.from(JSON.stringify(admitPayload))
+
+    test('Should reject requests with a missing signature header', async () => {
       await extensionWebhook.onEvent!({
         payload: {
           payload: admitPayload,
           settings: { ...mockSettings, webhookKey: 'secret' },
-          rawBody: Buffer.from(''),
-          headers: { 'x-webhook-key': 'wrong' },
+          rawBody,
+          headers: {},
         },
         onSuccess,
         onError,
@@ -299,18 +305,40 @@ describe('Metriport - Webhook - Enrollment', () => {
       expect(onError).toHaveBeenCalledWith({
         response: {
           statusCode: 401,
-          message: 'Invalid or missing x-webhook-key header',
+          message: 'Invalid or missing x-metriport-signature header',
         },
       })
     })
 
-    test('Should accept requests with a matching key', async () => {
+    test('Should reject requests with an invalid signature', async () => {
       await extensionWebhook.onEvent!({
         payload: {
           payload: admitPayload,
           settings: { ...mockSettings, webhookKey: 'secret' },
-          rawBody: Buffer.from(''),
-          headers: { 'x-webhook-key': 'secret' },
+          rawBody,
+          headers: { 'x-metriport-signature': sign('wrong-key', rawBody.toString()) },
+        },
+        onSuccess,
+        onError,
+        helpers,
+      })
+
+      expect(onSuccess).not.toHaveBeenCalled()
+      expect(onError).toHaveBeenCalledWith({
+        response: {
+          statusCode: 401,
+          message: 'Invalid or missing x-metriport-signature header',
+        },
+      })
+    })
+
+    test('Should accept requests with a valid HMAC-SHA256 signature over the raw body', async () => {
+      await extensionWebhook.onEvent!({
+        payload: {
+          payload: admitPayload,
+          settings: { ...mockSettings, webhookKey: 'secret' },
+          rawBody,
+          headers: { 'x-metriport-signature': sign('secret', rawBody.toString()) },
         },
         onSuccess,
         onError,

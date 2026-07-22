@@ -20,7 +20,7 @@ export const settings = {
     label: 'Webhook Key',
     obfuscated: true,
     description:
-      'The Metriport webhook key used to verify incoming webhook requests (sent in the `x-webhook-key` header). Found in the Developers tab of the Metriport dashboard. When left empty, incoming webhook requests are not verified.',
+      'The Metriport webhook key used to verify incoming webhook requests. Metriport signs each request with an HMAC-SHA256 of the raw body using this key, sent in the `x-metriport-signature` header. Found in the Settings/Developers tab of the Metriport dashboard. When left empty, incoming webhook requests are not verified.',
     required: false,
   },
 } satisfies Record<string, Setting>
