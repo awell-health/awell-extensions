@@ -64,6 +64,38 @@ export const fields = {
     stringType: StringType.URL,
     required: false,
   },
+  timeOut: {
+    id: 'timeOut',
+    label: 'Timeout (seconds)',
+    description:
+      'Seconds of user silence (after an agent message) before the timeout flow fires (warning message and/or conversation end). Overrides the time_out on the agent number\u2019s SMS config and persists on the conversation.',
+    type: FieldType.NUMERIC,
+    required: false,
+  },
+  timeoutMessage: {
+    id: 'timeoutMessage',
+    label: 'Timeout message',
+    description:
+      'The message sent to the user when the timeout fires. Overrides the timeout_message on the agent number\u2019s SMS config.',
+    type: FieldType.TEXT,
+    required: false,
+  },
+  warningTime: {
+    id: 'warningTime',
+    label: 'Warning time (seconds)',
+    description:
+      'Seconds of user silence before sending the warning message. Must be less than the timeout. Overrides the warning_time on the agent number\u2019s SMS config.',
+    type: FieldType.NUMERIC,
+    required: false,
+  },
+  warningMessage: {
+    id: 'warningMessage',
+    label: 'Warning message',
+    description:
+      'The warning message sent to the user at the warning time. Overrides the warning_message on the agent number\u2019s SMS config.',
+    type: FieldType.TEXT,
+    required: false,
+  },
   requestData: {
     id: 'requestData',
     label: 'Request data',
@@ -89,6 +121,10 @@ export const FieldsValidationSchema = z.object({
   pathwayId: z.string().optional(),
   newConversation: dropdownOptionsBooleanSchema.optional(),
   webhook: z.string().optional(),
+  timeOut: z.number().optional(),
+  timeoutMessage: z.string().optional(),
+  warningTime: z.number().optional(),
+  warningMessage: z.string().optional(),
   requestData: JsonObjectSchema.optional(),
   metadata: JsonObjectSchema.optional(),
 } satisfies Record<keyof typeof fields, ZodTypeAny>)

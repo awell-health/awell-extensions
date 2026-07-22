@@ -9,6 +9,10 @@ export const SendSmsInputSchema = z
     new_conversation: z.boolean().optional(),
     request_data: z.record(z.string(), z.any()).optional(),
     webhook: z.string().optional(),
+    time_out: z.number().optional(), // Seconds of user silence before the timeout flow fires. Persists on the conversation.
+    timeout_message: z.string().optional(), // Message sent when the timeout fires.
+    warning_time: z.number().optional(), // Seconds before sending the warning message. Must be less than time_out.
+    warning_message: z.string().optional(), // Warning message sent at warning_time.
     metadata: z.record(z.string(), z.any()).optional(),
   })
   .passthrough()

@@ -42,6 +42,14 @@ export const sendSms: Action<
       pathway_id: isEmpty(fields.pathwayId) ? undefined : fields.pathwayId,
       new_conversation: fields.newConversation,
       webhook: getWebhookUrl(),
+      time_out: fields.timeOut,
+      timeout_message: isEmpty(fields.timeoutMessage)
+        ? undefined
+        : fields.timeoutMessage,
+      warning_time: fields.warningTime,
+      warning_message: isEmpty(fields.warningMessage)
+        ? undefined
+        : fields.warningMessage,
       request_data: isEmpty(fields.requestData) ? undefined : fields.requestData,
       metadata: {
         ...fields.metadata,

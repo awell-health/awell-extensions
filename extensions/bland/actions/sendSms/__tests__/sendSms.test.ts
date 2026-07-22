@@ -89,6 +89,44 @@ describe('Bland.ai - Send SMS', () => {
     expect(onComplete).toHaveBeenCalled()
   })
 
+  test('Should pass timeout configuration to Bland', async () => {
+    await sendSms.onEvent({
+      payload: {
+        fields: {
+          userNumber: '+12223334444',
+          agentNumber: '+18162392019',
+          agentMessage: 'Hello from Awell',
+          timeOut: 3600,
+          timeoutMessage: 'This conversation has ended.',
+          warningTime: 1800,
+          warningMessage: 'Are you still there?',
+        },
+        settings: {
+          apiKey: 'api-key',
+        },
+        patient: { id: 'patient-id' },
+        pathway: { id: 'pathway-id', definition_id: 'definition-id' },
+        activity: { id: 'activity-id' },
+      } as any,
+      onComplete,
+      onError,
+      helpers,
+      attempt: 1,
+    })
+
+    const sdkInstance =
+      mockedSdk.mock.results[mockedSdk.mock.results.length - 1].value
+    expect(sdkInstance.sendSms).toHaveBeenCalledWith(
+      expect.objectContaining({
+        time_out: 3600,
+        timeout_message: 'This conversation has ended.',
+        warning_time: 1800,
+        warning_message: 'Are you still there?',
+      }),
+    )
+    expect(onComplete).toHaveBeenCalled()
+  })
+
   test('Should append activity_id to the webhook URL', async () => {
     await sendSms.onEvent({
       payload: {
