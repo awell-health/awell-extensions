@@ -27,6 +27,12 @@ export const sendSms: Action<
       payload,
     })
 
+    const getWebhookUrl = (): string | undefined => {
+      if (isEmpty(fields.webhook)) return undefined
+      const separator = fields.webhook?.includes('?') === true ? '&' : '?'
+      return `${fields.webhook as string}${separator}activity_id=${payload.activity.id}`
+    }
+
     const sendSmsInput = SendSmsInputSchema.parse({
       user_number: fields.userNumber,
       agent_number: fields.agentNumber,
@@ -35,6 +41,7 @@ export const sendSms: Action<
         : fields.agentMessage,
       pathway_id: isEmpty(fields.pathwayId) ? undefined : fields.pathwayId,
       new_conversation: fields.newConversation,
+      webhook: getWebhookUrl(),
       request_data: isEmpty(fields.requestData) ? undefined : fields.requestData,
       metadata: {
         ...fields.metadata,

@@ -55,6 +55,15 @@ export const fields = {
       dropdownOptions: dropdownOptionsBoolean,
     },
   },
+  webhook: {
+    id: 'webhook',
+    label: 'Webhook',
+    description:
+      'The webhook URL to send SMS conversation events to. The Awell activity ID is appended as an activity_id query parameter for correlation.',
+    type: FieldType.STRING,
+    stringType: StringType.URL,
+    required: false,
+  },
   requestData: {
     id: 'requestData',
     label: 'Request data',
@@ -79,6 +88,7 @@ export const FieldsValidationSchema = z.object({
   agentMessage: z.string().optional(),
   pathwayId: z.string().optional(),
   newConversation: dropdownOptionsBooleanSchema.optional(),
+  webhook: z.string().optional(),
   requestData: JsonObjectSchema.optional(),
   metadata: JsonObjectSchema.optional(),
 } satisfies Record<keyof typeof fields, ZodTypeAny>)
