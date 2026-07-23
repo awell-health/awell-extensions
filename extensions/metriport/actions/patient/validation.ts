@@ -20,7 +20,7 @@ export const patientCreateSchema = z.object({
   driversLicenseValue: z.string().optional(),
   phone: z.string().optional(),
   email: optionalEmailSchema,
-  cohorts: z.array(z.string()).optional(),
+  cohorts: z.array(z.string()).default([]),
 })
 
 export type PatientCreate = z.infer<typeof patientCreateSchema>
