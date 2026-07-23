@@ -14,11 +14,23 @@ export const getFaxDocumentWithOCR: Action<typeof fields, typeof settings> = {
   key: 'getFaxDocumentWithOCR',
   category: Category.DOCUMENT_MANAGEMENT,
   title: 'Get fax document with OCR',
-  description: 'Get fax document with SRFax and extract structured data with OCR',
+  description:
+    'Get fax document with SRFax and extract structured data with OCR',
   fields,
   dataPoints,
   previewable: true,
-  onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
+  onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
+
+    helpers.log(
+      { meta, fields: payload.fields },
+      'Processing getFaxDocumentWithOCR',
+    )
+
     const { fields, srfaxSdk } = await validatePayloadAndCreateSdk({
       fieldsSchema: FieldsValidationSchema,
       payload,
@@ -31,7 +43,12 @@ export const getFaxDocumentWithOCR: Action<typeof fields, typeof settings> = {
       direction: 'IN',
     })
 
-    if (retrieve.status !== 'Success' || !retrieve.result) {
+    if (
+      retrieve.status !== 'Success' ||
+      retrieve.result === null ||
+      retrieve.result === undefined ||
+      retrieve.result === ''
+    ) {
       await onError({
         events: [
           addActivityEventLog({
@@ -42,26 +59,46 @@ export const getFaxDocumentWithOCR: Action<typeof fields, typeof settings> = {
       return
     }
 
-    let direction: string | undefined = 'IN'
-    let date: string | undefined = undefined
-    let pageCount: string | undefined = undefined
-    let status: string | undefined = undefined
+    const direction: string | undefined = 'IN'
+    let date: string | undefined
+    let pageCount: string | undefined
+    let status: string | undefined
     const format: string | undefined = 'PDF'
 
     try {
       const inbox = await srfaxSdk.getFaxInboxAll()
       if (inbox.status === 'Success' && Array.isArray(inbox.result)) {
-        const match = inbox.result.find((i: any) => {
-          if (typeof i?.FileName === 'string' && i.FileName.includes('|')) {
-            const id = i.FileName.split('|')[1]
+        const match = inbox.result.find((i: unknown) => {
+          if (typeof i !== 'object' || i === null) {
+            return false
+          }
+
+          const item = i as { FileName?: unknown }
+          if (
+            typeof item.FileName === 'string' &&
+            item.FileName.includes('|')
+          ) {
+            const id = item.FileName.split('|')[1]
             return id === fields.faxId
           }
           return false
         })
-        if (match) {
-          date = match.Date
-          pageCount = String(match.Pages)
-          status = match.ReceiveStatus
+        if (match !== undefined) {
+          const matchedFax = match as {
+            Date?: unknown
+            Pages?: unknown
+            ReceiveStatus?: unknown
+          }
+          date =
+            typeof matchedFax.Date === 'string' ? matchedFax.Date : undefined
+          pageCount =
+            matchedFax.Pages !== null && matchedFax.Pages !== undefined
+              ? String(matchedFax.Pages)
+              : undefined
+          status =
+            typeof matchedFax.ReceiveStatus === 'string'
+              ? matchedFax.ReceiveStatus
+              : undefined
         }
       }
     } catch (_e) {}

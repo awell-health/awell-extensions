@@ -18,43 +18,68 @@ export const getComments: Action<
   previewable: false,
   dataPoints,
   supports_automated_retries: true,
-  onEvent: async ({ payload, onComplete }): Promise<void> => {
-    const { taskSdk, pathway } = await validatePayloadAndCreateSdk({
-      fieldsSchema: FieldsValidationSchema,
-      payload,
-    })
+  onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
 
-    const { data } = await taskSdk.getCareflowComments({
-      careflowId: pathway.id,
-      /**
-       * This endpoint is paginated.
-       * We currently use a heuristic and assume that 50 is a good number to retrieve all comments.
-       */
-      limit: 50,
-      offset: 0,
-    })
+    helpers.log({ meta, fields: payload.fields }, 'Processing getComments')
 
-    const commentsAsText = data.comments
-      .map((comment) => {
-        const author = `Author: ${comment.comment?.created_by?.email ?? 'Unknown user'}`
-        const date = `Date: ${new Date(
-          comment.comment?.created_at ?? '',
-        ).toLocaleDateString('en-US', {
-          year: 'numeric',
-          month: 'long',
-          day: 'numeric',
-        })}`
-        // Non-visit note text only supports plain text.
-        const commentText = htmlToEscapedJsString(comment.comment?.text ?? '')
-        return `${author}\n${date}\n\n${commentText}\n\n-------------------\n`
+    try {
+      const { taskSdk, pathway } = await validatePayloadAndCreateSdk({
+        fieldsSchema: FieldsValidationSchema,
+        payload,
       })
-      .join('\n')
 
-    await onComplete({
-      data_points: {
-        comments:
-          commentsAsText.length > 0 ? commentsAsText : 'No comments found',
-      },
-    })
+      const { data } = await taskSdk.getCareflowComments({
+        careflowId: pathway.id,
+        /**
+         * This endpoint is paginated.
+         * We currently use a heuristic and assume that 50 is a good number to retrieve all comments.
+         */
+        limit: 50,
+        offset: 0,
+      })
+
+      const commentsAsText = data.comments
+        .map((comment) => {
+          const author = `Author: ${comment.comment?.created_by?.email ?? 'Unknown user'}`
+          const date = `Date: ${new Date(
+            comment.comment?.created_at ?? '',
+          ).toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+          })}`
+          // Non-visit note text only supports plain text.
+          const commentText = htmlToEscapedJsString(comment.comment?.text ?? '')
+          return `${author}\n${date}\n\n${commentText}\n\n-------------------\n`
+        })
+        .join('\n')
+
+      await onComplete({
+        data_points: {
+          comments:
+            commentsAsText.length > 0 ? commentsAsText : 'No comments found',
+        },
+      })
+    } catch (err) {
+      helpers.log({ meta, err }, 'error', err as Error)
+      const error = err as Error
+      await onError({
+        events: [
+          {
+            date: new Date().toISOString(),
+            text: { en: error.message },
+            error: {
+              category: 'SERVER_ERROR',
+              message: error.message,
+            },
+          },
+        ],
+      })
+    }
   },
 }

@@ -28,37 +28,62 @@ export const generateMessage: Action<
   dataPoints,
 
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
-    // 1. Validate input fields
-    const {
-      communicationObjective,
-      personalizationInput,
-      stakeholder,
-      language,
-    } = FieldsValidationSchema.parse(payload.fields)
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
 
-    // 2. Initialize OpenAI model with metadata
-    const { model, metadata, callbacks } = await createOpenAIModel({
-      settings: {}, // we use built-in API key for OpenAI
-      helpers,
-      payload,
-      modelType: OPENAI_MODELS.GPT5Mini, // Using GPT-5 Mini for message generation
-    })
+    helpers.log({ meta, fields: payload.fields }, 'Processing generateMessage')
 
-    // 3. Generate message
-    const { subject, message } = await generateMessageWithLLM({
-      model,
-      communicationObjective,
-      personalizationInput,
-      stakeholder,
-      language,
-      metadata,
-      callbacks,
-    })
+    try {
+      // 1. Validate input fields
+      const {
+        communicationObjective,
+        personalizationInput,
+        stakeholder,
+        language,
+      } = FieldsValidationSchema.parse(payload.fields)
 
-    // 4. Format and return results
-    const htmlMessage = await markdownToHtml(message)
-    await onComplete({
-      data_points: { subject, message: htmlMessage },
-    })
+      // 2. Initialize OpenAI model with metadata
+      const { model, metadata, callbacks } = await createOpenAIModel({
+        settings: {}, // we use built-in API key for OpenAI
+        helpers,
+        payload,
+        modelType: OPENAI_MODELS.GPT5Mini, // Using GPT-5 Mini for message generation
+      })
+
+      // 3. Generate message
+      const { subject, message } = await generateMessageWithLLM({
+        model,
+        communicationObjective,
+        personalizationInput,
+        stakeholder,
+        language,
+        metadata,
+        callbacks,
+      })
+
+      // 4. Format and return results
+      const htmlMessage = await markdownToHtml(message)
+      await onComplete({
+        data_points: { subject, message: htmlMessage },
+      })
+    } catch (err) {
+      helpers.log({ meta, err }, 'error', err as Error)
+      const error = err as Error
+      await onError({
+        events: [
+          {
+            date: new Date().toISOString(),
+            text: { en: error.message },
+            error: {
+              category: 'SERVER_ERROR',
+              message: error.message,
+            },
+          },
+        ],
+      })
+    }
   },
 }

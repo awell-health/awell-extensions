@@ -1,6 +1,7 @@
 import DropboxSignSdk from '../../../common/sdk/dropboxSignSdk'
 import { cancelSignatureRequest } from '..'
 import { generateTestPayload } from '@/tests'
+import { TestHelpers } from '@awell-health/extensions-core'
 
 jest.mock('../../../common/sdk/dropboxSignSdk')
 
@@ -15,21 +16,21 @@ const mockFn = jest
         headers: {},
         config: {},
       },
-    })
+    }),
   )
 
 describe('Cancel signature request action', () => {
-  const onComplete = jest.fn()
-  const onError = jest.fn()
+  const { onComplete, onError, helpers, clearMocks } = TestHelpers.fromAction(
+    cancelSignatureRequest,
+  )
 
   beforeEach(() => {
-    onComplete.mockClear()
-    onError.mockClear()
+    clearMocks()
   })
 
   test('Should call the onComplete callback', async () => {
-    await cancelSignatureRequest.onActivityCreated!(
-      generateTestPayload({
+    await cancelSignatureRequest.onEvent!({
+      payload: generateTestPayload({
         fields: {
           signatureRequestId: '123',
         },
@@ -40,8 +41,10 @@ describe('Cancel signature request action', () => {
         },
       }),
       onComplete,
-      onError
-    )
+      onError,
+      helpers,
+      attempt: 1,
+    })
 
     expect(mockFn).toHaveBeenCalled()
     expect(onComplete).toHaveBeenCalled()

@@ -1,4 +1,3 @@
-import { ZodError } from 'zod'
 import { makeAPIClient } from '../../client'
 import { createMessageThread as action } from './createMessageThread'
 import { TestHelpers } from '@awell-health/extensions-core'
@@ -47,6 +46,7 @@ describe('createMessageThread action', () => {
 
   beforeEach(() => {
     clearMocks()
+    mockCreateMessageThread.mockClear()
   })
 
   describe('successful cases', () => {
@@ -82,10 +82,10 @@ describe('createMessageThread action', () => {
     it.each([
       ['invalid patientId', { patientId: 'invalid_id' }],
       ['missing messageBody', { messageBody: undefined }],
-    ])('should fail with %s', async (_, invalidFields) => {
+    ])('should call onError for %s', async (_, invalidFields) => {
       const payload = createTestPayload(invalidFields)
 
-      const response = extensionAction.onEvent({
+      await extensionAction.onEvent({
         payload,
         onComplete,
         onError,
@@ -93,7 +93,18 @@ describe('createMessageThread action', () => {
         attempt: 1,
       })
 
-      await expect(response).rejects.toThrow(ZodError)
+      expect(onError).toHaveBeenCalledWith({
+        events: [
+          expect.objectContaining({
+            error: expect.objectContaining({
+              category: 'SERVER_ERROR',
+              message: expect.any(String),
+            }),
+          }),
+        ],
+      })
+      expect(onComplete).not.toHaveBeenCalled()
+      expect(mockCreateMessageThread).not.toHaveBeenCalled()
     })
   })
 
@@ -113,7 +124,7 @@ describe('createMessageThread action', () => {
     it('should handle API errors appropriately', async () => {
       const payload = createTestPayload(validFields)
 
-      const response = extensionAction.onEvent({
+      await extensionAction.onEvent({
         payload,
         onComplete,
         onError,
@@ -121,7 +132,16 @@ describe('createMessageThread action', () => {
         attempt: 1,
       })
 
-      await expect(response).rejects.toThrow()
+      expect(onError).toHaveBeenCalledWith({
+        events: [
+          expect.objectContaining({
+            error: expect.objectContaining({
+              category: 'SERVER_ERROR',
+              message: expect.any(String),
+            }),
+          }),
+        ],
+      })
       expect(onComplete).not.toHaveBeenCalled()
     })
   })

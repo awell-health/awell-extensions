@@ -21,7 +21,15 @@ export const createUser: Action<typeof fields, typeof settings> = {
   fields,
   dataPoints,
   previewable: true,
-  onActivityCreated: async (payload, onComplete, onError) => {
+  onEvent: async ({ payload, onComplete, onError, helpers }) => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
+
+    helpers.log({ meta, fields: payload.fields }, 'Processing createUser')
+
     try {
       const {
         settings: { applicationId, chatApiToken, deskApiToken },
@@ -50,6 +58,7 @@ export const createUser: Action<typeof fields, typeof settings> = {
 
       await onComplete({ data_points: { userId: res.data.user_id } })
     } catch (err) {
+      helpers.log({ meta, err }, 'error', err as Error)
       if (err instanceof ZodError) {
         const error = fromZodError(err)
         await onError({
@@ -95,7 +104,7 @@ const parseNickname = (payload: any): string => {
 
   if (isEmpty(firstName) && isEmpty(lastName))
     throw new Error(
-      'The required nickname has not been specified, and neither the first name nor last name of the patient has been set in their profile'
+      'The required nickname has not been specified, and neither the first name nor last name of the patient has been set in their profile',
     )
 
   return `${firstName as string} ${lastName as string}`.trim()

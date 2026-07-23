@@ -16,18 +16,47 @@ export const sendEmailWithSmtp: Action<
   previewable: true,
   dataPoints,
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
-    const { hubSpotSmtpSdk, fields } = await validatePayloadAndCreateSdks({
-      fieldsSchema: FieldsValidationSchema,
-      payload,
-    })
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
 
-    if (hubSpotSmtpSdk === undefined)
-      throw new Error(
-        'Could not instantiate SMTP client. Make sure the SMTP username and password are provided and valid.'
-      )
+    helpers.log(
+      { meta, fields: payload.fields },
+      'Processing sendEmailWithSmtp',
+    )
 
-    await hubSpotSmtpSdk.sendEmail(fields)
+    try {
+      const { hubSpotSmtpSdk, fields } = await validatePayloadAndCreateSdks({
+        fieldsSchema: FieldsValidationSchema,
+        payload,
+      })
 
-    await onComplete()
+      if (hubSpotSmtpSdk === undefined)
+        throw new Error(
+          'Could not instantiate SMTP client. Make sure the SMTP username and password are provided and valid.',
+        )
+
+      helpers.log({ meta, fields }, 'Sending email via HubSpot SMTP')
+      await hubSpotSmtpSdk.sendEmail(fields)
+
+      await onComplete()
+    } catch (err) {
+      helpers.log({ meta, err }, 'error', err as Error)
+      const error = err as Error
+      await onError({
+        events: [
+          {
+            date: new Date().toISOString(),
+            text: { en: error.message },
+            error: {
+              category: 'SERVER_ERROR',
+              message: error.message,
+            },
+          },
+        ],
+      })
+    }
   },
 }

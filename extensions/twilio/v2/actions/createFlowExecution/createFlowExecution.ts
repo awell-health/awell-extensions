@@ -14,31 +14,61 @@ export const createFlowExecution: Action<typeof fields, typeof settings> = {
   fields,
   dataPoints,
   previewable: true,
-  onActivityCreated: async (payload, onComplete, onError) => {
-    const {
-      fields: { recipient, parameters, from, flow_id },
-    } = validate({
-      schema: CreateFlowExecutionSchema,
-      payload,
-    })
-
-    // TODO: get rid of this assertion
-    if (isNil(from)) {
-      throw new Error('`from` should never be invalid')
+  onEvent: async ({ payload, onComplete, onError, helpers }) => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
     }
 
-    const { client } = await createSdkClient({ payload, skipRegion: true })
+    helpers.log(
+      { meta, fields: payload.fields },
+      'Processing createFlowExecution',
+    )
 
-    const execution = await client.studio.v2.flows(flow_id).executions.create({
-      to: recipient,
-      from,
-      parameters,
-    })
+    try {
+      const {
+        fields: { recipient, parameters, from, flow_id },
+      } = validate({
+        schema: CreateFlowExecutionSchema,
+        payload,
+      })
 
-    await onComplete({
-      data_points: {
-        executionId: execution.sid,
-      },
-    })
+      // TODO: get rid of this assertion
+      if (isNil(from)) {
+        throw new Error('`from` should never be invalid')
+      }
+
+      const { client } = await createSdkClient({ payload, skipRegion: true })
+
+      const execution = await client.studio.v2
+        .flows(flow_id)
+        .executions.create({
+          to: recipient,
+          from,
+          parameters,
+        })
+
+      await onComplete({
+        data_points: {
+          executionId: execution.sid,
+        },
+      })
+    } catch (err) {
+      helpers.log({ meta, err }, 'error', err as Error)
+      const error = err as Error
+      await onError({
+        events: [
+          {
+            date: new Date().toISOString(),
+            text: { en: error.message },
+            error: {
+              category: 'SERVER_ERROR',
+              message: error.message,
+            },
+          },
+        ],
+      })
+    }
   },
 }

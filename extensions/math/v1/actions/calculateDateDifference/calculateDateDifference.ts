@@ -1,5 +1,5 @@
 import { type Action } from '@awell-health/extensions-core'
-import { Category , validate } from '@awell-health/extensions-core'
+import { Category, validate } from '@awell-health/extensions-core'
 import { type settings } from '../../../settings'
 import { fields, dataPoints, FieldsValidationSchema } from './config'
 import { fromZodError } from 'zod-validation-error'
@@ -24,7 +24,13 @@ export const calculateDateDifference: Action<typeof fields, typeof settings> = {
   fields,
   dataPoints,
   previewable: true,
-  onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
+  onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
+
     try {
       const {
         fields: { dateLeft, dateRight, unit },
@@ -67,12 +73,18 @@ export const calculateDateDifference: Action<typeof fields, typeof settings> = {
 
       const dateDifference = calculateDifference()
 
+      helpers.log(
+        { meta, dateLeft, dateRight, unit, dateDifference },
+        'Calculated date difference',
+      )
+
       await onComplete({
         data_points: {
           dateDifference: String(dateDifference),
         },
       })
     } catch (err) {
+      helpers.log({ meta, err }, 'error', err as Error)
       if (err instanceof ZodError) {
         const error = fromZodError(err)
         await onError({

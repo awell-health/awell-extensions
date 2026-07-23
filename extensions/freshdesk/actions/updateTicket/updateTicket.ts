@@ -18,7 +18,13 @@ export const updateTicket: Action<
   fields,
   previewable: true,
   dataPoints,
-  onEvent: async ({ payload, onComplete, onError }): Promise<void> => {
+  onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
+
     const { fields, freshdeskSdk } = await validatePayloadAndCreateSdk({
       fieldsSchema: FieldsValidationSchema,
       payload,
@@ -38,10 +44,13 @@ export const updateTicket: Action<
         custom_fields: fields.customFields,
       }
 
-      await freshdeskSdk.updateTicket({
+      const updateTicketInput = {
         ticketId: fields.ticketId,
         input: requestBody,
-      })
+      }
+
+      helpers.log({ meta, updateTicketInput }, 'Updating Freshdesk ticket')
+      await freshdeskSdk.updateTicket(updateTicketInput)
 
       await onComplete({
         events: [

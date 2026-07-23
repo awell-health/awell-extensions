@@ -1,12 +1,13 @@
 import { generateDynamicUrl } from '.'
 import { generateTestPayload } from '@/tests'
+import { TestHelpers } from '@awell-health/extensions-core'
 
 describe('Transform - Generate dynamic URL', () => {
-  const onComplete = jest.fn()
-  const onError = jest.fn()
+  const { onComplete, onError, helpers, clearMocks } =
+    TestHelpers.fromAction(generateDynamicUrl)
 
   beforeEach(() => {
-    jest.clearAllMocks()
+    clearMocks()
   })
 
   test('Should return the expected URL', async () => {
@@ -18,11 +19,13 @@ describe('Transform - Generate dynamic URL', () => {
       settings: {},
     })
 
-    await generateDynamicUrl.onActivityCreated!(
-      mockOnActivityCreateParams,
+    await generateDynamicUrl.onEvent!({
+      payload: mockOnActivityCreateParams,
       onComplete,
-      onError
-    )
+      onError,
+      helpers,
+      attempt: 1,
+    })
 
     expect(onComplete).toBeCalledWith({
       data_points: {
@@ -43,11 +46,13 @@ describe('Transform - Generate dynamic URL', () => {
       settings: {},
     })
 
-    await generateDynamicUrl.onActivityCreated!(
-      mockOnActivityCreateParams,
+    await generateDynamicUrl.onEvent!({
+      payload: mockOnActivityCreateParams,
       onComplete,
-      onError
-    )
+      onError,
+      helpers,
+      attempt: 1,
+    })
 
     expect(onComplete).toBeCalledWith({
       data_points: {
@@ -65,11 +70,13 @@ describe('Transform - Generate dynamic URL', () => {
       settings: {},
     })
 
-    await generateDynamicUrl.onActivityCreated!(
-      mockOnActivityCreateParams,
+    await generateDynamicUrl.onEvent!({
+      payload: mockOnActivityCreateParams,
       onComplete,
-      onError
-    )
+      onError,
+      helpers,
+      attempt: 1,
+    })
 
     expect(onError).toBeCalled()
   })

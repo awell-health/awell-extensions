@@ -2,6 +2,7 @@ import { TestHelpers } from '@awell-health/extensions-core'
 import { WestFaxApiClient } from '../../lib/api/client'
 import { getFaxDocument as action } from './getFaxDocument'
 import { getFaxDocumentMock } from './__mocks__/GetFaxDocument.mock'
+import { testPayload } from '../../../../tests'
 
 describe('WestFax - Get fax document', () => {
   let getFaxDocumentSpy: jest.SpyInstance
@@ -25,6 +26,7 @@ describe('WestFax - Get fax document', () => {
     test('Should work', async () => {
       await extensionAction.onEvent({
         payload: {
+          ...testPayload,
           fields: {
             faxId: '1',
           },

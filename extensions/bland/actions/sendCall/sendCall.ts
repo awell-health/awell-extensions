@@ -19,66 +19,93 @@ export const sendCall: Action<
   previewable: true,
   dataPoints,
   supports_automated_retries: true,
-  onEvent: async ({ payload, onComplete, helpers: { log } }): Promise<void> => {
-    const { fields: allFields, blandSdk } = await validatePayloadAndCreateSdk({
-      fieldsSchema: FieldsValidationSchema,
-      payload,
-    })
-
-    const getWebhookUrl = (): string | undefined => {
-      if (
-        allFields.completeExtensionActivityAsync &&
-        allFields.webhook !== undefined
-      ) {
-        return `${allFields.webhook}?activity_id=${payload.activity.id}`
-      }
-      return undefined
+  onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
     }
 
-    const { otherData, ...fields } = allFields
-    // otherData helps us to pass in fields that are not part of the SendCallInputSchema,
-    // given bland's schema is updating quickly
-    const sendCallInput = SendCallInputSchema.parse({
-      ...fields,
-      webhook: getWebhookUrl(),
-      ...otherData, // there can be a 'webhook' field in this otherData object, it needs to be able to override the webhook from the fields object
-      phone_number: fields.phoneNumber,
-      request_data: fields.requestData,
-      metadata: {
-        ...fields.metadata,
-        awell_patient_id: payload.patient.id,
-        awell_care_flow_definition_id: payload.pathway.definition_id,
-        awell_care_flow_id: payload.pathway.id,
-        awell_activity_id: payload.activity.id,
-      },
-      analysis_schema: fields.analysisSchema,
-    })
+    helpers.log({ meta, fields: payload.fields }, 'Processing sendCall')
 
     try {
-      log({ sendCallInput }, 'Sending call to Bland')
+      const { fields: allFields, blandSdk } = await validatePayloadAndCreateSdk(
+        {
+          fieldsSchema: FieldsValidationSchema,
+          payload,
+        },
+      )
+
+      const getWebhookUrl = (): string | undefined => {
+        if (
+          allFields.completeExtensionActivityAsync &&
+          allFields.webhook !== undefined
+        ) {
+          return `${allFields.webhook}?activity_id=${payload.activity.id}`
+        }
+        return undefined
+      }
+
+      const { otherData, ...fields } = allFields
+      // otherData helps us to pass in fields that are not part of the SendCallInputSchema,
+      // given bland's schema is updating quickly
+      const sendCallInput = SendCallInputSchema.parse({
+        ...fields,
+        webhook: getWebhookUrl(),
+        ...otherData, // there can be a 'webhook' field in this otherData object, it needs to be able to override the webhook from the fields object
+        phone_number: fields.phoneNumber,
+        request_data: fields.requestData,
+        metadata: {
+          ...fields.metadata,
+          awell_patient_id: payload.patient.id,
+          awell_care_flow_definition_id: payload.pathway.definition_id,
+          awell_care_flow_id: payload.pathway.id,
+          awell_activity_id: payload.activity.id,
+        },
+        analysis_schema: fields.analysisSchema,
+      })
+
+      try {
+        helpers.log({ meta, sendCallInput }, 'Sending call to Bland')
+      } catch (err) {
+        console.error('unable to use new helpers.log')
+        console.error(JSON.stringify(err))
+      }
+      const { data } = await blandSdk.sendCall(sendCallInput)
+
+      /**
+       * If a webhook is provided, we don't need to complete the action
+       * as the webhook will handle the completion
+       */
+      if (allFields.completeExtensionActivityAsync) {
+        return
+      }
+
+      await onComplete({
+        data_points: {
+          call_id: data.call_id,
+        },
+        events: [
+          addActivityEventLog({
+            message: `Request for call sent to Bland.\nStatus: ${data.status}\nCall ID: ${data.call_id}\nMessage: ${data.message}`,
+          }),
+        ],
+      })
     } catch (err) {
-      console.error('unable to use new helpers.log')
-      console.error(JSON.stringify(err))
+      helpers.log({ meta, err }, 'error', err as Error)
+      const error = err as Error
+      await onError({
+        events: [
+          {
+            date: new Date().toISOString(),
+            text: { en: error.message },
+            error: {
+              category: 'SERVER_ERROR',
+              message: error.message,
+            },
+          },
+        ],
+      })
     }
-    const { data } = await blandSdk.sendCall(sendCallInput)
-
-    /**
-     * If a webhook is provided, we don't need to complete the action
-     * as the webhook will handle the completion
-     */
-    if (allFields.completeExtensionActivityAsync) {
-      return
-    }
-
-    await onComplete({
-      data_points: {
-        call_id: data.call_id,
-      },
-      events: [
-        addActivityEventLog({
-          message: `Request for call sent to Bland.\nStatus: ${data.status}\nCall ID: ${data.call_id}\nMessage: ${data.message}`,
-        }),
-      ],
-    })
   },
 }

@@ -1,5 +1,4 @@
 import { TestHelpers } from '@awell-health/extensions-core'
-import { ZodError } from 'zod'
 import { generateTestPayload } from '@/tests'
 import { updateBaselineInfo } from './updateBaselineInfo'
 
@@ -105,8 +104,8 @@ describe('Update baseline info', () => {
     expect(onError).not.toHaveBeenCalled()
   })
 
-  test('Should throw an error', async () => {
-    const resp = extensionAction.onEvent({
+  test('Should call onError for invalid baseline info', async () => {
+    await extensionAction.onEvent({
       payload: generateTestPayload({
         fields: {
           baselineInfo: '',
@@ -121,7 +120,16 @@ describe('Update baseline info', () => {
       helpers,
       attempt: 1,
     })
-    await expect(resp).rejects.toThrow(ZodError)
+    expect(onError).toHaveBeenCalledWith({
+      events: [
+        expect.objectContaining({
+          error: expect.objectContaining({
+            category: 'SERVER_ERROR',
+            message: expect.any(String),
+          }),
+        }),
+      ],
+    })
     expect(onComplete).not.toHaveBeenCalled()
   })
 })

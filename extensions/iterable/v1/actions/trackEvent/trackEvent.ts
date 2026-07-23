@@ -13,29 +13,54 @@ export const trackEvent: Action<typeof fields, typeof settings> = {
   category: Category.COMMUNICATION,
   fields,
   previewable: true,
-  onActivityCreated: async (payload, onComplete, onError) => {
-    const {
-      settings: { apiKey },
-      fields: { eventName, email, userId, dataFields },
-    } = validate({
-      schema: z.object({
-        settings: SettingsValidationSchema,
-        fields: FieldsValidationSchema,
-      }),
-      payload,
-    })
+  onEvent: async ({ payload, onComplete, onError, helpers }) => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
 
-    const client = new IterableClient({
-      apiKey,
-    })
+    helpers.log({ meta, fields: payload.fields }, 'Processing trackEvent')
 
-    await client.eventsApi.trackEvent({
-      eventName,
-      email,
-      userId,
-      dataFields,
-    })
+    try {
+      const {
+        settings: { apiKey },
+        fields: { eventName, email, userId, dataFields },
+      } = validate({
+        schema: z.object({
+          settings: SettingsValidationSchema,
+          fields: FieldsValidationSchema,
+        }),
+        payload,
+      })
 
-    await onComplete()
+      const client = new IterableClient({
+        apiKey,
+      })
+
+      await client.eventsApi.trackEvent({
+        eventName,
+        email,
+        userId,
+        dataFields,
+      })
+
+      await onComplete()
+    } catch (err) {
+      helpers.log({ meta, err }, 'error', err as Error)
+      const error = err as Error
+      await onError({
+        events: [
+          {
+            date: new Date().toISOString(),
+            text: { en: error.message },
+            error: {
+              category: 'SERVER_ERROR',
+              message: error.message,
+            },
+          },
+        ],
+      })
+    }
   },
 }

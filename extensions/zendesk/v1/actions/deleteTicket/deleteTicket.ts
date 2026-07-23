@@ -17,7 +17,13 @@ export const deleteTicket: Action<typeof fields, typeof settings> = {
   category: Category.CUSTOMER_SUPPORT,
   fields,
   previewable: true,
-  onEvent: async ({ payload, onComplete, onError }): Promise<void> => {
+  onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
+
     try {
       const {
         settings,
@@ -31,7 +37,10 @@ export const deleteTicket: Action<typeof fields, typeof settings> = {
       })
 
       const client = makeAPIClient(settings)
-      await client.deleteTicket(String(ticketId))
+      const ticketIdInput = String(ticketId)
+
+      helpers.log({ meta, ticketIdInput }, 'Deleting Zendesk ticket')
+      await client.deleteTicket(ticketIdInput)
 
       await onComplete()
     } catch (err) {

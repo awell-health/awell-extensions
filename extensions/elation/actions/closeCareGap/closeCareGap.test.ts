@@ -1,4 +1,6 @@
 import { closeCareGap } from './closeCareGap'
+import { TestHelpers } from '@awell-health/extensions-core'
+import { generateTestPayload } from '@/tests'
 
 const careGapExample = {
   id: 'CARE_GAP_ID',
@@ -16,13 +18,12 @@ jest.mock('../../client', () => ({
 }))
 
 describe('Elation - Close care gap', () => {
-  const onComplete = jest.fn()
-  const onError = jest.fn()
+  const { onComplete, onError, helpers, clearMocks } =
+    TestHelpers.fromAction(closeCareGap)
 
   beforeEach(() => {
     jest.clearAllMocks()
-    onComplete.mockClear()
-    onError.mockClear()
+    clearMocks()
     mockElationAPIClient.closeCareGap.mockResolvedValue(careGapExample)
   })
 
@@ -56,7 +57,13 @@ describe('Elation - Close care gap', () => {
   }
 
   test('should close care gap', async () => {
-    await closeCareGap.onActivityCreated!(payload, onComplete, onError)
+    await closeCareGap.onEvent!({
+      payload,
+      onComplete,
+      onError,
+      helpers,
+      attempt: 1,
+    })
 
     expect(onComplete).toHaveBeenCalled()
   })

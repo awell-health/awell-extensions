@@ -29,16 +29,24 @@ export const deleteNonVisitNote: Action<typeof fields, typeof settings> = {
   description: "Delete a Non-Visit Note using Elation's patient API.",
   fields,
   previewable: true,
-  onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
+  onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
+
     try {
       const { nonVisitNoteId } = payload.fields
       const noteId = NumericIdSchema.parse(nonVisitNoteId)
 
       const api = makeAPIClient(payload.settings)
+      helpers.log({ meta, noteId }, 'Deleting Elation non-visit note')
       await api.deleteNonVisitNote(noteId)
 
       await onComplete()
     } catch (err) {
+      helpers.log({ meta, err }, 'error', err as Error)
       if (err instanceof ZodError) {
         const error = fromZodError(err)
         await onError({

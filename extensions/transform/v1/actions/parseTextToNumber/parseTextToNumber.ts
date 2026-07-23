@@ -18,7 +18,13 @@ export const parseTextToNumber: Action<
   fields,
   dataPoints,
   previewable: true,
-  onActivityCreated: async (payload, onComplete, onError) => {
+  onEvent: async ({ payload, onComplete, onError, helpers }) => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
+
     try {
       const {
         fields: { text },
@@ -32,12 +38,15 @@ export const parseTextToNumber: Action<
       const parsed = parseFloat(text)
       const output = isNaN(parsed) ? NaN : parsed
 
+      helpers.log({ meta, text, number: output }, 'Parsed text to number')
+
       await onComplete({
         data_points: {
           number: String(output),
         },
       })
     } catch (err) {
+      helpers.log({ meta, err }, 'error', err as Error)
       if (err instanceof ZodError) {
         const error = fromZodError(err)
         await onError({

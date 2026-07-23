@@ -14,68 +14,94 @@ export const sendEmail = {
   dataPoints,
   previewable: true,
   onEvent: async ({ payload, onComplete, onError, helpers }) => {
-    const {
-      brazeClient,
-      appId,
-      fields: {
-        externalUserId,
-        from,
-        replyTo: reply_to,
-        subject,
-        body,
-        preheader,
-        shouldInlineCss: should_inline_css,
-        campaignId: campaign_id,
-        messageVariantionId: message_variation_id,
-      },
-    } = await validateAndCreateClient({
-      fieldsSchema: FieldsSchema,
-      payload,
-    })
-
-    const requestBody = {
-      external_user_ids: [externalUserId],
-      ...(!isNil(campaign_id) && {
-        campaign_id,
-      }),
-      messages: {
-        email: {
-          from,
-          body,
-          app_id: appId,
-          ...(!isNil(subject) && {
-            subject,
-          }),
-          ...(!isNil(preheader) && {
-            preheader,
-          }),
-          ...(typeof should_inline_css === 'boolean'
-            ? {
-                should_inline_css,
-              }
-            : {}),
-          ...(!isNil(message_variation_id) && {
-            message_variation_id,
-          }),
-          ...(!isNil(reply_to) && {
-            reply_to,
-          }),
-        },
-      },
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
     }
 
-    const resp = await brazeClient.sendMessageImmediately(requestBody)
+    helpers.log({ meta, fields: payload.fields }, 'Processing sendEmail')
 
-    await onComplete({
-      events: [
-        {
-          date: new Date().toISOString(),
-          text: { en: `Email sent. Response: ${JSON.stringify(resp)}` },
+    try {
+      const {
+        brazeClient,
+        appId,
+        fields: {
+          externalUserId,
+          from,
+          replyTo: reply_to,
+          subject,
+          body,
+          preheader,
+          shouldInlineCss: should_inline_css,
+          campaignId: campaign_id,
+          messageVariantionId: message_variation_id,
         },
-      ],
-      data_points: {
-        EmailDispatchId: resp.dispatch_id,
-      },
-    })
+      } = await validateAndCreateClient({
+        fieldsSchema: FieldsSchema,
+        payload,
+      })
+
+      const requestBody = {
+        external_user_ids: [externalUserId],
+        ...(!isNil(campaign_id) && {
+          campaign_id,
+        }),
+        messages: {
+          email: {
+            from,
+            body,
+            app_id: appId,
+            ...(!isNil(subject) && {
+              subject,
+            }),
+            ...(!isNil(preheader) && {
+              preheader,
+            }),
+            ...(typeof should_inline_css === 'boolean'
+              ? {
+                  should_inline_css,
+                }
+              : {}),
+            ...(!isNil(message_variation_id) && {
+              message_variation_id,
+            }),
+            ...(!isNil(reply_to) && {
+              reply_to,
+            }),
+          },
+        },
+      }
+
+      helpers.log({ meta, requestBody }, 'Sending email via Braze')
+      const resp = await brazeClient.sendMessageImmediately(requestBody)
+
+      await onComplete({
+        events: [
+          {
+            date: new Date().toISOString(),
+            text: { en: `Email sent. Response: ${JSON.stringify(resp)}` },
+          },
+        ],
+        data_points: {
+          EmailDispatchId: resp.dispatch_id,
+        },
+      })
+    } catch (err) {
+      helpers.log({ meta, err }, 'error', err as Error)
+      const error = err as Error
+      await onError({
+        events: [
+          {
+            date: new Date().toISOString(),
+            text: { en: error.message },
+            error: {
+              category: 'SERVER_ERROR',
+              message: error.message,
+            },
+          },
+        ],
+      })
+    }
   },
 } satisfies Action<typeof fields, typeof settings>

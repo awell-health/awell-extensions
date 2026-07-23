@@ -1,6 +1,7 @@
 import { executeBot } from '.'
 import { generateTestPayload } from '@/tests'
 import { mockSettings } from '../../__mocks__'
+import { TestHelpers } from '@awell-health/extensions-core'
 
 jest.mock('@medplum/core', () => {
   // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -12,11 +13,12 @@ jest.mock('@medplum/core', () => {
 })
 
 describe('Medplum - Execute bot', () => {
-  const onComplete = jest.fn()
-  const onError = jest.fn()
+  const { onComplete, onError, helpers, clearMocks } =
+    TestHelpers.fromAction(executeBot)
 
   beforeEach(() => {
     jest.clearAllMocks()
+    clearMocks()
   })
 
   test('Should execute a bot', async () => {
@@ -28,11 +30,13 @@ describe('Medplum - Execute bot', () => {
       settings: mockSettings,
     })
 
-    await executeBot.onActivityCreated!(
-      mockOnActivityCreateParams,
+    await executeBot.onEvent!({
+      payload: mockOnActivityCreateParams,
       onComplete,
       onError,
-    )
+      helpers,
+      attempt: 1,
+    })
 
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {

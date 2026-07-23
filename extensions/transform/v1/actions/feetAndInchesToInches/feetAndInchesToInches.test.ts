@@ -1,12 +1,14 @@
 import { feetAndInchesToInches } from '.'
 import { generateTestPayload } from '@/tests'
+import { TestHelpers } from '@awell-health/extensions-core'
 
 describe('Transform - Feet and inches to inches', () => {
-  const onComplete = jest.fn()
-  const onError = jest.fn()
+  const { onComplete, onError, helpers, clearMocks } = TestHelpers.fromAction(
+    feetAndInchesToInches,
+  )
 
   beforeEach(() => {
-    jest.clearAllMocks()
+    clearMocks()
   })
 
   test('Should work with whole numbers', async () => {
@@ -18,11 +20,13 @@ describe('Transform - Feet and inches to inches', () => {
       settings: {},
     })
 
-    await feetAndInchesToInches.onActivityCreated!(
-      mockOnActivityCreateParams,
+    await feetAndInchesToInches.onEvent!({
+      payload: mockOnActivityCreateParams,
       onComplete,
-      onError
-    )
+      onError,
+      helpers,
+      attempt: 1,
+    })
 
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
@@ -40,11 +44,13 @@ describe('Transform - Feet and inches to inches', () => {
       settings: {},
     })
 
-    await feetAndInchesToInches.onActivityCreated!(
-      mockOnActivityCreateParams,
+    await feetAndInchesToInches.onEvent!({
+      payload: mockOnActivityCreateParams,
       onComplete,
-      onError
-    )
+      onError,
+      helpers,
+      attempt: 1,
+    })
 
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {

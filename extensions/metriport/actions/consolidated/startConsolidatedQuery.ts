@@ -34,7 +34,18 @@ export const startConsolidatedQuery: Action<
   fields: startConsolidatedQueryFields,
   previewable: false,
   dataPoints,
-  onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
+  onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
+
+    helpers.log(
+      { meta, fields: payload.fields },
+      'Processing startConsolidatedQuery',
+    )
+
     try {
       const { patientId, resources, dateFrom, dateTo, conversionType } =
         startConsolidatedQuerySchema.parse(payload.fields)
@@ -65,6 +76,7 @@ export const startConsolidatedQuery: Action<
         },
       })
     } catch (err) {
+      helpers.log({ meta, err }, 'error', err as Error)
       await handleErrorMessage(err, onError)
     }
   },

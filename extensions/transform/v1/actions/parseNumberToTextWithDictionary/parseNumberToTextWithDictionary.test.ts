@@ -1,12 +1,14 @@
 import { parseNumberToTextWithDictionary } from '.'
 import { generateTestPayload } from '@/tests'
+import { TestHelpers } from '@awell-health/extensions-core'
 
 describe('Transform - Parse number to text with dictionary', () => {
-  const onComplete = jest.fn()
-  const onError = jest.fn()
+  const { onComplete, onError, helpers, clearMocks } = TestHelpers.fromAction(
+    parseNumberToTextWithDictionary,
+  )
 
   beforeEach(() => {
-    jest.clearAllMocks()
+    clearMocks()
   })
 
   test('Should parse number to text if mapping is found in dict', async () => {
@@ -20,11 +22,13 @@ describe('Transform - Parse number to text with dictionary', () => {
       settings: {},
     })
 
-    await parseNumberToTextWithDictionary.onActivityCreated!(
-      mockOnActivityCreateParams,
+    await parseNumberToTextWithDictionary.onEvent!({
+      payload: mockOnActivityCreateParams,
       onComplete,
-      onError
-    )
+      onError,
+      helpers,
+      attempt: 1,
+    })
 
     expect(onComplete).toBeCalledWith({
       data_points: {
@@ -44,11 +48,13 @@ describe('Transform - Parse number to text with dictionary', () => {
       settings: {},
     })
 
-    await parseNumberToTextWithDictionary.onActivityCreated!(
-      mockOnActivityCreateParams,
+    await parseNumberToTextWithDictionary.onEvent!({
+      payload: mockOnActivityCreateParams,
       onComplete,
-      onError
-    )
+      onError,
+      helpers,
+      attempt: 1,
+    })
 
     expect(onComplete).toBeCalledWith({
       data_points: {
@@ -68,11 +74,13 @@ describe('Transform - Parse number to text with dictionary', () => {
       settings: {},
     })
 
-    await parseNumberToTextWithDictionary.onActivityCreated!(
-      mockOnActivityCreateParams,
+    await parseNumberToTextWithDictionary.onEvent!({
+      payload: mockOnActivityCreateParams,
       onComplete,
-      onError
-    )
+      onError,
+      helpers,
+      attempt: 1,
+    })
 
     expect(onComplete).toBeCalledWith({
       data_points: {
@@ -90,11 +98,13 @@ describe('Transform - Parse number to text with dictionary', () => {
       settings: {},
     })
 
-    await parseNumberToTextWithDictionary.onActivityCreated!(
-      mockOnActivityCreateParams,
+    await parseNumberToTextWithDictionary.onEvent!({
+      payload: mockOnActivityCreateParams,
       onComplete,
-      onError
-    )
+      onError,
+      helpers,
+      attempt: 1,
+    })
 
     expect(onComplete).toBeCalledWith({
       data_points: {
@@ -112,11 +122,13 @@ describe('Transform - Parse number to text with dictionary', () => {
       settings: {},
     })
 
-    await parseNumberToTextWithDictionary.onActivityCreated!(
-      mockOnActivityCreateParams,
+    await parseNumberToTextWithDictionary.onEvent!({
+      payload: mockOnActivityCreateParams,
       onComplete,
-      onError
-    )
+      onError,
+      helpers,
+      attempt: 1,
+    })
 
     expect(onComplete).toBeCalledWith({
       data_points: {

@@ -114,6 +114,26 @@ describe('pushFormResponsesToHealthie', () => {
      * two calls to GetFormResponse each form has a response
      */
     expect(awellSdkMock.orchestration.query).toHaveBeenCalledTimes(6)
+    const expectedMeta = {
+      tenant_id: '123',
+      careflow_id: '5eN4qWbxZGSA',
+      activity_id: 'X74HeDQ4N0gtdaSEuzF8s',
+    }
+    expect(helpers.log).toHaveBeenCalledWith(
+      expect.objectContaining({
+        meta: expectedMeta,
+        status: mockCareflowActivitiesResponse.activities[0].status,
+      }),
+      '[getAllFormsInCurrentStep] Fetched current activity',
+      undefined,
+    )
+    expect(helpers.log).toHaveBeenCalledWith(
+      expect.objectContaining({
+        meta: expectedMeta,
+        formsData: expect.any(Array),
+      }),
+      '[pushFormResponsesToHealthie] Forms data',
+    )
 
     expect(formResponseToHealthieSpy).toHaveNthReturnedWith(1, {
       formAnswers: [{ answer: '<p>Nick</p>', custom_module_id: '14460375' }],

@@ -101,7 +101,13 @@ export const createLabOrder: Action<
   fields,
   previewable: true,
   dataPoints,
-  onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
+  onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
+
     try {
       const {
         patientId,
@@ -126,7 +132,9 @@ export const createLabOrder: Action<
       })
 
       const api = makeAPIClient(payload.settings)
+      helpers.log({ meta, labOrder }, 'Creating Elation lab order')
       const { id, printable_view } = await api.createLabOrder(labOrder)
+      helpers.log({ meta, labOrderId: id }, 'Created Elation lab order')
       await onComplete({
         data_points: {
           labOrderId: String(id),
@@ -134,6 +142,7 @@ export const createLabOrder: Action<
         },
       })
     } catch (err) {
+      helpers.log({ meta, err }, 'error', err as Error)
       if (err instanceof ZodError) {
         const error = fromZodError(err)
         await onError({

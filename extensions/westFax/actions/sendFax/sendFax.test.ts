@@ -1,16 +1,17 @@
 import { generateTestPayload } from '@/tests'
 import { sendFax } from './sendFax'
 import fetchMock from 'jest-fetch-mock'
+import { TestHelpers } from '@awell-health/extensions-core'
 
 describe('send fax action', () => {
-  const onComplete = jest.fn()
-  const onError = jest.fn()
+  const { onComplete, onError, helpers, clearMocks } =
+    TestHelpers.fromAction(sendFax)
   fetchMock.enableMocks()
 
   fetchMock.mockResponseOnce(JSON.stringify({ Success: true, Result: 'asdf' }))
   test('Mock send a fax - success', async () => {
-    await sendFax.onActivityCreated!(
-      generateTestPayload({
+    await sendFax.onEvent!({
+      payload: generateTestPayload({
         fields: {
           productId: 'wrongproductid',
           number: '234234234234',
@@ -29,7 +30,9 @@ describe('send fax action', () => {
       }),
       onComplete,
       onError,
-    )
+      helpers,
+      attempt: 1,
+    })
 
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {

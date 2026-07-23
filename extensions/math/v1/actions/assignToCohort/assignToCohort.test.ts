@@ -1,12 +1,13 @@
 import { generateTestPayload } from '@/tests'
 import { assignToCohort } from './assignToCohort'
+import { TestHelpers } from '@awell-health/extensions-core'
 
 describe('Assign to cohort', () => {
-  const onComplete = jest.fn()
-  const onError = jest.fn()
+  const { onComplete, onError, helpers, clearMocks } =
+    TestHelpers.fromAction(assignToCohort)
 
   beforeEach(() => {
-    jest.clearAllMocks()
+    clearMocks()
   })
 
   describe('Determinism', () => {
@@ -19,15 +20,25 @@ describe('Assign to cohort', () => {
         settings: {},
       })
 
-      await assignToCohort.onActivityCreated!(payload, onComplete, onError)
-      const firstResult =
-        onComplete.mock.calls[0][0].data_points.cohortNumber
+      await assignToCohort.onEvent!({
+        payload: payload,
+        onComplete,
+        onError,
+        helpers,
+        attempt: 1,
+      })
+      const firstResult = onComplete.mock.calls[0][0].data_points.cohortNumber
 
       onComplete.mockClear()
 
-      await assignToCohort.onActivityCreated!(payload, onComplete, onError)
-      const secondResult =
-        onComplete.mock.calls[0][0].data_points.cohortNumber
+      await assignToCohort.onEvent!({
+        payload: payload,
+        onComplete,
+        onError,
+        helpers,
+        attempt: 1,
+      })
+      const secondResult = onComplete.mock.calls[0][0].data_points.cohortNumber
 
       expect(firstResult).toBe(secondResult)
     })
@@ -47,15 +58,27 @@ describe('Assign to cohort', () => {
           settings: {},
         })
 
-        await assignToCohort.onActivityCreated!(payload, onComplete, onError)
+        await assignToCohort.onEvent!({
+          payload: payload,
+          onComplete,
+          onError,
+          helpers,
+          attempt: 1,
+        })
         const firstResult =
-          onComplete.mock.calls[onComplete.mock.calls.length - 1][0]
-            .data_points.cohortNumber
+          onComplete.mock.calls[onComplete.mock.calls.length - 1][0].data_points
+            .cohortNumber
 
-        await assignToCohort.onActivityCreated!(payload, onComplete, onError)
+        await assignToCohort.onEvent!({
+          payload: payload,
+          onComplete,
+          onError,
+          helpers,
+          attempt: 1,
+        })
         const secondResult =
-          onComplete.mock.calls[onComplete.mock.calls.length - 1][0]
-            .data_points.cohortNumber
+          onComplete.mock.calls[onComplete.mock.calls.length - 1][0].data_points
+            .cohortNumber
 
         expect(firstResult).toBe(secondResult)
       }
@@ -84,10 +107,16 @@ describe('Assign to cohort', () => {
           settings: {},
         })
 
-        await assignToCohort.onActivityCreated!(payload, onComplete, onError)
+        await assignToCohort.onEvent!({
+          payload: payload,
+          onComplete,
+          onError,
+          helpers,
+          attempt: 1,
+        })
         const cohort = Number(
-          onComplete.mock.calls[onComplete.mock.calls.length - 1][0]
-            .data_points.cohortNumber
+          onComplete.mock.calls[onComplete.mock.calls.length - 1][0].data_points
+            .cohortNumber,
         )
 
         expect(cohort).toBeGreaterThanOrEqual(1)
@@ -101,7 +130,13 @@ describe('Assign to cohort', () => {
         settings: {},
       })
 
-      await assignToCohort.onActivityCreated!(payload, onComplete, onError)
+      await assignToCohort.onEvent!({
+        payload: payload,
+        onComplete,
+        onError,
+        helpers,
+        attempt: 1,
+      })
 
       expect(onComplete).toHaveBeenCalledWith({
         data_points: {
@@ -120,10 +155,16 @@ describe('Assign to cohort', () => {
         fields: { input, numberOfCohorts: 2 },
         settings: {},
       })
-      await assignToCohort.onActivityCreated!(payload2, onComplete, onError)
+      await assignToCohort.onEvent!({
+        payload: payload2,
+        onComplete,
+        onError,
+        helpers,
+        attempt: 1,
+      })
       const cohortWith2 = Number(
         onComplete.mock.calls[onComplete.mock.calls.length - 1][0].data_points
-          .cohortNumber
+          .cohortNumber,
       )
 
       // Get cohort with 3 cohorts
@@ -131,10 +172,16 @@ describe('Assign to cohort', () => {
         fields: { input, numberOfCohorts: 3 },
         settings: {},
       })
-      await assignToCohort.onActivityCreated!(payload3, onComplete, onError)
+      await assignToCohort.onEvent!({
+        payload: payload3,
+        onComplete,
+        onError,
+        helpers,
+        attempt: 1,
+      })
       const cohortWith3 = Number(
         onComplete.mock.calls[onComplete.mock.calls.length - 1][0].data_points
-          .cohortNumber
+          .cohortNumber,
       )
 
       // Get cohort with 4 cohorts
@@ -142,10 +189,16 @@ describe('Assign to cohort', () => {
         fields: { input, numberOfCohorts: 4 },
         settings: {},
       })
-      await assignToCohort.onActivityCreated!(payload4, onComplete, onError)
+      await assignToCohort.onEvent!({
+        payload: payload4,
+        onComplete,
+        onError,
+        helpers,
+        attempt: 1,
+      })
       const cohortWith4 = Number(
         onComplete.mock.calls[onComplete.mock.calls.length - 1][0].data_points
-          .cohortNumber
+          .cohortNumber,
       )
 
       // All should be valid cohort numbers within their respective ranges
@@ -169,10 +222,16 @@ describe('Assign to cohort', () => {
         fields: { input, numberOfCohorts: 5 },
         settings: {},
       })
-      await assignToCohort.onActivityCreated!(payload5, onComplete, onError)
+      await assignToCohort.onEvent!({
+        payload: payload5,
+        onComplete,
+        onError,
+        helpers,
+        attempt: 1,
+      })
       const cohortWith5 = Number(
         onComplete.mock.calls[onComplete.mock.calls.length - 1][0].data_points
-          .cohortNumber
+          .cohortNumber,
       )
 
       // Get cohort with 3 cohorts
@@ -180,10 +239,16 @@ describe('Assign to cohort', () => {
         fields: { input, numberOfCohorts: 3 },
         settings: {},
       })
-      await assignToCohort.onActivityCreated!(payload3, onComplete, onError)
+      await assignToCohort.onEvent!({
+        payload: payload3,
+        onComplete,
+        onError,
+        helpers,
+        attempt: 1,
+      })
       const cohortWith3 = Number(
         onComplete.mock.calls[onComplete.mock.calls.length - 1][0].data_points
-          .cohortNumber
+          .cohortNumber,
       )
 
       // Get cohort with 2 cohorts
@@ -191,10 +256,16 @@ describe('Assign to cohort', () => {
         fields: { input, numberOfCohorts: 2 },
         settings: {},
       })
-      await assignToCohort.onActivityCreated!(payload2, onComplete, onError)
+      await assignToCohort.onEvent!({
+        payload: payload2,
+        onComplete,
+        onError,
+        helpers,
+        attempt: 1,
+      })
       const cohortWith2 = Number(
         onComplete.mock.calls[onComplete.mock.calls.length - 1][0].data_points
-          .cohortNumber
+          .cohortNumber,
       )
 
       // All should be valid within their ranges
@@ -216,20 +287,32 @@ describe('Assign to cohort', () => {
         fields: { input, numberOfCohorts: 2 },
         settings: {},
       })
-      await assignToCohort.onActivityCreated!(payload2, onComplete, onError)
+      await assignToCohort.onEvent!({
+        payload: payload2,
+        onComplete,
+        onError,
+        helpers,
+        attempt: 1,
+      })
       const cohortWith2 = Number(
         onComplete.mock.calls[onComplete.mock.calls.length - 1][0].data_points
-          .cohortNumber
+          .cohortNumber,
       )
 
       const payload4 = generateTestPayload({
         fields: { input, numberOfCohorts: 4 },
         settings: {},
       })
-      await assignToCohort.onActivityCreated!(payload4, onComplete, onError)
+      await assignToCohort.onEvent!({
+        payload: payload4,
+        onComplete,
+        onError,
+        helpers,
+        attempt: 1,
+      })
       const cohortWith4 = Number(
         onComplete.mock.calls[onComplete.mock.calls.length - 1][0].data_points
-          .cohortNumber
+          .cohortNumber,
       )
 
       expect(cohortWith2).toBeGreaterThanOrEqual(1)
@@ -239,16 +322,28 @@ describe('Assign to cohort', () => {
 
       // Both calls are deterministic
       onComplete.mockClear()
-      await assignToCohort.onActivityCreated!(payload2, onComplete, onError)
-      expect(
-        Number(onComplete.mock.calls[0][0].data_points.cohortNumber)
-      ).toBe(cohortWith2)
+      await assignToCohort.onEvent!({
+        payload: payload2,
+        onComplete,
+        onError,
+        helpers,
+        attempt: 1,
+      })
+      expect(Number(onComplete.mock.calls[0][0].data_points.cohortNumber)).toBe(
+        cohortWith2,
+      )
 
       onComplete.mockClear()
-      await assignToCohort.onActivityCreated!(payload4, onComplete, onError)
-      expect(
-        Number(onComplete.mock.calls[0][0].data_points.cohortNumber)
-      ).toBe(cohortWith4)
+      await assignToCohort.onEvent!({
+        payload: payload4,
+        onComplete,
+        onError,
+        helpers,
+        attempt: 1,
+      })
+      expect(Number(onComplete.mock.calls[0][0].data_points.cohortNumber)).toBe(
+        cohortWith4,
+      )
     })
   })
 
@@ -266,10 +361,16 @@ describe('Assign to cohort', () => {
           settings: {},
         })
 
-        await assignToCohort.onActivityCreated!(payload, onComplete, onError)
+        await assignToCohort.onEvent!({
+          payload: payload,
+          onComplete,
+          onError,
+          helpers,
+          attempt: 1,
+        })
         const cohort = Number(
-          onComplete.mock.calls[onComplete.mock.calls.length - 1][0]
-            .data_points.cohortNumber
+          onComplete.mock.calls[onComplete.mock.calls.length - 1][0].data_points
+            .cohortNumber,
         )
         seenCohorts.add(cohort)
       }
@@ -286,7 +387,13 @@ describe('Assign to cohort', () => {
         settings: {},
       })
 
-      await assignToCohort.onActivityCreated!(payload, onComplete, onError)
+      await assignToCohort.onEvent!({
+        payload: payload,
+        onComplete,
+        onError,
+        helpers,
+        attempt: 1,
+      })
 
       expect(onComplete).not.toHaveBeenCalled()
       expect(onError).toHaveBeenCalledWith({
@@ -310,7 +417,13 @@ describe('Assign to cohort', () => {
         settings: {},
       })
 
-      await assignToCohort.onActivityCreated!(payload, onComplete, onError)
+      await assignToCohort.onEvent!({
+        payload: payload,
+        onComplete,
+        onError,
+        helpers,
+        attempt: 1,
+      })
 
       expect(onComplete).not.toHaveBeenCalled()
       expect(onError).toHaveBeenCalledWith({
@@ -320,8 +433,7 @@ describe('Assign to cohort', () => {
             text: { en: 'ZodValidationError' },
             error: {
               category: 'WRONG_INPUT',
-              message:
-                'Validation error: Required at "fields.input"',
+              message: 'Validation error: Required at "fields.input"',
             },
           }),
         ],
@@ -334,7 +446,13 @@ describe('Assign to cohort', () => {
         settings: {},
       })
 
-      await assignToCohort.onActivityCreated!(payload, onComplete, onError)
+      await assignToCohort.onEvent!({
+        payload: payload,
+        onComplete,
+        onError,
+        helpers,
+        attempt: 1,
+      })
 
       expect(onComplete).not.toHaveBeenCalled()
       expect(onError).toHaveBeenCalledWith({
@@ -358,7 +476,13 @@ describe('Assign to cohort', () => {
         settings: {},
       })
 
-      await assignToCohort.onActivityCreated!(payload, onComplete, onError)
+      await assignToCohort.onEvent!({
+        payload: payload,
+        onComplete,
+        onError,
+        helpers,
+        attempt: 1,
+      })
 
       expect(onComplete).not.toHaveBeenCalled()
       expect(onError).toHaveBeenCalledWith({
@@ -382,7 +506,13 @@ describe('Assign to cohort', () => {
         settings: {},
       })
 
-      await assignToCohort.onActivityCreated!(payload, onComplete, onError)
+      await assignToCohort.onEvent!({
+        payload: payload,
+        onComplete,
+        onError,
+        helpers,
+        attempt: 1,
+      })
 
       expect(onComplete).not.toHaveBeenCalled()
       expect(onError).toHaveBeenCalledWith({

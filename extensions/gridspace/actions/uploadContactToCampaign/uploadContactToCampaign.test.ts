@@ -114,32 +114,41 @@ describe('uploadContactToCampaign', () => {
     })
   })
 
-  it('should throw an error if API call fails', async () => {
+  it('should call onError if API call fails', async () => {
     mockUploadContactsToCampaign.mockRejectedValueOnce(new Error('API error'))
 
-    await expect(
-      extensionAction.onEvent({
-        payload: generateTestPayload({
-          fields: {
-            campaignId: 'campaign123',
-            data: JSON.stringify({ first_name: 'John', last_name: 'Doe' }),
-            phoneNumber: '15552223333',
-            serviceTermsReviewed: true,
-          },
-          settings: {
-            accountId: 'someAccountId',
-            clientSecret: 'someClientSecret',
-          },
-        }),
-        onComplete,
-        onError,
-        helpers,
-        attempt: 1,
+    await extensionAction.onEvent({
+      payload: generateTestPayload({
+        fields: {
+          campaignId: 'campaign123',
+          data: JSON.stringify({ first_name: 'John', last_name: 'Doe' }),
+          phoneNumber: '15552223333',
+          serviceTermsReviewed: true,
+        },
+        settings: {
+          accountId: 'someAccountId',
+          clientSecret: 'someClientSecret',
+        },
       }),
-    ).rejects.toThrow('API error')
+      onComplete,
+      onError,
+      helpers,
+      attempt: 1,
+    })
 
     expect(mockUploadContactsToCampaign).toHaveBeenCalled()
+    expect(onError).toHaveBeenCalledWith({
+      events: [
+        {
+          date: expect.any(String),
+          text: { en: 'API error' },
+          error: {
+            category: 'SERVER_ERROR',
+            message: 'API error',
+          },
+        },
+      ],
+    })
     expect(onComplete).not.toHaveBeenCalled()
-    expect(onError).not.toHaveBeenCalled()
   })
 })

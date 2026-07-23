@@ -1,5 +1,6 @@
 import { generateTestPayload } from '@/tests'
 import { getSdk } from '../../lib/sdk/graphql-codegen/generated/sdk'
+import { TestHelpers } from '@awell-health/extensions-core'
 import {
   mockGetSdk,
   mockGetSdkReturn,
@@ -10,7 +11,8 @@ jest.mock('../../lib/sdk/graphql-codegen/generated/sdk')
 jest.mock('../../lib/sdk/graphql-codegen/graphqlClient')
 
 describe('getAppointment action', () => {
-  const onComplete = jest.fn()
+  const { onComplete, onError, helpers, clearMocks } =
+    TestHelpers.fromAction(getAppointment)
   const newActivityPayload = generateTestPayload({
     fields: {
       appointmentId: 'appointment-1',
@@ -49,6 +51,7 @@ describe('getAppointment action', () => {
 
   beforeEach(() => {
     jest.clearAllMocks()
+    clearMocks()
   })
 
   test('Should handle an appointment with no date set', async () => {
@@ -58,11 +61,13 @@ describe('getAppointment action', () => {
       },
     })
 
-    await getAppointment.onActivityCreated!(
-      newActivityPayload,
+    await getAppointment.onEvent!({
+      payload: newActivityPayload,
       onComplete,
-      jest.fn(),
-    )
+      onError,
+      helpers,
+      attempt: 1,
+    })
 
     expect(mockGetSdkReturn.getAppointment).toHaveBeenCalledWith({
       id: 'appointment-1',
@@ -85,11 +90,13 @@ describe('getAppointment action', () => {
       },
     })
 
-    await getAppointment.onActivityCreated!(
-      newActivityPayload,
+    await getAppointment.onEvent!({
+      payload: newActivityPayload,
       onComplete,
-      jest.fn(),
-    )
+      onError,
+      helpers,
+      attempt: 1,
+    })
 
     expect(mockGetSdkReturn.getAppointment).toHaveBeenCalledWith({
       id: 'appointment-1',
@@ -112,11 +119,13 @@ describe('getAppointment action', () => {
       },
     })
 
-    await getAppointment.onActivityCreated!(
-      newActivityPayload,
+    await getAppointment.onEvent!({
+      payload: newActivityPayload,
       onComplete,
-      jest.fn(),
-    )
+      onError,
+      helpers,
+      attempt: 1,
+    })
 
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {

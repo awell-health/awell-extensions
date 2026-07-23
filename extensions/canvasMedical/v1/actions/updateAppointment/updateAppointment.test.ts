@@ -5,6 +5,7 @@ import {
   mockedMakeAPIClient,
   mockedSettings,
 } from '../../client/__mocks__'
+import { TestHelpers } from '@awell-health/extensions-core'
 import { updateAppointment } from './updateAppointment'
 
 jest.mock('../../client', () => ({
@@ -13,8 +14,8 @@ jest.mock('../../client', () => ({
 }))
 
 describe('updateAppointment', () => {
-  const onComplete = jest.fn()
-  const onError = jest.fn()
+  const { onComplete, onError, helpers, clearMocks } =
+    TestHelpers.fromAction(updateAppointment)
   const payload = {
     settings: mockedSettings,
     fields: {
@@ -23,11 +24,13 @@ describe('updateAppointment', () => {
   }
 
   it('should update appointment', async () => {
-    await updateAppointment.onActivityCreated!(
-      generateTestPayload(payload),
+    await updateAppointment.onEvent!({
+      payload: generateTestPayload(payload),
       onComplete,
-      onError
-    )
+      onError,
+      helpers,
+      attempt: 1,
+    })
     expect(onComplete).toHaveBeenCalledTimes(1)
     expect(onComplete).toHaveBeenCalledWith({
       data_points: { appointmentId: mockedAppointmentId },

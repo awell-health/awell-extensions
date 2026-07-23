@@ -20,42 +20,67 @@ export const startCareFlow: Action<typeof fields, typeof settings> = {
   dataPoints,
   previewable: false,
   supports_automated_retries: true,
-  onEvent: async ({ payload, onComplete, helpers }): Promise<void> => {
-    const {
-      fields: { pathwayDefinitionId, baselineInfo },
-      patient: { id: patientId },
-    } = validate({
-      schema: z.object({
-        fields: FieldsValidationSchema,
-        patient: PatientValidationSchema,
-      }),
-      payload,
-    })
+  onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
 
-    const sdk = await helpers.awellSdk()
-    const resp = await sdk.orchestration.mutation({
-      startPathway: {
-        __args: {
-          input: {
-            patient_id: patientId,
-            pathway_definition_id: pathwayDefinitionId,
-            data_points: baselineInfo,
-          },
-        },
-        pathway_id: true,
-      },
-    })
-    const careFlowId = resp.startPathway.pathway_id
+    helpers.log({ meta, fields: payload.fields }, 'Processing startCareFlow')
 
-    await onComplete({
-      data_points: {
-        careFlowId,
-      },
-      events: [
-        addActivityEventLog({
-          message: `Care flow started, instance ID: ${careFlowId}.`,
+    try {
+      const {
+        fields: { pathwayDefinitionId, baselineInfo },
+        patient: { id: patientId },
+      } = validate({
+        schema: z.object({
+          fields: FieldsValidationSchema,
+          patient: PatientValidationSchema,
         }),
-      ],
-    })
+        payload,
+      })
+
+      const sdk = await helpers.awellSdk()
+      const resp = await sdk.orchestration.mutation({
+        startPathway: {
+          __args: {
+            input: {
+              patient_id: patientId,
+              pathway_definition_id: pathwayDefinitionId,
+              data_points: baselineInfo,
+            },
+          },
+          pathway_id: true,
+        },
+      })
+      const careFlowId = resp.startPathway.pathway_id
+
+      await onComplete({
+        data_points: {
+          careFlowId,
+        },
+        events: [
+          addActivityEventLog({
+            message: `Care flow started, instance ID: ${careFlowId}.`,
+          }),
+        ],
+      })
+    } catch (err) {
+      helpers.log({ meta, err }, 'error', err as Error)
+      const error = err as Error
+      await onError({
+        events: [
+          {
+            date: new Date().toISOString(),
+            text: { en: error.message },
+            error: {
+              category: 'SERVER_ERROR',
+              message: error.message,
+            },
+          },
+        ],
+      })
+    }
   },
 }

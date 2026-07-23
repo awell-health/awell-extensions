@@ -17,7 +17,15 @@ export const sendSms: Action<typeof fields, typeof settings> = {
   fields,
   previewable: true,
   dataPoints,
-  onActivityCreated: async (payload, onComplete, onError) => {
+  onEvent: async ({ payload, onComplete, onError, helpers }) => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
+
+    helpers.log({ meta, fields: payload.fields }, 'Processing sendSms')
+
     try {
       const {
         settings: { accessToken },
@@ -34,7 +42,7 @@ export const sendSms: Action<typeof fields, typeof settings> = {
       const response: SendMessageResponse = await textLineApi.sendMessage(
         message,
         recipient,
-        departmentId
+        departmentId,
       )
 
       const conversationId = response.post.conversation_uuid
@@ -52,6 +60,7 @@ export const sendSms: Action<typeof fields, typeof settings> = {
         ],
       })
     } catch (err) {
+      helpers.log({ meta, err }, 'error', err as Error)
       if (err instanceof ZodError) {
         const error = fromZodError(err)
         await onError({

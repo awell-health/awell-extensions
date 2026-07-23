@@ -1,20 +1,20 @@
 import { sendVoiceMessage } from '..'
 import { generateTestPayload } from '@/tests'
+import { TestHelpers } from '@awell-health/extensions-core'
 
 jest.mock('../../../common/sdk/messagebirdSdk')
 
 describe('Send voice message', () => {
-  const onComplete = jest.fn()
-  const onError = jest.fn()
+  const { onComplete, onError, helpers, clearMocks } =
+    TestHelpers.fromAction(sendVoiceMessage)
 
   beforeEach(() => {
-    onComplete.mockClear()
-    onError.mockClear()
+    clearMocks()
   })
 
   test('Should call the onComplete callback', async () => {
-    await sendVoiceMessage.onActivityCreated!(
-      generateTestPayload({
+    await sendVoiceMessage.onEvent!({
+      payload: generateTestPayload({
         fields: {
           originator: 'MessageBird', // "MessageBird" can be used for test messages
           recipient: '+32476581696',
@@ -28,8 +28,10 @@ describe('Send voice message', () => {
         },
       }),
       onComplete,
-      onError
-    )
+      onError,
+      helpers,
+      attempt: 1,
+    })
     expect(onComplete).toHaveBeenCalled()
     expect(onError).not.toHaveBeenCalled()
   })

@@ -1,7 +1,7 @@
 import { createPatient as action } from '.'
 import { makeAPIClient } from '../../client'
 import { TestHelpers } from '@awell-health/extensions-core'
-import { createAxiosError } from '../../../../tests'
+import { createAxiosError, testPayload } from '../../../../tests'
 import { CreatePatientSuccessMock } from './__testdata__/createPatient.mock'
 import { FieldsValidationSchema } from './config/fields'
 
@@ -79,6 +79,7 @@ describe('Elation - Create patient', () => {
     test('Should return with correct data_points', async () => {
       await extensionAction.onEvent!({
         payload: {
+          ...testPayload,
           fields: {
             firstName: 'Test',
             middleName: 'P',
@@ -140,6 +141,7 @@ describe('Elation - Create patient', () => {
       test('Should return the existing patient id', async () => {
         await extensionAction.onEvent!({
           payload: {
+            ...testPayload,
             fields: {
               firstName: 'Nick Test',
               lastName: 'Test',
@@ -190,28 +192,37 @@ describe('Elation - Create patient', () => {
         )
       })
 
-      test('Should throw the error', async () => {
-        await expect(
-          extensionAction.onEvent!({
-            payload: {
-              fields: {
-                firstName: 'Nick Test',
-                lastName: 'Test',
-                dob: '1993-11-30',
-                sex: 'Male',
-                primaryPhysicianId: 141377681883138,
-                caregiverPracticeId: 141127173275652,
-              },
-              settings,
-            } as any,
-            onComplete,
-            onError,
-            helpers,
-            attempt: 1,
-          }),
-        ).rejects.toThrow()
+      test('Should call onError', async () => {
+        await extensionAction.onEvent!({
+          payload: {
+            ...testPayload,
+            fields: {
+              firstName: 'Nick Test',
+              lastName: 'Test',
+              dob: '1993-11-30',
+              sex: 'Male',
+              primaryPhysicianId: 141377681883138,
+              caregiverPracticeId: 141127173275652,
+            },
+            settings,
+          } as any,
+          onComplete,
+          onError,
+          helpers,
+          attempt: 1,
+        })
 
         expect(mockCreatePatient).toHaveBeenCalled()
+        expect(onError).toHaveBeenCalledWith({
+          events: [
+            expect.objectContaining({
+              error: {
+                category: 'SERVER_ERROR',
+                message: 'Request failed with status code 400',
+              },
+            }),
+          ],
+        })
         expect(onComplete).not.toHaveBeenCalled()
       })
     })

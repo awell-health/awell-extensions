@@ -2,6 +2,7 @@ import { TestHelpers } from '@awell-health/extensions-core'
 import { z } from 'zod'
 import { BlandApiClient } from '../../../api/client'
 import { getCallDetails as action } from '../getCallDetails'
+import { testPayload } from '../../../../../tests'
 
 const callData = {
   call_id: 'd9cce3f3-23cf-4fa7-b62c-8be8119b8715',
@@ -109,6 +110,7 @@ describe('Bland.ai - Get call details', () => {
   test('Should work', async () => {
     await sendCall.onEvent({
       payload: {
+        ...testPayload,
         fields: {
           callId: 'call-id',
         },

@@ -3,6 +3,7 @@ import { FreshdeskApiClient } from '../../lib/api/client'
 import { getContact as action } from './getContact'
 import { GetContactResponseMock } from './__mocks__/GetContact.mock'
 import { createAxiosError } from '../../../../tests'
+import { generateTestPayload } from '../../../../tests/constants'
 
 describe('Freshdesk - Get contact', () => {
   let getContactSpy: jest.SpyInstance
@@ -25,7 +26,7 @@ describe('Freshdesk - Get contact', () => {
 
     test('Should work', async () => {
       await extensionAction.onEvent({
-        payload: {
+        payload: generateTestPayload({
           fields: {
             contactId: '1',
           },
@@ -33,7 +34,7 @@ describe('Freshdesk - Get contact', () => {
             domain: 'domain',
             apiKey: 'api-key',
           },
-        } as any,
+        }),
         onComplete,
         onError,
         helpers,
@@ -69,7 +70,7 @@ describe('Freshdesk - Get contact', () => {
 
     test('Should call onError', async () => {
       await extensionAction.onEvent({
-        payload: {
+        payload: generateTestPayload({
           fields: {
             contactId: '1',
           },
@@ -77,7 +78,7 @@ describe('Freshdesk - Get contact', () => {
             domain: 'domain',
             apiKey: 'api-key',
           },
-        } as any,
+        }),
         onComplete,
         onError,
         helpers,

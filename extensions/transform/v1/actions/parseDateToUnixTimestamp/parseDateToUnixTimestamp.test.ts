@@ -1,12 +1,14 @@
 import { parseDateToUnixTimestamp } from '.'
 import { generateTestPayload } from '@/tests'
+import { TestHelpers } from '@awell-health/extensions-core'
 
 describe('Transform - Parse date to unix timestamp', () => {
-  const onComplete = jest.fn()
-  const onError = jest.fn()
+  const { onComplete, onError, helpers, clearMocks } = TestHelpers.fromAction(
+    parseDateToUnixTimestamp,
+  )
 
   beforeEach(() => {
-    jest.clearAllMocks()
+    clearMocks()
   })
 
   test('Should parse integer to serialized number', async () => {
@@ -17,11 +19,13 @@ describe('Transform - Parse date to unix timestamp', () => {
       settings: {},
     })
 
-    await parseDateToUnixTimestamp.onActivityCreated!(
-      mockOnActivityCreateParams,
+    await parseDateToUnixTimestamp.onEvent!({
+      payload: mockOnActivityCreateParams,
       onComplete,
-      onError
-    )
+      onError,
+      helpers,
+      attempt: 1,
+    })
 
     expect(onComplete).toBeCalledWith({
       data_points: {

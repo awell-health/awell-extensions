@@ -5,6 +5,7 @@ import {
   mockedMakeAPIClient,
   mockedSettings,
 } from '../../client/__mocks__'
+import { TestHelpers } from '@awell-health/extensions-core'
 import { createCoverage } from './createCoverage'
 
 jest.mock('../../client', () => ({
@@ -13,19 +14,21 @@ jest.mock('../../client', () => ({
 }))
 
 describe('createCoverage', () => {
-  const onComplete = jest.fn()
-  const onError = jest.fn()
+  const { onComplete, onError, helpers, clearMocks } =
+    TestHelpers.fromAction(createCoverage)
   const payload = {
     settings: mockedSettings,
     fields: mockedCreateCoverageData,
   }
 
   it('should create coverage', async () => {
-    await createCoverage.onActivityCreated!(
-      generateTestPayload(payload),
+    await createCoverage.onEvent!({
+      payload: generateTestPayload(payload),
       onComplete,
-      onError
-    )
+      onError,
+      helpers,
+      attempt: 1,
+    })
     expect(onComplete).toHaveBeenCalledTimes(1)
     expect(onComplete).toHaveBeenCalledWith({
       data_points: { coverageId: mockedCoverageId },

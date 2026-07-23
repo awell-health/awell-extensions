@@ -16,45 +16,70 @@ export const createTask: Action<
   fields,
   previewable: true,
   dataPoints,
-  onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
-    const { fields, dockClient } = await validatePayloadAndCreateClient({
-      fieldsSchema: FieldsValidationSchema,
-      payload,
-    })
+  onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
 
-    const res = await dockClient.createTask({
-      description: fields.description,
-      patient: !isEmpty(fields.patientId)
-        ? {
-            id: fields.patientId as string,
-          }
-        : undefined,
-      taskList: {
-        id: fields.taskListId,
-      },
-      taskGroup: !isEmpty(fields.taskGroupId)
-        ? {
-            id: fields.taskGroupId as string,
-          }
-        : undefined,
-      // taskMetaData: [
-      //   {
-      //     customFieldIdentifier: 'awellCareflowId',
-      //     customFieldName: 'Awell care flow ID',
-      //     value: pathwayId,
-      //   },
-      //   {
-      //     customFieldIdentifier: 'awellActivityId',
-      //     customFieldName: 'Awell activity ID',
-      //     value: activityId,
-      //   },
-      // ],
-    })
+    helpers.log({ meta, fields: payload.fields }, 'Processing createTask')
 
-    await onComplete({
-      data_points: {
-        taskId: res.id,
-      },
-    })
+    try {
+      const { fields, dockClient } = await validatePayloadAndCreateClient({
+        fieldsSchema: FieldsValidationSchema,
+        payload,
+      })
+
+      const res = await dockClient.createTask({
+        description: fields.description,
+        patient: !isEmpty(fields.patientId)
+          ? {
+              id: fields.patientId as string,
+            }
+          : undefined,
+        taskList: {
+          id: fields.taskListId,
+        },
+        taskGroup: !isEmpty(fields.taskGroupId)
+          ? {
+              id: fields.taskGroupId as string,
+            }
+          : undefined,
+        // taskMetaData: [
+        //   {
+        //     customFieldIdentifier: 'awellCareflowId',
+        //     customFieldName: 'Awell care flow ID',
+        //     value: pathwayId,
+        //   },
+        //   {
+        //     customFieldIdentifier: 'awellActivityId',
+        //     customFieldName: 'Awell activity ID',
+        //     value: activityId,
+        //   },
+        // ],
+      })
+
+      await onComplete({
+        data_points: {
+          taskId: res.id,
+        },
+      })
+    } catch (err) {
+      helpers.log({ meta, err }, 'error', err as Error)
+      const error = err as Error
+      await onError({
+        events: [
+          {
+            date: new Date().toISOString(),
+            text: { en: error.message },
+            error: {
+              category: 'SERVER_ERROR',
+              message: error.message,
+            },
+          },
+        ],
+      })
+    }
   },
 }

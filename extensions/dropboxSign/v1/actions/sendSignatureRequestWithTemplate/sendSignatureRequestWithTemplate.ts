@@ -19,7 +19,18 @@ export const sendSignatureRequestWithTemplate: Action<
   fields,
   dataPoints,
   previewable: false,
-  onActivityCreated: async (payload, onComplete, onError) => {
+  onEvent: async ({ payload, onComplete, onError, helpers }) => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
+
+    helpers.log(
+      { meta, fields: payload.fields },
+      'Processing sendSignatureRequestWithTemplate',
+    )
+
     try {
       const {
         patient: { id: patientId },
@@ -70,18 +81,18 @@ export const sendSignatureRequestWithTemplate: Action<
         },
       }
 
-      const result = await signatureRequestApi.signatureRequestSendWithTemplate(
-        data
-      )
+      const result =
+        await signatureRequestApi.signatureRequestSendWithTemplate(data)
 
       await onComplete({
         data_points: {
           signatureRequestId: String(
-            result.body.signatureRequest?.signatureRequestId
+            result.body.signatureRequest?.signatureRequestId,
           ),
         },
       })
     } catch (err) {
+      helpers.log({ meta, err }, 'error', err as Error)
       if (err instanceof ZodError) {
         const error = fromZodError(err)
         await onError({
@@ -112,7 +123,7 @@ export const sendSignatureRequestWithTemplate: Action<
               error: {
                 category: 'SERVER_ERROR',
                 message: `${String(err?.statusCode)}: ${String(
-                  sdkErrorMessage
+                  sdkErrorMessage,
                 )}`,
               },
             },

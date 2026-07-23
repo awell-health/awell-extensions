@@ -16,31 +16,56 @@ export const getAppointment: Action<
   fields,
   previewable: true,
   dataPoints,
-  onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
-    const {
-      fields: input,
-      client,
-      settings: { practiceId },
-    } = await validatePayloadAndCreateClient({
-      fieldsSchema: FieldsValidationSchema,
-      payload,
-    })
+  onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
 
-    const res = await client.getAppointment({ ...input, practiceId })
+    helpers.log({ meta, fields: payload.fields }, 'Processing getAppointment')
 
-    // Both validates and transforms some of the response data
-    const appt = AppointmentSchema.parse(res)
+    try {
+      const {
+        fields: input,
+        client,
+        settings: { practiceId },
+      } = await validatePayloadAndCreateClient({
+        fieldsSchema: FieldsValidationSchema,
+        payload,
+      })
 
-    await onComplete({
-      data_points: {
-        patientId: appt.patientid,
-        startTime: appt.starttime,
-        status: appt.appointmentstatus,
-        appointmentTypeName: appt.appointmenttype,
-        appointmentTypeId: appt.appointmenttypeid,
-        date: appt.date,
-        duration: String(appt.duration),
-      },
-    })
+      const res = await client.getAppointment({ ...input, practiceId })
+
+      // Both validates and transforms some of the response data
+      const appt = AppointmentSchema.parse(res)
+
+      await onComplete({
+        data_points: {
+          patientId: appt.patientid,
+          startTime: appt.starttime,
+          status: appt.appointmentstatus,
+          appointmentTypeName: appt.appointmenttype,
+          appointmentTypeId: appt.appointmenttypeid,
+          date: appt.date,
+          duration: String(appt.duration),
+        },
+      })
+    } catch (err) {
+      helpers.log({ meta, err }, 'error', err as Error)
+      const error = err as Error
+      await onError({
+        events: [
+          {
+            date: new Date().toISOString(),
+            text: { en: error.message },
+            error: {
+              category: 'SERVER_ERROR',
+              message: error.message,
+            },
+          },
+        ],
+      })
+    }
   },
 }

@@ -15,19 +15,44 @@ export const getPatient: Action<
   fields,
   previewable: true,
   dataPoints,
-  onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
-    const { fields, dockClient } = await validatePayloadAndCreateClient({
-      fieldsSchema: FieldsValidationSchema,
-      payload,
-    })
+  onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
 
-    const res = await dockClient.getPatient({ id: fields.dockPatientId })
+    helpers.log({ meta, fields: payload.fields }, 'Processing getPatient')
 
-    await onComplete({
-      data_points: {
-        firstName: res.firstName,
-        lastName: res.lastName,
-      },
-    })
+    try {
+      const { fields, dockClient } = await validatePayloadAndCreateClient({
+        fieldsSchema: FieldsValidationSchema,
+        payload,
+      })
+
+      const res = await dockClient.getPatient({ id: fields.dockPatientId })
+
+      await onComplete({
+        data_points: {
+          firstName: res.firstName,
+          lastName: res.lastName,
+        },
+      })
+    } catch (err) {
+      helpers.log({ meta, err }, 'error', err as Error)
+      const error = err as Error
+      await onError({
+        events: [
+          {
+            date: new Date().toISOString(),
+            text: { en: error.message },
+            error: {
+              category: 'SERVER_ERROR',
+              message: error.message,
+            },
+          },
+        ],
+      })
+    }
   },
 }

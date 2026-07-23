@@ -1,18 +1,19 @@
 import { generateTestPayload } from '@/tests'
 import { calculateDateDifference } from './calculateDateDifference'
+import { TestHelpers } from '@awell-health/extensions-core'
 
 describe('Calculate date difference', () => {
-  const onComplete = jest.fn()
-  const onError = jest.fn()
+  const { onComplete, onError, helpers, clearMocks } = TestHelpers.fromAction(
+    calculateDateDifference,
+  )
 
   beforeEach(() => {
-    onComplete.mockClear()
-    onError.mockClear()
+    clearMocks()
   })
 
   test('Date difference in seconds', async () => {
-    await calculateDateDifference.onActivityCreated!(
-      generateTestPayload({
+    await calculateDateDifference.onEvent!({
+      payload: generateTestPayload({
         fields: {
           dateLeft: '2023-04-08T10:00:00',
           dateRight: '2023-04-08T09:59:55',
@@ -21,8 +22,10 @@ describe('Calculate date difference', () => {
         settings: {},
       }),
       onComplete,
-      onError
-    )
+      onError,
+      helpers,
+      attempt: 1,
+    })
 
     expect(onComplete).toBeCalledWith({
       data_points: {
@@ -33,8 +36,8 @@ describe('Calculate date difference', () => {
   })
 
   test('Date difference in minutes', async () => {
-    await calculateDateDifference.onActivityCreated!(
-      generateTestPayload({
+    await calculateDateDifference.onEvent!({
+      payload: generateTestPayload({
         fields: {
           dateLeft: '2023-04-08T10:00:00',
           dateRight: '2023-04-08T09:50:00',
@@ -43,8 +46,10 @@ describe('Calculate date difference', () => {
         settings: {},
       }),
       onComplete,
-      onError
-    )
+      onError,
+      helpers,
+      attempt: 1,
+    })
 
     expect(onComplete).toBeCalledWith({
       data_points: {
@@ -55,8 +60,8 @@ describe('Calculate date difference', () => {
   })
 
   test('Date difference in hours', async () => {
-    await calculateDateDifference.onActivityCreated!(
-      generateTestPayload({
+    await calculateDateDifference.onEvent!({
+      payload: generateTestPayload({
         fields: {
           dateLeft: '2023-04-08T10:00:00',
           dateRight: '2023-04-08T09:00:00',
@@ -65,8 +70,10 @@ describe('Calculate date difference', () => {
         settings: {},
       }),
       onComplete,
-      onError
-    )
+      onError,
+      helpers,
+      attempt: 1,
+    })
 
     expect(onComplete).toBeCalledWith({
       data_points: {
@@ -77,8 +84,8 @@ describe('Calculate date difference', () => {
   })
 
   test('Date difference in days', async () => {
-    await calculateDateDifference.onActivityCreated!(
-      generateTestPayload({
+    await calculateDateDifference.onEvent!({
+      payload: generateTestPayload({
         fields: {
           dateLeft: '2023-04-18T10:00:00',
           dateRight: '2023-04-08T10:00:00',
@@ -87,8 +94,10 @@ describe('Calculate date difference', () => {
         settings: {},
       }),
       onComplete,
-      onError
-    )
+      onError,
+      helpers,
+      attempt: 1,
+    })
 
     expect(onComplete).toBeCalledWith({
       data_points: {
@@ -99,8 +108,8 @@ describe('Calculate date difference', () => {
   })
 
   test('Date difference in weeks', async () => {
-    await calculateDateDifference.onActivityCreated!(
-      generateTestPayload({
+    await calculateDateDifference.onEvent!({
+      payload: generateTestPayload({
         fields: {
           dateLeft: '2014-07-20T00:00:00',
           dateRight: '2014-07-05T00:00:00',
@@ -109,8 +118,10 @@ describe('Calculate date difference', () => {
         settings: {},
       }),
       onComplete,
-      onError
-    )
+      onError,
+      helpers,
+      attempt: 1,
+    })
 
     expect(onComplete).toBeCalledWith({
       data_points: {
@@ -121,8 +132,8 @@ describe('Calculate date difference', () => {
   })
 
   test('Date difference in months', async () => {
-    await calculateDateDifference.onActivityCreated!(
-      generateTestPayload({
+    await calculateDateDifference.onEvent!({
+      payload: generateTestPayload({
         fields: {
           dateLeft: '2023-09-01T00:00:00',
           dateRight: '2023-01-31T00:00:00',
@@ -131,8 +142,10 @@ describe('Calculate date difference', () => {
         settings: {},
       }),
       onComplete,
-      onError
-    )
+      onError,
+      helpers,
+      attempt: 1,
+    })
 
     expect(onComplete).toBeCalledWith({
       data_points: {
@@ -143,8 +156,8 @@ describe('Calculate date difference', () => {
   })
 
   test('Date difference in years', async () => {
-    await calculateDateDifference.onActivityCreated!(
-      generateTestPayload({
+    await calculateDateDifference.onEvent!({
+      payload: generateTestPayload({
         fields: {
           dateLeft: '2025-02-11T00:00:00',
           dateRight: '2023-12-31T00:00:00',
@@ -153,8 +166,10 @@ describe('Calculate date difference', () => {
         settings: {},
       }),
       onComplete,
-      onError
-    )
+      onError,
+      helpers,
+      attempt: 1,
+    })
 
     expect(onComplete).toBeCalledWith({
       data_points: {
@@ -165,8 +180,8 @@ describe('Calculate date difference', () => {
   })
 
   test('Date difference in non-supported unit should throw an error', async () => {
-    await calculateDateDifference.onActivityCreated!(
-      generateTestPayload({
+    await calculateDateDifference.onEvent!({
+      payload: generateTestPayload({
         fields: {
           dateLeft: '2025-02-11T00:00:00',
           dateRight: '2023-12-31T00:00:00',
@@ -175,8 +190,10 @@ describe('Calculate date difference', () => {
         settings: {},
       }),
       onComplete,
-      onError
-    )
+      onError,
+      helpers,
+      attempt: 1,
+    })
 
     expect(onComplete).not.toHaveBeenCalled()
     expect(onError).toHaveBeenCalled()

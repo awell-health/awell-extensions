@@ -19,25 +19,50 @@ export const findAppointments: Action<
   previewable: true,
   supports_automated_retries: true,
   dataPoints,
-  onEvent: async ({ payload, onComplete }): Promise<void> => {
-    const { fields, settings } = validate({
-      schema: z.object({
-        fields: FieldsValidationSchema,
-        settings: SettingsValidationSchema,
-      }),
-      payload,
-    })
+  onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
 
-    const findAppiontmentsParams = FindAppointmentFieldSchema.parse(fields)
+    helpers.log({ meta, fields: payload.fields }, 'Processing findAppointment')
 
-    const client = makeAPIClient(settings)
-    const resp = await client.findAppointments(findAppiontmentsParams)
+    try {
+      const { fields, settings } = validate({
+        schema: z.object({
+          fields: FieldsValidationSchema,
+          settings: SettingsValidationSchema,
+        }),
+        payload,
+      })
 
-    await onComplete({
-      data_points: {
-        appointments: JSON.stringify(resp),
-        appointment_exists: resp.length > 0 ? 'true' : 'false',
-      },
-    })
+      const findAppiontmentsParams = FindAppointmentFieldSchema.parse(fields)
+
+      const client = makeAPIClient(settings)
+      const resp = await client.findAppointments(findAppiontmentsParams)
+
+      await onComplete({
+        data_points: {
+          appointments: JSON.stringify(resp),
+          appointment_exists: resp.length > 0 ? 'true' : 'false',
+        },
+      })
+    } catch (err) {
+      helpers.log({ meta, err }, 'error', err as Error)
+      const error = err as Error
+      await onError({
+        events: [
+          {
+            date: new Date().toISOString(),
+            text: { en: error.message },
+            error: {
+              category: 'SERVER_ERROR',
+              message: error.message,
+            },
+          },
+        ],
+      })
+    }
   },
 }

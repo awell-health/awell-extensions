@@ -1,12 +1,13 @@
 import { serializeJson } from '.'
 import { generateTestPayload } from '@/tests'
+import { TestHelpers } from '@awell-health/extensions-core'
 
 describe('Transform - Serialize JSON', () => {
-  const onComplete = jest.fn()
-  const onError = jest.fn()
+  const { onComplete, onError, helpers, clearMocks } =
+    TestHelpers.fromAction(serializeJson)
 
   beforeEach(() => {
-    jest.clearAllMocks()
+    clearMocks()
   })
 
   test('Should serialize a JSON object to a string', async () => {
@@ -21,11 +22,13 @@ describe('Transform - Serialize JSON', () => {
       settings: {},
     })
 
-    await serializeJson.onActivityCreated!(
-      mockOnActivityCreateParams,
+    await serializeJson.onEvent!({
+      payload: mockOnActivityCreateParams,
       onComplete,
-      onError
-    )
+      onError,
+      helpers,
+      attempt: 1,
+    })
 
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {

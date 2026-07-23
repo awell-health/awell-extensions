@@ -14,7 +14,18 @@ export const extractPatientInfo: Action<typeof fields, typeof settings> = {
   fields,
   dataPoints,
   previewable: true,
-  onActivityCreated: async (payload, onComplete, onError) => {
+  onEvent: async ({ payload, onComplete, onError, helpers }) => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
+
+    helpers.log(
+      { meta, fields: payload.fields },
+      'Processing extractPatientInfo',
+    )
+
     try {
       validate({
         schema: z.object({
@@ -34,7 +45,7 @@ export const extractPatientInfo: Action<typeof fields, typeof settings> = {
           }
           return acc
         },
-        { firstName: '', lastName: '' }
+        { firstName: '', lastName: '' },
       )
       const phone =
         patient.telecom?.find((t) => t.system === 'phone' && t.use === 'mobile')
@@ -53,6 +64,7 @@ export const extractPatientInfo: Action<typeof fields, typeof settings> = {
         },
       })
     } catch (error) {
+      helpers.log({ meta, error }, 'error', error as Error)
       let parsedError
 
       if (isZodError(error)) {

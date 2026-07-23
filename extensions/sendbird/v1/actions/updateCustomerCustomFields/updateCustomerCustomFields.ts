@@ -25,7 +25,18 @@ export const updateCustomerCustomFields: Action<
   category: Category.COMMUNICATION,
   fields,
   previewable: true,
-  onActivityCreated: async (payload, onComplete, onError) => {
+  onEvent: async ({ payload, onComplete, onError, helpers }) => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
+
+    helpers.log(
+      { meta, fields: payload.fields },
+      'Processing updateCustomerCustomFields',
+    )
+
     try {
       const {
         settings: { applicationId, chatApiToken, deskApiToken },
@@ -56,7 +67,7 @@ export const updateCustomerCustomFields: Action<
         const providedFields = Object.keys(customFieldsObject)
         const receivedFields = receivedCustomFields.map(({ key }) => key)
         const missingFields = receivedFields.filter(
-          (field) => !providedFields.includes(field)
+          (field) => !providedFields.includes(field),
         )
         if (missingFields.length > 0) {
           await onError({
@@ -69,7 +80,7 @@ export const updateCustomerCustomFields: Action<
                 error: {
                   category: 'WRONG_DATA',
                   message: `The following fields were not updated: ${missingFields.join(
-                    ', '
+                    ', ',
                   )}`,
                 },
               },
@@ -90,7 +101,7 @@ export const updateCustomerCustomFields: Action<
             const valueToSet =
               customFieldsObject[key as keyof typeof customFields]
             const valueReceived = receivedCustomFields.find(
-              ({ key: receivedKey }) => key === receivedKey
+              ({ key: receivedKey }) => key === receivedKey,
             )?.value
 
             try {
@@ -116,7 +127,7 @@ export const updateCustomerCustomFields: Action<
                 error: {
                   category: 'WRONG_DATA',
                   message: `The following fields were not updated: ${fieldsWithMismatchedValues.join(
-                    ', '
+                    ', ',
                   )}`,
                 },
               },
@@ -132,6 +143,7 @@ export const updateCustomerCustomFields: Action<
       // if all checks passed, we can assume that the update was successful
       await onComplete()
     } catch (err) {
+      helpers.log({ meta, err }, 'error', err as Error)
       if (err instanceof ZodError) {
         const error = fromZodError(err)
         await onError({

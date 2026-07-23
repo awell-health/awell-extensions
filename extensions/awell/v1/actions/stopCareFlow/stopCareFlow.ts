@@ -17,27 +17,57 @@ export const stopCareFlow: Action<typeof fields, typeof settings> = {
   fields,
   previewable: false,
   supports_automated_retries: true,
-  onEvent: async ({ payload, onComplete, helpers }): Promise<void> => {
-    const {
-      fields: { careFlowIds, reason },
-      pathway: { id: currentCareFlowId },
-    } = validate({
-      schema: z.object({
-        fields: FieldsValidationSchema,
-        pathway: PathwayValidationSchema,
-      }),
-      payload,
-    })
+  onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
 
-    const awellSdk = await helpers.awellSdk()
-    const events = []
-    if (careFlowIds.length > 0) {
-      for (const careFlowId of careFlowIds) {
+    helpers.log({ meta, fields: payload.fields }, 'Processing stopCareFlow')
+
+    try {
+      const {
+        fields: { careFlowIds, reason },
+        pathway: { id: currentCareFlowId },
+      } = validate({
+        schema: z.object({
+          fields: FieldsValidationSchema,
+          pathway: PathwayValidationSchema,
+        }),
+        payload,
+      })
+
+      const awellSdk = await helpers.awellSdk()
+      const events = []
+      if (careFlowIds.length > 0) {
+        for (const careFlowId of careFlowIds) {
+          await awellSdk.orchestration.mutation({
+            stopPathway: {
+              __args: {
+                input: {
+                  pathway_id: careFlowId,
+                  reason,
+                },
+              },
+              code: true,
+              success: true,
+            },
+          })
+          events.push(
+            addActivityEventLog({
+              message: `Care flow ${careFlowId} successfully stopped.`,
+            }),
+          )
+          // wait 1 second for rate limiting
+          await new Promise((resolve) => setTimeout(resolve, 1000))
+        }
+      } else {
         await awellSdk.orchestration.mutation({
           stopPathway: {
             __args: {
               input: {
-                pathway_id: careFlowId,
+                pathway_id: currentCareFlowId,
                 reason,
               },
             },
@@ -47,34 +77,29 @@ export const stopCareFlow: Action<typeof fields, typeof settings> = {
         })
         events.push(
           addActivityEventLog({
-            message: `Care flow ${careFlowId} successfully stopped.`,
+            message: `Care flow ${currentCareFlowId} successfully stopped.`,
           }),
         )
-        // wait 1 second for rate limiting
-        await new Promise((resolve) => setTimeout(resolve, 1000))
       }
-    } else {
-      await awellSdk.orchestration.mutation({
-        stopPathway: {
-          __args: {
-            input: {
-              pathway_id: currentCareFlowId,
-              reason,
+
+      await onComplete({
+        events,
+      })
+    } catch (err) {
+      helpers.log({ meta, err }, 'error', err as Error)
+      const error = err as Error
+      await onError({
+        events: [
+          {
+            date: new Date().toISOString(),
+            text: { en: error.message },
+            error: {
+              category: 'SERVER_ERROR',
+              message: error.message,
             },
           },
-          code: true,
-          success: true,
-        },
+        ],
       })
-      events.push(
-        addActivityEventLog({
-          message: `Care flow ${currentCareFlowId} successfully stopped.`,
-        }),
-      )
     }
-
-    await onComplete({
-      events,
-    })
   },
 }

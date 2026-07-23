@@ -17,11 +17,13 @@ export const createResource: Action<
   fields,
   previewable: false,
   dataPoints,
-  onEvent: async ({ payload, onComplete, onError }): Promise<void> => {
-    const {
-      fields: input,
-      medplumSdk,
-    } = await validateAndCreateSdkClient({
+  onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
+    const { fields: input, medplumSdk } = await validateAndCreateSdkClient({
       fieldsSchema: FieldsValidationSchema,
       payload,
     })
@@ -29,24 +31,26 @@ export const createResource: Action<
     try {
       const resourceData = JSON.parse(input.resourceJson)
 
-      const shouldSearch =
-        input.searchResourceType && input.searchIdentifier
-
-      if (shouldSearch && input.searchResourceType && input.searchIdentifier) {
+      if (
+        input.searchResourceType != null &&
+        input.searchResourceType !== '' &&
+        input.searchIdentifier != null &&
+        input.searchIdentifier !== ''
+      ) {
         const searchParams: Record<string, string> = {
           identifier: input.searchIdentifier,
         }
 
         const searchBundle = await medplumSdk.search(
           input.searchResourceType as any,
-          searchParams
+          searchParams,
         )
 
-        if (searchBundle.entry && searchBundle.entry.length > 0) {
+        if (searchBundle.entry !== undefined && searchBundle.entry.length > 0) {
           const latestResource =
             searchBundle.entry[searchBundle.entry.length - 1].resource
 
-          if (latestResource) {
+          if (latestResource !== undefined) {
             await onComplete({
               data_points: {
                 resourceId: latestResource.id ?? '',
@@ -60,20 +64,28 @@ export const createResource: Action<
       }
 
       if (resourceData.resourceType === 'Bundle') {
+        helpers.log(
+          { meta, resourceData },
+          '[createResource] Executing Medplum bundle',
+        )
+
         const result = await medplumSdk.executeBatch(resourceData as Bundle)
 
         const resourceIds =
           result.entry
             ?.map((entry) => {
-              if (entry.response?.location) {
+              if (
+                entry.response?.location !== undefined &&
+                entry.response.location !== ''
+              ) {
                 const match = entry.response.location.match(
-                  /(?:^|\/)([^/]+)\/([^/]+)(?:\/|$)/
+                  /(?:^|\/)([^/]+)\/([^/]+)(?:\/|$)/,
                 )
-                return match ? match[2] : undefined
+                return match !== null ? match[2] : undefined
               }
               return entry.resource?.id
             })
-            .filter(Boolean)
+            .filter((id): id is string => id !== undefined && id !== '')
             .join(',') ?? ''
 
         const resourcesCreated =
@@ -83,24 +95,40 @@ export const createResource: Action<
               let resourceType: string | undefined
               let location: string | undefined
 
-              if (entry.response?.location) {
+              if (
+                entry.response?.location !== undefined &&
+                entry.response.location !== ''
+              ) {
                 const match = entry.response.location.match(
-                  /(?:^|\/)([^/]+)\/([^/]+)(?:\/|$)/
+                  /(?:^|\/)([^/]+)\/([^/]+)(?:\/|$)/,
                 )
-                if (match) {
+                if (match !== null) {
                   resourceType = match[1]
                   id = match[2]
                   location = `${resourceType}/${id}`
                 }
               }
 
-              if (!id && entry.resource?.id) {
+              if (
+                (id === undefined || id === '') &&
+                entry.resource?.id !== undefined &&
+                entry.resource.id !== ''
+              ) {
                 id = entry.resource.id
               }
-              if (!resourceType && entry.resource?.resourceType) {
+              if (
+                (resourceType === undefined || resourceType === '') &&
+                entry.resource?.resourceType !== undefined
+              ) {
                 resourceType = entry.resource.resourceType
               }
-              if (!location && resourceType && id) {
+              if (
+                (location === undefined || location === '') &&
+                resourceType !== undefined &&
+                resourceType !== '' &&
+                id !== undefined &&
+                id !== ''
+              ) {
                 location = `${resourceType}/${id}`
               }
 
@@ -111,7 +139,7 @@ export const createResource: Action<
                 location: location ?? '',
               }
             })
-            .filter((r) => r.id) ?? []
+            .filter((resource) => resource.id !== '') ?? []
 
         await onComplete({
           data_points: {
@@ -122,7 +150,12 @@ export const createResource: Action<
             wasResourceFound: 'false',
           },
         })
-      }else {
+      } else {
+        helpers.log(
+          { meta, resourceData },
+          '[createResource] Creating Medplum resource',
+        )
+
         const result = await medplumSdk.createResource(resourceData)
 
         await onComplete({

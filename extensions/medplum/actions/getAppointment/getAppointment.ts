@@ -16,21 +16,46 @@ export const getAppointment: Action<
   fields,
   previewable: true,
   dataPoints,
-  onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
-    const { fields: input, medplumSdk } = await validateAndCreateSdkClient({
-      fieldsSchema: FieldsValidationSchema,
-      payload,
-    })
+  onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
 
-    const resourceId =
-      extractResourceId(input.appointmentId, 'Appointment') ?? ''
+    helpers.log({ meta, fields: payload.fields }, 'Processing getAppointment')
 
-    const res = await medplumSdk.readResource('Appointment', resourceId)
+    try {
+      const { fields: input, medplumSdk } = await validateAndCreateSdkClient({
+        fieldsSchema: FieldsValidationSchema,
+        payload,
+      })
 
-    await onComplete({
-      data_points: {
-        appointmentData: JSON.stringify(res),
-      },
-    })
+      const resourceId =
+        extractResourceId(input.appointmentId, 'Appointment') ?? ''
+
+      const res = await medplumSdk.readResource('Appointment', resourceId)
+
+      await onComplete({
+        data_points: {
+          appointmentData: JSON.stringify(res),
+        },
+      })
+    } catch (err) {
+      helpers.log({ meta, err }, 'error', err as Error)
+      const error = err as Error
+      await onError({
+        events: [
+          {
+            date: new Date().toISOString(),
+            text: { en: error.message },
+            error: {
+              category: 'SERVER_ERROR',
+              message: error.message,
+            },
+          },
+        ],
+      })
+    }
   },
 }

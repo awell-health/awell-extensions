@@ -1,20 +1,20 @@
 import { sendSms } from '..'
 import { generateTestPayload } from '@/tests'
+import { TestHelpers } from '@awell-health/extensions-core'
 
 jest.mock('../../../common/sdk/messagebirdSdk')
 
 describe('Send SMS', () => {
-  const onComplete = jest.fn()
-  const onError = jest.fn()
+  const { onComplete, onError, helpers, clearMocks } =
+    TestHelpers.fromAction(sendSms)
 
   beforeEach(() => {
-    onComplete.mockClear()
-    onError.mockClear()
+    clearMocks()
   })
 
   test('Should call the onComplete callback', async () => {
-    await sendSms.onActivityCreated!(
-      generateTestPayload({
+    await sendSms.onEvent!({
+      payload: generateTestPayload({
         fields: {
           originator: 'TestMessage', // "TestMessage" can be used for test messages
           recipient: '+32476581696',
@@ -26,8 +26,10 @@ describe('Send SMS', () => {
         },
       }),
       onComplete,
-      onError
-    )
+      onError,
+      helpers,
+      attempt: 1,
+    })
     expect(onComplete).toHaveBeenCalled()
     expect(onError).not.toHaveBeenCalled()
   })

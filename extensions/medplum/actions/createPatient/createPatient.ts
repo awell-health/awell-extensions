@@ -20,82 +20,107 @@ export const createPatient: Action<
   fields,
   previewable: false,
   dataPoints,
-  onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
-    const {
-      fields: input,
-      medplumSdk,
-      patient,
-    } = await validateAndCreateSdkClient({
-      fieldsSchema: FieldsValidationSchema,
-      payload,
-    })
+  onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
 
-    const mobilePhone: ContactPoint | null = !isEmpty(input.mobilePhone)
-      ? {
-          system: 'phone',
-          value: input.mobilePhone,
-          use: 'mobile',
-        }
-      : null
+    helpers.log({ meta, fields: payload.fields }, 'Processing createPatient')
 
-    const email: ContactPoint | null = !isEmpty(input.email)
-      ? {
-          system: 'email',
-          value: input.email,
-          use: 'home',
-        }
-      : null
+    try {
+      const {
+        fields: input,
+        medplumSdk,
+        patient,
+      } = await validateAndCreateSdkClient({
+        fieldsSchema: FieldsValidationSchema,
+        payload,
+      })
 
-    const addressLine = !isEmpty(input.address) ? [input.address ?? ''] : []
+      const mobilePhone: ContactPoint | null = !isEmpty(input.mobilePhone)
+        ? {
+            system: 'phone',
+            value: input.mobilePhone,
+            use: 'mobile',
+          }
+        : null
 
-    /**
-     * We only create the patient in Medplum if that patient
-     * doesn't exist yet.
-     */
-    const res = await medplumSdk.createResourceIfNoneExist(
-      {
-        resourceType: 'Patient',
-        identifier: [
+      const email: ContactPoint | null = !isEmpty(input.email)
+        ? {
+            system: 'email',
+            value: input.email,
+            use: 'home',
+          }
+        : null
+
+      const addressLine = !isEmpty(input.address) ? [input.address ?? ''] : []
+
+      /**
+       * We only create the patient in Medplum if that patient
+       * doesn't exist yet.
+       */
+      const res = await medplumSdk.createResourceIfNoneExist(
+        {
+          resourceType: 'Patient',
+          identifier: [
+            {
+              system: 'https://www.awellhealth.com/',
+              value: patient.id,
+              assigner: {
+                display: 'Awell',
+              },
+            },
+          ],
+          name: [
+            {
+              use: 'official',
+              family: input.lastName,
+              given: isEmpty(input.firstName) ? [] : [String(input.firstName)],
+            },
+          ],
+          telecom: [
+            ...(mobilePhone != null ? [mobilePhone] : []),
+            ...(email != null ? [email] : []),
+          ],
+          birthDate: input.birthDate,
+          gender: input.gender,
+          address: [
+            {
+              use: 'home',
+              line: addressLine,
+              city: input.city,
+              state: input.state,
+              postalCode: input.postalCode,
+              country: input.country,
+            },
+          ],
+        },
+        `identifier=${AWELL_IDENTIFIER_SYSTEM}|${patient.id}`,
+      )
+
+      await onComplete({
+        data_points: {
+          // @ts-expect-error id is not included in the response type?
+          patientId: res.id,
+        },
+      })
+    } catch (err) {
+      helpers.log({ meta, err }, 'error', err as Error)
+      const error = err as Error
+      await onError({
+        events: [
           {
-            system: 'https://www.awellhealth.com/',
-            value: patient.id,
-            assigner: {
-              display: 'Awell',
+            date: new Date().toISOString(),
+            text: { en: error.message },
+            error: {
+              category: 'SERVER_ERROR',
+              message: error.message,
             },
           },
         ],
-        name: [
-          {
-            use: 'official',
-            family: input.lastName,
-            given: isEmpty(input.firstName) ? [] : [String(input.firstName)],
-          },
-        ],
-        telecom: [
-          ...((mobilePhone != null) ? [mobilePhone] : []),
-          ...((email != null) ? [email] : []),
-        ],
-        birthDate: input.birthDate,
-        gender: input.gender,
-        address: [
-          {
-            use: 'home',
-            line: addressLine,
-            city: input.city,
-            state: input.state,
-            postalCode: input.postalCode,
-            country: input.country,
-          },
-        ],
-      },
-      `identifier=${AWELL_IDENTIFIER_SYSTEM}|${patient.id}`
-    )
-
-    await onComplete({
-      data_points: {
-        // @ts-expect-error id is not included in the response type?
-        patientId: res.id,
-      },
-    })
+      })
+    }
   },
 }

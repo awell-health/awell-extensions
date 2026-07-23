@@ -112,14 +112,26 @@ describe('generateMessage', () => {
     ).createOpenAIModel
     createOpenAIModel.mockRejectedValueOnce(new Error('Failed to create model'))
 
-    await expect(
-      extensionAction.onEvent({
-        payload,
-        onComplete,
-        onError,
-        helpers,
-        attempt: 1,
-      }),
-    ).rejects.toThrow('Failed to create model')
+    await extensionAction.onEvent({
+      payload,
+      onComplete,
+      onError,
+      helpers,
+      attempt: 1,
+    })
+
+    expect(onError).toHaveBeenCalledWith({
+      events: [
+        {
+          date: expect.any(String),
+          text: { en: 'Failed to create model' },
+          error: {
+            category: 'SERVER_ERROR',
+            message: 'Failed to create model',
+          },
+        },
+      ],
+    })
+    expect(onComplete).not.toHaveBeenCalled()
   })
 })

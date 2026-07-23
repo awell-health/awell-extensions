@@ -13,38 +13,63 @@ export const sendEmail: Action<typeof fields, typeof settings> = {
   category: Category.COMMUNICATION,
   fields,
   previewable: true,
-  onActivityCreated: async (payload, onComplete, onError) => {
-    const {
-      settings: { apiKey },
-      fields: {
+  onEvent: async ({ payload, onComplete, onError, helpers }) => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
+
+    helpers.log({ meta, fields: payload.fields }, 'Processing sendEmail')
+
+    try {
+      const {
+        settings: { apiKey },
+        fields: {
+          campaignId,
+          recipientEmail,
+          recipientUserId,
+          dataFields,
+          allowRepeatMarketingSends,
+          metadata,
+        },
+      } = validate({
+        schema: z.object({
+          settings: SettingsValidationSchema,
+          fields: FieldsValidationSchema,
+        }),
+        payload,
+      })
+
+      const client = new IterableClient({
+        apiKey,
+      })
+
+      await client.emailApi.sendEmail({
         campaignId,
         recipientEmail,
         recipientUserId,
         dataFields,
         allowRepeatMarketingSends,
         metadata,
-      },
-    } = validate({
-      schema: z.object({
-        settings: SettingsValidationSchema,
-        fields: FieldsValidationSchema,
-      }),
-      payload,
-    })
+      })
 
-    const client = new IterableClient({
-      apiKey,
-    })
-
-    await client.emailApi.sendEmail({
-      campaignId,
-      recipientEmail,
-      recipientUserId,
-      dataFields,
-      allowRepeatMarketingSends,
-      metadata,
-    })
-
-    await onComplete()
+      await onComplete()
+    } catch (err) {
+      helpers.log({ meta, err }, 'error', err as Error)
+      const error = err as Error
+      await onError({
+        events: [
+          {
+            date: new Date().toISOString(),
+            text: { en: error.message },
+            error: {
+              category: 'SERVER_ERROR',
+              message: error.message,
+            },
+          },
+        ],
+      })
+    }
   },
 }

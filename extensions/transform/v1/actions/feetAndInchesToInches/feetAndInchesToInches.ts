@@ -16,22 +16,52 @@ export const feetAndInchesToInches: Action<
   fields,
   dataPoints,
   previewable: true,
-  onActivityCreated: async (payload, onComplete, onError) => {
-    const {
-      fields: { feet, inches },
-    } = validate({
-      schema: z.object({
-        fields: FieldsValidationSchema,
-      }),
-      payload,
-    })
+  onEvent: async ({ payload, onComplete, onError, helpers }) => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
 
-    const totalInches = feet * 12 + inches
+    helpers.log(
+      { meta, fields: payload.fields },
+      'Processing feetAndInchesToInches',
+    )
 
-    await onComplete({
-      data_points: {
-        inches: String(totalInches),
-      },
-    })
+    try {
+      const {
+        fields: { feet, inches },
+      } = validate({
+        schema: z.object({
+          fields: FieldsValidationSchema,
+        }),
+        payload,
+      })
+
+      const totalInches = feet * 12 + inches
+
+      helpers.log({ meta, feet, inches, totalInches }, 'Converted to inches')
+
+      await onComplete({
+        data_points: {
+          inches: String(totalInches),
+        },
+      })
+    } catch (err) {
+      helpers.log({ meta, err }, 'error', err as Error)
+      const error = err as Error
+      await onError({
+        events: [
+          {
+            date: new Date().toISOString(),
+            text: { en: error.message },
+            error: {
+              category: 'SERVER_ERROR',
+              message: error.message,
+            },
+          },
+        ],
+      })
+    }
   },
 }

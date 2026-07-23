@@ -5,6 +5,7 @@ import { createAxiosError } from '../../../../../tests'
 import { AxiosError, AxiosResponse } from 'axios'
 import { getBookingMockResponse } from './__testdata__/GetBookingMockResponse'
 import { GetBookingResponseType } from 'extensions/calDotCom/lib/api/v2/schema'
+import { generateTestPayload } from '@/tests'
 
 jest.mock('../../../lib/api/v2/client')
 
@@ -33,15 +34,18 @@ describe('Cal.com - Get booking (v2 api)', () => {
     })
 
     test('It should call the onComplete callback', async () => {
+      const payload = generateTestPayload({
+        fields: {
+          bookingUid: 'booking_uid_123',
+        },
+        settings: {
+          apiKey: 'apiKey',
+          customDomain: undefined,
+        },
+      })
+
       await extensionAction.onEvent({
-        payload: {
-          fields: {
-            bookingUid: 'booking_uid_123',
-          },
-          settings: {
-            apiKey: 'apiKey',
-          },
-        } as any,
+        payload,
         onComplete,
         onError,
         helpers,
@@ -49,6 +53,19 @@ describe('Cal.com - Get booking (v2 api)', () => {
       })
 
       expect(onError).not.toHaveBeenCalled()
+      expect(helpers.log).toHaveBeenCalledWith(
+        {
+          meta: {
+            tenant_id: payload.pathway.tenant_id,
+            careflow_id: payload.pathway.id,
+            activity_id: payload.activity.id,
+          },
+          getBookingRequest: {
+            bookingUid: 'booking_uid_123',
+          },
+        },
+        'Getting Cal.com booking',
+      )
       expect(onComplete).toHaveBeenCalledWith({
         data_points: {
           bookingData: JSON.stringify(getBookingMockResponse.data.data),
@@ -92,14 +109,15 @@ describe('Cal.com - Get booking (v2 api)', () => {
 
       test('It should call the onError callback', async () => {
         await extensionAction.onEvent({
-          payload: {
+          payload: generateTestPayload({
             fields: {
               bookingUid: 'booking_uid_123',
             },
             settings: {
               apiKey: 'apiKey',
+              customDomain: undefined,
             },
-          } as any,
+          }),
           onComplete,
           onError,
           helpers,
@@ -122,14 +140,15 @@ describe('Cal.com - Get booking (v2 api)', () => {
         // Error is handled in Extensions Core and thrown to the user in the UI
         expect(
           extensionAction.onEvent({
-            payload: {
+            payload: generateTestPayload({
               fields: {
                 bookingUid: 'booking_uid_123',
               },
               settings: {
                 apiKey: 'apiKey',
+                customDomain: undefined,
               },
-            } as any,
+            }),
             onComplete,
             onError,
             helpers,

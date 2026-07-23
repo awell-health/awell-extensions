@@ -17,7 +17,15 @@ export const sendFax: Action<typeof fields, typeof settings> = {
   fields,
   dataPoints,
   previewable: true,
-  onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
+  onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
+
+    helpers.log({ meta, fields: payload.fields }, 'Processing sendFax')
+
     const { fields, settings } = validate({
       schema: z.object({
         settings: SettingsValidationSchema,
@@ -63,7 +71,7 @@ export const sendFax: Action<typeof fields, typeof settings> = {
 
       const response = await fetch(
         'https://api2.westfax.com/REST/Fax_SendFax/json',
-        requestOptions
+        requestOptions,
       )
       const jsonResponse = await response.json()
 
@@ -77,7 +85,7 @@ export const sendFax: Action<typeof fields, typeof settings> = {
           events: [
             addActivityEventLog({
               message: `WestFax accepted the Fax, the ID of the fax is ${String(
-                faxId
+                faxId,
               )}`,
             }),
           ],
@@ -116,6 +124,7 @@ export const sendFax: Action<typeof fields, typeof settings> = {
         }
       }
     } catch (err) {
+      helpers.log({ meta, err }, 'error', err as Error)
       const error = err as Error
       await onError({
         events: [

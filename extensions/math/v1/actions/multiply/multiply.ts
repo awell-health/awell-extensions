@@ -14,22 +14,49 @@ export const multiply: Action<typeof fields, typeof settings> = {
   fields,
   dataPoints,
   previewable: true,
-  onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
-    const { fields } = validate({
-      schema: z.object({ fields: FieldsValidationSchema }),
-      payload,
-    })
-
-    const multiplyAddends = (fields: Fields): number => {
-      return Object.values(fields).reduce((acc, curr) => acc * (curr ?? 1), 1)
+  onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
     }
 
-    const product = multiplyAddends(fields)
+    helpers.log({ meta, fields: payload.fields }, 'Processing multiply')
 
-    await onComplete({
-      data_points: {
-        product: String(product),
-      },
-    })
+    try {
+      const { fields } = validate({
+        schema: z.object({ fields: FieldsValidationSchema }),
+        payload,
+      })
+
+      const multiplyAddends = (fields: Fields): number => {
+        return Object.values(fields).reduce((acc, curr) => acc * (curr ?? 1), 1)
+      }
+
+      const product = multiplyAddends(fields)
+
+      helpers.log({ meta, fields, product }, 'Calculated product')
+
+      await onComplete({
+        data_points: {
+          product: String(product),
+        },
+      })
+    } catch (err) {
+      helpers.log({ meta, err }, 'error', err as Error)
+      const error = err as Error
+      await onError({
+        events: [
+          {
+            date: new Date().toISOString(),
+            text: { en: error.message },
+            error: {
+              category: 'SERVER_ERROR',
+              message: error.message,
+            },
+          },
+        ],
+      })
+    }
   },
 }

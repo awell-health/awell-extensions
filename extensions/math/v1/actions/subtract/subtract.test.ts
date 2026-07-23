@@ -1,19 +1,18 @@
-import { ZodError } from 'zod'
 import { generateTestPayload } from '@/tests'
 import { subtract } from './subtract'
+import { TestHelpers } from '@awell-health/extensions-core'
 
 describe('Subtract', () => {
-  const onComplete = jest.fn()
-  const onError = jest.fn()
+  const { onComplete, onError, helpers, clearMocks } =
+    TestHelpers.fromAction(subtract)
 
   beforeEach(() => {
-    onComplete.mockClear()
-    onError.mockClear()
+    clearMocks()
   })
 
   test('Should work', async () => {
-    await subtract.onActivityCreated!(
-      generateTestPayload({
+    await subtract.onEvent!({
+      payload: generateTestPayload({
         fields: {
           minuend: 5,
           subtrahend: 10,
@@ -21,8 +20,10 @@ describe('Subtract', () => {
         settings: {},
       }),
       onComplete,
-      onError
-    )
+      onError,
+      helpers,
+      attempt: 1,
+    })
 
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
@@ -34,18 +35,30 @@ describe('Subtract', () => {
   })
 
   test('Should return an error if action fields are undefined', async () => {
-    await expect(
-      subtract.onActivityCreated!(
-        generateTestPayload({
-          fields: {
-            minuend: undefined,
-            subtrahend: undefined,
-          },
-          settings: {},
+    await subtract.onEvent!({
+      payload: generateTestPayload({
+        fields: {
+          minuend: undefined,
+          subtrahend: undefined,
+        },
+        settings: {},
+      }),
+      onComplete,
+      onError,
+      helpers,
+      attempt: 1,
+    })
+
+    expect(onError).toHaveBeenCalledWith({
+      events: [
+        expect.objectContaining({
+          error: expect.objectContaining({
+            category: 'SERVER_ERROR',
+            message: expect.any(String),
+          }),
         }),
-        onComplete,
-        onError
-      )
-    ).rejects.toThrow(ZodError)
+      ],
+    })
+    expect(onComplete).not.toHaveBeenCalled()
   })
 })

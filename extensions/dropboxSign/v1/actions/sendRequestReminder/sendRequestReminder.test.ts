@@ -1,4 +1,5 @@
 import DropboxSignSdk from '../../../common/sdk/dropboxSignSdk'
+import { TestHelpers } from '@awell-health/extensions-core'
 
 import { sendRequestReminder } from '..'
 import { generateTestPayload } from '@/tests'
@@ -21,21 +22,21 @@ const mockFn = jest
         headers: {},
         config: {},
       },
-    })
+    }),
   )
 
 describe('Send request reminder action', () => {
-  const onComplete = jest.fn()
-  const onError = jest.fn()
+  const { onComplete, onError, helpers, clearMocks } =
+    TestHelpers.fromAction(sendRequestReminder)
 
   beforeEach(() => {
     onError.mockClear()
-    onComplete.mockClear()
+    clearMocks()
   })
 
   test('Should call the onComplete callback', async () => {
-    await sendRequestReminder.onActivityCreated!(
-      generateTestPayload({
+    await sendRequestReminder.onEvent!({
+      payload: generateTestPayload({
         fields: {
           signatureRequestId: '123',
           signerEmailAddress: 'hello@patient.com',
@@ -47,8 +48,10 @@ describe('Send request reminder action', () => {
         },
       }),
       onComplete,
-      jest.fn()
-    )
+      onError,
+      helpers,
+      attempt: 1,
+    })
 
     expect(mockFn).toHaveBeenCalled()
     expect(onComplete).toHaveBeenCalled()

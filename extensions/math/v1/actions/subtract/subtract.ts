@@ -12,21 +12,51 @@ export const subtract: Action<typeof fields, typeof settings> = {
   fields,
   dataPoints,
   previewable: true,
-  onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
-    const {
-      fields: { minuend, subtrahend },
-    } = validate({
-      schema: z.object({ fields: FieldsValidationSchema }),
-      payload,
-    })
+  onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
 
-    const difference = minuend - subtrahend
+    helpers.log({ meta, fields: payload.fields }, 'Processing subtract')
 
-    await onComplete({
-      data_points: {
-        difference: String(difference),
-        absoluteDifference: String(Math.abs(difference)),
-      },
-    })
+    try {
+      const {
+        fields: { minuend, subtrahend },
+      } = validate({
+        schema: z.object({ fields: FieldsValidationSchema }),
+        payload,
+      })
+
+      const difference = minuend - subtrahend
+
+      helpers.log(
+        { meta, minuend, subtrahend, difference },
+        'Calculated difference',
+      )
+
+      await onComplete({
+        data_points: {
+          difference: String(difference),
+          absoluteDifference: String(Math.abs(difference)),
+        },
+      })
+    } catch (err) {
+      helpers.log({ meta, err }, 'error', err as Error)
+      const error = err as Error
+      await onError({
+        events: [
+          {
+            date: new Date().toISOString(),
+            text: { en: error.message },
+            error: {
+              category: 'SERVER_ERROR',
+              message: error.message,
+            },
+          },
+        ],
+      })
+    }
   },
 }

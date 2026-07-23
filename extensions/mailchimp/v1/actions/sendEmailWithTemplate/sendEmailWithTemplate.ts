@@ -16,6 +16,12 @@ export const sendEmailWithTemplate: Action<typeof fields, typeof settings> = {
   fields,
   previewable: false,
   onEvent: async ({ payload, onComplete, onError, helpers }) => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
+
     try {
       const {
         patient: { id: patientId },
@@ -35,7 +41,7 @@ export const sendEmailWithTemplate: Action<typeof fields, typeof settings> = {
 
       const apiClient = mailchimpSdk(apiKey)
 
-      await apiClient.messages.sendTemplate({
+      const requestBody = {
         template_name: templateName,
         template_content: templateContent,
         message: {
@@ -49,13 +55,16 @@ export const sendEmailWithTemplate: Action<typeof fields, typeof settings> = {
             awellActivityId: activityId,
           },
         },
-      })
+      }
+
+      helpers.log({ meta, requestBody }, 'Sending template email via Mailchimp')
+      await apiClient.messages.sendTemplate(requestBody)
 
       await onComplete()
     } catch (err) {
       if (err instanceof ZodError) {
         const error = fromZodError(err)
-        helpers.log({ error }, 'error', error as Error)
+        helpers.log({ meta, error }, 'error', error as Error)
         await onError({
           events: [
             {
