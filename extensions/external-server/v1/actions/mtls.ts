@@ -56,18 +56,21 @@ export const mtls: Action<
     }
     const { fields, settings } = PayloadSchema.parse(payload)
     const clientPayload = fields.payload ?? {}
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
+    const requestBody = { data: clientPayload }
+    helpers.log({ meta, requestBody }, 'Sending mTLS request')
     const { data, status } = await axios.post<{
       data_points: any
       events: any
       response: 'success' | 'failure'
-    }>(
-      `${settings.url}`,
-      { data: clientPayload },
-      {
-        headers: { 'Content-Type': 'application/json' },
-        httpsAgent: helpers.httpsAgent(),
-      }
-    )
+    }>(`${settings.url}`, requestBody, {
+      headers: { 'Content-Type': 'application/json' },
+      httpsAgent: helpers.httpsAgent(),
+    })
     if (status === 200) {
       await onComplete({
         data_points: { response: JSON.stringify(data) },

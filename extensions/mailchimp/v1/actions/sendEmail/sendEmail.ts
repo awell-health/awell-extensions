@@ -40,7 +40,7 @@ export const sendEmail: Action<typeof fields, typeof settings> = {
 
       const apiClient = mailchimpSdk(apiKey)
 
-      await apiClient.messages.send({
+      const requestBody = {
         message: {
           from_email: fromEmail,
           from_name: fromName,
@@ -53,7 +53,10 @@ export const sendEmail: Action<typeof fields, typeof settings> = {
             awellActivityId: activityId,
           },
         },
-      })
+      }
+
+      helpers.log({ meta, requestBody }, 'Sending email via Mailchimp')
+      await apiClient.messages.send(requestBody)
 
       await onComplete()
     } catch (err) {

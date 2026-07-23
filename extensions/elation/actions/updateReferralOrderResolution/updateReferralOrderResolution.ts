@@ -17,18 +17,30 @@ export const updateReferralOrderResolution: Action<
   fields,
   previewable: true,
   dataPoints,
-  onEvent: async ({ payload, onComplete, onError }): Promise<void> => {
+  onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
+
     const { referralOrderId, resolutionState, resolvingDocument } =
       FieldsValidationSchema.parse(payload.fields)
     const api = makeAPIClient(payload.settings)
+    const updateReferralOrderInput = {
+      resolution: {
+        state: resolutionState,
+        resolving_document: resolvingDocument,
+      },
+    }
 
     try {
-      await api.updateReferralOrder(referralOrderId, {
-        resolution: {
-          state: resolutionState,
-          resolving_document: resolvingDocument,
-        },
-      })
+      helpers.log(
+        { meta, updateReferralOrderInput },
+        '[updateReferralOrderResolution] Updating Elation referral order',
+      )
+
+      await api.updateReferralOrder(referralOrderId, updateReferralOrderInput)
     } catch (error) {
       const err = error as AxiosError
 

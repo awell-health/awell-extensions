@@ -15,6 +15,12 @@ export const scheduleSMS = {
   dataPoints,
   previewable: true,
   onEvent: async ({ payload, onComplete, onError, helpers }) => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
+
     const {
       brazeClient,
       appId,
@@ -60,6 +66,8 @@ export const scheduleSMS = {
         },
       },
     }
+
+    helpers.log({ meta, requestBody }, 'Scheduling SMS via Braze')
     const resp = await brazeClient.scheduleMessage(requestBody)
 
     await onComplete({

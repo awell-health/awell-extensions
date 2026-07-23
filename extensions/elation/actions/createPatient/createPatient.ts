@@ -20,7 +20,13 @@ export const createPatient: Action<
   fields,
   previewable: true,
   dataPoints,
-  onEvent: async ({ payload, onComplete, onError }): Promise<void> => {
+  onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
+
     const {
       firstName,
       lastName,
@@ -81,6 +87,8 @@ export const createPatient: Action<
     })
 
     try {
+      helpers.log({ meta, patient }, '[createPatient] Creating Elation patient')
+
       const { data } = await api.createPatient(patient)
 
       await onComplete({

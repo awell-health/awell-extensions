@@ -19,14 +19,23 @@ export const stopActiveCall: Action<
   dataPoints,
   supports_automated_retries: true,
   onEvent: async ({ payload, onComplete, helpers: { log } }): Promise<void> => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
+
     const { fields, blandSdk } = await validatePayloadAndCreateSdk({
       fieldsSchema: FieldsValidationSchema,
       payload,
     })
 
-    const { data } = await blandSdk.stopActiveCall({
+    const stopActiveCallInput = {
       call_id: fields.callId,
-    })
+    }
+
+    log({ meta, stopActiveCallInput }, 'Stopping active call via Bland')
+    const { data } = await blandSdk.stopActiveCall(stopActiveCallInput)
 
     await onComplete({
       data_points: {

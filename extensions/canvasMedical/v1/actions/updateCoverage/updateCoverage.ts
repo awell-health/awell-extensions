@@ -12,6 +12,7 @@ import {
 import { z } from 'zod'
 import { type AxiosError } from 'axios'
 import { makeAPIClient } from '../../client'
+import { type CoverageWithId } from '../../validation/coverage.zod'
 
 export const updateCoverage: Action<typeof fields, typeof settings> = {
   key: 'updateCoverage',
@@ -52,7 +53,7 @@ export const updateCoverage: Action<typeof fields, typeof settings> = {
       })
 
       const api = makeAPIClient(payload.settings)
-      const coverageId = await api.updateCoverage({
+      const coverageData = {
         id,
         resourceType: 'Coverage',
         order,
@@ -72,7 +73,14 @@ export const updateCoverage: Action<typeof fields, typeof settings> = {
         },
         payor,
         class: classCoverage,
-      })
+      } satisfies CoverageWithId
+
+      helpers.log(
+        { meta, coverageData },
+        '[updateCoverage] Updating Canvas coverage',
+      )
+
+      const coverageId = await api.updateCoverage(coverageData)
 
       await onComplete({
         data_points: {

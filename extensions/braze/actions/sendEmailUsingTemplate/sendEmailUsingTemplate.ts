@@ -16,6 +16,12 @@ export const sendEmailUsingTemplate = {
   dataPoints,
   previewable: true,
   onEvent: async ({ payload, onComplete, onError, helpers }) => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
+
     const {
       brazeClient,
       appId,
@@ -69,6 +75,7 @@ export const sendEmailUsingTemplate = {
       },
     }
 
+    helpers.log({ meta, requestBody }, 'Sending email using template via Braze')
     const resp = isNil(time)
       ? await brazeClient.sendMessageImmediately(requestBody)
       : await brazeClient.scheduleMessage(requestBody)

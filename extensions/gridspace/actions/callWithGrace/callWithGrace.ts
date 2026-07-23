@@ -12,7 +12,13 @@ export const callWithGrace = {
   fields,
   dataPoints,
   previewable: false,
-  onEvent: async ({ payload, onComplete, onError }) => {
+  onEvent: async ({ payload, onComplete, onError, helpers }) => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
+
     const { pathway, patient } = payload
     const {
       fields: { flowId, data, phoneNumber },
@@ -31,6 +37,7 @@ export const callWithGrace = {
       pathway_definition_id: pathway.definition_id,
       activity_id: payload.activity.id,
     }
+    helpers.log({ meta, allData }, 'Calling with Grace via Gridspace')
     const resp = await client.callWithGrace(flowId, allData)
     await onComplete({
       events: [

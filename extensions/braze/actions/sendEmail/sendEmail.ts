@@ -14,6 +14,12 @@ export const sendEmail = {
   dataPoints,
   previewable: true,
   onEvent: async ({ payload, onComplete, onError, helpers }) => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
+
     const {
       brazeClient,
       appId,
@@ -64,6 +70,7 @@ export const sendEmail = {
       },
     }
 
+    helpers.log({ meta, requestBody }, 'Sending email via Braze')
     const resp = await brazeClient.sendMessageImmediately(requestBody)
 
     await onComplete({

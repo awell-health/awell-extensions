@@ -32,6 +32,11 @@ export const pushFormResponseToHealthie: Action<
         fieldsSchema: FieldsValidationSchema,
         payload,
       })
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
 
     const awellSdk = await helpers.awellSdk()
 
@@ -64,18 +69,25 @@ export const pushFormResponseToHealthie: Action<
     const lock = defaultTo(fields.lockFormAnswerGroup, false)
 
     try {
+      const createFormAnswerGroupInput = {
+        finished: true,
+        custom_module_form_id: fields.healthieFormId,
+        user_id: fields.healthiePatientId,
+        form_answers: healthieFormAnswerInputs.map((input) => ({
+          ...input,
+          user_id: fields.healthiePatientId,
+        })),
+      }
+
+      helpers.log(
+        { meta, createFormAnswerGroupInput },
+        '[pushFormResponseToHealthie] Creating Healthie form answer group',
+      )
+
       const res = await healthieSdk.client.mutation({
         createFormAnswerGroup: {
           __args: {
-            input: {
-              finished: true,
-              custom_module_form_id: fields.healthieFormId,
-              user_id: fields.healthiePatientId,
-              form_answers: healthieFormAnswerInputs.map((input) => ({
-                ...input,
-                user_id: fields.healthiePatientId,
-              })),
-            },
+            input: createFormAnswerGroupInput,
           },
           form_answer_group: {
             id: true,
@@ -90,12 +102,19 @@ export const pushFormResponseToHealthie: Action<
 
       // separate call to lock the form if needed
       if (lock && formAnswerGroupId !== undefined) {
+        const lockFormAnswerGroupInput = {
+          id: formAnswerGroupId,
+        }
+
+        helpers.log(
+          { meta, lockFormAnswerGroupInput },
+          '[pushFormResponseToHealthie] Locking Healthie form answer group',
+        )
+
         await healthieSdk.client.mutation({
           lockFormAnswerGroup: {
             __args: {
-              input: {
-                id: formAnswerGroupId,
-              },
+              input: lockFormAnswerGroupInput,
             },
             form_answer_group: {
               id: true,

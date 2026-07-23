@@ -12,6 +12,7 @@ import {
 import { z } from 'zod'
 import { type AxiosError } from 'axios'
 import { makeAPIClient } from '../../client'
+import { type Claim } from '../../validation/claim'
 
 export const createClaim: Action<typeof fields, typeof settings> = {
   key: 'createClaim',
@@ -49,7 +50,7 @@ export const createClaim: Action<typeof fields, typeof settings> = {
       })
 
       const api = makeAPIClient(payload.settings)
-      const claimId = await api.createClaim({
+      const claimData = {
         resourceType: 'Claim',
         status,
         type,
@@ -63,7 +64,11 @@ export const createClaim: Action<typeof fields, typeof settings> = {
         diagnosis,
         insurance,
         item,
-      })
+      } satisfies Claim
+
+      helpers.log({ meta, claimData }, '[createClaim] Creating Canvas claim')
+
+      const claimId = await api.createClaim(claimData)
 
       await onComplete({
         data_points: {

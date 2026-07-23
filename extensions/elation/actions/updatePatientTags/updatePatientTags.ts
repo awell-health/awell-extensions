@@ -3,7 +3,6 @@ import { addActivityEventLog } from '../../../../src/lib/awell/addEventLog'
 import { type settings } from '../../settings'
 import { makeAPIClient } from '../../client'
 import { FieldsValidationSchema, fields, dataPoints } from './config'
-import { updateElationTags } from './updateTags'
 import { getTagsFromLLM } from './lib/getTagsFromLLM/getTagsFromLLM'
 import { createOpenAIModel } from '../../../../src/lib/llm/openai/createOpenAIModel'
 import { OPENAI_MODELS } from '../../../../src/lib/llm/openai/constants'
@@ -29,6 +28,12 @@ export const updatePatientTags: Action<
   previewable: true,
   dataPoints,
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
+
     // 1. Validate input and initialize API client
     const { instructions, patientId } = FieldsValidationSchema.parse(
       payload.fields,
@@ -57,7 +62,17 @@ export const updatePatientTags: Action<
     })
 
     // 5. Update tags in Elation
-    await updateElationTags(api, patientId, validatedTags)
+    const updatePatientTagsInput = {
+      // Empty array doesn't clear tags, but [''] clears the rest by setting an empty tag.
+      tags: validatedTags.length === 0 ? [''] : validatedTags,
+    }
+
+    helpers.log(
+      { meta, updatePatientTagsInput },
+      '[updatePatientTags] Updating Elation patient tags',
+    )
+
+    await api.updatePatient(patientId, updatePatientTagsInput)
 
     // 6. Complete action with results
     await onComplete({

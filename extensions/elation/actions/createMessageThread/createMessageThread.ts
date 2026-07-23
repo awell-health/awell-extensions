@@ -18,7 +18,13 @@ export const createMessageThread: Action<
   fields,
   previewable: true,
   dataPoints,
-  onEvent: async ({ payload, onComplete, onError }): Promise<void> => {
+  onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
+
     const {
       patientId,
       senderId,
@@ -65,6 +71,11 @@ export const createMessageThread: Action<
     })
 
     const api = makeAPIClient(payload.settings)
+    helpers.log(
+      { meta, messageThread },
+      '[createMessageThread] Creating Elation message thread',
+    )
+
     const data = await api.createMessageThread(messageThread)
 
     await onComplete({

@@ -169,6 +169,7 @@ export const createSMSBroadcast: Action<
 
     // Step 5: Send to Text-Em-All
     const client = new TextEmAllClient(settings)
+    log({ meta, request }, 'Creating SMS broadcast via Text-Em-All')
     const resp = await client.createBroadcast(request)
     const data = resp.data
 

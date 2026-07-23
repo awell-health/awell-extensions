@@ -41,7 +41,7 @@ export const sendEmailWithTemplate: Action<typeof fields, typeof settings> = {
 
       const apiClient = mailchimpSdk(apiKey)
 
-      await apiClient.messages.sendTemplate({
+      const requestBody = {
         template_name: templateName,
         template_content: templateContent,
         message: {
@@ -55,7 +55,10 @@ export const sendEmailWithTemplate: Action<typeof fields, typeof settings> = {
             awellActivityId: activityId,
           },
         },
-      })
+      }
+
+      helpers.log({ meta, requestBody }, 'Sending template email via Mailchimp')
+      await apiClient.messages.sendTemplate(requestBody)
 
       await onComplete()
     } catch (err) {

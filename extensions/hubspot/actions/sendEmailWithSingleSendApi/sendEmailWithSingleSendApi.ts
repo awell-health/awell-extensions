@@ -16,24 +16,38 @@ export const sendEmailWithSingleSendApi: Action<
   previewable: true,
   dataPoints,
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
+
     const { hubSpotSdk, fields, activity } = await validatePayloadAndCreateSdks(
       {
         fieldsSchema: FieldsValidationSchema,
         payload,
-      }
+      },
     )
 
+    const requestBody = {
+      emailId: Number(fields.emailId),
+      message: {
+        _from: fields.from,
+        to: fields.to,
+        sendId: `awell_activity_${activity.id}`,
+      },
+      contactProperties: fields.contactProperties,
+      customProperties: fields.customProperties,
+    }
+
+    helpers.log(
+      { meta, requestBody },
+      'Sending email via HubSpot Single Send API',
+    )
     const res =
-      await hubSpotSdk.marketing.transactional.singleSendApi.sendEmail({
-        emailId: Number(fields.emailId),
-        message: {
-          _from: fields.from,
-          to: fields.to,
-          sendId: `awell_activity_${activity.id}`,
-        },
-        contactProperties: fields.contactProperties,
-        customProperties: fields.customProperties,
-      })
+      await hubSpotSdk.marketing.transactional.singleSendApi.sendEmail(
+        requestBody,
+      )
 
     await onComplete({
       data_points: {

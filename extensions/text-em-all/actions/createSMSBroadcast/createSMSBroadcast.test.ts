@@ -289,7 +289,7 @@ describe('CreateSMSBroadcast', () => {
         ],
       }),
     )
-    expect(helpers.log).toHaveBeenCalledTimes(3)
+    expect(helpers.log).toHaveBeenCalledTimes(4)
     expect(helpers.log).toHaveBeenNthCalledWith(
       1,
       {
@@ -302,6 +302,27 @@ describe('CreateSMSBroadcast', () => {
         field: 'mobile_phone',
       },
       'Phone number not provided — using patient profile mobile phone',
+    )
+    expect(helpers.log).toHaveBeenNthCalledWith(
+      4,
+      expect.objectContaining({
+        meta: {
+          tenant_id: 'tenant-id',
+          careflow_id: 'pathway-id',
+          activity_id: 'activity-id',
+        },
+        request: expect.objectContaining({
+          BroadcastName: 'testBroadcast',
+          Contacts: [
+            expect.objectContaining({
+              PrimaryPhone: '(555) 123-4567',
+              FirstName: 'Jane',
+              LastName: 'Smith',
+            }),
+          ],
+        }),
+      }),
+      'Creating SMS broadcast via Text-Em-All',
     )
     expect(onError).not.toHaveBeenCalled()
     expect(onComplete).toHaveBeenCalled()

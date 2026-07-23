@@ -13,7 +13,13 @@ export const uploadContactToCampaign = {
   fields,
   dataPoints,
   previewable: false,
-  onEvent: async ({ payload, onComplete }) => {
+  onEvent: async ({ payload, onComplete, helpers }) => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
+
     const { pathway, patient, activity } = payload
     const {
       fields: { campaignId, data, phoneNumber, serviceTermsReviewed = true },
@@ -44,6 +50,7 @@ export const uploadContactToCampaign = {
       service_terms_reviewed: serviceTermsReviewed,
     }
 
+    helpers.log({ meta, requestBody }, 'Uploading contact via Gridspace')
     const { num_uploaded_contacts = 0 } = await client.uploadContactsToCampaign(
       campaignId,
       requestBody,

@@ -8,6 +8,7 @@ import {
   getLatestFormInCurrentStep,
 } from '../../../../src/lib/awell'
 import { type Form, type FormResponse } from '@awell-health/awell-sdk'
+import { type QuestionnaireResponse } from '@medplum/fhirtypes'
 
 export const submitQuestionnaireResponse: Action<
   typeof fields,
@@ -33,9 +34,9 @@ export const submitQuestionnaireResponse: Action<
       payload,
     })
     const meta = {
-      tenant_id: pathway.tenant_id,
-      careflow_id: pathway.id,
-      activity_id: activity.id,
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
     }
 
     const awellSdk = await helpers.awellSdk()
@@ -79,6 +80,11 @@ export const submitQuestionnaireResponse: Action<
       'Fhir questionnaire and response',
     )
 
+    helpers.log(
+      { meta, FhirQuestionnaire },
+      '[submitQuestionnaireResponse] Creating Medplum questionnaire resource',
+    )
+
     const QuestionnaireResource = await medplumSdk.createResourceIfNoneExist(
       FhirQuestionnaire,
       `identifier=${formDefinition.definition_id}/published/${formDefinition.id}`,
@@ -86,7 +92,7 @@ export const submitQuestionnaireResponse: Action<
 
     helpers.log({ meta, QuestionnaireResource }, 'Questionnaire resource')
 
-    const res = await medplumSdk.createResource({
+    const questionnaireResponseResource: QuestionnaireResponse = {
       resourceType: 'QuestionnaireResponse',
       questionnaire: `Questionnaire/${String(QuestionnaireResource.id)}`,
       status: 'completed',
@@ -96,13 +102,19 @@ export const submitQuestionnaireResponse: Action<
         }`,
       },
       item: FhirQuestionnaireResponse,
-    })
+    }
+
+    helpers.log(
+      { meta, questionnaireResponseResource },
+      '[submitQuestionnaireResponse] Creating Medplum questionnaire response',
+    )
+
+    const res = await medplumSdk.createResource(questionnaireResponseResource)
 
     helpers.log({ meta, res }, 'Questionnaire response')
 
     await onComplete({
       data_points: {
-        // @ts-expect-error id is not included in the response type?
         questionnnaireResponseId: res.id,
       },
     })

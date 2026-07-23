@@ -17,7 +17,13 @@ export const addAllergy: Action<
   fields,
   previewable: true,
   dataPoints,
-  onEvent: async ({ payload, onComplete }): Promise<void> => {
+  onEvent: async ({ payload, onComplete, helpers }): Promise<void> => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
+
     const { fields, settings } = validate({
       schema: z.object({
         fields: FieldsValidationSchema,
@@ -28,13 +34,20 @@ export const addAllergy: Action<
 
     const api = makeAPIClient(settings)
 
-    const { id } = await api.addAllergy({
+    const addAllergyInput = {
       patient: fields.patientId,
       name: fields.name,
       start_date: fields.startDate,
       reaction: fields.reaction,
       severity: fields.severity,
-    })
+    }
+
+    helpers.log(
+      { meta, addAllergyInput },
+      '[addAllergy] Adding Elation allergy',
+    )
+
+    const { id } = await api.addAllergy(addAllergyInput)
 
     await onComplete({
       data_points: {

@@ -17,7 +17,13 @@ export const queryPage: Action<
   fields,
   previewable: true,
   dataPoints,
-  onEvent: async ({ payload, onComplete, onError }): Promise<void> => {
+  onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
+
     const { fields, airtopSdk } = await validatePayloadAndCreateSdk({
       fieldsSchema: FieldsValidationSchema,
       payload,
@@ -27,20 +33,27 @@ export const queryPage: Action<
     const session = await airtopSdk.sessions.create()
 
     // Create a new window in the session and open the page
-    const window = await airtopSdk.windows.create(session.data.id, {
+    const createWindowRequest = {
       url: fields.pageUrl,
-    })
+    }
+    helpers.log({ meta, createWindowRequest }, 'Creating Airtop window')
+    const window = await airtopSdk.windows.create(
+      session.data.id,
+      createWindowRequest,
+    )
 
     // query the content of the window using the prompt
+    const pageQueryRequest = {
+      prompt: fields.prompt,
+      configuration: {
+        outputSchema: fields.jsonSchema,
+      },
+    }
+    helpers.log({ meta, pageQueryRequest }, 'Querying Airtop page')
     const result = await airtopSdk.windows.pageQuery(
       session.data.id,
       window.data.windowId,
-      {
-        prompt: fields.prompt,
-        configuration: {
-          outputSchema: fields.jsonSchema,
-        },
-      },
+      pageQueryRequest,
     )
 
     // Close the window and terminate the session

@@ -16,7 +16,13 @@ export const trackPersonEvent: Action<
   fields,
   previewable: false,
   dataPoints,
-  onEvent: async ({ payload, onComplete, onError }): Promise<void> => {
+  onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
+
     const { customerIoTrackClient, fields, pathway, patient, activity } =
       await validatePayloadAndCreateSdks({
         fieldsSchema: FieldsValidationSchema,
@@ -35,9 +41,9 @@ export const trackPersonEvent: Action<
           )
         : {}
 
-    await customerIoTrackClient.trackPersonEvent({
-      type: 'person',
-      action: 'event',
+    const trackPersonEventWithPatientIdentifiersInput = {
+      type: 'person' as const,
+      action: 'event' as const,
       name: fields.eventName,
       identifiers: {
         [fields.personIdentifierType]: fields.identifierValue,
@@ -50,11 +56,19 @@ export const trackPersonEvent: Action<
         ...patientIdentifiersAttributes,
         ...fields.attributes,
       },
-    })
+    }
 
-    await customerIoTrackClient.trackPersonEvent({
-      type: 'person',
-      action: 'event',
+    helpers.log(
+      { meta, trackPersonEventWithPatientIdentifiersInput },
+      'Tracking Customer.io person event',
+    )
+    await customerIoTrackClient.trackPersonEvent(
+      trackPersonEventWithPatientIdentifiersInput,
+    )
+
+    const trackPersonEventInput = {
+      type: 'person' as const,
+      action: 'event' as const,
       name: fields.eventName,
       identifiers: {
         [fields.personIdentifierType]: fields.identifierValue,
@@ -66,7 +80,13 @@ export const trackPersonEvent: Action<
         _awell_activity_id: activity.id,
         ...fields.attributes,
       },
-    })
+    }
+
+    helpers.log(
+      { meta, trackPersonEventInput },
+      'Tracking Customer.io person event',
+    )
+    await customerIoTrackClient.trackPersonEvent(trackPersonEventInput)
 
     await onComplete()
   },

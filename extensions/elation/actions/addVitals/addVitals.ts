@@ -16,7 +16,7 @@ import {
 // Helper function to create measurement objects with optional notes
 const createMeasurement = (
   value?: number,
-  note?: string
+  note?: string,
 ): Array<z.infer<typeof measurementInputSchema>> => {
   // the undefined check is stupid but otherwise the build is failing
   if (value !== undefined && !isNil(value)) {
@@ -47,7 +47,13 @@ export const addVitals: Action<
   fields: elationFields,
   previewable: true,
   dataPoints,
-  onEvent: async ({ payload, onComplete }): Promise<void> => {
+  onEvent: async ({ payload, onComplete, helpers }): Promise<void> => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
+
     const { fields, settings } = validate({
       schema: z.object({
         fields: FieldsValidationSchema,
@@ -72,7 +78,7 @@ export const addVitals: Action<
       hc: createMeasurement(fields.hc, fields.hcNote),
       temperature: createMeasurement(
         fields.temperature,
-        fields.temperatureNote
+        fields.temperatureNote,
       ),
       bp: createMeasurement(fields.bp, fields.bpNote),
       bodyfat: createMeasurement(fields.bodyfat, fields.bodyfatNote),
@@ -80,6 +86,8 @@ export const addVitals: Action<
       bfm: createMeasurement(fields.bfm, fields.bfmNote),
       wc: createMeasurement(fields.wc, fields.wcNote),
     }
+
+    helpers.log({ meta, body }, '[addVitals] Adding Elation vitals')
 
     const { id } = await api.addVitals(body)
 
