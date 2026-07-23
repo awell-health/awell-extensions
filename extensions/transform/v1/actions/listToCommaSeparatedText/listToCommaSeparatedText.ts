@@ -17,7 +17,13 @@ export const listToCommaSeparatedText: Action<
   fields,
   dataPoints,
   previewable: false,
-  onActivityCreated: async (payload, onComplete) => {
+  onEvent: async ({ payload, onComplete, helpers }) => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
+
     const {
       fields: { list },
     } = validate({
@@ -28,6 +34,11 @@ export const listToCommaSeparatedText: Action<
     })
 
     const output = list.join(',')
+    helpers.log(
+      { meta, list, output },
+      'Converted list to comma separated text',
+    )
+
     await onComplete({
       data_points: {
         listText: output,

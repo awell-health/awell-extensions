@@ -22,7 +22,13 @@ export const parseStringToPhoneNumber: Action<
   fields,
   dataPoints,
   previewable: true,
-  onEvent: async ({ payload, onComplete }) => {
+  onEvent: async ({ payload, onComplete, helpers }) => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
+
     const {
       fields: { text, countryCallingCode },
     } = validate({
@@ -46,6 +52,10 @@ export const parseStringToPhoneNumber: Action<
             message: `Text input is a valid E164 phone number.`,
           }),
         )
+        helpers.log(
+          { meta, text, countryCallingCode, phoneNumber: parsed.data },
+          'Parsed text to phone number',
+        )
         return parsed.data
       }
 
@@ -58,7 +68,9 @@ export const parseStringToPhoneNumber: Action<
             message: `Text input is not a valid E164 phone number and no country calling code was provided.`,
           }),
         )
-        throw new ZodError(parsed.error.issues)
+        const err = new ZodError(parsed.error.issues)
+        helpers.log({ meta, text, countryCallingCode, err }, 'error', err)
+        throw err
       }
 
       events.push(
@@ -71,7 +83,19 @@ export const parseStringToPhoneNumber: Action<
        * Try parsing the number with the country calling code prepended this time.
        */
       const withCode = `+${countryCallingCode}${text}`
-      return E164PhoneValidationSchema.parse(withCode)
+      let phoneNumber: string
+      try {
+        phoneNumber = E164PhoneValidationSchema.parse(withCode)
+      } catch (err) {
+        helpers.log({ meta, err }, 'error', err as Error)
+        throw err
+      }
+
+      helpers.log(
+        { meta, text, countryCallingCode, phoneNumber },
+        'Parsed text to phone number',
+      )
+      return phoneNumber
     }
 
     await onComplete({

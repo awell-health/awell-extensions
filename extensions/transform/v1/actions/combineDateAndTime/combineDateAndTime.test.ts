@@ -1,12 +1,13 @@
 import { combineDateAndTime } from '.'
 import { generateTestPayload } from '@/tests'
+import { TestHelpers } from '@awell-health/extensions-core'
 
 describe('Transform - Combine date and time', () => {
-  const onComplete = jest.fn()
-  const onError = jest.fn()
+  const { onComplete, onError, helpers, clearMocks } =
+    TestHelpers.fromAction(combineDateAndTime)
 
   beforeEach(() => {
-    jest.clearAllMocks()
+    clearMocks()
   })
 
   describe('HH:mm:ss time format', () => {
@@ -19,11 +20,13 @@ describe('Transform - Combine date and time', () => {
         settings: {},
       })
 
-      await combineDateAndTime.onActivityCreated!(
-        mockOnActivityCreateParams,
+      await combineDateAndTime.onEvent!({
+        payload: mockOnActivityCreateParams,
         onComplete,
         onError,
-      )
+        helpers,
+        attempt: 1,
+      })
 
       expect(onComplete).toBeCalledWith({
         data_points: {
@@ -41,11 +44,13 @@ describe('Transform - Combine date and time', () => {
         settings: {},
       })
 
-      await combineDateAndTime.onActivityCreated!(
-        mockOnActivityCreateParams,
+      await combineDateAndTime.onEvent!({
+        payload: mockOnActivityCreateParams,
         onComplete,
         onError,
-      )
+        helpers,
+        attempt: 1,
+      })
 
       expect(onComplete).toBeCalledWith({
         data_points: {
@@ -63,11 +68,13 @@ describe('Transform - Combine date and time', () => {
         settings: {},
       })
 
-      await combineDateAndTime.onActivityCreated!(
-        mockOnActivityCreateParams,
+      await combineDateAndTime.onEvent!({
+        payload: mockOnActivityCreateParams,
         onComplete,
         onError,
-      )
+        helpers,
+        attempt: 1,
+      })
 
       expect(onComplete).toBeCalledWith({
         data_points: {
@@ -87,11 +94,13 @@ describe('Transform - Combine date and time', () => {
         settings: {},
       })
 
-      await combineDateAndTime.onActivityCreated!(
-        mockOnActivityCreateParams,
+      await combineDateAndTime.onEvent!({
+        payload: mockOnActivityCreateParams,
         onComplete,
         onError,
-      )
+        helpers,
+        attempt: 1,
+      })
 
       expect(onComplete).toBeCalledWith({
         data_points: {
@@ -109,11 +118,13 @@ describe('Transform - Combine date and time', () => {
         settings: {},
       })
 
-      await combineDateAndTime.onActivityCreated!(
-        mockOnActivityCreateParams,
+      await combineDateAndTime.onEvent!({
+        payload: mockOnActivityCreateParams,
         onComplete,
         onError,
-      )
+        helpers,
+        attempt: 1,
+      })
 
       expect(onComplete).toBeCalledWith({
         data_points: {
@@ -131,11 +142,13 @@ describe('Transform - Combine date and time', () => {
         settings: {},
       })
 
-      await combineDateAndTime.onActivityCreated!(
-        mockOnActivityCreateParams,
+      await combineDateAndTime.onEvent!({
+        payload: mockOnActivityCreateParams,
         onComplete,
         onError,
-      )
+        helpers,
+        attempt: 1,
+      })
 
       expect(onComplete).toBeCalledWith({
         data_points: {
@@ -153,11 +166,13 @@ describe('Transform - Combine date and time', () => {
         settings: {},
       })
 
-      await combineDateAndTime.onActivityCreated!(
-        mockOnActivityCreateParams,
+      await combineDateAndTime.onEvent!({
+        payload: mockOnActivityCreateParams,
         onComplete,
         onError,
-      )
+        helpers,
+        attempt: 1,
+      })
 
       expect(onComplete).toBeCalledWith({
         data_points: {
@@ -175,11 +190,13 @@ describe('Transform - Combine date and time', () => {
         settings: {},
       })
 
-      await combineDateAndTime.onActivityCreated!(
-        mockOnActivityCreateParams,
+      await combineDateAndTime.onEvent!({
+        payload: mockOnActivityCreateParams,
         onComplete,
         onError,
-      )
+        helpers,
+        attempt: 1,
+      })
 
       expect(onComplete).toBeCalledWith({
         data_points: {
@@ -199,11 +216,13 @@ describe('Transform - Combine date and time', () => {
         settings: {},
       })
 
-      await combineDateAndTime.onActivityCreated!(
-        mockOnActivityCreateParams,
+      await combineDateAndTime.onEvent!({
+        payload: mockOnActivityCreateParams,
         onComplete,
         onError,
-      )
+        helpers,
+        attempt: 1,
+      })
 
       expect(onError).toHaveBeenCalledWith({
         events: [
@@ -230,11 +249,13 @@ describe('Transform - Combine date and time', () => {
         settings: {},
       })
 
-      await combineDateAndTime.onActivityCreated!(
-        mockOnActivityCreateParams,
+      await combineDateAndTime.onEvent!({
+        payload: mockOnActivityCreateParams,
         onComplete,
         onError,
-      )
+        helpers,
+        attempt: 1,
+      })
 
       expect(onError).toHaveBeenCalledWith({
         events: [

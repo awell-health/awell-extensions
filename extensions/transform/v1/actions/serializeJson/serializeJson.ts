@@ -16,7 +16,13 @@ export const serializeJson: Action<
   fields,
   dataPoints,
   previewable: true,
-  onActivityCreated: async (payload, onComplete, onError) => {
+  onEvent: async ({ payload, onComplete, helpers }) => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
+
     const {
       fields: { json },
     } = validate({
@@ -26,9 +32,12 @@ export const serializeJson: Action<
       payload,
     })
 
+    const serializedJson = JSON.stringify(json)
+    helpers.log({ meta, json, serializedJson }, 'Serialized JSON')
+
     await onComplete({
       data_points: {
-        serializedJson: JSON.stringify(json),
+        serializedJson,
       },
     })
   },

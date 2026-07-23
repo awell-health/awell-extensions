@@ -16,7 +16,13 @@ export const feetAndInchesToInches: Action<
   fields,
   dataPoints,
   previewable: true,
-  onActivityCreated: async (payload, onComplete, onError) => {
+  onEvent: async ({ payload, onComplete, helpers }) => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
+
     const {
       fields: { feet, inches },
     } = validate({
@@ -27,6 +33,8 @@ export const feetAndInchesToInches: Action<
     })
 
     const totalInches = feet * 12 + inches
+
+    helpers.log({ meta, feet, inches, totalInches }, 'Converted to inches')
 
     await onComplete({
       data_points: {

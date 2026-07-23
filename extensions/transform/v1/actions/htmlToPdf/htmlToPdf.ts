@@ -18,7 +18,13 @@ export const htmlToPdf: Action<
   fields,
   dataPoints,
   previewable: false,
-  onEvent: async ({ payload, onComplete }) => {
+  onEvent: async ({ payload, onComplete, helpers }) => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
+
     const {
       fields: { htmlString, options },
     } = validate({
@@ -29,6 +35,16 @@ export const htmlToPdf: Action<
     })
 
     const base64Pdf = await htmlToBase64Pdf(htmlString, options)
+
+    helpers.log(
+      {
+        meta,
+        htmlStringLength: htmlString.length,
+        options,
+        base64PdfLength: base64Pdf.length,
+      },
+      'Converted HTML to PDF',
+    )
 
     await onComplete({
       data_points: {

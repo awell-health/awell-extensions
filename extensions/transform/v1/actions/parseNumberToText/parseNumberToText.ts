@@ -34,6 +34,11 @@ export const parseNumberToText: Action<
         payload,
       })
 
+      helpers.log(
+        { meta, number, text: String(number) },
+        'Parsed number to text',
+      )
+
       await onComplete({
         data_points: {
           text: String(number),
