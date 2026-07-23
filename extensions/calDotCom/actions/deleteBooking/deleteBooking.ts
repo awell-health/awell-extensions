@@ -13,7 +13,13 @@ export const deleteBooking: Action<typeof fields, typeof settings> = {
   category: Category.SCHEDULING,
   fields,
   previewable: true,
-  onActivityCreated: async (payload, onComplete, onError) => {
+  onEvent: async ({ payload, onComplete, onError, helpers }) => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
+
     try {
       const {
         settings: { apiKey },
@@ -27,13 +33,21 @@ export const deleteBooking: Action<typeof fields, typeof settings> = {
       })
 
       const calComApi = new CalComApi(apiKey)
-      await calComApi.deleteBooking(bookingId, {
+      const deleteBookingRequest = {
         allRemainingBookings,
         cancellationReason: reason,
-      })
+      }
+
+      helpers.log(
+        { meta, bookingId, deleteBookingRequest },
+        'Deleting Cal.com booking',
+      )
+
+      await calComApi.deleteBooking(bookingId, deleteBookingRequest)
 
       await onComplete()
     } catch (err) {
+      helpers.log({ meta, err }, 'error', err as Error)
       if (err instanceof ZodError) {
         const error = fromZodError(err)
         await onError({

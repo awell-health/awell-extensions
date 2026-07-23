@@ -1,5 +1,6 @@
 import { createBooking } from './createBooking'
 import { generateTestPayload } from '@/tests'
+import { TestHelpers } from '@awell-health/extensions-core'
 import {
   mockReturnValue,
   sampleBooking,
@@ -8,8 +9,8 @@ import {
 jest.mock('../../lib/api/v1/calComApi', () => jest.fn(() => mockReturnValue))
 
 describe('Create booking', () => {
-  const onComplete = jest.fn()
-  const onError = jest.fn()
+  const { onComplete, onError, helpers, clearMocks } =
+    TestHelpers.fromAction(createBooking)
 
   const basePayload = generateTestPayload({
     fields: {
@@ -32,11 +33,17 @@ describe('Create booking', () => {
   })
 
   beforeEach(() => {
-    jest.clearAllMocks()
+    clearMocks()
   })
 
   test('Should call the onComplete callback', async () => {
-    await createBooking.onActivityCreated!(basePayload, onComplete, onError)
+    await createBooking.onEvent!({
+      payload: basePayload,
+      onComplete,
+      onError,
+      helpers,
+      attempt: 1,
+    })
 
     expect(mockReturnValue.createBooking).toHaveBeenCalledWith({
       eventTypeId: sampleBooking.eventTypeId,
@@ -56,5 +63,28 @@ describe('Create booking', () => {
         bookingId: String(sampleBooking.id),
       },
     })
+    expect(helpers.log).toHaveBeenCalledWith(
+      {
+        meta: {
+          tenant_id: basePayload.pathway.tenant_id,
+          careflow_id: basePayload.pathway.id,
+          activity_id: basePayload.activity.id,
+        },
+        createBookingRequest: {
+          eventTypeId: sampleBooking.eventTypeId,
+          start: sampleBooking.startTime,
+          end: sampleBooking.endTime,
+          responses: sampleBooking.responses,
+          metadata: {},
+          timeZone: sampleBooking.timeZone,
+          language: sampleBooking.language,
+          title: sampleBooking.title,
+          recurringEventId: undefined,
+          description: undefined,
+          status: sampleBooking.status,
+        },
+      },
+      'Creating Cal.com booking',
+    )
   })
 })

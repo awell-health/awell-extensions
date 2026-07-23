@@ -14,7 +14,13 @@ export const createBooking: Action<typeof fields, typeof settings> = {
   fields,
   dataPoints,
   previewable: true,
-  onActivityCreated: async (payload, onComplete, onError) => {
+  onEvent: async ({ payload, onComplete, onError, helpers }) => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
+
     try {
       const {
         settings: { apiKey },
@@ -40,7 +46,7 @@ export const createBooking: Action<typeof fields, typeof settings> = {
       })
 
       const calComApi = new CalComApi(apiKey)
-      const booking = await calComApi.createBooking({
+      const createBookingRequest = {
         eventTypeId,
         start,
         end,
@@ -52,7 +58,11 @@ export const createBooking: Action<typeof fields, typeof settings> = {
         recurringEventId,
         description,
         status,
-      })
+      }
+
+      helpers.log({ meta, createBookingRequest }, 'Creating Cal.com booking')
+
+      const booking = await calComApi.createBooking(createBookingRequest)
 
       await onComplete({
         data_points: {
@@ -60,6 +70,7 @@ export const createBooking: Action<typeof fields, typeof settings> = {
         },
       })
     } catch (err) {
+      helpers.log({ meta, err }, 'error', err as Error)
       if (err instanceof ZodError) {
         const error = fromZodError(err)
         await onError({
