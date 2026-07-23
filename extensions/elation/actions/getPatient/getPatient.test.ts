@@ -1,8 +1,8 @@
 import { TestHelpers } from '@awell-health/extensions-core'
 
 import { getPatient as action } from './getPatient'
-import { ZodError } from 'zod'
 import { patientExample } from '../../__mocks__/constants'
+import { testPayload } from '../../../../tests'
 
 jest.mock('../../client')
 
@@ -26,11 +26,13 @@ describe('Elation - Get patient', () => {
 
   beforeEach(() => {
     clearMocks()
+    jest.clearAllMocks()
   })
 
   test('Should call onComplete when successful', async () => {
     await getPatient.onEvent({
       payload: {
+        ...testPayload,
         fields: { patientId: 123 },
         settings,
       } as any,
@@ -73,8 +75,9 @@ describe('Elation - Get patient', () => {
   })
 
   test('Should call onError when required fields are missing', async () => {
-    const resp = getPatient.onEvent({
+    await getPatient.onEvent({
       payload: {
+        ...testPayload,
         fields: {
           patientId: undefined,
         },
@@ -86,13 +89,23 @@ describe('Elation - Get patient', () => {
       attempt: 1,
     })
 
-    await expect(resp).rejects.toThrow(ZodError)
+    expect(onError).toHaveBeenCalledWith({
+      events: [
+        expect.objectContaining({
+          error: {
+            category: 'SERVER_ERROR',
+            message: expect.any(String),
+          },
+        }),
+      ],
+    })
     expect(onComplete).not.toHaveBeenCalled()
   })
 
-  test('Should call onError when no patientId is provided and name is invalid format', async () => {
-    const resp = getPatient.onEvent({
+  test('Should call onError when patientId has an invalid format', async () => {
+    await getPatient.onEvent({
       payload: {
+        ...testPayload,
         fields: {
           patientId: {
             value: 1234,
@@ -106,7 +119,16 @@ describe('Elation - Get patient', () => {
       attempt: 1,
     })
 
-    await expect(resp).rejects.toThrow(ZodError)
+    expect(onError).toHaveBeenCalledWith({
+      events: [
+        expect.objectContaining({
+          error: {
+            category: 'SERVER_ERROR',
+            message: expect.any(String),
+          },
+        }),
+      ],
+    })
     expect(onComplete).not.toHaveBeenCalled()
   })
 })

@@ -1,7 +1,6 @@
 import { TestHelpers } from '@awell-health/extensions-core'
 
 import { createVisitNote as action } from './createVisitNote'
-import { ZodError } from 'zod'
 import { createVisitNoteExample } from '../../__mocks__/constants'
 import { testPayload } from '../../../../tests'
 
@@ -27,6 +26,7 @@ describe('Elation - Create Visit Note', () => {
 
   beforeEach(() => {
     clearMocks()
+    jest.clearAllMocks()
   })
 
   test('Should call onComplete when successful', async () => {
@@ -51,7 +51,7 @@ describe('Elation - Create Visit Note', () => {
   })
 
   test('Should call onError when required fields are missing', async () => {
-    const resp = createVisitNote.onEvent({
+    await createVisitNote.onEvent({
       payload: {
         ...testPayload,
         fields: {
@@ -65,12 +65,21 @@ describe('Elation - Create Visit Note', () => {
       attempt: 1,
     })
 
-    await expect(resp).rejects.toThrow(ZodError)
+    expect(onError).toHaveBeenCalledWith({
+      events: [
+        expect.objectContaining({
+          error: {
+            category: 'SERVER_ERROR',
+            message: expect.any(String),
+          },
+        }),
+      ],
+    })
     expect(onComplete).not.toHaveBeenCalled()
   })
 
-  test('Should call onError when no patientId is provided and name is invalid format', async () => {
-    const resp = createVisitNote.onEvent({
+  test('Should call onError when patientId has an invalid format', async () => {
+    await createVisitNote.onEvent({
       payload: {
         ...testPayload,
         fields: {
@@ -85,7 +94,16 @@ describe('Elation - Create Visit Note', () => {
       attempt: 1,
     })
 
-    await expect(resp).rejects.toThrow(ZodError)
+    expect(onError).toHaveBeenCalledWith({
+      events: [
+        expect.objectContaining({
+          error: {
+            category: 'SERVER_ERROR',
+            message: expect.any(String),
+          },
+        }),
+      ],
+    })
     expect(onComplete).not.toHaveBeenCalled()
   })
 })

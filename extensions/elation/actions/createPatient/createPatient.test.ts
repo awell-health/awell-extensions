@@ -192,29 +192,37 @@ describe('Elation - Create patient', () => {
         )
       })
 
-      test('Should throw the error', async () => {
-        await expect(
-          extensionAction.onEvent!({
-            payload: {
-              ...testPayload,
-              fields: {
-                firstName: 'Nick Test',
-                lastName: 'Test',
-                dob: '1993-11-30',
-                sex: 'Male',
-                primaryPhysicianId: 141377681883138,
-                caregiverPracticeId: 141127173275652,
-              },
-              settings,
-            } as any,
-            onComplete,
-            onError,
-            helpers,
-            attempt: 1,
-          }),
-        ).rejects.toThrow()
+      test('Should call onError', async () => {
+        await extensionAction.onEvent!({
+          payload: {
+            ...testPayload,
+            fields: {
+              firstName: 'Nick Test',
+              lastName: 'Test',
+              dob: '1993-11-30',
+              sex: 'Male',
+              primaryPhysicianId: 141377681883138,
+              caregiverPracticeId: 141127173275652,
+            },
+            settings,
+          } as any,
+          onComplete,
+          onError,
+          helpers,
+          attempt: 1,
+        })
 
         expect(mockCreatePatient).toHaveBeenCalled()
+        expect(onError).toHaveBeenCalledWith({
+          events: [
+            expect.objectContaining({
+              error: {
+                category: 'SERVER_ERROR',
+                message: 'Request failed with status code 400',
+              },
+            }),
+          ],
+        })
         expect(onComplete).not.toHaveBeenCalled()
       })
     })
