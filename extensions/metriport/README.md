@@ -23,6 +23,8 @@ In order to set up this extension, **you will need to provide a Metriport API ke
 
 Creates a Patient in Metriport for the specified Facility where the Patient is receiving care.
 
+Optionally, providing a **Cohort** ID enrolls the Patient in real-time monitoring by adding them to that cohort. Note that enrolling a Patient in real-time monitoring has downstream consequences: once you start receiving updates about the Patient, you are expected to contribute data back to Metriport.
+
 Visit [endpoint docs](https://docs.metriport.com/medical-api/api-reference/patient/create-patient) for more info.
 
 ## Update Patient
@@ -66,6 +68,12 @@ Gets a presigned URL for downloading the specified Document.
 Visit [endpoint docs](https://docs.metriport.com/medical-api/api-reference/document/get-document) for more info.
 
 **NOTE: This endpoint returns a URL which you can use to download the specified Document using the file name provided from the List Documents endpoint.**
+
+## Remove Patient from Cohort
+
+Removes the specified Patient from a cohort.
+
+Visit [endpoint docs](https://docs.metriport.com/medical-api/api-reference/cohort/remove-patients-from-cohort) for more info.
 
 ## Get Webhook Bundle
 
@@ -112,6 +120,6 @@ Use the `eventType` data point in your care flow to branch on admit vs discharge
 
 Optionally set the **Webhook Key** setting to the webhook key from the Metriport dashboard (Settings/Developers tab). Metriport [authenticates each webhook](https://docs.metriport.com/medical-api/getting-started/webhooks#authentication) with an HMAC-SHA256 signature of the raw request body, keyed with your webhook key and sent in the `x-metriport-signature` header. When the setting is populated, the webhook recomputes the HMAC over the raw body and rejects any request whose signature is missing or does not match (`401`). When left empty, requests are not verified.
 
-# More Info
+## More Info
 
 For more information on how to integrate with Metriport please visit our [Medical API docs](https://docs.metriport.com/medical-api/getting-started/quickstart)

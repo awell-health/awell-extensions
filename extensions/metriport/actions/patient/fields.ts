@@ -62,6 +62,12 @@ export const createFields = {
     description: `The Patient's email address`,
     type: FieldType.STRING,
   },
+  cohort: {
+    id: 'cohort',
+    label: 'Cohort',
+    description: `The ID (UUID) of the cohort to enroll the Patient in for real-time monitoring`,
+    type: FieldType.STRING,
+  },
 } satisfies Record<string, Field>
 
 export const updateFields = {

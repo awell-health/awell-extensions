@@ -6,6 +6,10 @@ import {
   type GetCallDetailsResponseType,
   type StopActiveCallInputType,
   type StopActiveCallResponseType,
+  type SendSmsInputType,
+  type SendSmsResponseType,
+  type CreateSmsConversationInputType,
+  type CreateSmsConversationResponseType,
 } from './schema'
 
 export class BlandApiClient {
@@ -37,6 +41,28 @@ export class BlandApiClient {
   ): Promise<AxiosResponse<GetCallDetailsResponseType>> {
     const response = await this.client.get<GetCallDetailsResponseType>(
       `/calls/${input.call_id}`
+    )
+
+    return response
+  }
+
+  async sendSms(
+    input: SendSmsInputType
+  ): Promise<AxiosResponse<SendSmsResponseType>> {
+    const response = await this.client.post<SendSmsResponseType>(
+      `/sms/send`,
+      input
+    )
+
+    return response
+  }
+
+  async createSmsConversation(
+    input: CreateSmsConversationInputType
+  ): Promise<AxiosResponse<CreateSmsConversationResponseType>> {
+    const response = await this.client.post<CreateSmsConversationResponseType>(
+      `/sms/create`,
+      input
     )
 
     return response
