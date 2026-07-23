@@ -67,6 +67,12 @@ Visit [endpoint docs](https://docs.metriport.com/medical-api/api-reference/docum
 
 **NOTE: This endpoint returns a URL which you can use to download the specified Document using the file name provided from the List Documents endpoint.**
 
+## Remove Patient from Cohort
+
+Removes the specified Patient from a cohort.
+
+Visit [endpoint docs](https://docs.metriport.com/medical-api/api-reference/cohort/remove-patients-from-cohort) for more info.
+
 ## More Info
 
 For more information on how to integrate with Metriport please visit our [Medical API docs](https://docs.metriport.com/medical-api/getting-started/quickstart)
