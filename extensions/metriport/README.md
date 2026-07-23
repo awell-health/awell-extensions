@@ -94,7 +94,7 @@ Metriport POSTs every notification type to the same endpoint, so this webhook di
 
 The webhook validates the request, emits the data points (including the pre-signed bundle URL on `bundleUrl`), and replies immediately — it does **not** download the bundle. Fetch the bundle later in the care flow with the **Get Webhook Bundle** action, using the `bundleUrl` data point. Because the URL expires after 10 minutes, run that action early.
 
-Use the `eventType` data point in your care flow to branch on admit vs discharge. Every other notification type (`patient.discharge`, `patient.transfer`, ...) and verification `ping` requests are acknowledged with a `200` but do not enroll a patient.
+Use the `eventType` data point in your care flow to branch on admit vs discharge. Every other notification type (`patient.discharge`, `patient.transfer`, ...) is acknowledged with a `200` but does not enroll a patient. Metriport [verification `ping` messages](https://docs.metriport.com/medical-api/getting-started/webhooks#the-ping-message) are answered with a `200` that echoes the ping value back as `pong: <value>`.
 
 ### Data points
 

@@ -145,7 +145,7 @@ describe('Metriport - Webhook - Enrollment', () => {
       expect(onError).toHaveBeenCalledWith({
         response: {
           statusCode: 200,
-          message: 'Ping received: test-ping-value',
+          message: 'pong: test-ping-value',
         },
       })
     })

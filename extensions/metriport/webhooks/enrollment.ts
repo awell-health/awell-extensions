@@ -106,11 +106,13 @@ export const enrollment: Webhook<
       const webhook = webhookPayloadSchema.parse(payload)
 
       // Acknowledge Metriport's verification ping without enrolling anyone.
+      // Metriport expects the response to echo back the ping value as `pong`.
+      // https://docs.metriport.com/medical-api/getting-started/webhooks#the-ping-message
       if ('ping' in webhook) {
         await onError({
           response: {
             statusCode: 200,
-            message: `Ping received: ${webhook.ping}`,
+            message: `pong: ${webhook.ping}`,
           },
         })
         return
