@@ -17,7 +17,8 @@ export const getWebhookBundle: Action<
   description:
     'Fetches the FHIR bundle from a Metriport webhook payload URL (e.g. the Encounter Bundle from an ADT notification, or a discharge summary). The URL is provided by the enrollment webhook on the `bundleUrl` data point and is only valid for 10 minutes.',
   fields,
-  previewable: false,
+  previewable: true,
+  supports_automated_retries: true,
   dataPoints,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
     try {

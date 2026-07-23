@@ -140,6 +140,11 @@ export const enrollment: Webhook<
           bundleUrl: event.url ?? '',
         }
       } else if (isDischargeSummary(webhook)) {
+        // TBD: the `medical.discharge-summary` payload shape is not yet
+        // documented by Metriport — we're still discussing it with them. The
+        // handling below (patient entry in a `patients` array, bundle URL) is a
+        // best guess modelled on the published `medical.*` webhook family and
+        // should be revisited once the event is confirmed.
         const patient = webhook.patients?.[0]
         patientId = patient?.patientId ?? webhook.payload?.patientId
         data_points = {
