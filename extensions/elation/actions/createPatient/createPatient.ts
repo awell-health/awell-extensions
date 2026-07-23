@@ -27,93 +27,115 @@ export const createPatient: Action<
       activity_id: payload.activity.id,
     }
 
-    const {
-      firstName,
-      lastName,
-      actualName,
-      caregiverPracticeId,
-      genderIdentity,
-      legalGenderMarker,
-      middleName,
-      preferredLanguage,
-      previousFirstName,
-      previousLastName,
-      primaryPhysicianId,
-      sexualOrientation,
-      dob,
-      sex,
-      email,
-      mobilePhone,
-      pronouns,
-      ssn,
-      ethnicity,
-      race,
-      notes,
-      tags,
-    } = FieldsValidationSchema.parse(payload.fields)
-    const api = makeAPIClient(payload.settings)
-
-    const patientEmail =
-      isNil(email) || isEmpty(email) ? undefined : [{ email }]
-
-    const patientMobilePhone =
-      isNil(mobilePhone) || isEmpty(mobilePhone)
-        ? undefined
-        : [{ phone: mobilePhone, phone_type: 'Mobile' }]
-
-    const patient = patientSchema.parse({
-      first_name: firstName,
-      last_name: lastName,
-      primary_physician: primaryPhysicianId,
-      caregiver_practice: caregiverPracticeId,
-      middle_name: middleName,
-      actual_name: actualName,
-      gender_identity: genderIdentity,
-      legal_gender_marker: legalGenderMarker,
-      sexual_orientation: sexualOrientation,
-      preferred_language: preferredLanguage,
-      previous_first_name: previousFirstName,
-      previous_last_name: previousLastName,
-      emails: patientEmail,
-      phones: patientMobilePhone,
-      dob,
-      sex,
-      pronouns,
-      ssn,
-      ethnicity,
-      race,
-      notes,
-      tags,
-    })
+    helpers.log({ meta, fields: payload.fields }, 'Processing createPatient')
 
     try {
-      helpers.log({ meta, patient }, '[createPatient] Creating Elation patient')
+      const {
+        firstName,
+        lastName,
+        actualName,
+        caregiverPracticeId,
+        genderIdentity,
+        legalGenderMarker,
+        middleName,
+        preferredLanguage,
+        previousFirstName,
+        previousLastName,
+        primaryPhysicianId,
+        sexualOrientation,
+        dob,
+        sex,
+        email,
+        mobilePhone,
+        pronouns,
+        ssn,
+        ethnicity,
+        race,
+        notes,
+        tags,
+      } = FieldsValidationSchema.parse(payload.fields)
+      const api = makeAPIClient(payload.settings)
 
-      const { data } = await api.createPatient(patient)
+      const patientEmail =
+        isNil(email) || isEmpty(email) ? undefined : [{ email }]
 
-      await onComplete({
-        data_points: {
-          patientId: String(data.id),
-        },
+      const patientMobilePhone =
+        isNil(mobilePhone) || isEmpty(mobilePhone)
+          ? undefined
+          : [{ phone: mobilePhone, phone_type: 'Mobile' }]
+
+      const patient = patientSchema.parse({
+        first_name: firstName,
+        last_name: lastName,
+        primary_physician: primaryPhysicianId,
+        caregiver_practice: caregiverPracticeId,
+        middle_name: middleName,
+        actual_name: actualName,
+        gender_identity: genderIdentity,
+        legal_gender_marker: legalGenderMarker,
+        sexual_orientation: sexualOrientation,
+        preferred_language: preferredLanguage,
+        previous_first_name: previousFirstName,
+        previous_last_name: previousLastName,
+        emails: patientEmail,
+        phones: patientMobilePhone,
+        dob,
+        sex,
+        pronouns,
+        ssn,
+        ethnicity,
+        race,
+        notes,
+        tags,
       })
-    } catch (err) {
-      // Handle the patient exists already specifically. Every other validation or axios error is handled
-      // by the default error handler in extensions-core.
-      if (err instanceof AxiosError && err.response?.status === 409) {
+
+      try {
+        helpers.log(
+          { meta, patient },
+          '[createPatient] Creating Elation patient',
+        )
+
+        const { data } = await api.createPatient(patient)
+
         await onComplete({
           data_points: {
-            patientId: String(err.response?.data?.redirect),
+            patientId: String(data.id),
           },
-          events: [
-            addActivityEventLog({
-              message: `Patient already exists. Returning the existing patient id.`,
-            }),
-          ],
         })
-        return
-      }
+      } catch (err) {
+        // Handle the patient exists already specifically. Every other validation or axios error is handled
+        // by the default error handler in extensions-core.
+        if (err instanceof AxiosError && err.response?.status === 409) {
+          await onComplete({
+            data_points: {
+              patientId: String(err.response?.data?.redirect),
+            },
+            events: [
+              addActivityEventLog({
+                message: `Patient already exists. Returning the existing patient id.`,
+              }),
+            ],
+          })
+          return
+        }
 
-      throw err
+        throw err
+      }
+    } catch (err) {
+      helpers.log({ meta, err }, 'error', err as Error)
+      const error = err as Error
+      await onError({
+        events: [
+          {
+            date: new Date().toISOString(),
+            text: { en: error.message },
+            error: {
+              category: 'SERVER_ERROR',
+              message: error.message,
+            },
+          },
+        ],
+      })
     }
   },
 }

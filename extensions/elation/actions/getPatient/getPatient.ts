@@ -18,47 +18,72 @@ export const getPatient: Action<
   previewable: true,
   supports_automated_retries: true,
   dataPoints,
-  onEvent: async ({ payload, onComplete }): Promise<void> => {
-    const fields = FieldsValidationSchema.parse(payload.fields)
-    // API Call should produce AuthError or something dif.
-    const api = makeAPIClient(payload.settings)
+  onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
 
-    const patientInfo = await api.getPatient(fields.patientId)
+    helpers.log({ meta, fields: payload.fields }, 'Processing getPatient')
 
-    await onComplete({
-      data_points: {
-        firstName: patientInfo.first_name,
-        lastName: patientInfo.last_name,
-        dob: patientInfo.dob,
-        sex: patientInfo.sex,
-        primaryPhysicianId: String(patientInfo.primary_physician),
-        caregiverPracticeId: String(patientInfo.caregiver_practice),
-        mainPhone: elationMobilePhoneToE164(
-          patientInfo.phones?.find((p) => p.phone_type === 'Main')?.phone,
-        ),
-        mobilePhone: elationMobilePhoneToE164(
-          patientInfo.phones?.find((p) => p.phone_type === 'Mobile')?.phone,
-        ),
-        email: getLastEmail(patientInfo.emails),
-        middleName: patientInfo.middle_name,
-        actualName: patientInfo.actual_name,
-        genderIdentity: patientInfo.gender_identity,
-        legalGenderMarker: patientInfo.legal_gender_marker,
-        pronouns: patientInfo.pronouns,
-        sexualOrientation: patientInfo.sexual_orientation,
-        ssn: patientInfo.ssn,
-        ethnicity: patientInfo.ethnicity,
-        race: patientInfo.race,
-        preferredLanguage: patientInfo.preferred_language,
-        notes: patientInfo.notes,
-        previousFirstName: patientInfo.previous_first_name,
-        previousLastName: patientInfo.previous_last_name,
-        status: patientInfo.patient_status.status,
-        preferredServiceLocationId: String(
-          patientInfo.preferred_service_location,
-        ),
-        patientObject: JSON.stringify(patientInfo),
-      },
-    })
+    try {
+      const fields = FieldsValidationSchema.parse(payload.fields)
+      // API Call should produce AuthError or something dif.
+      const api = makeAPIClient(payload.settings)
+
+      const patientInfo = await api.getPatient(fields.patientId)
+
+      await onComplete({
+        data_points: {
+          firstName: patientInfo.first_name,
+          lastName: patientInfo.last_name,
+          dob: patientInfo.dob,
+          sex: patientInfo.sex,
+          primaryPhysicianId: String(patientInfo.primary_physician),
+          caregiverPracticeId: String(patientInfo.caregiver_practice),
+          mainPhone: elationMobilePhoneToE164(
+            patientInfo.phones?.find((p) => p.phone_type === 'Main')?.phone,
+          ),
+          mobilePhone: elationMobilePhoneToE164(
+            patientInfo.phones?.find((p) => p.phone_type === 'Mobile')?.phone,
+          ),
+          email: getLastEmail(patientInfo.emails),
+          middleName: patientInfo.middle_name,
+          actualName: patientInfo.actual_name,
+          genderIdentity: patientInfo.gender_identity,
+          legalGenderMarker: patientInfo.legal_gender_marker,
+          pronouns: patientInfo.pronouns,
+          sexualOrientation: patientInfo.sexual_orientation,
+          ssn: patientInfo.ssn,
+          ethnicity: patientInfo.ethnicity,
+          race: patientInfo.race,
+          preferredLanguage: patientInfo.preferred_language,
+          notes: patientInfo.notes,
+          previousFirstName: patientInfo.previous_first_name,
+          previousLastName: patientInfo.previous_last_name,
+          status: patientInfo.patient_status.status,
+          preferredServiceLocationId: String(
+            patientInfo.preferred_service_location,
+          ),
+          patientObject: JSON.stringify(patientInfo),
+        },
+      })
+    } catch (err) {
+      helpers.log({ meta, err }, 'error', err as Error)
+      const error = err as Error
+      await onError({
+        events: [
+          {
+            date: new Date().toISOString(),
+            text: { en: error.message },
+            error: {
+              category: 'SERVER_ERROR',
+              message: error.message,
+            },
+          },
+        ],
+      })
+    }
   },
 }

@@ -23,34 +23,56 @@ export const addMessageToThread: Action<
       activity_id: payload.activity.id,
     }
 
-    const { fields, settings } = validate({
-      schema: z.object({
-        fields: FieldsValidationSchema,
-        settings: SettingsValidationSchema,
-      }),
-      payload,
-    })
-
-    const api = makeAPIClient(settings)
-
-    const addMessageToThreadInput = {
-      thread: fields.threadId,
-      sender: fields.senderId,
-      body: fields.messageBody,
-      send_date: new Date().toISOString(),
-    }
-
     helpers.log(
-      { meta, addMessageToThreadInput },
-      '[addMessageToThread] Adding Elation thread message',
+      { meta, fields: payload.fields },
+      'Processing addMessageToThread',
     )
 
-    const { id } = await api.addMessageToThread(addMessageToThreadInput)
+    try {
+      const { fields, settings } = validate({
+        schema: z.object({
+          fields: FieldsValidationSchema,
+          settings: SettingsValidationSchema,
+        }),
+        payload,
+      })
 
-    await onComplete({
-      data_points: {
-        messageId: String(id),
-      },
-    })
+      const api = makeAPIClient(settings)
+
+      const addMessageToThreadInput = {
+        thread: fields.threadId,
+        sender: fields.senderId,
+        body: fields.messageBody,
+        send_date: new Date().toISOString(),
+      }
+
+      helpers.log(
+        { meta, addMessageToThreadInput },
+        '[addMessageToThread] Adding Elation thread message',
+      )
+
+      const { id } = await api.addMessageToThread(addMessageToThreadInput)
+
+      await onComplete({
+        data_points: {
+          messageId: String(id),
+        },
+      })
+    } catch (err) {
+      helpers.log({ meta, err }, 'error', err as Error)
+      const error = err as Error
+      await onError({
+        events: [
+          {
+            date: new Date().toISOString(),
+            text: { en: error.message },
+            error: {
+              category: 'SERVER_ERROR',
+              message: error.message,
+            },
+          },
+        ],
+      })
+    }
   },
 }

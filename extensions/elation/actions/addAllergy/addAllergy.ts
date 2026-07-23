@@ -17,42 +17,61 @@ export const addAllergy: Action<
   fields,
   previewable: true,
   dataPoints,
-  onEvent: async ({ payload, onComplete, helpers }): Promise<void> => {
+  onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
     const meta = {
       tenant_id: payload.pathway.tenant_id,
       careflow_id: payload.pathway.id,
       activity_id: payload.activity.id,
     }
 
-    const { fields, settings } = validate({
-      schema: z.object({
-        fields: FieldsValidationSchema,
-        settings: SettingsValidationSchema,
-      }),
-      payload,
-    })
+    helpers.log({ meta, fields: payload.fields }, 'Processing addAllergy')
 
-    const api = makeAPIClient(settings)
+    try {
+      const { fields, settings } = validate({
+        schema: z.object({
+          fields: FieldsValidationSchema,
+          settings: SettingsValidationSchema,
+        }),
+        payload,
+      })
 
-    const addAllergyInput = {
-      patient: fields.patientId,
-      name: fields.name,
-      start_date: fields.startDate,
-      reaction: fields.reaction,
-      severity: fields.severity,
+      const api = makeAPIClient(settings)
+
+      const addAllergyInput = {
+        patient: fields.patientId,
+        name: fields.name,
+        start_date: fields.startDate,
+        reaction: fields.reaction,
+        severity: fields.severity,
+      }
+
+      helpers.log(
+        { meta, addAllergyInput },
+        '[addAllergy] Adding Elation allergy',
+      )
+
+      const { id } = await api.addAllergy(addAllergyInput)
+
+      await onComplete({
+        data_points: {
+          allergyId: String(id),
+        },
+      })
+    } catch (err) {
+      helpers.log({ meta, err }, 'error', err as Error)
+      const error = err as Error
+      await onError({
+        events: [
+          {
+            date: new Date().toISOString(),
+            text: { en: error.message },
+            error: {
+              category: 'SERVER_ERROR',
+              message: error.message,
+            },
+          },
+        ],
+      })
     }
-
-    helpers.log(
-      { meta, addAllergyInput },
-      '[addAllergy] Adding Elation allergy',
-    )
-
-    const { id } = await api.addAllergy(addAllergyInput)
-
-    await onComplete({
-      data_points: {
-        allergyId: String(id),
-      },
-    })
   },
 }

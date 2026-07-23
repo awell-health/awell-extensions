@@ -47,54 +47,73 @@ export const addVitals: Action<
   fields: elationFields,
   previewable: true,
   dataPoints,
-  onEvent: async ({ payload, onComplete, helpers }): Promise<void> => {
+  onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
     const meta = {
       tenant_id: payload.pathway.tenant_id,
       careflow_id: payload.pathway.id,
       activity_id: payload.activity.id,
     }
 
-    const { fields, settings } = validate({
-      schema: z.object({
-        fields: FieldsValidationSchema,
-        settings: SettingsValidationSchema,
-      }),
-      payload,
-    })
+    helpers.log({ meta, fields: payload.fields }, 'Processing addVitals')
 
-    const api = makeAPIClient(settings)
+    try {
+      const { fields, settings } = validate({
+        schema: z.object({
+          fields: FieldsValidationSchema,
+          settings: SettingsValidationSchema,
+        }),
+        payload,
+      })
 
-    const body: AddVitalsInputType = {
-      patient: fields.patientId,
-      practice: fields.practiceId,
-      visit_note: fields?.visitNoteId,
-      non_visit_note: fields?.nonVisitNoteId,
-      bmi: fields.bmi,
-      height: createMeasurement(fields.height, fields.heightNote),
-      weight: createMeasurement(fields.weight, fields.weightNote),
-      oxygen: createMeasurement(fields.oxygen, fields.oxygenNote),
-      rr: createMeasurement(fields.rr, fields.rrNote),
-      hr: createMeasurement(fields.hr, fields.hrNote),
-      hc: createMeasurement(fields.hc, fields.hcNote),
-      temperature: createMeasurement(
-        fields.temperature,
-        fields.temperatureNote,
-      ),
-      bp: createMeasurement(fields.bp, fields.bpNote),
-      bodyfat: createMeasurement(fields.bodyfat, fields.bodyfatNote),
-      dlm: createMeasurement(fields.dlm, fields.dlmNote),
-      bfm: createMeasurement(fields.bfm, fields.bfmNote),
-      wc: createMeasurement(fields.wc, fields.wcNote),
+      const api = makeAPIClient(settings)
+
+      const body: AddVitalsInputType = {
+        patient: fields.patientId,
+        practice: fields.practiceId,
+        visit_note: fields?.visitNoteId,
+        non_visit_note: fields?.nonVisitNoteId,
+        bmi: fields.bmi,
+        height: createMeasurement(fields.height, fields.heightNote),
+        weight: createMeasurement(fields.weight, fields.weightNote),
+        oxygen: createMeasurement(fields.oxygen, fields.oxygenNote),
+        rr: createMeasurement(fields.rr, fields.rrNote),
+        hr: createMeasurement(fields.hr, fields.hrNote),
+        hc: createMeasurement(fields.hc, fields.hcNote),
+        temperature: createMeasurement(
+          fields.temperature,
+          fields.temperatureNote,
+        ),
+        bp: createMeasurement(fields.bp, fields.bpNote),
+        bodyfat: createMeasurement(fields.bodyfat, fields.bodyfatNote),
+        dlm: createMeasurement(fields.dlm, fields.dlmNote),
+        bfm: createMeasurement(fields.bfm, fields.bfmNote),
+        wc: createMeasurement(fields.wc, fields.wcNote),
+      }
+
+      helpers.log({ meta, body }, '[addVitals] Adding Elation vitals')
+
+      const { id } = await api.addVitals(body)
+
+      await onComplete({
+        data_points: {
+          vitalsId: String(id),
+        },
+      })
+    } catch (err) {
+      helpers.log({ meta, err }, 'error', err as Error)
+      const error = err as Error
+      await onError({
+        events: [
+          {
+            date: new Date().toISOString(),
+            text: { en: error.message },
+            error: {
+              category: 'SERVER_ERROR',
+              message: error.message,
+            },
+          },
+        ],
+      })
     }
-
-    helpers.log({ meta, body }, '[addVitals] Adding Elation vitals')
-
-    const { id } = await api.addVitals(body)
-
-    await onComplete({
-      data_points: {
-        vitalsId: String(id),
-      },
-    })
   },
 }

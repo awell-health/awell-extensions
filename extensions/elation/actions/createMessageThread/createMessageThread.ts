@@ -25,63 +25,85 @@ export const createMessageThread: Action<
       activity_id: payload.activity.id,
     }
 
-    const {
-      patientId,
-      senderId,
-      practiceId,
-      documentDate,
-      chartDate,
-      messageBody,
-      isUrgent,
-      recipientId,
-      groupId,
-    } = FieldsValidationSchema.parse(payload.fields)
-
-    const threadMembers = [
-      // Individual recipient
-      ...(!isNil(recipientId)
-        ? [{ user: recipientId, status: 'Requiring Action' }]
-        : []),
-      // Group recipient
-      ...(!isNil(groupId)
-        ? [{ group: groupId, status: 'Requiring Action' }]
-        : []),
-      // Sender
-      {
-        user: senderId,
-        status: 'Addressed',
-      },
-    ]
-
-    const messageThread = messageThreadSchema.parse({
-      patient: patientId,
-      sender: senderId,
-      practice: practiceId,
-      document_date: documentDate,
-      chart_date: chartDate,
-      is_urgent: isUrgent,
-      messages: [
-        {
-          body: messageBody,
-          send_date: new Date().toISOString(),
-          sender: senderId,
-        },
-      ],
-      members: threadMembers,
-    })
-
-    const api = makeAPIClient(payload.settings)
     helpers.log(
-      { meta, messageThread },
-      '[createMessageThread] Creating Elation message thread',
+      { meta, fields: payload.fields },
+      'Processing createMessageThread',
     )
 
-    const data = await api.createMessageThread(messageThread)
+    try {
+      const {
+        patientId,
+        senderId,
+        practiceId,
+        documentDate,
+        chartDate,
+        messageBody,
+        isUrgent,
+        recipientId,
+        groupId,
+      } = FieldsValidationSchema.parse(payload.fields)
 
-    await onComplete({
-      data_points: {
-        messageThreadId: String(data.id),
-      },
-    })
+      const threadMembers = [
+        // Individual recipient
+        ...(!isNil(recipientId)
+          ? [{ user: recipientId, status: 'Requiring Action' }]
+          : []),
+        // Group recipient
+        ...(!isNil(groupId)
+          ? [{ group: groupId, status: 'Requiring Action' }]
+          : []),
+        // Sender
+        {
+          user: senderId,
+          status: 'Addressed',
+        },
+      ]
+
+      const messageThread = messageThreadSchema.parse({
+        patient: patientId,
+        sender: senderId,
+        practice: practiceId,
+        document_date: documentDate,
+        chart_date: chartDate,
+        is_urgent: isUrgent,
+        messages: [
+          {
+            body: messageBody,
+            send_date: new Date().toISOString(),
+            sender: senderId,
+          },
+        ],
+        members: threadMembers,
+      })
+
+      const api = makeAPIClient(payload.settings)
+      helpers.log(
+        { meta, messageThread },
+        '[createMessageThread] Creating Elation message thread',
+      )
+
+      const data = await api.createMessageThread(messageThread)
+
+      await onComplete({
+        data_points: {
+          messageThreadId: String(data.id),
+        },
+      })
+    } catch (err) {
+      helpers.log({ meta, err }, 'error', err as Error)
+      const error = err as Error
+      await onError({
+        events: [
+          {
+            date: new Date().toISOString(),
+            text: { en: error.message },
+            error: {
+              category: 'SERVER_ERROR',
+              message: error.message,
+            },
+          },
+        ],
+      })
+    }
   },
 }

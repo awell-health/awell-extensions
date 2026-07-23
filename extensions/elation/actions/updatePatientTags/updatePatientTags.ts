@@ -34,57 +34,79 @@ export const updatePatientTags: Action<
       activity_id: payload.activity.id,
     }
 
-    // 1. Validate input and initialize API client
-    const { instructions, patientId } = FieldsValidationSchema.parse(
-      payload.fields,
-    )
-    const api = makeAPIClient(payload.settings)
-
-    // 2. Get existing tags
-    const { tags } = await api.getPatient(patientId)
-    const existingTags = tags ?? []
-
-    // 3. Initialize OpenAI model with metadata and callbacks
-    const { model, metadata, callbacks } = await createOpenAIModel({
-      settings: {}, // we use built-in API key for OpenAI
-      helpers,
-      payload,
-      modelType: OPENAI_MODELS.GPT5Mini,
-    })
-
-    // 4. Generate updated tags
-    const { validatedTags, explanation } = await getTagsFromLLM({
-      model,
-      existingTags,
-      instructions,
-      metadata,
-      callbacks,
-    })
-
-    // 5. Update tags in Elation
-    const updatePatientTagsInput = {
-      // Empty array doesn't clear tags, but [''] clears the rest by setting an empty tag.
-      tags: validatedTags.length === 0 ? [''] : validatedTags,
-    }
-
     helpers.log(
-      { meta, updatePatientTagsInput },
-      '[updatePatientTags] Updating Elation patient tags',
+      { meta, fields: payload.fields },
+      'Processing updatePatientTags',
     )
 
-    await api.updatePatient(patientId, updatePatientTagsInput)
+    try {
+      // 1. Validate input and initialize API client
+      const { instructions, patientId } = FieldsValidationSchema.parse(
+        payload.fields,
+      )
+      const api = makeAPIClient(payload.settings)
 
-    // 6. Complete action with results
-    await onComplete({
-      data_points: {
-        updatedTags: validatedTags.join(', '),
-        explanation,
-      },
-      events: [
-        addActivityEventLog({
-          message: `Previous patient tags: ${existingTags?.length > 0 ? existingTags?.join(', ') : 'No tags'}\nUpdated patient tags: ${validatedTags.join(', ')}\nExplanation: ${explanation}`,
-        }),
-      ],
-    })
+      // 2. Get existing tags
+      const { tags } = await api.getPatient(patientId)
+      const existingTags = tags ?? []
+
+      // 3. Initialize OpenAI model with metadata and callbacks
+      const { model, metadata, callbacks } = await createOpenAIModel({
+        settings: {}, // we use built-in API key for OpenAI
+        helpers,
+        payload,
+        modelType: OPENAI_MODELS.GPT5Mini,
+      })
+
+      // 4. Generate updated tags
+      const { validatedTags, explanation } = await getTagsFromLLM({
+        model,
+        existingTags,
+        instructions,
+        metadata,
+        callbacks,
+      })
+
+      // 5. Update tags in Elation
+      const updatePatientTagsInput = {
+        // Empty array doesn't clear tags, but [''] clears the rest by setting an empty tag.
+        tags: validatedTags.length === 0 ? [''] : validatedTags,
+      }
+
+      helpers.log(
+        { meta, updatePatientTagsInput },
+        '[updatePatientTags] Updating Elation patient tags',
+      )
+
+      await api.updatePatient(patientId, updatePatientTagsInput)
+
+      // 6. Complete action with results
+      await onComplete({
+        data_points: {
+          updatedTags: validatedTags.join(', '),
+          explanation,
+        },
+        events: [
+          addActivityEventLog({
+            message: `Previous patient tags: ${existingTags?.length > 0 ? existingTags?.join(', ') : 'No tags'}\nUpdated patient tags: ${validatedTags.join(', ')}\nExplanation: ${explanation}`,
+          }),
+        ],
+      })
+    } catch (err) {
+      helpers.log({ meta, err }, 'error', err as Error)
+      const error = err as Error
+      await onError({
+        events: [
+          {
+            date: new Date().toISOString(),
+            text: { en: error.message },
+            error: {
+              category: 'SERVER_ERROR',
+              message: error.message,
+            },
+          },
+        ],
+      })
+    }
   },
 }
