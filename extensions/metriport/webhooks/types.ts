@@ -23,17 +23,6 @@ export enum MetriportWebhookType {
 }
 
 /**
- * The event type surfaced to the care flow as a data point so it can be
- * distinguished on. We enroll on two of them:
- *  - `adt`: the patient was admitted (`patient.admit`, HL7 ADT^A01)
- *  - `discharge`: a discharge summary was produced (`medical.discharge-summary`)
- */
-export enum EnrollmentEventType {
-  Adt = 'adt',
-  Discharge = 'discharge',
-}
-
-/**
  * Metadata present on every Metriport webhook request.
  */
 export interface MetriportWebhookMeta {

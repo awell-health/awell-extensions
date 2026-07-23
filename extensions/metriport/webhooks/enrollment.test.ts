@@ -68,14 +68,14 @@ describe('Metriport - Webhook - Enrollment', () => {
     })
   }
 
-  describe('When an admit (adt) event is received', () => {
-    test('Should enroll the patient with eventType "adt" and the bundle URL', async () => {
+  describe('When an admit (patient.admit) event is received', () => {
+    test('Should enroll the patient with eventType "patient.admit" and the bundle URL', async () => {
       await invoke(admitPayload)
 
       expect(onError).not.toHaveBeenCalled()
       expect(onSuccess).toHaveBeenCalledWith({
         data_points: {
-          eventType: 'adt',
+          eventType: 'patient.admit',
           metriportPatientId: 'patient-123',
           externalId: 'external-abc',
           admitTimestamp: '2026-07-21T09:00:00.000Z',
@@ -92,13 +92,13 @@ describe('Metriport - Webhook - Enrollment', () => {
   })
 
   describe('When a discharge summary event is received', () => {
-    test('Should enroll the patient with eventType "discharge" and the bundle URL', async () => {
+    test('Should enroll the patient with eventType "medical.discharge-summary" and the bundle URL', async () => {
       await invoke(dischargeSummaryPayload)
 
       expect(onError).not.toHaveBeenCalled()
       expect(onSuccess).toHaveBeenCalledWith({
         data_points: {
-          eventType: 'discharge',
+          eventType: 'medical.discharge-summary',
           metriportPatientId: 'patient-123',
           externalId: 'external-abc',
           admitTimestamp: '',

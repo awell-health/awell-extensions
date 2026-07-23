@@ -8,7 +8,6 @@ import {
 import { type settings } from '../settings'
 import { isWebhookRequestAuthorized } from '../shared/verifyWebhookSignature'
 import {
-  EnrollmentEventType,
   MetriportWebhookType,
   type MetriportEnrollmentWebhookPayload,
 } from './types'
@@ -78,7 +77,7 @@ export const enrollment: Webhook<
 > = {
   key: 'enrollment',
   description:
-    'Enrolls a patient when Metriport sends a real-time notification. Distinguishes between admit (`adt`, from `patient.admit`) and `discharge` (from `medical.discharge-summary`) events via the `eventType` data point. The FHIR bundle is not fetched here — the pre-signed URL is passed on the `bundleUrl` data point and can be retrieved later with the "Get Webhook Bundle" action.',
+    'Enrolls a patient when Metriport sends a real-time notification. The `eventType` data point carries the Metriport webhook type (`patient.admit` or `medical.discharge-summary`) so it can be distinguished on. The FHIR bundle is not fetched here — the pre-signed URL is passed on the `bundleUrl` data point and can be retrieved later with the "Get Webhook Bundle" action.',
   dataPoints,
   onEvent: async ({
     payload: { payload, rawBody, headers, settings },
@@ -132,7 +131,7 @@ export const enrollment: Webhook<
         const event = webhook.payload
         patientId = event.patientId
         data_points = {
-          eventType: EnrollmentEventType.Adt,
+          eventType: webhook.meta.type,
           metriportPatientId: event.patientId,
           externalId: event.externalId ?? '',
           admitTimestamp: event.admitTimestamp ?? '',
@@ -144,7 +143,7 @@ export const enrollment: Webhook<
         const patient = webhook.patients?.[0]
         patientId = patient?.patientId ?? webhook.payload?.patientId
         data_points = {
-          eventType: EnrollmentEventType.Discharge,
+          eventType: webhook.meta.type,
           metriportPatientId: patientId ?? '',
           externalId: patient?.externalId ?? webhook.payload?.externalId ?? '',
           admitTimestamp: '',
