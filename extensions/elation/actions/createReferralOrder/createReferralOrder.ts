@@ -80,7 +80,7 @@ export const createReferralOrder: Action<
         body,
         referral_order: referralOrderResponse.id,
         send_to_contact: { id: contact.id },
-        letter_type: 'referral',
+        letter_type: 'referral' as const,
       }
 
       helpers.log(

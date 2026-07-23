@@ -3,6 +3,7 @@ import { TestHelpers } from '@awell-health/extensions-core'
 import { addVitals as action } from './addVitals'
 import { ZodError } from 'zod'
 import { vitalsExample } from '../../__mocks__/constants'
+import { testPayload } from '../../../../tests'
 
 jest.mock('../../client')
 
@@ -31,6 +32,7 @@ describe('Elation - Add Vitals', () => {
   test('Should call onComplete when successful', async () => {
     await addVitals.onEvent({
       payload: {
+        ...testPayload,
         fields: vitalsExample,
         settings,
       } as any,
@@ -46,6 +48,7 @@ describe('Elation - Add Vitals', () => {
   test('Should call onError when patientId is missing', async () => {
     const resp = addVitals.onEvent({
       payload: {
+        ...testPayload,
         fields: {
           practiceId: 67890,
           visitNoteId: 11111,
@@ -66,6 +69,7 @@ describe('Elation - Add Vitals', () => {
   test('Should call onError when field is missing ', async () => {
     const resp = addVitals.onEvent({
       payload: {
+        ...testPayload,
         fields: {
           patientId: 123,
           visitNoteId: 11111,
@@ -86,6 +90,7 @@ describe('Elation - Add Vitals', () => {
   test('Should call onError when type is incorrect', async () => {
     const resp = addVitals.onEvent({
       payload: {
+        ...testPayload,
         fields: {
           ...vitalsExample,
           wc: { value: 'some value' },

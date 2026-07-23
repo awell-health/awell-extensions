@@ -3,6 +3,7 @@ import { SrfaxApiClient } from '../../lib/api/client'
 import { LandingAiApiClient } from '../../../landingAi/lib/api/client'
 import { getFaxDocumentWithOCR as action } from './getFaxDocumentWithOCR'
 import { zOcrProvider } from './config/fields'
+import { testPayload } from '../../../../tests'
 
 describe('SRFax - Get fax document with OCR', () => {
   let retrieveFaxSpy: jest.SpyInstance
@@ -71,6 +72,7 @@ describe('SRFax - Get fax document with OCR', () => {
     test('Should work', async () => {
       await extensionAction.onEvent({
         payload: {
+          ...testPayload,
           fields: {
             faxId: '1516273800',
             ocrProvider: zOcrProvider.enum['awell-landing-ai'],

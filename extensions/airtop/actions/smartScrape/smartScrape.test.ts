@@ -1,6 +1,7 @@
 import { TestHelpers } from '@awell-health/extensions-core'
 import { AirtopClient } from '@airtop/sdk'
 import { smartScrape as action } from './smartScrape'
+import { testPayload } from '../../../../tests'
 
 jest.mock('@airtop/sdk')
 
@@ -53,6 +54,7 @@ describe('Airtop - Smart Scrape', () => {
     test('Should work', async () => {
       await extensionAction.onEvent({
         payload: {
+          ...testPayload,
           fields: {
             pageUrl: 'https://example.com',
           },

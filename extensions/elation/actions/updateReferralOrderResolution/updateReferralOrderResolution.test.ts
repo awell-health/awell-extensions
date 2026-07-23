@@ -2,7 +2,7 @@ import { makeAPIClientMockFunc } from '../../__mocks__/client'
 import { makeAPIClient } from '../../client'
 import { updateReferralOrderResolution as action } from './updateReferralOrderResolution'
 import { TestHelpers } from '@awell-health/extensions-core'
-import { createAxiosError } from '../../../../tests'
+import { createAxiosError, testPayload } from '../../../../tests'
 
 jest.mock('../../client', () => ({
   makeAPIClient: jest.fn(),
@@ -48,6 +48,7 @@ describe('Elation - Update referral order resolution', () => {
       test('Should return an error', async () => {
         await extensionAction.onEvent({
           payload: {
+            ...testPayload,
             fields: {
               referralOrderId: 142685415604249,
               resolutionState: 'fulfilled',
@@ -89,6 +90,7 @@ describe('Elation - Update referral order resolution', () => {
     test('Should update the referral order resolution', async () => {
       await extensionAction.onEvent({
         payload: {
+          ...testPayload,
           fields: {
             referralOrderId: 142685415604249,
             resolutionState: 'fulfilled',

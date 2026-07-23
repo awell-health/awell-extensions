@@ -2,7 +2,7 @@ import { TestHelpers } from '@awell-health/extensions-core'
 import { FreshdeskApiClient } from '../../lib/api/client'
 import { addNoteToTicket as action } from './addNoteToTicket'
 import { AddNoteResponseMock } from './__mocks__/AddNoteResponse.mock'
-import { createAxiosError } from '../../../../tests'
+import { createAxiosError, testPayload } from '../../../../tests'
 
 describe('Freshdesk - Add note to ticket', () => {
   let addNoteSpy: jest.SpyInstance
@@ -26,6 +26,7 @@ describe('Freshdesk - Add note to ticket', () => {
     test('Should work', async () => {
       await extensionAction.onEvent({
         payload: {
+          ...testPayload,
           fields: {
             ticketId: '1',
             body: 'Note content',
@@ -61,6 +62,7 @@ describe('Freshdesk - Add note to ticket', () => {
     test('Should call onError', async () => {
       await extensionAction.onEvent({
         payload: {
+          ...testPayload,
           fields: {
             ticketId: '1',
             body: 'Note content',

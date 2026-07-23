@@ -2,6 +2,7 @@ import { makeAPIClientMockFunc } from '../../__mocks__/client'
 import { makeAPIClient } from '../../client'
 import { getLetter as action } from './getLetter'
 import { TestHelpers } from '@awell-health/extensions-core'
+import { testPayload } from '../../../../tests'
 
 jest.mock('../../client')
 
@@ -27,6 +28,7 @@ describe('Elation - Get letter', () => {
   test('Should return the correct letter', async () => {
     await sendCall.onEvent({
       payload: {
+        ...testPayload,
         fields: {
           letterId: 123,
         },

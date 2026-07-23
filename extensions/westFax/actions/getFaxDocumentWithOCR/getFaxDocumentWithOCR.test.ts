@@ -4,6 +4,7 @@ import { LandingAiApiClient } from '../../../landingAi/lib/api/client'
 import { getFaxDocumentWithOCR as action } from './getFaxDocumentWithOCR'
 import { getFaxDocumentMock } from '../getFaxDocument/__mocks__/GetFaxDocument.mock'
 import { zOcrProvider } from './config/fields'
+import { testPayload } from '../../../../tests'
 
 describe('WestFax - Get fax document with OCR', () => {
   let getFaxDocumentSpy: jest.SpyInstance
@@ -48,6 +49,7 @@ describe('WestFax - Get fax document with OCR', () => {
     test('Should work', async () => {
       await extensionAction.onEvent({
         payload: {
+          ...testPayload,
           fields: {
             faxId: '1',
             ocrProvider: zOcrProvider.enum['awell-landing-ai'],

@@ -3,6 +3,7 @@ import { TestHelpers } from '@awell-health/extensions-core'
 import { createVisitNote as action } from './createVisitNote'
 import { ZodError } from 'zod'
 import { createVisitNoteExample } from '../../__mocks__/constants'
+import { testPayload } from '../../../../tests'
 
 jest.mock('../../client')
 
@@ -31,6 +32,7 @@ describe('Elation - Create Visit Note', () => {
   test('Should call onComplete when successful', async () => {
     await createVisitNote.onEvent({
       payload: {
+        ...testPayload,
         fields: createVisitNoteExample,
         settings,
       } as any,
@@ -51,6 +53,7 @@ describe('Elation - Create Visit Note', () => {
   test('Should call onError when required fields are missing', async () => {
     const resp = createVisitNote.onEvent({
       payload: {
+        ...testPayload,
         fields: {
           patientId: 123,
         },
@@ -69,6 +72,7 @@ describe('Elation - Create Visit Note', () => {
   test('Should call onError when no patientId is provided and name is invalid format', async () => {
     const resp = createVisitNote.onEvent({
       payload: {
+        ...testPayload,
         fields: {
           ...createVisitNoteExample,
           patientId: 'invalid',

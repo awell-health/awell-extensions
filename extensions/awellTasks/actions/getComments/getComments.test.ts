@@ -2,6 +2,7 @@ import { TestHelpers } from '@awell-health/extensions-core'
 import { TasksApiClient } from '../../api/client'
 import { getComments as action } from './getComments'
 import { commentsMock } from './__testdata__/comments.mock'
+import { testPayload } from '../../../../tests'
 
 jest.mock('../../api/client', () => ({
   TasksApiClient: jest.fn().mockImplementation(() => ({
@@ -24,9 +25,11 @@ describe('Task Service - Get care flow comments', () => {
   test('Should work', async () => {
     await extensionAction.onEvent({
       payload: {
+        ...testPayload,
         fields: {},
         pathway: {
           id: 'pathway-id',
+          tenant_id: 'tenant-id',
         },
         settings: {
           baseUrl: 'https://api.awellhealth.com',

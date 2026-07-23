@@ -1,7 +1,7 @@
 import { TestHelpers } from '@awell-health/extensions-core'
 import { ZoomApiClient } from '../../lib/api/client'
 import { sendSms as action } from './sendSms'
-import { createAxiosError } from '../../../../tests'
+import { createAxiosError, testPayload } from '../../../../tests'
 import { AxiosError } from 'axios'
 
 jest.mock('../../lib/api/client')
@@ -42,6 +42,7 @@ describe('Zoom - Send SMS', () => {
     test('It should call the onComplete callback', async () => {
       await extensionAction.onEvent({
         payload: {
+          ...testPayload,
           fields: {
             contactCenterNumber: '+12090000000',
             to: '+12090001111',
@@ -87,6 +88,7 @@ describe('Zoom - Send SMS', () => {
       test('It should call onComplete with failure code', async () => {
         await extensionAction.onEvent({
           payload: {
+            ...testPayload,
             fields: {
               contactCenterNumber: '+12090000000',
               to: '+12090001111',
@@ -142,6 +144,7 @@ describe('Zoom - Send SMS', () => {
         expect(
           extensionAction.onEvent({
             payload: {
+              ...testPayload,
               fields: {
                 contactCenterNumber: '+12090000000',
                 to: '+12090001111',

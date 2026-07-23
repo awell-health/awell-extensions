@@ -119,7 +119,7 @@ export const parseStringToPhoneNumber: Action<
             date: new Date().toISOString(),
             text: { en: error.message },
             error: {
-              category: 'SERVER_ERROR',
+              category: 'BAD_REQUEST',
               message: error.message,
             },
           },

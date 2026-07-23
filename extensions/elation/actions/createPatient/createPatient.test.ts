@@ -1,7 +1,7 @@
 import { createPatient as action } from '.'
 import { makeAPIClient } from '../../client'
 import { TestHelpers } from '@awell-health/extensions-core'
-import { createAxiosError } from '../../../../tests'
+import { createAxiosError, testPayload } from '../../../../tests'
 import { CreatePatientSuccessMock } from './__testdata__/createPatient.mock'
 import { FieldsValidationSchema } from './config/fields'
 
@@ -79,6 +79,7 @@ describe('Elation - Create patient', () => {
     test('Should return with correct data_points', async () => {
       await extensionAction.onEvent!({
         payload: {
+          ...testPayload,
           fields: {
             firstName: 'Test',
             middleName: 'P',
@@ -140,6 +141,7 @@ describe('Elation - Create patient', () => {
       test('Should return the existing patient id', async () => {
         await extensionAction.onEvent!({
           payload: {
+            ...testPayload,
             fields: {
               firstName: 'Nick Test',
               lastName: 'Test',
@@ -194,6 +196,7 @@ describe('Elation - Create patient', () => {
         await expect(
           extensionAction.onEvent!({
             payload: {
+              ...testPayload,
               fields: {
                 firstName: 'Nick Test',
                 lastName: 'Test',

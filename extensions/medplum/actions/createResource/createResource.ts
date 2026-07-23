@@ -31,13 +31,12 @@ export const createResource: Action<
     try {
       const resourceData = JSON.parse(input.resourceJson)
 
-      const shouldSearch =
+      if (
         input.searchResourceType != null &&
         input.searchResourceType !== '' &&
         input.searchIdentifier != null &&
         input.searchIdentifier !== ''
-
-      if (shouldSearch) {
+      ) {
         const searchParams: Record<string, string> = {
           identifier: input.searchIdentifier,
         }
@@ -119,8 +118,7 @@ export const createResource: Action<
               }
               if (
                 (resourceType === undefined || resourceType === '') &&
-                entry.resource?.resourceType !== undefined &&
-                entry.resource.resourceType !== ''
+                entry.resource?.resourceType !== undefined
               ) {
                 resourceType = entry.resource.resourceType
               }

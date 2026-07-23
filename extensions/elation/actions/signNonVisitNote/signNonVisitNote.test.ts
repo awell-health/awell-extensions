@@ -2,7 +2,7 @@ import { makeAPIClientMockFunc } from '../../__mocks__/client'
 import { makeAPIClient } from '../../client'
 import { signNonVisitNote as action } from './signNonVisitNote'
 import { TestHelpers } from '@awell-health/extensions-core'
-import { createAxiosError } from '../../../../tests'
+import { createAxiosError, testPayload } from '../../../../tests'
 
 jest.mock('../../client', () => ({
   makeAPIClient: jest.fn(),
@@ -50,6 +50,7 @@ describe('Elation - Sign non-visit note', () => {
       test('Should return an error', async () => {
         await extensionAction.onEvent({
           payload: {
+            ...testPayload,
             fields: {
               nonVisitNoteId: 142685415604249,
               signedBy: 141402084933634,
@@ -98,6 +99,7 @@ describe('Elation - Sign non-visit note', () => {
       test('Should return an error', async () => {
         await extensionAction.onEvent({
           payload: {
+            ...testPayload,
             fields: {
               nonVisitNoteId: 142685415604249,
               signedBy: 141402084933634,
@@ -144,6 +146,7 @@ describe('Elation - Sign non-visit note', () => {
       test('Should return an error', async () => {
         await extensionAction.onEvent({
           payload: {
+            ...testPayload,
             fields: {
               nonVisitNoteId: 142685415604249,
               signedBy: 141402084933634,
@@ -185,6 +188,7 @@ describe('Elation - Sign non-visit note', () => {
     test('Should sign the non-visit note', async () => {
       await extensionAction.onEvent({
         payload: {
+          ...testPayload,
           fields: {
             nonVisitNoteId: 142685415604249,
             signedBy: 141402084933634,
