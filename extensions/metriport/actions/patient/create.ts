@@ -22,9 +22,10 @@ export const createPatient: Action<
   category: Category.EHR_INTEGRATIONS,
   title: 'Create Patient',
   description:
-    'Creates a Patient in Metriport for the specified Facility where the Patient is receiving care.',
+    'Creates a Patient in Metriport for the specified Facility where the Patient is receiving care. Passing in a cohort ID will register that patient for real-time monitoring.',
   fields: createFields,
   previewable: true,
+  supports_automated_retries: true,
   dataPoints: patientIdDataPoint,
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
     const meta = {
@@ -78,6 +79,10 @@ export const convertToMetriportPatient = (
       phone: patient.phone,
       email: patient.email,
     },
+    cohorts:
+      patient.cohort !== undefined && patient.cohort.length > 0
+        ? [patient.cohort]
+        : [],
   }
 
   if (
