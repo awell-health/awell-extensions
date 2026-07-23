@@ -14,7 +14,18 @@ export const createFlowExecution: Action<typeof fields, typeof settings> = {
   fields,
   dataPoints,
   previewable: true,
-  onActivityCreated: async (payload, onComplete, onError) => {
+  onEvent: async ({ payload, onComplete, onError, helpers }) => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
+
+    helpers.log(
+      { meta, fields: payload.fields },
+      'Processing createFlowExecution',
+    )
+
     const {
       fields: { recipient, parameters, from, flow_id },
     } = validate({

@@ -2,21 +2,21 @@ import { sendSms } from './sendSms'
 import twilioSdk from '../../../common/sdk/twilio'
 import { generateTestPayload } from '@/tests'
 import { ZodError } from 'zod'
+import { TestHelpers } from '@awell-health/extensions-core'
 
 describe('Send SMS (with from number) action', () => {
-  const onComplete = jest.fn()
-  const onError = jest.fn()
+  const { onComplete, onError, helpers, clearMocks } =
+    TestHelpers.fromAction(sendSms)
   const getLastTwilioClient = (): any =>
     (twilioSdk as any as jest.Mock<typeof twilioSdk>).mock.results.at(-1)?.value
 
   beforeEach(() => {
-    onComplete.mockClear()
-    onError.mockClear()
+    clearMocks()
   })
 
   test('Should call the onComplete callback', async () => {
-    await sendSms.onActivityCreated!(
-      generateTestPayload({
+    await sendSms.onEvent!({
+      payload: generateTestPayload({
         fields: {
           message: 'Message content',
           recipient: '+32494000000',
@@ -35,15 +35,17 @@ describe('Send SMS (with from number) action', () => {
         },
       }),
       onComplete,
-      onError
-    )
+      onError,
+      helpers,
+      attempt: 1,
+    })
     expect(onComplete).toHaveBeenCalled()
     expect(onError).not.toHaveBeenCalled()
   })
 
   test('Should call the onError callback when there is no recipient', async () => {
-    const resp = sendSms.onActivityCreated!(
-      generateTestPayload({
+    const resp = sendSms.onEvent!({
+      payload: generateTestPayload({
         fields: {
           message: 'Message content',
           recipient: '',
@@ -62,15 +64,17 @@ describe('Send SMS (with from number) action', () => {
         },
       }),
       onComplete,
-      onError
-    )
+      onError,
+      helpers,
+      attempt: 1,
+    })
     await expect(resp).rejects.toThrow(ZodError)
     expect(onComplete).not.toHaveBeenCalled()
   })
 
   test('Should call the onError callback when there is no message', async () => {
-    const resp = sendSms.onActivityCreated!(
-      generateTestPayload({
+    const resp = sendSms.onEvent!({
+      payload: generateTestPayload({
         fields: {
           message: '',
           recipient: '+19144542596',
@@ -89,8 +93,10 @@ describe('Send SMS (with from number) action', () => {
         },
       }),
       onComplete,
-      onError
-    )
+      onError,
+      helpers,
+      attempt: 1,
+    })
     await expect(resp).rejects.toThrow(ZodError)
     expect(onComplete).not.toHaveBeenCalled()
   })
@@ -116,9 +122,15 @@ describe('Send SMS (with from number) action', () => {
     })
 
     test('Should use one provided in action fields', async () => {
-      await sendSms.onActivityCreated!(basePayload, onComplete, onError)
+      await sendSms.onEvent!({
+        payload: basePayload,
+        onComplete,
+        onError,
+        helpers,
+        attempt: 1,
+      })
       expect(
-        getLastTwilioClient().messages.create.mock.calls.at(-1)[0].from
+        getLastTwilioClient().messages.create.mock.calls.at(-1)[0].from,
       ).toEqual(basePayload.fields.from)
       expect(onComplete).toHaveBeenCalled()
       expect(onError).not.toHaveBeenCalled()
@@ -134,9 +146,15 @@ describe('Send SMS (with from number) action', () => {
         },
       }
 
-      await sendSms.onActivityCreated!(payloadWithoutFrom, onComplete, onError)
+      await sendSms.onEvent!({
+        payload: payloadWithoutFrom,
+        onComplete,
+        onError,
+        helpers,
+        attempt: 1,
+      })
       expect(
-        getLastTwilioClient().messages.create.mock.calls.at(-1)[0].from
+        getLastTwilioClient().messages.create.mock.calls.at(-1)[0].from,
       ).toEqual(payloadWithoutFrom.settings.fromNumber)
       expect(onComplete).toHaveBeenCalled()
       expect(onError).not.toHaveBeenCalled()
@@ -152,11 +170,13 @@ describe('Send SMS (with from number) action', () => {
         },
       }
 
-      const resp = sendSms.onActivityCreated!(
-        payloadWithoutFrom,
+      const resp = sendSms.onEvent!({
+        payload: payloadWithoutFrom,
         onComplete,
-        onError
-      )
+        onError,
+        helpers,
+        attempt: 1,
+      })
       await expect(resp).rejects.toThrow(ZodError)
       expect(onComplete).not.toHaveBeenCalled()
     })
