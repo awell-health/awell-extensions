@@ -2,7 +2,6 @@ import { htmlToPdf as extensionAction } from './htmlToPdf'
 import { generateTestPayload } from '@/tests'
 import * as htmlToPdfHelper from '../../../../../src/utils/htmlToPdf/htmlToBase64Pdf'
 import { TestHelpers } from '@awell-health/extensions-core'
-import { ZodError } from 'zod'
 
 describe('Transform - htmlToPdf', () => {
   const htmlToBase64PdfSpy = jest
@@ -47,7 +46,7 @@ describe('Transform - htmlToPdf', () => {
     })
   })
 
-  test('Should throw error when htmlString is empty', async () => {
+  test('Should call onError when htmlString is empty', async () => {
     const mockOnActivityCreateParams = generateTestPayload({
       fields: {
         htmlString: '',
@@ -55,7 +54,7 @@ describe('Transform - htmlToPdf', () => {
       settings: {},
     })
 
-    const resp = htmlToPdf.onEvent({
+    await htmlToPdf.onEvent({
       payload: mockOnActivityCreateParams,
       onComplete,
       onError,
@@ -63,7 +62,17 @@ describe('Transform - htmlToPdf', () => {
       attempt: 1,
     })
 
-    await expect(resp).rejects.toThrow(ZodError)
+    expect(onError).toHaveBeenCalledWith({
+      events: [
+        expect.objectContaining({
+          error: expect.objectContaining({
+            category: 'SERVER_ERROR',
+            message: expect.any(String),
+          }),
+        }),
+      ],
+    })
+    expect(onComplete).not.toHaveBeenCalled()
     expect(htmlToBase64PdfSpy).not.toHaveBeenCalled()
   })
 

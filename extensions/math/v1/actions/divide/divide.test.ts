@@ -1,4 +1,3 @@
-import { ZodError } from 'zod'
 import { generateTestPayload } from '@/tests'
 import { divide } from './divide'
 import { TestHelpers } from '@awell-health/extensions-core'
@@ -35,20 +34,30 @@ describe('Divide', () => {
   })
 
   test('Should return an error if action fields are undefined', async () => {
-    await expect(
-      divide.onEvent!({
-        payload: generateTestPayload({
-          fields: {
-            dividend: undefined,
-            divisor: undefined,
-          },
-          settings: {},
-        }),
-        onComplete,
-        onError,
-        helpers,
-        attempt: 1,
+    await divide.onEvent!({
+      payload: generateTestPayload({
+        fields: {
+          dividend: undefined,
+          divisor: undefined,
+        },
+        settings: {},
       }),
-    ).rejects.toThrow(ZodError)
+      onComplete,
+      onError,
+      helpers,
+      attempt: 1,
+    })
+
+    expect(onError).toHaveBeenCalledWith({
+      events: [
+        expect.objectContaining({
+          error: expect.objectContaining({
+            category: 'SERVER_ERROR',
+            message: expect.any(String),
+          }),
+        }),
+      ],
+    })
+    expect(onComplete).not.toHaveBeenCalled()
   })
 })

@@ -119,18 +119,27 @@ describe('summarizeCareFlow - Mocked LLM calls', () => {
     }
     helpers.awellSdk = jest.fn().mockResolvedValue(awellSdkMock)
 
-    // Expect the action to throw
-    await expect(
-      extensionAction.onEvent({
-        payload,
-        onComplete,
-        onError,
-        helpers,
-        attempt: 1,
-      }),
-    ).rejects.toThrow('SDK query failed')
+    await extensionAction.onEvent({
+      payload,
+      onComplete,
+      onError,
+      helpers,
+      attempt: 1,
+    })
 
     // Verify error handling
+    expect(onError).toHaveBeenCalledWith({
+      events: [
+        {
+          date: expect.any(String),
+          text: { en: 'SDK query failed' },
+          error: {
+            category: 'SERVER_ERROR',
+            message: 'SDK query failed',
+          },
+        },
+      ],
+    })
     expect(onComplete).not.toHaveBeenCalled()
     expect(awellSdkMock.orchestration.query).toHaveBeenCalledTimes(1)
   })

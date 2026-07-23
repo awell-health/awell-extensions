@@ -1,4 +1,3 @@
-import { ZodError } from 'zod'
 import { generateTestPayload } from '@/tests'
 import { sum } from './sum'
 import { TestHelpers } from '@awell-health/extensions-core'
@@ -53,38 +52,48 @@ describe('Sum', () => {
   })
 
   test('Should return an error if all addends are undefined', async () => {
-    await expect(
-      sum.onEvent!({
-        payload: generateTestPayload({
-          fields: {
-            addend_01: undefined,
-            addend_02: undefined,
-            addend_03: undefined,
-            addend_04: undefined,
-            addend_05: undefined,
-            addend_06: undefined,
-            addend_07: undefined,
-            addend_08: undefined,
-            addend_09: undefined,
-            addend_10: undefined,
-            addend_11: undefined,
-            addend_12: undefined,
-            addend_13: undefined,
-            addend_14: undefined,
-            addend_15: undefined,
-            addend_16: undefined,
-            addend_17: undefined,
-            addend_18: undefined,
-            addend_19: undefined,
-            addend_20: undefined,
-          },
-          settings: {},
-        }),
-        onComplete,
-        onError,
-        helpers,
-        attempt: 1,
+    await sum.onEvent!({
+      payload: generateTestPayload({
+        fields: {
+          addend_01: undefined,
+          addend_02: undefined,
+          addend_03: undefined,
+          addend_04: undefined,
+          addend_05: undefined,
+          addend_06: undefined,
+          addend_07: undefined,
+          addend_08: undefined,
+          addend_09: undefined,
+          addend_10: undefined,
+          addend_11: undefined,
+          addend_12: undefined,
+          addend_13: undefined,
+          addend_14: undefined,
+          addend_15: undefined,
+          addend_16: undefined,
+          addend_17: undefined,
+          addend_18: undefined,
+          addend_19: undefined,
+          addend_20: undefined,
+        },
+        settings: {},
       }),
-    ).rejects.toThrow(ZodError)
+      onComplete,
+      onError,
+      helpers,
+      attempt: 1,
+    })
+
+    expect(onError).toHaveBeenCalledWith({
+      events: [
+        expect.objectContaining({
+          error: expect.objectContaining({
+            category: 'SERVER_ERROR',
+            message: expect.any(String),
+          }),
+        }),
+      ],
+    })
+    expect(onComplete).not.toHaveBeenCalled()
   })
 })
