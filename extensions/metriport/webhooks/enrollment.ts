@@ -5,7 +5,11 @@ import {
   type DataPointDefinition,
   type Webhook,
 } from '@awell-health/extensions-core'
-import { type settings } from '../settings'
+import {
+  rateLimitDurationSchema,
+  transformRateLimitDuration,
+  type settings,
+} from '../settings'
 import { isWebhookRequestAuthorized } from '../shared/verifyWebhookSignature'
 import {
   MetriportWebhookType,
@@ -80,9 +84,10 @@ export const enrollment: Webhook<
     'Enrolls a patient when Metriport sends a real-time notification. The `eventType` data point carries the Metriport webhook type (`patient.admit` or `medical.discharge-summary`) so it can be distinguished on. The FHIR bundle is not fetched here — the pre-signed URL is passed on the `bundleUrl` data point and can be retrieved later with the "Get Webhook Bundle" action.',
   dataPoints,
   onEvent: async ({
-    payload: { payload, rawBody, headers, settings },
+    payload: { payload, rawBody, headers, settings, endpoint },
     onSuccess,
     onError,
+    helpers: { rateLimiter },
   }) => {
     try {
       // Verify the Metriport webhook signature (HMAC-SHA256 over the raw body)
@@ -176,6 +181,35 @@ export const enrollment: Webhook<
           },
         })
         return
+      }
+
+      // rate limiting
+      //
+      // Keyed on the guaranteed-unique `meta.messageId`. Metriport reuses the
+      // same messageId on retries, so this acts as an idempotency/dedup guard:
+      // a duplicate delivery of the same message within the configured window is
+      // acknowledged with 200 OK (so Metriport stops retrying) but does not
+      // re-enroll the patient. Distinct messages always pass.
+      const { success, data: durationString } =
+        rateLimitDurationSchema.safeParse(settings.rateLimitDuration)
+      if (success && !isNil(durationString)) {
+        const duration = transformRateLimitDuration(durationString)
+        const limiterName = `metriport-enrollment-${webhook.meta.type}-${endpoint?.id ?? 'global'}`
+        const limiter = rateLimiter(limiterName, {
+          requests: 1,
+          duration,
+        })
+        const key = webhook.meta.messageId
+        const { success } = await limiter.limit(key)
+        if (!success) {
+          await onError({
+            response: {
+              statusCode: 200,
+              message: `Rate limit exceeded on limiter ${limiterName} for messageId ${key}. 200 OK response sent to Metriport to prevent re-enrolling patient ${patientId} for a duplicate delivery of this message on endpoint ${endpoint?.url ?? 'global'}.`,
+            },
+          })
+          return
+        }
       }
 
       await onSuccess({

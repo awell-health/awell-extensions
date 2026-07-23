@@ -293,6 +293,73 @@ describe('Metriport - Webhook - Enrollment', () => {
     })
   })
 
+  describe('When rate limiting is configured', () => {
+    const settingsWithRateLimit = { ...mockSettings, rateLimitDuration: '1 m' }
+
+    const invokeWithSettings = async (
+      payload: unknown,
+      settings: Record<string, string>,
+    ): Promise<void> => {
+      await extensionWebhook.onEvent!({
+        payload: {
+          payload,
+          settings,
+          rawBody: Buffer.from(''),
+          headers: {},
+        },
+        onSuccess,
+        onError,
+        helpers,
+      })
+    }
+
+    test('Should build the limiter from meta.type + endpoint and rate-limit on messageId, then enroll when not a duplicate', async () => {
+      const limit = jest
+        .fn()
+        .mockResolvedValue({ success: true, result: {} })
+      jest
+        .mocked(helpers.rateLimiter)
+        .mockReturnValueOnce({ limit, reset: jest.fn() })
+
+      await invokeWithSettings(admitPayload, settingsWithRateLimit)
+
+      expect(onError).not.toHaveBeenCalled()
+      expect(onSuccess).toHaveBeenCalledTimes(1)
+      expect(helpers.rateLimiter).toHaveBeenCalledWith(
+        `metriport-enrollment-${MetriportWebhookType.PatientAdmit}-global`,
+        { requests: 1, duration: { value: 1, unit: 'minutes' } },
+      )
+      expect(limit).toHaveBeenCalledWith('msg-1')
+    })
+
+    test('Should acknowledge a duplicate delivery with 200 and not enroll', async () => {
+      const limit = jest
+        .fn()
+        .mockResolvedValue({ success: false, result: {} })
+      jest
+        .mocked(helpers.rateLimiter)
+        .mockReturnValueOnce({ limit, reset: jest.fn() })
+
+      await invokeWithSettings(admitPayload, settingsWithRateLimit)
+
+      expect(onSuccess).not.toHaveBeenCalled()
+      expect(onError).toHaveBeenCalledTimes(1)
+      const call = onError.mock.calls[0][0]
+      expect(call.response.statusCode).toBe(200)
+      expect(call.response.message).toContain('Rate limit exceeded')
+      expect(call.response.message).toContain('msg-1')
+    })
+
+    test('Should enroll normally when rate limiting is not configured', async () => {
+      await invokeWithSettings(admitPayload, mockSettings)
+
+      expect(onError).not.toHaveBeenCalled()
+      expect(onSuccess).toHaveBeenCalledTimes(1)
+      // With no rateLimitDuration set the limiter is never constructed.
+      expect(helpers.rateLimiter).not.toHaveBeenCalled()
+    })
+  })
+
   describe('When the payload is invalid', () => {
     test('Should call onError', async () => {
       await invoke({ meta: { type: 'not-a-real-type' } })
