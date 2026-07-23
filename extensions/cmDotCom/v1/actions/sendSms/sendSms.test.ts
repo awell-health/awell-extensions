@@ -1,12 +1,13 @@
 import { CmClientMockImplementation } from '../../../client/__mocks__'
 import { sendSms } from '..'
 import { generateTestPayload } from '@/tests'
+import { TestHelpers } from '@awell-health/extensions-core'
 
 jest.mock('../../../client')
 
 describe('Send SMS', () => {
-  const onComplete = jest.fn()
-  const onError = jest.fn()
+  const { onComplete, onError, helpers, clearMocks } =
+    TestHelpers.fromAction(sendSms)
 
   const basePayload = generateTestPayload({
     pathway: {
@@ -30,10 +31,17 @@ describe('Send SMS', () => {
 
   beforeEach(() => {
     jest.clearAllMocks()
+    clearMocks()
   })
 
   test('Should call the onComplete callback', async () => {
-    await sendSms.onActivityCreated!(basePayload, onComplete, onError)
+    await sendSms.onEvent!({
+      payload: basePayload,
+      onComplete,
+      onError,
+      helpers,
+      attempt: 1,
+    })
 
     expect(CmClientMockImplementation.sendSms).toHaveBeenCalledWith({
       from: basePayload.fields.fromName,
@@ -48,8 +56,8 @@ describe('Send SMS', () => {
   test.each([{ value: undefined }, { value: '' }])(
     '$#. Should use settings values when fields equal "$value"',
     async ({ value }) => {
-      await sendSms.onActivityCreated!(
-        {
+      await sendSms.onEvent!({
+        payload: {
           ...basePayload,
           fields: {
             ...basePayload.fields,
@@ -61,8 +69,10 @@ describe('Send SMS', () => {
           },
         },
         onComplete,
-        onError
-      )
+        onError,
+        helpers,
+        attempt: 1,
+      })
       expect(CmClientMockImplementation.sendSms).toHaveBeenCalledWith({
         from: 'settings',
         to: basePayload.fields.recipient,
@@ -71,7 +81,7 @@ describe('Send SMS', () => {
       })
       expect(onComplete).toHaveBeenCalled()
       expect(onError).not.toHaveBeenCalled()
-    }
+    },
   )
 
   test.each([
@@ -81,8 +91,8 @@ describe('Send SMS', () => {
   ])(
     '$#. Should use fields values when provided and override settings values',
     async ({ settings }) => {
-      await sendSms.onActivityCreated!(
-        {
+      await sendSms.onEvent!({
+        payload: {
           ...basePayload,
           fields: {
             ...basePayload.fields,
@@ -94,8 +104,10 @@ describe('Send SMS', () => {
           },
         },
         onComplete,
-        onError
-      )
+        onError,
+        helpers,
+        attempt: 1,
+      })
       expect(CmClientMockImplementation.sendSms).toHaveBeenCalledWith({
         from: 'fields',
         to: basePayload.fields.recipient,
@@ -104,14 +116,14 @@ describe('Send SMS', () => {
       })
       expect(onComplete).toHaveBeenCalled()
       expect(onError).not.toHaveBeenCalled()
-    }
+    },
   )
 
   test.each([{ value: undefined }, { value: '' }])(
     '$#. Should throw error when fields and settings are not provided',
     async ({ value }) => {
-      await sendSms.onActivityCreated!(
-        {
+      await sendSms.onEvent!({
+        payload: {
           ...basePayload,
           fields: {
             ...basePayload.fields,
@@ -123,8 +135,10 @@ describe('Send SMS', () => {
           },
         },
         onComplete,
-        onError
-      )
+        onError,
+        helpers,
+        attempt: 1,
+      })
       expect(CmClientMockImplementation.sendSms).not.toHaveBeenCalled()
       expect(onComplete).not.toHaveBeenCalled()
       expect(onError).toHaveBeenCalledWith({
@@ -138,6 +152,6 @@ describe('Send SMS', () => {
           }),
         ],
       })
-    }
+    },
   )
 })

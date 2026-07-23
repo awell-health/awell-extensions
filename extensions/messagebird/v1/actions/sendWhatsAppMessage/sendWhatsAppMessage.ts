@@ -12,7 +12,18 @@ export const sendWhatsAppMessage: Action<typeof fields, typeof settings> = {
   category: Category.COMMUNICATION,
   fields,
   previewable: true,
-  onActivityCreated: async (payload, onComplete, onError) => {
+  onEvent: async ({ payload, onComplete, onError, helpers }) => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
+
+    helpers.log(
+      { meta, fields: payload.fields },
+      'Processing sendWhatsAppMessage',
+    )
+
     const {
       fields: { from, to, content },
       settings: { apiKey, reportUrl },
@@ -20,7 +31,7 @@ export const sendWhatsAppMessage: Action<typeof fields, typeof settings> = {
 
     try {
       const allRequiredFieldsHaveValues = [from, to, content].every(
-        (field) => !isEmpty(field)
+        (field) => !isEmpty(field),
       )
 
       if (!allRequiredFieldsHaveValues) {
@@ -82,9 +93,10 @@ export const sendWhatsAppMessage: Action<typeof fields, typeof settings> = {
           } else {
             void onComplete()
           }
-        }
+        },
       )
     } catch (err) {
+      helpers.log({ meta, err }, 'error', err as Error)
       const error = err as Error
       await onError({
         events: [

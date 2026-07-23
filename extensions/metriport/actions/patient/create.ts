@@ -26,7 +26,15 @@ export const createPatient: Action<
   fields: createFields,
   previewable: true,
   dataPoints: patientIdDataPoint,
-  onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
+  onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
+
+    helpers.log({ meta, fields: payload.fields }, 'Processing createPatient')
+
     try {
       const patient = patientCreateSchema.parse(payload.fields)
 
@@ -44,6 +52,7 @@ export const createPatient: Action<
         },
       })
     } catch (err) {
+      helpers.log({ meta, err }, 'error', err as Error)
       await handleErrorMessage(err, onError)
     }
   },

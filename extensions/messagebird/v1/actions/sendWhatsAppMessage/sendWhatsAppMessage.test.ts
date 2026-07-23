@@ -1,20 +1,20 @@
 import { sendWhatsAppMessage } from '..'
 import { generateTestPayload } from '@/tests'
+import { TestHelpers } from '@awell-health/extensions-core'
 
 jest.mock('../../../common/sdk/messagebirdSdk')
 
 describe('Send WhatsApp message', () => {
-  const onComplete = jest.fn()
-  const onError = jest.fn()
+  const { onComplete, onError, helpers, clearMocks } =
+    TestHelpers.fromAction(sendWhatsAppMessage)
 
   beforeEach(() => {
-    onComplete.mockClear()
-    onError.mockClear()
+    clearMocks()
   })
 
   test('Should call the onComplete callback', async () => {
-    await sendWhatsAppMessage.onActivityCreated!(
-      generateTestPayload({
+    await sendWhatsAppMessage.onEvent!({
+      payload: generateTestPayload({
         fields: {
           from: 'WHATSAPP-CHANNEL-ID',
           to: '+32xxxxxxx',
@@ -26,8 +26,10 @@ describe('Send WhatsApp message', () => {
         },
       }),
       onComplete,
-      onError
-    )
+      onError,
+      helpers,
+      attempt: 1,
+    })
     expect(onComplete).toHaveBeenCalled()
     expect(onError).not.toHaveBeenCalled()
   })

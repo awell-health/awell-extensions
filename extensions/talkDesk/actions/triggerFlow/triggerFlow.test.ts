@@ -4,15 +4,17 @@ import {
   mockFlowTriggeredResponse,
   mockSettings,
 } from '../../api/__mocks__/mockData'
+import { TestHelpers } from '@awell-health/extensions-core'
 
 jest.mock('../../api/talkdeskClient')
 
 describe('Talkdesk - Trigger flow', () => {
-  const onComplete = jest.fn()
-  const onError = jest.fn()
+  const { onComplete, onError, helpers, clearMocks } =
+    TestHelpers.fromAction(triggerFlow)
 
   beforeEach(() => {
     jest.clearAllMocks()
+    clearMocks()
   })
 
   test('Should trigger a flow', async () => {
@@ -25,11 +27,13 @@ describe('Talkdesk - Trigger flow', () => {
       settings: mockSettings,
     })
 
-    await triggerFlow.onActivityCreated!(
-      mockOnActivityCreateParams,
+    await triggerFlow.onEvent!({
+      payload: mockOnActivityCreateParams,
       onComplete,
-      onError
-    )
+      onError,
+      helpers,
+      attempt: 1,
+    })
 
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {

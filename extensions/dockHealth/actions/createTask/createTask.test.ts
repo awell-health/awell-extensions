@@ -2,15 +2,17 @@ import { createTask } from '.'
 import { generateTestPayload } from '@/tests'
 import { mockSettings } from '../../api/__mocks__'
 import { mockCreateTaskResponse } from '../../api/__mocks__/mockTask'
+import { TestHelpers } from '@awell-health/extensions-core'
 
 jest.mock('../../api/client')
 
 describe('Dock Health - Create task', () => {
-  const onComplete = jest.fn()
-  const onError = jest.fn()
+  const { onComplete, onError, helpers, clearMocks } =
+    TestHelpers.fromAction(createTask)
 
   beforeEach(() => {
     jest.clearAllMocks()
+    clearMocks()
   })
 
   test('Should return a patient', async () => {
@@ -24,11 +26,13 @@ describe('Dock Health - Create task', () => {
       settings: mockSettings,
     })
 
-    await createTask.onActivityCreated!(
-      mockOnActivityCreateParams,
+    await createTask.onEvent!({
+      payload: mockOnActivityCreateParams,
       onComplete,
-      onError
-    )
+      onError,
+      helpers,
+      attempt: 1,
+    })
 
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {

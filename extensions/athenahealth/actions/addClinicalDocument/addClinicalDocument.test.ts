@@ -3,18 +3,20 @@ import { addClinicalDocument } from '.'
 import { generateTestPayload } from '@/tests'
 import { mockSettings } from '../../api/__mocks__/mockData'
 import * as htmlToPdf from '../../../../src/utils/htmlToPdf/htmlToBase64Pdf'
+import { TestHelpers } from '@awell-health/extensions-core'
 
 jest.mock('../../api/client')
 
 describe('athenahealth - Add clinical document', () => {
-  const onComplete = jest.fn()
-  const onError = jest.fn()
+  const { onComplete, onError, helpers, clearMocks } =
+    TestHelpers.fromAction(addClinicalDocument)
   jest
     .spyOn(htmlToPdf, 'htmlToBase64Pdf')
     .mockImplementation(async (_: string) => 'base64string')
 
   beforeEach(() => {
     jest.clearAllMocks()
+    clearMocks()
   })
 
   test.skip('Should add a document to the patient chart', async () => {
@@ -27,11 +29,13 @@ describe('athenahealth - Add clinical document', () => {
       settings: mockSettings,
     })
 
-    await addClinicalDocument.onActivityCreated!(
-      mockOnActivityCreateParams,
+    await addClinicalDocument.onEvent!({
+      payload: mockOnActivityCreateParams,
       onComplete,
       onError,
-    )
+      helpers,
+      attempt: 1,
+    })
 
     expect(onComplete).toHaveBeenCalled()
   })
@@ -47,11 +51,13 @@ describe('athenahealth - Add clinical document', () => {
     })
 
     try {
-      await addClinicalDocument.onActivityCreated!(
-        mockOnActivityCreateParams,
+      await addClinicalDocument.onEvent!({
+        payload: mockOnActivityCreateParams,
         onComplete,
         onError,
-      )
+        helpers,
+        attempt: 1,
+      })
     } catch (error) {
       const axiosError = error as AxiosError
       expect(axiosError.response).toBeDefined()
@@ -77,11 +83,13 @@ describe('athenahealth - Add clinical document', () => {
     })
 
     try {
-      await addClinicalDocument.onActivityCreated!(
-        mockOnActivityCreateParams,
+      await addClinicalDocument.onEvent!({
+        payload: mockOnActivityCreateParams,
         onComplete,
         onError,
-      )
+        helpers,
+        attempt: 1,
+      })
     } catch (error) {
       const axiosError = error as AxiosError
       expect(axiosError.response).toBeDefined()

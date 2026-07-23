@@ -14,7 +14,18 @@ export const setContactConsent: Action<typeof fields, typeof settings> = {
   category: Category.COMMUNICATION,
   fields,
   previewable: true,
-  onActivityCreated: async (payload, onComplete, onError) => {
+  onEvent: async ({ payload, onComplete, onError, helpers }) => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
+
+    helpers.log(
+      { meta, fields: payload.fields },
+      'Processing setContactConsent',
+    )
+
     try {
       const {
         settings: { accessToken },
@@ -28,13 +39,11 @@ export const setContactConsent: Action<typeof fields, typeof settings> = {
       })
 
       const textLineApi = new TextLineApi(accessToken)
-      await textLineApi.setContactConsent(
-        consentStatus,
-        recipient,
-      )
+      await textLineApi.setContactConsent(consentStatus, recipient)
 
       await onComplete()
     } catch (err) {
+      helpers.log({ meta, err }, 'error', err as Error)
       if (err instanceof ZodError) {
         const error = fromZodError(err)
         await onError({

@@ -2,14 +2,15 @@ import {
   SendgridClient,
   SendgridClientMockImplementation,
 } from '../../../__mocks__/client'
+import { TestHelpers } from '@awell-health/extensions-core'
 import { sendEmail } from '..'
 import { generateTestPayload } from '@/tests'
 
 jest.mock('../../../client', () => ({ SendgridClient }))
 
 describe('Send email', () => {
-  const onComplete = jest.fn()
-  const onError = jest.fn()
+  const { onComplete, onError, helpers, clearMocks } =
+    TestHelpers.fromAction(sendEmail)
 
   const basePayload = generateTestPayload({
     fields: {
@@ -28,10 +29,17 @@ describe('Send email', () => {
 
   beforeEach(() => {
     jest.clearAllMocks()
+    clearMocks()
   })
 
   test('Should call the onComplete callback', async () => {
-    await sendEmail.onActivityCreated!(basePayload, onComplete, onError)
+    await sendEmail.onEvent!({
+      payload: basePayload,
+      onComplete,
+      onError,
+      helpers,
+      attempt: 1,
+    })
 
     expect(SendgridClientMockImplementation.mail.send).toHaveBeenCalledWith({
       from: {
@@ -52,8 +60,8 @@ describe('Send email', () => {
   })
 
   test('Should use settings values when fields are not provided', async () => {
-    await sendEmail.onActivityCreated!(
-      {
+    await sendEmail.onEvent!({
+      payload: {
         ...basePayload,
         fields: {
           ...basePayload.fields,
@@ -67,15 +75,17 @@ describe('Send email', () => {
         },
       },
       onComplete,
-      onError
-    )
+      onError,
+      helpers,
+      attempt: 1,
+    })
     expect(SendgridClientMockImplementation.mail.send).toHaveBeenCalledWith(
       expect.objectContaining({
         from: {
           name: 'settings',
           email: 'settings@settings.com',
         },
-      })
+      }),
     )
     expect(onComplete).toHaveBeenCalled()
     expect(onError).not.toHaveBeenCalled()
@@ -87,8 +97,8 @@ describe('Send email', () => {
   ])(
     '$#. Should use fields values when provided and override settings values',
     async ({ settings }) => {
-      await sendEmail.onActivityCreated!(
-        {
+      await sendEmail.onEvent!({
+        payload: {
           ...basePayload,
           fields: {
             ...basePayload.fields,
@@ -101,24 +111,26 @@ describe('Send email', () => {
           },
         },
         onComplete,
-        onError
-      )
+        onError,
+        helpers,
+        attempt: 1,
+      })
       expect(SendgridClientMockImplementation.mail.send).toHaveBeenCalledWith(
         expect.objectContaining({
           from: {
             name: 'fields',
             email: 'fields@fields.com',
           },
-        })
+        }),
       )
       expect(onComplete).toHaveBeenCalled()
       expect(onError).not.toHaveBeenCalled()
-    }
+    },
   )
 
   test('Should throw error when fields and settings are not provided', async () => {
-    await sendEmail.onActivityCreated!(
-      {
+    await sendEmail.onEvent!({
+      payload: {
         ...basePayload,
         fields: {
           ...basePayload.fields,
@@ -132,8 +144,10 @@ describe('Send email', () => {
         },
       },
       onComplete,
-      onError
-    )
+      onError,
+      helpers,
+      attempt: 1,
+    })
     expect(SendgridClientMockImplementation.mail.send).not.toHaveBeenCalled()
     expect(onComplete).not.toHaveBeenCalled()
     expect(onError).toHaveBeenCalledWith({

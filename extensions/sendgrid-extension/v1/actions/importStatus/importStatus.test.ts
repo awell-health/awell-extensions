@@ -3,6 +3,7 @@ import {
   SendgridClient,
   SendgridClientMockImplementation,
 } from '../../../__mocks__/client'
+import { TestHelpers } from '@awell-health/extensions-core'
 import { importStatus } from './importStatus'
 import { type Response } from '@sendgrid/helpers/classes'
 
@@ -30,8 +31,8 @@ describe('Import Status', () => {
       id: 'id',
     },
   }
-  const onComplete = jest.fn()
-  const onError = jest.fn()
+  const { onComplete, onError, helpers, clearMocks } =
+    TestHelpers.fromAction(importStatus)
   const basePayload = mockActionPayload<(typeof importStatus)['fields']>({
     fields: {
       jobId: 'jobId',
@@ -40,18 +41,25 @@ describe('Import Status', () => {
 
   beforeEach(() => {
     jest.clearAllMocks()
+    clearMocks()
   })
 
   test('Should call onComplete callback when Sendgrid returns a 200 status response', async () => {
     SendgridClientMockImplementation.marketing.contacts.importStatus.mockImplementationOnce(
       () => {
         return [successResponse, 'status']
-      }
+      },
     )
-    await importStatus.onActivityCreated!(basePayload, onComplete, onError)
+    await importStatus.onEvent!({
+      payload: basePayload,
+      onComplete,
+      onError,
+      helpers,
+      attempt: 1,
+    })
 
     expect(
-      SendgridClientMockImplementation.marketing.contacts.importStatus
+      SendgridClientMockImplementation.marketing.contacts.importStatus,
     ).toHaveBeenCalledWith('jobId')
 
     expect(onComplete).toHaveBeenNthCalledWith(1, {
@@ -77,8 +85,8 @@ describe('Import Status', () => {
       .mockImplementationOnce(() => {
         return [successResponse, 'status']
       })
-    await importStatus.onActivityCreated!(
-      {
+    await importStatus.onEvent!({
+      payload: {
         ...basePayload,
         fields: {
           jobId: 'jobId',
@@ -86,11 +94,13 @@ describe('Import Status', () => {
         },
       },
       onComplete,
-      onError
-    )
+      onError,
+      helpers,
+      attempt: 1,
+    })
 
     expect(
-      SendgridClientMockImplementation.marketing.contacts.importStatus
+      SendgridClientMockImplementation.marketing.contacts.importStatus,
     ).toHaveBeenCalledTimes(3)
 
     expect(onComplete).toHaveBeenNthCalledWith(1, {
@@ -109,9 +119,15 @@ describe('Import Status', () => {
     SendgridClientMockImplementation.marketing.contacts.importStatus.mockImplementationOnce(
       () => {
         throw new Error('An error occurred')
-      }
+      },
     )
-    await importStatus.onActivityCreated!(basePayload, onComplete, onError)
+    await importStatus.onEvent!({
+      payload: basePayload,
+      onComplete,
+      onError,
+      helpers,
+      attempt: 1,
+    })
     expect(onComplete).not.toBeCalled()
     expect(onError).toHaveBeenNthCalledWith(1, {
       events: expect.arrayContaining([

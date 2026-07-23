@@ -1,15 +1,17 @@
 import { updateLead } from '.'
 import { generateTestPayload } from '@/tests'
 import { mockSettings } from '../../api/__mocks__'
+import { TestHelpers } from '@awell-health/extensions-core'
 
 jest.mock('../../api/client')
 
 describe('Salesforce - Update Lead', () => {
-  const onComplete = jest.fn()
-  const onError = jest.fn()
+  const { onComplete, onError, helpers, clearMocks } =
+    TestHelpers.fromAction(updateLead)
 
   beforeEach(() => {
     jest.clearAllMocks()
+    clearMocks()
   })
 
   test('Should update a Lead', async () => {
@@ -29,11 +31,13 @@ describe('Salesforce - Update Lead', () => {
       settings: mockSettings,
     })
 
-    await updateLead.onActivityCreated!(
-      mockOnActivityCreateParams,
+    await updateLead.onEvent!({
+      payload: mockOnActivityCreateParams,
       onComplete,
-      onError
-    )
+      onError,
+      helpers,
+      attempt: 1,
+    })
 
     expect(onComplete).toHaveBeenCalled()
   })

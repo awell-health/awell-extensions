@@ -16,7 +16,15 @@ export const addSideEffect: Action<
   fields,
   previewable: false,
   dataPoints,
-  onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
+  onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
+
+    helpers.log({ meta, fields: payload.fields }, 'Processing addSideEffect')
+
     const {
       fields: input,
       medplumSdk,
@@ -39,7 +47,7 @@ export const addSideEffect: Action<
 
     const currentMedicationRequest = await medplumSdk.readResource(
       'MedicationRequest',
-      input.medicationRequestId
+      input.medicationRequestId,
     )
 
     const currentAnnotations = currentMedicationRequest.note
@@ -53,7 +61,7 @@ export const addSideEffect: Action<
           path: '/note',
           value: [...(currentAnnotations ?? []), annotation],
         },
-      ]
+      ],
     )
 
     await onComplete()

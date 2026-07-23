@@ -17,7 +17,15 @@ export const completeTask: Action<typeof fields, typeof settings> = {
   category: Category.CUSTOMER_SUPPORT,
   fields,
   previewable: true,
-  onActivityCreated: async (payload, onComplete, onError) => {
+  onEvent: async ({ payload, onComplete, onError, helpers }) => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
+
+    helpers.log({ meta, fields: payload.fields }, 'Processing completeTask')
+
     try {
       const {
         settings: { salesApiToken },
@@ -40,6 +48,7 @@ export const completeTask: Action<typeof fields, typeof settings> = {
 
       await onComplete()
     } catch (err) {
+      helpers.log({ meta, err }, 'error', err as Error)
       if (isSalesApiError(err)) {
         const events = salesApiErrorToActivityEvent(err)
         await onError({ events })

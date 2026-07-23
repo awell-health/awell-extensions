@@ -3,14 +3,15 @@ import {
   mockedTaskData,
   ZendeskClientMockImplementation,
 } from '../../client/__mocks__'
+import { TestHelpers } from '@awell-health/extensions-core'
 import { createTask } from '..'
 import { generateTestPayload } from '@/tests'
 
 jest.mock('../../client')
 
 describe('Create task', () => {
-  const onComplete = jest.fn()
-  const onError = jest.fn()
+  const { onComplete, onError, helpers, clearMocks } =
+    TestHelpers.fromAction(createTask)
 
   const basePayload = generateTestPayload({
     fields: {
@@ -29,13 +30,20 @@ describe('Create task', () => {
 
   beforeEach(() => {
     jest.clearAllMocks()
+    clearMocks()
   })
 
   test('Should call the onComplete callback', async () => {
-    await createTask.onActivityCreated!(basePayload, onComplete, onError)
+    await createTask.onEvent!({
+      payload: basePayload,
+      onComplete,
+      onError,
+      helpers,
+      attempt: 1,
+    })
 
     expect(
-      ZendeskClientMockImplementation.salesApi.createTask
+      ZendeskClientMockImplementation.salesApi.createTask,
     ).toHaveBeenCalledWith({
       content: mockedTaskData.content,
       due_date: mockedTaskData.due_date,

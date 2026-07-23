@@ -18,7 +18,18 @@ export const removeSuppressions: Action<typeof fields, typeof settings> = {
   description: 'Remove an email address from one or more suppression lists.',
   fields,
   previewable: true,
-  onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
+  onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
+
+    helpers.log(
+      { meta, fields: payload.fields },
+      'Processing removeSuppressions',
+    )
+
     try {
       const {
         fields: { email, groups = [] },
@@ -55,6 +66,7 @@ export const removeSuppressions: Action<typeof fields, typeof settings> = {
         })
       }
     } catch (err) {
+      helpers.log({ meta, err }, 'error', err as Error)
       if (err instanceof ZodError) {
         const error = fromZodError(err)
         await onError({

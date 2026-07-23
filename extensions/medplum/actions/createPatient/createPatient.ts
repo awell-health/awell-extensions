@@ -20,7 +20,15 @@ export const createPatient: Action<
   fields,
   previewable: false,
   dataPoints,
-  onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
+  onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
+
+    helpers.log({ meta, fields: payload.fields }, 'Processing createPatient')
+
     const {
       fields: input,
       medplumSdk,
@@ -72,8 +80,8 @@ export const createPatient: Action<
           },
         ],
         telecom: [
-          ...((mobilePhone != null) ? [mobilePhone] : []),
-          ...((email != null) ? [email] : []),
+          ...(mobilePhone != null ? [mobilePhone] : []),
+          ...(email != null ? [email] : []),
         ],
         birthDate: input.birthDate,
         gender: input.gender,
@@ -88,7 +96,7 @@ export const createPatient: Action<
           },
         ],
       },
-      `identifier=${AWELL_IDENTIFIER_SYSTEM}|${patient.id}`
+      `identifier=${AWELL_IDENTIFIER_SYSTEM}|${patient.id}`,
     )
 
     await onComplete({
