@@ -75,6 +75,51 @@ Removes the specified Patient from a cohort.
 
 Visit [endpoint docs](https://docs.metriport.com/medical-api/api-reference/cohort/remove-patients-from-cohort) for more info.
 
+## Get Webhook Bundle
+
+Fetches the FHIR bundle from a Metriport webhook payload URL — e.g. the [Encounter Bundle](https://docs.metriport.com/medical-api/handling-data/patient-encounter-bundle) from an ADT notification, or a discharge summary. Pass the `bundleUrl` data point emitted by the **Enrollment** webhook; the action downloads the bundle and returns it on the `bundle` data point.
+
+**NOTE: Metriport pre-signed URLs are only valid for 10 minutes, so this action should run early in the care flow, shortly after the enrollment webhook fires.**
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `url` | string | The pre-signed payload URL to fetch (the webhook's `bundleUrl` data point). |
+
+| Data point | Type | Description |
+| --- | --- | --- |
+| `bundle` | json | The FHIR bundle fetched from the URL. |
+
+# Webhooks
+
+## Enrollment
+
+An enrollment trigger that starts a care flow when Metriport sends a [real-time patient notification](https://docs.metriport.com/medical-api/handling-data/realtime-patient-notifications).
+
+Metriport POSTs every notification type to the same endpoint, so this webhook discriminates on the notification `type` and only enrolls on two events. The `eventType` data point carries the raw Metriport webhook type:
+
+- `patient.admit` (HL7 ADT^A01) → `eventType` = `patient.admit`. The payload carries a pre-signed URL to the [FHIR Encounter Bundle](https://docs.metriport.com/medical-api/handling-data/patient-encounter-bundle).
+- `medical.discharge-summary` → `eventType` = `medical.discharge-summary`. This event is currently undocumented by Metriport and is modelled on the published `medical.*` webhook family (a `patients` array).
+
+The webhook validates the request, emits the data points (including the pre-signed bundle URL on `bundleUrl`), and replies immediately — it does **not** download the bundle. Fetch the bundle later in the care flow with the **Get Webhook Bundle** action, using the `bundleUrl` data point. Because the URL expires after 10 minutes, run that action early.
+
+Use the `eventType` data point in your care flow to branch on admit vs discharge. Every other notification type (`patient.discharge`, `patient.transfer`, ...) is acknowledged with a `200` but does not enroll a patient. Metriport [verification `ping` messages](https://docs.metriport.com/medical-api/getting-started/webhooks#the-ping-message) are answered with a `200` that echoes the ping value back as `pong: <value>`.
+
+### Data points
+
+| Data point | Type | Description |
+| --- | --- | --- |
+| `eventType` | string | The Metriport webhook type: `patient.admit` or `medical.discharge-summary` |
+| `metriportPatientId` | string | The Metriport patient ID (also used as the patient identifier for enrollment) |
+| `externalId` | string | Your external patient ID, if provided to Metriport |
+| `admitTimestamp` | date | When the patient was admitted (admit events only) |
+| `whenSourceSent` | date | When the source sent the notification, if available (admit events) |
+| `messageId` | string | The Metriport message ID for the notification |
+| `bundleUrl` | string | Pre-signed URL to the FHIR bundle; fetch it with the **Get Webhook Bundle** action (valid for 10 minutes) |
+
+### Verifying incoming requests
+
+Optionally set the **Webhook Key** setting to the webhook key from the Metriport dashboard (Settings/Developers tab). Metriport [authenticates each webhook](https://docs.metriport.com/medical-api/getting-started/webhooks#authentication) with an HMAC-SHA256 signature of the raw request body, keyed with your webhook key and sent in the `x-metriport-signature` header. When the setting is populated, the webhook recomputes the HMAC over the raw body and rejects any request whose signature is missing or does not match (`401`). When left empty, requests are not verified.
+
 ## More Info
 
 For more information on how to integrate with Metriport please visit our [Medical API docs](https://docs.metriport.com/medical-api/getting-started/quickstart)

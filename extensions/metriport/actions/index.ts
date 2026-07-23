@@ -8,6 +8,7 @@ import { getUrl } from './document/getUrl'
 import { startNetworkQuery } from './network/startNetworkQuery'
 import { startConsolidatedQuery } from './consolidated/startConsolidatedQuery'
 import { getConsolidatedQueryStatus } from './consolidated/getConsolidatedQueryStatus'
+import { getWebhookBundle } from './webhookBundle/getWebhookBundle'
 import { removePatientFromCohort } from './cohort/removePatientFromCohort'
 
 export const actions = {
@@ -21,5 +22,6 @@ export const actions = {
   startNetworkQuery,
   startConsolidatedQuery,
   getConsolidatedQueryStatus,
+  getWebhookBundle,
   removePatientFromCohort,
 }
