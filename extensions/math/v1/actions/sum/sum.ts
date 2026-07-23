@@ -14,7 +14,13 @@ export const sum: Action<typeof fields, typeof settings> = {
   fields,
   dataPoints,
   previewable: true,
-  onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
+  onEvent: async ({ payload, onComplete, helpers }): Promise<void> => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
+
     const { fields } = validate({
       schema: z.object({ fields: FieldsValidationSchema }),
       payload,
@@ -25,6 +31,8 @@ export const sum: Action<typeof fields, typeof settings> = {
     }
 
     const sum = sumAddends(fields)
+
+    helpers.log({ meta, fields, sum }, 'Calculated sum')
 
     await onComplete({
       data_points: {

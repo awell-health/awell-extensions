@@ -12,7 +12,13 @@ export const subtract: Action<typeof fields, typeof settings> = {
   fields,
   dataPoints,
   previewable: true,
-  onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
+  onEvent: async ({ payload, onComplete, helpers }): Promise<void> => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
+
     const {
       fields: { minuend, subtrahend },
     } = validate({
@@ -21,6 +27,11 @@ export const subtract: Action<typeof fields, typeof settings> = {
     })
 
     const difference = minuend - subtrahend
+
+    helpers.log(
+      { meta, minuend, subtrahend, difference },
+      'Calculated difference',
+    )
 
     await onComplete({
       data_points: {

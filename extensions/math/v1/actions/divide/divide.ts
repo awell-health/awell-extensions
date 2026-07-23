@@ -12,7 +12,13 @@ export const divide: Action<typeof fields, typeof settings> = {
   fields,
   dataPoints,
   previewable: true,
-  onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
+  onEvent: async ({ payload, onComplete, helpers }): Promise<void> => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
+
     const {
       fields: { dividend, divisor },
     } = validate({
@@ -21,6 +27,8 @@ export const divide: Action<typeof fields, typeof settings> = {
     })
 
     const quotient = dividend / divisor
+
+    helpers.log({ meta, dividend, divisor, quotient }, 'Calculated quotient')
 
     await onComplete({
       data_points: {

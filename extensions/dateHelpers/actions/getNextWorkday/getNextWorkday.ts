@@ -16,7 +16,13 @@ export const getNextWorkday: Action<
   fields,
   dataPoints,
   previewable: true,
-  onActivityCreated: async (payload, onComplete, onError) => {
+  onEvent: async ({ payload, onComplete, helpers }) => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
+
     const { referenceDate: referenceDateInput, includeReferenceDate } =
       FieldsValidationSchema.parse(payload.fields)
 
@@ -28,25 +34,25 @@ export const getNextWorkday: Action<
         day: 'numeric',
       })
         .formatToParts(date)
-        .reduce(
+        .reduce<{
+          year: number
+          month: number
+          day: number
+        }>(
           (acc, part) => {
             if (part.type === 'year') acc.year = parseInt(part.value, 10)
             if (part.type === 'month') acc.month = parseInt(part.value, 10)
             if (part.type === 'day') acc.day = parseInt(part.value, 10)
             return acc
           },
-          { year: 0, month: 0, day: 0 } as {
-            year: number
-            month: number
-            day: number
-          },
+          { year: 0, month: 0, day: 0 },
         )
       return new Date(Date.UTC(parts.year, parts.month - 1, parts.day, 0, 0, 0))
     }
 
     // Use provided timezone if present, default from validation schema is America/Chicago
     const { timezone } = FieldsValidationSchema.parse(payload.fields)
-    let referenceDate = toZonedStartOfDay(
+    const referenceDate = toZonedStartOfDay(
       referenceDateInput ?? new Date(),
       timezone,
     )
@@ -153,6 +159,17 @@ export const getNextWorkday: Action<
     }
 
     const nextWorkday = referenceDate.toISOString()
+
+    helpers.log(
+      {
+        meta,
+        referenceDate: referenceDateInput,
+        includeReferenceDate,
+        nextWorkday,
+        referenceDateIsWeekday: refIsWeekday,
+      },
+      'Calculated next workday',
+    )
 
     await onComplete({
       data_points: {

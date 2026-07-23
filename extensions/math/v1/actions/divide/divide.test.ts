@@ -1,19 +1,19 @@
 import { ZodError } from 'zod'
 import { generateTestPayload } from '@/tests'
 import { divide } from './divide'
+import { TestHelpers } from '@awell-health/extensions-core'
 
 describe('Divide', () => {
-  const onComplete = jest.fn()
-  const onError = jest.fn()
+  const { onComplete, onError, helpers, clearMocks } =
+    TestHelpers.fromAction(divide)
 
   beforeEach(() => {
-    onComplete.mockClear()
-    onError.mockClear()
+    clearMocks()
   })
 
   test('Should work', async () => {
-    await divide.onActivityCreated!(
-      generateTestPayload({
+    await divide.onEvent!({
+      payload: generateTestPayload({
         fields: {
           dividend: 10,
           divisor: 5,
@@ -21,8 +21,10 @@ describe('Divide', () => {
         settings: {},
       }),
       onComplete,
-      onError
-    )
+      onError,
+      helpers,
+      attempt: 1,
+    })
 
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
@@ -34,8 +36,8 @@ describe('Divide', () => {
 
   test('Should return an error if action fields are undefined', async () => {
     await expect(
-      divide.onActivityCreated!(
-        generateTestPayload({
+      divide.onEvent!({
+        payload: generateTestPayload({
           fields: {
             dividend: undefined,
             divisor: undefined,
@@ -43,8 +45,10 @@ describe('Divide', () => {
           settings: {},
         }),
         onComplete,
-        onError
-      )
+        onError,
+        helpers,
+        attempt: 1,
+      }),
     ).rejects.toThrow(ZodError)
   })
 })

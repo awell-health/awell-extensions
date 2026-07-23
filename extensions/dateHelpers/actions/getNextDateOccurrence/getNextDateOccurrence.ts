@@ -15,7 +15,13 @@ export const getNextDateOccurrence: Action<
   fields,
   dataPoints,
   previewable: true,
-  onActivityCreated: async (payload, onComplete, onError) => {
+  onEvent: async ({ payload, onComplete, helpers }) => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
+
     const { referenceDate: referenceDateInput } = FieldsValidationSchema.parse(
       payload.fields,
     )
@@ -65,6 +71,11 @@ export const getNextDateOccurrence: Action<
       referenceDate.getTime() > now.getTime() ? referenceDate : now
 
     const nextOccurrence = findNextOccurrence(anchorDate)
+
+    helpers.log(
+      { meta, referenceDate: referenceDateInput, nextOccurrence },
+      'Calculated next date occurrence',
+    )
 
     await onComplete({
       data_points: {

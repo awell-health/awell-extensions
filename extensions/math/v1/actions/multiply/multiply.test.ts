@@ -1,19 +1,19 @@
 import { ZodError } from 'zod'
 import { generateTestPayload } from '@/tests'
 import { multiply } from './multiply'
+import { TestHelpers } from '@awell-health/extensions-core'
 
 describe('Multiply', () => {
-  const onComplete = jest.fn()
-  const onError = jest.fn()
+  const { onComplete, onError, helpers, clearMocks } =
+    TestHelpers.fromAction(multiply)
 
   beforeEach(() => {
-    onComplete.mockClear()
-    onError.mockClear()
+    clearMocks()
   })
 
   test('Should work', async () => {
-    await multiply.onActivityCreated!(
-      generateTestPayload({
+    await multiply.onEvent!({
+      payload: generateTestPayload({
         fields: {
           factor_01: 1,
           factor_02: 2,
@@ -39,8 +39,10 @@ describe('Multiply', () => {
         settings: {},
       }),
       onComplete,
-      onError
-    )
+      onError,
+      helpers,
+      attempt: 1,
+    })
 
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
@@ -52,8 +54,8 @@ describe('Multiply', () => {
 
   test('Should return an error if all addends are undefined', async () => {
     await expect(
-      multiply.onActivityCreated!(
-        generateTestPayload({
+      multiply.onEvent!({
+        payload: generateTestPayload({
           fields: {
             factor_01: undefined,
             factor_02: undefined,
@@ -79,8 +81,10 @@ describe('Multiply', () => {
           settings: {},
         }),
         onComplete,
-        onError
-      )
+        onError,
+        helpers,
+        attempt: 1,
+      }),
     ).rejects.toThrow(ZodError)
   })
 })

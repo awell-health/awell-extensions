@@ -1,12 +1,13 @@
 import { generateTestPayload } from '@/tests'
 import { generateRandomNumber } from './generateRandomNumber'
+import { TestHelpers } from '@awell-health/extensions-core'
 
 describe('Generate random number', () => {
-  const onComplete = jest.fn()
-  const onError = jest.fn()
+  const { onComplete, onError, helpers, clearMocks } =
+    TestHelpers.fromAction(generateRandomNumber)
 
   beforeEach(() => {
-    jest.clearAllMocks()
+    clearMocks()
   })
 
   test('Should call onComplete', async () => {
@@ -18,11 +19,13 @@ describe('Generate random number', () => {
       settings: {},
     })
 
-    await generateRandomNumber.onActivityCreated!(
-      mockOnActivityCreateParams,
+    await generateRandomNumber.onEvent!({
+      payload: mockOnActivityCreateParams,
       onComplete,
-      onError
-    )
+      onError,
+      helpers,
+      attempt: 1,
+    })
 
     expect(onComplete).toHaveBeenCalled()
   })
@@ -35,11 +38,13 @@ describe('Generate random number', () => {
       settings: {},
     })
 
-    await generateRandomNumber.onActivityCreated!(
-      mockOnActivityCreateParams,
+    await generateRandomNumber.onEvent!({
+      payload: mockOnActivityCreateParams,
       onComplete,
-      onError
-    )
+      onError,
+      helpers,
+      attempt: 1,
+    })
 
     expect(onError).toHaveBeenCalled()
   })
@@ -52,11 +57,13 @@ describe('Generate random number', () => {
       settings: {},
     })
 
-    await generateRandomNumber.onActivityCreated!(
-      mockOnActivityCreateParams,
+    await generateRandomNumber.onEvent!({
+      payload: mockOnActivityCreateParams,
       onComplete,
-      onError
-    )
+      onError,
+      helpers,
+      attempt: 1,
+    })
 
     expect(onError).toHaveBeenCalled()
   })
@@ -69,11 +76,13 @@ describe('Generate random number', () => {
       settings: {},
     })
 
-    await generateRandomNumber.onActivityCreated!(
-      mockOnActivityCreateParams,
+    await generateRandomNumber.onEvent!({
+      payload: mockOnActivityCreateParams,
       onComplete,
-      onError
-    )
+      onError,
+      helpers,
+      attempt: 1,
+    })
 
     expect(onComplete).toBeCalledWith({
       data_points: {

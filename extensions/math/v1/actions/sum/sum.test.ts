@@ -1,19 +1,19 @@
 import { ZodError } from 'zod'
 import { generateTestPayload } from '@/tests'
 import { sum } from './sum'
+import { TestHelpers } from '@awell-health/extensions-core'
 
 describe('Sum', () => {
-  const onComplete = jest.fn()
-  const onError = jest.fn()
+  const { onComplete, onError, helpers, clearMocks } =
+    TestHelpers.fromAction(sum)
 
   beforeEach(() => {
-    onComplete.mockClear()
-    onError.mockClear()
+    clearMocks()
   })
 
   test('Should work', async () => {
-    await sum.onActivityCreated!(
-      generateTestPayload({
+    await sum.onEvent!({
+      payload: generateTestPayload({
         fields: {
           addend_01: 1,
           addend_02: 2,
@@ -39,8 +39,10 @@ describe('Sum', () => {
         settings: {},
       }),
       onComplete,
-      onError
-    )
+      onError,
+      helpers,
+      attempt: 1,
+    })
 
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
@@ -52,8 +54,8 @@ describe('Sum', () => {
 
   test('Should return an error if all addends are undefined', async () => {
     await expect(
-      sum.onActivityCreated!(
-        generateTestPayload({
+      sum.onEvent!({
+        payload: generateTestPayload({
           fields: {
             addend_01: undefined,
             addend_02: undefined,
@@ -79,8 +81,10 @@ describe('Sum', () => {
           settings: {},
         }),
         onComplete,
-        onError
-      )
+        onError,
+        helpers,
+        attempt: 1,
+      }),
     ).rejects.toThrow(ZodError)
   })
 })
