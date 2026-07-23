@@ -18,6 +18,7 @@ export const removePatientFromCohort: Action<
   description: 'Removes the specified Patient from a cohort.',
   fields: removePatientFromCohortFields,
   previewable: true,
+  supports_automated_retries: true,
   dataPoints,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
     try {
