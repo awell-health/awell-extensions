@@ -130,6 +130,34 @@ describe('Metriport - Webhook - Enrollment', () => {
     })
   })
 
+  describe('When values contain surrounding whitespace', () => {
+    test('Should trim strings before emitting data points', async () => {
+      await invoke({
+        meta: {
+          messageId: '  msg-1  ',
+          when: '2026-07-21T10:00:00.000Z',
+          type: MetriportWebhookType.PatientAdmit,
+        },
+        payload: {
+          url: '  https://example.com/encounter-bundle  ',
+          patientId: '  patient-123  ',
+          externalId: '  external-abc  ',
+          admitTimestamp: '2026-07-21T09:00:00.000Z',
+        },
+      })
+
+      expect(onError).not.toHaveBeenCalled()
+      const call = onSuccess.mock.calls[0][0]
+      expect(call.data_points.metriportPatientId).toBe('patient-123')
+      expect(call.data_points.externalId).toBe('external-abc')
+      expect(call.data_points.messageId).toBe('msg-1')
+      expect(call.data_points.bundleUrl).toBe(
+        'https://example.com/encounter-bundle',
+      )
+      expect(call.patient_identifier.value).toBe('patient-123')
+    })
+  })
+
   describe('When a ping event is received', () => {
     test('Should acknowledge with 200 and not enroll', async () => {
       await invoke({

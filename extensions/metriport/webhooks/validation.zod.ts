@@ -1,21 +1,27 @@
 import { z } from 'zod'
 import { MetriportWebhookType } from './types'
 
+/**
+ * Incoming string values are trimmed so stray whitespace never leaks into
+ * data points, identifiers, or the pre-signed URLs we pass downstream.
+ */
+const trimmedString = z.string().trim()
+
 const metaSchema = z.object({
-  messageId: z.string(),
-  when: z.string(),
-  requestId: z.string().optional(),
+  messageId: trimmedString,
+  when: trimmedString,
+  requestId: trimmedString.optional(),
   data: z.unknown().optional(),
 })
 
 const adtEventPayloadSchema = z.object({
-  url: z.string().url(),
-  patientId: z.string(),
-  externalId: z.string().optional(),
-  additionalIds: z.record(z.array(z.string())).optional(),
-  admitTimestamp: z.string(),
-  dischargeTimestamp: z.string().optional(),
-  whenSourceSent: z.string().optional(),
+  url: trimmedString.url(),
+  patientId: trimmedString,
+  externalId: trimmedString.optional(),
+  additionalIds: z.record(z.array(trimmedString)).optional(),
+  admitTimestamp: trimmedString,
+  dischargeTimestamp: trimmedString.optional(),
+  whenSourceSent: trimmedString.optional(),
 })
 
 /**
@@ -25,12 +31,12 @@ const adtEventPayloadSchema = z.object({
  */
 const medicalPatientEntrySchema = z
   .object({
-    patientId: z.string(),
-    externalId: z.string().optional(),
-    additionalIds: z.record(z.array(z.string())).optional(),
-    status: z.string().optional(),
+    patientId: trimmedString,
+    externalId: trimmedString.optional(),
+    additionalIds: z.record(z.array(trimmedString)).optional(),
+    status: trimmedString.optional(),
     bundle: z.unknown().optional(),
-    url: z.string().url().optional(),
+    url: trimmedString.url().optional(),
   })
   .passthrough()
 
@@ -46,7 +52,7 @@ const patientDischargeWebhookSchema = z.object({
     type: z.literal(MetriportWebhookType.PatientDischarge),
   }),
   payload: adtEventPayloadSchema.extend({
-    dischargeTimestamp: z.string(),
+    dischargeTimestamp: trimmedString,
   }),
 })
 
@@ -69,7 +75,7 @@ const pingWebhookSchema = z.object({
   meta: metaSchema.extend({
     type: z.literal(MetriportWebhookType.Ping),
   }),
-  ping: z.string(),
+  ping: trimmedString,
 })
 
 /**
