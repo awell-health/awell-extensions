@@ -2,12 +2,15 @@ import { generateTestPayload } from '@/tests'
 import { getSdk } from '../../lib/sdk/graphql-codegen/generated/sdk'
 import { mockGetSdk } from '../../lib/sdk/graphql-codegen/generated/__mocks__/sdk'
 import { checkScheduledAppointments } from '../checkScheduledAppointments'
+import { TestHelpers } from '@awell-health/extensions-core'
 
 jest.mock('../../lib/sdk/graphql-codegen/generated/sdk')
 jest.mock('../../lib/sdk/graphql-codegen/graphqlClient')
 
 describe('checkScheduledAppointments action', () => {
-  const onComplete = jest.fn()
+  const { onComplete, onError, helpers, clearMocks } = TestHelpers.fromAction(
+    checkScheduledAppointments,
+  )
 
   beforeAll(() => {
     const mockSdk = getSdk as jest.Mock
@@ -16,12 +19,13 @@ describe('checkScheduledAppointments action', () => {
 
   beforeEach(() => {
     jest.clearAllMocks()
+    clearMocks()
   })
 
   describe('when there is active future appointment with appointment_type_id', () => {
     it('should return call onComplete with isScheduled data points set to true', async () => {
-      await checkScheduledAppointments.onActivityCreated!(
-        generateTestPayload({
+      await checkScheduledAppointments.onEvent!({
+        payload: generateTestPayload({
           fields: {
             patientId: 'patient-1',
             appointmentTypeId: 'appointment-type-1',
@@ -33,8 +37,10 @@ describe('checkScheduledAppointments action', () => {
           },
         }),
         onComplete,
-        jest.fn(),
-      )
+        onError,
+        helpers,
+        attempt: 1,
+      })
 
       expect(onComplete).toHaveBeenCalledWith({
         data_points: {
@@ -45,8 +51,8 @@ describe('checkScheduledAppointments action', () => {
   })
   describe('when there is not active future appointment with appointment_type_id', () => {
     it('should return call onComplete with isScheduled data points set to false', async () => {
-      await checkScheduledAppointments.onActivityCreated!(
-        generateTestPayload({
+      await checkScheduledAppointments.onEvent!({
+        payload: generateTestPayload({
           fields: {
             patientId: 'patient-1',
             appointmentTypeId: 'appointment-type-2',
@@ -58,8 +64,10 @@ describe('checkScheduledAppointments action', () => {
           },
         }),
         onComplete,
-        jest.fn(),
-      )
+        onError,
+        helpers,
+        attempt: 1,
+      })
 
       expect(onComplete).toHaveBeenCalledWith({
         data_points: {

@@ -13,7 +13,18 @@ export const getSetPasswordLink: Action<typeof fields, typeof settings> = {
   fields,
   previewable: true,
   dataPoints,
-  onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
+  onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
+
+    helpers.log(
+      { meta, fields: payload.fields },
+      'Processing getSetPasswordLink',
+    )
+
     const MAX_RETRIES = 3
     const BASE_DELAY_MS = process.env.NODE_ENV === 'test' ? 10 : 1000
 
