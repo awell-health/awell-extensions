@@ -22,87 +22,109 @@ export const parseStringToPhoneNumber: Action<
   fields,
   dataPoints,
   previewable: true,
-  onEvent: async ({ payload, onComplete, helpers }) => {
+  onEvent: async ({ payload, onComplete, onError, helpers }) => {
     const meta = {
       tenant_id: payload.pathway.tenant_id,
       careflow_id: payload.pathway.id,
       activity_id: payload.activity.id,
     }
 
-    const {
-      fields: { text, countryCallingCode },
-    } = validate({
-      schema: z.object({
-        fields: FieldsValidationSchema,
-      }),
-      payload,
-    })
+    helpers.log(
+      { meta, fields: payload.fields },
+      'Processing parseStringToPhoneNumber',
+    )
 
-    const events: ActivityEvent[] = []
+    try {
+      const {
+        fields: { text, countryCallingCode },
+      } = validate({
+        schema: z.object({
+          fields: FieldsValidationSchema,
+        }),
+        payload,
+      })
 
-    const getPhoneNumber = (): string => {
-      const parsed = E164PhoneValidationSchema.safeParse(text)
+      const events: ActivityEvent[] = []
 
-      /**
-       * If E164 validation passes, the phone number is already in E164 format.
-       */
-      if (parsed.success) {
+      const getPhoneNumber = (): string => {
+        const parsed = E164PhoneValidationSchema.safeParse(text)
+
+        /**
+         * If E164 validation passes, the phone number is already in E164 format.
+         */
+        if (parsed.success) {
+          events.push(
+            addActivityEventLog({
+              message: `Text input is a valid E164 phone number.`,
+            }),
+          )
+          helpers.log(
+            { meta, text, countryCallingCode, phoneNumber: parsed.data },
+            'Parsed text to phone number',
+          )
+          return parsed.data
+        }
+
+        /**
+         * If the country calling code is not provided, we can throw a validation error.
+         */
+        if (isNil(countryCallingCode)) {
+          events.push(
+            addActivityEventLog({
+              message: `Text input is not a valid E164 phone number and no country calling code was provided.`,
+            }),
+          )
+          const err = new ZodError(parsed.error.issues)
+          helpers.log({ meta, text, countryCallingCode, err }, 'error', err)
+          throw err
+        }
+
         events.push(
           addActivityEventLog({
-            message: `Text input is a valid E164 phone number.`,
+            message: `Text input is not a valid E164 phone number. Trying again by adding country calling code (${countryCallingCode}).`,
           }),
         )
+
+        /**
+         * Try parsing the number with the country calling code prepended this time.
+         */
+        const withCode = `+${countryCallingCode}${text}`
+        let phoneNumber: string
+        try {
+          phoneNumber = E164PhoneValidationSchema.parse(withCode)
+        } catch (err) {
+          helpers.log({ meta, err }, 'error', err as Error)
+          throw err
+        }
+
         helpers.log(
-          { meta, text, countryCallingCode, phoneNumber: parsed.data },
+          { meta, text, countryCallingCode, phoneNumber },
           'Parsed text to phone number',
         )
-        return parsed.data
+        return phoneNumber
       }
 
-      /**
-       * If the country calling code is not provided, we can throw a validation error.
-       */
-      if (isNil(countryCallingCode)) {
-        events.push(
-          addActivityEventLog({
-            message: `Text input is not a valid E164 phone number and no country calling code was provided.`,
-          }),
-        )
-        const err = new ZodError(parsed.error.issues)
-        helpers.log({ meta, text, countryCallingCode, err }, 'error', err)
-        throw err
-      }
-
-      events.push(
-        addActivityEventLog({
-          message: `Text input is not a valid E164 phone number. Trying again by adding country calling code (${countryCallingCode}).`,
-        }),
-      )
-
-      /**
-       * Try parsing the number with the country calling code prepended this time.
-       */
-      const withCode = `+${countryCallingCode}${text}`
-      let phoneNumber: string
-      try {
-        phoneNumber = E164PhoneValidationSchema.parse(withCode)
-      } catch (err) {
-        helpers.log({ meta, err }, 'error', err as Error)
-        throw err
-      }
-
-      helpers.log(
-        { meta, text, countryCallingCode, phoneNumber },
-        'Parsed text to phone number',
-      )
-      return phoneNumber
+      await onComplete({
+        data_points: {
+          phoneNumber: getPhoneNumber(),
+        },
+        events,
+      })
+    } catch (err) {
+      helpers.log({ meta, err }, 'error', err as Error)
+      const error = err as Error
+      await onError({
+        events: [
+          {
+            date: new Date().toISOString(),
+            text: { en: error.message },
+            error: {
+              category: 'SERVER_ERROR',
+              message: error.message,
+            },
+          },
+        ],
+      })
     }
-
-    await onComplete({
-      data_points: {
-        phoneNumber: getPhoneNumber(),
-      },
-      events,
-    })
   },
 }

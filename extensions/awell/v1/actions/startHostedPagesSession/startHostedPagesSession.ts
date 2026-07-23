@@ -25,98 +25,120 @@ export const startHostedPagesSession: Action<typeof fields, typeof settings> = {
       activity_id: payload.activity.id,
     }
 
-    const {
-      fields: { careFlowId, stakeholder },
-    } = validate({
-      schema: z.object({
-        fields: FieldsValidationSchema,
-      }),
-      payload,
-    })
+    helpers.log(
+      { meta, fields: payload.fields },
+      'Processing startHostedPagesSession',
+    )
 
-    // To make sure the care flow activated the activity for the stakeholder :-)
-    await delay(4000)
+    try {
+      const {
+        fields: { careFlowId, stakeholder },
+      } = validate({
+        schema: z.object({
+          fields: FieldsValidationSchema,
+        }),
+        payload,
+      })
 
-    const normalizedStakeholder = stakeholder.toLowerCase()
+      // To make sure the care flow activated the activity for the stakeholder :-)
+      await delay(4000)
 
-    const sdk = await helpers.awellSdk()
+      const normalizedStakeholder = stakeholder.toLowerCase()
 
-    const pathwayRes = await sdk.orchestration.query({
-      pathway: {
-        __args: {
-          id: careFlowId,
-        },
+      const sdk = await helpers.awellSdk()
+
+      const pathwayRes = await sdk.orchestration.query({
         pathway: {
-          release_id: true,
-        },
-      },
-    })
-
-    const releaseId = pathwayRes?.pathway.pathway?.release_id
-
-    if (releaseId === undefined)
-      throw new Error('Could not retrieve the release ID for this care flow.')
-
-    const getStakeholderId = async (releaseId: string): Promise<string> => {
-      const stakeholdersInRelease = await sdk.orchestration.query({
-        stakeholdersByReleaseIds: {
           __args: {
-            release_ids: [releaseId],
+            id: careFlowId,
           },
-          success: true,
-          stakeholders: {
-            id: true,
-            label: {
-              en: true,
-            },
-            definition_id: true,
+          pathway: {
+            release_id: true,
           },
         },
       })
 
-      helpers.log(
-        { meta, careFlowId, stakeholdersInRelease },
-        'stakeholdersInRelease',
-      )
+      const releaseId = pathwayRes?.pathway.pathway?.release_id
 
-      const stakeholderMatchId =
-        stakeholdersInRelease.stakeholdersByReleaseIds.stakeholders.find(
-          (stakeholder) =>
-            stakeholder.label.en.toLowerCase() === normalizedStakeholder,
-        )?.id
+      if (releaseId === undefined)
+        throw new Error('Could not retrieve the release ID for this care flow.')
 
-      if (stakeholderMatchId === undefined)
-        throw new Error(
-          `Could not find stakeholder ID for ${normalizedStakeholder} in care flow ${careFlowId}`,
+      const getStakeholderId = async (releaseId: string): Promise<string> => {
+        const stakeholdersInRelease = await sdk.orchestration.query({
+          stakeholdersByReleaseIds: {
+            __args: {
+              release_ids: [releaseId],
+            },
+            success: true,
+            stakeholders: {
+              id: true,
+              label: {
+                en: true,
+              },
+              definition_id: true,
+            },
+          },
+        })
+
+        helpers.log(
+          { meta, careFlowId, stakeholdersInRelease },
+          'stakeholdersInRelease',
         )
 
-      return stakeholderMatchId
-    }
+        const stakeholderMatchId =
+          stakeholdersInRelease.stakeholdersByReleaseIds.stakeholders.find(
+            (stakeholder) =>
+              stakeholder.label.en.toLowerCase() === normalizedStakeholder,
+          )?.id
 
-    const stakeholderId = await getStakeholderId(releaseId)
+        if (stakeholderMatchId === undefined)
+          throw new Error(
+            `Could not find stakeholder ID for ${normalizedStakeholder} in care flow ${careFlowId}`,
+          )
 
-    const res = await sdk.orchestration.mutation({
-      startHostedActivitySession: {
-        __args: {
-          input: {
-            pathway_id: careFlowId,
-            stakeholder_id: stakeholderId,
+        return stakeholderMatchId
+      }
+
+      const stakeholderId = await getStakeholderId(releaseId)
+
+      const res = await sdk.orchestration.mutation({
+        startHostedActivitySession: {
+          __args: {
+            input: {
+              pathway_id: careFlowId,
+              stakeholder_id: stakeholderId,
+            },
           },
+          success: true,
+          session_url: true,
         },
-        success: true,
-        session_url: true,
-      },
-    })
+      })
 
-    await onComplete({
-      data_points: {
-        sessionUrl: res.startHostedActivitySession.session_url,
-      },
-      events: [
-        addActivityEventLog({
-          message: `Session started for care flow instance id ${careFlowId} and stakeholder ${stakeholder} (${stakeholderId}). Session URL is ${res.startHostedActivitySession.session_url}.`,
-        }),
-      ],
-    })
+      await onComplete({
+        data_points: {
+          sessionUrl: res.startHostedActivitySession.session_url,
+        },
+        events: [
+          addActivityEventLog({
+            message: `Session started for care flow instance id ${careFlowId} and stakeholder ${stakeholder} (${stakeholderId}). Session URL is ${res.startHostedActivitySession.session_url}.`,
+          }),
+        ],
+      })
+    } catch (err) {
+      helpers.log({ meta, err }, 'error', err as Error)
+      const error = err as Error
+      await onError({
+        events: [
+          {
+            date: new Date().toISOString(),
+            text: { en: error.message },
+            error: {
+              category: 'SERVER_ERROR',
+              message: error.message,
+            },
+          },
+        ],
+      })
+    }
   },
 }

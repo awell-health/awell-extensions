@@ -15,51 +15,79 @@ export const startCareFlowAndSession: Action<typeof fields, typeof settings> = {
   previewable: false,
   supports_automated_retries: true,
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
-    const {
-      fields: { careFlowDefinitionId, stakeholderDefinitionId, baselineInfo },
-    } = validate({
-      schema: z.object({
-        fields: FieldsValidationSchema,
-      }),
-      payload,
-    })
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
 
-    const sdk = await helpers.awellSdk()
+    helpers.log(
+      { meta, fields: payload.fields },
+      'Processing startCareFlowAndSession',
+    )
 
-    const resp = await sdk.orchestration.mutation({
-      startHostedPathwaySession: {
-        __args: {
-          input: {
-            patient_id: payload.patient.id,
-            pathway_definition_id: careFlowDefinitionId,
-            // If the stakeholder is the patient, we don't need to specify a stakeholder definition id
-            stakeholder_definition_id:
-              stakeholderDefinitionId === 'patient'
-                ? undefined
-                : stakeholderDefinitionId,
-            data_points: baselineInfo,
-          },
-        },
-        success: true,
-        pathway_id: true,
-        session_url: true,
-      },
-    })
-
-    const {
-      startHostedPathwaySession: { pathway_id, session_url },
-    } = resp
-
-    await onComplete({
-      data_points: {
-        careFlowId: pathway_id,
-        sessionUrl: session_url,
-      },
-      events: [
-        addActivityEventLog({
-          message: `Care flow started with instance id ${pathway_id}. Session URL is ${session_url}.`,
+    try {
+      const {
+        fields: { careFlowDefinitionId, stakeholderDefinitionId, baselineInfo },
+      } = validate({
+        schema: z.object({
+          fields: FieldsValidationSchema,
         }),
-      ],
-    })
+        payload,
+      })
+
+      const sdk = await helpers.awellSdk()
+
+      const resp = await sdk.orchestration.mutation({
+        startHostedPathwaySession: {
+          __args: {
+            input: {
+              patient_id: payload.patient.id,
+              pathway_definition_id: careFlowDefinitionId,
+              // If the stakeholder is the patient, we don't need to specify a stakeholder definition id
+              stakeholder_definition_id:
+                stakeholderDefinitionId === 'patient'
+                  ? undefined
+                  : stakeholderDefinitionId,
+              data_points: baselineInfo,
+            },
+          },
+          success: true,
+          pathway_id: true,
+          session_url: true,
+        },
+      })
+
+      const {
+        startHostedPathwaySession: { pathway_id, session_url },
+      } = resp
+
+      await onComplete({
+        data_points: {
+          careFlowId: pathway_id,
+          sessionUrl: session_url,
+        },
+        events: [
+          addActivityEventLog({
+            message: `Care flow started with instance id ${pathway_id}. Session URL is ${session_url}.`,
+          }),
+        ],
+      })
+    } catch (err) {
+      helpers.log({ meta, err }, 'error', err as Error)
+      const error = err as Error
+      await onError({
+        events: [
+          {
+            date: new Date().toISOString(),
+            text: { en: error.message },
+            error: {
+              category: 'SERVER_ERROR',
+              message: error.message,
+            },
+          },
+        ],
+      })
+    }
   },
 }

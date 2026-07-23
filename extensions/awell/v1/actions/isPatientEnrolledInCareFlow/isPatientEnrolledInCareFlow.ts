@@ -39,84 +39,119 @@ export const isPatientEnrolledInCareFlow: Action<
   previewable: false,
   supports_automated_retries: true,
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
-    const {
-      patient: { id: patientId },
-      pathway: { id: pathwayId, definition_id: currentPathwayDefinitionId },
-      fields: { pathwayStatus, careFlowDefinitionIds, dayRange },
-    } = validate({
-      schema: z.object({
-        patient: PatientValidationSchema,
-        pathway: PathwayValidationSchema,
-        fields: FieldsValidationSchema,
-      }),
-      payload,
-    })
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
 
-    const sdk = await helpers.awellSdk()
+    helpers.log(
+      { meta, fields: payload.fields },
+      'Processing isPatientEnrolledInCareFlow',
+    )
 
-    const {
-      patientPathways: { patientPathways },
-    } = await sdk.orchestration.query({
-      patientPathways: {
-        __args: {
-          patient_id: patientId,
-          filters: {
-            status: {
-              in: pathwayStatus ?? [PathwayStatus.Active]
-            }
+    try {
+      const {
+        patient: { id: patientId },
+        pathway: { id: pathwayId, definition_id: currentPathwayDefinitionId },
+        fields: { pathwayStatus, careFlowDefinitionIds, dayRange },
+      } = validate({
+        schema: z.object({
+          patient: PatientValidationSchema,
+          pathway: PathwayValidationSchema,
+          fields: FieldsValidationSchema,
+        }),
+        payload,
+      })
+
+      const sdk = await helpers.awellSdk()
+
+      const {
+        patientPathways: { patientPathways },
+      } = await sdk.orchestration.query({
+        patientPathways: {
+          __args: {
+            patient_id: patientId,
+            filters: {
+              status: {
+                in: pathwayStatus ?? [PathwayStatus.Active],
+              },
+            },
+          },
+          patientPathways: {
+            id: true,
+            title: true,
+            pathway_definition_id: true,
+            release_id: true,
+            start_date: true,
+            complete_date: true,
+            status: true,
           },
         },
-        patientPathways: {
-          id: true,
-          title: true,
-          pathway_definition_id: true,
-          release_id: true,
-          start_date: true,
-          complete_date: true,
-          status: true,
+      })
+
+      const getCareFlowsThatMatchFilters = (): PatientPathway[] =>
+        (patientPathways as PatientPathway[])
+          // Exclude the current care flow instance
+          .filter((careFlow) => careFlow.id !== pathwayId)
+          // Filter by care flow definition ids
+          .filter((careFlow) => {
+            if (
+              isNil(careFlowDefinitionIds) ||
+              isEmpty(careFlowDefinitionIds)
+            ) {
+              return (
+                careFlow.pathway_definition_id === currentPathwayDefinitionId
+              )
+            }
+
+            return careFlowDefinitionIds.includes(
+              careFlow.pathway_definition_id,
+            )
+          })
+          // Filter by day range
+          .filter((careFlow) => {
+            if (isNil(dayRange)) {
+              return true
+            }
+            return isWithinDayRange(careFlow.start_date, dayRange)
+          })
+
+      const careFlows = getCareFlowsThatMatchFilters()
+      const nbrOFResults = careFlows.length
+      const isPatientEnrolledInCareFlowResult = nbrOFResults > 0
+
+      await onComplete({
+        data_points: {
+          result: String(isPatientEnrolledInCareFlowResult),
+          nbrOfResults: String(nbrOFResults),
+          careFlowIds: careFlows.map((careFlow) => careFlow.id).join(','),
         },
-      },
-    })
-
-    const getCareFlowsThatMatchFilters = (): PatientPathway[] =>
-      (patientPathways as PatientPathway[])
-        // Exclude the current care flow instance
-        .filter((careFlow) => careFlow.id !== pathwayId)
-        // Filter by care flow definition ids
-        .filter((careFlow) => {
-          if (isNil(careFlowDefinitionIds) || isEmpty(careFlowDefinitionIds)) {
-            return careFlow.pathway_definition_id === currentPathwayDefinitionId
-          }
-
-          return careFlowDefinitionIds.includes(careFlow.pathway_definition_id)
-        })
-        // Filter by day range
-        .filter((careFlow) => {
-          if (isNil(dayRange)) {
-            return true
-          }
-          return isWithinDayRange(careFlow.start_date, dayRange)
-        })
-
-    const careFlows = getCareFlowsThatMatchFilters()
-    const nbrOFResults = careFlows.length
-    const isPatientEnrolledInCareFlowResult = nbrOFResults > 0
-
-    await onComplete({
-      data_points: {
-        result: String(isPatientEnrolledInCareFlowResult),
-        nbrOfResults: String(nbrOFResults),
-        careFlowIds: careFlows.map((careFlow) => careFlow.id).join(','),
-      },
-      events: [
-        addActivityEventLog({
-          message: isPatientEnrolledInCareFlowResult
-            ? `Patient was already enrolled in this care flow. Care flow IDs: ${careFlows
-                .map((careFlow) => careFlow.id)
-                .join(',')}`
-            : `Patient was not previously enrolled in this care flow.`,
-        }),
-      ],
-    })
+        events: [
+          addActivityEventLog({
+            message: isPatientEnrolledInCareFlowResult
+              ? `Patient was already enrolled in this care flow. Care flow IDs: ${careFlows
+                  .map((careFlow) => careFlow.id)
+                  .join(',')}`
+              : `Patient was not previously enrolled in this care flow.`,
+          }),
+        ],
+      })
+    } catch (err) {
+      helpers.log({ meta, err }, 'error', err as Error)
+      const error = err as Error
+      await onError({
+        events: [
+          {
+            date: new Date().toISOString(),
+            text: { en: error.message },
+            error: {
+              category: 'SERVER_ERROR',
+              message: error.message,
+            },
+          },
+        ],
+      })
+    }
   },
 }

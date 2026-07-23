@@ -17,32 +17,54 @@ export const listToCommaSeparatedText: Action<
   fields,
   dataPoints,
   previewable: false,
-  onEvent: async ({ payload, onComplete, helpers }) => {
+  onEvent: async ({ payload, onComplete, onError, helpers }) => {
     const meta = {
       tenant_id: payload.pathway.tenant_id,
       careflow_id: payload.pathway.id,
       activity_id: payload.activity.id,
     }
 
-    const {
-      fields: { list },
-    } = validate({
-      schema: z.object({
-        fields: FieldsValidationSchema,
-      }),
-      payload,
-    })
-
-    const output = list.join(',')
     helpers.log(
-      { meta, list, output },
-      'Converted list to comma separated text',
+      { meta, fields: payload.fields },
+      'Processing listToCommaSeparatedText',
     )
 
-    await onComplete({
-      data_points: {
-        listText: output,
-      },
-    })
+    try {
+      const {
+        fields: { list },
+      } = validate({
+        schema: z.object({
+          fields: FieldsValidationSchema,
+        }),
+        payload,
+      })
+
+      const output = list.join(',')
+      helpers.log(
+        { meta, list, output },
+        'Converted list to comma separated text',
+      )
+
+      await onComplete({
+        data_points: {
+          listText: output,
+        },
+      })
+    } catch (err) {
+      helpers.log({ meta, err }, 'error', err as Error)
+      const error = err as Error
+      await onError({
+        events: [
+          {
+            date: new Date().toISOString(),
+            text: { en: error.message },
+            error: {
+              category: 'SERVER_ERROR',
+              message: error.message,
+            },
+          },
+        ],
+      })
+    }
   },
 }

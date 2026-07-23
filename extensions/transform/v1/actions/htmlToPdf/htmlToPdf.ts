@@ -18,38 +18,57 @@ export const htmlToPdf: Action<
   fields,
   dataPoints,
   previewable: false,
-  onEvent: async ({ payload, onComplete, helpers }) => {
+  onEvent: async ({ payload, onComplete, onError, helpers }) => {
     const meta = {
       tenant_id: payload.pathway.tenant_id,
       careflow_id: payload.pathway.id,
       activity_id: payload.activity.id,
     }
 
-    const {
-      fields: { htmlString, options },
-    } = validate({
-      schema: z.object({
-        fields: FieldsValidationSchema,
-      }),
-      payload,
-    })
+    helpers.log({ meta, fields: payload.fields }, 'Processing htmlToPdf')
 
-    const base64Pdf = await htmlToBase64Pdf(htmlString, options)
+    try {
+      const {
+        fields: { htmlString, options },
+      } = validate({
+        schema: z.object({
+          fields: FieldsValidationSchema,
+        }),
+        payload,
+      })
 
-    helpers.log(
-      {
-        meta,
-        htmlStringLength: htmlString.length,
-        options,
-        base64PdfLength: base64Pdf.length,
-      },
-      'Converted HTML to PDF',
-    )
+      const base64Pdf = await htmlToBase64Pdf(htmlString, options)
 
-    await onComplete({
-      data_points: {
-        base64Pdf,
-      },
-    })
+      helpers.log(
+        {
+          meta,
+          htmlStringLength: htmlString.length,
+          options,
+          base64PdfLength: base64Pdf.length,
+        },
+        'Converted HTML to PDF',
+      )
+
+      await onComplete({
+        data_points: {
+          base64Pdf,
+        },
+      })
+    } catch (err) {
+      helpers.log({ meta, err }, 'error', err as Error)
+      const error = err as Error
+      await onError({
+        events: [
+          {
+            date: new Date().toISOString(),
+            text: { en: error.message },
+            error: {
+              category: 'SERVER_ERROR',
+              message: error.message,
+            },
+          },
+        ],
+      })
+    }
   },
 }

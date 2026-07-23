@@ -16,29 +16,48 @@ export const serializeJson: Action<
   fields,
   dataPoints,
   previewable: true,
-  onEvent: async ({ payload, onComplete, helpers }) => {
+  onEvent: async ({ payload, onComplete, onError, helpers }) => {
     const meta = {
       tenant_id: payload.pathway.tenant_id,
       careflow_id: payload.pathway.id,
       activity_id: payload.activity.id,
     }
 
-    const {
-      fields: { json },
-    } = validate({
-      schema: z.object({
-        fields: FieldsValidationSchema,
-      }),
-      payload,
-    })
+    helpers.log({ meta, fields: payload.fields }, 'Processing serializeJson')
 
-    const serializedJson = JSON.stringify(json)
-    helpers.log({ meta, json, serializedJson }, 'Serialized JSON')
+    try {
+      const {
+        fields: { json },
+      } = validate({
+        schema: z.object({
+          fields: FieldsValidationSchema,
+        }),
+        payload,
+      })
 
-    await onComplete({
-      data_points: {
-        serializedJson,
-      },
-    })
+      const serializedJson = JSON.stringify(json)
+      helpers.log({ meta, json, serializedJson }, 'Serialized JSON')
+
+      await onComplete({
+        data_points: {
+          serializedJson,
+        },
+      })
+    } catch (err) {
+      helpers.log({ meta, err }, 'error', err as Error)
+      const error = err as Error
+      await onError({
+        events: [
+          {
+            date: new Date().toISOString(),
+            text: { en: error.message },
+            error: {
+              category: 'SERVER_ERROR',
+              message: error.message,
+            },
+          },
+        ],
+      })
+    }
   },
 }
