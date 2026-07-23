@@ -91,28 +91,45 @@ export const getAppointment: Action<
       activity_id: payload.activity.id,
     }
 
-    const appointmentId = NumericIdSchema.parse(payload.fields.appointmentId)
+    try {
+      const appointmentId = NumericIdSchema.parse(payload.fields.appointmentId)
 
-    // API Call should produce AuthError or something dif.
-    const api = makeAPIClient(payload.settings)
-    helpers.log({ meta, appointmentId }, 'Getting Elation appointment')
-    const appointment = await api.getAppointment(appointmentId)
-    helpers.log({ meta, appointmentId }, 'Got Elation appointment')
-    await onComplete({
-      data_points: {
-        scheduledDate: appointment.scheduled_date,
-        reason: appointment.reason,
-        patientId: String(appointment.patient),
-        physicianId: String(appointment.physician),
-        practiceId: String(appointment.practice),
-        duration: String(appointment.duration),
-        description: appointment.description,
-        serviceLocationId: String(appointment.service_location?.id),
-        telehealthDetails: appointment.telehealth_details,
-        status: JSON.stringify(appointment.status),
-        statusString: appointment.status?.status,
-        appointment: JSON.stringify(appointment),
-      },
-    })
+      // API Call should produce AuthError or something dif.
+      const api = makeAPIClient(payload.settings)
+      helpers.log({ meta, appointmentId }, 'Getting Elation appointment')
+      const appointment = await api.getAppointment(appointmentId)
+      helpers.log({ meta, appointmentId }, 'Got Elation appointment')
+      await onComplete({
+        data_points: {
+          scheduledDate: appointment.scheduled_date,
+          reason: appointment.reason,
+          patientId: String(appointment.patient),
+          physicianId: String(appointment.physician),
+          practiceId: String(appointment.practice),
+          duration: String(appointment.duration),
+          description: appointment.description,
+          serviceLocationId: String(appointment.service_location?.id),
+          telehealthDetails: appointment.telehealth_details,
+          status: JSON.stringify(appointment.status),
+          statusString: appointment.status?.status,
+          appointment: JSON.stringify(appointment),
+        },
+      })
+    } catch (err) {
+      const message = (err as Error).message
+      helpers.log({ meta, err }, 'error', err as Error)
+      await onError({
+        events: [
+          {
+            date: new Date().toISOString(),
+            text: { en: message },
+            error: {
+              category: 'SERVER_ERROR',
+              message,
+            },
+          },
+        ],
+      })
+    }
   },
 }

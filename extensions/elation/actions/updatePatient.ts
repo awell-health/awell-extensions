@@ -182,84 +182,101 @@ export const updatePatient: Action<
       activity_id: payload.activity.id,
     }
 
-    const {
-      patientId,
-      firstName,
-      lastName,
-      actualName,
-      caregiverPracticeId,
-      genderIdentity,
-      legalGenderMarker,
-      middleName,
-      preferredLanguage,
-      previousFirstName,
-      previousLastName,
-      primaryPhysicianId,
-      sexualOrientation,
-      status,
-      tags,
-      ...fields
-    } = payload.fields
+    try {
+      const {
+        patientId,
+        firstName,
+        lastName,
+        actualName,
+        caregiverPracticeId,
+        genderIdentity,
+        legalGenderMarker,
+        middleName,
+        preferredLanguage,
+        previousFirstName,
+        previousLastName,
+        primaryPhysicianId,
+        sexualOrientation,
+        status,
+        tags,
+        ...fields
+      } = payload.fields
 
-    const patient = updatePatientSchema.parse({
-      ...fields,
-      first_name: firstName,
-      last_name: lastName,
-      primary_physician: primaryPhysicianId,
-      caregiver_practice: caregiverPracticeId,
-      middle_name: middleName,
-      actual_name: actualName,
-      gender_identity: genderIdentity,
-      legal_gender_marker: legalGenderMarker,
-      sexual_orientation: sexualOrientation,
-      preferred_language: preferredLanguage,
-      previous_first_name: previousFirstName,
-      previous_last_name: previousLastName,
-      ...(!isNil(status) && {
-        patient_status: {
-          status,
-          ...(status === 'inactive' && { inactive_reason: 'other' }),
+      const patient = updatePatientSchema.parse({
+        ...fields,
+        first_name: firstName,
+        last_name: lastName,
+        primary_physician: primaryPhysicianId,
+        caregiver_practice: caregiverPracticeId,
+        middle_name: middleName,
+        actual_name: actualName,
+        gender_identity: genderIdentity,
+        legal_gender_marker: legalGenderMarker,
+        sexual_orientation: sexualOrientation,
+        preferred_language: preferredLanguage,
+        previous_first_name: previousFirstName,
+        previous_last_name: previousLastName,
+        ...(!isNil(status) && {
+          patient_status: {
+            status,
+            ...(status === 'inactive' && { inactive_reason: 'other' }),
+          },
+        }),
+      })
+
+      const id = NumericIdSchema.parse(patientId)
+
+      /** We only want to patch the fields that are not undefined or null so
+       *  we know the update is intentional. I.e. if the builder doesn't set
+       *  a value for any action field besides the patient ID (which is required)
+       *  then we are updating nothing.
+       **/
+      const updatedPatientFields = Object.entries(patient).reduce(
+        (acc: Record<string, unknown>, [key, value]) => {
+          if (!isNil(value) && !isEmpty(value)) {
+            acc[key] = value
+          }
+          return acc
         },
-      }),
-    })
+        {},
+      )
 
-    const id = NumericIdSchema.parse(patientId)
+      const api = makeAPIClient(payload.settings)
+      if (!isNil(tags)) {
+        const formattedTags = tags.split(',').map((tag) => tag.trim())
+        // we need to fetch current information because we do not want to override existing tags
+        const currentPatientInfo = await api.getPatient(id)
 
-    /** We only want to patch the fields that are not undefined or null so
-     *  we know the update is intentional. I.e. if the builder doesn't set
-     *  a value for any action field besides the patient ID (which is required)
-     *  then we are updating nothing.
-     **/
-    const updatedPatientFields = Object.entries(patient).reduce(
-      (acc: Record<string, unknown>, [key, value]) => {
-        if (!isNil(value) && !isEmpty(value)) {
-          acc[key] = value
-        }
-        return acc
-      },
-      {},
-    )
+        const currentTags = !isNil(currentPatientInfo.tags)
+          ? currentPatientInfo.tags
+          : []
 
-    const api = makeAPIClient(payload.settings)
-    if (!isNil(tags)) {
-      const formattedTags = tags.split(',').map((tag) => tag.trim())
-      // we need to fetch current information because we do not want to override existing tags
-      const currentPatientInfo = await api.getPatient(id)
+        // get a unique list of tags
+        updatedPatientFields.tags = union(currentTags, formattedTags)
+      }
 
-      const currentTags = !isNil(currentPatientInfo.tags)
-        ? currentPatientInfo.tags
-        : []
+      helpers.log(
+        { meta, patientId: id, updatedPatientFields },
+        'Updating Elation patient',
+      )
 
-      // get a unique list of tags
-      updatedPatientFields.tags = union(currentTags, formattedTags)
+      await api.updatePatient(id, updatedPatientFields)
+      await onComplete()
+    } catch (err) {
+      const message = (err as Error).message
+      helpers.log({ meta, err }, 'error', err as Error)
+      await onError({
+        events: [
+          {
+            date: new Date().toISOString(),
+            text: { en: message },
+            error: {
+              category: 'SERVER_ERROR',
+              message,
+            },
+          },
+        ],
+      })
     }
-
-    helpers.log(
-      { meta, patientId: id, updatedPatientFields },
-      'Updating Elation patient',
-    )
-
-    await api.updatePatient(id, updatedPatientFields)
-    await onComplete()
   },
 }

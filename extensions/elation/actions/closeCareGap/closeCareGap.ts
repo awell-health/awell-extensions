@@ -23,38 +23,55 @@ export const closeCareGap: Action<
       activity_id: payload.activity.id,
     }
 
-    const {
-      fields: { quality_program, caregap_id },
-      settings,
-    } = validate({
-      schema: z.object({
-        fields: FieldsValidationSchema,
-        settings: SettingsValidationSchema,
-      }),
-      payload,
-    })
+    try {
+      const {
+        fields: { quality_program, caregap_id },
+        settings,
+      } = validate({
+        schema: z.object({
+          fields: FieldsValidationSchema,
+          settings: SettingsValidationSchema,
+        }),
+        payload,
+      })
 
-    // The care gap API uses a different base URL than the rest of the Elation API, see https://docs.elationhealth.com/reference/caregaps_post_caregaps_api__quality_program__caregap__post-1
-    const caregapBaseUrl = settings.base_url.replace(
-      /(.+\.)?elationemr\.com\/api\/2\.0\/?/,
-      'caregaps.$1elationemr.com/caregaps/api/',
-    )
+      // The care gap API uses a different base URL than the rest of the Elation API, see https://docs.elationhealth.com/reference/caregaps_post_caregaps_api__quality_program__caregap__post-1
+      const caregapBaseUrl = settings.base_url.replace(
+        /(.+\.)?elationemr\.com\/api\/2\.0\/?/,
+        'caregaps.$1elationemr.com/caregaps/api/',
+      )
 
-    const api = makeAPIClient({
-      ...payload.settings,
-      baseUrl: caregapBaseUrl,
-    })
+      const api = makeAPIClient({
+        ...payload.settings,
+        baseUrl: caregapBaseUrl,
+      })
 
-    const closeCareGapRequest = {
-      quality_program,
-      caregap_id,
-      status: 'closed',
+      const closeCareGapRequest = {
+        quality_program,
+        caregap_id,
+        status: 'closed' as const,
+      }
+
+      helpers.log({ meta, closeCareGapRequest }, 'Closing Elation care gap')
+
+      await api.closeCareGap(closeCareGapRequest)
+
+      await onComplete()
+    } catch (err) {
+      const message = (err as Error).message
+      helpers.log({ meta, err }, 'error', err as Error)
+      await onError({
+        events: [
+          {
+            date: new Date().toISOString(),
+            text: { en: message },
+            error: {
+              category: 'SERVER_ERROR',
+              message,
+            },
+          },
+        ],
+      })
     }
-
-    helpers.log({ meta, closeCareGapRequest }, 'Closing Elation care gap')
-
-    await api.closeCareGap(closeCareGapRequest)
-
-    await onComplete()
   },
 }

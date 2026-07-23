@@ -23,22 +23,39 @@ export const getLetter: Action<
       activity_id: payload.activity.id,
     }
 
-    const { letterId } = FieldsValidationSchema.parse(payload.fields)
-    const api = makeAPIClient(payload.settings)
+    try {
+      const { letterId } = FieldsValidationSchema.parse(payload.fields)
+      const api = makeAPIClient(payload.settings)
 
-    helpers.log({ meta, letterId }, 'Getting Elation letter')
-    const res = await api.getLetter(letterId)
+      helpers.log({ meta, letterId }, 'Getting Elation letter')
+      const res = await api.getLetter(letterId)
 
-    helpers.log({ meta, letterId }, 'Got Elation letter')
+      helpers.log({ meta, letterId }, 'Got Elation letter')
 
-    await onComplete({
-      data_points: {
-        body: res.body,
-        signedBy:
-          typeof res?.signed_by === 'number'
-            ? String(res.signed_by)
-            : undefined,
-      },
-    })
+      await onComplete({
+        data_points: {
+          body: res.body,
+          signedBy:
+            typeof res?.signed_by === 'number'
+              ? String(res.signed_by)
+              : undefined,
+        },
+      })
+    } catch (err) {
+      const message = (err as Error).message
+      helpers.log({ meta, err }, 'error', err as Error)
+      await onError({
+        events: [
+          {
+            date: new Date().toISOString(),
+            text: { en: message },
+            error: {
+              category: 'SERVER_ERROR',
+              message,
+            },
+          },
+        ],
+      })
+    }
   },
 }

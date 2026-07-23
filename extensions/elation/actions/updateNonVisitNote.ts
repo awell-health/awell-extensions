@@ -112,39 +112,56 @@ export const updateNonVisitNote: Action<typeof fields, typeof settings> = {
       activity_id: payload.activity.id,
     }
 
-    const {
-      nonVisitNoteId,
-      nonVisitNoteBulletId,
-      authorId,
-      chartDate,
-      documentDate,
-      text,
-      category,
-      patientId,
-      practiceId,
-      signed_by,
-      ...fields
-    } = payload.fields
-    const noteId = NumericIdSchema.parse(nonVisitNoteId)
-    // partial - all fields are optional
-    const note = nonVisitNoteSchema.partial().parse({
-      ...fields,
-      patient: patientId,
-      practice: practiceId,
-      bullets: isNil(nonVisitNoteBulletId)
-        ? undefined
-        : [{ id: nonVisitNoteBulletId, text, author: authorId, category }],
-      document_date: documentDate,
-      chart_date: chartDate,
-      ...(!isNil(signed_by) && {
+    try {
+      const {
+        nonVisitNoteId,
+        nonVisitNoteBulletId,
+        authorId,
+        chartDate,
+        documentDate,
+        text,
+        category,
+        patientId,
+        practiceId,
         signed_by,
-        sign_date: new Date().toISOString(),
-      }),
-    })
+        ...fields
+      } = payload.fields
+      const noteId = NumericIdSchema.parse(nonVisitNoteId)
+      // partial - all fields are optional
+      const note = nonVisitNoteSchema.partial().parse({
+        ...fields,
+        patient: patientId,
+        practice: practiceId,
+        bullets: isNil(nonVisitNoteBulletId)
+          ? undefined
+          : [{ id: nonVisitNoteBulletId, text, author: authorId, category }],
+        document_date: documentDate,
+        chart_date: chartDate,
+        ...(!isNil(signed_by) && {
+          signed_by,
+          sign_date: new Date().toISOString(),
+        }),
+      })
 
-    const api = makeAPIClient(payload.settings)
-    helpers.log({ meta, noteId, note }, 'Updating Elation non-visit note')
-    await api.updateNonVisitNote(noteId, note)
-    await onComplete()
+      const api = makeAPIClient(payload.settings)
+      helpers.log({ meta, noteId, note }, 'Updating Elation non-visit note')
+      await api.updateNonVisitNote(noteId, note)
+      await onComplete()
+    } catch (err) {
+      const message = (err as Error).message
+      helpers.log({ meta, err }, 'error', err as Error)
+      await onError({
+        events: [
+          {
+            date: new Date().toISOString(),
+            text: { en: message },
+            error: {
+              category: 'SERVER_ERROR',
+              message,
+            },
+          },
+        ],
+      })
+    }
   },
 }
