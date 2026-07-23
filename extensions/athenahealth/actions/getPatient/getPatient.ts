@@ -25,27 +25,44 @@ export const getPatient: Action<
 
     helpers.log({ meta, fields: payload.fields }, 'Processing getPatient')
 
-    const {
-      fields: input,
-      client,
-      settings: { practiceId },
-    } = await validatePayloadAndCreateClient({
-      fieldsSchema: FieldsValidationSchema,
-      payload,
-    })
+    try {
+      const {
+        fields: input,
+        client,
+        settings: { practiceId },
+      } = await validatePayloadAndCreateClient({
+        fieldsSchema: FieldsValidationSchema,
+        payload,
+      })
 
-    const res = await client.getPatient({ practiceId, ...input })
+      const res = await client.getPatient({ practiceId, ...input })
 
-    // Both validates and transforms some of the response data
-    const patient = PatientSchema.parse(res)
+      // Both validates and transforms some of the response data
+      const patient = PatientSchema.parse(res)
 
-    await onComplete({
-      data_points: {
-        firstName: patient.firstname,
-        lastName: patient.lastname,
-        dob: patient.dob,
-        email: patient.email,
-      },
-    })
+      await onComplete({
+        data_points: {
+          firstName: patient.firstname,
+          lastName: patient.lastname,
+          dob: patient.dob,
+          email: patient.email,
+        },
+      })
+    } catch (err) {
+      helpers.log({ meta, err }, 'error', err as Error)
+      const error = err as Error
+      await onError({
+        events: [
+          {
+            date: new Date().toISOString(),
+            text: { en: error.message },
+            error: {
+              category: 'SERVER_ERROR',
+              message: error.message,
+            },
+          },
+        ],
+      })
+    }
   },
 }

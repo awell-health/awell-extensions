@@ -22,6 +22,23 @@ export const sendQuestionnaire: Action<typeof fields, typeof settings> = {
       'Processing sendQuestionnaire',
     )
 
-    await onComplete()
+    try {
+      await onComplete()
+    } catch (err) {
+      helpers.log({ meta, err }, 'error', err as Error)
+      const error = err as Error
+      await onError({
+        events: [
+          {
+            date: new Date().toISOString(),
+            text: { en: error.message },
+            error: {
+              category: 'SERVER_ERROR',
+              message: error.message,
+            },
+          },
+        ],
+      })
+    }
   },
 }

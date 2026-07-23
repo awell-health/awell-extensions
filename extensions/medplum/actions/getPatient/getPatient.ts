@@ -25,28 +25,45 @@ export const getPatient: Action<
 
     helpers.log({ meta, fields: payload.fields }, 'Processing getPatient')
 
-    const { fields: input, medplumSdk } = await validateAndCreateSdkClient({
-      fieldsSchema: FieldsValidationSchema,
-      payload,
-    })
+    try {
+      const { fields: input, medplumSdk } = await validateAndCreateSdkClient({
+        fieldsSchema: FieldsValidationSchema,
+        payload,
+      })
 
-    const resourceId = extractResourceId(input.patientId, 'Patient') ?? ''
+      const resourceId = extractResourceId(input.patientId, 'Patient') ?? ''
 
-    const res = await medplumSdk.readResource('Patient', resourceId)
+      const res = await medplumSdk.readResource('Patient', resourceId)
 
-    const patientFirstName = res?.name?.[0]?.given?.[0]
-    const patientLastName = res?.name?.[0]?.family
-    const patientDob = res?.birthDate
-    const patientGender = res?.gender
+      const patientFirstName = res?.name?.[0]?.given?.[0]
+      const patientLastName = res?.name?.[0]?.family
+      const patientDob = res?.birthDate
+      const patientGender = res?.gender
 
-    await onComplete({
-      data_points: {
-        patientData: JSON.stringify(res),
-        patientFirstName,
-        patientLastName,
-        patientDob,
-        patientGender,
-      },
-    })
+      await onComplete({
+        data_points: {
+          patientData: JSON.stringify(res),
+          patientFirstName,
+          patientLastName,
+          patientDob,
+          patientGender,
+        },
+      })
+    } catch (err) {
+      helpers.log({ meta, err }, 'error', err as Error)
+      const error = err as Error
+      await onError({
+        events: [
+          {
+            date: new Date().toISOString(),
+            text: { en: error.message },
+            error: {
+              category: 'SERVER_ERROR',
+              message: error.message,
+            },
+          },
+        ],
+      })
+    }
   },
 }

@@ -27,38 +27,55 @@ export const createSubscription: Action<
       'Processing createSubscription',
     )
 
-    const {
-      fields: input,
-      stripe,
-      patient,
-      pathway,
-      activity,
-    } = await validateAndCreateStripeSdk({
-      fieldsSchema: FieldsValidationSchema,
-      payload,
-    })
+    try {
+      const {
+        fields: input,
+        stripe,
+        patient,
+        pathway,
+        activity,
+      } = await validateAndCreateStripeSdk({
+        fieldsSchema: FieldsValidationSchema,
+        payload,
+      })
 
-    const res = await stripe.subscriptions.create({
-      customer: input.customer,
-      items: [
-        {
-          price: input.item,
+      const res = await stripe.subscriptions.create({
+        customer: input.customer,
+        items: [
+          {
+            price: input.item,
+          },
+        ],
+        payment_settings: {
+          payment_method_types: ['card'],
         },
-      ],
-      payment_settings: {
-        payment_method_types: ['card'],
-      },
-      metadata: {
-        awellPatientId: patient.id,
-        awellCareflowId: pathway.id,
-        awellActivityId: activity.id,
-      },
-    })
+        metadata: {
+          awellPatientId: patient.id,
+          awellCareflowId: pathway.id,
+          awellActivityId: activity.id,
+        },
+      })
 
-    await onComplete({
-      data_points: {
-        subscriptionId: res.id,
-      },
-    })
+      await onComplete({
+        data_points: {
+          subscriptionId: res.id,
+        },
+      })
+    } catch (err) {
+      helpers.log({ meta, err }, 'error', err as Error)
+      const error = err as Error
+      await onError({
+        events: [
+          {
+            date: new Date().toISOString(),
+            text: { en: error.message },
+            error: {
+              category: 'SERVER_ERROR',
+              message: error.message,
+            },
+          },
+        ],
+      })
+    }
   },
 }

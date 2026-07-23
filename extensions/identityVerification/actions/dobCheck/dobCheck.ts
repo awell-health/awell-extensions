@@ -31,16 +31,33 @@ export const dobCheck: Action<
 
     helpers.log({ meta, fields: payload.fields }, 'Processing dobCheck')
 
-    validate({
-      schema: z.object({
-        settings: SettingsValidationSchema,
-        fields: FieldsValidationSchema,
-      }),
-      payload,
-    })
+    try {
+      validate({
+        schema: z.object({
+          settings: SettingsValidationSchema,
+          fields: FieldsValidationSchema,
+        }),
+        payload,
+      })
 
-    /**
-     * Completion happens in Awell Hosted Pages
-     */
+      /**
+       * Completion happens in Awell Hosted Pages
+       */
+    } catch (err) {
+      helpers.log({ meta, err }, 'error', err as Error)
+      const error = err as Error
+      await onError({
+        events: [
+          {
+            date: new Date().toISOString(),
+            text: { en: error.message },
+            error: {
+              category: 'SERVER_ERROR',
+              message: error.message,
+            },
+          },
+        ],
+      })
+    }
   },
 }

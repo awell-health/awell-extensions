@@ -27,37 +27,54 @@ export const createServiceRequest: Action<
       'Processing createServiceRequest',
     )
 
-    const {
-      fields: input,
-      medplumSdk,
-      activity,
-    } = await validateAndCreateSdkClient({
-      fieldsSchema: FieldsValidationSchema,
-      payload,
-    })
+    try {
+      const {
+        fields: input,
+        medplumSdk,
+        activity,
+      } = await validateAndCreateSdkClient({
+        fieldsSchema: FieldsValidationSchema,
+        payload,
+      })
 
-    const res = await medplumSdk.createResource({
-      resourceType: 'ServiceRequest',
-      status: input.status,
-      intent: input.intent,
-      priority: input.priority,
-      subject: {
-        reference: `Patient/${input.patientId}`,
-      },
-      requester: {
-        identifier: {
-          system: 'https://awellhealth.com/activities/',
-          value: activity.id,
+      const res = await medplumSdk.createResource({
+        resourceType: 'ServiceRequest',
+        status: input.status,
+        intent: input.intent,
+        priority: input.priority,
+        subject: {
+          reference: `Patient/${input.patientId}`,
         },
-        display: 'Awell',
-      },
-    })
+        requester: {
+          identifier: {
+            system: 'https://awellhealth.com/activities/',
+            value: activity.id,
+          },
+          display: 'Awell',
+        },
+      })
 
-    await onComplete({
-      data_points: {
-        // @ts-expect-error id is not included in the response type?
-        serviceRequestId: res.id,
-      },
-    })
+      await onComplete({
+        data_points: {
+          // @ts-expect-error id is not included in the response type?
+          serviceRequestId: res.id,
+        },
+      })
+    } catch (err) {
+      helpers.log({ meta, err }, 'error', err as Error)
+      const error = err as Error
+      await onError({
+        events: [
+          {
+            date: new Date().toISOString(),
+            text: { en: error.message },
+            error: {
+              category: 'SERVER_ERROR',
+              message: error.message,
+            },
+          },
+        ],
+      })
+    }
   },
 }

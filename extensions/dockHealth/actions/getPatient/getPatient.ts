@@ -24,18 +24,35 @@ export const getPatient: Action<
 
     helpers.log({ meta, fields: payload.fields }, 'Processing getPatient')
 
-    const { fields, dockClient } = await validatePayloadAndCreateClient({
-      fieldsSchema: FieldsValidationSchema,
-      payload,
-    })
+    try {
+      const { fields, dockClient } = await validatePayloadAndCreateClient({
+        fieldsSchema: FieldsValidationSchema,
+        payload,
+      })
 
-    const res = await dockClient.getPatient({ id: fields.dockPatientId })
+      const res = await dockClient.getPatient({ id: fields.dockPatientId })
 
-    await onComplete({
-      data_points: {
-        firstName: res.firstName,
-        lastName: res.lastName,
-      },
-    })
+      await onComplete({
+        data_points: {
+          firstName: res.firstName,
+          lastName: res.lastName,
+        },
+      })
+    } catch (err) {
+      helpers.log({ meta, err }, 'error', err as Error)
+      const error = err as Error
+      await onError({
+        events: [
+          {
+            date: new Date().toISOString(),
+            text: { en: error.message },
+            error: {
+              category: 'SERVER_ERROR',
+              message: error.message,
+            },
+          },
+        ],
+      })
+    }
   },
 }

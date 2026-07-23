@@ -25,51 +25,68 @@ export const createTask: Action<
 
     helpers.log({ meta, fields: payload.fields }, 'Processing createTask')
 
-    const {
-      fields: input,
-      medplumSdk,
-      activity,
-    } = await validateAndCreateSdkClient({
-      fieldsSchema: FieldsValidationSchema,
-      payload,
-    })
+    try {
+      const {
+        fields: input,
+        medplumSdk,
+        activity,
+      } = await validateAndCreateSdkClient({
+        fieldsSchema: FieldsValidationSchema,
+        payload,
+      })
 
-    const res = await medplumSdk.createResource({
-      resourceType: 'Task',
-      code: {
-        text: input.taskTitle,
-      },
-      description: input.description,
-      status: input.status,
-      intent: input.intent,
-      priority: input.priority,
-      for: {
-        reference: `Patient/${
-          extractResourceId(input.patientId, 'Patient') ?? 'undefined'
-        }`,
-      },
-      executionPeriod: {
-        end: input.dueDate,
-      },
-      performerType: [
-        {
-          text: input.performerType,
+      const res = await medplumSdk.createResource({
+        resourceType: 'Task',
+        code: {
+          text: input.taskTitle,
         },
-      ],
-      requester: {
-        identifier: {
-          system: 'https://awellhealth.com/activities/',
-          value: activity.id,
+        description: input.description,
+        status: input.status,
+        intent: input.intent,
+        priority: input.priority,
+        for: {
+          reference: `Patient/${
+            extractResourceId(input.patientId, 'Patient') ?? 'undefined'
+          }`,
         },
-        display: 'Awell',
-      },
-    })
+        executionPeriod: {
+          end: input.dueDate,
+        },
+        performerType: [
+          {
+            text: input.performerType,
+          },
+        ],
+        requester: {
+          identifier: {
+            system: 'https://awellhealth.com/activities/',
+            value: activity.id,
+          },
+          display: 'Awell',
+        },
+      })
 
-    await onComplete({
-      data_points: {
-        // @ts-expect-error id is not included in the response type?
-        taskId: res.id,
-      },
-    })
+      await onComplete({
+        data_points: {
+          // @ts-expect-error id is not included in the response type?
+          taskId: res.id,
+        },
+      })
+    } catch (err) {
+      helpers.log({ meta, err }, 'error', err as Error)
+      const error = err as Error
+      await onError({
+        events: [
+          {
+            date: new Date().toISOString(),
+            text: { en: error.message },
+            error: {
+              category: 'SERVER_ERROR',
+              message: error.message,
+            },
+          },
+        ],
+      })
+    }
   },
 }

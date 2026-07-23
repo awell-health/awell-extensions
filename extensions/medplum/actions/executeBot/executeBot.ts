@@ -24,22 +24,39 @@ export const executeBot: Action<
 
     helpers.log({ meta, fields: payload.fields }, 'Processing executeBot')
 
-    const { fields: input, medplumSdk } = await validateAndCreateSdkClient({
-      fieldsSchema: FieldsValidationSchema,
-      payload,
-    })
+    try {
+      const { fields: input, medplumSdk } = await validateAndCreateSdkClient({
+        fieldsSchema: FieldsValidationSchema,
+        payload,
+      })
 
-    const res = await medplumSdk.executeBot(
-      input.botId,
-      input.body,
-      'application/json',
-    )
+      const res = await medplumSdk.executeBot(
+        input.botId,
+        input.body,
+        'application/json',
+      )
 
-    await onComplete({
-      data_points: {
-        data: JSON.stringify(res),
-        jsonData: JSON.stringify(res),
-      },
-    })
+      await onComplete({
+        data_points: {
+          data: JSON.stringify(res),
+          jsonData: JSON.stringify(res),
+        },
+      })
+    } catch (err) {
+      helpers.log({ meta, err }, 'error', err as Error)
+      const error = err as Error
+      await onError({
+        events: [
+          {
+            date: new Date().toISOString(),
+            text: { en: error.message },
+            error: {
+              category: 'SERVER_ERROR',
+              message: error.message,
+            },
+          },
+        ],
+      })
+    }
   },
 }

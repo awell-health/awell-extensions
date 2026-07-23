@@ -22,28 +22,45 @@ export const trackEvent: Action<typeof fields, typeof settings> = {
 
     helpers.log({ meta, fields: payload.fields }, 'Processing trackEvent')
 
-    const {
-      settings: { apiKey },
-      fields: { eventName, email, userId, dataFields },
-    } = validate({
-      schema: z.object({
-        settings: SettingsValidationSchema,
-        fields: FieldsValidationSchema,
-      }),
-      payload,
-    })
+    try {
+      const {
+        settings: { apiKey },
+        fields: { eventName, email, userId, dataFields },
+      } = validate({
+        schema: z.object({
+          settings: SettingsValidationSchema,
+          fields: FieldsValidationSchema,
+        }),
+        payload,
+      })
 
-    const client = new IterableClient({
-      apiKey,
-    })
+      const client = new IterableClient({
+        apiKey,
+      })
 
-    await client.eventsApi.trackEvent({
-      eventName,
-      email,
-      userId,
-      dataFields,
-    })
+      await client.eventsApi.trackEvent({
+        eventName,
+        email,
+        userId,
+        dataFields,
+      })
 
-    await onComplete()
+      await onComplete()
+    } catch (err) {
+      helpers.log({ meta, err }, 'error', err as Error)
+      const error = err as Error
+      await onError({
+        events: [
+          {
+            date: new Date().toISOString(),
+            text: { en: error.message },
+            error: {
+              category: 'SERVER_ERROR',
+              message: error.message,
+            },
+          },
+        ],
+      })
+    }
   },
 }

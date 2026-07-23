@@ -22,37 +22,54 @@ export const sendEmail: Action<typeof fields, typeof settings> = {
 
     helpers.log({ meta, fields: payload.fields }, 'Processing sendEmail')
 
-    const {
-      settings: { apiKey },
-      fields: {
+    try {
+      const {
+        settings: { apiKey },
+        fields: {
+          campaignId,
+          recipientEmail,
+          recipientUserId,
+          dataFields,
+          allowRepeatMarketingSends,
+          metadata,
+        },
+      } = validate({
+        schema: z.object({
+          settings: SettingsValidationSchema,
+          fields: FieldsValidationSchema,
+        }),
+        payload,
+      })
+
+      const client = new IterableClient({
+        apiKey,
+      })
+
+      await client.emailApi.sendEmail({
         campaignId,
         recipientEmail,
         recipientUserId,
         dataFields,
         allowRepeatMarketingSends,
         metadata,
-      },
-    } = validate({
-      schema: z.object({
-        settings: SettingsValidationSchema,
-        fields: FieldsValidationSchema,
-      }),
-      payload,
-    })
+      })
 
-    const client = new IterableClient({
-      apiKey,
-    })
-
-    await client.emailApi.sendEmail({
-      campaignId,
-      recipientEmail,
-      recipientUserId,
-      dataFields,
-      allowRepeatMarketingSends,
-      metadata,
-    })
-
-    await onComplete()
+      await onComplete()
+    } catch (err) {
+      helpers.log({ meta, err }, 'error', err as Error)
+      const error = err as Error
+      await onError({
+        events: [
+          {
+            date: new Date().toISOString(),
+            text: { en: error.message },
+            error: {
+              category: 'SERVER_ERROR',
+              message: error.message,
+            },
+          },
+        ],
+      })
+    }
   },
 }

@@ -24,27 +24,44 @@ export const createCustomer: Action<
 
     helpers.log({ meta, fields: payload.fields }, 'Processing createCustomer')
 
-    const {
-      fields: input,
-      stripe,
-      patient,
-    } = await validateAndCreateStripeSdk({
-      fieldsSchema: FieldsValidationSchema,
-      payload,
-    })
+    try {
+      const {
+        fields: input,
+        stripe,
+        patient,
+      } = await validateAndCreateStripeSdk({
+        fieldsSchema: FieldsValidationSchema,
+        payload,
+      })
 
-    const res = await stripe.customers.create({
-      email: input.email,
-      name: input.name,
-      metadata: {
-        awellPatientId: patient.id,
-      },
-    })
+      const res = await stripe.customers.create({
+        email: input.email,
+        name: input.name,
+        metadata: {
+          awellPatientId: patient.id,
+        },
+      })
 
-    await onComplete({
-      data_points: {
-        customerId: res.id,
-      },
-    })
+      await onComplete({
+        data_points: {
+          customerId: res.id,
+        },
+      })
+    } catch (err) {
+      helpers.log({ meta, err }, 'error', err as Error)
+      const error = err as Error
+      await onError({
+        events: [
+          {
+            date: new Date().toISOString(),
+            text: { en: error.message },
+            error: {
+              category: 'SERVER_ERROR',
+              message: error.message,
+            },
+          },
+        ],
+      })
+    }
   },
 }

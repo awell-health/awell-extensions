@@ -44,11 +44,28 @@ export const logTwo: Action<
 
     helpers.log({ meta, fields: payload.fields }, 'Processing world')
 
-    const { fields } = payload
-    await onComplete({
-      data_points: {
-        world: fields.hello,
-      },
-    })
+    try {
+      const { fields } = payload
+      await onComplete({
+        data_points: {
+          world: fields.hello,
+        },
+      })
+    } catch (err) {
+      helpers.log({ meta, err }, 'error', err as Error)
+      const error = err as Error
+      await onError({
+        events: [
+          {
+            date: new Date().toISOString(),
+            text: { en: error.message },
+            error: {
+              category: 'SERVER_ERROR',
+              message: error.message,
+            },
+          },
+        ],
+      })
+    }
   },
 }
