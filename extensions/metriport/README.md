@@ -23,7 +23,7 @@ In order to set up this extension, **you will need to provide a Metriport API ke
 
 Creates a Patient in Metriport for the specified Facility where the Patient is receiving care.
 
-Optionally, providing a **Cohort** ID enrolls the Patient in real-time monitoring by adding them to that cohort. Note that enrolling a Patient in real-time monitoring has downstream consequences: once you start receiving updates about the Patient, you are expected to contribute data back to Metriport.
+Optionally, providing one or more **Cohort** IDs enrolls the Patient in real-time monitoring by adding them to those cohorts. Note that enrolling a Patient in real-time monitoring has downstream consequences: once you start receiving updates about the Patient, you are expected to contribute data back to Metriport.
 
 Visit [endpoint docs](https://docs.metriport.com/medical-api/api-reference/patient/create-patient) for more info.
 
