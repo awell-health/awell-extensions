@@ -20,6 +20,7 @@ export const patientCreateSchema = z.object({
   driversLicenseValue: z.string().optional(),
   phone: z.string().optional(),
   email: optionalEmailSchema,
+  cohort: z.string().optional(),
 })
 
 export type PatientCreate = z.infer<typeof patientCreateSchema>
@@ -29,13 +30,3 @@ export const patientUpdateSchema = z
     id: z.string().min(1),
   })
   .merge(patientCreateSchema)
-
-export const enrollRealTimeMonitoringSchema = patientCreateSchema.merge(
-  z.object({
-    cohortId: z.string().min(1),
-  }),
-)
-
-export type EnrollRealTimeMonitoring = z.infer<
-  typeof enrollRealTimeMonitoringSchema
->
