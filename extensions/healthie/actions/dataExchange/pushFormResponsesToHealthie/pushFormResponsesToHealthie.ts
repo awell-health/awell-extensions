@@ -36,6 +36,18 @@ export const pushFormResponsesToHealthie: Action<
         fieldsSchema: FieldsValidationSchema,
         payload,
       })
+    const meta = {
+      tenant_id: pathway.tenant_id,
+      careflow_id: pathway.id,
+      activity_id: activity.id,
+    }
+    const log = (
+      data: Record<string, unknown>,
+      message: string,
+      error?: Error,
+    ): void => {
+      helpers.log({ ...data, meta }, message, error)
+    }
 
     const awellSdk = await helpers.awellSdk()
 
@@ -47,12 +59,12 @@ export const pushFormResponsesToHealthie: Action<
       awellSdk,
       pathwayId: pathway.id,
       activityId: activity.id,
-      log: helpers.log,
+      log,
     })
 
     helpers.log(
       {
-        activityId: activity.id,
+        meta,
         formsData,
       },
       '[pushFormResponsesToHealthie] Forms data',
@@ -61,7 +73,7 @@ export const pushFormResponsesToHealthie: Action<
     const formDataWithHealthieFormAnswers = formsData.map((formData) => {
       helpers.log(
         {
-          activityId: activity.id,
+          meta,
           formActivityId: formData.formActivityId,
           formId: formData.formId,
         },
@@ -89,7 +101,7 @@ export const pushFormResponsesToHealthie: Action<
 
     helpers.log(
       {
-        activityId: activity.id,
+        meta,
         mergedHealthieFormAnswers,
         mergedOmittedFormAnswers,
       },
@@ -101,7 +113,7 @@ export const pushFormResponsesToHealthie: Action<
 
     helpers.log(
       {
-        activityId: activity.id,
+        meta,
         lock,
       },
       '[pushFormResponsesToHealthie] Indicates whether to make form values editable in Healthie',
@@ -118,7 +130,7 @@ export const pushFormResponsesToHealthie: Action<
 
     helpers.log(
       {
-        activityId: activity.id,
+        meta,
         healthieFormAnswersLog,
       },
       '[pushFormResponsesToHealthie] Healthie form answers log',
@@ -149,7 +161,7 @@ export const pushFormResponsesToHealthie: Action<
       if (isEmpty(formAnswerGroupId)) {
         helpers.log(
           {
-            activityId: activity.id,
+            meta,
             formAnswerGroupId,
           },
           '[pushFormResponsesToHealthie] Form answer group ID is empty',
@@ -180,7 +192,7 @@ export const pushFormResponsesToHealthie: Action<
       })
     } catch (error) {
       helpers.log(
-        { activityId: activity.id, pathwayId: pathway.id, error },
+        { meta, error },
         '[pushFormResponsesToHealthie] Error when pushing form responses to Healthie',
       )
       if (error instanceof HealthieError) {

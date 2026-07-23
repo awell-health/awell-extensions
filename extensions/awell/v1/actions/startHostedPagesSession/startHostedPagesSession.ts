@@ -19,6 +19,12 @@ export const startHostedPagesSession: Action<typeof fields, typeof settings> = {
   previewable: false,
   supports_automated_retries: true,
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
+
     const {
       fields: { careFlowId, stakeholder },
     } = validate({
@@ -68,7 +74,10 @@ export const startHostedPagesSession: Action<typeof fields, typeof settings> = {
         },
       })
 
-      helpers.log(stakeholdersInRelease, 'stakeholdersInRelease')
+      helpers.log(
+        { meta, careFlowId, stakeholdersInRelease },
+        'stakeholdersInRelease',
+      )
 
       const stakeholderMatchId =
         stakeholdersInRelease.stakeholdersByReleaseIds.stakeholders.find(

@@ -66,6 +66,12 @@ export const createSMSBroadcast: Action<
     onError,
     helpers: { log },
   }): Promise<void> => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
+
     // Step 1: Extract raw field values and settings
     const { fields: rawFields, settings } = validate({
       schema: z.object({ fields: FieldsSchema, settings: SettingsSchema }),
@@ -97,7 +103,7 @@ export const createSMSBroadcast: Action<
         return
       }
       log(
-        { source: 'patient_profile', field: 'mobile_phone' },
+        { meta, source: 'patient_profile', field: 'mobile_phone' },
         'Phone number not provided — using patient profile mobile phone',
       )
     }
@@ -106,7 +112,7 @@ export const createSMSBroadcast: Action<
     if (isEmpty(firstName) && !isEmpty(patientProfile?.first_name)) {
       firstName = patientProfile?.first_name as string
       log(
-        { source: 'patient_profile', field: 'first_name' },
+        { meta, source: 'patient_profile', field: 'first_name' },
         'First name not provided — using patient profile first name',
       )
     }
@@ -115,7 +121,7 @@ export const createSMSBroadcast: Action<
     if (isEmpty(lastName) && !isEmpty(patientProfile?.last_name)) {
       lastName = patientProfile?.last_name as string
       log(
-        { source: 'patient_profile', field: 'last_name' },
+        { meta, source: 'patient_profile', field: 'last_name' },
         'Last name not provided — using patient profile last name',
       )
     }

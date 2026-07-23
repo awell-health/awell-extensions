@@ -23,6 +23,12 @@ export const createSmsConversation: Action<
   dataPoints,
   supports_automated_retries: true,
   onEvent: async ({ payload, onComplete, helpers: { log } }): Promise<void> => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
+
     const { fields, blandSdk } = await validatePayloadAndCreateSdk({
       fieldsSchema: FieldsValidationSchema,
       payload,
@@ -46,12 +52,14 @@ export const createSmsConversation: Action<
         ? undefined
         : fields.currentNodeId,
       new_conversation: fields.newConversation,
-      request_data: isEmpty(fields.requestData) ? undefined : fields.requestData,
+      request_data: isEmpty(fields.requestData)
+        ? undefined
+        : fields.requestData,
     })
 
     try {
       log(
-        { createSmsConversationInput },
+        { meta, createSmsConversationInput },
         'Creating SMS conversation via Bland',
       )
     } catch (err) {

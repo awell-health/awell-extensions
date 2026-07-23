@@ -32,6 +32,11 @@ export const submitQuestionnaireResponse: Action<
       fieldsSchema: FieldsValidationSchema,
       payload,
     })
+    const meta = {
+      tenant_id: pathway.tenant_id,
+      careflow_id: pathway.id,
+      activity_id: activity.id,
+    }
 
     const awellSdk = await helpers.awellSdk()
 
@@ -44,11 +49,11 @@ export const submitQuestionnaireResponse: Action<
         pathwayId: pathway.id,
         activityId: activity.id,
       })
-      helpers.log(formRes, 'Form response')
+      helpers.log({ meta, formRes }, 'Form response')
       formDefinition = formRes.formDefinition
       formResponse = formRes.formResponse
     } catch (error) {
-      helpers.log({ error }, 'Error')
+      helpers.log({ meta, error }, 'Error')
       const err = error as Error
       await onError({
         events: [addActivityEventLog({ message: err.message })],
@@ -57,7 +62,7 @@ export const submitQuestionnaireResponse: Action<
     }
 
     helpers.log(
-      { formDefinition, formResponse },
+      { meta, formDefinition, formResponse },
       'Form definition and response',
     )
 
@@ -70,7 +75,7 @@ export const submitQuestionnaireResponse: Action<
       })
 
     helpers.log(
-      { FhirQuestionnaire, FhirQuestionnaireResponse },
+      { meta, FhirQuestionnaire, FhirQuestionnaireResponse },
       'Fhir questionnaire and response',
     )
 
@@ -79,7 +84,7 @@ export const submitQuestionnaireResponse: Action<
       `identifier=${formDefinition.definition_id}/published/${formDefinition.id}`,
     )
 
-    helpers.log({ QuestionnaireResource }, 'Questionnaire resource')
+    helpers.log({ meta, QuestionnaireResource }, 'Questionnaire resource')
 
     const res = await medplumSdk.createResource({
       resourceType: 'QuestionnaireResponse',
@@ -93,7 +98,7 @@ export const submitQuestionnaireResponse: Action<
       item: FhirQuestionnaireResponse,
     })
 
-    helpers.log({ res }, 'Questionnaire response')
+    helpers.log({ meta, res }, 'Questionnaire response')
 
     await onComplete({
       data_points: {

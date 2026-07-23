@@ -22,6 +22,12 @@ export const sendSms: Action<
   dataPoints,
   supports_automated_retries: true,
   onEvent: async ({ payload, onComplete, helpers: { log } }): Promise<void> => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
+
     const { fields, blandSdk } = await validatePayloadAndCreateSdk({
       fieldsSchema: FieldsValidationSchema,
       payload,
@@ -50,7 +56,9 @@ export const sendSms: Action<
       warning_message: isEmpty(fields.warningMessage)
         ? undefined
         : fields.warningMessage,
-      request_data: isEmpty(fields.requestData) ? undefined : fields.requestData,
+      request_data: isEmpty(fields.requestData)
+        ? undefined
+        : fields.requestData,
       metadata: {
         ...fields.metadata,
         awell_patient_id: payload.patient.id,
@@ -61,7 +69,7 @@ export const sendSms: Action<
     })
 
     try {
-      log({ sendSmsInput }, 'Sending SMS via Bland')
+      log({ meta, sendSmsInput }, 'Sending SMS via Bland')
     } catch (err) {
       console.error('unable to use new helpers.log')
       console.error(JSON.stringify(err))

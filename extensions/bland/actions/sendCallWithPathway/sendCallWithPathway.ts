@@ -20,6 +20,12 @@ export const sendCallWithPathway: Action<
   dataPoints,
   supports_automated_retries: true,
   onEvent: async ({ payload, onComplete, helpers: { log } }): Promise<void> => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
+
     const { fields: allFields, blandSdk } = await validatePayloadAndCreateSdk({
       fieldsSchema: FieldsValidationSchema,
       payload,
@@ -48,6 +54,7 @@ export const sendCallWithPathway: Action<
     if (resolvedPathwayId !== fields.pathwayId) {
       log(
         {
+          meta,
           originalPathwayId: fields.pathwayId,
           resolvedPathwayId,
         },
@@ -74,7 +81,7 @@ export const sendCallWithPathway: Action<
 
     // TODO: remove this once we validate helpers.log in production
     try {
-      log({ sendCallInput }, 'Sending call to Bland')
+      log({ meta, sendCallInput }, 'Sending call to Bland')
     } catch (err) {
       console.error('unable to use new helpers.log')
       console.error(JSON.stringify(err))

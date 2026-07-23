@@ -20,6 +20,12 @@ export const sendCall: Action<
   dataPoints,
   supports_automated_retries: true,
   onEvent: async ({ payload, onComplete, helpers: { log } }): Promise<void> => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
+
     const { fields: allFields, blandSdk } = await validatePayloadAndCreateSdk({
       fieldsSchema: FieldsValidationSchema,
       payload,
@@ -55,7 +61,7 @@ export const sendCall: Action<
     })
 
     try {
-      log({ sendCallInput }, 'Sending call to Bland')
+      log({ meta, sendCallInput }, 'Sending call to Bland')
     } catch (err) {
       console.error('unable to use new helpers.log')
       console.error(JSON.stringify(err))
