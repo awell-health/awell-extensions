@@ -105,7 +105,13 @@ export const updateNonVisitNote: Action<typeof fields, typeof settings> = {
   description: "Update a Non-Visit Note using Elation's patient API.",
   fields,
   previewable: true,
-  onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
+  onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
+
     const {
       nonVisitNoteId,
       nonVisitNoteBulletId,
@@ -137,6 +143,7 @@ export const updateNonVisitNote: Action<typeof fields, typeof settings> = {
     })
 
     const api = makeAPIClient(payload.settings)
+    helpers.log({ meta, noteId, note }, 'Updating Elation non-visit note')
     await api.updateNonVisitNote(noteId, note)
     await onComplete()
   },

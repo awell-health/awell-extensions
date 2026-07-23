@@ -16,7 +16,13 @@ export const createCareGap: Action<
   fields,
   previewable: true,
   dataPoints,
-  onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
+  onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
+
     const {
       fields: {
         patient_id,
@@ -39,7 +45,7 @@ export const createCareGap: Action<
     // The care gap API uses a different base URL than the rest of the Elation API, see https://docs.elationhealth.com/reference/caregaps_post_caregaps_api__quality_program__caregap__post-1
     const caregapBaseUrl = settings.base_url.replace(
       /(.+\.)?elationemr\.com\/api\/2\.0\/?/,
-      'caregaps.$1elationemr.com/caregaps/api/'
+      'caregaps.$1elationemr.com/caregaps/api/',
     )
 
     const api = makeAPIClient({
@@ -47,7 +53,7 @@ export const createCareGap: Action<
       baseUrl: caregapBaseUrl,
     })
 
-    const careGap = await api.createCareGap({
+    const createCareGapRequest = {
       quality_program,
       definition_id,
       patient_id,
@@ -55,7 +61,13 @@ export const createCareGap: Action<
       created_date,
       status,
       detail: detail ?? '',
-    })
+    }
+
+    helpers.log({ meta, createCareGapRequest }, 'Creating Elation care gap')
+
+    const careGap = await api.createCareGap(createCareGapRequest)
+
+    helpers.log({ meta, careGapId: careGap.id }, 'Created Elation care gap')
 
     await onComplete({
       data_points: {

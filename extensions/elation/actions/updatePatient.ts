@@ -175,7 +175,13 @@ export const updatePatient: Action<
   fields,
   previewable: true,
   dataPoints,
-  onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
+  onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
+
     const {
       patientId,
       firstName,
@@ -231,7 +237,7 @@ export const updatePatient: Action<
         }
         return acc
       },
-      {}
+      {},
     )
 
     const api = makeAPIClient(payload.settings)
@@ -247,6 +253,11 @@ export const updatePatient: Action<
       // get a unique list of tags
       updatedPatientFields.tags = union(currentTags, formattedTags)
     }
+
+    helpers.log(
+      { meta, patientId: id, updatedPatientFields },
+      'Updating Elation patient',
+    )
 
     await api.updatePatient(id, updatedPatientFields)
     await onComplete()

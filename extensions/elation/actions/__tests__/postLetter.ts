@@ -1,3 +1,5 @@
+import { generateTestPayload } from '@/tests'
+import { TestHelpers } from '@awell-health/extensions-core'
 import {
   findContactResponseExample,
   postLetterResponseExample,
@@ -10,8 +12,8 @@ import { type ActivityEvent } from '@awell-health/extensions-core'
 jest.mock('../../client')
 
 describe('Post new letter action', () => {
-  const onComplete = jest.fn()
-  const onError = jest.fn()
+  const { onComplete, onError, helpers, clearMocks } =
+    TestHelpers.fromAction(postLetter)
   const settings = {
     client_id: 'clientId',
     client_secret: 'clientSecret',
@@ -31,8 +33,8 @@ describe('Post new letter action', () => {
   })
 
   test('Should return with correct data_points', async () => {
-    await postLetter.onActivityCreated!(
-      {
+    await postLetter.onEvent!({
+      payload: generateTestPayload({
         fields: {
           patientId: postLetterResponseExample.patient,
           practiceId: postLetterResponseExample.practice,
@@ -41,10 +43,12 @@ describe('Post new letter action', () => {
           contactNpi: findContactResponseExample.results[0].npi,
         },
         settings,
-      } as any,
+      } as any),
       onComplete,
-      onError
-    )
+      onError,
+      helpers,
+      attempt: 1,
+    })
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
         letterId: String(postLetterResponseExample.id),
@@ -58,8 +62,8 @@ describe('Post new letter action', () => {
       .mockImplementation((obj: { events: ActivityEvent[] }) => {
         return obj.events[0].error?.message
       })
-    await postLetter.onActivityCreated!(
-      {
+    await postLetter.onEvent!({
+      payload: generateTestPayload({
         fields: {
           patientId: postLetterResponseExample.patient,
           practiceId: postLetterResponseExample.practice,
@@ -67,13 +71,15 @@ describe('Post new letter action', () => {
           contactNpi: findContactResponseExample.results[0].npi,
         },
         settings,
-      } as any,
+      } as any),
       onComplete,
-      onError
-    )
+      onError,
+      helpers,
+      attempt: 1,
+    })
     expect(onError).toHaveBeenCalled()
     expect(onError).toHaveReturnedWith(
-      "Validation error: One of either 'subject' or 'referral order' is required."
+      "Validation error: One of either 'subject' or 'referral order' is required.",
     )
   })
 })

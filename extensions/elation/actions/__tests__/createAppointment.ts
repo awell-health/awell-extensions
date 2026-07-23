@@ -1,10 +1,13 @@
 import { appointmentExample } from '../../__mocks__/constants'
 import { createAppointment } from '../createAppointment'
+import { TestHelpers } from '@awell-health/extensions-core'
+import { generateTestPayload } from '@/tests'
 
 jest.mock('../../client')
 
 describe('Simple create appointment action', () => {
-  const onComplete = jest.fn()
+  const { onComplete, onError, helpers, clearMocks } =
+    TestHelpers.fromAction(createAppointment)
   const settings = {
     client_id: 'clientId',
     client_secret: 'clientSecret',
@@ -15,7 +18,7 @@ describe('Simple create appointment action', () => {
   }
 
   beforeEach(() => {
-    onComplete.mockClear()
+    clearMocks()
   })
 
   test('Should return with correct data_points', async () => {
@@ -28,8 +31,8 @@ describe('Simple create appointment action', () => {
       telehealth_details,
       ...appointment
     } = appointmentExample
-    await createAppointment.onActivityCreated!(
-      {
+    await createAppointment.onEvent!({
+      payload: generateTestPayload({
         fields: {
           ...appointment,
           patientId: patient,
@@ -40,10 +43,12 @@ describe('Simple create appointment action', () => {
           telehealthDetails: telehealth_details,
         },
         settings,
-      } as any,
+      } as any),
       onComplete,
-      jest.fn()
-    )
+      onError,
+      helpers,
+      attempt: 1,
+    })
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
         appointmentId: '1',

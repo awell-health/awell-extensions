@@ -16,7 +16,13 @@ export const closeCareGap: Action<
   fields,
   previewable: true,
   dataPoints,
-  onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
+  onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
+
     const {
       fields: { quality_program, caregap_id },
       settings,
@@ -31,7 +37,7 @@ export const closeCareGap: Action<
     // The care gap API uses a different base URL than the rest of the Elation API, see https://docs.elationhealth.com/reference/caregaps_post_caregaps_api__quality_program__caregap__post-1
     const caregapBaseUrl = settings.base_url.replace(
       /(.+\.)?elationemr\.com\/api\/2\.0\/?/,
-      'caregaps.$1elationemr.com/caregaps/api/'
+      'caregaps.$1elationemr.com/caregaps/api/',
     )
 
     const api = makeAPIClient({
@@ -39,11 +45,15 @@ export const closeCareGap: Action<
       baseUrl: caregapBaseUrl,
     })
 
-    await api.closeCareGap({
+    const closeCareGapRequest = {
       quality_program,
       caregap_id,
       status: 'closed',
-    })
+    }
+
+    helpers.log({ meta, closeCareGapRequest }, 'Closing Elation care gap')
+
+    await api.closeCareGap(closeCareGapRequest)
 
     await onComplete()
   },
