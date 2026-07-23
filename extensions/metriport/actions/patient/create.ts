@@ -70,8 +70,8 @@ export const convertToMetriportPatient = (
       phone: patient.phone,
       email: patient.email,
     },
-    ...(patient.cohorts !== undefined && patient.cohorts.length > 0
-      ? { cohorts: patient.cohorts }
+    ...(patient.cohort
+      ? { cohorts: [patient.cohort] }
       : {}),
   }
 
