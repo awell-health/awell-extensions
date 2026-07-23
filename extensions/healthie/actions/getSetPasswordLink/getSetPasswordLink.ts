@@ -25,48 +25,65 @@ export const getSetPasswordLink: Action<typeof fields, typeof settings> = {
       'Processing getSetPasswordLink',
     )
 
-    const MAX_RETRIES = 3
-    const BASE_DELAY_MS = process.env.NODE_ENV === 'test' ? 10 : 1000
+    try {
+      const MAX_RETRIES = 3
+      const BASE_DELAY_MS = process.env.NODE_ENV === 'test' ? 10 : 1000
 
-    const { fields, healthieSdk } = await validatePayloadAndCreateSdk({
-      fieldsSchema: FieldsValidationSchema,
-      payload,
-    })
-
-    let setPasswordLink: string | undefined
-
-    /**
-     * We need to retry the API call because:
-     * - The setPasswordLink field is not immediately available after creating a new user.
-     * - The API response is inconsistent
-     */
-    for (let attempt = 0; attempt < MAX_RETRIES; attempt++) {
-      const res = await healthieSdk.client.query({
-        user: {
-          __args: {
-            id: fields.healthiePatientId,
-          },
-          set_password_link: true,
-        },
+      const { fields, healthieSdk } = await validatePayloadAndCreateSdk({
+        fieldsSchema: FieldsValidationSchema,
+        payload,
       })
 
-      if (!isNil(res.user?.set_password_link)) {
-        setPasswordLink = String(res.user?.set_password_link)
-        break
+      let setPasswordLink: string | undefined
+
+      /**
+       * We need to retry the API call because:
+       * - The setPasswordLink field is not immediately available after creating a new user.
+       * - The API response is inconsistent
+       */
+      for (let attempt = 0; attempt < MAX_RETRIES; attempt++) {
+        const res = await healthieSdk.client.query({
+          user: {
+            __args: {
+              id: fields.healthiePatientId,
+            },
+            set_password_link: true,
+          },
+        })
+
+        if (!isNil(res.user?.set_password_link)) {
+          setPasswordLink = String(res.user?.set_password_link)
+          break
+        }
+
+        // Exponential backoff delay calculation
+        const delay = BASE_DELAY_MS * Math.pow(2, attempt)
+        await new Promise((resolve) => setTimeout(resolve, delay))
       }
 
-      // Exponential backoff delay calculation
-      const delay = BASE_DELAY_MS * Math.pow(2, attempt)
-      await new Promise((resolve) => setTimeout(resolve, delay))
+      await onComplete({
+        data_points: {
+          setPasswordLink:
+            setPasswordLink === undefined || setPasswordLink === null
+              ? undefined
+              : String(setPasswordLink),
+        },
+      })
+    } catch (err) {
+      helpers.log({ meta, err }, 'error', err as Error)
+      const error = err as Error
+      await onError({
+        events: [
+          {
+            date: new Date().toISOString(),
+            text: { en: error.message },
+            error: {
+              category: 'SERVER_ERROR',
+              message: error.message,
+            },
+          },
+        ],
+      })
     }
-
-    await onComplete({
-      data_points: {
-        setPasswordLink:
-          setPasswordLink === undefined || setPasswordLink === null
-            ? undefined
-            : String(setPasswordLink),
-      },
-    })
   },
 }

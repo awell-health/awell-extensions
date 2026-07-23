@@ -19,34 +19,53 @@ export const callWithGrace = {
       activity_id: payload.activity.id,
     }
 
-    const { pathway, patient } = payload
-    const {
-      fields: { flowId, data, phoneNumber },
-      settings: { accountId, clientSecret },
-    } = validate({
-      schema: z.object({ fields: FieldsSchema, settings: SettingsSchema }),
-      payload,
-    })
-    const client = new GridspaceClient({ accountId, clientSecret })
-    const allData = {
-      ...data,
-      phone_number: phoneNumber,
-      patient_id: patient.id,
-      ...(!isNil(patient.profile) && { ...patient.profile }),
-      pathway_id: pathway.id,
-      pathway_definition_id: pathway.definition_id,
-      activity_id: payload.activity.id,
+    helpers.log({ meta, fields: payload.fields }, 'Processing callWithGrace')
+
+    try {
+      const { pathway, patient } = payload
+      const {
+        fields: { flowId, data, phoneNumber },
+        settings: { accountId, clientSecret },
+      } = validate({
+        schema: z.object({ fields: FieldsSchema, settings: SettingsSchema }),
+        payload,
+      })
+      const client = new GridspaceClient({ accountId, clientSecret })
+      const allData = {
+        ...data,
+        phone_number: phoneNumber,
+        patient_id: patient.id,
+        ...(!isNil(patient.profile) && { ...patient.profile }),
+        pathway_id: pathway.id,
+        pathway_definition_id: pathway.definition_id,
+        activity_id: payload.activity.id,
+      }
+      helpers.log({ meta, allData }, 'Calling with Grace via Gridspace')
+      const resp = await client.callWithGrace(flowId, allData)
+      await onComplete({
+        events: [
+          {
+            date: new Date().toISOString(),
+            text: { en: `Call with Grace. Response: ${JSON.stringify(resp)}` },
+          },
+        ],
+        data_points: {},
+      })
+    } catch (err) {
+      helpers.log({ meta, err }, 'error', err as Error)
+      const error = err as Error
+      await onError({
+        events: [
+          {
+            date: new Date().toISOString(),
+            text: { en: error.message },
+            error: {
+              category: 'SERVER_ERROR',
+              message: error.message,
+            },
+          },
+        ],
+      })
     }
-    helpers.log({ meta, allData }, 'Calling with Grace via Gridspace')
-    const resp = await client.callWithGrace(flowId, allData)
-    await onComplete({
-      events: [
-        {
-          date: new Date().toISOString(),
-          text: { en: `Call with Grace. Response: ${JSON.stringify(resp)}` },
-        },
-      ],
-      data_points: {},
-    })
   },
 } satisfies Action<typeof fields, typeof settings>

@@ -22,19 +22,41 @@ export const sendEmailWithSmtp: Action<
       activity_id: payload.activity.id,
     }
 
-    const { hubSpotSmtpSdk, fields } = await validatePayloadAndCreateSdks({
-      fieldsSchema: FieldsValidationSchema,
-      payload,
-    })
+    helpers.log(
+      { meta, fields: payload.fields },
+      'Processing sendEmailWithSmtp',
+    )
 
-    if (hubSpotSmtpSdk === undefined)
-      throw new Error(
-        'Could not instantiate SMTP client. Make sure the SMTP username and password are provided and valid.',
-      )
+    try {
+      const { hubSpotSmtpSdk, fields } = await validatePayloadAndCreateSdks({
+        fieldsSchema: FieldsValidationSchema,
+        payload,
+      })
 
-    helpers.log({ meta, fields }, 'Sending email via HubSpot SMTP')
-    await hubSpotSmtpSdk.sendEmail(fields)
+      if (hubSpotSmtpSdk === undefined)
+        throw new Error(
+          'Could not instantiate SMTP client. Make sure the SMTP username and password are provided and valid.',
+        )
 
-    await onComplete()
+      helpers.log({ meta, fields }, 'Sending email via HubSpot SMTP')
+      await hubSpotSmtpSdk.sendEmail(fields)
+
+      await onComplete()
+    } catch (err) {
+      helpers.log({ meta, err }, 'error', err as Error)
+      const error = err as Error
+      await onError({
+        events: [
+          {
+            date: new Date().toISOString(),
+            text: { en: error.message },
+            error: {
+              category: 'SERVER_ERROR',
+              message: error.message,
+            },
+          },
+        ],
+      })
+    }
   },
 }

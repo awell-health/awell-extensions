@@ -24,50 +24,69 @@ export const queryPage: Action<
       activity_id: payload.activity.id,
     }
 
-    const { fields, airtopSdk } = await validatePayloadAndCreateSdk({
-      fieldsSchema: FieldsValidationSchema,
-      payload,
-    })
+    helpers.log({ meta, fields: payload.fields }, 'Processing queryPage')
 
-    // Create a headless browser session
-    const session = await airtopSdk.sessions.create()
+    try {
+      const { fields, airtopSdk } = await validatePayloadAndCreateSdk({
+        fieldsSchema: FieldsValidationSchema,
+        payload,
+      })
 
-    // Create a new window in the session and open the page
-    const createWindowRequest = {
-      url: fields.pageUrl,
+      // Create a headless browser session
+      const session = await airtopSdk.sessions.create()
+
+      // Create a new window in the session and open the page
+      const createWindowRequest = {
+        url: fields.pageUrl,
+      }
+      helpers.log({ meta, createWindowRequest }, 'Creating Airtop window')
+      const window = await airtopSdk.windows.create(
+        session.data.id,
+        createWindowRequest,
+      )
+
+      // query the content of the window using the prompt
+      const pageQueryRequest = {
+        prompt: fields.prompt,
+        configuration: {
+          outputSchema: fields.jsonSchema,
+        },
+      }
+      helpers.log({ meta, pageQueryRequest }, 'Querying Airtop page')
+      const result = await airtopSdk.windows.pageQuery(
+        session.data.id,
+        window.data.windowId,
+        pageQueryRequest,
+      )
+
+      // Close the window and terminate the session
+      await airtopSdk.windows.close(session.data.id, window.data.windowId)
+      await airtopSdk.sessions.terminate(session.data.id)
+
+      const content = result.data.modelResponse
+
+      // Return the result
+      await onComplete({
+        data_points: {
+          result: isNil(fields.jsonSchema) ? content : content,
+          resultJson: isNil(fields.jsonSchema) ? undefined : content,
+        },
+      })
+    } catch (err) {
+      helpers.log({ meta, err }, 'error', err as Error)
+      const error = err as Error
+      await onError({
+        events: [
+          {
+            date: new Date().toISOString(),
+            text: { en: error.message },
+            error: {
+              category: 'SERVER_ERROR',
+              message: error.message,
+            },
+          },
+        ],
+      })
     }
-    helpers.log({ meta, createWindowRequest }, 'Creating Airtop window')
-    const window = await airtopSdk.windows.create(
-      session.data.id,
-      createWindowRequest,
-    )
-
-    // query the content of the window using the prompt
-    const pageQueryRequest = {
-      prompt: fields.prompt,
-      configuration: {
-        outputSchema: fields.jsonSchema,
-      },
-    }
-    helpers.log({ meta, pageQueryRequest }, 'Querying Airtop page')
-    const result = await airtopSdk.windows.pageQuery(
-      session.data.id,
-      window.data.windowId,
-      pageQueryRequest,
-    )
-
-    // Close the window and terminate the session
-    await airtopSdk.windows.close(session.data.id, window.data.windowId)
-    await airtopSdk.sessions.terminate(session.data.id)
-
-    const content = result.data.modelResponse
-
-    // Return the result
-    await onComplete({
-      data_points: {
-        result: isNil(fields.jsonSchema) ? content : content,
-        resultJson: isNil(fields.jsonSchema) ? undefined : content,
-      },
-    })
   },
 }

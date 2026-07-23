@@ -21,73 +21,92 @@ export const scheduleEmail = {
       activity_id: payload.activity.id,
     }
 
-    const {
-      brazeClient,
-      appId,
-      fields: {
-        externalUserId,
-        from,
-        replyTo: reply_to,
-        subject,
-        body,
-        preheader,
-        shouldInlineCss: should_inline_css,
-        scheduleTime: time,
-        inPatientLocalTime: in_local_time,
-        atOptimalTime: at_optimal_time,
-        campaignId: campaign_id,
-        messageVariantionId: message_variation_id,
-      },
-    } = await validateAndCreateClient({
-      fieldsSchema: FieldsSchema,
-      payload,
-    })
+    helpers.log({ meta, fields: payload.fields }, 'Processing scheduleEmail')
 
-    const requestBody = {
-      external_user_ids: [externalUserId],
-      ...(!isNil(campaign_id) && {
-        campaign_id,
-      }),
-      schedule: {
-        time,
-        ...addBooleanFieldIfDefined({ in_local_time }),
-        ...addBooleanFieldIfDefined({ at_optimal_time }),
-      },
-      messages: {
-        email: {
+    try {
+      const {
+        brazeClient,
+        appId,
+        fields: {
+          externalUserId,
           from,
+          replyTo: reply_to,
+          subject,
           body,
-          app_id: appId,
-          ...(!isNil(subject) && {
-            subject,
-          }),
-          ...(!isNil(preheader) && {
-            preheader,
-          }),
-          ...(!isNil(message_variation_id) && {
-            message_variation_id,
-          }),
-          ...(!isNil(reply_to) && {
-            reply_to,
-          }),
-          ...addBooleanFieldIfDefined({ should_inline_css }),
+          preheader,
+          shouldInlineCss: should_inline_css,
+          scheduleTime: time,
+          inPatientLocalTime: in_local_time,
+          atOptimalTime: at_optimal_time,
+          campaignId: campaign_id,
+          messageVariantionId: message_variation_id,
         },
-      },
+      } = await validateAndCreateClient({
+        fieldsSchema: FieldsSchema,
+        payload,
+      })
+
+      const requestBody = {
+        external_user_ids: [externalUserId],
+        ...(!isNil(campaign_id) && {
+          campaign_id,
+        }),
+        schedule: {
+          time,
+          ...addBooleanFieldIfDefined({ in_local_time }),
+          ...addBooleanFieldIfDefined({ at_optimal_time }),
+        },
+        messages: {
+          email: {
+            from,
+            body,
+            app_id: appId,
+            ...(!isNil(subject) && {
+              subject,
+            }),
+            ...(!isNil(preheader) && {
+              preheader,
+            }),
+            ...(!isNil(message_variation_id) && {
+              message_variation_id,
+            }),
+            ...(!isNil(reply_to) && {
+              reply_to,
+            }),
+            ...addBooleanFieldIfDefined({ should_inline_css }),
+          },
+        },
+      }
+
+      helpers.log({ meta, requestBody }, 'Scheduling email via Braze')
+      const resp = await brazeClient.scheduleMessage(requestBody)
+
+      await onComplete({
+        events: [
+          {
+            date: new Date().toISOString(),
+            text: { en: `Email sent. Response: ${JSON.stringify(resp)}` },
+          },
+        ],
+        data_points: {
+          EmailDispatchId: resp.dispatch_id,
+        },
+      })
+    } catch (err) {
+      helpers.log({ meta, err }, 'error', err as Error)
+      const error = err as Error
+      await onError({
+        events: [
+          {
+            date: new Date().toISOString(),
+            text: { en: error.message },
+            error: {
+              category: 'SERVER_ERROR',
+              message: error.message,
+            },
+          },
+        ],
+      })
     }
-
-    helpers.log({ meta, requestBody }, 'Scheduling email via Braze')
-    const resp = await brazeClient.scheduleMessage(requestBody)
-
-    await onComplete({
-      events: [
-        {
-          date: new Date().toISOString(),
-          text: { en: `Email sent. Response: ${JSON.stringify(resp)}` },
-        },
-      ],
-      data_points: {
-        EmailDispatchId: resp.dispatch_id,
-      },
-    })
   },
 } satisfies Action<typeof fields, typeof settings>

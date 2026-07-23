@@ -22,37 +22,58 @@ export const sendEmailWithSingleSendApi: Action<
       activity_id: payload.activity.id,
     }
 
-    const { hubSpotSdk, fields, activity } = await validatePayloadAndCreateSdks(
-      {
-        fieldsSchema: FieldsValidationSchema,
-        payload,
-      },
-    )
-
-    const requestBody = {
-      emailId: Number(fields.emailId),
-      message: {
-        _from: fields.from,
-        to: fields.to,
-        sendId: `awell_activity_${activity.id}`,
-      },
-      contactProperties: fields.contactProperties,
-      customProperties: fields.customProperties,
-    }
-
     helpers.log(
-      { meta, requestBody },
-      'Sending email via HubSpot Single Send API',
+      { meta, fields: payload.fields },
+      'Processing sendEmailWithSingleSendApi',
     )
-    const res =
-      await hubSpotSdk.marketing.transactional.singleSendApi.sendEmail(
-        requestBody,
-      )
 
-    await onComplete({
-      data_points: {
-        statusId: res.statusId,
-      },
-    })
+    try {
+      const { hubSpotSdk, fields, activity } =
+        await validatePayloadAndCreateSdks({
+          fieldsSchema: FieldsValidationSchema,
+          payload,
+        })
+
+      const requestBody = {
+        emailId: Number(fields.emailId),
+        message: {
+          _from: fields.from,
+          to: fields.to,
+          sendId: `awell_activity_${activity.id}`,
+        },
+        contactProperties: fields.contactProperties,
+        customProperties: fields.customProperties,
+      }
+
+      helpers.log(
+        { meta, requestBody },
+        'Sending email via HubSpot Single Send API',
+      )
+      const res =
+        await hubSpotSdk.marketing.transactional.singleSendApi.sendEmail(
+          requestBody,
+        )
+
+      await onComplete({
+        data_points: {
+          statusId: res.statusId,
+        },
+      })
+    } catch (err) {
+      helpers.log({ meta, err }, 'error', err as Error)
+      const error = err as Error
+      await onError({
+        events: [
+          {
+            date: new Date().toISOString(),
+            text: { en: error.message },
+            error: {
+              category: 'SERVER_ERROR',
+              message: error.message,
+            },
+          },
+        ],
+      })
+    }
   },
 }

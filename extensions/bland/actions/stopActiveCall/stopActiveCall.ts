@@ -18,35 +18,57 @@ export const stopActiveCall: Action<
   previewable: false,
   dataPoints,
   supports_automated_retries: true,
-  onEvent: async ({ payload, onComplete, helpers: { log } }): Promise<void> => {
+  onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
     const meta = {
       tenant_id: payload.pathway.tenant_id,
       careflow_id: payload.pathway.id,
       activity_id: payload.activity.id,
     }
 
-    const { fields, blandSdk } = await validatePayloadAndCreateSdk({
-      fieldsSchema: FieldsValidationSchema,
-      payload,
-    })
+    helpers.log({ meta, fields: payload.fields }, 'Processing stopActiveCall')
 
-    const stopActiveCallInput = {
-      call_id: fields.callId,
+    try {
+      const { fields, blandSdk } = await validatePayloadAndCreateSdk({
+        fieldsSchema: FieldsValidationSchema,
+        payload,
+      })
+
+      const stopActiveCallInput = {
+        call_id: fields.callId,
+      }
+
+      helpers.log(
+        { meta, stopActiveCallInput },
+        'Stopping active call via Bland',
+      )
+      const { data } = await blandSdk.stopActiveCall(stopActiveCallInput)
+
+      await onComplete({
+        data_points: {
+          status: data.status,
+          message: data.message,
+        },
+        events: [
+          addActivityEventLog({
+            message: `Stop call request sent to Bland.\nStatus: ${data.status}\nMessage: ${data.message}`,
+          }),
+        ],
+      })
+    } catch (err) {
+      helpers.log({ meta, err }, 'error', err as Error)
+      const error = err as Error
+      await onError({
+        events: [
+          {
+            date: new Date().toISOString(),
+            text: { en: error.message },
+            error: {
+              category: 'SERVER_ERROR',
+              message: error.message,
+            },
+          },
+        ],
+      })
     }
-
-    log({ meta, stopActiveCallInput }, 'Stopping active call via Bland')
-    const { data } = await blandSdk.stopActiveCall(stopActiveCallInput)
-
-    await onComplete({
-      data_points: {
-        status: data.status,
-        message: data.message,
-      },
-      events: [
-        addActivityEventLog({
-          message: `Stop call request sent to Bland.\nStatus: ${data.status}\nMessage: ${data.message}`,
-        }),
-      ],
-    })
   },
 }

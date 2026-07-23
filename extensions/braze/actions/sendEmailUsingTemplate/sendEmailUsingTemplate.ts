@@ -22,78 +22,103 @@ export const sendEmailUsingTemplate = {
       activity_id: payload.activity.id,
     }
 
-    const {
-      brazeClient,
-      appId,
-      fields: {
-        externalUserId,
-        from,
-        replyTo: reply_to,
-        templateId: email_template_id,
-        preheader,
-        scheduleTime: time,
-        inPatientLocalTime: in_local_time,
-        atOptimalTime: at_optimal_time,
-        campaignId: campaign_id,
-        messageVariantionId: message_variation_id,
-      },
-    } = await validateAndCreateClient({
-      fieldsSchema: FieldsSchema,
-      payload,
-    })
+    helpers.log(
+      { meta, fields: payload.fields },
+      'Processing sendEmailUsingTemplate',
+    )
 
-    const schedule = {
-      ...(!isNil(time) && {
-        time,
-      }),
-      ...addBooleanFieldIfDefined({ in_local_time }),
-      ...addBooleanFieldIfDefined({ at_optimal_time }),
-    }
-    const requestBody = {
-      external_user_ids: [externalUserId],
-      ...(!isNil(campaign_id) && {
-        campaign_id,
-      }),
-      ...(!isEmpty(schedule) && {
-        schedule,
-      }),
-      messages: {
-        email: {
+    try {
+      const {
+        brazeClient,
+        appId,
+        fields: {
+          externalUserId,
           from,
-          app_id: appId,
-          email_template_id,
-          ...(!isNil(preheader) && {
-            preheader,
-          }),
-          ...(!isNil(message_variation_id) && {
-            message_variation_id,
-          }),
-          ...(!isNil(reply_to) && {
-            reply_to,
-          }),
+          replyTo: reply_to,
+          templateId: email_template_id,
+          preheader,
+          scheduleTime: time,
+          inPatientLocalTime: in_local_time,
+          atOptimalTime: at_optimal_time,
+          campaignId: campaign_id,
+          messageVariantionId: message_variation_id,
         },
-      },
-    }
+      } = await validateAndCreateClient({
+        fieldsSchema: FieldsSchema,
+        payload,
+      })
 
-    helpers.log({ meta, requestBody }, 'Sending email using template via Braze')
-    const resp = isNil(time)
-      ? await brazeClient.sendMessageImmediately(requestBody)
-      : await brazeClient.scheduleMessage(requestBody)
-
-    await onComplete({
-      events: [
-        {
-          date: new Date().toISOString(),
-          text: {
-            en: `Email sent using template id ${email_template_id}. Response: ${JSON.stringify(
-              resp,
-            )}`,
+      const schedule = {
+        ...(!isNil(time) && {
+          time,
+        }),
+        ...addBooleanFieldIfDefined({ in_local_time }),
+        ...addBooleanFieldIfDefined({ at_optimal_time }),
+      }
+      const requestBody = {
+        external_user_ids: [externalUserId],
+        ...(!isNil(campaign_id) && {
+          campaign_id,
+        }),
+        ...(!isEmpty(schedule) && {
+          schedule,
+        }),
+        messages: {
+          email: {
+            from,
+            app_id: appId,
+            email_template_id,
+            ...(!isNil(preheader) && {
+              preheader,
+            }),
+            ...(!isNil(message_variation_id) && {
+              message_variation_id,
+            }),
+            ...(!isNil(reply_to) && {
+              reply_to,
+            }),
           },
         },
-      ],
-      data_points: {
-        EmailDispatchId: resp.dispatch_id,
-      },
-    })
+      }
+
+      helpers.log(
+        { meta, requestBody },
+        'Sending email using template via Braze',
+      )
+      const resp = isNil(time)
+        ? await brazeClient.sendMessageImmediately(requestBody)
+        : await brazeClient.scheduleMessage(requestBody)
+
+      await onComplete({
+        events: [
+          {
+            date: new Date().toISOString(),
+            text: {
+              en: `Email sent using template id ${email_template_id}. Response: ${JSON.stringify(
+                resp,
+              )}`,
+            },
+          },
+        ],
+        data_points: {
+          EmailDispatchId: resp.dispatch_id,
+        },
+      })
+    } catch (err) {
+      helpers.log({ meta, err }, 'error', err as Error)
+      const error = err as Error
+      await onError({
+        events: [
+          {
+            date: new Date().toISOString(),
+            text: { en: error.message },
+            error: {
+              category: 'SERVER_ERROR',
+              message: error.message,
+            },
+          },
+        ],
+      })
+    }
   },
 } satisfies Action<typeof fields, typeof settings>

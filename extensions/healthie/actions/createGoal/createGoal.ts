@@ -21,34 +21,51 @@ export const createGoal: Action<typeof fields, typeof settings> = {
 
     helpers.log({ meta, fields: payload.fields }, 'Processing createGoal')
 
-    const { fields, healthieSdk } = await validatePayloadAndCreateSdk({
-      fieldsSchema: FieldsValidationSchema,
-      payload,
-    })
+    try {
+      const { fields, healthieSdk } = await validatePayloadAndCreateSdk({
+        fieldsSchema: FieldsValidationSchema,
+        payload,
+      })
 
-    const input = {
-      user_id: fields.healthiePatientId,
-      repeat: fields.repeat,
-      title_link: fields.titleLink,
-      name: fields.name,
-      due_date: fields.dueDate,
+      const input = {
+        user_id: fields.healthiePatientId,
+        repeat: fields.repeat,
+        title_link: fields.titleLink,
+        name: fields.name,
+        due_date: fields.dueDate,
+      }
+
+      const res = await healthieSdk.client.mutation({
+        createGoal: {
+          __args: {
+            input,
+          },
+          goal: {
+            id: true,
+          },
+        },
+      })
+
+      await onComplete({
+        data_points: {
+          createdGoalId: String(res.createGoal?.goal?.id),
+        },
+      })
+    } catch (err) {
+      helpers.log({ meta, err }, 'error', err as Error)
+      const error = err as Error
+      await onError({
+        events: [
+          {
+            date: new Date().toISOString(),
+            text: { en: error.message },
+            error: {
+              category: 'SERVER_ERROR',
+              message: error.message,
+            },
+          },
+        ],
+      })
     }
-
-    const res = await healthieSdk.client.mutation({
-      createGoal: {
-        __args: {
-          input,
-        },
-        goal: {
-          id: true,
-        },
-      },
-    })
-
-    await onComplete({
-      data_points: {
-        createdGoalId: String(res.createGoal?.goal?.id),
-      },
-    })
   },
 }

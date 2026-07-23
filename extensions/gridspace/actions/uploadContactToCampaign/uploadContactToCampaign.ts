@@ -13,64 +13,84 @@ export const uploadContactToCampaign = {
   fields,
   dataPoints,
   previewable: false,
-  onEvent: async ({ payload, onComplete, helpers }) => {
+  onEvent: async ({ payload, onComplete, onError, helpers }) => {
     const meta = {
       tenant_id: payload.pathway.tenant_id,
       careflow_id: payload.pathway.id,
       activity_id: payload.activity.id,
     }
 
-    const { pathway, patient, activity } = payload
-    const {
-      fields: { campaignId, data, phoneNumber, serviceTermsReviewed = true },
-      settings: { accountId, clientSecret },
-    } = validate({
-      schema: z.object({ fields: FieldsSchema, settings: SettingsSchema }),
-      payload,
-    })
-
-    const client = new GridspaceClient({ accountId, clientSecret })
-
-    const contactData = {
-      phone_number: phoneNumber,
-      ...data,
-      activity_id: activity.id,
-      pathway_id: pathway.id,
-      pathway_definition_id: pathway.definition_id,
-      patient_id: patient.id,
-    }
-
-    const columnNames = keys(contactData)
-    const contactRow = values(contactData)
-
-    const requestBody = {
-      column_names: columnNames,
-      phone_number_column_name: 'phone_number',
-      contact_rows: [contactRow],
-      service_terms_reviewed: serviceTermsReviewed,
-    }
-
-    helpers.log({ meta, requestBody }, 'Uploading contact via Gridspace')
-    const { num_uploaded_contacts = 0 } = await client.uploadContactsToCampaign(
-      campaignId,
-      requestBody,
+    helpers.log(
+      { meta, fields: payload.fields },
+      'Processing uploadContactToCampaign',
     )
 
-    const event_text =
-      num_uploaded_contacts === 0
-        ? { en: `Contact was NOT uploaded to campaign ${campaignId}` }
-        : { en: `Contact uploaded to campaign ${campaignId}` }
+    try {
+      const { pathway, patient, activity } = payload
+      const {
+        fields: { campaignId, data, phoneNumber, serviceTermsReviewed = true },
+        settings: { accountId, clientSecret },
+      } = validate({
+        schema: z.object({ fields: FieldsSchema, settings: SettingsSchema }),
+        payload,
+      })
 
-    await onComplete({
-      events: [
-        {
-          date: new Date().toISOString(),
-          text: event_text,
+      const client = new GridspaceClient({ accountId, clientSecret })
+
+      const contactData = {
+        phone_number: phoneNumber,
+        ...data,
+        activity_id: activity.id,
+        pathway_id: pathway.id,
+        pathway_definition_id: pathway.definition_id,
+        patient_id: patient.id,
+      }
+
+      const columnNames = keys(contactData)
+      const contactRow = values(contactData)
+
+      const requestBody = {
+        column_names: columnNames,
+        phone_number_column_name: 'phone_number',
+        contact_rows: [contactRow],
+        service_terms_reviewed: serviceTermsReviewed,
+      }
+
+      helpers.log({ meta, requestBody }, 'Uploading contact via Gridspace')
+      const { num_uploaded_contacts = 0 } =
+        await client.uploadContactsToCampaign(campaignId, requestBody)
+
+      const event_text =
+        num_uploaded_contacts === 0
+          ? { en: `Contact was NOT uploaded to campaign ${campaignId}` }
+          : { en: `Contact uploaded to campaign ${campaignId}` }
+
+      await onComplete({
+        events: [
+          {
+            date: new Date().toISOString(),
+            text: event_text,
+          },
+        ],
+        data_points: {
+          num_uploaded_contacts: String(num_uploaded_contacts),
         },
-      ],
-      data_points: {
-        num_uploaded_contacts: String(num_uploaded_contacts),
-      },
-    })
+      })
+    } catch (err) {
+      helpers.log({ meta, err }, 'error', err as Error)
+      const error = err as Error
+      await onError({
+        events: [
+          {
+            date: new Date().toISOString(),
+            text: { en: error.message },
+            error: {
+              category: 'SERVER_ERROR',
+              message: error.message,
+            },
+          },
+        ],
+      })
+    }
   },
 } satisfies Action<typeof fields, typeof settings>

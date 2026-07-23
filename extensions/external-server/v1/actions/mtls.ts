@@ -61,22 +61,41 @@ export const mtls: Action<
       careflow_id: payload.pathway.id,
       activity_id: payload.activity.id,
     }
-    const requestBody = { data: clientPayload }
-    helpers.log({ meta, requestBody }, 'Sending mTLS request')
-    const { data, status } = await axios.post<{
-      data_points: any
-      events: any
-      response: 'success' | 'failure'
-    }>(`${settings.url}`, requestBody, {
-      headers: { 'Content-Type': 'application/json' },
-      httpsAgent: helpers.httpsAgent(),
-    })
-    if (status === 200) {
-      await onComplete({
-        data_points: { response: JSON.stringify(data) },
+    helpers.log({ meta, fields: payload.fields }, 'Processing response')
+
+    try {
+      const requestBody = { data: clientPayload }
+      helpers.log({ meta, requestBody }, 'Sending mTLS request')
+      const { data, status } = await axios.post<{
+        data_points: any
+        events: any
+        response: 'success' | 'failure'
+      }>(`${settings.url}`, requestBody, {
+        headers: { 'Content-Type': 'application/json' },
+        httpsAgent: helpers.httpsAgent(),
       })
-    } else {
-      throw new Error(`Error: ${JSON.stringify(data)}`)
+      if (status === 200) {
+        await onComplete({
+          data_points: { response: JSON.stringify(data) },
+        })
+      } else {
+        throw new Error(`Error: ${JSON.stringify(data)}`)
+      }
+    } catch (err) {
+      helpers.log({ meta, err }, 'error', err as Error)
+      const error = err as Error
+      await onError({
+        events: [
+          {
+            date: new Date().toISOString(),
+            text: { en: error.message },
+            error: {
+              category: 'SERVER_ERROR',
+              message: error.message,
+            },
+          },
+        ],
+      })
     }
   },
 }

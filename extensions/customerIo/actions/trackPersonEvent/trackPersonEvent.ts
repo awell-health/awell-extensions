@@ -23,71 +23,90 @@ export const trackPersonEvent: Action<
       activity_id: payload.activity.id,
     }
 
-    const { customerIoTrackClient, fields, pathway, patient, activity } =
-      await validatePayloadAndCreateSdks({
-        fieldsSchema: FieldsValidationSchema,
-        payload,
-      })
+    helpers.log({ meta, fields: payload.fields }, 'Processing trackPersonEvent')
 
-    const patientIdentifiers = patient.profile?.identifier
-    const patientIdentifiersAttributes =
-      !isNil(patientIdentifiers) && !isEmpty(patientIdentifiers)
-        ? patientIdentifiers.reduce<Record<string, string>>(
-            (acc, identifier) => {
-              acc[`_awell_identifier_${identifier.system}`] = identifier.value
-              return acc
+    try {
+      const { customerIoTrackClient, fields, pathway, patient, activity } =
+        await validatePayloadAndCreateSdks({
+          fieldsSchema: FieldsValidationSchema,
+          payload,
+        })
+
+      const patientIdentifiers = patient.profile?.identifier
+      const patientIdentifiersAttributes =
+        !isNil(patientIdentifiers) && !isEmpty(patientIdentifiers)
+          ? patientIdentifiers.reduce<Record<string, string>>(
+              (acc, identifier) => {
+                acc[`_awell_identifier_${identifier.system}`] = identifier.value
+                return acc
+              },
+              {},
+            )
+          : {}
+
+      const trackPersonEventWithPatientIdentifiersInput = {
+        type: 'person' as const,
+        action: 'event' as const,
+        name: fields.eventName,
+        identifiers: {
+          [fields.personIdentifierType]: fields.identifierValue,
+        },
+        attributes: {
+          _awell_careflow_id: pathway.id,
+          _awell_careflow_definition_id: pathway.definition_id,
+          _awell_patient_id: patient.id,
+          _awell_activity_id: activity.id,
+          ...patientIdentifiersAttributes,
+          ...fields.attributes,
+        },
+      }
+
+      helpers.log(
+        { meta, trackPersonEventWithPatientIdentifiersInput },
+        'Tracking Customer.io person event',
+      )
+      await customerIoTrackClient.trackPersonEvent(
+        trackPersonEventWithPatientIdentifiersInput,
+      )
+
+      const trackPersonEventInput = {
+        type: 'person' as const,
+        action: 'event' as const,
+        name: fields.eventName,
+        identifiers: {
+          [fields.personIdentifierType]: fields.identifierValue,
+        },
+        attributes: {
+          _awell_careflow_id: pathway.id,
+          _awell_careflow_definition_id: pathway.definition_id,
+          _awell_patient_id: patient.id,
+          _awell_activity_id: activity.id,
+          ...fields.attributes,
+        },
+      }
+
+      helpers.log(
+        { meta, trackPersonEventInput },
+        'Tracking Customer.io person event',
+      )
+      await customerIoTrackClient.trackPersonEvent(trackPersonEventInput)
+
+      await onComplete()
+    } catch (err) {
+      helpers.log({ meta, err }, 'error', err as Error)
+      const error = err as Error
+      await onError({
+        events: [
+          {
+            date: new Date().toISOString(),
+            text: { en: error.message },
+            error: {
+              category: 'SERVER_ERROR',
+              message: error.message,
             },
-            {},
-          )
-        : {}
-
-    const trackPersonEventWithPatientIdentifiersInput = {
-      type: 'person' as const,
-      action: 'event' as const,
-      name: fields.eventName,
-      identifiers: {
-        [fields.personIdentifierType]: fields.identifierValue,
-      },
-      attributes: {
-        _awell_careflow_id: pathway.id,
-        _awell_careflow_definition_id: pathway.definition_id,
-        _awell_patient_id: patient.id,
-        _awell_activity_id: activity.id,
-        ...patientIdentifiersAttributes,
-        ...fields.attributes,
-      },
+          },
+        ],
+      })
     }
-
-    helpers.log(
-      { meta, trackPersonEventWithPatientIdentifiersInput },
-      'Tracking Customer.io person event',
-    )
-    await customerIoTrackClient.trackPersonEvent(
-      trackPersonEventWithPatientIdentifiersInput,
-    )
-
-    const trackPersonEventInput = {
-      type: 'person' as const,
-      action: 'event' as const,
-      name: fields.eventName,
-      identifiers: {
-        [fields.personIdentifierType]: fields.identifierValue,
-      },
-      attributes: {
-        _awell_careflow_id: pathway.id,
-        _awell_careflow_definition_id: pathway.definition_id,
-        _awell_patient_id: patient.id,
-        _awell_activity_id: activity.id,
-        ...fields.attributes,
-      },
-    }
-
-    helpers.log(
-      { meta, trackPersonEventInput },
-      'Tracking Customer.io person event',
-    )
-    await customerIoTrackClient.trackPersonEvent(trackPersonEventInput)
-
-    await onComplete()
   },
 }
