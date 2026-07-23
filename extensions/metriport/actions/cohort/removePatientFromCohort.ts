@@ -20,7 +20,7 @@ export const removePatientFromCohort: Action<
   previewable: true,
   supports_automated_retries: true,
   dataPoints,
-  onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
+  onEvent: async ({ payload, onComplete, onError }): Promise<void> => {
     try {
       const cohortId = stringId.parse(payload.fields.cohortId)
       const patientId = stringId.parse(payload.fields.patientId)
