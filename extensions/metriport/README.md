@@ -67,6 +67,20 @@ Visit [endpoint docs](https://docs.metriport.com/medical-api/api-reference/docum
 
 **NOTE: This endpoint returns a URL which you can use to download the specified Document using the file name provided from the List Documents endpoint.**
 
+## Get Webhook Bundle
+
+Fetches the FHIR bundle from a Metriport webhook payload URL — e.g. the [Encounter Bundle](https://docs.metriport.com/medical-api/handling-data/patient-encounter-bundle) from an ADT notification, or a discharge summary. Pass the `bundleUrl` data point emitted by the **Enrollment** webhook; the action downloads the bundle and returns it on the `bundle` data point.
+
+**NOTE: Metriport pre-signed URLs are only valid for 10 minutes, so this action should run early in the care flow, shortly after the enrollment webhook fires.**
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `url` | string | The pre-signed payload URL to fetch (the webhook's `bundleUrl` data point). |
+
+| Data point | Type | Description |
+| --- | --- | --- |
+| `bundle` | json | The FHIR bundle fetched from the URL. |
+
 # Webhooks
 
 ## Enrollment
@@ -75,10 +89,12 @@ An enrollment trigger that starts a care flow when Metriport sends a [real-time 
 
 Metriport POSTs every notification type to the same endpoint, so this webhook discriminates on the notification `type` and only enrolls on two events:
 
-- `patient.admit` → surfaced as `eventType` = `adt` (HL7 ADT^A01). The payload carries a pre-signed URL to the [FHIR Encounter Bundle](https://docs.metriport.com/medical-api/handling-data/patient-encounter-bundle) (valid for 10 minutes), which is downloaded and exposed on the `encounterBundle` data point.
-- `medical.discharge-summary` → surfaced as `eventType` = `discharge`. This event is currently undocumented by Metriport and is modelled on the published `medical.*` webhook family (a `patients` array). The discharge summary FHIR data — whether embedded inline (`patients[].bundle`) or referenced by a pre-signed URL — is exposed on the `dischargeSummary` data point.
+- `patient.admit` → surfaced as `eventType` = `adt` (HL7 ADT^A01). The payload carries a pre-signed URL to the [FHIR Encounter Bundle](https://docs.metriport.com/medical-api/handling-data/patient-encounter-bundle).
+- `medical.discharge-summary` → surfaced as `eventType` = `discharge`. This event is currently undocumented by Metriport and is modelled on the published `medical.*` webhook family (a `patients` array).
 
-Use the `eventType` data point in your care flow to branch on admit vs discharge. Every other notification type (`patient.discharge`, `patient.transfer`, ...) and verification `ping` requests are acknowledged with a `200` but do not enroll a patient. If a referenced bundle cannot be downloaded, enrollment still proceeds without it.
+The webhook validates the request, emits the data points (including the pre-signed bundle URL on `bundleUrl`), and replies immediately — it does **not** download the bundle. Fetch the bundle later in the care flow with the **Get Webhook Bundle** action, using the `bundleUrl` data point. Because the URL expires after 10 minutes, run that action early.
+
+Use the `eventType` data point in your care flow to branch on admit vs discharge. Every other notification type (`patient.discharge`, `patient.transfer`, ...) and verification `ping` requests are acknowledged with a `200` but do not enroll a patient.
 
 ### Data points
 
@@ -90,8 +106,7 @@ Use the `eventType` data point in your care flow to branch on admit vs discharge
 | `admitTimestamp` | date | When the patient was admitted (admit events only) |
 | `whenSourceSent` | date | When the source sent the notification, if available (admit events) |
 | `messageId` | string | The Metriport message ID for the notification |
-| `encounterBundle` | json | The FHIR Encounter Bundle (admit events) |
-| `dischargeSummary` | json | The discharge summary FHIR data (discharge events) |
+| `bundleUrl` | string | Pre-signed URL to the FHIR bundle; fetch it with the **Get Webhook Bundle** action (valid for 10 minutes) |
 
 ### Verifying incoming requests
 

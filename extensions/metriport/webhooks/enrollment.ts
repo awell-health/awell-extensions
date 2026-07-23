@@ -13,7 +13,6 @@ import {
   type MetriportEnrollmentWebhookPayload,
 } from './types'
 import { webhookPayloadSchema, type WebhookPayloadSchema } from './validation.zod'
-import { fetchEncounterBundle } from './encounterBundle'
 
 /**
  * The identifier system used to enroll a patient based on their Metriport
@@ -47,13 +46,9 @@ const dataPoints = {
     key: 'messageId',
     valueType: 'string',
   },
-  encounterBundle: {
-    key: 'encounterBundle',
-    valueType: 'json',
-  },
-  dischargeSummary: {
-    key: 'dischargeSummary',
-    valueType: 'json',
+  bundleUrl: {
+    key: 'bundleUrl',
+    valueType: 'string',
   },
 } satisfies Record<string, DataPointDefinition>
 
@@ -76,66 +71,6 @@ const isDischargeSummary = (
 ): webhook is DischargeSummaryWebhook =>
   webhook.meta.type === MetriportWebhookType.DischargeSummary
 
-/**
- * Serializes the FHIR data for an ADT (admit) notification. The pre-signed URL
- * is only valid for 10 minutes, so we fetch it while handling the webhook. A
- * failure here must not block enrollment.
- */
-const resolveEncounterBundle = async (url: string): Promise<string> => {
-  try {
-    return JSON.stringify(await fetchEncounterBundle(url))
-  } catch {
-    return ''
-  }
-}
-
-const buildAdtDataPoints = async (
-  webhook: AdmitWebhook,
-): Promise<DataPoints> => {
-  const { payload, meta } = webhook
-  return {
-    eventType: EnrollmentEventType.Adt,
-    metriportPatientId: payload.patientId,
-    externalId: payload.externalId ?? '',
-    admitTimestamp: payload.admitTimestamp ?? '',
-    whenSourceSent: payload.whenSourceSent ?? '',
-    messageId: meta.messageId,
-    encounterBundle: await resolveEncounterBundle(payload.url),
-    dischargeSummary: '',
-  }
-}
-
-/**
- * Resolves the discharge summary FHIR data. It may be embedded inline
- * (`bundle`, as in `medical.consolidated-data`) or referenced by a pre-signed
- * `url`. When neither is present we fall back to serializing whatever the
- * patient entry contained so nothing is lost.
- */
-const resolveDischargeSummary = async (
-  webhook: DischargeSummaryWebhook,
-): Promise<{ patientId?: string; externalId?: string; dischargeSummary: string }> => {
-  const patient = webhook.patients?.[0]
-  const patientId = patient?.patientId ?? webhook.payload?.patientId
-  const externalId = patient?.externalId ?? webhook.payload?.externalId
-
-  if (!isNil(patient?.bundle)) {
-    return { patientId, externalId, dischargeSummary: JSON.stringify(patient.bundle) }
-  }
-
-  const url = patient?.url ?? webhook.payload?.url
-  if (!isNil(url)) {
-    return { patientId, externalId, dischargeSummary: await resolveEncounterBundle(url) }
-  }
-
-  // Nothing to fetch — capture whatever was delivered for the care flow.
-  const raw = patient ?? webhook.payload
-  return {
-    patientId,
-    externalId,
-    dischargeSummary: isNil(raw) ? '' : JSON.stringify(raw),
-  }
-}
-
 export const enrollment: Webhook<
   keyof typeof dataPoints,
   MetriportEnrollmentWebhookPayload,
@@ -143,7 +78,7 @@ export const enrollment: Webhook<
 > = {
   key: 'enrollment',
   description:
-    'Enrolls a patient when Metriport sends a real-time notification. Distinguishes between admit (`adt`, from `patient.admit`) and `discharge` (from `medical.discharge-summary`) events via the `eventType` data point.',
+    'Enrolls a patient when Metriport sends a real-time notification. Distinguishes between admit (`adt`, from `patient.admit`) and `discharge` (from `medical.discharge-summary`) events via the `eventType` data point. The FHIR bundle is not fetched here — the pre-signed URL is passed on the `bundleUrl` data point and can be retrieved later with the "Get Webhook Bundle" action.',
   dataPoints,
   onEvent: async ({
     payload: { payload, rawBody, headers, settings },
@@ -198,24 +133,37 @@ export const enrollment: Webhook<
       // We enroll on admit (adt) and discharge-summary events only. Every other
       // notification type (patient.discharge, patient.transfer, ...) is
       // acknowledged with a 200 but does not enroll a patient.
+      //
+      // The bundle referenced by `bundleUrl` is intentionally NOT fetched here:
+      // we validate, emit the data points (including the URL), and reply
+      // immediately. The bundle is fetched later via the "Get Webhook Bundle"
+      // action.
       let data_points: DataPoints
       let patientId: string | undefined
 
       if (isAdmit(webhook)) {
-        data_points = await buildAdtDataPoints(webhook)
-        patientId = data_points.metriportPatientId
+        const event = webhook.payload
+        patientId = event.patientId
+        data_points = {
+          eventType: EnrollmentEventType.Adt,
+          metriportPatientId: event.patientId,
+          externalId: event.externalId ?? '',
+          admitTimestamp: event.admitTimestamp ?? '',
+          whenSourceSent: event.whenSourceSent ?? '',
+          messageId: webhook.meta.messageId,
+          bundleUrl: event.url ?? '',
+        }
       } else if (isDischargeSummary(webhook)) {
-        const resolved = await resolveDischargeSummary(webhook)
-        patientId = resolved.patientId
+        const patient = webhook.patients?.[0]
+        patientId = patient?.patientId ?? webhook.payload?.patientId
         data_points = {
           eventType: EnrollmentEventType.Discharge,
-          metriportPatientId: resolved.patientId ?? '',
-          externalId: resolved.externalId ?? '',
+          metriportPatientId: patientId ?? '',
+          externalId: patient?.externalId ?? webhook.payload?.externalId ?? '',
           admitTimestamp: '',
           whenSourceSent: '',
           messageId: webhook.meta.messageId,
-          encounterBundle: '',
-          dischargeSummary: resolved.dischargeSummary,
+          bundleUrl: patient?.url ?? webhook.payload?.url ?? '',
         }
       } else {
         await onError({

@@ -4,38 +4,16 @@ import {
   enrollment as webhook,
   METRIPORT_PATIENT_IDENTIFIER_SYSTEM,
 } from './enrollment'
-import { fetchEncounterBundle } from './encounterBundle'
-import { MetriportWebhookType, type EncounterBundle } from './types'
+import { MetriportWebhookType } from './types'
 
 const sign = (key: string, body: string): string =>
   crypto.createHmac('sha256', key).update(body).digest('hex')
-
-jest.mock('./encounterBundle')
-
-const mockedFetchEncounterBundle = fetchEncounterBundle as jest.MockedFunction<
-  typeof fetchEncounterBundle
->
 
 const mockSettings = {
   apiKey: 'test-api-key',
   baseUrl: '',
   webhookKey: '',
 }
-
-const encounterBundle = {
-  resourceType: 'Bundle',
-  type: 'searchset',
-  entry: [
-    {
-      resource: {
-        resourceType: 'Encounter',
-        id: 'enc-1',
-        status: 'finished',
-        class: { code: 'IMP' },
-      },
-    },
-  ],
-} as unknown as EncounterBundle
 
 const admitPayload = {
   meta: {
@@ -44,18 +22,12 @@ const admitPayload = {
     type: MetriportWebhookType.PatientAdmit,
   },
   payload: {
-    url: 'https://example.com/bundle',
+    url: 'https://example.com/encounter-bundle',
     patientId: 'patient-123',
     externalId: 'external-abc',
     admitTimestamp: '2026-07-21T09:00:00.000Z',
     whenSourceSent: '2026-07-21T09:30:00.000Z',
   },
-}
-
-const dischargeSummaryBundle = {
-  resourceType: 'Bundle',
-  type: 'searchset',
-  entry: [{ resource: { resourceType: 'Composition', id: 'discharge-1' } }],
 }
 
 const dischargeSummaryPayload = {
@@ -69,7 +41,7 @@ const dischargeSummaryPayload = {
       patientId: 'patient-123',
       externalId: 'external-abc',
       status: 'completed',
-      bundle: dischargeSummaryBundle,
+      url: 'https://example.com/discharge-summary',
     },
   ],
 }
@@ -80,8 +52,6 @@ describe('Metriport - Webhook - Enrollment', () => {
 
   beforeEach(() => {
     clearMocks()
-    mockedFetchEncounterBundle.mockReset()
-    mockedFetchEncounterBundle.mockResolvedValue(encounterBundle)
   })
 
   const invoke = async (payload: unknown, headers = {}): Promise<void> => {
@@ -99,13 +69,10 @@ describe('Metriport - Webhook - Enrollment', () => {
   }
 
   describe('When an admit (adt) event is received', () => {
-    test('Should enroll the patient with eventType "adt" and the Encounter Bundle', async () => {
+    test('Should enroll the patient with eventType "adt" and the bundle URL', async () => {
       await invoke(admitPayload)
 
       expect(onError).not.toHaveBeenCalled()
-      expect(mockedFetchEncounterBundle).toHaveBeenCalledWith(
-        'https://example.com/bundle',
-      )
       expect(onSuccess).toHaveBeenCalledWith({
         data_points: {
           eventType: 'adt',
@@ -114,8 +81,7 @@ describe('Metriport - Webhook - Enrollment', () => {
           admitTimestamp: '2026-07-21T09:00:00.000Z',
           whenSourceSent: '2026-07-21T09:30:00.000Z',
           messageId: 'msg-1',
-          encounterBundle: JSON.stringify(encounterBundle),
-          dischargeSummary: '',
+          bundleUrl: 'https://example.com/encounter-bundle',
         },
         patient_identifier: {
           system: METRIPORT_PATIENT_IDENTIFIER_SYSTEM,
@@ -125,13 +91,11 @@ describe('Metriport - Webhook - Enrollment', () => {
     })
   })
 
-  describe('When a discharge summary event is received with an inline bundle', () => {
-    test('Should enroll the patient with eventType "discharge" and the inline bundle', async () => {
+  describe('When a discharge summary event is received', () => {
+    test('Should enroll the patient with eventType "discharge" and the bundle URL', async () => {
       await invoke(dischargeSummaryPayload)
 
       expect(onError).not.toHaveBeenCalled()
-      // Inline bundle: no fetch required.
-      expect(mockedFetchEncounterBundle).not.toHaveBeenCalled()
       expect(onSuccess).toHaveBeenCalledWith({
         data_points: {
           eventType: 'discharge',
@@ -140,8 +104,7 @@ describe('Metriport - Webhook - Enrollment', () => {
           admitTimestamp: '',
           whenSourceSent: '',
           messageId: 'msg-2',
-          encounterBundle: '',
-          dischargeSummary: JSON.stringify(dischargeSummaryBundle),
+          bundleUrl: 'https://example.com/discharge-summary',
         },
         patient_identifier: {
           system: METRIPORT_PATIENT_IDENTIFIER_SYSTEM,
@@ -149,43 +112,11 @@ describe('Metriport - Webhook - Enrollment', () => {
         },
       })
     })
-  })
 
-  describe('When a discharge summary event references a URL', () => {
-    test('Should fetch the bundle from the URL', async () => {
+    test('Should enroll with an empty bundle URL when none is provided', async () => {
       await invoke({
         meta: {
           messageId: 'msg-3',
-          when: '2026-07-22T10:00:00.000Z',
-          type: MetriportWebhookType.DischargeSummary,
-        },
-        patients: [
-          {
-            patientId: 'patient-456',
-            status: 'completed',
-            url: 'https://example.com/discharge-summary',
-          },
-        ],
-      })
-
-      expect(onError).not.toHaveBeenCalled()
-      expect(mockedFetchEncounterBundle).toHaveBeenCalledWith(
-        'https://example.com/discharge-summary',
-      )
-      const call = onSuccess.mock.calls[0][0]
-      expect(call.data_points.eventType).toBe('discharge')
-      expect(call.data_points.metriportPatientId).toBe('patient-456')
-      expect(call.data_points.dischargeSummary).toBe(
-        JSON.stringify(encounterBundle),
-      )
-    })
-  })
-
-  describe('When a discharge summary event has neither bundle nor URL', () => {
-    test('Should still enroll and capture the raw patient entry', async () => {
-      await invoke({
-        meta: {
-          messageId: 'msg-4',
           when: '2026-07-22T10:00:00.000Z',
           type: MetriportWebhookType.DischargeSummary,
         },
@@ -195,23 +126,7 @@ describe('Metriport - Webhook - Enrollment', () => {
       expect(onError).not.toHaveBeenCalled()
       const call = onSuccess.mock.calls[0][0]
       expect(call.data_points.metriportPatientId).toBe('patient-789')
-      expect(JSON.parse(call.data_points.dischargeSummary)).toMatchObject({
-        patientId: 'patient-789',
-        status: 'completed',
-      })
-    })
-  })
-
-  describe('When the encounter bundle cannot be fetched', () => {
-    test('Should still enroll the patient without the bundle', async () => {
-      mockedFetchEncounterBundle.mockRejectedValue(new Error('expired'))
-
-      await invoke(admitPayload)
-
-      expect(onError).not.toHaveBeenCalled()
-      const call = onSuccess.mock.calls[0][0]
-      expect(call.data_points.encounterBundle).toBe('')
-      expect(call.data_points.eventType).toBe('adt')
+      expect(call.data_points.bundleUrl).toBe('')
     })
   })
 
