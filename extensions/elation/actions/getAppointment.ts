@@ -85,20 +85,14 @@ export const getAppointment: Action<
   supports_automated_retries: true,
   dataPoints,
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
-    const meta = {
-      tenant_id: payload.pathway.tenant_id,
-      careflow_id: payload.pathway.id,
-      activity_id: payload.activity.id,
-    }
-
     try {
       const appointmentId = NumericIdSchema.parse(payload.fields.appointmentId)
 
       // API Call should produce AuthError or something dif.
       const api = makeAPIClient(payload.settings)
-      helpers.log({ meta, appointmentId }, 'Getting Elation appointment')
+      helpers.log({ appointmentId }, 'Getting Elation appointment')
       const appointment = await api.getAppointment(appointmentId)
-      helpers.log({ meta, appointmentId }, 'Got Elation appointment')
+      helpers.log({ appointmentId }, 'Got Elation appointment')
       await onComplete({
         data_points: {
           scheduledDate: appointment.scheduled_date,
@@ -117,7 +111,7 @@ export const getAppointment: Action<
       })
     } catch (err) {
       const message = (err as Error).message
-      helpers.log({ meta, err }, 'error', err as Error)
+      helpers.log({ err }, 'error', err as Error)
       await onError({
         events: [
           {

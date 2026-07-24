@@ -22,13 +22,7 @@ export const sendSms: Action<
   dataPoints,
   supports_automated_retries: true,
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
-    const meta = {
-      tenant_id: payload.pathway.tenant_id,
-      careflow_id: payload.pathway.id,
-      activity_id: payload.activity.id,
-    }
-
-    helpers.log({ meta, fields: payload.fields }, 'Processing sendSms')
+    helpers.log({ fields: payload.fields }, 'Processing sendSms')
 
     try {
       const { fields, blandSdk } = await validatePayloadAndCreateSdk({
@@ -72,7 +66,7 @@ export const sendSms: Action<
       })
 
       try {
-        helpers.log({ meta, sendSmsInput }, 'Sending SMS via Bland')
+        helpers.log({ sendSmsInput }, 'Sending SMS via Bland')
       } catch (err) {
         console.error('unable to use new helpers.log')
         console.error(JSON.stringify(err))
@@ -96,7 +90,7 @@ export const sendSms: Action<
         ],
       })
     } catch (err) {
-      helpers.log({ meta, err }, 'error', err as Error)
+      helpers.log({ err }, 'error', err as Error)
       const error = err as Error
       await onError({
         events: [

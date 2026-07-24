@@ -29,13 +29,7 @@ export const checkPatientTags: Action<
   supports_automated_retries: true,
   dataPoints,
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
-    const meta = {
-      tenant_id: payload.pathway.tenant_id,
-      careflow_id: payload.pathway.id,
-      activity_id: payload.activity.id,
-    }
-
-    helpers.log({ meta, fields: payload.fields }, 'Processing checkPatientTags')
+    helpers.log({ fields: payload.fields }, 'Processing checkPatientTags')
 
     try {
       // 1. Validate input and initialize API client
@@ -78,7 +72,7 @@ export const checkPatientTags: Action<
         ],
       })
     } catch (err) {
-      helpers.log({ meta, err }, 'error', err as Error)
+      helpers.log({ err }, 'error', err as Error)
       const error = err as Error
       await onError({
         events: [

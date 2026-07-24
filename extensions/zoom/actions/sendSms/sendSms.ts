@@ -60,12 +60,6 @@ export const sendSms: Action<
     onError,
     helpers: { log },
   }): Promise<void> => {
-    const meta = {
-      tenant_id: payload.pathway.tenant_id,
-      careflow_id: payload.pathway.id,
-      activity_id: payload.activity.id,
-    }
-
     const { fields, zoomSdk } = await validatePayloadAndCreateSdk({
       fieldsSchema: FieldsValidationSchema,
       payload,
@@ -77,7 +71,7 @@ export const sendSms: Action<
       body: fields.body,
     }
 
-    log({ meta, sendSmsInput }, 'Sending SMS via Zoom')
+    log({ sendSmsInput }, 'Sending SMS via Zoom')
     const { data } = await zoomSdk.sendSms(sendSmsInput)
 
     /**

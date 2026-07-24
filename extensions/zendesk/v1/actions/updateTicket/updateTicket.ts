@@ -19,12 +19,6 @@ export const updateTicket: Action<typeof fields, typeof settings> = {
   fields,
   previewable: true,
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
-    const meta = {
-      tenant_id: payload.pathway.tenant_id,
-      careflow_id: payload.pathway.id,
-      activity_id: payload.activity.id,
-    }
-
     try {
       const {
         settings,
@@ -45,7 +39,7 @@ export const updateTicket: Action<typeof fields, typeof settings> = {
         ...(!isNil(status) && { status }),
       }
 
-      helpers.log({ meta, updateData }, 'Updating Zendesk ticket')
+      helpers.log({ updateData }, 'Updating Zendesk ticket')
       await client.updateTicket(ticket_id.toString(), updateData)
 
       await onComplete({})

@@ -17,20 +17,14 @@ export const getLetter: Action<
   supports_automated_retries: true,
   dataPoints,
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
-    const meta = {
-      tenant_id: payload.pathway.tenant_id,
-      careflow_id: payload.pathway.id,
-      activity_id: payload.activity.id,
-    }
-
     try {
       const { letterId } = FieldsValidationSchema.parse(payload.fields)
       const api = makeAPIClient(payload.settings)
 
-      helpers.log({ meta, letterId }, 'Getting Elation letter')
+      helpers.log({ letterId }, 'Getting Elation letter')
       const res = await api.getLetter(letterId)
 
-      helpers.log({ meta, letterId }, 'Got Elation letter')
+      helpers.log({ letterId }, 'Got Elation letter')
 
       await onComplete({
         data_points: {
@@ -43,7 +37,7 @@ export const getLetter: Action<
       })
     } catch (err) {
       const message = (err as Error).message
-      helpers.log({ meta, err }, 'error', err as Error)
+      helpers.log({ err }, 'error', err as Error)
       await onError({
         events: [
           {

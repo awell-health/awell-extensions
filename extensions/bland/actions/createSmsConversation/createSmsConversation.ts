@@ -23,16 +23,7 @@ export const createSmsConversation: Action<
   dataPoints,
   supports_automated_retries: true,
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
-    const meta = {
-      tenant_id: payload.pathway.tenant_id,
-      careflow_id: payload.pathway.id,
-      activity_id: payload.activity.id,
-    }
-
-    helpers.log(
-      { meta, fields: payload.fields },
-      'Processing createSmsConversation',
-    )
+    helpers.log({ fields: payload.fields }, 'Processing createSmsConversation')
 
     try {
       const { fields, blandSdk } = await validatePayloadAndCreateSdk({
@@ -67,7 +58,7 @@ export const createSmsConversation: Action<
 
       try {
         helpers.log(
-          { meta, createSmsConversationInput },
+          { createSmsConversationInput },
           'Creating SMS conversation via Bland',
         )
       } catch (err) {
@@ -95,7 +86,7 @@ export const createSmsConversation: Action<
         ],
       })
     } catch (err) {
-      helpers.log({ meta, err }, 'error', err as Error)
+      helpers.log({ err }, 'error', err as Error)
       const error = err as Error
       await onError({
         events: [

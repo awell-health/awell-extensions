@@ -16,16 +16,7 @@ export const sendEmailUsingTemplate = {
   dataPoints,
   previewable: true,
   onEvent: async ({ payload, onComplete, onError, helpers }) => {
-    const meta = {
-      tenant_id: payload.pathway.tenant_id,
-      careflow_id: payload.pathway.id,
-      activity_id: payload.activity.id,
-    }
-
-    helpers.log(
-      { meta, fields: payload.fields },
-      'Processing sendEmailUsingTemplate',
-    )
+    helpers.log({ fields: payload.fields }, 'Processing sendEmailUsingTemplate')
 
     try {
       const {
@@ -81,10 +72,7 @@ export const sendEmailUsingTemplate = {
         },
       }
 
-      helpers.log(
-        { meta, requestBody },
-        'Sending email using template via Braze',
-      )
+      helpers.log({ requestBody }, 'Sending email using template via Braze')
       const resp = isNil(time)
         ? await brazeClient.sendMessageImmediately(requestBody)
         : await brazeClient.scheduleMessage(requestBody)
@@ -105,7 +93,7 @@ export const sendEmailUsingTemplate = {
         },
       })
     } catch (err) {
-      helpers.log({ meta, err }, 'error', err as Error)
+      helpers.log({ err }, 'error', err as Error)
       const error = err as Error
       await onError({
         events: [

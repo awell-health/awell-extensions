@@ -25,12 +25,6 @@ export const generateDynamicUrl: Action<
   dataPoints,
   previewable: false,
   onEvent: async ({ payload, onComplete, onError, helpers }) => {
-    const meta = {
-      tenant_id: payload.pathway.tenant_id,
-      careflow_id: payload.pathway.id,
-      activity_id: payload.activity.id,
-    }
-
     try {
       const {
         fields: { urlTemplate, value },
@@ -48,7 +42,7 @@ export const generateDynamicUrl: Action<
       const url = urlTemplate.replace(placeholderPattern, valueForUrl)
 
       helpers.log(
-        { meta, urlTemplate, value, valueForUrl, url },
+        { urlTemplate, value, valueForUrl, url },
         'Generated dynamic URL',
       )
 
@@ -58,7 +52,7 @@ export const generateDynamicUrl: Action<
         },
       })
     } catch (err) {
-      helpers.log({ meta, err }, 'error', err as Error)
+      helpers.log({ err }, 'error', err as Error)
       if (err instanceof ZodError) {
         const error = fromZodError(err)
         await onError({

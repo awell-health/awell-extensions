@@ -20,13 +20,7 @@ export const sendEmail: Action<typeof fields, typeof settings> = {
   fields,
   previewable: false,
   onEvent: async ({ payload, onComplete, onError, helpers }) => {
-    const meta = {
-      tenant_id: payload.pathway.tenant_id,
-      careflow_id: payload.pathway.id,
-      activity_id: payload.activity.id,
-    }
-
-    helpers.log({ meta, fields: payload.fields }, 'Processing sendEmail')
+    helpers.log({ fields: payload.fields }, 'Processing sendEmail')
 
     try {
       const {
@@ -100,7 +94,7 @@ export const sendEmail: Action<typeof fields, typeof settings> = {
 
       await onComplete()
     } catch (err) {
-      helpers.log({ meta, err }, 'error', err as Error)
+      helpers.log({ err }, 'error', err as Error)
       if (err instanceof ZodError) {
         const error = fromZodError(err)
         await onError({

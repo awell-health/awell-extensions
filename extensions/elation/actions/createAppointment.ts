@@ -96,12 +96,6 @@ export const createAppointment: Action<
   previewable: true,
   dataPoints,
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
-    const meta = {
-      tenant_id: payload.pathway.tenant_id,
-      careflow_id: payload.pathway.id,
-      activity_id: payload.activity.id,
-    }
-
     try {
       const {
         scheduledDate,
@@ -124,16 +118,16 @@ export const createAppointment: Action<
 
       // API Call should produce AuthError or something dif.
       const api = makeAPIClient(payload.settings)
-      helpers.log({ meta, appointment }, 'Creating Elation appointment')
+      helpers.log({ appointment }, 'Creating Elation appointment')
       const { id } = await api.createAppointment(appointment)
-      helpers.log({ meta, appointmentId: id }, 'Created Elation appointment')
+      helpers.log({ appointmentId: id }, 'Created Elation appointment')
       await onComplete({
         data_points: {
           appointmentId: String(id),
         },
       })
     } catch (err) {
-      helpers.log({ meta, err }, 'error', err as Error)
+      helpers.log({ err }, 'error', err as Error)
       if (err instanceof ZodError) {
         const error = fromZodError(err)
         await onError({

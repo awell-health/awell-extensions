@@ -18,13 +18,7 @@ export const sendFax: Action<typeof fields, typeof settings> = {
   dataPoints,
   previewable: true,
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
-    const meta = {
-      tenant_id: payload.pathway.tenant_id,
-      careflow_id: payload.pathway.id,
-      activity_id: payload.activity.id,
-    }
-
-    helpers.log({ meta, fields: payload.fields }, 'Processing sendFax')
+    helpers.log({ fields: payload.fields }, 'Processing sendFax')
 
     const { fields, settings } = validate({
       schema: z.object({
@@ -124,7 +118,7 @@ export const sendFax: Action<typeof fields, typeof settings> = {
         }
       }
     } catch (err) {
-      helpers.log({ meta, err }, 'error', err as Error)
+      helpers.log({ err }, 'error', err as Error)
       const error = err as Error
       await onError({
         events: [

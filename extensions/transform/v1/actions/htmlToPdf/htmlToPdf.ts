@@ -19,13 +19,7 @@ export const htmlToPdf: Action<
   dataPoints,
   previewable: false,
   onEvent: async ({ payload, onComplete, onError, helpers }) => {
-    const meta = {
-      tenant_id: payload.pathway.tenant_id,
-      careflow_id: payload.pathway.id,
-      activity_id: payload.activity.id,
-    }
-
-    helpers.log({ meta, fields: payload.fields }, 'Processing htmlToPdf')
+    helpers.log({ fields: payload.fields }, 'Processing htmlToPdf')
 
     try {
       const {
@@ -55,7 +49,7 @@ export const htmlToPdf: Action<
         },
       })
     } catch (err) {
-      helpers.log({ meta, err }, 'error', err as Error)
+      helpers.log({ err }, 'error', err as Error)
       const error = err as Error
       await onError({
         events: [

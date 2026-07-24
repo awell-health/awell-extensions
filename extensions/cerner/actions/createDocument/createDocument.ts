@@ -20,11 +20,6 @@ export const createDocument: Action<
   previewable: true,
   dataPoints,
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
-    const meta = {
-      tenant_id: payload.pathway.tenant_id,
-      careflow_id: payload.pathway.id,
-      activity_id: payload.activity.id,
-    }
     const {
       cernerFhirR4Sdk,
       fields: { patientResourceId, encounterResourceId, type, note },
@@ -75,7 +70,7 @@ export const createDocument: Action<
 
     try {
       helpers.log(
-        { meta, DocumentReferenceInput },
+        { DocumentReferenceInput },
         '[createDocument] Creating Cerner document reference',
       )
 

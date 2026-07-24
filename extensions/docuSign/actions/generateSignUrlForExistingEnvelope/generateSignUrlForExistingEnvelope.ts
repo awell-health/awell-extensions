@@ -25,11 +25,6 @@ export const generateSignUrlForExistingEnvelope: Action<
       pathway: { id: pathwayId },
       activity: { id: activityId, sessionId },
     } = payload
-    const meta = {
-      tenant_id: payload.pathway.tenant_id,
-      careflow_id: payload.pathway.id,
-      activity_id: payload.activity.id,
-    }
 
     const {
       settings: {
@@ -76,7 +71,7 @@ export const generateSignUrlForExistingEnvelope: Action<
       }
 
       helpers.log(
-        { meta, createRecipientViewRequest },
+        { createRecipientViewRequest },
         'Creating DocuSign recipient view',
       )
       const viewResult = await envelopesApi.createRecipientView(

@@ -19,16 +19,7 @@ export const createMessageThread: Action<
   previewable: true,
   dataPoints,
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
-    const meta = {
-      tenant_id: payload.pathway.tenant_id,
-      careflow_id: payload.pathway.id,
-      activity_id: payload.activity.id,
-    }
-
-    helpers.log(
-      { meta, fields: payload.fields },
-      'Processing createMessageThread',
-    )
+    helpers.log({ fields: payload.fields }, 'Processing createMessageThread')
 
     try {
       const {
@@ -78,7 +69,7 @@ export const createMessageThread: Action<
 
       const api = makeAPIClient(payload.settings)
       helpers.log(
-        { meta, messageThread },
+        { messageThread },
         '[createMessageThread] Creating Elation message thread',
       )
 
@@ -90,7 +81,7 @@ export const createMessageThread: Action<
         },
       })
     } catch (err) {
-      helpers.log({ meta, err }, 'error', err as Error)
+      helpers.log({ err }, 'error', err as Error)
       const error = err as Error
       await onError({
         events: [

@@ -26,11 +26,6 @@ export const createSequentialEmbeddedSignatureRequest: Action<
       pathway: { id: pathwayId },
       activity: { id: activityId, sessionId },
     } = payload
-    const meta = {
-      tenant_id: payload.pathway.tenant_id,
-      careflow_id: payload.pathway.id,
-      activity_id: payload.activity.id,
-    }
 
     const {
       settings: {
@@ -98,7 +93,7 @@ export const createSequentialEmbeddedSignatureRequest: Action<
       const createEnvelopeRequest = {
         envelopeDefinition: envelope,
       }
-      helpers.log({ meta, createEnvelopeRequest }, 'Creating DocuSign envelope')
+      helpers.log({ createEnvelopeRequest }, 'Creating DocuSign envelope')
       const envelopeResult = await envelopesApi.createEnvelope(
         accountId,
         createEnvelopeRequest,
@@ -122,7 +117,7 @@ export const createSequentialEmbeddedSignatureRequest: Action<
       }
 
       helpers.log(
-        { meta, createRecipientViewRequest },
+        { createRecipientViewRequest },
         'Creating DocuSign recipient view',
       )
       const recipient1ViewResult = await envelopesApi.createRecipientView(

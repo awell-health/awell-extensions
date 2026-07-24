@@ -37,11 +37,6 @@ export const createCalculationObservation: Action<
       fieldsSchema: FieldsValidationSchema,
       payload,
     })
-    const meta = {
-      tenant_id: payload.pathway.tenant_id,
-      careflow_id: payload.pathway.id,
-      activity_id: payload.activity.id,
-    }
 
     const awellSdk = await helpers.awellSdk()
 
@@ -158,7 +153,7 @@ export const createCalculationObservation: Action<
     }
 
     helpers.log(
-      { meta, observationResource },
+      { observationResource },
       '[createCalculationObservation] Creating Medplum observation',
     )
 

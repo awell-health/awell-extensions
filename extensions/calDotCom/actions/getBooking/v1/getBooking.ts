@@ -14,12 +14,6 @@ export const getBooking: Action<typeof fields, typeof settings> = {
   dataPoints,
   previewable: true,
   onEvent: async ({ payload, onComplete, onError, helpers }) => {
-    const meta = {
-      tenant_id: payload.pathway.tenant_id,
-      careflow_id: payload.pathway.id,
-      activity_id: payload.activity.id,
-    }
-
     try {
       const {
         fields: { bookingId },
@@ -32,7 +26,7 @@ export const getBooking: Action<typeof fields, typeof settings> = {
         payload,
       })
       const calComApi = new CalComApi(apiKey)
-      helpers.log({ meta, bookingId }, 'Getting Cal.com booking')
+      helpers.log({ bookingId }, 'Getting Cal.com booking')
       const booking = await calComApi.getBooking(bookingId)
 
       await onComplete({
@@ -54,7 +48,7 @@ export const getBooking: Action<typeof fields, typeof settings> = {
         },
       })
     } catch (error) {
-      helpers.log({ meta, error }, 'error', error as Error)
+      helpers.log({ error }, 'error', error as Error)
       if (error instanceof ZodError) {
         const err = fromZodError(error)
         await onError({

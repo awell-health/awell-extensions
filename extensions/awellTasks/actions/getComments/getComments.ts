@@ -19,13 +19,7 @@ export const getComments: Action<
   dataPoints,
   supports_automated_retries: true,
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
-    const meta = {
-      tenant_id: payload.pathway.tenant_id,
-      careflow_id: payload.pathway.id,
-      activity_id: payload.activity.id,
-    }
-
-    helpers.log({ meta, fields: payload.fields }, 'Processing getComments')
+    helpers.log({ fields: payload.fields }, 'Processing getComments')
 
     try {
       const { taskSdk, pathway } = await validatePayloadAndCreateSdk({
@@ -66,7 +60,7 @@ export const getComments: Action<
         },
       })
     } catch (err) {
-      helpers.log({ meta, err }, 'error', err as Error)
+      helpers.log({ err }, 'error', err as Error)
       const error = err as Error
       await onError({
         events: [

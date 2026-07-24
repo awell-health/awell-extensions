@@ -20,13 +20,7 @@ export const uploadSingleFile: Action<typeof fields, typeof settings> = {
   dataPoints,
   previewable: false,
   onEvent: async ({ payload, onComplete, onError, helpers }) => {
-    const meta = {
-      tenant_id: payload.pathway.tenant_id,
-      careflow_id: payload.pathway.id,
-      activity_id: payload.activity.id,
-    }
-
-    helpers.log({ meta, fields: payload.fields }, 'Processing uploadSingleFile')
+    helpers.log({ fields: payload.fields }, 'Processing uploadSingleFile')
 
     try {
       validate({
@@ -41,7 +35,7 @@ export const uploadSingleFile: Action<typeof fields, typeof settings> = {
        * Completion happens in Awell Hosted Pages
        */
     } catch (err) {
-      helpers.log({ meta, err }, 'error', err as Error)
+      helpers.log({ err }, 'error', err as Error)
       if (err instanceof ZodError) {
         const error = fromZodError(err)
         await onError({

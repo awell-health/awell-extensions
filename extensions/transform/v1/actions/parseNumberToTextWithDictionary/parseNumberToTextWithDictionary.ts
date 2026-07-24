@@ -18,12 +18,6 @@ export const parseNumberToTextWithDictionary: Action<
   dataPoints,
   previewable: true,
   onEvent: async ({ payload, onComplete, onError, helpers }) => {
-    const meta = {
-      tenant_id: payload.pathway.tenant_id,
-      careflow_id: payload.pathway.id,
-      activity_id: payload.activity.id,
-    }
-
     try {
       const {
         fields: { number, dictionary },
@@ -50,7 +44,7 @@ export const parseNumberToTextWithDictionary: Action<
 
       const text = getStringFromDictionary()
       helpers.log(
-        { meta, number, dictionary, text },
+        { number, dictionary, text },
         'Parsed number to text with dictionary',
       )
 
@@ -60,7 +54,7 @@ export const parseNumberToTextWithDictionary: Action<
         },
       })
     } catch (err) {
-      helpers.log({ meta, err }, 'error', err as Error)
+      helpers.log({ err }, 'error', err as Error)
       if (err instanceof ZodError) {
         const error = fromZodError(err)
         await onError({

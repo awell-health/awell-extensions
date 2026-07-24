@@ -24,14 +24,8 @@ export const getQuestionnaireResponse: Action<typeof fields, typeof settings> =
     dataPoints,
     previewable: true,
     onEvent: async ({ payload, onComplete, onError, helpers }) => {
-      const meta = {
-        tenant_id: payload.pathway.tenant_id,
-        careflow_id: payload.pathway.id,
-        activity_id: payload.activity.id,
-      }
-
       helpers.log(
-        { meta, fields: payload.fields },
+        { fields: payload.fields },
         'Processing getQuestionnaireResponse',
       )
 
@@ -60,7 +54,7 @@ export const getQuestionnaireResponse: Action<typeof fields, typeof settings> =
           },
         })
       } catch (error) {
-        helpers.log({ meta, error }, 'error', error as Error)
+        helpers.log({ error }, 'error', error as Error)
         let parsedError
 
         if (isZodError(error)) {

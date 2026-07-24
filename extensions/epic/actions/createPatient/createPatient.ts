@@ -20,11 +20,6 @@ export const createPatient: Action<
   previewable: true,
   dataPoints,
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
-    const meta = {
-      tenant_id: payload.pathway.tenant_id,
-      careflow_id: payload.pathway.id,
-      activity_id: payload.activity.id,
-    }
     const {
       epicFhirR4Sdk,
       fields: { familyName, givenName, email, gender, birthDate, ssn },
@@ -62,10 +57,7 @@ export const createPatient: Action<
     } satisfies Patient
 
     try {
-      helpers.log(
-        { meta, PatientResource },
-        '[createPatient] Creating Epic patient',
-      )
+      helpers.log({ PatientResource }, '[createPatient] Creating Epic patient')
 
       const res = await epicFhirR4Sdk.createPatient(PatientResource)
       const resourceReference =

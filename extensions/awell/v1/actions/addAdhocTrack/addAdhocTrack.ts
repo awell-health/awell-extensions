@@ -18,13 +18,7 @@ export const addAdhocTrack: Action<typeof fields, typeof settings> = {
   previewable: false,
   supports_automated_retries: true,
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
-    const meta = {
-      tenant_id: payload.pathway.tenant_id,
-      careflow_id: payload.pathway.id,
-      activity_id: payload.activity.id,
-    }
-
-    helpers.log({ meta, fields: payload.fields }, 'Processing addAdhocTrack')
+    helpers.log({ fields: payload.fields }, 'Processing addAdhocTrack')
 
     try {
       const {
@@ -60,7 +54,7 @@ export const addAdhocTrack: Action<typeof fields, typeof settings> = {
         ],
       })
     } catch (err) {
-      helpers.log({ meta, err }, 'error', err as Error)
+      helpers.log({ err }, 'error', err as Error)
       const error = err as Error
       await onError({
         events: [

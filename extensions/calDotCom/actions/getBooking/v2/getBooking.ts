@@ -14,12 +14,6 @@ export const getBookingv2: Action<typeof fields, typeof settings> = {
   dataPoints,
   previewable: true,
   onEvent: async ({ payload, onComplete, onError, helpers }) => {
-    const meta = {
-      tenant_id: payload.pathway.tenant_id,
-      careflow_id: payload.pathway.id,
-      activity_id: payload.activity.id,
-    }
-
     const {
       fields: { bookingUid },
       calv2Client,
@@ -32,13 +26,13 @@ export const getBookingv2: Action<typeof fields, typeof settings> = {
       bookingUid,
     }
 
-    helpers.log({ meta, getBookingRequest }, 'Getting Cal.com booking')
+    helpers.log({ getBookingRequest }, 'Getting Cal.com booking')
 
     const response = await calv2Client.getBooking(getBookingRequest)
 
     if (response.data.status === 'error') {
       helpers.log(
-        { meta, getBookingRequest, responseData: response.data },
+        { getBookingRequest, responseData: response.data },
         'Cal.com get booking returned an error',
       )
       await onError({

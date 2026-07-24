@@ -16,14 +16,8 @@ export const sendEmailWithSingleSendApi: Action<
   previewable: true,
   dataPoints,
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
-    const meta = {
-      tenant_id: payload.pathway.tenant_id,
-      careflow_id: payload.pathway.id,
-      activity_id: payload.activity.id,
-    }
-
     helpers.log(
-      { meta, fields: payload.fields },
+      { fields: payload.fields },
       'Processing sendEmailWithSingleSendApi',
     )
 
@@ -45,10 +39,7 @@ export const sendEmailWithSingleSendApi: Action<
         customProperties: fields.customProperties,
       }
 
-      helpers.log(
-        { meta, requestBody },
-        'Sending email via HubSpot Single Send API',
-      )
+      helpers.log({ requestBody }, 'Sending email via HubSpot Single Send API')
       const res =
         await hubSpotSdk.marketing.transactional.singleSendApi.sendEmail(
           requestBody,
@@ -60,7 +51,7 @@ export const sendEmailWithSingleSendApi: Action<
         },
       })
     } catch (err) {
-      helpers.log({ meta, err }, 'error', err as Error)
+      helpers.log({ err }, 'error', err as Error)
       const error = err as Error
       await onError({
         events: [

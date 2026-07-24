@@ -17,13 +17,7 @@ export const serializeJson: Action<
   dataPoints,
   previewable: true,
   onEvent: async ({ payload, onComplete, onError, helpers }) => {
-    const meta = {
-      tenant_id: payload.pathway.tenant_id,
-      careflow_id: payload.pathway.id,
-      activity_id: payload.activity.id,
-    }
-
-    helpers.log({ meta, fields: payload.fields }, 'Processing serializeJson')
+    helpers.log({ fields: payload.fields }, 'Processing serializeJson')
 
     try {
       const {
@@ -36,7 +30,7 @@ export const serializeJson: Action<
       })
 
       const serializedJson = JSON.stringify(json)
-      helpers.log({ meta, json, serializedJson }, 'Serialized JSON')
+      helpers.log({ json, serializedJson }, 'Serialized JSON')
 
       await onComplete({
         data_points: {
@@ -44,7 +38,7 @@ export const serializeJson: Action<
         },
       })
     } catch (err) {
-      helpers.log({ meta, err }, 'error', err as Error)
+      helpers.log({ err }, 'error', err as Error)
       const error = err as Error
       await onError({
         events: [

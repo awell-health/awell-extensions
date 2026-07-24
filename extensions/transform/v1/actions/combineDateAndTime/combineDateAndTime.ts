@@ -19,12 +19,6 @@ export const combineDateAndTime: Action<
   dataPoints,
   previewable: true,
   onEvent: async ({ payload, onComplete, onError, helpers }) => {
-    const meta = {
-      tenant_id: payload.pathway.tenant_id,
-      careflow_id: payload.pathway.id,
-      activity_id: payload.activity.id,
-    }
-
     const {
       fields: { referenceDate, timeString },
     } = validate({
@@ -47,10 +41,7 @@ export const combineDateAndTime: Action<
     } else {
       const parsedDateTime = parseISO(timeString)
       if (!isValid(parsedDateTime)) {
-        helpers.log(
-          { meta, referenceDate, timeString },
-          'Invalid time string format',
-        )
+        helpers.log({ referenceDate, timeString }, 'Invalid time string format')
         await onError({
           events: [
             {
@@ -78,7 +69,7 @@ export const combineDateAndTime: Action<
     const isoDateTime = formatISO(combinedDate)
 
     helpers.log(
-      { meta, referenceDate, timeString, combinedDateTime: isoDateTime },
+      { referenceDate, timeString, combinedDateTime: isoDateTime },
       'Combined date and time',
     )
 

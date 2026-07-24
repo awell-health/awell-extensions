@@ -15,12 +15,6 @@ export const generateRandomNumber: Action<typeof fields, typeof settings> = {
   dataPoints,
   previewable: true,
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
-    const meta = {
-      tenant_id: payload.pathway.tenant_id,
-      careflow_id: payload.pathway.id,
-      activity_id: payload.activity.id,
-    }
-
     try {
       const {
         fields: { min, max },
@@ -35,10 +29,7 @@ export const generateRandomNumber: Action<typeof fields, typeof settings> = {
         Math.floor(Math.random() * (maxSerialized - minSerialized + 1)) +
         minSerialized
 
-      helpers.log(
-        { meta, min, max, generatedNumber },
-        'Generated random number',
-      )
+      helpers.log({ min, max, generatedNumber }, 'Generated random number')
 
       await onComplete({
         data_points: {
@@ -46,7 +37,7 @@ export const generateRandomNumber: Action<typeof fields, typeof settings> = {
         },
       })
     } catch (err) {
-      helpers.log({ meta, err }, 'error', err as Error)
+      helpers.log({ err }, 'error', err as Error)
       if (err instanceof ZodError) {
         const error = fromZodError(err)
         await onError({

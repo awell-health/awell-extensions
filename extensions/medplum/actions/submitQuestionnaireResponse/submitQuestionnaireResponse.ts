@@ -33,11 +33,6 @@ export const submitQuestionnaireResponse: Action<
       fieldsSchema: FieldsValidationSchema,
       payload,
     })
-    const meta = {
-      tenant_id: payload.pathway.tenant_id,
-      careflow_id: payload.pathway.id,
-      activity_id: payload.activity.id,
-    }
 
     const awellSdk = await helpers.awellSdk()
 
@@ -50,11 +45,11 @@ export const submitQuestionnaireResponse: Action<
         pathwayId: pathway.id,
         activityId: activity.id,
       })
-      helpers.log({ meta, formRes }, 'Form response')
+      helpers.log({ formRes }, 'Form response')
       formDefinition = formRes.formDefinition
       formResponse = formRes.formResponse
     } catch (error) {
-      helpers.log({ meta, error }, 'Error')
+      helpers.log({ error }, 'Error')
       const err = error as Error
       await onError({
         events: [addActivityEventLog({ message: err.message })],
@@ -63,7 +58,7 @@ export const submitQuestionnaireResponse: Action<
     }
 
     helpers.log(
-      { meta, formDefinition, formResponse },
+      { formDefinition, formResponse },
       'Form definition and response',
     )
 
@@ -76,12 +71,12 @@ export const submitQuestionnaireResponse: Action<
       })
 
     helpers.log(
-      { meta, FhirQuestionnaire, FhirQuestionnaireResponse },
+      { fhirQuestionnaire, FhirQuestionnaireResponse },
       'Fhir questionnaire and response',
     )
 
     helpers.log(
-      { meta, FhirQuestionnaire },
+      { fhirQuestionnaire },
       '[submitQuestionnaireResponse] Creating Medplum questionnaire resource',
     )
 
@@ -90,7 +85,7 @@ export const submitQuestionnaireResponse: Action<
       `identifier=${formDefinition.definition_id}/published/${formDefinition.id}`,
     )
 
-    helpers.log({ meta, QuestionnaireResource }, 'Questionnaire resource')
+    helpers.log({ QuestionnaireResource }, 'Questionnaire resource')
 
     const questionnaireResponseResource: QuestionnaireResponse = {
       resourceType: 'QuestionnaireResponse',
@@ -105,13 +100,13 @@ export const submitQuestionnaireResponse: Action<
     }
 
     helpers.log(
-      { meta, questionnaireResponseResource },
+      { questionnaireResponseResource },
       '[submitQuestionnaireResponse] Creating Medplum questionnaire response',
     )
 
     const res = await medplumSdk.createResource(questionnaireResponseResource)
 
-    helpers.log({ meta, res }, 'Questionnaire response')
+    helpers.log({ res }, 'Questionnaire response')
 
     await onComplete({
       data_points: {

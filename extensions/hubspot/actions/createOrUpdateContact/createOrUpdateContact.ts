@@ -25,12 +25,6 @@ export const createOrUpdateContact: Action<
   supports_automated_retries: true,
   dataPoints,
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
-    const meta = {
-      tenant_id: payload.pathway.tenant_id,
-      careflow_id: payload.pathway.id,
-      activity_id: payload.activity.id,
-    }
-
     const eventLogs: ActivityEvent[] = []
 
     const { hubSpotSdk, fields } = await validatePayloadAndCreateSdks({
@@ -72,7 +66,7 @@ export const createOrUpdateContact: Action<
           properties: createOrUpdateProperties,
         }
 
-        helpers.log({ meta, updateContactInput }, 'Updating HubSpot contact')
+        helpers.log({ updateContactInput }, 'Updating HubSpot contact')
         const updatedContact = await hubSpotSdk.crm.contacts.basicApi.update(
           existingContact.id,
           updateContactInput,
@@ -105,7 +99,7 @@ export const createOrUpdateContact: Action<
         properties: createOrUpdateProperties,
       }
 
-      helpers.log({ meta, createContactInput }, 'Creating HubSpot contact')
+      helpers.log({ createContactInput }, 'Creating HubSpot contact')
       const newContact =
         await hubSpotSdk.crm.contacts.basicApi.create(createContactInput)
 

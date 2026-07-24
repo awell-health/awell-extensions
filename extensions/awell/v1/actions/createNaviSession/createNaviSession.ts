@@ -28,11 +28,6 @@ export const createNaviSession: Action<typeof fields, typeof settings> = {
     const orgId = payload.pathway.org_id
     const tenantId = payload.pathway.tenant_id
     const environment = process.env.AWELL_ENVIRONMENT ?? 'test'
-    const meta = {
-      tenant_id: payload.pathway.tenant_id,
-      careflow_id: payload.pathway.id,
-      activity_id: payload.activity.id,
-    }
 
     const body = {
       orgId,
@@ -45,7 +40,7 @@ export const createNaviSession: Action<typeof fields, typeof settings> = {
     }
 
     try {
-      helpers.log({ meta, body }, 'Creating Navi session')
+      helpers.log({ body }, 'Creating Navi session')
       const response = await fetch(
         'https://navi-portal.awellhealth.com/api/session/create',
         {

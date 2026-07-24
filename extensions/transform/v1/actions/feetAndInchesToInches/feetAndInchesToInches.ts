@@ -17,16 +17,7 @@ export const feetAndInchesToInches: Action<
   dataPoints,
   previewable: true,
   onEvent: async ({ payload, onComplete, onError, helpers }) => {
-    const meta = {
-      tenant_id: payload.pathway.tenant_id,
-      careflow_id: payload.pathway.id,
-      activity_id: payload.activity.id,
-    }
-
-    helpers.log(
-      { meta, fields: payload.fields },
-      'Processing feetAndInchesToInches',
-    )
+    helpers.log({ fields: payload.fields }, 'Processing feetAndInchesToInches')
 
     try {
       const {
@@ -40,7 +31,7 @@ export const feetAndInchesToInches: Action<
 
       const totalInches = feet * 12 + inches
 
-      helpers.log({ meta, feet, inches, totalInches }, 'Converted to inches')
+      helpers.log({ feet, inches, totalInches }, 'Converted to inches')
 
       await onComplete({
         data_points: {
@@ -48,7 +39,7 @@ export const feetAndInchesToInches: Action<
         },
       })
     } catch (err) {
-      helpers.log({ meta, err }, 'error', err as Error)
+      helpers.log({ err }, 'error', err as Error)
       const error = err as Error
       await onError({
         events: [

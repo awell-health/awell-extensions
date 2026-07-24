@@ -232,14 +232,9 @@ export const helloWorld: Action<
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
     const { fields } = payload
     const message = fields.message ?? 'Hello, World!'
-    const meta = {
-      tenant_id: payload.pathway.tenant_id,
-      careflow_id: payload.pathway.id,
-      activity_id: payload.activity.id,
-    }
 
     // Log the message using the helpers
-    helpers.log({ meta, message }, 'Hello World Action')
+    helpers.log({ message }, 'Hello World Action')
 
     await onComplete({
       data_points: {

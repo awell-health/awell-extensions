@@ -17,13 +17,7 @@ export const trackPersonEvent: Action<
   previewable: false,
   dataPoints,
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
-    const meta = {
-      tenant_id: payload.pathway.tenant_id,
-      careflow_id: payload.pathway.id,
-      activity_id: payload.activity.id,
-    }
-
-    helpers.log({ meta, fields: payload.fields }, 'Processing trackPersonEvent')
+    helpers.log({ fields: payload.fields }, 'Processing trackPersonEvent')
 
     try {
       const { customerIoTrackClient, fields, pathway, patient, activity } =
@@ -62,7 +56,7 @@ export const trackPersonEvent: Action<
       }
 
       helpers.log(
-        { meta, trackPersonEventWithPatientIdentifiersInput },
+        { trackPersonEventWithPatientIdentifiersInput },
         'Tracking Customer.io person event',
       )
       await customerIoTrackClient.trackPersonEvent(
@@ -86,14 +80,14 @@ export const trackPersonEvent: Action<
       }
 
       helpers.log(
-        { meta, trackPersonEventInput },
+        { trackPersonEventInput },
         'Tracking Customer.io person event',
       )
       await customerIoTrackClient.trackPersonEvent(trackPersonEventInput)
 
       await onComplete()
     } catch (err) {
-      helpers.log({ meta, err }, 'error', err as Error)
+      helpers.log({ err }, 'error', err as Error)
       const error = err as Error
       await onError({
         events: [

@@ -13,13 +13,7 @@ export const callWithGrace = {
   dataPoints,
   previewable: false,
   onEvent: async ({ payload, onComplete, onError, helpers }) => {
-    const meta = {
-      tenant_id: payload.pathway.tenant_id,
-      careflow_id: payload.pathway.id,
-      activity_id: payload.activity.id,
-    }
-
-    helpers.log({ meta, fields: payload.fields }, 'Processing callWithGrace')
+    helpers.log({ fields: payload.fields }, 'Processing callWithGrace')
 
     try {
       const { pathway, patient } = payload
@@ -40,7 +34,7 @@ export const callWithGrace = {
         pathway_definition_id: pathway.definition_id,
         activity_id: payload.activity.id,
       }
-      helpers.log({ meta, allData }, 'Calling with Grace via Gridspace')
+      helpers.log({ allData }, 'Calling with Grace via Gridspace')
       const resp = await client.callWithGrace(flowId, allData)
       await onComplete({
         events: [
@@ -52,7 +46,7 @@ export const callWithGrace = {
         data_points: {},
       })
     } catch (err) {
-      helpers.log({ meta, err }, 'error', err as Error)
+      helpers.log({ err }, 'error', err as Error)
       const error = err as Error
       await onError({
         events: [

@@ -30,11 +30,6 @@ export const createPatient: Action<
       fieldsSchema: FieldsValidationSchema,
       payload,
     })
-    const meta = {
-      tenant_id: payload.pathway.tenant_id,
-      careflow_id: payload.pathway.id,
-      activity_id: payload.activity.id,
-    }
 
     const dont_send_welcome = fields.send_invite !== true
     const dietitian_id =
@@ -59,7 +54,7 @@ export const createPatient: Action<
       }
 
       helpers.log(
-        { meta, createClientInput },
+        { createClientInput },
         '[createPatient] Creating Healthie client',
       )
 

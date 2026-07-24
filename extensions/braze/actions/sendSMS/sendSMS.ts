@@ -14,13 +14,7 @@ export const sendSMS = {
   dataPoints,
   previewable: true,
   onEvent: async ({ payload, onComplete, onError, helpers }) => {
-    const meta = {
-      tenant_id: payload.pathway.tenant_id,
-      careflow_id: payload.pathway.id,
-      activity_id: payload.activity.id,
-    }
-
-    helpers.log({ meta, fields: payload.fields }, 'Processing sendSMS')
+    helpers.log({ fields: payload.fields }, 'Processing sendSMS')
 
     try {
       const {
@@ -67,7 +61,7 @@ export const sendSMS = {
         },
       }
 
-      helpers.log({ meta, requestBody }, 'Sending SMS via Braze')
+      helpers.log({ requestBody }, 'Sending SMS via Braze')
       const resp = await brazeClient.sendMessageImmediately(requestBody)
 
       await onComplete({
@@ -82,7 +76,7 @@ export const sendSMS = {
         },
       })
     } catch (err) {
-      helpers.log({ meta, err }, 'error', err as Error)
+      helpers.log({ err }, 'error', err as Error)
       const error = err as Error
       await onError({
         events: [

@@ -84,12 +84,6 @@ export const findPhysician: Action<
   supports_automated_retries: true,
   dataPoints,
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
-    const meta = {
-      tenant_id: payload.pathway.tenant_id,
-      careflow_id: payload.pathway.id,
-      activity_id: payload.activity.id,
-    }
-
     try {
       const { firstName, lastName, npi } = payload.fields
 
@@ -102,13 +96,13 @@ export const findPhysician: Action<
         },
       }
 
-      helpers.log({ meta, findPhysiciansRequest }, 'Finding Elation physicians')
+      helpers.log({ findPhysiciansRequest }, 'Finding Elation physicians')
 
       const physiciansList = await api.findPhysicians(findPhysiciansRequest)
 
       if (physiciansList.count !== 1) {
         helpers.log(
-          { meta, findPhysiciansRequest, count: physiciansList.count },
+          { findPhysiciansRequest, count: physiciansList.count },
           'Elation physician search returned unexpected result count',
         )
         await onError({
@@ -129,17 +123,14 @@ export const findPhysician: Action<
       }
 
       const physician = physiciansList.results[0]
-      helpers.log(
-        { meta, physicianId: physician.id },
-        'Found Elation physician',
-      )
+      helpers.log({ physicianId: physician.id }, 'Found Elation physician')
       await onComplete({
         data_points: {
           physicianId: String(physician.id),
         },
       })
     } catch (err) {
-      helpers.log({ meta, err }, 'error', err as Error)
+      helpers.log({ err }, 'error', err as Error)
       if (err instanceof ZodError) {
         const error = fromZodError(err)
         await onError({

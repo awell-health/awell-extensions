@@ -16,16 +16,7 @@ export const getNextDateOccurrence: Action<
   dataPoints,
   previewable: true,
   onEvent: async ({ payload, onComplete, onError, helpers }) => {
-    const meta = {
-      tenant_id: payload.pathway.tenant_id,
-      careflow_id: payload.pathway.id,
-      activity_id: payload.activity.id,
-    }
-
-    helpers.log(
-      { meta, fields: payload.fields },
-      'Processing getNextDateOccurrence',
-    )
+    helpers.log({ fields: payload.fields }, 'Processing getNextDateOccurrence')
 
     try {
       const { referenceDate: referenceDateInput } =
@@ -78,7 +69,7 @@ export const getNextDateOccurrence: Action<
       const nextOccurrence = findNextOccurrence(anchorDate)
 
       helpers.log(
-        { meta, referenceDate: referenceDateInput, nextOccurrence },
+        { referenceDate: referenceDateInput, nextOccurrence },
         'Calculated next date occurrence',
       )
 
@@ -88,7 +79,7 @@ export const getNextDateOccurrence: Action<
         },
       })
     } catch (err) {
-      helpers.log({ meta, err }, 'error', err as Error)
+      helpers.log({ err }, 'error', err as Error)
       const error = err as Error
       await onError({
         events: [

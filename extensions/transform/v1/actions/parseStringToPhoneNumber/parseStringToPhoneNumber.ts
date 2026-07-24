@@ -23,14 +23,8 @@ export const parseStringToPhoneNumber: Action<
   dataPoints,
   previewable: true,
   onEvent: async ({ payload, onComplete, onError, helpers }) => {
-    const meta = {
-      tenant_id: payload.pathway.tenant_id,
-      careflow_id: payload.pathway.id,
-      activity_id: payload.activity.id,
-    }
-
     helpers.log(
-      { meta, fields: payload.fields },
+      { fields: payload.fields },
       'Processing parseStringToPhoneNumber',
     )
 
@@ -59,7 +53,7 @@ export const parseStringToPhoneNumber: Action<
             }),
           )
           helpers.log(
-            { meta, text, countryCallingCode, phoneNumber: parsed.data },
+            { text, countryCallingCode, phoneNumber: parsed.data },
             'Parsed text to phone number',
           )
           return parsed.data
@@ -75,7 +69,7 @@ export const parseStringToPhoneNumber: Action<
             }),
           )
           const err = new ZodError(parsed.error.issues)
-          helpers.log({ meta, text, countryCallingCode, err }, 'error', err)
+          helpers.log({ text, countryCallingCode, err }, 'error', err)
           throw err
         }
 
@@ -93,12 +87,12 @@ export const parseStringToPhoneNumber: Action<
         try {
           phoneNumber = E164PhoneValidationSchema.parse(withCode)
         } catch (err) {
-          helpers.log({ meta, err }, 'error', err as Error)
+          helpers.log({ err }, 'error', err as Error)
           throw err
         }
 
         helpers.log(
-          { meta, text, countryCallingCode, phoneNumber },
+          { text, countryCallingCode, phoneNumber },
           'Parsed text to phone number',
         )
         return phoneNumber
@@ -111,7 +105,7 @@ export const parseStringToPhoneNumber: Action<
         events,
       })
     } catch (err) {
-      helpers.log({ meta, err }, 'error', err as Error)
+      helpers.log({ err }, 'error', err as Error)
       const error = err as Error
       await onError({
         events: [

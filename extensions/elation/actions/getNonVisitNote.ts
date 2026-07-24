@@ -69,23 +69,17 @@ export const getNonVisitNote: Action<
   supports_automated_retries: true,
   dataPoints,
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
-    const meta = {
-      tenant_id: payload.pathway.tenant_id,
-      careflow_id: payload.pathway.id,
-      activity_id: payload.activity.id,
-    }
-
     try {
       const { nonVisitNoteId } = payload.fields
       const noteId = NumericIdSchema.parse(nonVisitNoteId)
 
       const api = makeAPIClient(payload.settings)
-      helpers.log({ meta, noteId }, 'Getting Elation non-visit note')
+      helpers.log({ noteId }, 'Getting Elation non-visit note')
       const { bullets, chart_date, document_date, patient, practice, tags } =
         await api.getNonVisitNote(noteId)
 
       helpers.log(
-        { meta, noteId, patient, practice, document_date, chart_date },
+        { noteId, patient, practice, document_date, chart_date },
         'Got Elation non-visit note',
       )
 
@@ -105,7 +99,7 @@ export const getNonVisitNote: Action<
         },
       })
     } catch (err) {
-      helpers.log({ meta, err }, 'error', err as Error)
+      helpers.log({ err }, 'error', err as Error)
       if (err instanceof ZodError) {
         const error = fromZodError(err)
         await onError({

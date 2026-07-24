@@ -19,12 +19,6 @@ export const checkWorkingHours: Action<
   dataPoints,
   previewable: true,
   onEvent: async ({ payload, onComplete, onError, helpers }) => {
-    const meta = {
-      tenant_id: payload.pathway.tenant_id,
-      careflow_id: payload.pathway.id,
-      activity_id: payload.activity.id,
-    }
-
     const { workingHoursStart, workingHoursEnd, timezone } =
       FieldsValidationSchema.parse(payload.fields)
 
@@ -44,7 +38,7 @@ export const checkWorkingHours: Action<
 
     if (endTotalMinutes <= startTotalMinutes) {
       helpers.log(
-        { meta, workingHoursStart, workingHoursEnd, timezone },
+        { workingHoursStart, workingHoursEnd, timezone },
         'Invalid working hours',
       )
       await onError({

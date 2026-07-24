@@ -16,13 +16,7 @@ export const updatePatient: Action<typeof updateFields, typeof settings> = {
   fields: updateFields,
   previewable: true,
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
-    const meta = {
-      tenant_id: payload.pathway.tenant_id,
-      careflow_id: payload.pathway.id,
-      activity_id: payload.activity.id,
-    }
-
-    helpers.log({ meta, fields: payload.fields }, 'Processing updatePatient')
+    helpers.log({ fields: payload.fields }, 'Processing updatePatient')
 
     try {
       const patient = patientUpdateSchema.parse(payload.fields)
@@ -40,7 +34,7 @@ export const updatePatient: Action<typeof updateFields, typeof settings> = {
 
       await onComplete()
     } catch (err) {
-      helpers.log({ meta, err }, 'error', err as Error)
+      helpers.log({ err }, 'error', err as Error)
       await handleErrorMessage(err, onError)
     }
   },

@@ -27,16 +27,7 @@ export const startNetworkQuery: Action<
   previewable: false,
   dataPoints,
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
-    const meta = {
-      tenant_id: payload.pathway.tenant_id,
-      careflow_id: payload.pathway.id,
-      activity_id: payload.activity.id,
-    }
-
-    helpers.log(
-      { meta, fields: payload.fields },
-      'Processing startNetworkQuery',
-    )
+    helpers.log({ fields: payload.fields }, 'Processing startNetworkQuery')
 
     try {
       const { patientId } = startNetworkQuerySchema.parse(payload.fields)
@@ -55,7 +46,7 @@ export const startNetworkQuery: Action<
         },
       })
     } catch (err) {
-      helpers.log({ meta, err }, 'error', err as Error)
+      helpers.log({ err }, 'error', err as Error)
       await handleErrorMessage(err, onError)
     }
   },

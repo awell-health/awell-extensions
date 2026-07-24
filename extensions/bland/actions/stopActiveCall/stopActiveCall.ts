@@ -19,13 +19,7 @@ export const stopActiveCall: Action<
   dataPoints,
   supports_automated_retries: true,
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
-    const meta = {
-      tenant_id: payload.pathway.tenant_id,
-      careflow_id: payload.pathway.id,
-      activity_id: payload.activity.id,
-    }
-
-    helpers.log({ meta, fields: payload.fields }, 'Processing stopActiveCall')
+    helpers.log({ fields: payload.fields }, 'Processing stopActiveCall')
 
     try {
       const { fields, blandSdk } = await validatePayloadAndCreateSdk({
@@ -37,10 +31,7 @@ export const stopActiveCall: Action<
         call_id: fields.callId,
       }
 
-      helpers.log(
-        { meta, stopActiveCallInput },
-        'Stopping active call via Bland',
-      )
+      helpers.log({ stopActiveCallInput }, 'Stopping active call via Bland')
       const { data } = await blandSdk.stopActiveCall(stopActiveCallInput)
 
       await onComplete({
@@ -55,7 +46,7 @@ export const stopActiveCall: Action<
         ],
       })
     } catch (err) {
-      helpers.log({ meta, err }, 'error', err as Error)
+      helpers.log({ err }, 'error', err as Error)
       const error = err as Error
       await onError({
         events: [

@@ -19,13 +19,7 @@ export const addSuppressions: Action<typeof fields, typeof settings> = {
   fields,
   previewable: true,
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
-    const meta = {
-      tenant_id: payload.pathway.tenant_id,
-      careflow_id: payload.pathway.id,
-      activity_id: payload.activity.id,
-    }
-
-    helpers.log({ meta, fields: payload.fields }, 'Processing addSuppressions')
+    helpers.log({ fields: payload.fields }, 'Processing addSuppressions')
 
     try {
       const {
@@ -63,7 +57,7 @@ export const addSuppressions: Action<typeof fields, typeof settings> = {
         })
       }
     } catch (err) {
-      helpers.log({ meta, err }, 'error', err as Error)
+      helpers.log({ err }, 'error', err as Error)
       if (err instanceof ZodError) {
         const error = fromZodError(err)
         await onError({
