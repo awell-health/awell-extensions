@@ -35,7 +35,6 @@ export const htmlToPdf: Action<
 
       helpers.log(
         {
-          meta,
           htmlStringLength: htmlString.length,
           options,
           base64PdfLength: base64Pdf.length,

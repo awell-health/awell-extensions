@@ -102,7 +102,6 @@ export const checkWorkingHours: Action<
 
     helpers.log(
       {
-        meta,
         workingHoursStart,
         workingHoursEnd,
         timezone,

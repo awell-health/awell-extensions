@@ -53,7 +53,6 @@ export const sendCallWithPathway: Action<
       if (resolvedPathwayId !== fields.pathwayId) {
         helpers.log(
           {
-            meta,
             originalPathwayId: fields.pathwayId,
             resolvedPathwayId,
           },

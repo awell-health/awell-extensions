@@ -71,12 +71,12 @@ export const submitQuestionnaireResponse: Action<
       })
 
     helpers.log(
-      { fhirQuestionnaire, FhirQuestionnaireResponse },
+      { FhirQuestionnaire, FhirQuestionnaireResponse },
       'Fhir questionnaire and response',
     )
 
     helpers.log(
-      { fhirQuestionnaire },
+      { FhirQuestionnaire },
       '[submitQuestionnaireResponse] Creating Medplum questionnaire resource',
     )
 

@@ -161,7 +161,6 @@ export const getNextWorkday: Action<
 
       helpers.log(
         {
-          meta,
           referenceDate: referenceDateInput,
           includeReferenceDate,
           nextWorkday,
