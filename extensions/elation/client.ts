@@ -106,7 +106,7 @@ export class ElationDataWrapper extends DataWrapper {
   public async getPatient(id: number): Promise<PatientResponse> {
     const req = this.Request<PatientResponse>({
       method: 'GET',
-      url: `/patients/${id}`,
+      url: `/patients/${id}/`,
     })
     const res = await req
     return res
@@ -130,7 +130,7 @@ export class ElationDataWrapper extends DataWrapper {
   ): Promise<PatientResponse> {
     const req = this.Request<PatientResponse>({
       method: 'PATCH',
-      url: `/patients/${id}`,
+      url: `/patients/${id}/`,
       data: obj,
     })
     const res = await req
