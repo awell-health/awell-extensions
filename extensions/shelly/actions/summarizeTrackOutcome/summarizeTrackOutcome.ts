@@ -25,89 +25,117 @@ export const summarizeTrackOutcome: Action<
   dataPoints,
 
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
-    // 1. Validate input fields
-    const { instructions } = FieldsValidationSchema.parse(payload.fields)
-    const pathway = payload.pathway
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
 
-    // 2. Initialize OpenAI model with metadata
-    const { model, metadata, callbacks } = await createOpenAIModel({
-      settings: {}, // we use built-in API key for OpenAI
-      helpers,
-      payload,
-      modelType: OPENAI_MODELS.GPT5Mini,
-      hideDataForTracing: false, // IMPORTANT: set to true if there is a use case that might include PHI
-    })
+    helpers.log(
+      { meta, fields: payload.fields },
+      'Processing summarizeTrackOutcome',
+    )
 
-    const awellSdk = await helpers.awellSdk()
+    try {
+      // 1. Validate input fields
+      const { instructions } = FieldsValidationSchema.parse(payload.fields)
+      const pathway = payload.pathway
 
-    // Get activity details to find track_id
-    const activityId = payload.activity.id
-    const activityDetails = await awellSdk.orchestration.query({
-      activity: {
-        __args: {
-          id: activityId,
-        },
-        success: true,
+      // 2. Initialize OpenAI model with metadata
+      const { model, metadata, callbacks } = await createOpenAIModel({
+        settings: {}, // we use built-in API key for OpenAI
+        helpers,
+        payload,
+        modelType: OPENAI_MODELS.GPT5Mini,
+        hideDataForTracing: false, // IMPORTANT: set to true if there is a use case that might include PHI
+      })
+
+      const awellSdk = await helpers.awellSdk()
+
+      // Get activity details to find track_id
+      const activityId = payload.activity.id
+      const activityDetails = await awellSdk.orchestration.query({
         activity: {
-          id: true,
-          context: {
-            track_id: true,
+          __args: {
+            id: activityId,
+          },
+          success: true,
+          activity: {
+            id: true,
+            context: {
+              track_id: true,
+            },
           },
         },
-      },
-    })
+      })
 
-    const currentActivity = activityDetails?.activity?.activity
+      const currentActivity = activityDetails?.activity?.activity
 
-    if (isNil(currentActivity) || !activityDetails.activity.success) {
-      throw new Error(`Failed to fetch activity ${activityId}`)
+      if (isNil(currentActivity) || !activityDetails.activity.success) {
+        throw new Error(`Failed to fetch activity ${activityId}`)
+      }
+
+      const trackId = currentActivity.context?.track_id
+
+      if (isNil(trackId) || trackId.trim() === '') {
+        throw new Error('Could not find track ID for the current activity')
+      }
+
+      // 3. Get track data including forms and decision path
+      const trackData = await getTrackData({
+        awellSdk,
+        pathwayId: pathway.id,
+        trackId,
+        currentActivityId: (payload.activity as Activity).id,
+      })
+
+      // 4. Generate summary with LLM
+      const summary = await summarizeTrackOutcomeWithLLM({
+        model,
+        trackActivities: JSON.stringify(trackData, null, 2),
+        instructions,
+        metadata,
+        callbacks,
+      })
+
+      // Get care flow details for the disclaimer
+      const careFlowDetails = await getCareFlowDetails(awellSdk, pathway.id)
+
+      // Create version string if version is available
+      let disclaimerMsg = ''
+      if (!isNil(careFlowDetails.version)) {
+        disclaimerMsg = `**Important Notice:** The content provided is an AI-generated summary of version ${careFlowDetails.version} of Care Flow "${careFlowDetails.title}" (ID: ${pathway.id}).`
+      } else {
+        disclaimerMsg = `**Important Notice:** The content provided is an AI-generated summary of Care Flow "${careFlowDetails.title}" (ID: ${pathway.id}).`
+      }
+
+      const htmlSummary = await markdownToHtml(`${disclaimerMsg}\n\n${summary}`)
+
+      await onComplete({
+        data_points: {
+          outcomeSummary: htmlSummary,
+        },
+        events: [
+          addActivityEventLog({
+            message: `Processing track data with ${trackData.steps.length} steps and ${trackData.steps.flatMap((step) => step.activities).length} total activities (hard limit is 500)`,
+          }),
+        ],
+      })
+    } catch (err) {
+      helpers.log({ meta, err }, 'error', err as Error)
+      const error = err as Error
+      await onError({
+        events: [
+          {
+            date: new Date().toISOString(),
+            text: { en: error.message },
+            error: {
+              category: 'SERVER_ERROR',
+              message: error.message,
+            },
+          },
+        ],
+      })
     }
-
-    const trackId = currentActivity.context?.track_id
-
-    if (isNil(trackId) || trackId.trim() === '') {
-      throw new Error('Could not find track ID for the current activity')
-    }
-
-    // 3. Get track data including forms and decision path
-    const trackData = await getTrackData({
-      awellSdk,
-      pathwayId: pathway.id,
-      trackId,
-      currentActivityId: (payload.activity as Activity).id,
-    })
-
-    // 4. Generate summary with LLM
-    const summary = await summarizeTrackOutcomeWithLLM({
-      model,
-      trackActivities: JSON.stringify(trackData, null, 2),
-      instructions,
-      metadata,
-      callbacks,
-    })
-
-    // Get care flow details for the disclaimer
-    const careFlowDetails = await getCareFlowDetails(awellSdk, pathway.id)
-
-    // Create version string if version is available
-    let disclaimerMsg = ''
-    if (!isNil(careFlowDetails.version)) {
-      disclaimerMsg = `**Important Notice:** The content provided is an AI-generated summary of version ${careFlowDetails.version} of Care Flow "${careFlowDetails.title}" (ID: ${pathway.id}).`
-    } else {
-      disclaimerMsg = `**Important Notice:** The content provided is an AI-generated summary of Care Flow "${careFlowDetails.title}" (ID: ${pathway.id}).`
-    }
-
-    const htmlSummary = await markdownToHtml(`${disclaimerMsg}\n\n${summary}`)
-
-    await onComplete({
-      data_points: {
-        outcomeSummary: htmlSummary,
-      },
-      events: [
-        addActivityEventLog({
-          message: `Processing track data with ${trackData.steps.length} steps and ${trackData.steps.flatMap((step) => step.activities).length} total activities (hard limit is 500)`,
-        }),
-      ],
-    })
   },
 }

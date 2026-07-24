@@ -2,12 +2,14 @@ import { updateNonVisitNote } from '../updateNonVisitNote'
 import { nonVisitNoteResponseExample } from '../../__mocks__/constants'
 import { makeAPIClientMockFunc } from '../../__mocks__/client'
 import { makeAPIClient } from '../../client'
+import { TestHelpers } from '@awell-health/extensions-core'
+import { generateTestPayload } from '@/tests'
 
 jest.mock('../../client')
 
 describe('Update non-visit note action', () => {
-  const onComplete = jest.fn()
-  const onError = jest.fn()
+  const { onComplete, onError, helpers, clearMocks } =
+    TestHelpers.fromAction(updateNonVisitNote)
   const settings = {
     client_id: 'clientId',
     client_secret: 'clientSecret',
@@ -90,31 +92,35 @@ describe('Update non-visit note action', () => {
   }>)(
     '$#. Should successfully update and execute onComplete when input is $input',
     async ({ input }) => {
-      await updateNonVisitNote.onActivityCreated!(
-        {
+      await updateNonVisitNote.onEvent!({
+        payload: generateTestPayload({
           fields: {
             ...input,
           },
           settings,
-        } as any,
+        } as any),
         onComplete,
-        onError
-      )
+        onError,
+        helpers,
+        attempt: 1,
+      })
       expect(onComplete).toHaveBeenCalled()
-    }
+    },
   )
   it('make sure a signed note is updated correctly', async () => {
-    await updateNonVisitNote.onActivityCreated!(
-      {
+    await updateNonVisitNote.onEvent!({
+      payload: generateTestPayload({
         fields: {
           ...exampleInput,
           signed_by: 1,
         },
         settings,
-      } as any,
+      } as any),
       onComplete,
-      onError
-    )
+      onError,
+      helpers,
+      attempt: 1,
+    })
     expect(onComplete).toHaveBeenCalled()
   })
 })

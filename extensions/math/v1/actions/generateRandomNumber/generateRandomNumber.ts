@@ -1,5 +1,5 @@
 import { type Action } from '@awell-health/extensions-core'
-import { Category , validate } from '@awell-health/extensions-core'
+import { Category, validate } from '@awell-health/extensions-core'
 import { type settings } from '../../../settings'
 import { fields, dataPoints } from './config'
 import { FieldsValidationSchema } from './config/fields'
@@ -14,7 +14,13 @@ export const generateRandomNumber: Action<typeof fields, typeof settings> = {
   fields,
   dataPoints,
   previewable: true,
-  onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
+  onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
+
     try {
       const {
         fields: { min, max },
@@ -29,12 +35,18 @@ export const generateRandomNumber: Action<typeof fields, typeof settings> = {
         Math.floor(Math.random() * (maxSerialized - minSerialized + 1)) +
         minSerialized
 
+      helpers.log(
+        { meta, min, max, generatedNumber },
+        'Generated random number',
+      )
+
       await onComplete({
         data_points: {
           generatedNumber: String(generatedNumber),
         },
       })
     } catch (err) {
+      helpers.log({ meta, err }, 'error', err as Error)
       if (err instanceof ZodError) {
         const error = fromZodError(err)
         await onError({

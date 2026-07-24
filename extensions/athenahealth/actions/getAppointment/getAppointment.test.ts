@@ -6,15 +6,17 @@ import {
   mockGetAppointmentResponse,
   mockSettings,
 } from '../../api/__mocks__/mockData'
+import { TestHelpers } from '@awell-health/extensions-core'
 
 jest.mock('../../api/client')
 
 describe('athenahealth - Get appointment', () => {
-  const onComplete = jest.fn()
-  const onError = jest.fn()
+  const { onComplete, onError, helpers, clearMocks } =
+    TestHelpers.fromAction(getAppointment)
 
   beforeEach(() => {
     jest.clearAllMocks()
+    clearMocks()
   })
 
   test('Should return an appointment', async () => {
@@ -25,11 +27,13 @@ describe('athenahealth - Get appointment', () => {
       settings: mockSettings,
     })
 
-    await getAppointment.onActivityCreated!(
-      mockOnActivityCreateParams,
+    await getAppointment.onEvent!({
+      payload: mockOnActivityCreateParams,
       onComplete,
-      onError
-    )
+      onError,
+      helpers,
+      attempt: 1,
+    })
 
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
@@ -55,11 +59,13 @@ describe('athenahealth - Get appointment', () => {
     })
 
     try {
-      await getAppointment.onActivityCreated!(
-        mockOnActivityCreateParams,
+      await getAppointment.onEvent!({
+        payload: mockOnActivityCreateParams,
         onComplete,
-        onError
-      )
+        onError,
+        helpers,
+        attempt: 1,
+      })
     } catch (error) {
       const axiosError = error as AxiosError
       expect(axiosError.response).toBeDefined()
@@ -81,11 +87,13 @@ describe('athenahealth - Get appointment', () => {
     })
 
     try {
-      await getAppointment.onActivityCreated!(
-        mockOnActivityCreateParams,
+      await getAppointment.onEvent!({
+        payload: mockOnActivityCreateParams,
         onComplete,
-        onError
-      )
+        onError,
+        helpers,
+        attempt: 1,
+      })
     } catch (error) {
       const axiosError = error as AxiosError
       expect(axiosError.response).toBeDefined()

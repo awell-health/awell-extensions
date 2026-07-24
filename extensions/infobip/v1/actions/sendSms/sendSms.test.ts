@@ -3,14 +3,15 @@ import {
   mockedMessageData,
   InfobipClientMockImplementation,
 } from '../../client/__mocks__'
+import { TestHelpers } from '@awell-health/extensions-core'
 import { sendSms } from '..'
 import { generateTestPayload } from '@/tests'
 
 jest.mock('../../client')
 
 describe('Send SMS', () => {
-  const onComplete = jest.fn()
-  const onError = jest.fn()
+  const { onComplete, onError, helpers, clearMocks } =
+    TestHelpers.fromAction(sendSms)
 
   const basePayload = generateTestPayload({
     fields: {
@@ -28,13 +29,20 @@ describe('Send SMS', () => {
 
   beforeEach(() => {
     jest.clearAllMocks()
+    clearMocks()
   })
 
   test('Should call the onComplete callback', async () => {
-    await sendSms.onActivityCreated!(basePayload, onComplete, onError)
+    await sendSms.onEvent!({
+      payload: basePayload,
+      onComplete,
+      onError,
+      helpers,
+      attempt: 1,
+    })
 
     expect(InfobipClientMockImplementation.smsApi.send).toHaveBeenCalledWith(
-      mockedMessageData
+      mockedMessageData,
     )
     expect(onComplete).toHaveBeenCalledWith()
     expect(onError).not.toHaveBeenCalled()

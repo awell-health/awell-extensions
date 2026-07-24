@@ -2,15 +2,18 @@ import { type AxiosError } from 'axios'
 import { createAppointmentNote } from '.'
 import { generateTestPayload } from '@/tests'
 import { mockSettings } from '../../api/__mocks__/mockData'
+import { TestHelpers } from '@awell-health/extensions-core'
 
 jest.mock('../../api/client')
 
 describe('athenahealth - Create appointment note', () => {
-  const onComplete = jest.fn()
-  const onError = jest.fn()
+  const { onComplete, onError, helpers, clearMocks } = TestHelpers.fromAction(
+    createAppointmentNote,
+  )
 
   beforeEach(() => {
     jest.clearAllMocks()
+    clearMocks()
   })
 
   test('Should create an appointment note', async () => {
@@ -23,11 +26,13 @@ describe('athenahealth - Create appointment note', () => {
       settings: mockSettings,
     })
 
-    await createAppointmentNote.onActivityCreated!(
-      mockOnActivityCreateParams,
+    await createAppointmentNote.onEvent!({
+      payload: mockOnActivityCreateParams,
       onComplete,
-      onError
-    )
+      onError,
+      helpers,
+      attempt: 1,
+    })
 
     expect(onComplete).toHaveBeenCalled()
   })
@@ -43,11 +48,13 @@ describe('athenahealth - Create appointment note', () => {
     })
 
     try {
-      await createAppointmentNote.onActivityCreated!(
-        mockOnActivityCreateParams,
+      await createAppointmentNote.onEvent!({
+        payload: mockOnActivityCreateParams,
         onComplete,
-        onError
-      )
+        onError,
+        helpers,
+        attempt: 1,
+      })
     } catch (error) {
       const axiosError = error as AxiosError
       expect(axiosError.response).toBeDefined()
@@ -71,11 +78,13 @@ describe('athenahealth - Create appointment note', () => {
     })
 
     try {
-      await createAppointmentNote.onActivityCreated!(
-        mockOnActivityCreateParams,
+      await createAppointmentNote.onEvent!({
+        payload: mockOnActivityCreateParams,
         onComplete,
-        onError
-      )
+        onError,
+        helpers,
+        attempt: 1,
+      })
     } catch (error) {
       const axiosError = error as AxiosError
       expect(axiosError.response).toBeDefined()

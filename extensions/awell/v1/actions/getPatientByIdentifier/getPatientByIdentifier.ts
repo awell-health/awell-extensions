@@ -17,52 +17,76 @@ export const getPatientByIdentifier: Action<typeof fields, typeof settings> = {
   dataPoints,
   previewable: true,
   supports_automated_retries: true,
-  onEvent: async ({
-    payload,
-    onComplete,
-    helpers: { awellSdk },
-  }): Promise<void> => {
-    const {
-      fields: { system, value },
-    } = validate({
-      schema: z.object({
-        fields: FieldsValidationSchema,
-      }),
-      payload,
-    })
-    const { apiKey, apiUrl } = await awellSdk()
-    const sdk = new AwellSdk({ apiKey, apiUrl: apiUrl as string })
+  onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
 
-    const patient = await sdk.getPatientByIdentifier({
-      system,
-      value,
-    })
+    helpers.log(
+      { meta, fields: payload.fields },
+      'Processing getPatientByIdentifier',
+    )
 
-    if (isNil(patient)) {
+    try {
+      const {
+        fields: { system, value },
+      } = validate({
+        schema: z.object({
+          fields: FieldsValidationSchema,
+        }),
+        payload,
+      })
+      const { apiKey, apiUrl } = await helpers.awellSdk()
+      const sdk = new AwellSdk({ apiKey, apiUrl: apiUrl as string })
+
+      const patient = await sdk.getPatientByIdentifier({
+        system,
+        value,
+      })
+
+      if (isNil(patient)) {
+        await onComplete({
+          data_points: {
+            patientAlreadyExists: String(false),
+            patientId: undefined,
+          },
+          events: [
+            addActivityEventLog({
+              message: `No patient with identifier system ${system} and value ${value} exists.`,
+            }),
+          ],
+        })
+        return
+      }
+
       await onComplete({
         data_points: {
-          patientAlreadyExists: String(false),
-          patientId: undefined,
+          patientAlreadyExists: String(true),
+          patientId: patient.id,
         },
         events: [
           addActivityEventLog({
-            message: `No patient with identifier system ${system} and value ${value} exists.`,
+            message: `Patient with identifier system ${system} and value ${value} was found. The Awell ID of the patient is ${patient.id}.`,
           }),
         ],
       })
-      return
+    } catch (err) {
+      helpers.log({ meta, err }, 'error', err as Error)
+      const error = err as Error
+      await onError({
+        events: [
+          {
+            date: new Date().toISOString(),
+            text: { en: error.message },
+            error: {
+              category: 'SERVER_ERROR',
+              message: error.message,
+            },
+          },
+        ],
+      })
     }
-
-    await onComplete({
-      data_points: {
-        patientAlreadyExists: String(true),
-        patientId: patient.id,
-      },
-      events: [
-        addActivityEventLog({
-          message: `Patient with identifier system ${system} and value ${value} was found. The Awell ID of the patient is ${patient.id}.`,
-        }),
-      ],
-    })
   },
 }

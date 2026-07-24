@@ -22,11 +22,22 @@ export const getConsolidatedQueryStatus: Action<
   category: Category.EHR_INTEGRATIONS,
   title: 'Get Consolidated Data Query Status',
   description:
-    "Gets the status of a consolidated data query for a Patient. Use after starting a consolidated query to check if results are ready.",
+    'Gets the status of a consolidated data query for a Patient. Use after starting a consolidated query to check if results are ready.',
   fields: getConsolidatedQueryStatusFields,
   previewable: true,
   dataPoints,
-  onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
+  onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
+
+    helpers.log(
+      { meta, fields: payload.fields },
+      'Processing getConsolidatedQueryStatus',
+    )
+
     try {
       const { patientId } = getConsolidatedQueryStatusSchema.parse(
         payload.fields,
@@ -43,6 +54,7 @@ export const getConsolidatedQueryStatus: Action<
         },
       })
     } catch (err) {
+      helpers.log({ meta, err }, 'error', err as Error)
       await handleErrorMessage(err, onError)
     }
   },

@@ -16,35 +16,63 @@ export const getServiceRequest: Action<
   fields,
   previewable: true,
   dataPoints,
-  onEvent: async ({ payload, onComplete, onError }): Promise<void> => {
-    const { fields: input, medplumSdk } = await validateAndCreateSdkClient({
-      fieldsSchema: FieldsValidationSchema,
-      payload,
-    })
-
-    const resourceId =
-      extractResourceId(input.resourceId, 'ServiceRequest') ?? ''
-
-    const res = await medplumSdk.readResource('ServiceRequest', resourceId)
-
-    const getPatientId = (): string | null => {
-      const subjectReference = res.subject?.reference ?? ''
-
-      if (subjectReference.startsWith('Patient')) {
-        return extractResourceId(subjectReference, 'Patient')
-      }
-
-      return null
+  onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
     }
 
-    await onComplete({
-      data_points: {
-        serviceRequestResource: JSON.stringify(res),
-        status: res.status,
-        intent: res.intent,
-        priority: res.priority,
-        patientId: getPatientId(),
-      },
-    })
+    helpers.log(
+      { meta, fields: payload.fields },
+      'Processing getServiceRequest',
+    )
+
+    try {
+      const { fields: input, medplumSdk } = await validateAndCreateSdkClient({
+        fieldsSchema: FieldsValidationSchema,
+        payload,
+      })
+
+      const resourceId =
+        extractResourceId(input.resourceId, 'ServiceRequest') ?? ''
+
+      const res = await medplumSdk.readResource('ServiceRequest', resourceId)
+
+      const getPatientId = (): string | null => {
+        const subjectReference = res.subject?.reference ?? ''
+
+        if (subjectReference.startsWith('Patient')) {
+          return extractResourceId(subjectReference, 'Patient')
+        }
+
+        return null
+      }
+
+      await onComplete({
+        data_points: {
+          serviceRequestResource: JSON.stringify(res),
+          status: res.status,
+          intent: res.intent,
+          priority: res.priority,
+          patientId: getPatientId(),
+        },
+      })
+    } catch (err) {
+      helpers.log({ meta, err }, 'error', err as Error)
+      const error = err as Error
+      await onError({
+        events: [
+          {
+            date: new Date().toISOString(),
+            text: { en: error.message },
+            error: {
+              category: 'SERVER_ERROR',
+              message: error.message,
+            },
+          },
+        ],
+      })
+    }
   },
 }

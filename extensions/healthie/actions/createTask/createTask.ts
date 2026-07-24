@@ -22,7 +22,15 @@ export const createTask: Action<
   fields,
   dataPoints,
   previewable: true,
-  onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
+  onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
+
+    helpers.log({ meta, fields: payload.fields }, 'Processing createTask')
+
     const { fields, settings } = payload
 
     try {
@@ -48,6 +56,7 @@ export const createTask: Action<
         throw new Error('API Client is missing settings (api url or api key)')
       }
     } catch (err) {
+      helpers.log({ meta, err }, 'error', err as Error)
       if (err instanceof HealthieError) {
         const errors = mapHealthieToActivityError(err.errors)
         await onError({

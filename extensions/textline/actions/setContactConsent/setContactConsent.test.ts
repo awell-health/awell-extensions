@@ -1,21 +1,21 @@
 import { generateTestPayload } from '@/tests'
 import { mockReturnValue } from '../../client/__mocks__/textLineApi'
 import { setContactConsent } from './setContactConsent'
+import { TestHelpers } from '@awell-health/extensions-core'
 
 jest.mock('../../client/textLineApi', () => jest.fn(() => mockReturnValue))
 
 describe('Set Contact Consent action', () => {
-  const onComplete = jest.fn()
-  const onError = jest.fn()
+  const { onComplete, onError, helpers, clearMocks } =
+    TestHelpers.fromAction(setContactConsent)
 
   beforeEach(() => {
-    onComplete.mockClear()
-    onError.mockClear()
+    clearMocks()
   })
 
   test('Should call the onComplete callback', async () => {
-    await setContactConsent.onActivityCreated!(
-      generateTestPayload({
+    await setContactConsent.onEvent!({
+      payload: generateTestPayload({
         fields: {
           consentStatus: true,
           recipient: '+13108820245',
@@ -25,15 +25,17 @@ describe('Set Contact Consent action', () => {
         },
       }),
       onComplete,
-      onError
-    )
+      onError,
+      helpers,
+      attempt: 1,
+    })
     expect(onComplete).toHaveBeenCalled()
     expect(onError).not.toHaveBeenCalled()
   }, 20000)
 
   test('Should call the onError callback when there is no recipient', async () => {
-    await setContactConsent.onActivityCreated!(
-      generateTestPayload({
+    await setContactConsent.onEvent!({
+      payload: generateTestPayload({
         fields: {
           consentStatus: false,
           recipient: undefined,
@@ -43,15 +45,17 @@ describe('Set Contact Consent action', () => {
         },
       }),
       onComplete,
-      onError
-    )
+      onError,
+      helpers,
+      attempt: 1,
+    })
     expect(onComplete).not.toHaveBeenCalled()
     expect(onError).toHaveBeenCalled()
   })
 
   test('Should call the onError callback when there is no consent status', async () => {
-    await setContactConsent.onActivityCreated!(
-      generateTestPayload({
+    await setContactConsent.onEvent!({
+      payload: generateTestPayload({
         fields: {
           consentStatus: undefined,
           recipient: '+13108820245',
@@ -61,8 +65,10 @@ describe('Set Contact Consent action', () => {
         },
       }),
       onComplete,
-      onError
-    )
+      onError,
+      helpers,
+      attempt: 1,
+    })
     expect(onComplete).not.toHaveBeenCalled()
     expect(onError).toHaveBeenCalled()
   })

@@ -17,94 +17,119 @@ export const updatePatient: Action<typeof fields, typeof settings> = {
   fields,
   previewable: false,
   supports_automated_retries: true,
-  onEvent: async ({ payload, onComplete, helpers }): Promise<void> => {
-    const {
-      fields: {
-        patientCode,
-        firstName,
-        lastName,
-        birthDate,
-        email,
-        phone,
-        mobilePhone,
-        street,
-        state,
-        country,
-        city,
-        zip,
-        preferredLanguage,
-        sex,
-        nationalRegistryNumber,
-        patientTimzone,
-      },
-      patient: { id: patientId },
-    } = validate({
-      schema: z.object({
-        fields: FieldsValidationSchema,
-        patient: PatientValidationSchema,
-      }),
-      payload,
-    })
+  onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
 
-    const awellSdk = await helpers.awellSdk()
-    const sdk = new AwellSdk({
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      apiUrl: awellSdk.apiUrl!,
-      apiKey: awellSdk.apiKey,
-    })
+    helpers.log({ meta, fields: payload.fields }, 'Processing updatePatient')
 
-    // we cannot use this until we fully deprecate patient_code
-    // await awellSdk.orchestration.mutation({
-    //   updatePatient: {
-    //     __args: {
-    //       input: {
-    //         patient_id: patientId,
-    //         patient_code: patientCode,
-    //         first_name: firstName,
-    //         last_name: lastName,
-    //         birth_date: birthDate,
-    //         email,
-    //         phone,
-    //         mobile_phone: mobilePhone,
-    //         address: {
-    //           street,
-    //           state,
-    //           country,
-    //           city,
-    //           zip,
-    //         },
-    //         preferred_language: preferredLanguage,
-    //         sex,
-    //         national_registry_number: nationalRegistryNumber,
-    //       },
-    //     },
-    //   }
-    // })
-
-    await sdk.updatePatient({
-      patient_id: patientId,
-      profile: {
-        patient_code: patientCode,
-        first_name: firstName,
-        last_name: lastName,
-        birth_date: birthDate,
-        email,
-        phone,
-        mobile_phone: mobilePhone,
-        address: {
+    try {
+      const {
+        fields: {
+          patientCode,
+          firstName,
+          lastName,
+          birthDate,
+          email,
+          phone,
+          mobilePhone,
           street,
           state,
           country,
           city,
           zip,
+          preferredLanguage,
+          sex,
+          nationalRegistryNumber,
+          patientTimzone,
         },
-        preferred_language: preferredLanguage,
-        sex,
-        national_registry_number: nationalRegistryNumber,
-        patient_timezone: patientTimzone,
-      },
-    })
+        patient: { id: patientId },
+      } = validate({
+        schema: z.object({
+          fields: FieldsValidationSchema,
+          patient: PatientValidationSchema,
+        }),
+        payload,
+      })
 
-    await onComplete()
+      const awellSdk = await helpers.awellSdk()
+      const sdk = new AwellSdk({
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        apiUrl: awellSdk.apiUrl!,
+        apiKey: awellSdk.apiKey,
+      })
+
+      // we cannot use this until we fully deprecate patient_code
+      // await awellSdk.orchestration.mutation({
+      //   updatePatient: {
+      //     __args: {
+      //       input: {
+      //         patient_id: patientId,
+      //         patient_code: patientCode,
+      //         first_name: firstName,
+      //         last_name: lastName,
+      //         birth_date: birthDate,
+      //         email,
+      //         phone,
+      //         mobile_phone: mobilePhone,
+      //         address: {
+      //           street,
+      //           state,
+      //           country,
+      //           city,
+      //           zip,
+      //         },
+      //         preferred_language: preferredLanguage,
+      //         sex,
+      //         national_registry_number: nationalRegistryNumber,
+      //       },
+      //     },
+      //   }
+      // })
+
+      await sdk.updatePatient({
+        patient_id: patientId,
+        profile: {
+          patient_code: patientCode,
+          first_name: firstName,
+          last_name: lastName,
+          birth_date: birthDate,
+          email,
+          phone,
+          mobile_phone: mobilePhone,
+          address: {
+            street,
+            state,
+            country,
+            city,
+            zip,
+          },
+          preferred_language: preferredLanguage,
+          sex,
+          national_registry_number: nationalRegistryNumber,
+          patient_timezone: patientTimzone,
+        },
+      })
+
+      await onComplete()
+    } catch (err) {
+      helpers.log({ meta, err }, 'error', err as Error)
+      const error = err as Error
+      await onError({
+        events: [
+          {
+            date: new Date().toISOString(),
+            text: { en: error.message },
+            error: {
+              category: 'SERVER_ERROR',
+              message: error.message,
+            },
+          },
+        ],
+      })
+    }
   },
 }

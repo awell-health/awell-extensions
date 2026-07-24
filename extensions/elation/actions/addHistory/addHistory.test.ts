@@ -1,8 +1,8 @@
 import { TestHelpers } from '@awell-health/extensions-core'
 
 import { addHistory as action } from './addHistory'
-import { ZodError } from 'zod'
 import { historyExample } from '../../__mocks__/constants'
+import { testPayload } from '../../../../tests'
 
 jest.mock('../../client')
 
@@ -26,11 +26,13 @@ describe('Elation - Add History', () => {
 
   beforeEach(() => {
     clearMocks()
+    jest.clearAllMocks()
   })
 
   test('Should call onComplete when successful', async () => {
     await addHistory.onEvent({
       payload: {
+        ...testPayload,
         fields: historyExample,
         settings,
       } as any,
@@ -44,8 +46,9 @@ describe('Elation - Add History', () => {
   })
 
   test('Should call onError when patientId is missing', async () => {
-    const resp = addHistory.onEvent({
+    await addHistory.onEvent({
       payload: {
+        ...testPayload,
         fields: {
           type: 'Past',
           text: 'some txt',
@@ -58,13 +61,23 @@ describe('Elation - Add History', () => {
       attempt: 1,
     })
 
-    await expect(resp).rejects.toThrow(ZodError)
+    expect(onError).toHaveBeenCalledWith({
+      events: [
+        expect.objectContaining({
+          error: {
+            category: 'SERVER_ERROR',
+            message: expect.any(String),
+          },
+        }),
+      ],
+    })
     expect(onComplete).not.toHaveBeenCalled()
   })
 
-  test('Should call onError when field is missing ', async () => {
-    const resp = addHistory.onEvent({
+  test('Should call onError when field is missing', async () => {
+    await addHistory.onEvent({
       payload: {
+        ...testPayload,
         fields: {
           patientId: 123,
           type: 'History',
@@ -77,13 +90,23 @@ describe('Elation - Add History', () => {
       attempt: 1,
     })
 
-    await expect(resp).rejects.toThrow(ZodError)
+    expect(onError).toHaveBeenCalledWith({
+      events: [
+        expect.objectContaining({
+          error: {
+            category: 'SERVER_ERROR',
+            message: expect.any(String),
+          },
+        }),
+      ],
+    })
     expect(onComplete).not.toHaveBeenCalled()
   })
 
   test('Should call onError when type is incorrect', async () => {
-    const resp = addHistory.onEvent({
+    await addHistory.onEvent({
       payload: {
+        ...testPayload,
         fields: {
           patientId: 123,
           type: 'something',
@@ -97,13 +120,23 @@ describe('Elation - Add History', () => {
       attempt: 1,
     })
 
-    await expect(resp).rejects.toThrow(ZodError)
+    expect(onError).toHaveBeenCalledWith({
+      events: [
+        expect.objectContaining({
+          error: {
+            category: 'SERVER_ERROR',
+            message: expect.any(String),
+          },
+        }),
+      ],
+    })
     expect(onComplete).not.toHaveBeenCalled()
   })
 
   test('Should call onError when text is incorrect type', async () => {
-    const resp = addHistory.onEvent({
+    await addHistory.onEvent({
       payload: {
+        ...testPayload,
         fields: {
           patientId: 123,
           type: 'history',
@@ -117,7 +150,16 @@ describe('Elation - Add History', () => {
       attempt: 1,
     })
 
-    await expect(resp).rejects.toThrow(ZodError)
+    expect(onError).toHaveBeenCalledWith({
+      events: [
+        expect.objectContaining({
+          error: {
+            category: 'SERVER_ERROR',
+            message: expect.any(String),
+          },
+        }),
+      ],
+    })
     expect(onComplete).not.toHaveBeenCalled()
   })
 })

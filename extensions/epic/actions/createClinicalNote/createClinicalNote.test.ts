@@ -2,6 +2,7 @@ import { TestHelpers } from '@awell-health/extensions-core'
 import { createClinicalNote as action } from './createClinicalNote'
 import { EpicFhirR4Client } from '../../lib/api/FhirR4'
 import { CreateClinicalNoteMockResponse } from './__testdata__/CreateClinicalNote.mock'
+import { testPayload } from '../../../../tests'
 
 jest.mock('../../lib/api/FhirR4')
 
@@ -27,6 +28,7 @@ describe('Epic - Create clinical note', () => {
 
     await extensionAction.onEvent({
       payload: {
+        ...testPayload,
         fields: {
           patientResourceId: 'patient-resource-id',
           encounterResourceId: 'encounter-resource-id',

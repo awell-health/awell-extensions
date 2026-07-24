@@ -3,10 +3,11 @@ import { faker } from '@faker-js/faker'
 import CalComApi from '../../../lib/api/v1/calComApi'
 import { generateTestPayload } from '@/tests'
 import type { User, Booking } from '../../../lib/api/v1/schema'
+import { TestHelpers } from '@awell-health/extensions-core'
 
 describe('Cal.com GetBooking action', () => {
-  const onComplete = jest.fn()
-  const onError = jest.fn()
+  const { onComplete, onError, helpers, clearMocks } =
+    TestHelpers.fromAction(getBooking)
   const dummyPayloadPart = {
     pathway: {
       id: faker.string.uuid(),
@@ -18,14 +19,13 @@ describe('Cal.com GetBooking action', () => {
     patient: { id: faker.string.uuid() },
   }
   beforeEach(() => {
-    onComplete.mockClear()
-    onError.mockClear()
+    clearMocks()
   })
 
   describe('with empty apiKey', () => {
     it('should call onError', async () => {
-      await getBooking.onActivityCreated!(
-        generateTestPayload({
+      await getBooking.onEvent!({
+        payload: generateTestPayload({
           ...dummyPayloadPart,
           fields: {
             bookingId: faker.string.uuid(),
@@ -34,15 +34,17 @@ describe('Cal.com GetBooking action', () => {
         }),
         onComplete,
         onError,
-      )
+        helpers,
+        attempt: 1,
+      })
       expect(onError).toHaveBeenCalled()
     })
   })
 
   describe('with empty bookingId', () => {
     it('should call onError', async () => {
-      await getBooking.onActivityCreated!(
-        generateTestPayload({
+      await getBooking.onEvent!({
+        payload: generateTestPayload({
           ...dummyPayloadPart,
           fields: {
             bookingId: '',
@@ -51,7 +53,9 @@ describe('Cal.com GetBooking action', () => {
         }),
         onComplete,
         onError,
-      )
+        helpers,
+        attempt: 1,
+      })
       expect(onError).toHaveBeenCalledWith({
         events: [
           {
@@ -138,17 +142,34 @@ describe('Cal.com GetBooking action', () => {
     })
 
     it('should call onComplete with data points', async () => {
-      await getBooking.onActivityCreated!(
-        generateTestPayload({
-          ...dummyPayloadPart,
-          fields: {
-            bookingId: faker.string.uuid(),
-          },
-          settings: { apiKey: faker.string.uuid(), customDomain: undefined },
-        }),
+      const payload = generateTestPayload({
+        ...dummyPayloadPart,
+        fields: {
+          bookingId: faker.string.uuid(),
+        },
+        settings: { apiKey: faker.string.uuid(), customDomain: undefined },
+      })
+
+      await getBooking.onEvent!({
+        payload,
         onComplete,
         onError,
+        helpers,
+        attempt: 1,
+      })
+
+      expect(helpers.log).toHaveBeenCalledWith(
+        {
+          meta: {
+            tenant_id: payload.pathway.tenant_id,
+            careflow_id: payload.pathway.id,
+            activity_id: payload.activity.id,
+          },
+          bookingId: payload.fields.bookingId,
+        },
+        'Getting Cal.com booking',
       )
+
       expect(onComplete).toHaveBeenCalledWith({
         data_points: {
           eventTypeId: eventTypeId.toString(),
@@ -186,8 +207,8 @@ describe('Cal.com GetBooking action', () => {
     })
 
     it('should call onComplete with data points', async () => {
-      await getBooking.onActivityCreated!(
-        generateTestPayload({
+      await getBooking.onEvent!({
+        payload: generateTestPayload({
           ...dummyPayloadPart,
           fields: {
             bookingId: faker.string.uuid(),
@@ -196,7 +217,9 @@ describe('Cal.com GetBooking action', () => {
         }),
         onComplete,
         onError,
-      )
+        helpers,
+        attempt: 1,
+      })
       expect(onError).toHaveBeenCalledWith({
         events: [
           {

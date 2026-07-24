@@ -1,20 +1,20 @@
 import { sendEmail } from '..'
 import { generateTestPayload } from '@/tests'
+import { TestHelpers } from '@awell-health/extensions-core'
 
 jest.mock('../../../common/sdk/mailgunSdk')
 
 describe('Send email', () => {
-  const onComplete = jest.fn()
-  const onError = jest.fn()
+  const { onComplete, onError, helpers, clearMocks } =
+    TestHelpers.fromAction(sendEmail)
 
   beforeEach(() => {
-    onComplete.mockClear()
-    onError.mockClear()
+    clearMocks()
   })
 
   test('Should call the onComplete callback', async () => {
-    await sendEmail.onActivityCreated!(
-      generateTestPayload({
+    await sendEmail.onEvent!({
+      payload: generateTestPayload({
         fields: {
           to: 'email@hello.com',
           subject: 'A subject',
@@ -30,16 +30,18 @@ describe('Send email', () => {
         },
       }),
       onComplete,
-      onError
-    )
+      onError,
+      helpers,
+      attempt: 1,
+    })
 
     expect(onComplete).toHaveBeenCalled()
     expect(onError).not.toHaveBeenCalled()
   })
 
   test('Should call the onError callback when there is a validation error', async () => {
-    await sendEmail.onActivityCreated!(
-      generateTestPayload({
+    await sendEmail.onEvent!({
+      payload: generateTestPayload({
         fields: {
           to: 'email@hello.com',
           subject: 'A subject',
@@ -55,8 +57,10 @@ describe('Send email', () => {
         },
       }),
       onComplete,
-      onError
-    )
+      onError,
+      helpers,
+      attempt: 1,
+    })
     expect(onComplete).not.toHaveBeenCalled()
     expect(onError).toHaveBeenCalled()
   })

@@ -33,7 +33,15 @@ export const addOrUpdateContact: Action<
   fields,
   dataPoints,
   previewable: true,
-  onActivityCreated: async (payload, onComplete, onError) => {
+  onEvent: async ({ payload, onComplete, onError, helpers }) => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
+
+    helpers.log({ meta, fields: payload.fields }, 'Processing jobId')
+
     try {
       const {
         fields: { email, firstName, lastName, listIds, customFields },
@@ -64,6 +72,7 @@ export const addOrUpdateContact: Action<
         },
       })
     } catch (err) {
+      helpers.log({ meta, err }, 'error', err as Error)
       if (err instanceof ZodError) {
         const error = fromZodError(err)
         await onError({

@@ -5,6 +5,7 @@ import {
   mockedQuestionnaireResponseResource,
   mockedSettings,
 } from '../../client/__mocks__'
+import { TestHelpers } from '@awell-health/extensions-core'
 import { getQuestionnaireResponse } from './getQuestionnaireResponse'
 
 jest.mock('../../client', () => ({
@@ -13,8 +14,9 @@ jest.mock('../../client', () => ({
 }))
 
 describe('getQuestionnaireResponse', () => {
-  const onComplete = jest.fn()
-  const onError = jest.fn()
+  const { onComplete, onError, helpers, clearMocks } = TestHelpers.fromAction(
+    getQuestionnaireResponse,
+  )
   const payload = {
     settings: mockedSettings,
     fields: {
@@ -23,16 +25,18 @@ describe('getQuestionnaireResponse', () => {
   }
 
   it('should get questionnaire response', async () => {
-    await getQuestionnaireResponse.onActivityCreated!(
-      generateTestPayload(payload),
+    await getQuestionnaireResponse.onEvent!({
+      payload: generateTestPayload(payload),
       onComplete,
-      onError
-    )
+      onError,
+      helpers,
+      attempt: 1,
+    })
     expect(onComplete).toHaveBeenCalledTimes(1)
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
         questionnaireResponseData: JSON.stringify(
-          mockedQuestionnaireResponseResource
+          mockedQuestionnaireResponseResource,
         ),
       },
     })

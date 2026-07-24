@@ -1,5 +1,6 @@
 import { generateTestPayload } from '@/tests'
 import { getSdk } from '../../lib/sdk/graphql-codegen/generated/sdk'
+import { TestHelpers } from '@awell-health/extensions-core'
 import {
   mockGetSdk,
   mockGetSdkReturn,
@@ -10,7 +11,9 @@ jest.mock('../../lib/sdk/graphql-codegen/generated/sdk')
 jest.mock('../../lib/sdk/graphql-codegen/graphqlClient')
 
 describe('closeChatConversation action', () => {
-  const onComplete = jest.fn()
+  const { onComplete, onError, helpers, clearMocks } = TestHelpers.fromAction(
+    closeChatConversation,
+  )
 
   beforeAll(() => {
     ;(getSdk as jest.Mock).mockImplementation(mockGetSdk)
@@ -18,11 +21,12 @@ describe('closeChatConversation action', () => {
 
   beforeEach(() => {
     jest.clearAllMocks()
+    clearMocks()
   })
 
   test('Should close a conversation', async () => {
-    await closeChatConversation.onActivityCreated!(
-      generateTestPayload({
+    await closeChatConversation.onEvent!({
+      payload: generateTestPayload({
         fields: {
           id: 'conversation-1',
           provider_id: 'provider-1',
@@ -34,8 +38,10 @@ describe('closeChatConversation action', () => {
         },
       }),
       onComplete,
-      jest.fn(),
-    )
+      onError,
+      helpers,
+      attempt: 1,
+    })
 
     expect(mockGetSdkReturn.updateConversation).toHaveBeenCalledWith({
       input: {

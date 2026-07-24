@@ -24,7 +24,15 @@ export const sendChatMessage: Action<
   fields,
   dataPoints,
   previewable: true,
-  onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
+  onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
+
+    helpers.log({ meta, fields: payload.fields }, 'Processing sendChatMessage')
+
     const { fields, settings } = payload
     const { healthie_patient_id, provider_id, message } = fields
     try {
@@ -101,7 +109,7 @@ export const sendChatMessage: Action<
          */
         let maybeParsedMessage: string | undefined
         const isValidHTML = /^<([A-Za-z][A-Za-z0-9]*)\b[^>]*>(.*?)<\/\1>/i.test(
-          message ?? ''
+          message ?? '',
         )
         if (isValidHTML) {
           // Parse the HTML content using cheerio
@@ -117,7 +125,7 @@ export const sendChatMessage: Action<
         }
 
         const sendMessage = async (
-          conversationId: string
+          conversationId: string,
         ): Promise<SendChatMessage> => {
           return await sdk.sendChatMessage({
             input: {
@@ -148,7 +156,7 @@ export const sendChatMessage: Action<
 
           const conversations = data.conversationMemberships ?? []
           const conversation = conversations.find(
-            (value) => value?.convo?.owner?.id === provider_id
+            (value) => value?.convo?.owner?.id === provider_id,
           )?.convo
 
           if (!isNil(conversation)) {
@@ -202,6 +210,7 @@ export const sendChatMessage: Action<
         })
       }
     } catch (err) {
+      helpers.log({ meta, err }, 'error', err as Error)
       if (err instanceof HealthieError) {
         const errors = mapHealthieToActivityError(err.errors)
         await onError({

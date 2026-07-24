@@ -93,8 +93,8 @@ describe('sendCampaign', () => {
     })
   })
 
-  it('should throw an error when neither externalUserId nor email is provided', async () => {
-    const promise = extensionAction.onEvent({
+  it('should call onError when neither externalUserId nor email is provided', async () => {
+    await extensionAction.onEvent({
       payload: generateTestPayload({
         fields: {
           campaignId: '123',
@@ -113,8 +113,18 @@ describe('sendCampaign', () => {
       attempt: 1,
     })
 
-    await expect(promise).rejects.toThrow(
-      'Either externalUserId or email must be provided.',
-    )
+    expect(onError).toHaveBeenCalledWith({
+      events: [
+        {
+          date: expect.any(String),
+          text: { en: 'Either externalUserId or email must be provided.' },
+          error: {
+            category: 'SERVER_ERROR',
+            message: 'Either externalUserId or email must be provided.',
+          },
+        },
+      ],
+    })
+    expect(onComplete).not.toHaveBeenCalled()
   })
 })

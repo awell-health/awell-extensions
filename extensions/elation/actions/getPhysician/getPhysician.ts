@@ -19,12 +19,27 @@ export const getPhysician: Action<
   previewable: true,
   supports_automated_retries: true,
   dataPoints,
-  onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
+  onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
+
     try {
       const validatedFields = FieldsValidationSchema.parse(payload.fields)
 
       const api = makeAPIClient(payload.settings)
+      helpers.log(
+        { meta, physicianId: validatedFields.physicianId },
+        'Getting Elation physician',
+      )
       const physician = await api.getPhysician(validatedFields.physicianId)
+
+      helpers.log(
+        { meta, physicianId: validatedFields.physicianId },
+        'Got Elation physician',
+      )
 
       await onComplete({
         data_points: {
@@ -38,6 +53,7 @@ export const getPhysician: Action<
         },
       })
     } catch (err) {
+      helpers.log({ meta, err }, 'error', err as Error)
       if (err instanceof ZodError) {
         const error = fromZodError(err)
         await onError({

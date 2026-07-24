@@ -2,16 +2,17 @@ import { sendSmsDuringBusinessHours } from './sendSmsDuringBusinessHours'
 import twilioSdk from '../../../common/sdk/twilio'
 import { generateTestPayload } from '@/tests'
 import { ZodError } from 'zod'
+import { TestHelpers } from '@awell-health/extensions-core'
 
 describe('Send SMS during business hours', () => {
-  const onComplete = jest.fn()
-  const onError = jest.fn()
+  const { onComplete, onError, helpers, clearMocks } = TestHelpers.fromAction(
+    sendSmsDuringBusinessHours,
+  )
   const getLastTwilioClient = (): any =>
     (twilioSdk as any as jest.Mock<typeof twilioSdk>).mock.results.at(-1)?.value
 
   beforeEach(() => {
-    onComplete.mockClear()
-    onError.mockClear()
+    clearMocks()
     jest.useFakeTimers()
   })
 
@@ -23,8 +24,8 @@ describe('Send SMS during business hours', () => {
     const mockDate = '2024-01-01T10:00:00Z' // between business hours
     jest.setSystemTime(new Date(mockDate))
 
-    await sendSmsDuringBusinessHours.onActivityCreated!(
-      generateTestPayload({
+    await sendSmsDuringBusinessHours.onEvent!({
+      payload: generateTestPayload({
         fields: {
           message: 'Message content',
           recipient: '+32494000000',
@@ -44,8 +45,10 @@ describe('Send SMS during business hours', () => {
         },
       }),
       onComplete,
-      onError
-    )
+      onError,
+      helpers,
+      attempt: 1,
+    })
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
         scheduled: 'false', // message will be sent immediately
@@ -61,8 +64,8 @@ describe('Send SMS during business hours', () => {
     const mockDate = '2024-01-01T08:59:00Z' // before business hours
     jest.setSystemTime(new Date(mockDate))
 
-    await sendSmsDuringBusinessHours.onActivityCreated!(
-      generateTestPayload({
+    await sendSmsDuringBusinessHours.onEvent!({
+      payload: generateTestPayload({
         fields: {
           message: 'Message content',
           recipient: '+32494000000',
@@ -82,8 +85,10 @@ describe('Send SMS during business hours', () => {
         },
       }),
       onComplete,
-      onError
-    )
+      onError,
+      helpers,
+      attempt: 1,
+    })
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
         scheduled: 'true',
@@ -99,8 +104,8 @@ describe('Send SMS during business hours', () => {
     const mockDate = '2024-01-01T17:01:00Z' // after business hours
     jest.setSystemTime(new Date(mockDate))
 
-    await sendSmsDuringBusinessHours.onActivityCreated!(
-      generateTestPayload({
+    await sendSmsDuringBusinessHours.onEvent!({
+      payload: generateTestPayload({
         fields: {
           message: 'Message content',
           recipient: '+32494000000',
@@ -120,8 +125,10 @@ describe('Send SMS during business hours', () => {
         },
       }),
       onComplete,
-      onError
-    )
+      onError,
+      helpers,
+      attempt: 1,
+    })
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
         scheduled: 'true',
@@ -134,8 +141,8 @@ describe('Send SMS during business hours', () => {
   })
 
   test('Should call the onError callback when there is no recipient', async () => {
-    const resp = sendSmsDuringBusinessHours.onActivityCreated!(
-      generateTestPayload({
+    const resp = sendSmsDuringBusinessHours.onEvent!({
+      payload: generateTestPayload({
         fields: {
           message: 'Message content',
           recipient: '',
@@ -155,15 +162,17 @@ describe('Send SMS during business hours', () => {
         },
       }),
       onComplete,
-      onError
-    )
+      onError,
+      helpers,
+      attempt: 1,
+    })
     await expect(resp).rejects.toThrow(ZodError)
     expect(onComplete).not.toHaveBeenCalled()
   })
 
   test('Should call the onError callback when there is no message', async () => {
-    const resp = sendSmsDuringBusinessHours.onActivityCreated!(
-      generateTestPayload({
+    const resp = sendSmsDuringBusinessHours.onEvent!({
+      payload: generateTestPayload({
         fields: {
           message: '',
           recipient: '+19144542596',
@@ -183,8 +192,10 @@ describe('Send SMS during business hours', () => {
         },
       }),
       onComplete,
-      onError
-    )
+      onError,
+      helpers,
+      attempt: 1,
+    })
     await expect(resp).rejects.toThrow(ZodError)
     expect(onComplete).not.toHaveBeenCalled()
   })
@@ -211,14 +222,16 @@ describe('Send SMS during business hours', () => {
     })
 
     test('Should use one provided in action fields', async () => {
-      await sendSmsDuringBusinessHours.onActivityCreated!(
-        basePayload,
+      await sendSmsDuringBusinessHours.onEvent!({
+        payload: basePayload,
         onComplete,
-        onError
-      )
+        onError,
+        helpers,
+        attempt: 1,
+      })
       expect(
         getLastTwilioClient().messages.create.mock.calls.at(-1)[0]
-          .messagingServiceSid
+          .messagingServiceSid,
       ).toEqual(basePayload.fields.messagingServiceSid)
       expect(onComplete).toHaveBeenCalled()
       expect(onError).not.toHaveBeenCalled()
@@ -235,14 +248,16 @@ describe('Send SMS during business hours', () => {
         },
       }
 
-      await sendSmsDuringBusinessHours.onActivityCreated!(
-        payloadWithoutFrom,
+      await sendSmsDuringBusinessHours.onEvent!({
+        payload: payloadWithoutFrom,
         onComplete,
-        onError
-      )
+        onError,
+        helpers,
+        attempt: 1,
+      })
       expect(
         getLastTwilioClient().messages.create.mock.calls.at(-1)[0]
-          .messagingServiceSid
+          .messagingServiceSid,
       ).toEqual(payloadWithoutFrom.settings.messagingServiceSid)
       expect(onComplete).toHaveBeenCalled()
       expect(onError).not.toHaveBeenCalled()
@@ -259,11 +274,13 @@ describe('Send SMS during business hours', () => {
         },
       }
 
-      const resp = sendSmsDuringBusinessHours.onActivityCreated!(
-        payloadWithoutFrom,
+      const resp = sendSmsDuringBusinessHours.onEvent!({
+        payload: payloadWithoutFrom,
         onComplete,
-        onError
-      )
+        onError,
+        helpers,
+        attempt: 1,
+      })
       await expect(resp).rejects.toThrow(ZodError)
       expect(onComplete).not.toHaveBeenCalled()
     })

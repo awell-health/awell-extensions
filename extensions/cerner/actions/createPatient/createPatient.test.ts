@@ -2,7 +2,7 @@ import { TestHelpers } from '@awell-health/extensions-core'
 import { createPatient as action } from './createPatient'
 import { CernerR4APIClient } from '../../lib/api/FhirR4'
 import { CreateFhirPatientMockResponse } from './__testdata__/CreateFhirPatient.mock'
-import { createAxiosError } from '../../../../tests'
+import { createAxiosError, testPayload } from '../../../../tests'
 
 jest.mock('../../lib/api/FhirR4')
 
@@ -29,6 +29,7 @@ describe('Cerner - Create patient', () => {
 
       await extensionAction.onEvent({
         payload: {
+          ...testPayload,
           fields: {
             assigningOrganizationId: '9999',
             ssn: '123-45-6789',
@@ -102,6 +103,7 @@ describe('Cerner - Create patient', () => {
 
       await extensionAction.onEvent({
         payload: {
+          ...testPayload,
           fields: {
             assigningOrganizationId: '9999',
             familyName: 'Awell',

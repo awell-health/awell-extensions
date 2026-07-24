@@ -1,18 +1,18 @@
 import { generateTestPayload } from '@/tests'
 import { uploadSingleFile } from './uploadSingleFile'
+import { TestHelpers } from '@awell-health/extensions-core'
 
 describe('Cloudinary - Upload single file', () => {
-  const onComplete = jest.fn()
-  const onError = jest.fn()
+  const { onComplete, onError, helpers, clearMocks } =
+    TestHelpers.fromAction(uploadSingleFile)
 
   beforeEach(() => {
-    onComplete.mockClear()
-    onError.mockClear()
+    clearMocks()
   })
 
   test('Should not call the onComplete callback', async () => {
-    await uploadSingleFile.onActivityCreated!(
-      generateTestPayload({
+    await uploadSingleFile.onEvent!({
+      payload: generateTestPayload({
         fields: {
           uploadPreset: undefined, // If not defined, it will use preset from the extension settings
           folder: undefined, // If not defined, it will use folder from the extension settings
@@ -25,8 +25,10 @@ describe('Cloudinary - Upload single file', () => {
         },
       }),
       onComplete,
-      jest.fn()
-    )
+      onError,
+      helpers,
+      attempt: 1,
+    })
 
     /**
      * Because completion is done in Awell Hosted Pages

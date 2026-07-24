@@ -22,7 +22,13 @@ export const createReferralOrder: Action<
   fields,
   previewable: true,
   dataPoints,
-  onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
+  onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
+
     try {
       const {
         patient,
@@ -45,7 +51,7 @@ export const createReferralOrder: Action<
 
       const contact = contactsResponse.results[0]
 
-      const referralOrderResponse = await api.createReferralOrder({
+      const createReferralOrderRequest = {
         authorization_for,
         consultant_name,
         short_consultant_name: consultant_name,
@@ -57,16 +63,32 @@ export const createReferralOrder: Action<
         auth_number: null,
         date_for_reEval: null,
         resolution: null,
-      })
+      }
 
-      await api.postNewLetter({
+      helpers.log(
+        { meta, createReferralOrderRequest },
+        'Creating Elation referral order',
+      )
+
+      const referralOrderResponse = await api.createReferralOrder(
+        createReferralOrderRequest,
+      )
+
+      const postLetterRequest = {
         patient,
         practice,
         body,
         referral_order: referralOrderResponse.id,
         send_to_contact: { id: contact.id },
-        letter_type: 'referral',
-      })
+        letter_type: 'referral' as const,
+      }
+
+      helpers.log(
+        { meta, postLetterRequest },
+        'Posting Elation referral order letter',
+      )
+
+      await api.postNewLetter(postLetterRequest)
 
       await onComplete({
         data_points: {
@@ -74,6 +96,7 @@ export const createReferralOrder: Action<
         },
       })
     } catch (err) {
+      helpers.log({ meta, err }, 'error', err as Error)
       if (err instanceof AxiosError) {
         const responseData = (err as AxiosError).response?.data
         await onError({

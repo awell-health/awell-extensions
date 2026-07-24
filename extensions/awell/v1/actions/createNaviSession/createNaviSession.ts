@@ -14,7 +14,7 @@ export const createNaviSession: Action<typeof fields, typeof settings> = {
   dataPoints,
   previewable: false,
   supports_automated_retries: true,
-  onEvent: async ({ payload, onComplete, onError }): Promise<void> => {
+  onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
     const {
       fields: { stakeholderId, exp },
     } = validate({
@@ -28,6 +28,11 @@ export const createNaviSession: Action<typeof fields, typeof settings> = {
     const orgId = payload.pathway.org_id
     const tenantId = payload.pathway.tenant_id
     const environment = process.env.AWELL_ENVIRONMENT ?? 'test'
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
 
     const body = {
       orgId,
@@ -40,6 +45,7 @@ export const createNaviSession: Action<typeof fields, typeof settings> = {
     }
 
     try {
+      helpers.log({ meta, body }, 'Creating Navi session')
       const response = await fetch(
         'https://navi-portal.awellhealth.com/api/session/create',
         {

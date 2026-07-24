@@ -3,7 +3,11 @@ import { type settings } from '../../settings'
 import { fields, dataPoints, FieldsValidationSchema } from './config'
 import { validateAndCreateSdkClient } from '../../utils'
 import { isEmpty, isNil } from 'lodash'
-import { type Reference, type QuestionnaireResponse } from '@medplum/fhirtypes'
+import {
+  type Observation,
+  type Reference,
+  type QuestionnaireResponse,
+} from '@medplum/fhirtypes'
 import { extractResourceId } from '../../utils/extractResourceId/extractResourceId'
 import {
   getLastCalculationActivityInCurrentStep,
@@ -33,6 +37,11 @@ export const createCalculationObservation: Action<
       fieldsSchema: FieldsValidationSchema,
       payload,
     })
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
 
     const awellSdk = await helpers.awellSdk()
 
@@ -111,7 +120,7 @@ export const createCalculationObservation: Action<
           },
         }
 
-    const res = await medplumSdk.createResource({
+    const observationResource: Observation = {
       resourceType: 'Observation',
       status: 'final',
       code: {
@@ -146,11 +155,17 @@ export const createCalculationObservation: Action<
       ],
       derivedFrom: [...(derivedFrom != null ? [derivedFrom] : [])],
       ...scoreResult,
-    })
+    }
+
+    helpers.log(
+      { meta, observationResource },
+      '[createCalculationObservation] Creating Medplum observation',
+    )
+
+    const res = await medplumSdk.createResource(observationResource)
 
     await onComplete({
       data_points: {
-        // @ts-expect-error should be fine
         observationId: res?.id,
       },
     })

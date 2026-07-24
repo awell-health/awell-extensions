@@ -22,17 +22,42 @@ export const dobCheck: Action<
       mode: 'single',
     },
   },
-  onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
-    validate({
-      schema: z.object({
-        settings: SettingsValidationSchema,
-        fields: FieldsValidationSchema,
-      }),
-      payload,
-    })
+  onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
 
-    /**
-     * Completion happens in Awell Hosted Pages
-     */
+    helpers.log({ meta, fields: payload.fields }, 'Processing dobCheck')
+
+    try {
+      validate({
+        schema: z.object({
+          settings: SettingsValidationSchema,
+          fields: FieldsValidationSchema,
+        }),
+        payload,
+      })
+
+      /**
+       * Completion happens in Awell Hosted Pages
+       */
+    } catch (err) {
+      helpers.log({ meta, err }, 'error', err as Error)
+      const error = err as Error
+      await onError({
+        events: [
+          {
+            date: new Date().toISOString(),
+            text: { en: error.message },
+            error: {
+              category: 'SERVER_ERROR',
+              message: error.message,
+            },
+          },
+        ],
+      })
+    }
   },
 }

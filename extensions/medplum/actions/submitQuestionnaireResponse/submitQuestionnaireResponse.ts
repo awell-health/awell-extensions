@@ -8,6 +8,7 @@ import {
   getLatestFormInCurrentStep,
 } from '../../../../src/lib/awell'
 import { type Form, type FormResponse } from '@awell-health/awell-sdk'
+import { type QuestionnaireResponse } from '@medplum/fhirtypes'
 
 export const submitQuestionnaireResponse: Action<
   typeof fields,
@@ -32,6 +33,11 @@ export const submitQuestionnaireResponse: Action<
       fieldsSchema: FieldsValidationSchema,
       payload,
     })
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
 
     const awellSdk = await helpers.awellSdk()
 
@@ -44,11 +50,11 @@ export const submitQuestionnaireResponse: Action<
         pathwayId: pathway.id,
         activityId: activity.id,
       })
-      helpers.log(formRes, 'Form response')
+      helpers.log({ meta, formRes }, 'Form response')
       formDefinition = formRes.formDefinition
       formResponse = formRes.formResponse
     } catch (error) {
-      helpers.log({ error }, 'Error')
+      helpers.log({ meta, error }, 'Error')
       const err = error as Error
       await onError({
         events: [addActivityEventLog({ message: err.message })],
@@ -57,7 +63,7 @@ export const submitQuestionnaireResponse: Action<
     }
 
     helpers.log(
-      { formDefinition, formResponse },
+      { meta, formDefinition, formResponse },
       'Form definition and response',
     )
 
@@ -70,8 +76,13 @@ export const submitQuestionnaireResponse: Action<
       })
 
     helpers.log(
-      { FhirQuestionnaire, FhirQuestionnaireResponse },
+      { meta, FhirQuestionnaire, FhirQuestionnaireResponse },
       'Fhir questionnaire and response',
+    )
+
+    helpers.log(
+      { meta, FhirQuestionnaire },
+      '[submitQuestionnaireResponse] Creating Medplum questionnaire resource',
     )
 
     const QuestionnaireResource = await medplumSdk.createResourceIfNoneExist(
@@ -79,9 +90,9 @@ export const submitQuestionnaireResponse: Action<
       `identifier=${formDefinition.definition_id}/published/${formDefinition.id}`,
     )
 
-    helpers.log({ QuestionnaireResource }, 'Questionnaire resource')
+    helpers.log({ meta, QuestionnaireResource }, 'Questionnaire resource')
 
-    const res = await medplumSdk.createResource({
+    const questionnaireResponseResource: QuestionnaireResponse = {
       resourceType: 'QuestionnaireResponse',
       questionnaire: `Questionnaire/${String(QuestionnaireResource.id)}`,
       status: 'completed',
@@ -91,13 +102,19 @@ export const submitQuestionnaireResponse: Action<
         }`,
       },
       item: FhirQuestionnaireResponse,
-    })
+    }
 
-    helpers.log({ res }, 'Questionnaire response')
+    helpers.log(
+      { meta, questionnaireResponseResource },
+      '[submitQuestionnaireResponse] Creating Medplum questionnaire response',
+    )
+
+    const res = await medplumSdk.createResource(questionnaireResponseResource)
+
+    helpers.log({ meta, res }, 'Questionnaire response')
 
     await onComplete({
       data_points: {
-        // @ts-expect-error id is not included in the response type?
         questionnnaireResponseId: res.id,
       },
     })

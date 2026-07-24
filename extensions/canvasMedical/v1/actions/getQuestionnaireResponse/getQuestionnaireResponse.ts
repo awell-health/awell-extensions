@@ -23,7 +23,18 @@ export const getQuestionnaireResponse: Action<typeof fields, typeof settings> =
     fields,
     dataPoints,
     previewable: true,
-    onActivityCreated: async (payload, onComplete, onError) => {
+    onEvent: async ({ payload, onComplete, onError, helpers }) => {
+      const meta = {
+        tenant_id: payload.pathway.tenant_id,
+        careflow_id: payload.pathway.id,
+        activity_id: payload.activity.id,
+      }
+
+      helpers.log(
+        { meta, fields: payload.fields },
+        'Processing getQuestionnaireResponse',
+      )
+
       try {
         validate({
           schema: z.object({
@@ -33,22 +44,23 @@ export const getQuestionnaireResponse: Action<typeof fields, typeof settings> =
         })
 
         const questionnaireResponseId = idSchema.parse(
-          payload.fields.questionnaireResponseId
+          payload.fields.questionnaireResponseId,
         )
 
         const api = makeAPIClient(payload.settings)
         const questionnaireResponseData = await api.getQuestionnaireResponse(
-          questionnaireResponseId
+          questionnaireResponseId,
         )
 
         await onComplete({
           data_points: {
             questionnaireResponseData: JSON.stringify(
-              questionnaireResponseData
+              questionnaireResponseData,
             ),
           },
         })
       } catch (error) {
+        helpers.log({ meta, error }, 'error', error as Error)
         let parsedError
 
         if (isZodError(error)) {

@@ -1,3 +1,4 @@
+import { TestHelpers } from '@awell-health/extensions-core'
 import {
   mockedChannelNames,
   mockedTicketData,
@@ -9,8 +10,8 @@ import { updateTicket } from './updateTicket'
 jest.mock('../../client')
 
 describe('Update ticket', () => {
-  const onComplete = jest.fn()
-  const onError = jest.fn()
+  const { onComplete, onError, helpers, clearMocks } =
+    TestHelpers.fromAction(updateTicket)
 
   const basePayload = generateTestPayload({
     pathway: {
@@ -35,13 +36,20 @@ describe('Update ticket', () => {
 
   beforeEach(() => {
     jest.clearAllMocks()
+    clearMocks()
   })
 
   test('Should call the onComplete callback', async () => {
-    await updateTicket.onActivityCreated!(basePayload, onComplete, onError)
+    await updateTicket.onEvent!({
+      payload: basePayload,
+      onComplete,
+      onError,
+      helpers,
+      attempt: 1,
+    })
 
     expect(
-      SendbirdClientMockImplementation.deskApi.updateTicket
+      SendbirdClientMockImplementation.deskApi.updateTicket,
     ).toHaveBeenCalledWith(mockedTicketData.id, {
       relatedChannelUrls: `${mockedChannelNames.channel1},${mockedChannelNames.channel2}`,
       priority: mockedTicketData.priority,
@@ -53,7 +61,13 @@ describe('Update ticket', () => {
   test('Should call the onError callback when it receives invalid ticket ID', async () => {
     basePayload.fields.ticketId = NaN
 
-    await updateTicket.onActivityCreated!(basePayload, onComplete, onError)
+    await updateTicket.onEvent!({
+      payload: basePayload,
+      onComplete,
+      onError,
+      helpers,
+      attempt: 1,
+    })
 
     expect(onComplete).not.toHaveBeenCalled()
     expect(onError).toHaveBeenCalledTimes(1)

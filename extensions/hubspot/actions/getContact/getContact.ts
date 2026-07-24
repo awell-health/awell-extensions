@@ -16,19 +16,46 @@ export const getcontact: Action<
   previewable: true,
   dataPoints,
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
-    const { hubSpotSdk, fields } = await validatePayloadAndCreateSdks({
-      fieldsSchema: FieldsValidationSchema,
-      payload,
-    })
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
 
-    const res = await hubSpotSdk.crm.contacts.basicApi.getById(fields.contactId)
+    helpers.log({ meta, fields: payload.fields }, 'Processing getcontact')
 
-    await onComplete({
-      data_points: {
-        firstName: res.properties.firstname ?? undefined,
-        lastName: res.properties.lastname ?? undefined,
-        email: res.properties.email ?? undefined,
-      },
-    })
+    try {
+      const { hubSpotSdk, fields } = await validatePayloadAndCreateSdks({
+        fieldsSchema: FieldsValidationSchema,
+        payload,
+      })
+
+      const res = await hubSpotSdk.crm.contacts.basicApi.getById(
+        fields.contactId,
+      )
+
+      await onComplete({
+        data_points: {
+          firstName: res.properties.firstname ?? undefined,
+          lastName: res.properties.lastname ?? undefined,
+          email: res.properties.email ?? undefined,
+        },
+      })
+    } catch (err) {
+      helpers.log({ meta, err }, 'error', err as Error)
+      const error = err as Error
+      await onError({
+        events: [
+          {
+            date: new Date().toISOString(),
+            text: { en: error.message },
+            error: {
+              category: 'SERVER_ERROR',
+              message: error.message,
+            },
+          },
+        ],
+      })
+    }
   },
 }

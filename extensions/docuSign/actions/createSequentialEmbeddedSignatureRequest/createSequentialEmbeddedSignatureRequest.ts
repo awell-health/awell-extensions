@@ -20,12 +20,17 @@ export const createSequentialEmbeddedSignatureRequest: Action<
   fields,
   dataPoints,
   previewable: false,
-  onEvent: async ({ payload, onComplete, onError }): Promise<void> => {
+  onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
     const {
       patient: { id: patientId },
       pathway: { id: pathwayId },
       activity: { id: activityId, sessionId },
     } = payload
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
 
     const {
       settings: {
@@ -90,29 +95,40 @@ export const createSequentialEmbeddedSignatureRequest: Action<
     const envelopesApi = new DocuSignSdk.EnvelopesApi(client)
 
     try {
-      const envelopeResult = await envelopesApi.createEnvelope(accountId, {
+      const createEnvelopeRequest = {
         envelopeDefinition: envelope,
-      })
+      }
+      helpers.log({ meta, createEnvelopeRequest }, 'Creating DocuSign envelope')
+      const envelopeResult = await envelopesApi.createEnvelope(
+        accountId,
+        createEnvelopeRequest,
+      )
 
-      const recipient1ViewRequest = DocuSignSdk.RecipientViewRequest.constructFromObject({
-        authenticationMethod: 'none',
-        email: patientSignerEmail,
-        userName: patientSignerName,
-        clientUserId: patientId,
-        returnUrl: replaceStringVariables(returnUrlTemplate, {
-          sessionId: sessionId ?? '',
-          stakeholderId: patientId,
-          pathwayId,
-          activityId,
-        }),
-      })
+      const recipient1ViewRequest =
+        DocuSignSdk.RecipientViewRequest.constructFromObject({
+          authenticationMethod: 'none',
+          email: patientSignerEmail,
+          userName: patientSignerName,
+          clientUserId: patientId,
+          returnUrl: replaceStringVariables(returnUrlTemplate, {
+            sessionId: sessionId ?? '',
+            stakeholderId: patientId,
+            pathwayId,
+            activityId,
+          }),
+        })
+      const createRecipientViewRequest = {
+        recipientViewRequest: recipient1ViewRequest,
+      }
 
+      helpers.log(
+        { meta, createRecipientViewRequest },
+        'Creating DocuSign recipient view',
+      )
       const recipient1ViewResult = await envelopesApi.createRecipientView(
         accountId,
         envelopeResult?.envelopeId ?? '',
-        {
-          recipientViewRequest: recipient1ViewRequest,
-        }
+        createRecipientViewRequest,
       )
 
       await onComplete({

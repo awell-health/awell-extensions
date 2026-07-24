@@ -26,107 +26,135 @@ export const findFutureAppointment: Action<
   supports_automated_retries: true,
   dataPoints,
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
-    // 1. Validate input
-    const { prompt, patientId } = FieldsValidationSchema.parse(payload.fields)
-
-    // 2. Get future appointments (scheduled or confirmed) first
-    const appointments = await getFutureAppointments(
-      payload.settings as SettingsType,
-      patientId,
-    )
-
-    // Early return if no appointments found - no need to go to LLMs
-    if (appointments.length === 0) {
-      await onComplete({
-        data_points: {
-          appointment: undefined,
-          appointmentExists: 'false',
-          explanation: 'No future appointments found',
-        },
-      })
-      return
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
     }
 
-    // 3. Initialize OpenAI model with metadata and callbacks
-    const { model, metadata, callbacks } = await createOpenAIModel({
-      settings: {}, // we use built-in API key for OpenAI
-      helpers,
-      payload,
-      modelType: OPENAI_MODELS.GPT5Mini,
-    })
-
-    // 4. Extract date information from the prompt
-    const { from, to, instructions } = await extractDatesFromInstructions({
-      model,
-      prompt,
-      metadata,
-      callbacks,
-    })
-
-    // 5. Find matching appointments with LLM
-    const { appointmentIds, explanation } = await findAppointmentsWithLLM({
-      model,
-      appointments,
-      prompt: defaultTo(instructions, prompt),
-      metadata,
-      callbacks,
-    })
-    const htmlExplanation = await markdownToHtml(explanation)
-
-    // 6. Filter appointments based on both LLM selection and date range
-    const filteredAppointments = appointments.filter(
-      (appointment) =>
-        appointmentIds.includes(appointment.id) &&
-        (isNil(from) ||
-          isAfter(parseISO(appointment.scheduled_date), parseISO(from))) &&
-        (isNil(to) ||
-          isBefore(parseISO(appointment.scheduled_date), parseISO(to))),
+    helpers.log(
+      { meta, fields: payload.fields },
+      'Processing findFutureAppointment',
     )
 
-    const filteredAppointmentIds = filteredAppointments.map(
-      (appointment) => appointment.id,
-    )
+    try {
+      // 1. Validate input
+      const { prompt, patientId } = FieldsValidationSchema.parse(payload.fields)
 
-    // Handle case where no appointments were found after filtering
-    if (filteredAppointmentIds.length === 0) {
+      // 2. Get future appointments (scheduled or confirmed) first
+      const appointments = await getFutureAppointments(
+        payload.settings as SettingsType,
+        patientId,
+      )
+
+      // Early return if no appointments found - no need to go to LLMs
+      if (appointments.length === 0) {
+        await onComplete({
+          data_points: {
+            appointment: undefined,
+            appointmentExists: 'false',
+            explanation: 'No future appointments found',
+          },
+        })
+        return
+      }
+
+      // 3. Initialize OpenAI model with metadata and callbacks
+      const { model, metadata, callbacks } = await createOpenAIModel({
+        settings: {}, // we use built-in API key for OpenAI
+        helpers,
+        payload,
+        modelType: OPENAI_MODELS.GPT5Mini,
+      })
+
+      // 4. Extract date information from the prompt
+      const { from, to, instructions } = await extractDatesFromInstructions({
+        model,
+        prompt,
+        metadata,
+        callbacks,
+      })
+
+      // 5. Find matching appointments with LLM
+      const { appointmentIds, explanation } = await findAppointmentsWithLLM({
+        model,
+        appointments,
+        prompt: defaultTo(instructions, prompt),
+        metadata,
+        callbacks,
+      })
+      const htmlExplanation = await markdownToHtml(explanation)
+
+      // 6. Filter appointments based on both LLM selection and date range
+      const filteredAppointments = appointments.filter(
+        (appointment) =>
+          appointmentIds.includes(appointment.id) &&
+          (isNil(from) ||
+            isAfter(parseISO(appointment.scheduled_date), parseISO(from))) &&
+          (isNil(to) ||
+            isBefore(parseISO(appointment.scheduled_date), parseISO(to))),
+      )
+
+      const filteredAppointmentIds = filteredAppointments.map(
+        (appointment) => appointment.id,
+      )
+
+      // Handle case where no appointments were found after filtering
+      if (filteredAppointmentIds.length === 0) {
+        await onComplete({
+          data_points: {
+            appointment: undefined,
+            appointmentExists: 'false',
+            explanation: htmlExplanation,
+          },
+          events: [
+            addActivityEventLog({
+              message: `Number of future scheduled or confirmed appointments: ${appointments.length}\n
+              Appointments data: ${JSON.stringify(appointments, null, 2)}\n
+              Found appointment: none\n
+              Explanation: ${htmlExplanation}`,
+            }),
+          ],
+        })
+        return
+      }
+
+      // 7. If appointments were found, return the first matching appointment
+      const matchedAppointmentId = filteredAppointmentIds[0]
+      const foundAppointment = filteredAppointments[0]
+
       await onComplete({
         data_points: {
-          appointment: undefined,
-          appointmentExists: 'false',
+          appointment: !isNil(matchedAppointmentId)
+            ? JSON.stringify(foundAppointment)
+            : undefined,
           explanation: htmlExplanation,
+          appointmentExists: !isNil(matchedAppointmentId) ? 'true' : 'false',
         },
         events: [
           addActivityEventLog({
             message: `Number of future scheduled or confirmed appointments: ${appointments.length}\n
             Appointments data: ${JSON.stringify(appointments, null, 2)}\n
-            Found appointment: none\n
+            Found appointment: ${isNil(foundAppointment) ? 'none' : foundAppointment?.id}\n
             Explanation: ${htmlExplanation}`,
           }),
         ],
       })
-      return
+    } catch (err) {
+      helpers.log({ meta, err }, 'error', err as Error)
+      const error = err as Error
+      await onError({
+        events: [
+          {
+            date: new Date().toISOString(),
+            text: { en: error.message },
+            error: {
+              category: 'SERVER_ERROR',
+              message: error.message,
+            },
+          },
+        ],
+      })
     }
-
-    // 7. If appointments were found, return the first matching appointment
-    const matchedAppointmentId = filteredAppointmentIds[0]
-    const foundAppointment = filteredAppointments[0]
-
-    await onComplete({
-      data_points: {
-        appointment: !isNil(matchedAppointmentId)
-          ? JSON.stringify(foundAppointment)
-          : undefined,
-        explanation: htmlExplanation,
-        appointmentExists: !isNil(matchedAppointmentId) ? 'true' : 'false',
-      },
-      events: [
-        addActivityEventLog({
-          message: `Number of future scheduled or confirmed appointments: ${appointments.length}\n
-          Appointments data: ${JSON.stringify(appointments, null, 2)}\n
-          Found appointment: ${isNil(foundAppointment) ? 'none' : foundAppointment?.id}\n
-          Explanation: ${htmlExplanation}`,
-        }),
-      ],
-    })
   },
 }

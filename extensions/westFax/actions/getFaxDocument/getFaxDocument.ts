@@ -15,7 +15,15 @@ export const getFaxDocument: Action<typeof fields, typeof settings> = {
   fields,
   dataPoints,
   previewable: true,
-  onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
+  onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
+
+    helpers.log({ meta, fields: payload.fields }, 'Processing getFaxDocument')
+
     const { fields, westFaxSdk } = await validatePayloadAndCreateSdk({
       fieldsSchema: FieldsValidationSchema,
       payload,

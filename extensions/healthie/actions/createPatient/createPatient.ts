@@ -30,6 +30,11 @@ export const createPatient: Action<
       fieldsSchema: FieldsValidationSchema,
       payload,
     })
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
 
     const dont_send_welcome = fields.send_invite !== true
     const dietitian_id =
@@ -39,22 +44,29 @@ export const createPatient: Action<
     const skipped_email = fields.email === undefined || fields.email === '' // if email is empty we still want to create the patient
 
     try {
+      const createClientInput = {
+        first_name: fields.first_name,
+        last_name: fields.last_name,
+        legal_name: fields.legal_name,
+        email: fields.email,
+        phone_number: fields.phone_number,
+        dob: fields.dob,
+        dietitian_id,
+        dont_send_welcome,
+        skipped_email,
+        record_identifier: fields.record_identifier,
+        additional_record_identifier: fields.additional_record_identifier,
+      }
+
+      helpers.log(
+        { meta, createClientInput },
+        '[createPatient] Creating Healthie client',
+      )
+
       const res = await healthieSdk.client.mutation({
         createClient: {
           __args: {
-            input: {
-              first_name: fields.first_name,
-              last_name: fields.last_name,
-              legal_name: fields.legal_name,
-              email: fields.email,
-              phone_number: fields.phone_number,
-              dob: fields.dob,
-              dietitian_id,
-              dont_send_welcome,
-              skipped_email,
-              record_identifier: fields.record_identifier,
-              additional_record_identifier: fields.additional_record_identifier,
-            },
+            input: createClientInput,
           },
           user: {
             id: true,

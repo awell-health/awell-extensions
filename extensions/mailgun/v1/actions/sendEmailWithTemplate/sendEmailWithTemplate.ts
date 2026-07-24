@@ -16,10 +16,21 @@ export const sendEmailWithTemplate: Action<typeof fields, typeof settings> = {
   category: Category.COMMUNICATION,
   fields,
   previewable: true,
-  onActivityCreated: async (payload, onComplete, onError) => {
+  onEvent: async ({ payload, onComplete, onError, helpers }) => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
+
+    helpers.log(
+      { meta, fields: payload.fields },
+      'Processing sendEmailWithTemplate',
+    )
+
     try {
       const { to, subject, template, variables } = validateActionFields(
-        payload.fields
+        payload.fields,
       )
       const { apiKey, domain, region, fromName, fromEmail, testMode } =
         validateSettings(payload.settings)
@@ -43,12 +54,13 @@ export const sendEmailWithTemplate: Action<typeof fields, typeof settings> = {
         events: [
           addActivityEventLog({
             message: `Mailgun accepted the request, request ID: ${String(
-              res?.id
+              res?.id,
             )}`,
           }),
         ],
       })
     } catch (err) {
+      helpers.log({ meta, err }, 'error', err as Error)
       if (err instanceof ZodError) {
         const error = fromZodError(err)
         await onError({

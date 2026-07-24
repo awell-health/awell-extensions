@@ -2,14 +2,16 @@ import {
   SendgridClient,
   SendgridClientMockImplementation,
 } from '../../../__mocks__/client'
+import { TestHelpers } from '@awell-health/extensions-core'
 import { sendEmailWithTemplate } from '..'
 import { generateTestPayload } from '@/tests'
 
 jest.mock('../../../client', () => ({ SendgridClient }))
 
 describe('Send email with template', () => {
-  const onComplete = jest.fn()
-  const onError = jest.fn()
+  const { onComplete, onError, helpers, clearMocks } = TestHelpers.fromAction(
+    sendEmailWithTemplate,
+  )
 
   const payload = {
     fields: {
@@ -31,14 +33,17 @@ describe('Send email with template', () => {
 
   beforeEach(() => {
     jest.clearAllMocks()
+    clearMocks()
   })
 
   test('Should call the onComplete callback', async () => {
-    await sendEmailWithTemplate.onActivityCreated!(
-      basePayload,
+    await sendEmailWithTemplate.onEvent!({
+      payload: basePayload,
       onComplete,
-      onError
-    )
+      onError,
+      helpers,
+      attempt: 1,
+    })
     expect(SendgridClientMockImplementation.mail.send).toHaveBeenCalledWith({
       from: {
         email: basePayload.settings.fromEmail,
@@ -62,8 +67,8 @@ describe('Send email with template', () => {
   })
 
   test('Should use settings values when fields are not provided', async () => {
-    await sendEmailWithTemplate.onActivityCreated!(
-      {
+    await sendEmailWithTemplate.onEvent!({
+      payload: {
         ...basePayload,
         fields: {
           ...basePayload.fields,
@@ -77,15 +82,17 @@ describe('Send email with template', () => {
         },
       },
       onComplete,
-      onError
-    )
+      onError,
+      helpers,
+      attempt: 1,
+    })
     expect(SendgridClientMockImplementation.mail.send).toHaveBeenCalledWith(
       expect.objectContaining({
         from: {
           name: 'settings',
           email: 'settings@settings.com',
         },
-      })
+      }),
     )
     expect(onComplete).toHaveBeenCalled()
     expect(onError).not.toHaveBeenCalled()
@@ -97,8 +104,8 @@ describe('Send email with template', () => {
   ])(
     '$#. Should use fields values when provided and override settings values',
     async ({ settings }) => {
-      await sendEmailWithTemplate.onActivityCreated!(
-        {
+      await sendEmailWithTemplate.onEvent!({
+        payload: {
           ...basePayload,
           fields: {
             ...basePayload.fields,
@@ -111,24 +118,26 @@ describe('Send email with template', () => {
           },
         },
         onComplete,
-        onError
-      )
+        onError,
+        helpers,
+        attempt: 1,
+      })
       expect(SendgridClientMockImplementation.mail.send).toHaveBeenCalledWith(
         expect.objectContaining({
           from: {
             name: 'fields',
             email: 'fields@fields.com',
           },
-        })
+        }),
       )
       expect(onComplete).toHaveBeenCalled()
       expect(onError).not.toHaveBeenCalled()
-    }
+    },
   )
 
   test('Should throw error when fields and settings are not provided', async () => {
-    await sendEmailWithTemplate.onActivityCreated!(
-      {
+    await sendEmailWithTemplate.onEvent!({
+      payload: {
         ...basePayload,
         fields: {
           ...basePayload.fields,
@@ -142,8 +151,10 @@ describe('Send email with template', () => {
         },
       },
       onComplete,
-      onError
-    )
+      onError,
+      helpers,
+      attempt: 1,
+    })
     expect(SendgridClientMockImplementation.mail.send).not.toHaveBeenCalled()
     expect(onComplete).not.toHaveBeenCalled()
     expect(onError).toHaveBeenCalledWith({
@@ -160,8 +171,8 @@ describe('Send email with template', () => {
   })
 
   test('Should use the subject action field value when no subject is defined in template data', async () => {
-    await sendEmailWithTemplate.onActivityCreated!(
-      generateTestPayload({
+    await sendEmailWithTemplate.onEvent!({
+      payload: generateTestPayload({
         fields: {
           ...payload.fields,
           subject: 'Subject 1',
@@ -170,8 +181,10 @@ describe('Send email with template', () => {
         settings: payload.settings,
       }),
       onComplete,
-      onError
-    )
+      onError,
+      helpers,
+      attempt: 1,
+    })
 
     expect(SendgridClientMockImplementation.mail.send).toHaveBeenCalledWith({
       from: {
@@ -195,8 +208,8 @@ describe('Send email with template', () => {
   })
 
   test('Should use the subject value defined in template data when no subject is defined for the action field', async () => {
-    await sendEmailWithTemplate.onActivityCreated!(
-      generateTestPayload({
+    await sendEmailWithTemplate.onEvent!({
+      payload: generateTestPayload({
         fields: {
           ...payload.fields,
           subject: '',
@@ -207,8 +220,10 @@ describe('Send email with template', () => {
         settings: payload.settings,
       }),
       onComplete,
-      onError
-    )
+      onError,
+      helpers,
+      attempt: 1,
+    })
 
     expect(SendgridClientMockImplementation.mail.send).toHaveBeenCalledWith({
       from: {
@@ -232,8 +247,8 @@ describe('Send email with template', () => {
   })
 
   test('Should use the subject value defined in template data when both subjects are defined', async () => {
-    await sendEmailWithTemplate.onActivityCreated!(
-      generateTestPayload({
+    await sendEmailWithTemplate.onEvent!({
+      payload: generateTestPayload({
         fields: {
           ...payload.fields,
           subject: 'Subject 1',
@@ -244,8 +259,10 @@ describe('Send email with template', () => {
         settings: payload.settings,
       }),
       onComplete,
-      onError
-    )
+      onError,
+      helpers,
+      attempt: 1,
+    })
 
     expect(SendgridClientMockImplementation.mail.send).toHaveBeenCalledWith({
       from: {

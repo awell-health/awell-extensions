@@ -1,4 +1,5 @@
 import DropboxSignSdk from '../../../common/sdk/dropboxSignSdk'
+import { TestHelpers } from '@awell-health/extensions-core'
 
 import { sendSignatureRequestWithTemplate } from '..'
 import { generateTestPayload } from '@/tests'
@@ -8,7 +9,7 @@ jest.mock('../../../common/sdk/dropboxSignSdk')
 const mockFn = jest
   .spyOn(
     DropboxSignSdk.SignatureRequestApi.prototype,
-    'signatureRequestSendWithTemplate'
+    'signatureRequestSendWithTemplate',
   )
   .mockImplementation(
     jest.fn().mockResolvedValue({
@@ -24,21 +25,21 @@ const mockFn = jest
         headers: {},
         config: {},
       },
-    })
+    }),
   )
 
 describe('Cancel signature request action', () => {
-  const onComplete = jest.fn()
-  const onError = jest.fn()
+  const { onComplete, onError, helpers, clearMocks } = TestHelpers.fromAction(
+    sendSignatureRequestWithTemplate,
+  )
 
   beforeEach(() => {
-    onComplete.mockClear()
-    onError.mockClear()
+    clearMocks()
   })
 
   test('Should call the onComplete callback', async () => {
-    await sendSignatureRequestWithTemplate.onActivityCreated!(
-      generateTestPayload({
+    await sendSignatureRequestWithTemplate.onEvent!({
+      payload: generateTestPayload({
         fields: {
           signerRole: 'Client',
           signerName: 'John Doe',
@@ -56,8 +57,10 @@ describe('Cancel signature request action', () => {
         },
       }),
       onComplete,
-      jest.fn()
-    )
+      onError,
+      helpers,
+      attempt: 1,
+    })
     expect(mockFn).toHaveBeenCalled()
     expect(onComplete).toHaveBeenCalled()
     expect(onError).not.toHaveBeenCalled()

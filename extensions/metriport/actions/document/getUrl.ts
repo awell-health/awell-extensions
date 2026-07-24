@@ -19,7 +19,15 @@ export const getUrl: Action<
   fields: getUrlFields,
   previewable: true,
   dataPoints,
-  onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
+  onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
+
+    helpers.log({ meta, fields: payload.fields }, 'Processing getUrl')
+
     try {
       const { fileName } = getUrlSchema.parse(payload.fields)
 
@@ -33,6 +41,7 @@ export const getUrl: Action<
         },
       })
     } catch (err) {
+      helpers.log({ meta, err }, 'error', err as Error)
       await handleErrorMessage(err, onError)
     }
   },

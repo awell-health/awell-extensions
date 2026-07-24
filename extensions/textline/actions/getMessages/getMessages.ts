@@ -19,7 +19,15 @@ export const getMessages: Action<typeof fields, typeof settings> = {
   fields,
   dataPoints,
   previewable: true,
-  onActivityCreated: async (payload, onComplete, onError) => {
+  onEvent: async ({ payload, onComplete, onError, helpers }) => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
+
+    helpers.log({ meta, fields: payload.fields }, 'Processing getMessages')
+
     try {
       const {
         settings: { accessToken },
@@ -33,7 +41,13 @@ export const getMessages: Action<typeof fields, typeof settings> = {
       })
 
       const textLineApi = new TextLineApi(accessToken)
-      const messages = await textLineApi.getMessages(phoneNumber, afterMessageId, departmentId, 1, 30)
+      const messages = await textLineApi.getMessages(
+        phoneNumber,
+        afterMessageId,
+        departmentId,
+        1,
+        30,
+      )
 
       if (isNil(messages.posts)) {
         await onComplete({
@@ -45,11 +59,11 @@ export const getMessages: Action<typeof fields, typeof settings> = {
         })
       } else {
         // received messages contain a phone number, sent messages will not
-        const receivedMessages = messages.posts.filter(
-          (p: Post) => !isNil(p.creator.phone_number)
-        ).sort((a: Post, b: Post) => {
-          return b.created_at - a.created_at;
-        });
+        const receivedMessages = messages.posts
+          .filter((p: Post) => !isNil(p.creator.phone_number))
+          .sort((a: Post, b: Post) => {
+            return b.created_at - a.created_at
+          })
         const numberOfMessages = receivedMessages.length
         const allMessages = receivedMessages.map(function (p: Post) {
           return p.body
@@ -66,6 +80,7 @@ export const getMessages: Action<typeof fields, typeof settings> = {
         })
       }
     } catch (err) {
+      helpers.log({ meta, err }, 'error', err as Error)
       if (err instanceof ZodError) {
         const error = fromZodError(err)
         await onError({

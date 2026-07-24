@@ -12,35 +12,60 @@ export const createGoal: Action<typeof fields, typeof settings> = {
   fields,
   previewable: true,
   dataPoints,
-  onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
-    const { fields, healthieSdk } = await validatePayloadAndCreateSdk({
-      fieldsSchema: FieldsValidationSchema,
-      payload,
-    })
-
-    const input = {
-      user_id: fields.healthiePatientId,
-      repeat: fields.repeat,
-      title_link: fields.titleLink,
-      name: fields.name,
-      due_date: fields.dueDate,
+  onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
     }
 
-    const res = await healthieSdk.client.mutation({
-      createGoal: {
-        __args: {
-          input,
-        },
-        goal: {
-          id: true,
-        },
-      },
-    })
+    helpers.log({ meta, fields: payload.fields }, 'Processing createGoal')
 
-    await onComplete({
-      data_points: {
-        createdGoalId: String(res.createGoal?.goal?.id),
-      },
-    })
+    try {
+      const { fields, healthieSdk } = await validatePayloadAndCreateSdk({
+        fieldsSchema: FieldsValidationSchema,
+        payload,
+      })
+
+      const input = {
+        user_id: fields.healthiePatientId,
+        repeat: fields.repeat,
+        title_link: fields.titleLink,
+        name: fields.name,
+        due_date: fields.dueDate,
+      }
+
+      const res = await healthieSdk.client.mutation({
+        createGoal: {
+          __args: {
+            input,
+          },
+          goal: {
+            id: true,
+          },
+        },
+      })
+
+      await onComplete({
+        data_points: {
+          createdGoalId: String(res.createGoal?.goal?.id),
+        },
+      })
+    } catch (err) {
+      helpers.log({ meta, err }, 'error', err as Error)
+      const error = err as Error
+      await onError({
+        events: [
+          {
+            date: new Date().toISOString(),
+            text: { en: error.message },
+            error: {
+              category: 'SERVER_ERROR',
+              message: error.message,
+            },
+          },
+        ],
+      })
+    }
   },
 }

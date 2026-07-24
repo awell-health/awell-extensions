@@ -16,7 +16,18 @@ export const getSignatureRequest: Action<typeof fields, typeof settings> = {
   fields,
   dataPoints,
   previewable: true,
-  onActivityCreated: async (payload, onComplete, onError) => {
+  onEvent: async ({ payload, onComplete, onError, helpers }) => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
+
+    helpers.log(
+      { meta, fields: payload.fields },
+      'Processing getSignatureRequest',
+    )
+
     try {
       const { signatureRequestId } = validateActionFields(payload.fields)
       const { apiKey } = validateSettings(payload.settings)
@@ -24,9 +35,8 @@ export const getSignatureRequest: Action<typeof fields, typeof settings> = {
       const signatureRequestApi = new DropboxSignSdk.SignatureRequestApi()
       signatureRequestApi.username = apiKey
 
-      const result = await signatureRequestApi.signatureRequestGet(
-        signatureRequestId
-      )
+      const result =
+        await signatureRequestApi.signatureRequestGet(signatureRequestId)
 
       const signatures = result.body.signatureRequest?.signatures ?? []
       const hasSignature = signatures.length >= 1
@@ -51,6 +61,7 @@ export const getSignatureRequest: Action<typeof fields, typeof settings> = {
         },
       })
     } catch (err) {
+      helpers.log({ meta, err }, 'error', err as Error)
       if (err instanceof ZodError) {
         const error = fromZodError(err)
         await onError({
@@ -81,7 +92,7 @@ export const getSignatureRequest: Action<typeof fields, typeof settings> = {
               error: {
                 category: 'SERVER_ERROR',
                 message: `${String(err?.statusCode)}: ${String(
-                  sdkErrorMessage
+                  sdkErrorMessage,
                 )}`,
               },
             },

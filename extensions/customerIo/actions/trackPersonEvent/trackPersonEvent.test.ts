@@ -118,26 +118,37 @@ describe('Customer.io - Track person event', () => {
       )
     })
 
-    test('Should throw an error', async () => {
-      expect(
-        extensionAction.onEvent({
-          payload: generateTestPayload({
-            fields: {
-              eventName: 'test',
-              identifierValue: 'test@example.com',
-              personIdentifierType: 'email',
-            },
-            settings: {
-              siteId: 'siteId',
-              apiKey: 'apiKey',
+    test('Should call onError', async () => {
+      await extensionAction.onEvent({
+        payload: generateTestPayload({
+          fields: {
+            eventName: 'test',
+            identifierValue: 'test@example.com',
+            personIdentifierType: 'email',
+          },
+          settings: {
+            siteId: 'siteId',
+            apiKey: 'apiKey',
+          },
+        }),
+        onComplete,
+        onError,
+        helpers,
+        attempt: 1,
+      })
+
+      expect(mockTrackPersonEvent).toHaveBeenCalled()
+      expect(onError).toHaveBeenCalledWith({
+        events: [
+          expect.objectContaining({
+            error: {
+              category: 'SERVER_ERROR',
+              message: 'Request failed with status code 400',
             },
           }),
-          onComplete,
-          onError,
-          helpers,
-          attempt: 1,
-        }),
-      ).rejects.toThrow()
+        ],
+      })
+      expect(onComplete).not.toHaveBeenCalled()
     })
   })
 })

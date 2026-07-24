@@ -1,18 +1,18 @@
 import { smsNotification } from '../'
 import { generateTestPayload } from '@/tests'
+import { TestHelpers } from '@awell-health/extensions-core'
 
 describe('Simple sms notification action', () => {
-  const onComplete = jest.fn()
-  const onError = jest.fn()
+  const { onComplete, onError, helpers, clearMocks } =
+    TestHelpers.fromAction(smsNotification)
 
   beforeEach(() => {
-    onComplete.mockClear()
-    onError.mockClear()
+    clearMocks()
   })
 
   test('Should call the onComplete callback', async () => {
-    await smsNotification.onActivityCreated!(
-      generateTestPayload({
+    await smsNotification.onEvent!({
+      payload: generateTestPayload({
         fields: {
           message: 'Message content',
           recipient: '+32494000000',
@@ -30,15 +30,17 @@ describe('Simple sms notification action', () => {
         },
       }),
       onComplete,
-      onError
-    )
+      onError,
+      helpers,
+      attempt: 1,
+    })
     expect(onComplete).toHaveBeenCalled()
     expect(onError).not.toHaveBeenCalled()
   })
 
   test('Should call the onError callback', async () => {
-    await smsNotification.onActivityCreated!(
-      generateTestPayload({
+    await smsNotification.onEvent!({
+      payload: generateTestPayload({
         fields: {
           message: 'Message content',
           recipient: '',
@@ -56,8 +58,10 @@ describe('Simple sms notification action', () => {
         },
       }),
       onComplete,
-      onError
-    )
+      onError,
+      helpers,
+      attempt: 1,
+    })
     expect(onComplete).not.toHaveBeenCalled()
     expect(onError).toHaveBeenCalled()
   })

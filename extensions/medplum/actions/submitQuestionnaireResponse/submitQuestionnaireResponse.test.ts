@@ -8,6 +8,7 @@ import {
   simpleFormResponseMockResponse,
 } from './__testdata__'
 import { AwellSdk } from '@awell-health/awell-sdk'
+import { generateTestPayload } from '../../../../tests/constants'
 
 jest.mock('@medplum/core', () => ({
   MedplumClient: jest.fn().mockImplementation(() => ({
@@ -82,7 +83,7 @@ describe('Medplum - Create questionnaire response', () => {
       helpers.awellSdk = jest.fn().mockResolvedValue(awellSdkMock)
 
       await extensionAction.onEvent({
-        payload: {
+        payload: generateTestPayload({
           fields: {
             patientId: '5d1e74dd-6b92-43e6-ab07-e55d1033fbb6',
             questionnaireResponseId: 'abc',
@@ -94,7 +95,7 @@ describe('Medplum - Create questionnaire response', () => {
             id: 'uHiNInqiX-rhfnJEl0mcE',
           },
           settings: mockSettings,
-        } as any,
+        }),
         onComplete,
         onError,
         helpers,
@@ -181,7 +182,7 @@ describe('Medplum - Create questionnaire response', () => {
       helpers.awellSdk = jest.fn().mockResolvedValue(awellSdkMock)
 
       await extensionAction.onEvent({
-        payload: {
+        payload: generateTestPayload({
           fields: {
             patientId: '5d1e74dd-6b92-43e6-ab07-e55d1033fbb6',
             questionnaireResponseId: 'abc',
@@ -193,7 +194,7 @@ describe('Medplum - Create questionnaire response', () => {
             id: 'uHiNInqiX-rhfnJEl0mcE',
           },
           settings: mockSettings,
-        } as any,
+        }),
         onComplete,
         onError,
         helpers,

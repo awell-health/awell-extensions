@@ -1,5 +1,6 @@
 import { generateTestPayload } from '@/tests'
 import { getSdk } from '../../lib/sdk/graphql-codegen/generated/sdk'
+import { TestHelpers } from '@awell-health/extensions-core'
 import {
   mockGetSdk,
   mockGetSdkReturn,
@@ -10,7 +11,8 @@ jest.mock('../../lib/sdk/graphql-codegen/generated/sdk')
 jest.mock('../../lib/sdk/graphql-codegen/graphqlClient')
 
 describe('cancelAppointment action', () => {
-  const onComplete = jest.fn()
+  const { onComplete, onError, helpers, clearMocks } =
+    TestHelpers.fromAction(cancelAppointment)
 
   beforeAll(() => {
     ;(getSdk as jest.Mock).mockImplementation(mockGetSdk)
@@ -18,11 +20,12 @@ describe('cancelAppointment action', () => {
 
   beforeEach(() => {
     jest.clearAllMocks()
+    clearMocks()
   })
 
   test('Should cancel an appointment', async () => {
-    await cancelAppointment.onActivityCreated!(
-      generateTestPayload({
+    await cancelAppointment.onEvent!({
+      payload: generateTestPayload({
         fields: {
           id: 'appointment-1',
         },
@@ -33,8 +36,10 @@ describe('cancelAppointment action', () => {
         },
       }),
       onComplete,
-      jest.fn(),
-    )
+      onError,
+      helpers,
+      attempt: 1,
+    })
 
     expect(mockGetSdkReturn.updateAppointment).toHaveBeenCalledWith({
       input: {

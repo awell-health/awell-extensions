@@ -16,46 +16,71 @@ export const addSideEffect: Action<
   fields,
   previewable: false,
   dataPoints,
-  onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
-    const {
-      fields: input,
-      medplumSdk,
-      activity,
-    } = await validateAndCreateSdkClient({
-      fieldsSchema: FieldsValidationSchema,
-      payload,
-    })
-
-    const annotation: Annotation = {
-      text: input.sideEffect,
-      authorReference: {
-        identifier: {
-          system: 'https://awellhealth.com/activities/',
-          value: activity.id,
-        },
-        display: 'Awell',
-      },
+  onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
     }
 
-    const currentMedicationRequest = await medplumSdk.readResource(
-      'MedicationRequest',
-      input.medicationRequestId
-    )
+    helpers.log({ meta, fields: payload.fields }, 'Processing addSideEffect')
 
-    const currentAnnotations = currentMedicationRequest.note
+    try {
+      const {
+        fields: input,
+        medplumSdk,
+        activity,
+      } = await validateAndCreateSdkClient({
+        fieldsSchema: FieldsValidationSchema,
+        payload,
+      })
 
-    await medplumSdk.patchResource(
-      'MedicationRequest',
-      input.medicationRequestId,
-      [
-        {
-          op: 'add',
-          path: '/note',
-          value: [...(currentAnnotations ?? []), annotation],
+      const annotation: Annotation = {
+        text: input.sideEffect,
+        authorReference: {
+          identifier: {
+            system: 'https://awellhealth.com/activities/',
+            value: activity.id,
+          },
+          display: 'Awell',
         },
-      ]
-    )
+      }
 
-    await onComplete()
+      const currentMedicationRequest = await medplumSdk.readResource(
+        'MedicationRequest',
+        input.medicationRequestId,
+      )
+
+      const currentAnnotations = currentMedicationRequest.note
+
+      await medplumSdk.patchResource(
+        'MedicationRequest',
+        input.medicationRequestId,
+        [
+          {
+            op: 'add',
+            path: '/note',
+            value: [...(currentAnnotations ?? []), annotation],
+          },
+        ],
+      )
+
+      await onComplete()
+    } catch (err) {
+      helpers.log({ meta, err }, 'error', err as Error)
+      const error = err as Error
+      await onError({
+        events: [
+          {
+            date: new Date().toISOString(),
+            text: { en: error.message },
+            error: {
+              category: 'SERVER_ERROR',
+              message: error.message,
+            },
+          },
+        ],
+      })
+    }
   },
 }

@@ -3,7 +3,7 @@ import { makeAPIClient } from '../../client'
 import { nonVisitNoteSchema } from '../../validation/nonVisitNote.zod'
 import { TestHelpers } from '@awell-health/extensions-core'
 import { CreateNonVisitNoteMock } from './__testdata__/CreateNonVisitNote.mock'
-import { createAxiosError } from '../../../../tests'
+import { createAxiosError, testPayload } from '../../../../tests'
 import { AwellSdk } from '@awell-health/awell-sdk'
 
 jest.mock('../../client', () => ({
@@ -76,6 +76,7 @@ describe('Elation - Create non-visit note', () => {
     test('Should pass plain text if input text has no HTML tags', async () => {
       await extensionAction.onEvent!({
         payload: {
+          ...testPayload,
           fields: {
             patientId: CreateNonVisitNoteMock.data.patient,
             authorId: CreateNonVisitNoteMock.data.bullets[0].author,
@@ -105,6 +106,7 @@ describe('Elation - Create non-visit note', () => {
     test('Should pass plain text if input text is pure HTML', async () => {
       await extensionAction.onEvent!({
         payload: {
+          ...testPayload,
           fields: {
             patientId: CreateNonVisitNoteMock.data.patient,
             authorId: CreateNonVisitNoteMock.data.bullets[0].author,
@@ -134,6 +136,7 @@ describe('Elation - Create non-visit note', () => {
     test('Should pass plain text if input text is a mix of HTML and plain text', async () => {
       await extensionAction.onEvent!({
         payload: {
+          ...testPayload,
           fields: {
             patientId: CreateNonVisitNoteMock.data.patient,
             authorId: CreateNonVisitNoteMock.data.bullets[0].author,
@@ -169,6 +172,7 @@ describe('Elation - Create non-visit note', () => {
     test('Should return with correct data_points', async () => {
       await extensionAction.onEvent!({
         payload: {
+          ...testPayload,
           fields: {
             patientId: CreateNonVisitNoteMock.data.patient,
             authorId: CreateNonVisitNoteMock.data.bullets[0].author,
@@ -212,6 +216,7 @@ describe('Elation - Create non-visit note', () => {
     test('Should return with correct data_points', async () => {
       await extensionAction.onEvent!({
         payload: {
+          ...testPayload,
           fields: {
             patientId: CreateNonVisitNoteMock.data.patient,
             authorId: CreateNonVisitNoteMock.data.bullets[0].author,

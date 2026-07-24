@@ -1,15 +1,17 @@
 import { createPatient } from '.'
 import { generateTestPayload } from '@/tests'
 import { mockSettings } from '../../api/__mocks__/mockData'
+import { TestHelpers } from '@awell-health/extensions-core'
 
 jest.mock('../../api/client')
 
 describe('athenahealth - Create patient', () => {
-  const onComplete = jest.fn()
-  const onError = jest.fn()
+  const { onComplete, onError, helpers, clearMocks } =
+    TestHelpers.fromAction(createPatient)
 
   beforeEach(() => {
     jest.clearAllMocks()
+    clearMocks()
   })
 
   test('Should create a patient', async () => {
@@ -24,11 +26,13 @@ describe('athenahealth - Create patient', () => {
       settings: mockSettings,
     })
 
-    await createPatient.onActivityCreated!(
-      mockOnActivityCreateParams,
+    await createPatient.onEvent!({
+      payload: mockOnActivityCreateParams,
       onComplete,
-      onError
-    )
+      onError,
+      helpers,
+      attempt: 1,
+    })
 
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {

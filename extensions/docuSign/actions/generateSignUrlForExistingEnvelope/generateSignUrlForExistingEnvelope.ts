@@ -20,11 +20,16 @@ export const generateSignUrlForExistingEnvelope: Action<
   fields,
   dataPoints,
   previewable: false,
-  onEvent: async ({ payload, onComplete, onError }): Promise<void> => {
+  onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
     const {
       pathway: { id: pathwayId },
       activity: { id: activityId, sessionId },
     } = payload
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
 
     const {
       settings: {
@@ -35,12 +40,7 @@ export const generateSignUrlForExistingEnvelope: Action<
         rsaKey,
         userId,
       },
-      fields: {
-        envelopeId,
-        signerName,
-        signerEmail,
-        clientUserId,
-      },
+      fields: { envelopeId, signerName, signerEmail, clientUserId },
     } = validate({
       schema: z.object({
         settings: SettingsValidationSchema,
@@ -71,13 +71,18 @@ export const generateSignUrlForExistingEnvelope: Action<
           activityId,
         }),
       })
+      const createRecipientViewRequest = {
+        recipientViewRequest: viewRequest,
+      }
 
+      helpers.log(
+        { meta, createRecipientViewRequest },
+        'Creating DocuSign recipient view',
+      )
       const viewResult = await envelopesApi.createRecipientView(
         accountId,
         envelopeId,
-        {
-          recipientViewRequest: viewRequest,
-        }
+        createRecipientViewRequest,
       )
 
       await onComplete({

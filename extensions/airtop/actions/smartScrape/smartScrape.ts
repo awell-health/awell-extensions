@@ -16,36 +16,61 @@ export const smartScrape: Action<
   fields,
   previewable: true,
   dataPoints,
-  onEvent: async ({ payload, onComplete, onError }): Promise<void> => {
-    const { fields, airtopSdk } = await validatePayloadAndCreateSdk({
-      fieldsSchema: FieldsValidationSchema,
-      payload,
-    })
+  onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
 
-    // Create a headless browser session
-    const session = await airtopSdk.sessions.create()
+    helpers.log({ meta, fields: payload.fields }, 'Processing smartScrape')
 
-    // Create a new window in the session and open the page
-    const window = await airtopSdk.windows.create(session.data.id, {
-      url: fields.pageUrl,
-    })
+    try {
+      const { fields, airtopSdk } = await validatePayloadAndCreateSdk({
+        fieldsSchema: FieldsValidationSchema,
+        payload,
+      })
 
-    // Scrape the content of the window
-    const content = await airtopSdk.windows.scrapeContent(
-      session.data.id,
-      window.data.windowId,
-    )
+      // Create a headless browser session
+      const session = await airtopSdk.sessions.create()
 
-    // Close the window and terminate the session
-    await airtopSdk.windows.close(session.data.id, window.data.windowId)
-    await airtopSdk.sessions.terminate(session.data.id)
+      // Create a new window in the session and open the page
+      const window = await airtopSdk.windows.create(session.data.id, {
+        url: fields.pageUrl,
+      })
 
-    // Return the result
-    await onComplete({
-      data_points: {
-        result: content.data.modelResponse.scrapedContent.text,
-        mimeType: content.data.modelResponse.scrapedContent.contentType,
-      },
-    })
+      // Scrape the content of the window
+      const content = await airtopSdk.windows.scrapeContent(
+        session.data.id,
+        window.data.windowId,
+      )
+
+      // Close the window and terminate the session
+      await airtopSdk.windows.close(session.data.id, window.data.windowId)
+      await airtopSdk.sessions.terminate(session.data.id)
+
+      // Return the result
+      await onComplete({
+        data_points: {
+          result: content.data.modelResponse.scrapedContent.text,
+          mimeType: content.data.modelResponse.scrapedContent.contentType,
+        },
+      })
+    } catch (err) {
+      helpers.log({ meta, err }, 'error', err as Error)
+      const error = err as Error
+      await onError({
+        events: [
+          {
+            date: new Date().toISOString(),
+            text: { en: error.message },
+            error: {
+              category: 'SERVER_ERROR',
+              message: error.message,
+            },
+          },
+        ],
+      })
+    }
   },
 }

@@ -16,15 +16,25 @@ export const sendEmailWithSingleSendApi: Action<
   previewable: true,
   dataPoints,
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
-    const { hubSpotSdk, fields, activity } = await validatePayloadAndCreateSdks(
-      {
-        fieldsSchema: FieldsValidationSchema,
-        payload,
-      }
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
+
+    helpers.log(
+      { meta, fields: payload.fields },
+      'Processing sendEmailWithSingleSendApi',
     )
 
-    const res =
-      await hubSpotSdk.marketing.transactional.singleSendApi.sendEmail({
+    try {
+      const { hubSpotSdk, fields, activity } =
+        await validatePayloadAndCreateSdks({
+          fieldsSchema: FieldsValidationSchema,
+          payload,
+        })
+
+      const requestBody = {
         emailId: Number(fields.emailId),
         message: {
           _from: fields.from,
@@ -33,12 +43,37 @@ export const sendEmailWithSingleSendApi: Action<
         },
         contactProperties: fields.contactProperties,
         customProperties: fields.customProperties,
-      })
+      }
 
-    await onComplete({
-      data_points: {
-        statusId: res.statusId,
-      },
-    })
+      helpers.log(
+        { meta, requestBody },
+        'Sending email via HubSpot Single Send API',
+      )
+      const res =
+        await hubSpotSdk.marketing.transactional.singleSendApi.sendEmail(
+          requestBody,
+        )
+
+      await onComplete({
+        data_points: {
+          statusId: res.statusId,
+        },
+      })
+    } catch (err) {
+      helpers.log({ meta, err }, 'error', err as Error)
+      const error = err as Error
+      await onError({
+        events: [
+          {
+            date: new Date().toISOString(),
+            text: { en: error.message },
+            error: {
+              category: 'SERVER_ERROR',
+              message: error.message,
+            },
+          },
+        ],
+      })
+    }
   },
 }

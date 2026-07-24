@@ -11,8 +11,7 @@ import { type MessageListInstanceOptions } from 'twilio/lib/rest/api/v2010/accou
 export const getMessages: Action<typeof fields, typeof settings> = {
   key: 'getMessages',
   title: 'Get messages',
-  description:
-    `
+  description: `
     Get a list of text messages matching the given criteria.
     You can also filter the Messages by providing one of the allowed filters.
     `,
@@ -20,17 +19,31 @@ export const getMessages: Action<typeof fields, typeof settings> = {
   fields,
   dataPoints,
   previewable: true,
-  onActivityCreated: async (payload, onComplete, onError) => {
+  onEvent: async ({ payload, onComplete, onError, helpers }) => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
+
+    helpers.log({ meta, fields: payload.fields }, 'Processing getMessages')
+
     try {
       const {
-        settings: { accountSid, authToken},
-        fields: { recipient, from, date_sent, date_sent_after, date_sent_before, page_size },
+        settings: { accountSid, authToken },
+        fields: {
+          recipient,
+          from,
+          date_sent,
+          date_sent_after,
+          date_sent_before,
+          page_size,
+        },
       } = validate({
-        schema: z
-          .object({
-            settings: SettingsValidationSchema,
-            fields: FieldsValidationSchema,
-          }),
+        schema: z.object({
+          settings: SettingsValidationSchema,
+          fields: FieldsValidationSchema,
+        }),
         payload,
       })
 
@@ -39,28 +52,31 @@ export const getMessages: Action<typeof fields, typeof settings> = {
         accountSid,
       })
 
-      const params : MessageListInstanceOptions = {
+      const params: MessageListInstanceOptions = {
         to: recipient,
         from,
         dateSent: date_sent,
         dateSentAfter: date_sent_after,
         dateSentBefore: date_sent_before,
-        pageSize: page_size
+        pageSize: page_size,
       }
 
       const messages = await client.messages.list(params)
       const numberOfMessages = messages.length
-      const allMessages = messages.map(function(message) {
-        return message.body;
-      });
+      const allMessages = messages.map(function (message) {
+        return message.body
+      })
       const latestMessage = numberOfMessages > 0 ? messages[0].body : undefined
 
-      await onComplete( {data_points: {
-        allMessages: JSON.stringify(allMessages),
-        numberOfMessages: String(numberOfMessages),
-        latestMessage
-      }})
+      await onComplete({
+        data_points: {
+          allMessages: JSON.stringify(allMessages),
+          numberOfMessages: String(numberOfMessages),
+          latestMessage,
+        },
+      })
     } catch (err) {
+      helpers.log({ meta, err }, 'error', err as Error)
       if (err instanceof ZodError) {
         const error = fromZodError(err)
         await onError({

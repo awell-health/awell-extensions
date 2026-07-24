@@ -2,6 +2,7 @@ import { makeAPIClient } from '../../client'
 import { getReferralOrder as action } from './getReferralOrder'
 import { TestHelpers } from '@awell-health/extensions-core'
 import { referralOrderMockResponse } from './__testdata__/referralOrder.mock'
+import { testPayload } from '../../../../tests'
 
 jest.mock('../../client', () => ({
   makeAPIClient: jest.fn().mockImplementation(() => ({
@@ -23,6 +24,7 @@ describe('Elation - Get referral order', () => {
   test('Should return the correct referral order', async () => {
     await extensionAction.onEvent({
       payload: {
+        ...testPayload,
         fields: {
           referralOrderId: 123,
         },

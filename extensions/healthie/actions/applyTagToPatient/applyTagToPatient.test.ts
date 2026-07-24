@@ -1,5 +1,6 @@
 import { generateTestPayload } from '@/tests'
 import { getSdk } from '../../lib/sdk/graphql-codegen/generated/sdk'
+import { TestHelpers } from '@awell-health/extensions-core'
 import {
   mockGetSdk,
   mockGetSdkReturn,
@@ -10,7 +11,8 @@ jest.mock('../../lib/sdk/graphql-codegen/generated/sdk')
 jest.mock('../../lib/sdk/graphql-codegen/graphqlClient')
 
 describe('applyTagToPatient action', () => {
-  const onComplete = jest.fn()
+  const { onComplete, onError, helpers, clearMocks } =
+    TestHelpers.fromAction(applyTagToPatient)
 
   beforeAll(() => {
     ;(getSdk as jest.Mock).mockImplementation(mockGetSdk)
@@ -18,11 +20,12 @@ describe('applyTagToPatient action', () => {
 
   beforeEach(() => {
     jest.clearAllMocks()
+    clearMocks()
   })
 
   test('Should apply tag to a patient', async () => {
-    await applyTagToPatient.onActivityCreated!(
-      generateTestPayload({
+    await applyTagToPatient.onEvent!({
+      payload: generateTestPayload({
         fields: {
           id: 'tag-1',
           patient_id: 'patient-1',
@@ -34,8 +37,10 @@ describe('applyTagToPatient action', () => {
         },
       }),
       onComplete,
-      jest.fn(),
-    )
+      onError,
+      helpers,
+      attempt: 1,
+    })
 
     expect(mockGetSdkReturn.applyTagsToUser).toHaveBeenCalled()
     expect(onComplete).toHaveBeenCalled()

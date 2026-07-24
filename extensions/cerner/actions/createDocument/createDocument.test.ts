@@ -2,6 +2,7 @@ import { TestHelpers } from '@awell-health/extensions-core'
 import { createDocument as action } from './createDocument'
 import { CernerR4APIClient } from '../../lib/api/FhirR4'
 import { CreateDocumentMockResponse } from './__testdata__/CreateDocument.mock'
+import { testPayload } from '../../../../tests'
 
 jest.mock('../../lib/api/FhirR4')
 
@@ -27,6 +28,7 @@ describe('Cerner - Create document', () => {
 
     await extensionAction.onEvent({
       payload: {
+        ...testPayload,
         fields: {
           patientResourceId: 'patient-resource-id',
           encounterResourceId: 'encounter-resource-id',

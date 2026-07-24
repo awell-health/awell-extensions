@@ -1,6 +1,7 @@
 import { addSideEffect } from '.'
 import { generateTestPayload } from '@/tests'
 import { mockSettings } from '../../__mocks__'
+import { TestHelpers } from '@awell-health/extensions-core'
 
 jest.mock('@medplum/core', () => {
   // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -15,11 +16,12 @@ jest.mock('@medplum/core', () => {
  * Add tests later
  */
 describe.skip('Medplum - Add side effect to medication request', () => {
-  const onComplete = jest.fn()
-  const onError = jest.fn()
+  const { onComplete, onError, helpers, clearMocks } =
+    TestHelpers.fromAction(addSideEffect)
 
   beforeEach(() => {
     jest.clearAllMocks()
+    clearMocks()
   })
 
   test('Should work', async () => {
@@ -33,11 +35,13 @@ describe.skip('Medplum - Add side effect to medication request', () => {
       },
     })
 
-    await addSideEffect.onActivityCreated!(
-      mockOnActivityCreateParams,
+    await addSideEffect.onEvent!({
+      payload: mockOnActivityCreateParams,
       onComplete,
-      onError
-    )
+      onError,
+      helpers,
+      attempt: 1,
+    })
 
     expect(onComplete).toHaveBeenCalled()
   })

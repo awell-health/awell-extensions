@@ -54,17 +54,31 @@ export const sendSms: Action<
   fields,
   previewable: true,
   dataPoints,
-  onEvent: async ({ payload, onComplete, onError }): Promise<void> => {
+  onEvent: async ({
+    payload,
+    onComplete,
+    onError,
+    helpers: { log },
+  }): Promise<void> => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
+
     const { fields, zoomSdk } = await validatePayloadAndCreateSdk({
       fieldsSchema: FieldsValidationSchema,
       payload,
     })
 
-    const { data } = await zoomSdk.sendSms({
+    const sendSmsInput = {
       contact_center_number: fields.contactCenterNumber,
       consumer_numbers: [fields.to],
       body: fields.body,
-    })
+    }
+
+    log({ meta, sendSmsInput }, 'Sending SMS via Zoom')
+    const { data } = await zoomSdk.sendSms(sendSmsInput)
 
     /**
      * Custom error handling for Zoom API

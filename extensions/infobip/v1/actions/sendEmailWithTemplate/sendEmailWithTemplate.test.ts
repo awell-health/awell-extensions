@@ -2,14 +2,16 @@ import {
   InfobipClientMockImplementation,
   mockedEmailWithTemplateData,
 } from '../../client/__mocks__'
+import { TestHelpers } from '@awell-health/extensions-core'
 import { sendEmailWithTemplate } from '..'
 import { generateTestPayload } from '@/tests'
 
 jest.mock('../../client')
 
 describe('Send email', () => {
-  const onComplete = jest.fn()
-  const onError = jest.fn()
+  const { onComplete, onError, helpers, clearMocks } = TestHelpers.fromAction(
+    sendEmailWithTemplate,
+  )
 
   const basePayload = generateTestPayload({
     fields: {
@@ -28,17 +30,20 @@ describe('Send email', () => {
 
   beforeEach(() => {
     jest.clearAllMocks()
+    clearMocks()
   })
 
   test('Should call the onComplete callback', async () => {
-    await sendEmailWithTemplate.onActivityCreated!(
-      basePayload,
+    await sendEmailWithTemplate.onEvent!({
+      payload: basePayload,
       onComplete,
-      onError
-    )
+      onError,
+      helpers,
+      attempt: 1,
+    })
 
     expect(InfobipClientMockImplementation.emailApi.send).toHaveBeenCalledWith(
-      mockedEmailWithTemplateData
+      mockedEmailWithTemplateData,
     )
     expect(onComplete).toHaveBeenCalledWith()
     expect(onError).not.toHaveBeenCalled()

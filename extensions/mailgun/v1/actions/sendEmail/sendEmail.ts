@@ -16,7 +16,15 @@ export const sendEmail: Action<typeof fields, typeof settings> = {
   category: Category.COMMUNICATION,
   fields,
   previewable: false,
-  onActivityCreated: async (payload, onComplete, onError) => {
+  onEvent: async ({ payload, onComplete, onError, helpers }) => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
+
+    helpers.log({ meta, fields: payload.fields }, 'Processing sendEmail')
+
     try {
       const { to, subject, body } = validateActionFields(payload.fields)
       const { apiKey, domain, region, fromName, fromEmail, testMode } =
@@ -29,7 +37,7 @@ export const sendEmail: Action<typeof fields, typeof settings> = {
       })
 
       const res = await mg.messages.create(domain, {
-        from: `${fromName} <${fromEmail}>`,
+        from: `${String(fromName)} <${String(fromEmail)}>`,
         to,
         subject,
         html: body,
@@ -40,12 +48,13 @@ export const sendEmail: Action<typeof fields, typeof settings> = {
         events: [
           addActivityEventLog({
             message: `Mailgun accepted the request, message ID: ${String(
-              res?.id
+              res?.id,
             )}`,
           }),
         ],
       })
     } catch (err) {
+      helpers.log({ meta, err }, 'error', err as Error)
       if (err instanceof ZodError) {
         const error = fromZodError(err)
         await onError({

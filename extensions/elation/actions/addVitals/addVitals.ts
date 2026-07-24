@@ -16,7 +16,7 @@ import {
 // Helper function to create measurement objects with optional notes
 const createMeasurement = (
   value?: number,
-  note?: string
+  note?: string,
 ): Array<z.infer<typeof measurementInputSchema>> => {
   // the undefined check is stupid but otherwise the build is failing
   if (value !== undefined && !isNil(value)) {
@@ -47,46 +47,73 @@ export const addVitals: Action<
   fields: elationFields,
   previewable: true,
   dataPoints,
-  onEvent: async ({ payload, onComplete }): Promise<void> => {
-    const { fields, settings } = validate({
-      schema: z.object({
-        fields: FieldsValidationSchema,
-        settings: SettingsValidationSchema,
-      }),
-      payload,
-    })
-
-    const api = makeAPIClient(settings)
-
-    const body: AddVitalsInputType = {
-      patient: fields.patientId,
-      practice: fields.practiceId,
-      visit_note: fields?.visitNoteId,
-      non_visit_note: fields?.nonVisitNoteId,
-      bmi: fields.bmi,
-      height: createMeasurement(fields.height, fields.heightNote),
-      weight: createMeasurement(fields.weight, fields.weightNote),
-      oxygen: createMeasurement(fields.oxygen, fields.oxygenNote),
-      rr: createMeasurement(fields.rr, fields.rrNote),
-      hr: createMeasurement(fields.hr, fields.hrNote),
-      hc: createMeasurement(fields.hc, fields.hcNote),
-      temperature: createMeasurement(
-        fields.temperature,
-        fields.temperatureNote
-      ),
-      bp: createMeasurement(fields.bp, fields.bpNote),
-      bodyfat: createMeasurement(fields.bodyfat, fields.bodyfatNote),
-      dlm: createMeasurement(fields.dlm, fields.dlmNote),
-      bfm: createMeasurement(fields.bfm, fields.bfmNote),
-      wc: createMeasurement(fields.wc, fields.wcNote),
+  onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
     }
 
-    const { id } = await api.addVitals(body)
+    helpers.log({ meta, fields: payload.fields }, 'Processing addVitals')
 
-    await onComplete({
-      data_points: {
-        vitalsId: String(id),
-      },
-    })
+    try {
+      const { fields, settings } = validate({
+        schema: z.object({
+          fields: FieldsValidationSchema,
+          settings: SettingsValidationSchema,
+        }),
+        payload,
+      })
+
+      const api = makeAPIClient(settings)
+
+      const body: AddVitalsInputType = {
+        patient: fields.patientId,
+        practice: fields.practiceId,
+        visit_note: fields?.visitNoteId,
+        non_visit_note: fields?.nonVisitNoteId,
+        bmi: fields.bmi,
+        height: createMeasurement(fields.height, fields.heightNote),
+        weight: createMeasurement(fields.weight, fields.weightNote),
+        oxygen: createMeasurement(fields.oxygen, fields.oxygenNote),
+        rr: createMeasurement(fields.rr, fields.rrNote),
+        hr: createMeasurement(fields.hr, fields.hrNote),
+        hc: createMeasurement(fields.hc, fields.hcNote),
+        temperature: createMeasurement(
+          fields.temperature,
+          fields.temperatureNote,
+        ),
+        bp: createMeasurement(fields.bp, fields.bpNote),
+        bodyfat: createMeasurement(fields.bodyfat, fields.bodyfatNote),
+        dlm: createMeasurement(fields.dlm, fields.dlmNote),
+        bfm: createMeasurement(fields.bfm, fields.bfmNote),
+        wc: createMeasurement(fields.wc, fields.wcNote),
+      }
+
+      helpers.log({ meta, body }, '[addVitals] Adding Elation vitals')
+
+      const { id } = await api.addVitals(body)
+
+      await onComplete({
+        data_points: {
+          vitalsId: String(id),
+        },
+      })
+    } catch (err) {
+      helpers.log({ meta, err }, 'error', err as Error)
+      const error = err as Error
+      await onError({
+        events: [
+          {
+            date: new Date().toISOString(),
+            text: { en: error.message },
+            error: {
+              category: 'SERVER_ERROR',
+              message: error.message,
+            },
+          },
+        ],
+      })
+    }
   },
 }

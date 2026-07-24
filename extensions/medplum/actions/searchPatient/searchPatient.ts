@@ -15,24 +15,49 @@ export const searchPatient: Action<
   fields,
   previewable: true,
   dataPoints,
-  onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
-    const { fields: input, medplumSdk } = await validateAndCreateSdkClient({
-      fieldsSchema: FieldsValidationSchema,
-      payload,
-    })
+  onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
 
-    const searchParams: Record<string, string> = {}
-    searchParams[input.parameter] = input.value
+    helpers.log({ meta, fields: payload.fields }, 'Processing searchPatient')
 
-    const bundle = await medplumSdk.search('Patient', searchParams)
-    
-    const patient = bundle.entry?.[0]?.resource || null
+    try {
+      const { fields: input, medplumSdk } = await validateAndCreateSdkClient({
+        fieldsSchema: FieldsValidationSchema,
+        payload,
+      })
 
-    await onComplete({
-      data_points: {
-        patientData: JSON.stringify(patient),
-        searchResults: JSON.stringify(bundle),
-      },
-    })
+      const searchParams: Record<string, string> = {}
+      searchParams[input.parameter] = input.value
+
+      const bundle = await medplumSdk.search('Patient', searchParams)
+
+      const patient = bundle.entry?.[0]?.resource ?? null
+
+      await onComplete({
+        data_points: {
+          patientData: JSON.stringify(patient),
+          searchResults: JSON.stringify(bundle),
+        },
+      })
+    } catch (err) {
+      helpers.log({ meta, err }, 'error', err as Error)
+      const error = err as Error
+      await onError({
+        events: [
+          {
+            date: new Date().toISOString(),
+            text: { en: error.message },
+            error: {
+              category: 'SERVER_ERROR',
+              message: error.message,
+            },
+          },
+        ],
+      })
+    }
   },
 }

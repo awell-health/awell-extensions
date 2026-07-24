@@ -80,7 +80,7 @@ describe('Update patient', () => {
   })
 
   test('Should call onError when email is not an actual email address the onComplete callback', async () => {
-    const resp = extensionAction.onEvent({
+    await extensionAction.onEvent({
       payload: generateTestPayload({
         fields: {
           patientCode: undefined,
@@ -106,7 +106,16 @@ describe('Update patient', () => {
       helpers,
       attempt: 1,
     })
-    await expect(resp).rejects.toThrow(ZodError)
+    expect(onError).toHaveBeenCalledWith({
+      events: [
+        expect.objectContaining({
+          error: expect.objectContaining({
+            category: 'SERVER_ERROR',
+            message: expect.any(String),
+          }),
+        }),
+      ],
+    })
     expect(onComplete).not.toHaveBeenCalled()
   })
 
@@ -159,7 +168,7 @@ describe('Update patient', () => {
   })
 
   test('Should call onError when phone is not a possible phone number', async () => {
-    const resp = extensionAction.onEvent({
+    await extensionAction.onEvent({
       payload: generateTestPayload({
         fields: {
           patientCode: undefined,
@@ -185,7 +194,16 @@ describe('Update patient', () => {
       helpers,
       attempt: 1,
     })
-    await expect(resp).rejects.toThrow(ZodError)
+    expect(onError).toHaveBeenCalledWith({
+      events: [
+        expect.objectContaining({
+          error: expect.objectContaining({
+            category: 'SERVER_ERROR',
+            message: expect.any(String),
+          }),
+        }),
+      ],
+    })
     expect(onComplete).not.toHaveBeenCalled()
   })
 })

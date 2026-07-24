@@ -1,6 +1,7 @@
 import { createPatient } from '.'
 import { generateTestPayload } from '@/tests'
 import { mockSettings, mockCreatePatientResponse } from '../../__mocks__'
+import { TestHelpers } from '@awell-health/extensions-core'
 
 jest.mock('@medplum/core', () => {
   // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -12,11 +13,12 @@ jest.mock('@medplum/core', () => {
 })
 
 describe('Medplum - Create patient', () => {
-  const onComplete = jest.fn()
-  const onError = jest.fn()
+  const { onComplete, onError, helpers, clearMocks } =
+    TestHelpers.fromAction(createPatient)
 
   beforeEach(() => {
     jest.clearAllMocks()
+    clearMocks()
   })
 
   test('Should create a patient', async () => {
@@ -40,11 +42,13 @@ describe('Medplum - Create patient', () => {
       settings: mockSettings,
     })
 
-    await createPatient.onActivityCreated!(
-      mockOnActivityCreateParams,
+    await createPatient.onEvent!({
+      payload: mockOnActivityCreateParams,
       onComplete,
-      onError
-    )
+      onError,
+      helpers,
+      attempt: 1,
+    })
 
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {

@@ -2,14 +2,15 @@ import {
   mockedSendEmailData,
   IterableClientMockImplementation,
 } from '../../client/__mocks__'
+import { TestHelpers } from '@awell-health/extensions-core'
 import { sendEmail } from '..'
 import { generateTestPayload } from '@/tests'
 
 jest.mock('../../client')
 
 describe('Iterable - Send email', () => {
-  const onComplete = jest.fn()
-  const onError = jest.fn()
+  const { onComplete, onError, helpers, clearMocks } =
+    TestHelpers.fromAction(sendEmail)
 
   const basePayload = generateTestPayload({
     fields: {
@@ -27,13 +28,20 @@ describe('Iterable - Send email', () => {
 
   beforeEach(() => {
     jest.clearAllMocks()
+    clearMocks()
   })
 
   test('Should call the onComplete callback', async () => {
-    await sendEmail.onActivityCreated!(basePayload, onComplete, onError)
+    await sendEmail.onEvent!({
+      payload: basePayload,
+      onComplete,
+      onError,
+      helpers,
+      attempt: 1,
+    })
 
     expect(
-      IterableClientMockImplementation.emailApi.sendEmail
+      IterableClientMockImplementation.emailApi.sendEmail,
     ).toHaveBeenCalledWith({
       ...mockedSendEmailData,
     })

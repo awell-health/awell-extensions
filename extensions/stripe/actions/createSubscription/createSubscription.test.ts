@@ -1,6 +1,7 @@
 import { createSubscription } from '.'
 import { generateTestPayload } from '@/tests'
 import { mockSettings } from '../../__mocks__'
+import { TestHelpers } from '@awell-health/extensions-core'
 
 // jest.mock('../../api/client')
 
@@ -8,11 +9,12 @@ import { mockSettings } from '../../__mocks__'
  * Mock isn't working yet
  */
 describe.skip('Stripe - Create subscription', () => {
-  const onComplete = jest.fn()
-  const onError = jest.fn()
+  const { onComplete, onError, helpers, clearMocks } =
+    TestHelpers.fromAction(createSubscription)
 
   beforeEach(() => {
     jest.clearAllMocks()
+    clearMocks()
   })
 
   test('Should create a subscription', async () => {
@@ -24,11 +26,13 @@ describe.skip('Stripe - Create subscription', () => {
       settings: mockSettings,
     })
 
-    await createSubscription.onActivityCreated!(
-      mockOnActivityCreateParams,
+    await createSubscription.onEvent!({
+      payload: mockOnActivityCreateParams,
       onComplete,
-      onError
-    )
+      onError,
+      helpers,
+      attempt: 1,
+    })
 
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {

@@ -1,11 +1,18 @@
 import { log } from '../'
 import { generateTestPayload } from '@/tests'
+import { TestHelpers } from '@awell-health/extensions-core'
 
 describe('HelloWorld - log', () => {
+  const { onComplete, onError, helpers, clearMocks } =
+    TestHelpers.fromAction(log)
+
+  beforeEach(() => {
+    clearMocks()
+  })
+
   test('Should call onComplete with the correct data points', async () => {
-    const onComplete = jest.fn()
-    await log.onActivityCreated!(
-      generateTestPayload({
+    await log.onEvent!({
+      payload: generateTestPayload({
         fields: {
           hello: 'Some text',
           secondField: 'Some text',
@@ -17,8 +24,10 @@ describe('HelloWorld - log', () => {
         },
       }),
       onComplete,
-      jest.fn(),
-    )
+      onError,
+      helpers,
+      attempt: 1,
+    })
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
         clear: 'clear-value',
@@ -28,9 +37,8 @@ describe('HelloWorld - log', () => {
     })
   })
   test('Should call onComplete if fields are undefined', async () => {
-    const onComplete = jest.fn()
-    await log.onActivityCreated!(
-      generateTestPayload({
+    await log.onEvent!({
+      payload: generateTestPayload({
         fields: {
           hello: undefined,
           secondField: undefined,
@@ -42,14 +50,15 @@ describe('HelloWorld - log', () => {
         },
       }),
       onComplete,
-      jest.fn(),
-    )
+      onError,
+      helpers,
+      attempt: 1,
+    })
     expect(onComplete).toHaveBeenCalled()
   })
   test('Should call onComplete if settings are undefined', async () => {
-    const onComplete = jest.fn()
-    await log.onActivityCreated!(
-      generateTestPayload({
+    await log.onEvent!({
+      payload: generateTestPayload({
         fields: {
           hello: 'Some text',
           secondField: 'Some text',
@@ -61,8 +70,10 @@ describe('HelloWorld - log', () => {
         },
       }),
       onComplete,
-      jest.fn(),
-    )
+      onError,
+      helpers,
+      attempt: 1,
+    })
     expect(onComplete).toHaveBeenCalled()
   })
 })

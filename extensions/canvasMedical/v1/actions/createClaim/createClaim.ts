@@ -12,6 +12,7 @@ import {
 import { z } from 'zod'
 import { type AxiosError } from 'axios'
 import { makeAPIClient } from '../../client'
+import { type Claim } from '../../validation/claim'
 
 export const createClaim: Action<typeof fields, typeof settings> = {
   key: 'createClaim',
@@ -22,6 +23,12 @@ export const createClaim: Action<typeof fields, typeof settings> = {
   dataPoints,
   previewable: true,
   onEvent: async ({ payload, onComplete, onError, helpers }) => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
+
     try {
       const {
         fields: {
@@ -43,7 +50,7 @@ export const createClaim: Action<typeof fields, typeof settings> = {
       })
 
       const api = makeAPIClient(payload.settings)
-      const claimId = await api.createClaim({
+      const claimData = {
         resourceType: 'Claim',
         status,
         type,
@@ -57,7 +64,11 @@ export const createClaim: Action<typeof fields, typeof settings> = {
         diagnosis,
         insurance,
         item,
-      })
+      } satisfies Claim
+
+      helpers.log({ meta, claimData }, '[createClaim] Creating Canvas claim')
+
+      const claimId = await api.createClaim(claimData)
 
       await onComplete({
         data_points: {
@@ -65,7 +76,7 @@ export const createClaim: Action<typeof fields, typeof settings> = {
         },
       })
     } catch (error) {
-      helpers.log({ error }, 'error', error as Error)
+      helpers.log({ meta, error }, 'error', error as Error)
       let parsedError
 
       if (isZodError(error)) {

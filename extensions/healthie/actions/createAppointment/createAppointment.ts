@@ -29,21 +29,33 @@ export const createAppointment: Action<
       fieldsSchema: FieldsValidationSchema,
       payload,
     })
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
 
     try {
+      const createAppointmentInput = {
+        appointment_type_id: fields.appointmentTypeId,
+        contact_type: fields.contactTypeId,
+        other_party_id: fields.otherPartyId,
+        datetime: fields.datetime,
+        user_id: fields.patientId,
+        metadata: JSON.stringify(fields.metadata),
+        notes: fields.notes,
+        external_videochat_url: fields.externalVideochatUrl,
+      }
+
+      helpers.log(
+        { meta, createAppointmentInput },
+        '[createAppointment] Creating Healthie appointment',
+      )
+
       const res = await healthieSdk.client.mutation({
         createAppointment: {
           __args: {
-            input: {
-              appointment_type_id: fields.appointmentTypeId,
-              contact_type: fields.contactTypeId,
-              other_party_id: fields.otherPartyId,
-              datetime: fields.datetime,
-              user_id: fields.patientId,
-              metadata: JSON.stringify(fields.metadata),
-              notes: fields.notes,
-              external_videochat_url: fields.externalVideochatUrl,
-            },
+            input: createAppointmentInput,
           },
           appointment: {
             id: true,

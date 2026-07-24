@@ -16,20 +16,46 @@ export const getLetter: Action<
   previewable: true,
   supports_automated_retries: true,
   dataPoints,
-  onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
-    const { letterId } = FieldsValidationSchema.parse(payload.fields)
-    const api = makeAPIClient(payload.settings)
+  onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
 
-    const res = await api.getLetter(letterId)
+    try {
+      const { letterId } = FieldsValidationSchema.parse(payload.fields)
+      const api = makeAPIClient(payload.settings)
 
-    await onComplete({
-      data_points: {
-        body: res.body,
-        signedBy:
-          typeof res?.signed_by === 'number'
-            ? String(res.signed_by)
-            : undefined,
-      },
-    })
+      helpers.log({ meta, letterId }, 'Getting Elation letter')
+      const res = await api.getLetter(letterId)
+
+      helpers.log({ meta, letterId }, 'Got Elation letter')
+
+      await onComplete({
+        data_points: {
+          body: res.body,
+          signedBy:
+            typeof res?.signed_by === 'number'
+              ? String(res.signed_by)
+              : undefined,
+        },
+      })
+    } catch (err) {
+      const message = (err as Error).message
+      helpers.log({ meta, err }, 'error', err as Error)
+      await onError({
+        events: [
+          {
+            date: new Date().toISOString(),
+            text: { en: message },
+            error: {
+              category: 'SERVER_ERROR',
+              message,
+            },
+          },
+        ],
+      })
+    }
   },
 }

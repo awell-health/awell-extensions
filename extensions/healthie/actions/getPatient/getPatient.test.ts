@@ -1,5 +1,6 @@
 import { generateTestPayload } from '@/tests'
 import { getSdk } from '../../lib/sdk/graphql-codegen/generated/sdk'
+import { TestHelpers } from '@awell-health/extensions-core'
 import {
   mockGetSdk,
   mockGetSdkReturn,
@@ -10,7 +11,8 @@ jest.mock('../../lib/sdk/graphql-codegen/generated/sdk')
 jest.mock('../../lib/sdk/graphql-codegen/graphqlClient')
 
 describe('getPatient action', () => {
-  const onComplete = jest.fn()
+  const { onComplete, onError, helpers, clearMocks } =
+    TestHelpers.fromAction(getPatient)
   const DATE_MOCK = new Date('1990-01-01T00:00:00Z')
   const DATE_FNS_STRING = '1990-01-01T00:00:00Z'
 
@@ -23,6 +25,7 @@ describe('getPatient action', () => {
 
   beforeEach(() => {
     jest.clearAllMocks()
+    clearMocks()
   })
 
   afterAll(() => {
@@ -49,8 +52,8 @@ describe('getPatient action', () => {
           },
         })
 
-        await getPatient.onActivityCreated!(
-          generateTestPayload({
+        await getPatient.onEvent!({
+          payload: generateTestPayload({
             fields: {
               patientId: 'patient-1',
             },
@@ -61,8 +64,10 @@ describe('getPatient action', () => {
             },
           }),
           onComplete,
-          jest.fn(),
-        )
+          onError,
+          helpers,
+          attempt: 1,
+        })
 
         expect(onComplete).toHaveBeenCalledWith({
           data_points: {
@@ -97,8 +102,8 @@ describe('getPatient action', () => {
           },
         })
 
-        await getPatient.onActivityCreated!(
-          generateTestPayload({
+        await getPatient.onEvent!({
+          payload: generateTestPayload({
             fields: {
               patientId: 'patient-1',
             },
@@ -109,8 +114,10 @@ describe('getPatient action', () => {
             },
           }),
           onComplete,
-          jest.fn(),
-        )
+          onError,
+          helpers,
+          attempt: 1,
+        })
 
         expect(onComplete).toHaveBeenCalledWith({
           data_points: {
@@ -192,8 +199,8 @@ describe('getPatient action', () => {
           },
         })
 
-        await getPatient.onActivityCreated!(
-          generateTestPayload({
+        await getPatient.onEvent!({
+          payload: generateTestPayload({
             fields: {
               patientId: 'patient-1',
             },
@@ -204,8 +211,10 @@ describe('getPatient action', () => {
             },
           }),
           onComplete,
-          jest.fn(),
-        )
+          onError,
+          helpers,
+          attempt: 1,
+        })
 
         expect(onComplete).toHaveBeenCalledWith({
           data_points: {
@@ -242,8 +251,8 @@ describe('getPatient action', () => {
           },
         })
 
-        await getPatient.onActivityCreated!(
-          generateTestPayload({
+        await getPatient.onEvent!({
+          payload: generateTestPayload({
             fields: {
               patientId: 'patient-1',
             },
@@ -254,8 +263,10 @@ describe('getPatient action', () => {
             },
           }),
           onComplete,
-          jest.fn(),
-        )
+          onError,
+          helpers,
+          attempt: 1,
+        })
 
         expect(onComplete).toHaveBeenCalledWith({
           data_points: {

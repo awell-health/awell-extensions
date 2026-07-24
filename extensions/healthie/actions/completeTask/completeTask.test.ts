@@ -1,5 +1,6 @@
 import { generateTestPayload } from '@/tests'
 import { getSdk } from '../../lib/sdk/graphql-codegen/generated/sdk'
+import { TestHelpers } from '@awell-health/extensions-core'
 import {
   mockGetSdk,
   mockGetSdkReturn,
@@ -10,7 +11,8 @@ jest.mock('../../lib/sdk/graphql-codegen/generated/sdk')
 jest.mock('../../lib/sdk/graphql-codegen/graphqlClient')
 
 describe('completeTask action', () => {
-  const onComplete = jest.fn()
+  const { onComplete, onError, helpers, clearMocks } =
+    TestHelpers.fromAction(completeTask)
 
   beforeAll(() => {
     ;(getSdk as jest.Mock).mockImplementation(mockGetSdk)
@@ -18,11 +20,12 @@ describe('completeTask action', () => {
 
   beforeEach(() => {
     jest.clearAllMocks()
+    clearMocks()
   })
 
   test('Should complete a task', async () => {
-    await completeTask.onActivityCreated!(
-      generateTestPayload({
+    await completeTask.onEvent!({
+      payload: generateTestPayload({
         fields: {
           id: 'task-1',
         },
@@ -33,8 +36,10 @@ describe('completeTask action', () => {
         },
       }),
       onComplete,
-      jest.fn(),
-    )
+      onError,
+      helpers,
+      attempt: 1,
+    })
 
     expect(mockGetSdkReturn.updateTask).toHaveBeenCalledWith({
       input: {

@@ -29,44 +29,69 @@ export const checkPatientTags: Action<
   supports_automated_retries: true,
   dataPoints,
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
-    // 1. Validate input and initialize API client
-    const { instructions, patientId } = FieldsValidationSchema.parse(
-      payload.fields,
-    )
-    const api = makeAPIClient(payload.settings)
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
 
-    // 2. Get existing tags
-    const { tags } = await api.getPatient(patientId)
-    const existingTags = tags ?? []
+    helpers.log({ meta, fields: payload.fields }, 'Processing checkPatientTags')
 
-    // 3. Initialize OpenAI model with metadata and callbacks
-    const { model, metadata, callbacks } = await createOpenAIModel({
-      settings: {}, // we use built-in API key for OpenAI
-      helpers,
-      payload,
-      modelType: OPENAI_MODELS.GPT5Mini,
-    })
+    try {
+      // 1. Validate input and initialize API client
+      const { instructions, patientId } = FieldsValidationSchema.parse(
+        payload.fields,
+      )
+      const api = makeAPIClient(payload.settings)
 
-    // 4. Check tags against instruction
-    const { tagsFound, explanation } = await checkTagsWithLLM({
-      model,
-      existingTags,
-      instructions,
-      metadata,
-      callbacks,
-    })
+      // 2. Get existing tags
+      const { tags } = await api.getPatient(patientId)
+      const existingTags = tags ?? []
 
-    // 5. Complete action with results
-    await onComplete({
-      data_points: {
-        tagsFound: tagsFound ? 'true' : 'false',
-        explanation,
-      },
-      events: [
-        addActivityEventLog({
-          message: `Patient tags: ${existingTags?.length > 0 ? existingTags?.join(', ') : 'No tags'}\nInstruction: ${instructions}\nResult: ${tagsFound ? 'true' : 'false'}\nExplanation: ${explanation}`,
-        }),
-      ],
-    })
+      // 3. Initialize OpenAI model with metadata and callbacks
+      const { model, metadata, callbacks } = await createOpenAIModel({
+        settings: {}, // we use built-in API key for OpenAI
+        helpers,
+        payload,
+        modelType: OPENAI_MODELS.GPT5Mini,
+      })
+
+      // 4. Check tags against instruction
+      const { tagsFound, explanation } = await checkTagsWithLLM({
+        model,
+        existingTags,
+        instructions,
+        metadata,
+        callbacks,
+      })
+
+      // 5. Complete action with results
+      await onComplete({
+        data_points: {
+          tagsFound: tagsFound ? 'true' : 'false',
+          explanation,
+        },
+        events: [
+          addActivityEventLog({
+            message: `Patient tags: ${existingTags?.length > 0 ? existingTags?.join(', ') : 'No tags'}\nInstruction: ${instructions}\nResult: ${tagsFound ? 'true' : 'false'}\nExplanation: ${explanation}`,
+          }),
+        ],
+      })
+    } catch (err) {
+      helpers.log({ meta, err }, 'error', err as Error)
+      const error = err as Error
+      await onError({
+        events: [
+          {
+            date: new Date().toISOString(),
+            text: { en: error.message },
+            error: {
+              category: 'SERVER_ERROR',
+              message: error.message,
+            },
+          },
+        ],
+      })
+    }
   },
 }

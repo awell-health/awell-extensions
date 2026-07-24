@@ -18,7 +18,15 @@ export const post: Action<
   fields,
   dataPoints,
   previewable: true,
-  onActivityCreated: async (payload, onComplete, onError) => {
+  onEvent: async ({ payload, onComplete, onError, helpers }) => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
+
+    helpers.log({ meta, fields: payload.fields }, 'Processing post')
+
     const {
       fields: { endpoint, headers, jsonPayload, additionalPayload },
     } = validate({
@@ -43,7 +51,7 @@ export const post: Action<
 
       if (response.ok) {
         const getResponseBody = async (
-          response: Response
+          response: Response,
         ): Promise<string | object> => {
           const res = await response.text()
 
@@ -70,10 +78,11 @@ export const post: Action<
         throw new FetchError(
           response.status,
           response.statusText,
-          response.body
+          response.body,
         )
       }
     } catch (error) {
+      helpers.log({ meta, error }, 'error', error as Error)
       if (error instanceof FetchError) {
         await onError({
           events: [

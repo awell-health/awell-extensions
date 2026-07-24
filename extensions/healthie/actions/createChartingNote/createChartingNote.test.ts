@@ -1,5 +1,6 @@
 import { generateTestPayload } from '@/tests'
 import { getSdk } from '../../lib/sdk/graphql-codegen/generated/sdk'
+import { TestHelpers } from '@awell-health/extensions-core'
 import {
   mockGetSdk,
   mockGetSdkReturn,
@@ -10,7 +11,8 @@ jest.mock('../../lib/sdk/graphql-codegen/generated/sdk')
 jest.mock('../../lib/sdk/graphql-codegen/graphqlClient')
 
 describe('createChartingNote action', () => {
-  const onComplete = jest.fn()
+  const { onComplete, onError, helpers, clearMocks } =
+    TestHelpers.fromAction(createChartingNote)
 
   beforeAll(() => {
     ;(getSdk as jest.Mock).mockImplementation(mockGetSdk)
@@ -18,11 +20,12 @@ describe('createChartingNote action', () => {
 
   beforeEach(() => {
     jest.clearAllMocks()
+    clearMocks()
   })
 
   test('Should create a charting note', async () => {
-    await createChartingNote.onActivityCreated!(
-      generateTestPayload({
+    await createChartingNote.onEvent!({
+      payload: generateTestPayload({
         fields: {
           form_id: 'form-template-1',
           healthie_patient_id: 'patient-1',
@@ -37,8 +40,10 @@ describe('createChartingNote action', () => {
         },
       }),
       onComplete,
-      jest.fn(),
-    )
+      onError,
+      helpers,
+      attempt: 1,
+    })
 
     expect(mockGetSdkReturn.getFormTemplate).toHaveBeenCalled()
     expect(mockGetSdkReturn.createFormAnswerGroup).toHaveBeenCalled()

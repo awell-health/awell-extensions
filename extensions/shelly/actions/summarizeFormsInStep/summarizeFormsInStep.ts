@@ -22,69 +22,97 @@ export const summarizeFormsInStep: Action<
   previewable: false,
   dataPoints,
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
-    // 1. Validate input fields
-    const { summaryFormat, language } = FieldsValidationSchema.parse(
-      payload.fields,
-    )
-    const pathway = payload.pathway
-
-    // 2. Initialize OpenAI model with hideDataForTracing enabled
-    const { model, metadata, callbacks } = await createOpenAIModel({
-      settings: {}, // we use built-in API key for OpenAI
-      helpers,
-      payload,
-      modelType: OPENAI_MODELS.GPT5Mini,
-      hideDataForTracing: true, // Hide input and output data when tracing
-    })
-
-    // Fetch all forms in the current step
-    const formsData = await getAllFormsInCurrentStep({
-      awellSdk: await helpers.awellSdk(),
-      pathwayId: pathway.id,
-      activityId: payload.activity.id,
-    })
-
-    // Get responses for all forms
-    const { result: allFormsResponseText } = getResponsesForAllForms({
-      formsData,
-    })
-
-    // Determine which language to use for summarization
-    let summaryLanguage = language
-
-    // If language is set to 'Default', detect the language
-    if (language === 'Default') {
-      try {
-        summaryLanguage = await detectLanguageWithLLM({
-          model,
-          text: allFormsResponseText,
-          metadata,
-          callbacks,
-        })
-      } catch (error) {
-        // If language detection fails, fall back to 'Default'
-        summaryLanguage = 'Default'
-      }
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
     }
 
-    // Summarize all forms' responses
-    const summary = await summarizeFormWithLLM({
-      model,
-      formData: allFormsResponseText,
-      summaryFormat,
-      language: summaryLanguage,
-      disclaimerMessage: DISCLAIMER_MSG_FORM,
-      metadata,
-      callbacks, // Add callbacks here
-    })
+    helpers.log(
+      { meta, fields: payload.fields },
+      'Processing summarizeFormsInStep',
+    )
 
-    // Disclaimer is now handled within summarizeFormWithLLM
-    const htmlSummary = await markdownToHtml(summary)
+    try {
+      // 1. Validate input fields
+      const { summaryFormat, language } = FieldsValidationSchema.parse(
+        payload.fields,
+      )
+      const pathway = payload.pathway
 
-    await onComplete({
-      data_points: {
-        summary: htmlSummary,
-      },
-    })
+      // 2. Initialize OpenAI model with hideDataForTracing enabled
+      const { model, metadata, callbacks } = await createOpenAIModel({
+        settings: {}, // we use built-in API key for OpenAI
+        helpers,
+        payload,
+        modelType: OPENAI_MODELS.GPT5Mini,
+        hideDataForTracing: true, // Hide input and output data when tracing
+      })
+
+      // Fetch all forms in the current step
+      const formsData = await getAllFormsInCurrentStep({
+        awellSdk: await helpers.awellSdk(),
+        pathwayId: pathway.id,
+        activityId: payload.activity.id,
+      })
+
+      // Get responses for all forms
+      const { result: allFormsResponseText } = getResponsesForAllForms({
+        formsData,
+      })
+
+      // Determine which language to use for summarization
+      let summaryLanguage = language
+
+      // If language is set to 'Default', detect the language
+      if (language === 'Default') {
+        try {
+          summaryLanguage = await detectLanguageWithLLM({
+            model,
+            text: allFormsResponseText,
+            metadata,
+            callbacks,
+          })
+        } catch (error) {
+          // If language detection fails, fall back to 'Default'
+          summaryLanguage = 'Default'
+        }
+      }
+
+      // Summarize all forms' responses
+      const summary = await summarizeFormWithLLM({
+        model,
+        formData: allFormsResponseText,
+        summaryFormat,
+        language: summaryLanguage,
+        disclaimerMessage: DISCLAIMER_MSG_FORM,
+        metadata,
+        callbacks, // Add callbacks here
+      })
+
+      // Disclaimer is now handled within summarizeFormWithLLM
+      const htmlSummary = await markdownToHtml(summary)
+
+      await onComplete({
+        data_points: {
+          summary: htmlSummary,
+        },
+      })
+    } catch (err) {
+      helpers.log({ meta, err }, 'error', err as Error)
+      const error = err as Error
+      await onError({
+        events: [
+          {
+            date: new Date().toISOString(),
+            text: { en: error.message },
+            error: {
+              category: 'SERVER_ERROR',
+              message: error.message,
+            },
+          },
+        ],
+      })
+    }
   },
 }

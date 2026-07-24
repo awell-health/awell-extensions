@@ -1,4 +1,3 @@
-import { ZodError } from 'zod'
 import { makeAPIClient } from '../../client'
 import { findAppointments as action } from '../findAppointments'
 import { mockFindAppointmentsResponse } from '../../__mocks__/constants'
@@ -71,7 +70,7 @@ describe('find appointments', () => {
   })
 
   it('findAppointments fails with string practice ID', async () => {
-    const resp = extensionAction.onEvent({
+    await extensionAction.onEvent({
       payload: generateTestPayload({
         fields: {
           patientId: 12345,
@@ -84,11 +83,21 @@ describe('find appointments', () => {
       helpers,
       attempt: 1,
     })
-    await expect(resp).rejects.toThrow(ZodError)
+    expect(onError).toHaveBeenCalledWith({
+      events: [
+        expect.objectContaining({
+          error: expect.objectContaining({
+            category: 'SERVER_ERROR',
+            message: expect.any(String),
+          }),
+        }),
+      ],
+    })
+    expect(onComplete).not.toHaveBeenCalled()
   })
 
   it('validate missing patient ID', async () => {
-    const resp = extensionAction.onEvent({
+    await extensionAction.onEvent({
       payload: generateTestPayload({
         fields: {
           patientId: undefined as unknown as number,
@@ -101,7 +110,17 @@ describe('find appointments', () => {
       attempt: 1,
     })
 
-    await expect(resp).rejects.toThrow(ZodError)
+    expect(onError).toHaveBeenCalledWith({
+      events: [
+        expect.objectContaining({
+          error: expect.objectContaining({
+            category: 'SERVER_ERROR',
+            message: expect.any(String),
+          }),
+        }),
+      ],
+    })
+    expect(onComplete).not.toHaveBeenCalled()
   })
 
   it('no appointments to return appointment_exists: `false`', async () => {

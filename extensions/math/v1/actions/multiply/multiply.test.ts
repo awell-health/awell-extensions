@@ -1,19 +1,18 @@
-import { ZodError } from 'zod'
 import { generateTestPayload } from '@/tests'
 import { multiply } from './multiply'
+import { TestHelpers } from '@awell-health/extensions-core'
 
 describe('Multiply', () => {
-  const onComplete = jest.fn()
-  const onError = jest.fn()
+  const { onComplete, onError, helpers, clearMocks } =
+    TestHelpers.fromAction(multiply)
 
   beforeEach(() => {
-    onComplete.mockClear()
-    onError.mockClear()
+    clearMocks()
   })
 
   test('Should work', async () => {
-    await multiply.onActivityCreated!(
-      generateTestPayload({
+    await multiply.onEvent!({
+      payload: generateTestPayload({
         fields: {
           factor_01: 1,
           factor_02: 2,
@@ -39,8 +38,10 @@ describe('Multiply', () => {
         settings: {},
       }),
       onComplete,
-      onError
-    )
+      onError,
+      helpers,
+      attempt: 1,
+    })
 
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
@@ -51,36 +52,48 @@ describe('Multiply', () => {
   })
 
   test('Should return an error if all addends are undefined', async () => {
-    await expect(
-      multiply.onActivityCreated!(
-        generateTestPayload({
-          fields: {
-            factor_01: undefined,
-            factor_02: undefined,
-            factor_03: undefined,
-            factor_04: undefined,
-            factor_05: undefined,
-            factor_06: undefined,
-            factor_07: undefined,
-            factor_08: undefined,
-            factor_09: undefined,
-            factor_10: undefined,
-            factor_11: undefined,
-            factor_12: undefined,
-            factor_13: undefined,
-            factor_14: undefined,
-            factor_15: undefined,
-            factor_16: undefined,
-            factor_17: undefined,
-            factor_18: undefined,
-            factor_19: undefined,
-            factor_20: undefined,
-          },
-          settings: {},
+    await multiply.onEvent!({
+      payload: generateTestPayload({
+        fields: {
+          factor_01: undefined,
+          factor_02: undefined,
+          factor_03: undefined,
+          factor_04: undefined,
+          factor_05: undefined,
+          factor_06: undefined,
+          factor_07: undefined,
+          factor_08: undefined,
+          factor_09: undefined,
+          factor_10: undefined,
+          factor_11: undefined,
+          factor_12: undefined,
+          factor_13: undefined,
+          factor_14: undefined,
+          factor_15: undefined,
+          factor_16: undefined,
+          factor_17: undefined,
+          factor_18: undefined,
+          factor_19: undefined,
+          factor_20: undefined,
+        },
+        settings: {},
+      }),
+      onComplete,
+      onError,
+      helpers,
+      attempt: 1,
+    })
+
+    expect(onError).toHaveBeenCalledWith({
+      events: [
+        expect.objectContaining({
+          error: expect.objectContaining({
+            category: 'SERVER_ERROR',
+            message: expect.any(String),
+          }),
         }),
-        onComplete,
-        onError
-      )
-    ).rejects.toThrow(ZodError)
+      ],
+    })
+    expect(onComplete).not.toHaveBeenCalled()
   })
 })

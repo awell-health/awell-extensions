@@ -2,12 +2,14 @@ import { findPhysician } from '../findPhysician'
 import { physicianResponseExample } from '../../__mocks__/constants'
 import { makeAPIClientMockFunc, mockClientReturn } from '../../__mocks__/client'
 import { makeAPIClient } from '../../client'
+import { TestHelpers } from '@awell-health/extensions-core'
+import { generateTestPayload } from '@/tests'
 
 jest.mock('../../client')
 
 describe('Simple find physician action', () => {
-  const onComplete = jest.fn()
-  const onError = jest.fn()
+  const { onComplete, onError, helpers, clearMocks } =
+    TestHelpers.fromAction(findPhysician)
   const settings = {
     client_id: 'clientId',
     client_secret: 'clientSecret',
@@ -27,18 +29,20 @@ describe('Simple find physician action', () => {
   })
 
   test('Should return with correct data_points', async () => {
-    await findPhysician.onActivityCreated!(
-      {
+    await findPhysician.onEvent!({
+      payload: generateTestPayload({
         fields: {
           firstName: undefined,
           lastName: undefined,
           npi: undefined,
         },
         settings,
-      } as any,
+      } as any),
       onComplete,
-      onError
-    )
+      onError,
+      helpers,
+      attempt: 1,
+    })
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
         physicianId: String(physicianResponseExample.id),
@@ -53,14 +57,16 @@ describe('Simple find physician action', () => {
       previous: null,
       results: [physicianResponseExample, physicianResponseExample],
     })
-    await findPhysician.onActivityCreated!(
-      {
+    await findPhysician.onEvent!({
+      payload: generateTestPayload({
         fields: { firstName: undefined, lastName: undefined, npi: undefined },
         settings,
-      } as any,
+      } as any),
       onComplete,
-      onError
-    )
+      onError,
+      helpers,
+      attempt: 1,
+    })
     expect(onError).toHaveBeenCalledWith({
       events: [
         expect.objectContaining({

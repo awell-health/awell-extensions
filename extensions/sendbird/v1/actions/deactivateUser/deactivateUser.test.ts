@@ -1,3 +1,4 @@
+import { TestHelpers } from '@awell-health/extensions-core'
 import {
   mockedUserData,
   SendbirdClientMockImplementation,
@@ -8,8 +9,8 @@ import { generateTestPayload } from '@/tests'
 jest.mock('../../client')
 
 describe('Deactivate user', () => {
-  const onComplete = jest.fn()
-  const onError = jest.fn()
+  const { onComplete, onError, helpers, clearMocks } =
+    TestHelpers.fromAction(deactivateUser)
 
   const basePayload = generateTestPayload({
     pathway: {
@@ -33,13 +34,20 @@ describe('Deactivate user', () => {
 
   beforeEach(() => {
     jest.clearAllMocks()
+    clearMocks()
   })
 
   test('Should call the onComplete callback', async () => {
-    await deactivateUser.onActivityCreated!(basePayload, onComplete, onError)
+    await deactivateUser.onEvent!({
+      payload: basePayload,
+      onComplete,
+      onError,
+      helpers,
+      attempt: 1,
+    })
 
     expect(
-      SendbirdClientMockImplementation.chatApi.updateUser
+      SendbirdClientMockImplementation.chatApi.updateUser,
     ).toHaveBeenCalledWith({
       user_id: basePayload.fields.userId,
       is_active: false,

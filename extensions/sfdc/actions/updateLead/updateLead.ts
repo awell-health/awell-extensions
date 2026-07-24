@@ -18,7 +18,15 @@ export const updateLead: Action<
   previewable: true,
   supports_automated_retries: true,
   dataPoints,
-  onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
+  onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
+
+    helpers.log({ meta, fields: payload.fields }, 'Processing updateLead')
+
     const { fields, salesforceClient } = await validatePayloadAndCreateClient({
       fieldsSchema: FieldsValidationSchema,
       payload,
@@ -36,12 +44,13 @@ export const updateLead: Action<
             message: `Lead updated. Data passed:\n\n ${JSON.stringify(
               fields.data,
               null,
-              2
+              2,
             )}`,
           }),
         ],
       })
     } catch (error) {
+      helpers.log({ meta, error }, 'error', error as Error)
       if (isSalesforceError(error)) {
         await onError({
           events: [parseSalesforceError(error)],

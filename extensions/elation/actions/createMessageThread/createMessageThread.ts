@@ -18,59 +18,92 @@ export const createMessageThread: Action<
   fields,
   previewable: true,
   dataPoints,
-  onEvent: async ({ payload, onComplete, onError }): Promise<void> => {
-    const {
-      patientId,
-      senderId,
-      practiceId,
-      documentDate,
-      chartDate,
-      messageBody,
-      isUrgent,
-      recipientId,
-      groupId,
-    } = FieldsValidationSchema.parse(payload.fields)
+  onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
 
-    const threadMembers = [
-      // Individual recipient
-      ...(!isNil(recipientId)
-        ? [{ user: recipientId, status: 'Requiring Action' }]
-        : []),
-      // Group recipient
-      ...(!isNil(groupId)
-        ? [{ group: groupId, status: 'Requiring Action' }]
-        : []),
-      // Sender
-      {
-        user: senderId,
-        status: 'Addressed',
-      },
-    ]
+    helpers.log(
+      { meta, fields: payload.fields },
+      'Processing createMessageThread',
+    )
 
-    const messageThread = messageThreadSchema.parse({
-      patient: patientId,
-      sender: senderId,
-      practice: practiceId,
-      document_date: documentDate,
-      chart_date: chartDate,
-      is_urgent: isUrgent,
-      messages: [
+    try {
+      const {
+        patientId,
+        senderId,
+        practiceId,
+        documentDate,
+        chartDate,
+        messageBody,
+        isUrgent,
+        recipientId,
+        groupId,
+      } = FieldsValidationSchema.parse(payload.fields)
+
+      const threadMembers = [
+        // Individual recipient
+        ...(!isNil(recipientId)
+          ? [{ user: recipientId, status: 'Requiring Action' }]
+          : []),
+        // Group recipient
+        ...(!isNil(groupId)
+          ? [{ group: groupId, status: 'Requiring Action' }]
+          : []),
+        // Sender
         {
-          body: messageBody,
-          send_date: new Date().toISOString(),
-          sender: senderId,
+          user: senderId,
+          status: 'Addressed',
         },
-      ],
-      members: threadMembers,
-    })
+      ]
 
-    const api = makeAPIClient(payload.settings)
-    const data = await api.createMessageThread(messageThread)
+      const messageThread = messageThreadSchema.parse({
+        patient: patientId,
+        sender: senderId,
+        practice: practiceId,
+        document_date: documentDate,
+        chart_date: chartDate,
+        is_urgent: isUrgent,
+        messages: [
+          {
+            body: messageBody,
+            send_date: new Date().toISOString(),
+            sender: senderId,
+          },
+        ],
+        members: threadMembers,
+      })
 
-    await onComplete({
-      data_points: {
-        messageThreadId: String(data.id),
-      },
-    })
+      const api = makeAPIClient(payload.settings)
+      helpers.log(
+        { meta, messageThread },
+        '[createMessageThread] Creating Elation message thread',
+      )
+
+      const data = await api.createMessageThread(messageThread)
+
+      await onComplete({
+        data_points: {
+          messageThreadId: String(data.id),
+        },
+      })
+    } catch (err) {
+      helpers.log({ meta, err }, 'error', err as Error)
+      const error = err as Error
+      await onError({
+        events: [
+          {
+            date: new Date().toISOString(),
+            text: { en: error.message },
+            error: {
+              category: 'SERVER_ERROR',
+              message: error.message,
+            },
+          },
+        ],
+      })
+    }
   },
 }

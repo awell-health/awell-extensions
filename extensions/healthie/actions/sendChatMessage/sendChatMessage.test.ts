@@ -1,5 +1,6 @@
 import { generateTestPayload } from '@/tests'
 import { getSdk } from '../../lib/sdk/graphql-codegen/generated/sdk'
+import { TestHelpers } from '@awell-health/extensions-core'
 import {
   mockGetSdk,
   mockGetSdkReturn,
@@ -10,7 +11,8 @@ jest.mock('../../lib/sdk/graphql-codegen/generated/sdk')
 jest.mock('../../lib/sdk/graphql-codegen/graphqlClient')
 
 describe('sendChatMessage action', () => {
-  const onComplete = jest.fn()
+  const { onComplete, onError, helpers, clearMocks } =
+    TestHelpers.fromAction(sendChatMessage)
 
   beforeAll(() => {
     ;(getSdk as jest.Mock).mockImplementation(mockGetSdk)
@@ -18,11 +20,12 @@ describe('sendChatMessage action', () => {
 
   beforeEach(() => {
     jest.clearAllMocks()
+    clearMocks()
   })
 
   test("Should create a new message when it doesn't exist", async () => {
-    await sendChatMessage.onActivityCreated!(
-      generateTestPayload({
+    await sendChatMessage.onEvent!({
+      payload: generateTestPayload({
         fields: {
           healthie_patient_id: 'patient-1',
           message: 'hello',
@@ -35,8 +38,10 @@ describe('sendChatMessage action', () => {
         },
       }),
       onComplete,
-      jest.fn(),
-    )
+      onError,
+      helpers,
+      attempt: 1,
+    })
 
     expect(mockGetSdkReturn.getConversationList).toHaveReturnedWith({
       data: { conversationMemberships: [] },
@@ -67,8 +72,8 @@ describe('sendChatMessage action', () => {
           },
         }),
     })
-    await sendChatMessage.onActivityCreated!(
-      generateTestPayload({
+    await sendChatMessage.onEvent!({
+      payload: generateTestPayload({
         fields: {
           healthie_patient_id: 'patient-1',
           message: 'hello',
@@ -81,8 +86,10 @@ describe('sendChatMessage action', () => {
         },
       }),
       onComplete,
-      jest.fn(),
-    )
+      onError,
+      helpers,
+      attempt: 1,
+    })
 
     expect(mockGetSdkReturn.createConversation).not.toHaveBeenCalled()
     expect(mockGetSdkReturn.sendChatMessage).toHaveBeenCalled()
@@ -138,8 +145,8 @@ describe('sendChatMessage action', () => {
           },
         }),
     })
-    await sendChatMessage.onActivityCreated!(
-      generateTestPayload({
+    await sendChatMessage.onEvent!({
+      payload: generateTestPayload({
         fields: {
           healthie_patient_id: 'patient-1',
           message: input.message,
@@ -152,8 +159,10 @@ describe('sendChatMessage action', () => {
         },
       }),
       onComplete,
-      jest.fn(),
-    )
+      onError,
+      helpers,
+      attempt: 1,
+    })
 
     expect(mockGetSdkReturn.createConversation).not.toHaveBeenCalled()
     expect(mockGetSdkReturn.sendChatMessage).toHaveBeenCalledWith({

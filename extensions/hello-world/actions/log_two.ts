@@ -35,12 +35,37 @@ export const logTwo: Action<
   fields,
   previewable: false,
   dataPoints,
-  onActivityCreated: async (payload, onComplete): Promise<void> => {
-    const { fields } = payload
-    await onComplete({
-      data_points: {
-        world: fields.hello,
-      },
-    })
+  onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
+
+    helpers.log({ meta, fields: payload.fields }, 'Processing world')
+
+    try {
+      const { fields } = payload
+      await onComplete({
+        data_points: {
+          world: fields.hello,
+        },
+      })
+    } catch (err) {
+      helpers.log({ meta, err }, 'error', err as Error)
+      const error = err as Error
+      await onError({
+        events: [
+          {
+            date: new Date().toISOString(),
+            text: { en: error.message },
+            error: {
+              category: 'SERVER_ERROR',
+              message: error.message,
+            },
+          },
+        ],
+      })
+    }
   },
 }

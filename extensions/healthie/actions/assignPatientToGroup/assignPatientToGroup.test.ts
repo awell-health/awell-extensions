@@ -1,5 +1,6 @@
 import { generateTestPayload } from '@/tests'
 import { getSdk } from '../../lib/sdk/graphql-codegen/generated/sdk'
+import { TestHelpers } from '@awell-health/extensions-core'
 import {
   mockGetSdk,
   mockGetSdkReturn,
@@ -10,7 +11,8 @@ jest.mock('../../lib/sdk/graphql-codegen/generated/sdk')
 jest.mock('../../lib/sdk/graphql-codegen/graphqlClient')
 
 describe('assignPatientToGroup action', () => {
-  const onComplete = jest.fn()
+  const { onComplete, onError, helpers, clearMocks } =
+    TestHelpers.fromAction(assignPatientToGroup)
 
   beforeAll(() => {
     ;(getSdk as jest.Mock).mockImplementation(mockGetSdk)
@@ -18,6 +20,7 @@ describe('assignPatientToGroup action', () => {
 
   beforeEach(() => {
     jest.clearAllMocks()
+    clearMocks()
   })
 
   test.each([
@@ -27,8 +30,8 @@ describe('assignPatientToGroup action', () => {
   ])(
     '$#. When groupId equals "$inputGroupId", then it should be called with "$assignedGroupId"',
     async ({ inputGroupId, assignedGroupId }) => {
-      await assignPatientToGroup.onActivityCreated!(
-        generateTestPayload({
+      await assignPatientToGroup.onEvent!({
+        payload: generateTestPayload({
           fields: {
             id: 'patient-1',
             groupId: inputGroupId,
@@ -40,8 +43,10 @@ describe('assignPatientToGroup action', () => {
           },
         }),
         onComplete,
-        jest.fn(),
-      )
+        onError,
+        helpers,
+        attempt: 1,
+      })
 
       expect(mockGetSdkReturn.updatePatient).toHaveBeenCalledWith({
         input: {

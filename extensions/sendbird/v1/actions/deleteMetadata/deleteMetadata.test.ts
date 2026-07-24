@@ -1,3 +1,4 @@
+import { TestHelpers } from '@awell-health/extensions-core'
 import {
   mockedUserData,
   SendbirdClientMockImplementation,
@@ -8,8 +9,8 @@ import { generateTestPayload } from '@/tests'
 jest.mock('../../client')
 
 describe('Delete metadata', () => {
-  const onComplete = jest.fn()
-  const onError = jest.fn()
+  const { onComplete, onError, helpers, clearMocks } =
+    TestHelpers.fromAction(deleteMetadata)
 
   const basePayload = generateTestPayload({
     pathway: {
@@ -33,16 +34,23 @@ describe('Delete metadata', () => {
 
   beforeEach(() => {
     jest.clearAllMocks()
+    clearMocks()
   })
 
   test('Should call the onComplete callback', async () => {
-    await deleteMetadata.onActivityCreated!(basePayload, onComplete, onError)
+    await deleteMetadata.onEvent!({
+      payload: basePayload,
+      onComplete,
+      onError,
+      helpers,
+      attempt: 1,
+    })
 
     expect(
-      SendbirdClientMockImplementation.chatApi.deleteMetadata
+      SendbirdClientMockImplementation.chatApi.deleteMetadata,
     ).toHaveBeenCalledWith(
       basePayload.fields.userId,
-      basePayload.fields.metadataKey
+      basePayload.fields.metadataKey,
     )
     expect(onComplete).toHaveBeenCalled()
     expect(onError).not.toHaveBeenCalled()

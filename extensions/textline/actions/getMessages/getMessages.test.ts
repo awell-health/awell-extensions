@@ -1,21 +1,21 @@
 import { getMessages } from './getMessages'
 import { generateTestPayload } from '@/tests'
 import { mockReturnValue } from '../../client/__mocks__/textLineApi'
+import { TestHelpers } from '@awell-health/extensions-core'
 
 jest.mock('../../client/textLineApi', () => jest.fn(() => mockReturnValue))
 
 describe('Get messages action', () => {
-  const onComplete = jest.fn()
-  const onError = jest.fn()
+  const { onComplete, onError, helpers, clearMocks } =
+    TestHelpers.fromAction(getMessages)
 
   beforeEach(() => {
-    onComplete.mockClear()
-    onError.mockClear()
+    clearMocks()
   })
 
   test('Should call the onComplete callback with one answer', async () => {
-    await getMessages.onActivityCreated!(
-      generateTestPayload({
+    await getMessages.onEvent!({
+      payload: generateTestPayload({
         fields: {
           phoneNumber: '+18999999999',
           afterMessageId: undefined,
@@ -26,8 +26,10 @@ describe('Get messages action', () => {
         },
       }),
       onComplete,
-      onError
-    )
+      onError,
+      helpers,
+      attempt: 1,
+    })
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
         allMessages: '["Yes","Received"]',
@@ -39,8 +41,8 @@ describe('Get messages action', () => {
   })
 
   test('Should call the onComplete callback with zero answers', async () => {
-    await getMessages.onActivityCreated!(
-      generateTestPayload({
+    await getMessages.onEvent!({
+      payload: generateTestPayload({
         fields: {
           phoneNumber: '+19144542596',
           afterMessageId: undefined,
@@ -51,8 +53,10 @@ describe('Get messages action', () => {
         },
       }),
       onComplete,
-      onError
-    )
+      onError,
+      helpers,
+      attempt: 1,
+    })
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
         allMessages: '',
@@ -64,8 +68,8 @@ describe('Get messages action', () => {
   })
 
   test('Should call the onComplete even with no params', async () => {
-    await getMessages.onActivityCreated!(
-      generateTestPayload({
+    await getMessages.onEvent!({
+      payload: generateTestPayload({
         fields: {
           phoneNumber: undefined,
           afterMessageId: undefined,
@@ -76,8 +80,10 @@ describe('Get messages action', () => {
         },
       }),
       onComplete,
-      onError
-    )
+      onError,
+      helpers,
+      attempt: 1,
+    })
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
         allMessages: '',

@@ -3,12 +3,14 @@ import { nonVisitNoteResponseExample } from '../../__mocks__/constants'
 import { makeAPIClientMockFunc, mockClientReturn } from '../../__mocks__/client'
 import { makeAPIClient } from '../../client'
 import { type NonVisitNoteResponse } from '../../types/nonVisitNote'
+import { TestHelpers } from '@awell-health/extensions-core'
+import { generateTestPayload } from '@/tests'
 
 jest.mock('../../client')
 
 describe('Get non-visit note action', () => {
-  const onComplete = jest.fn()
-  const onError = jest.fn()
+  const { onComplete, onError, helpers, clearMocks } =
+    TestHelpers.fromAction(getNonVisitNote)
   const settings = {
     client_id: 'clientId',
     client_secret: 'clientSecret',
@@ -74,19 +76,21 @@ describe('Get non-visit note action', () => {
     '$#. Should execute onComplete with correct data point when response is $response',
     async ({ response, dataPoints }) => {
       mockClientReturn.getNonVisitNote.mockReturnValueOnce(response)
-      await getNonVisitNote.onActivityCreated!(
-        {
+      await getNonVisitNote.onEvent!({
+        payload: generateTestPayload({
           fields: {
             nonVisitNoteId: 1,
           },
           settings,
-        } as any,
+        } as any),
         onComplete,
-        onError
-      )
+        onError,
+        helpers,
+        attempt: 1,
+      })
       expect(onComplete).toHaveBeenCalledWith({
         data_points: dataPoints,
       })
-    }
+    },
   )
 })

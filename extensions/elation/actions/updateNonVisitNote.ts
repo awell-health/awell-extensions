@@ -105,39 +105,63 @@ export const updateNonVisitNote: Action<typeof fields, typeof settings> = {
   description: "Update a Non-Visit Note using Elation's patient API.",
   fields,
   previewable: true,
-  onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
-    const {
-      nonVisitNoteId,
-      nonVisitNoteBulletId,
-      authorId,
-      chartDate,
-      documentDate,
-      text,
-      category,
-      patientId,
-      practiceId,
-      signed_by,
-      ...fields
-    } = payload.fields
-    const noteId = NumericIdSchema.parse(nonVisitNoteId)
-    // partial - all fields are optional
-    const note = nonVisitNoteSchema.partial().parse({
-      ...fields,
-      patient: patientId,
-      practice: practiceId,
-      bullets: isNil(nonVisitNoteBulletId)
-        ? undefined
-        : [{ id: nonVisitNoteBulletId, text, author: authorId, category }],
-      document_date: documentDate,
-      chart_date: chartDate,
-      ...(!isNil(signed_by) && {
-        signed_by,
-        sign_date: new Date().toISOString(),
-      }),
-    })
+  onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
 
-    const api = makeAPIClient(payload.settings)
-    await api.updateNonVisitNote(noteId, note)
-    await onComplete()
+    try {
+      const {
+        nonVisitNoteId,
+        nonVisitNoteBulletId,
+        authorId,
+        chartDate,
+        documentDate,
+        text,
+        category,
+        patientId,
+        practiceId,
+        signed_by,
+        ...fields
+      } = payload.fields
+      const noteId = NumericIdSchema.parse(nonVisitNoteId)
+      // partial - all fields are optional
+      const note = nonVisitNoteSchema.partial().parse({
+        ...fields,
+        patient: patientId,
+        practice: practiceId,
+        bullets: isNil(nonVisitNoteBulletId)
+          ? undefined
+          : [{ id: nonVisitNoteBulletId, text, author: authorId, category }],
+        document_date: documentDate,
+        chart_date: chartDate,
+        ...(!isNil(signed_by) && {
+          signed_by,
+          sign_date: new Date().toISOString(),
+        }),
+      })
+
+      const api = makeAPIClient(payload.settings)
+      helpers.log({ meta, noteId, note }, 'Updating Elation non-visit note')
+      await api.updateNonVisitNote(noteId, note)
+      await onComplete()
+    } catch (err) {
+      const message = (err as Error).message
+      helpers.log({ meta, err }, 'error', err as Error)
+      await onError({
+        events: [
+          {
+            date: new Date().toISOString(),
+            text: { en: message },
+            error: {
+              category: 'SERVER_ERROR',
+              message,
+            },
+          },
+        ],
+      })
+    }
   },
 }

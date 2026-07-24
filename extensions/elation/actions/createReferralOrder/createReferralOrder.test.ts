@@ -1,6 +1,8 @@
 import { FindContactsResponse } from '../../types/contact'
 import { referralOrderExample } from '../../__mocks__/constants'
 import { createReferralOrder } from './createReferralOrder'
+import { TestHelpers } from '@awell-health/extensions-core'
+import { generateTestPayload } from '@/tests'
 
 // Add mock API client
 const mockElationAPIClient = {
@@ -18,13 +20,12 @@ jest.mock('../../client', () => ({
 }))
 
 describe('Elation - Create referral order', () => {
-  const onComplete = jest.fn()
-  const onError = jest.fn()
+  const { onComplete, onError, helpers, clearMocks } =
+    TestHelpers.fromAction(createReferralOrder)
 
   beforeEach(() => {
     jest.clearAllMocks()
-    onComplete.mockClear()
-    onError.mockClear()
+    clearMocks()
   })
 
   const payload = {
@@ -62,7 +63,13 @@ describe('Elation - Create referral order', () => {
   }
 
   test('Should return the referral order id as data point', async () => {
-    await createReferralOrder.onActivityCreated!(payload, onComplete, onError)
+    await createReferralOrder.onEvent!({
+      payload,
+      onComplete,
+      onError,
+      helpers,
+      attempt: 1,
+    })
 
     expect(onComplete).toHaveBeenCalledWith({
       data_points: { id: String(referralOrderExample.id) },
@@ -70,7 +77,13 @@ describe('Elation - Create referral order', () => {
   })
 
   test('Should create a letter with the referral order id', async () => {
-    await createReferralOrder.onActivityCreated!(payload, onComplete, onError)
+    await createReferralOrder.onEvent!({
+      payload,
+      onComplete,
+      onError,
+      helpers,
+      attempt: 1,
+    })
 
     expect(mockElationAPIClient.postNewLetter).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -80,7 +93,13 @@ describe('Elation - Create referral order', () => {
   })
 
   test('Should use the first contact found when creating the letter', async () => {
-    await createReferralOrder.onActivityCreated!(payload, onComplete, onError)
+    await createReferralOrder.onEvent!({
+      payload,
+      onComplete,
+      onError,
+      helpers,
+      attempt: 1,
+    })
 
     expect(mockElationAPIClient.postNewLetter).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -98,7 +117,13 @@ describe('Elation - Create referral order', () => {
     })
 
     await expect(
-      createReferralOrder.onActivityCreated!(payload, onComplete, onError),
+      createReferralOrder.onEvent!({
+        payload,
+        onComplete,
+        onError,
+        helpers,
+        attempt: 1,
+      }),
     ).rejects.toThrow('No contact found with the name A contact.')
   })
 })

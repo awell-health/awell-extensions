@@ -2,12 +2,14 @@ import { getPhysician } from '.'
 import { physicianResponseExample } from '../../__mocks__/constants'
 import { makeAPIClientMockFunc } from '../../__mocks__/client'
 import { makeAPIClient } from '../../client'
+import { TestHelpers } from '@awell-health/extensions-core'
+import { generateTestPayload } from '@/tests'
 
 jest.mock('../../client')
 
 describe('Elation - Get physician', () => {
-  const onComplete = jest.fn()
-  const onError = jest.fn()
+  const { onComplete, onError, helpers, clearMocks } =
+    TestHelpers.fromAction(getPhysician)
   const settings = {
     client_id: 'clientId',
     client_secret: 'clientSecret',
@@ -27,16 +29,18 @@ describe('Elation - Get physician', () => {
   })
 
   test('Should return the correct physician', async () => {
-    await getPhysician.onActivityCreated!(
-      {
+    await getPhysician.onEvent!({
+      payload: generateTestPayload({
         fields: {
           physicianId: 1,
         },
         settings,
-      } as any,
+      } as any),
       onComplete,
-      onError
-    )
+      onError,
+      helpers,
+      attempt: 1,
+    })
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
         physicianFirstName: physicianResponseExample.first_name,

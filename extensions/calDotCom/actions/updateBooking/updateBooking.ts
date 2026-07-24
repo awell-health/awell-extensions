@@ -14,7 +14,13 @@ export const updateBooking: Action<typeof fields, typeof settings> = {
   fields,
   dataPoints,
   previewable: true,
-  onActivityCreated: async (payload, onComplete, onError) => {
+  onEvent: async ({ payload, onComplete, onError, helpers }) => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
+
     try {
       const {
         settings: { apiKey },
@@ -28,13 +34,23 @@ export const updateBooking: Action<typeof fields, typeof settings> = {
       })
 
       const calComApi = new CalComApi(apiKey)
-      const booking = await calComApi.updateBooking(bookingId, {
+      const updateBookingRequest = {
         title,
         description,
         status,
         start,
         end,
-      })
+      }
+
+      helpers.log(
+        { meta, bookingId, updateBookingRequest },
+        'Updating Cal.com booking',
+      )
+
+      const booking = await calComApi.updateBooking(
+        bookingId,
+        updateBookingRequest,
+      )
 
       await onComplete({
         data_points: {
@@ -43,6 +59,7 @@ export const updateBooking: Action<typeof fields, typeof settings> = {
         },
       })
     } catch (err) {
+      helpers.log({ meta, err }, 'error', err as Error)
       if (err instanceof ZodError) {
         const error = fromZodError(err)
         await onError({

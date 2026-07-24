@@ -27,7 +27,13 @@ export const sendMessageToChannel: Action<
   fields,
   dataPoints,
   previewable: true,
-  onEvent: async ({ payload, onComplete, onError }) => {
+  onEvent: async ({ payload, onComplete, onError, helpers }) => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
+
     try {
       const {
         settings: { botToken },
@@ -45,10 +51,13 @@ export const sendMessageToChannel: Action<
       const careFlowUrl = getCareFlowUrl(payload.pathway.id)
       const messageWithLink = `${message}\n\n<${careFlowUrl}|View Care Flow>`
 
-      const response = await slackClient.postMessage({
+      const requestBody = {
         channel,
         text: messageWithLink,
-      })
+      }
+
+      helpers.log({ meta, requestBody }, 'Sending message via Slack')
+      const response = await slackClient.postMessage(requestBody)
 
       await onComplete({
         data_points: {

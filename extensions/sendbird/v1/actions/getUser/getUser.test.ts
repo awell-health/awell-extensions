@@ -1,3 +1,4 @@
+import { TestHelpers } from '@awell-health/extensions-core'
 import {
   mockedDates,
   mockedUserData,
@@ -9,8 +10,8 @@ import { generateTestPayload } from '@/tests'
 jest.mock('../../client')
 
 describe('Get user', () => {
-  const onComplete = jest.fn()
-  const onError = jest.fn()
+  const { onComplete, onError, helpers, clearMocks } =
+    TestHelpers.fromAction(getUser)
 
   const basePayload = generateTestPayload({
     pathway: {
@@ -33,13 +34,20 @@ describe('Get user', () => {
 
   beforeEach(() => {
     jest.clearAllMocks()
+    clearMocks()
   })
 
   test('Should call the onComplete callback', async () => {
-    await getUser.onActivityCreated!(basePayload, onComplete, onError)
+    await getUser.onEvent!({
+      payload: basePayload,
+      onComplete,
+      onError,
+      helpers,
+      attempt: 1,
+    })
 
     expect(
-      SendbirdClientMockImplementation.chatApi.getUser
+      SendbirdClientMockImplementation.chatApi.getUser,
     ).toHaveBeenCalledWith(basePayload.fields.userId)
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {

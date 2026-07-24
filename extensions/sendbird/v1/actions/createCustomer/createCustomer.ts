@@ -19,7 +19,15 @@ export const createCustomer: Action<typeof fields, typeof settings> = {
   fields,
   dataPoints,
   previewable: true,
-  onActivityCreated: async (payload, onComplete, onError) => {
+  onEvent: async ({ payload, onComplete, onError, helpers }) => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
+
+    helpers.log({ meta, fields: payload.fields }, 'Processing createCustomer')
+
     try {
       const {
         settings: { applicationId, chatApiToken, deskApiToken },
@@ -44,6 +52,7 @@ export const createCustomer: Action<typeof fields, typeof settings> = {
 
       await onComplete({ data_points: { customerId: String(res.data.id) } })
     } catch (err) {
+      helpers.log({ meta, err }, 'error', err as Error)
       if (err instanceof ZodError) {
         const error = fromZodError(err)
         await onError({

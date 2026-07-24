@@ -18,13 +18,19 @@ export const documentExtraction: Action<
   fields,
   previewable: true,
   dataPoints,
-  onEvent: async ({ payload, onComplete, onError }): Promise<void> => {
+  onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
+
     const { fields, landingAiSdk } = await validatePayloadAndCreateSdk({
       fieldsSchema: FieldsValidationSchema,
       payload,
     })
 
-    const { data } = await landingAiSdk.agenticDocumentAnalysis({
+    const documentAnalysisRequest = {
       input: {
         body: {
           image: fields.fileType === 'image' ? fields.fileUrl : null,
@@ -36,8 +42,16 @@ export const documentExtraction: Action<
             : null,
         },
       },
-      mode: 'remoteFile',
-    })
+      mode: 'remoteFile' as const,
+    }
+
+    helpers.log(
+      { meta, documentAnalysisRequest },
+      'Running LandingAI document extraction',
+    )
+    const { data } = await landingAiSdk.agenticDocumentAnalysis(
+      documentAnalysisRequest,
+    )
 
     if (data.errors.length > 0) {
       await onError({

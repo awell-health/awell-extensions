@@ -1,8 +1,8 @@
 import { TestHelpers } from '@awell-health/extensions-core'
 
 import { addAllergy as action } from './addAllergy'
-import { ZodError } from 'zod'
 import { allergyExample } from '../../__mocks__/constants'
+import { testPayload } from '../../../../tests'
 
 jest.mock('../../client')
 
@@ -26,11 +26,13 @@ describe('Elation - Add allergy', () => {
 
   beforeEach(() => {
     clearMocks()
+    jest.clearAllMocks()
   })
 
   test('Should call onComplete when successful', async () => {
     await addAllergy.onEvent({
       payload: {
+        ...testPayload,
         fields: allergyExample,
         settings,
       } as any,
@@ -49,8 +51,9 @@ describe('Elation - Add allergy', () => {
   })
 
   test('Should call onError when required fields are missing', async () => {
-    const resp = addAllergy.onEvent({
+    await addAllergy.onEvent({
       payload: {
+        ...testPayload,
         fields: {
           patientId: undefined,
           name: undefined,
@@ -63,13 +66,23 @@ describe('Elation - Add allergy', () => {
       attempt: 1,
     })
 
-    await expect(resp).rejects.toThrow(ZodError)
+    expect(onError).toHaveBeenCalledWith({
+      events: [
+        expect.objectContaining({
+          error: {
+            category: 'SERVER_ERROR',
+            message: expect.any(String),
+          },
+        }),
+      ],
+    })
     expect(onComplete).not.toHaveBeenCalled()
   })
 
   test('Should call onError when no patientId is provided and name is invalid format', async () => {
-    const resp = addAllergy.onEvent({
+    await addAllergy.onEvent({
       payload: {
+        ...testPayload,
         fields: {
           name: {
             value: 'Penicillin',
@@ -83,7 +96,16 @@ describe('Elation - Add allergy', () => {
       attempt: 1,
     })
 
-    await expect(resp).rejects.toThrow(ZodError)
+    expect(onError).toHaveBeenCalledWith({
+      events: [
+        expect.objectContaining({
+          error: {
+            category: 'SERVER_ERROR',
+            message: expect.any(String),
+          },
+        }),
+      ],
+    })
     expect(onComplete).not.toHaveBeenCalled()
   })
 })

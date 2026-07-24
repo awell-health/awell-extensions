@@ -1,8 +1,8 @@
 import { TestHelpers } from '@awell-health/extensions-core'
 
 import { addMessageToThread as action } from './addMessageToThread'
-import { ZodError } from 'zod'
 import { makeAPIClient } from '../../client'
+import { testPayload } from '../../../../tests'
 
 jest.mock('../../client')
 
@@ -34,12 +34,14 @@ describe('Elation - Add message to thread', () => {
 
   beforeEach(() => {
     clearMocks()
+    jest.clearAllMocks()
   })
 
   describe('Validation', () => {
     test('Should call onError when required fields are missing', async () => {
-      const resp = addMessageToThread.onEvent({
+      await addMessageToThread.onEvent({
         payload: {
+          ...testPayload,
           fields: {
             ...messagExample,
             messageBody: undefined,
@@ -52,13 +54,24 @@ describe('Elation - Add message to thread', () => {
         attempt: 1,
       })
 
-      await expect(resp).rejects.toThrow(ZodError)
+      expect(onError).toHaveBeenCalledWith({
+        events: [
+          expect.objectContaining({
+            error: {
+              category: 'SERVER_ERROR',
+              message: expect.any(String),
+            },
+          }),
+        ],
+      })
       expect(onComplete).not.toHaveBeenCalled()
+      expect(mockAddMessageToThread).not.toHaveBeenCalled()
     })
 
-    test('Should call onError when no threadId is invalid format', async () => {
-      const resp = addMessageToThread.onEvent({
+    test('Should call onError when threadId has an invalid format', async () => {
+      await addMessageToThread.onEvent({
         payload: {
+          ...testPayload,
           fields: {
             ...messagExample,
             threadId: 'some text',
@@ -71,8 +84,18 @@ describe('Elation - Add message to thread', () => {
         attempt: 1,
       })
 
-      await expect(resp).rejects.toThrow(ZodError)
+      expect(onError).toHaveBeenCalledWith({
+        events: [
+          expect.objectContaining({
+            error: {
+              category: 'SERVER_ERROR',
+              message: expect.any(String),
+            },
+          }),
+        ],
+      })
       expect(onComplete).not.toHaveBeenCalled()
+      expect(mockAddMessageToThread).not.toHaveBeenCalled()
     })
   })
 
@@ -89,6 +112,7 @@ describe('Elation - Add message to thread', () => {
     test('Should call onComplete when successful', async () => {
       await addMessageToThread.onEvent({
         payload: {
+          ...testPayload,
           fields: messagExample,
           settings,
         } as any,

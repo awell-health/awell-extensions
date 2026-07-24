@@ -2,13 +2,14 @@ import { generateTestPayload } from '@/tests'
 import { getSdk } from '../../lib/sdk/graphql-codegen/generated/sdk'
 import { mockGetSdk } from '../../lib/sdk/graphql-codegen/generated/__mocks__/sdk'
 import { getMetricEntry } from '.'
+import { TestHelpers } from '@awell-health/extensions-core'
 
 jest.mock('../../lib/sdk/graphql-codegen/generated/sdk')
 jest.mock('../../lib/sdk/graphql-codegen/graphqlClient')
 
 describe('Healthie - Get metric entry', () => {
-  const onComplete = jest.fn()
-  const onError = jest.fn()
+  const { onComplete, onError, helpers, clearMocks } =
+    TestHelpers.fromAction(getMetricEntry)
 
   beforeAll(() => {
     ;(getSdk as jest.Mock).mockImplementation(mockGetSdk)
@@ -16,11 +17,12 @@ describe('Healthie - Get metric entry', () => {
 
   beforeEach(() => {
     jest.clearAllMocks()
+    clearMocks()
   })
 
   test('Should get most recent metric entry', async () => {
-    await getMetricEntry.onActivityCreated!(
-      generateTestPayload({
+    await getMetricEntry.onEvent!({
+      payload: generateTestPayload({
         fields: {
           patientId: '123',
           category: 'Weight',
@@ -33,7 +35,9 @@ describe('Healthie - Get metric entry', () => {
       }),
       onComplete,
       onError,
-    )
+      helpers,
+      attempt: 1,
+    })
 
     expect(onComplete).toBeCalledWith({
       data_points: {

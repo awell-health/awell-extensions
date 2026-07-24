@@ -19,7 +19,23 @@ export const sendFormCompletionRequest: Action<typeof fields, typeof settings> =
     description: 'Send a form completion request to a patient in Healthie.',
     fields,
     previewable: true,
-    onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
+    onEvent: async ({
+      payload,
+      onComplete,
+      onError,
+      helpers,
+    }): Promise<void> => {
+      const meta = {
+        tenant_id: payload.pathway.tenant_id,
+        careflow_id: payload.pathway.id,
+        activity_id: payload.activity.id,
+      }
+
+      helpers.log(
+        { meta, fields: payload.fields },
+        'Processing sendFormCompletionRequest',
+      )
+
       const { fields, settings } = payload
       try {
         const {
@@ -77,6 +93,7 @@ export const sendFormCompletionRequest: Action<typeof fields, typeof settings> =
           })
         }
       } catch (err) {
+        helpers.log({ meta, err }, 'error', err as Error)
         if (err instanceof HealthieError) {
           const errors = mapHealthieToActivityError(err.errors)
           await onError({

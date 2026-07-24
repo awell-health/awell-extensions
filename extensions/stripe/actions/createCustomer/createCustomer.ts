@@ -15,28 +15,53 @@ export const createCustomer: Action<
   fields,
   previewable: true,
   dataPoints,
-  onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
-    const {
-      fields: input,
-      stripe,
-      patient,
-    } = await validateAndCreateStripeSdk({
-      fieldsSchema: FieldsValidationSchema,
-      payload,
-    })
+  onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
 
-    const res = await stripe.customers.create({
-      email: input.email,
-      name: input.name,
-      metadata: {
-        awellPatientId: patient.id,
-      },
-    })
+    helpers.log({ meta, fields: payload.fields }, 'Processing createCustomer')
 
-    await onComplete({
-      data_points: {
-        customerId: res.id,
-      },
-    })
+    try {
+      const {
+        fields: input,
+        stripe,
+        patient,
+      } = await validateAndCreateStripeSdk({
+        fieldsSchema: FieldsValidationSchema,
+        payload,
+      })
+
+      const res = await stripe.customers.create({
+        email: input.email,
+        name: input.name,
+        metadata: {
+          awellPatientId: patient.id,
+        },
+      })
+
+      await onComplete({
+        data_points: {
+          customerId: res.id,
+        },
+      })
+    } catch (err) {
+      helpers.log({ meta, err }, 'error', err as Error)
+      const error = err as Error
+      await onError({
+        events: [
+          {
+            date: new Date().toISOString(),
+            text: { en: error.message },
+            error: {
+              category: 'SERVER_ERROR',
+              message: error.message,
+            },
+          },
+        ],
+      })
+    }
   },
 }

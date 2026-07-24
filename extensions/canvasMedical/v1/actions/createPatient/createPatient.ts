@@ -22,7 +22,15 @@ export const createPatient: Action<typeof fields, typeof settings> = {
   fields,
   dataPoints,
   previewable: true,
-  onActivityCreated: async (payload, onComplete, onError) => {
+  onEvent: async ({ payload, onComplete, onError, helpers }) => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
+
+    helpers.log({ meta, fields: payload.fields }, 'Processing createPatient')
+
     try {
       validate({
         schema: z.object({
@@ -32,7 +40,7 @@ export const createPatient: Action<typeof fields, typeof settings> = {
       })
 
       const patientData = patientSchema.parse(
-        JSON.parse(payload.fields.patientData as string)
+        JSON.parse(payload.fields.patientData as string),
       )
 
       const api = makeAPIClient(payload.settings)
@@ -44,6 +52,7 @@ export const createPatient: Action<typeof fields, typeof settings> = {
         },
       })
     } catch (error) {
+      helpers.log({ meta, error }, 'error', error as Error)
       let parsedError
 
       if (isZodError(error)) {

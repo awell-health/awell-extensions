@@ -5,6 +5,7 @@ import {
   mockedPatientId,
   mockedSettings,
 } from '../../client/__mocks__'
+import { TestHelpers } from '@awell-health/extensions-core'
 import { createPatient } from './createPatient'
 
 jest.mock('../../client', () => ({
@@ -13,8 +14,8 @@ jest.mock('../../client', () => ({
 }))
 
 describe('createPatient', () => {
-  const onComplete = jest.fn()
-  const onError = jest.fn()
+  const { onComplete, onError, helpers, clearMocks } =
+    TestHelpers.fromAction(createPatient)
   const payload = {
     settings: mockedSettings,
     fields: {
@@ -23,11 +24,13 @@ describe('createPatient', () => {
   }
 
   it('should create patient', async () => {
-    await createPatient.onActivityCreated!(
-      generateTestPayload(payload),
+    await createPatient.onEvent!({
+      payload: generateTestPayload(payload),
       onComplete,
-      onError
-    )
+      onError,
+      helpers,
+      attempt: 1,
+    })
     expect(onComplete).toHaveBeenCalledTimes(1)
     expect(onComplete).toHaveBeenCalledWith({
       data_points: { patientId: mockedPatientId },

@@ -5,6 +5,7 @@ import {
   mockedTaskData,
   mockedTaskId,
 } from '../../client/__mocks__'
+import { TestHelpers } from '@awell-health/extensions-core'
 import { createTask } from './createTask'
 
 jest.mock('../../client', () => ({
@@ -13,8 +14,8 @@ jest.mock('../../client', () => ({
 }))
 
 describe('createTask', () => {
-  const onComplete = jest.fn()
-  const onError = jest.fn()
+  const { onComplete, onError, helpers, clearMocks } =
+    TestHelpers.fromAction(createTask)
   const payload = {
     settings: mockedSettings,
     fields: {
@@ -23,11 +24,13 @@ describe('createTask', () => {
   }
 
   it('should create task', async () => {
-    await createTask.onActivityCreated!(
-      generateTestPayload(payload),
+    await createTask.onEvent!({
+      payload: generateTestPayload(payload),
       onComplete,
-      onError
-    )
+      onError,
+      helpers,
+      attempt: 1,
+    })
     expect(onComplete).toHaveBeenCalledTimes(1)
     expect(onComplete).toHaveBeenCalledWith({
       data_points: { taskId: mockedTaskId },

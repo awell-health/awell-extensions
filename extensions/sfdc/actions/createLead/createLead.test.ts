@@ -1,15 +1,17 @@
 import { createLead } from '.'
 import { generateTestPayload } from '@/tests'
 import { mockSettings, mockCreateRecordResponse } from '../../api/__mocks__'
+import { TestHelpers } from '@awell-health/extensions-core'
 
 jest.mock('../../api/client')
 
 describe('Salesforce - Create Lead', () => {
-  const onComplete = jest.fn()
-  const onError = jest.fn()
+  const { onComplete, onError, helpers, clearMocks } =
+    TestHelpers.fromAction(createLead)
 
   beforeEach(() => {
     jest.clearAllMocks()
+    clearMocks()
   })
 
   test('Should create a Lead', async () => {
@@ -28,11 +30,13 @@ describe('Salesforce - Create Lead', () => {
       settings: mockSettings,
     })
 
-    await createLead.onActivityCreated!(
-      mockOnActivityCreateParams,
+    await createLead.onEvent!({
+      payload: mockOnActivityCreateParams,
       onComplete,
-      onError
-    )
+      onError,
+      helpers,
+      attempt: 1,
+    })
 
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {

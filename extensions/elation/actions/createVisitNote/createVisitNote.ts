@@ -17,38 +17,70 @@ export const createVisitNote: Action<
   fields,
   previewable: true,
   dataPoints,
-  onEvent: async ({ payload, onComplete }): Promise<void> => {
-    const { fields, settings } = validate({
-      schema: z.object({
-        fields: FieldsValidationSchema,
-        settings: SettingsValidationSchema,
-      }),
-      payload,
-    })
+  onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
 
-    const api = makeAPIClient(settings)
+    helpers.log({ meta, fields: payload.fields }, 'Processing createVisitNote')
 
-    const { id } = await api.createVisitNote({
-      patient: fields.patientId,
-      chart_date: new Date().toISOString(),
-      document_date: new Date().toISOString(),
-      template: fields.template,
-      physician: fields.physicianId,
-      bullets: [
-        {
-          text: fields.text,
-          author: fields.authorId,
-          category: fields.category,
+    try {
+      const { fields, settings } = validate({
+        schema: z.object({
+          fields: FieldsValidationSchema,
+          settings: SettingsValidationSchema,
+        }),
+        payload,
+      })
+
+      const api = makeAPIClient(settings)
+
+      const createVisitNoteInput = {
+        patient: fields.patientId,
+        chart_date: new Date().toISOString(),
+        document_date: new Date().toISOString(),
+        template: fields.template,
+        physician: fields.physicianId,
+        bullets: [
+          {
+            text: fields.text,
+            author: fields.authorId,
+            category: fields.category,
+          },
+        ],
+        type: fields?.type,
+        confidential: fields?.confidential,
+      }
+
+      helpers.log(
+        { meta, createVisitNoteInput },
+        '[createVisitNote] Creating Elation visit note',
+      )
+
+      const { id } = await api.createVisitNote(createVisitNoteInput)
+
+      await onComplete({
+        data_points: {
+          visitNoteId: String(id),
         },
-      ],
-      type: fields?.type,
-      confidential: fields?.confidential,
-    })
-
-    await onComplete({
-      data_points: {
-        visitNoteId: String(id),
-      },
-    })
+      })
+    } catch (err) {
+      helpers.log({ meta, err }, 'error', err as Error)
+      const error = err as Error
+      await onError({
+        events: [
+          {
+            date: new Date().toISOString(),
+            text: { en: error.message },
+            error: {
+              category: 'SERVER_ERROR',
+              message: error.message,
+            },
+          },
+        ],
+      })
+    }
   },
 }

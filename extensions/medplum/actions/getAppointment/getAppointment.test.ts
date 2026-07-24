@@ -1,6 +1,7 @@
 import { getAppointment } from '.'
 import { generateTestPayload } from '@/tests'
 import { mockSettings, mockAppointmentResponse } from '../../__mocks__'
+import { TestHelpers } from '@awell-health/extensions-core'
 
 jest.mock('@medplum/core', () => {
   // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -12,11 +13,12 @@ jest.mock('@medplum/core', () => {
 })
 
 describe('Medplum - Get appointment', () => {
-  const onComplete = jest.fn()
-  const onError = jest.fn()
+  const { onComplete, onError, helpers, clearMocks } =
+    TestHelpers.fromAction(getAppointment)
 
   beforeEach(() => {
     jest.clearAllMocks()
+    clearMocks()
   })
 
   test('Should return an appointment', async () => {
@@ -27,11 +29,13 @@ describe('Medplum - Get appointment', () => {
       settings: mockSettings,
     })
 
-    await getAppointment.onActivityCreated!(
-      mockOnActivityCreateParams,
+    await getAppointment.onEvent!({
+      payload: mockOnActivityCreateParams,
       onComplete,
-      onError
-    )
+      onError,
+      helpers,
+      attempt: 1,
+    })
 
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {

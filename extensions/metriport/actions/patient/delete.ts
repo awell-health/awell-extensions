@@ -13,7 +13,15 @@ export const deletePatient: Action<typeof deleteFields, typeof settings> = {
   description: 'Removes the specified Patient.',
   fields: deleteFields,
   previewable: true,
-  onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
+  onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
+
+    helpers.log({ meta, fields: payload.fields }, 'Processing deletePatient')
+
     try {
       const patientId = stringId.parse(payload.fields.patientId)
       const facilityId = stringId.parse(payload.fields.facilityId)
@@ -23,6 +31,7 @@ export const deletePatient: Action<typeof deleteFields, typeof settings> = {
 
       await onComplete()
     } catch (err) {
+      helpers.log({ meta, err }, 'error', err as Error)
       await handleErrorMessage(err, onError)
     }
   },

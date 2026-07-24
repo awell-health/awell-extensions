@@ -17,7 +17,13 @@ export const updatePatient: Action<typeof fields, typeof settings> = {
   description: 'Update a patient in Healthie.',
   fields,
   previewable: true,
-  onEvent: async ({ payload, onComplete, onError }) => {
+  onEvent: async ({ payload, onComplete, onError, helpers }) => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
+
     try {
       const { fields, healthieSdk } = await validatePayloadAndCreateSdk({
         fieldsSchema: FieldsValidationSchema,
@@ -29,28 +35,35 @@ export const updatePatient: Action<typeof fields, typeof settings> = {
           ? undefined
           : fields.provider_id
 
+      const updateClientInput = {
+        id: fields.id,
+        first_name: fields.first_name,
+        last_name: fields.last_name,
+        legal_name: fields.legal_name,
+        email: fields.email,
+        phone_number: fields.phone_number,
+        dietitian_id,
+        gender: fields.gender,
+        gender_identity: fields.gender_identity,
+        height: fields.height,
+        sex: fields.sex,
+        user_group_id: fields.user_group_id,
+        active: fields.active,
+        dob: fields.dob,
+        resend_welcome: fields.resend_welcome_email,
+        record_identifier: fields.record_identifier,
+        additional_record_identifier: fields.additional_record_identifier,
+      }
+
+      helpers.log(
+        { meta, updateClientInput },
+        '[updatePatient] Updating Healthie client',
+      )
+
       await healthieSdk.client.mutation({
         updateClient: {
           __args: {
-            input: {
-              id: fields.id,
-              first_name: fields.first_name,
-              last_name: fields.last_name,
-              legal_name: fields.legal_name,
-              email: fields.email,
-              phone_number: fields.phone_number,
-              dietitian_id,
-              gender: fields.gender,
-              gender_identity: fields.gender_identity,
-              height: fields.height,
-              sex: fields.sex,
-              user_group_id: fields.user_group_id,
-              active: fields.active,
-              dob: fields.dob,
-              resend_welcome: fields.resend_welcome_email,
-              record_identifier: fields.record_identifier,
-              additional_record_identifier: fields.additional_record_identifier,
-            },
+            input: updateClientInput,
           },
           user: {
             id: true,

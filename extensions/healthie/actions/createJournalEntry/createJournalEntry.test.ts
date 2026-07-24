@@ -1,5 +1,6 @@
 import { generateTestPayload } from '@/tests'
 import { getSdk } from '../../lib/sdk/graphql-codegen/generated/sdk'
+import { TestHelpers } from '@awell-health/extensions-core'
 import {
   mockGetSdk,
   mockGetSdkReturn,
@@ -10,7 +11,8 @@ jest.mock('../../lib/sdk/graphql-codegen/generated/sdk')
 jest.mock('../../lib/sdk/graphql-codegen/graphqlClient')
 
 describe('createJournalEntry action', () => {
-  const onComplete = jest.fn()
+  const { onComplete, onError, helpers, clearMocks } =
+    TestHelpers.fromAction(createJournalEntry)
 
   beforeAll(() => {
     const mock = getSdk as jest.Mock
@@ -19,11 +21,12 @@ describe('createJournalEntry action', () => {
 
   beforeEach(() => {
     jest.clearAllMocks()
+    clearMocks()
   })
 
   test('Should create a journal entry', async () => {
-    await createJournalEntry.onActivityCreated!(
-      generateTestPayload({
+    await createJournalEntry.onEvent!({
+      payload: generateTestPayload({
         fields: {
           id: 'patient-1',
           type: 'MetricEntry',
@@ -36,8 +39,10 @@ describe('createJournalEntry action', () => {
         },
       }),
       onComplete,
-      jest.fn(),
-    )
+      onError,
+      helpers,
+      attempt: 1,
+    })
 
     expect(mockGetSdkReturn.createJournalEntry).toHaveBeenCalled()
     expect(onComplete).toHaveBeenCalled()

@@ -17,14 +17,42 @@ export const getInsuranceVerificationDemo: Action<
   fields,
   previewable: true,
   dataPoints,
-  onEvent: async ({ payload, onComplete }): Promise<void> => {
-    const options = [true, false]
-    const random = sample(options)
+  onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
 
-    await onComplete({
-      data_points: {
-        verified: !isNil(random) ? JSON.stringify(random) : undefined,
-      },
-    })
+    helpers.log(
+      { meta, fields: payload.fields },
+      'Processing getInsuranceVerificationDemo',
+    )
+
+    try {
+      const options = [true, false]
+      const random = sample(options)
+
+      await onComplete({
+        data_points: {
+          verified: !isNil(random) ? JSON.stringify(random) : undefined,
+        },
+      })
+    } catch (err) {
+      helpers.log({ meta, err }, 'error', err as Error)
+      const error = err as Error
+      await onError({
+        events: [
+          {
+            date: new Date().toISOString(),
+            text: { en: error.message },
+            error: {
+              category: 'SERVER_ERROR',
+              message: error.message,
+            },
+          },
+        ],
+      })
+    }
   },
 }

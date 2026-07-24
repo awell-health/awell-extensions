@@ -1,3 +1,4 @@
+import { TestHelpers } from '@awell-health/extensions-core'
 import {
   mockedUserData,
   SendbirdClientMockImplementation,
@@ -8,8 +9,8 @@ import { generateTestPayload } from '@/tests'
 jest.mock('../../client')
 
 describe('Create user', () => {
-  const onComplete = jest.fn()
-  const onError = jest.fn()
+  const { onComplete, onError, helpers, clearMocks } =
+    TestHelpers.fromAction(createUser)
 
   const basePayload = generateTestPayload({
     pathway: {
@@ -39,13 +40,20 @@ describe('Create user', () => {
 
   beforeEach(() => {
     jest.clearAllMocks()
+    clearMocks()
   })
 
   test('Should call the onComplete callback', async () => {
-    await createUser.onActivityCreated!(basePayload, onComplete, onError)
+    await createUser.onEvent!({
+      payload: basePayload,
+      onComplete,
+      onError,
+      helpers,
+      attempt: 1,
+    })
 
     expect(
-      SendbirdClientMockImplementation.chatApi.createUser
+      SendbirdClientMockImplementation.chatApi.createUser,
     ).toHaveBeenCalledWith({
       user_id: basePayload.fields.userId,
       nickname: basePayload.fields.nickname,
@@ -61,10 +69,16 @@ describe('Create user', () => {
 
   test('Should call the onComplete callback with nickname as first and last name', async () => {
     basePayload.fields.nickname = ''
-    await createUser.onActivityCreated!(basePayload, onComplete, onError)
+    await createUser.onEvent!({
+      payload: basePayload,
+      onComplete,
+      onError,
+      helpers,
+      attempt: 1,
+    })
 
     expect(
-      SendbirdClientMockImplementation.chatApi.createUser
+      SendbirdClientMockImplementation.chatApi.createUser,
     ).toHaveBeenCalledWith({
       user_id: basePayload.fields.userId,
       nickname: `${basePayload.patient.profile?.first_name as string} ${
@@ -87,7 +101,13 @@ describe('Create user', () => {
       profile: { first_name: undefined, last_name: undefined },
     }
 
-    await createUser.onActivityCreated!(basePayload, onComplete, onError)
+    await createUser.onEvent!({
+      payload: basePayload,
+      onComplete,
+      onError,
+      helpers,
+      attempt: 1,
+    })
 
     expect(onComplete).not.toHaveBeenCalled()
     expect(onError).toBeCalledTimes(1)
@@ -100,7 +120,13 @@ describe('Create user', () => {
       profile: { first_name: 'test', last_name: undefined },
     }
 
-    await createUser.onActivityCreated!(basePayload, onComplete, onError)
+    await createUser.onEvent!({
+      payload: basePayload,
+      onComplete,
+      onError,
+      helpers,
+      attempt: 1,
+    })
 
     expect(onComplete).toHaveBeenCalledWith({
       data_points: { userId: basePayload.fields.userId },
@@ -115,7 +141,13 @@ describe('Create user', () => {
       profile: { first_name: undefined, last_name: 'test' },
     }
 
-    await createUser.onActivityCreated!(basePayload, onComplete, onError)
+    await createUser.onEvent!({
+      payload: basePayload,
+      onComplete,
+      onError,
+      helpers,
+      attempt: 1,
+    })
 
     expect(onComplete).toHaveBeenCalledWith({
       data_points: { userId: basePayload.fields.userId },

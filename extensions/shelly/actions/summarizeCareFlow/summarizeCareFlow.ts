@@ -20,77 +20,107 @@ export const summarizeCareFlow: Action<
   dataPoints,
 
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
-    // 1. Validate input fields
-    const { additionalInstructions, stakeholder } =
-      FieldsValidationSchema.parse(payload.fields)
-    const pathway = payload.pathway
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
 
-    // 2. Initialize OpenAI model with metadata
-    const { model, metadata, callbacks } = await createOpenAIModel({
-      settings: {}, // we use built-in API key for OpenAI
-      helpers,
-      payload,
-      modelType: OPENAI_MODELS.GPT5Mini,
-    })
+    helpers.log(
+      { meta, fields: payload.fields },
+      'Processing summarizeCareFlow',
+    )
 
-    const awellSdk = await helpers.awellSdk()
+    try {
+      // 1. Validate input fields
+      const { additionalInstructions, stakeholder } =
+        FieldsValidationSchema.parse(payload.fields)
+      const pathway = payload.pathway
 
-    /**
-     * Limitation: this query is paginated so we might not get all care flow activities - which is ok for now
-     */
-    const careflowActivitiesUntilNow = await awellSdk.orchestration.query({
-      careflowActivities: {
-        __args: {
-          pathway_id: pathway.id,
-          pagination: { offset: 0, count: 500 },
-          sorting: {
-            direction: 'desc',
-            field: 'date',
+      // 2. Initialize OpenAI model with metadata
+      const { model, metadata, callbacks } = await createOpenAIModel({
+        settings: {}, // we use built-in API key for OpenAI
+        helpers,
+        payload,
+        modelType: OPENAI_MODELS.GPT5Mini,
+      })
+
+      const awellSdk = await helpers.awellSdk()
+
+      /**
+       * Limitation: this query is paginated so we might not get all care flow activities - which is ok for now
+       */
+      const careflowActivitiesUntilNow = await awellSdk.orchestration.query({
+        careflowActivities: {
+          __args: {
+            pathway_id: pathway.id,
+            pagination: { offset: 0, count: 500 },
+            sorting: {
+              direction: 'desc',
+              field: 'date',
+            },
+          },
+          activities: {
+            __scalar: true,
+            subject: {
+              __scalar: true,
+            },
+            object: {
+              __scalar: true,
+            },
+            indirect_object: {
+              __scalar: true,
+            },
+            context: {
+              __scalar: true,
+            },
+            track: {
+              __scalar: true,
+            },
+            sub_activities: {
+              __scalar: true,
+            },
           },
         },
-        activities: {
-          __scalar: true,
-          subject: {
-            __scalar: true,
-          },
-          object: {
-            __scalar: true,
-          },
-          indirect_object: {
-            __scalar: true,
-          },
-          context: {
-            __scalar: true,
-          },
-          track: {
-            __scalar: true,
-          },
-          sub_activities: {
-            __scalar: true,
-          },
+      })
+
+      const summary = await summarizeCareFlowWithLLM({
+        model,
+        careFlowActivities: JSON.stringify(
+          careflowActivitiesUntilNow.careflowActivities.activities,
+          null,
+          2,
+        ),
+        stakeholder,
+        additionalInstructions,
+        metadata,
+        callbacks,
+      })
+
+      const htmlSummary = await markdownToHtml(
+        `${DISCLAIMER_MSG}\n\n${summary}`,
+      )
+
+      await onComplete({
+        data_points: {
+          summary: htmlSummary,
         },
-      },
-    })
-
-    const summary = await summarizeCareFlowWithLLM({
-      model,
-      careFlowActivities: JSON.stringify(
-        careflowActivitiesUntilNow.careflowActivities.activities,
-        null,
-        2,
-      ),
-      stakeholder,
-      additionalInstructions,
-      metadata,
-      callbacks,
-    })
-
-    const htmlSummary = await markdownToHtml(`${DISCLAIMER_MSG}\n\n${summary}`)
-
-    await onComplete({
-      data_points: {
-        summary: htmlSummary,
-      },
-    })
+      })
+    } catch (err) {
+      helpers.log({ meta, err }, 'error', err as Error)
+      const error = err as Error
+      await onError({
+        events: [
+          {
+            date: new Date().toISOString(),
+            text: { en: error.message },
+            error: {
+              category: 'SERVER_ERROR',
+              message: error.message,
+            },
+          },
+        ],
+      })
+    }
   },
 }

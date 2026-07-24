@@ -1,5 +1,5 @@
 import { type Action } from '@awell-health/extensions-core'
-import { Category , validate } from '@awell-health/extensions-core'
+import { Category, validate } from '@awell-health/extensions-core'
 import { SettingsValidationSchema, type settings } from '../../settings'
 import { fields } from './config'
 import { fromZodError } from 'zod-validation-error'
@@ -20,7 +20,15 @@ export const uploadFiles: Action<typeof fields, typeof settings> = {
     },
   },
   previewable: false,
-  onActivityCreated: async (payload, onComplete, onError) => {
+  onEvent: async ({ payload, onComplete, onError, helpers }) => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
+
+    helpers.log({ meta, fields: payload.fields }, 'Processing uploadFiles')
+
     try {
       validate({
         schema: z.object({
@@ -34,6 +42,7 @@ export const uploadFiles: Action<typeof fields, typeof settings> = {
        * Completion happens in Awell Hosted Pages
        */
     } catch (err) {
+      helpers.log({ meta, err }, 'error', err as Error)
       if (err instanceof ZodError) {
         const error = fromZodError(err)
         await onError({

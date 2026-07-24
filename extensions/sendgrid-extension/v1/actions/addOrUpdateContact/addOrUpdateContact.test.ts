@@ -2,13 +2,14 @@ import {
   SendgridClient,
   SendgridClientMockImplementation,
 } from '../../../__mocks__/client'
+import { TestHelpers } from '@awell-health/extensions-core'
 import { addOrUpdateContact } from '..'
 import { generateTestPayload } from '@/tests'
 jest.mock('../../../client', () => ({ SendgridClient }))
 
 describe('Add or update contact', () => {
-  const onComplete = jest.fn()
-  const onError = jest.fn()
+  const { onComplete, onError, helpers, clearMocks } =
+    TestHelpers.fromAction(addOrUpdateContact)
   const successResponse = {
     body: {
       job_id: 'job_id',
@@ -31,23 +32,26 @@ describe('Add or update contact', () => {
 
   beforeEach(() => {
     jest.clearAllMocks()
+    clearMocks()
   })
 
   test('Should call the onComplete callback when Sendgrid sends a response with a status code of 202', async () => {
     SendgridClientMockImplementation.marketing.contacts.addOrUpdate.mockImplementationOnce(
       () => {
         return [successResponse, 'job_id']
-      }
+      },
     )
 
-    await addOrUpdateContact.onActivityCreated!(
-      basePayload,
+    await addOrUpdateContact.onEvent!({
+      payload: basePayload,
       onComplete,
-      onError
-    )
+      onError,
+      helpers,
+      attempt: 1,
+    })
 
     expect(
-      SendgridClientMockImplementation.marketing.contacts.addOrUpdate
+      SendgridClientMockImplementation.marketing.contacts.addOrUpdate,
     ).toHaveBeenCalledWith({
       listIds: ['a1', 'b2'],
       contacts: [
@@ -71,16 +75,18 @@ describe('Add or update contact', () => {
     SendgridClientMockImplementation.marketing.contacts.addOrUpdate.mockImplementationOnce(
       () => {
         throw new Error('An error occurred')
-      }
+      },
     )
 
-    await addOrUpdateContact.onActivityCreated!(
-      basePayload,
+    await addOrUpdateContact.onEvent!({
+      payload: basePayload,
       onComplete,
-      onError
-    )
+      onError,
+      helpers,
+      attempt: 1,
+    })
     expect(
-      SendgridClientMockImplementation.marketing.contacts.addOrUpdate
+      SendgridClientMockImplementation.marketing.contacts.addOrUpdate,
     ).toHaveBeenCalledWith({
       listIds: ['a1', 'b2'],
       contacts: [

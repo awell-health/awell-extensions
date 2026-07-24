@@ -17,16 +17,28 @@ export const signVisitNote: Action<
   fields,
   previewable: true,
   dataPoints,
-  onEvent: async ({ payload, onComplete, onError }): Promise<void> => {
+  onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
+
     const { visitNoteId, signedBy } = FieldsValidationSchema.parse(
       payload.fields,
     )
     const api = makeAPIClient(payload.settings)
+    const signVisitNoteInput = {
+      signed_by: signedBy,
+    }
 
     try {
-      await api.updateVisitNote(visitNoteId, {
-        signed_by: signedBy,
-      })
+      helpers.log(
+        { meta, signVisitNoteInput },
+        '[signVisitNote] Signing Elation visit note',
+      )
+
+      await api.updateVisitNote(visitNoteId, signVisitNoteInput)
     } catch (error) {
       const err = error as AxiosError
 

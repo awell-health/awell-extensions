@@ -167,11 +167,13 @@ describe('REST - POST', () => {
       settings: {},
     })
 
-    await post.onActivityCreated!(
-      mockOnActivityCreateParams,
+    await post.onEvent!({
+      payload: mockOnActivityCreateParams,
       onComplete,
       onError,
-    )
+      helpers,
+      attempt: 1,
+    })
 
     expect(global.fetch).toHaveBeenCalledWith(
       'https://webhook.site/bb853fec-9260-44e5-a944-17894d678a7f',

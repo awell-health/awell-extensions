@@ -1,6 +1,7 @@
 import { createServiceRequest } from '.'
 import { generateTestPayload } from '@/tests'
 import { mockSettings, mockCreateServiceRequestResponse } from '../../__mocks__'
+import { TestHelpers } from '@awell-health/extensions-core'
 
 jest.mock('@medplum/core', () => {
   // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -12,11 +13,12 @@ jest.mock('@medplum/core', () => {
 })
 
 describe('Medplum - Create service request', () => {
-  const onComplete = jest.fn()
-  const onError = jest.fn()
+  const { onComplete, onError, helpers, clearMocks } =
+    TestHelpers.fromAction(createServiceRequest)
 
   beforeEach(() => {
     jest.clearAllMocks()
+    clearMocks()
   })
 
   test('Should create a service request', async () => {
@@ -33,11 +35,13 @@ describe('Medplum - Create service request', () => {
       settings: mockSettings,
     })
 
-    await createServiceRequest.onActivityCreated!(
-      mockOnActivityCreateParams,
+    await createServiceRequest.onEvent!({
+      payload: mockOnActivityCreateParams,
       onComplete,
-      onError
-    )
+      onError,
+      helpers,
+      attempt: 1,
+    })
 
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {

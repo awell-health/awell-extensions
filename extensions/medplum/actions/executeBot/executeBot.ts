@@ -15,23 +15,48 @@ export const executeBot: Action<
   fields,
   previewable: false,
   dataPoints,
-  onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
-    const { fields: input, medplumSdk } = await validateAndCreateSdkClient({
-      fieldsSchema: FieldsValidationSchema,
-      payload,
-    })
+  onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
 
-    const res = await medplumSdk.executeBot(
-      input.botId,
-      input.body,
-      'application/json',
-    )
+    helpers.log({ meta, fields: payload.fields }, 'Processing executeBot')
 
-    await onComplete({
-      data_points: {
-        data: JSON.stringify(res),
-        jsonData: JSON.stringify(res),
-      },
-    })
+    try {
+      const { fields: input, medplumSdk } = await validateAndCreateSdkClient({
+        fieldsSchema: FieldsValidationSchema,
+        payload,
+      })
+
+      const res = await medplumSdk.executeBot(
+        input.botId,
+        input.body,
+        'application/json',
+      )
+
+      await onComplete({
+        data_points: {
+          data: JSON.stringify(res),
+          jsonData: JSON.stringify(res),
+        },
+      })
+    } catch (err) {
+      helpers.log({ meta, err }, 'error', err as Error)
+      const error = err as Error
+      await onError({
+        events: [
+          {
+            date: new Date().toISOString(),
+            text: { en: error.message },
+            error: {
+              category: 'SERVER_ERROR',
+              message: error.message,
+            },
+          },
+        ],
+      })
+    }
   },
 }

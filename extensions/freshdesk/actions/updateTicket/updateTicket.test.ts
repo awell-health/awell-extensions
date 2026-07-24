@@ -3,7 +3,7 @@ import { FreshdeskApiClient } from '../../lib/api/client'
 import { updateTicket as action } from './updateTicket'
 import { UpdateTicketResponseMock } from './__mocks__/UpdateTicketResponse.mock'
 import { GetTicketResponseMock } from '../getTicket/__mocks__/GetTicketResponse.mock'
-import { createAxiosError } from '../../../../tests'
+import { createAxiosError, testPayload } from '../../../../tests'
 
 describe('Freshdesk - Update ticket', () => {
   let getTicketSpy: jest.SpyInstance
@@ -33,6 +33,7 @@ describe('Freshdesk - Update ticket', () => {
     test('Should work', async () => {
       await extensionAction.onEvent({
         payload: {
+          ...testPayload,
           fields: {
             ticketId: '1',
             subject: 'New subject',
@@ -69,6 +70,7 @@ describe('Freshdesk - Update ticket', () => {
     test('Should work', async () => {
       await extensionAction.onEvent({
         payload: {
+          ...testPayload,
           fields: {
             ticketId: '1',
           },

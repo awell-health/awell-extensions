@@ -1,6 +1,7 @@
 import { TestHelpers } from '@awell-health/extensions-core'
 import { LandingAiApiClient } from '../../lib/api/client'
 import { documentExtraction as action } from './documentExtraction'
+import { testPayload } from '../../../../tests'
 
 describe('Landing.ai - Document Extraction', () => {
   let agenticDocumentAnalysisSpy: jest.SpyInstance
@@ -38,6 +39,7 @@ describe('Landing.ai - Document Extraction', () => {
     test('Should work', async () => {
       await extensionAction.onEvent({
         payload: {
+          ...testPayload,
           fields: {
             fileType: 'image',
             fileUrl:

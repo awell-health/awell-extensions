@@ -13,7 +13,15 @@ export const sendSms: Action<typeof fields, typeof settings> = {
   category: Category.COMMUNICATION,
   fields,
   previewable: true,
-  onActivityCreated: async (payload, onComplete, onError) => {
+  onEvent: async ({ payload, onComplete, onError, helpers }) => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
+
+    helpers.log({ meta, fields: payload.fields }, 'Processing sendSms')
+
     try {
       const {
         settings: { baseUrl, apiKey, fromPhoneNumber },
@@ -54,6 +62,7 @@ export const sendSms: Action<typeof fields, typeof settings> = {
 
       await onComplete()
     } catch (err) {
+      helpers.log({ meta, err }, 'error', err as Error)
       if (isInfobipError(err)) {
         const events = infobipErrorToActivityEvent(err)
         await onError({ events })

@@ -13,7 +13,15 @@ export const getFormAnswers: Action<typeof fields, typeof settings> = {
   fields,
   previewable: true,
   dataPoints,
-  onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
+  onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
+    const meta = {
+      tenant_id: payload.pathway.tenant_id,
+      careflow_id: payload.pathway.id,
+      activity_id: payload.activity.id,
+    }
+
+    helpers.log({ meta, fields: payload.fields }, 'Processing getFormAnswers')
+
     const {
       fields: input,
       sdk,
@@ -30,7 +38,7 @@ export const getFormAnswers: Action<typeof fields, typeof settings> = {
 
       const rawFormAnswerGroup = res?.data?.formAnswerGroup
 
-      if (!rawFormAnswerGroup) {
+      if (rawFormAnswerGroup === null || rawFormAnswerGroup === undefined) {
         throw new Error(`Form answer group not found for id: ${input.id}`)
       }
 
@@ -46,6 +54,7 @@ export const getFormAnswers: Action<typeof fields, typeof settings> = {
         },
       })
     } catch (error) {
+      helpers.log({ meta, error }, 'error', error as Error)
       await onError({
         events: [
           {

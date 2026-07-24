@@ -5,6 +5,7 @@ import {
   mockedTaskId,
   mockedTaskResource,
 } from '../../client/__mocks__'
+import { TestHelpers } from '@awell-health/extensions-core'
 import { updateTask } from './updateTask'
 
 jest.mock('../../client', () => ({
@@ -13,8 +14,8 @@ jest.mock('../../client', () => ({
 }))
 
 describe('updateTask', () => {
-  const onComplete = jest.fn()
-  const onError = jest.fn()
+  const { onComplete, onError, helpers, clearMocks } =
+    TestHelpers.fromAction(updateTask)
   const payload = {
     settings: mockedSettings,
     fields: {
@@ -23,11 +24,13 @@ describe('updateTask', () => {
   }
 
   it('should update task', async () => {
-    await updateTask.onActivityCreated!(
-      generateTestPayload(payload),
+    await updateTask.onEvent!({
+      payload: generateTestPayload(payload),
       onComplete,
-      onError
-    )
+      onError,
+      helpers,
+      attempt: 1,
+    })
     expect(onComplete).toHaveBeenCalledTimes(1)
     expect(onComplete).toHaveBeenCalledWith({
       data_points: { taskId: mockedTaskId },
