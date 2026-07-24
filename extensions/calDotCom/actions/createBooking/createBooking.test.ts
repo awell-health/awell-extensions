@@ -65,11 +65,6 @@ describe('Create booking', () => {
     })
     expect(helpers.log).toHaveBeenCalledWith(
       {
-        meta: {
-          tenant_id: basePayload.pathway.tenant_id,
-          careflow_id: basePayload.pathway.id,
-          activity_id: basePayload.activity.id,
-        },
         createBookingRequest: {
           eventTypeId: sampleBooking.eventTypeId,
           start: sampleBooking.startTime,

@@ -293,11 +293,6 @@ describe('CreateSMSBroadcast', () => {
     expect(helpers.log).toHaveBeenNthCalledWith(
       1,
       {
-        meta: {
-          tenant_id: 'tenant-id',
-          careflow_id: 'pathway-id',
-          activity_id: 'activity-id',
-        },
         source: 'patient_profile',
         field: 'mobile_phone',
       },
@@ -306,11 +301,6 @@ describe('CreateSMSBroadcast', () => {
     expect(helpers.log).toHaveBeenNthCalledWith(
       4,
       expect.objectContaining({
-        meta: {
-          tenant_id: 'tenant-id',
-          careflow_id: 'pathway-id',
-          activity_id: 'activity-id',
-        },
         request: expect.objectContaining({
           BroadcastName: 'testBroadcast',
           Contacts: [
