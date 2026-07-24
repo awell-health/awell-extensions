@@ -17,12 +17,6 @@ export const closeCareGap: Action<
   previewable: true,
   dataPoints,
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
-    const meta = {
-      tenant_id: payload.pathway.tenant_id,
-      careflow_id: payload.pathway.id,
-      activity_id: payload.activity.id,
-    }
-
     try {
       const {
         fields: { quality_program, caregap_id },
@@ -52,14 +46,14 @@ export const closeCareGap: Action<
         status: 'closed' as const,
       }
 
-      helpers.log({ meta, closeCareGapRequest }, 'Closing Elation care gap')
+      helpers.log({ closeCareGapRequest }, 'Closing Elation care gap')
 
       await api.closeCareGap(closeCareGapRequest)
 
       await onComplete()
     } catch (err) {
       const message = (err as Error).message
-      helpers.log({ meta, err }, 'error', err as Error)
+      helpers.log({ err }, 'error', err as Error)
       await onError({
         events: [
           {

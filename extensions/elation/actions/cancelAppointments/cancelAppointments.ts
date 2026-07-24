@@ -24,12 +24,6 @@ export const cancelAppointments: Action<
   previewable: true,
   dataPoints,
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
-    const meta = {
-      tenant_id: payload.pathway.tenant_id,
-      careflow_id: payload.pathway.id,
-      activity_id: payload.activity.id,
-    }
-
     const { prompt, patientId } = FieldsValidationSchema.parse(payload.fields)
     const api = makeAPIClient(payload.settings)
 
@@ -146,7 +140,7 @@ export const cancelAppointments: Action<
             }
 
             helpers.log(
-              { meta, updateData },
+              { updateData },
               '[cancelAppointments] Cancelling Elation appointment',
             )
 

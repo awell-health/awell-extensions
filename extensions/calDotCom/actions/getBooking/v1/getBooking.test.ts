@@ -160,11 +160,6 @@ describe('Cal.com GetBooking action', () => {
 
       expect(helpers.log).toHaveBeenCalledWith(
         {
-          meta: {
-            tenant_id: payload.pathway.tenant_id,
-            careflow_id: payload.pathway.id,
-            activity_id: payload.activity.id,
-          },
           bookingId: payload.fields.bookingId,
         },
         'Getting Cal.com booking',

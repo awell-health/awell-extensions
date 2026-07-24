@@ -19,12 +19,6 @@ export const createNonVisitNote: Action<
   previewable: true,
   dataPoints,
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
-    const meta = {
-      tenant_id: payload.pathway.tenant_id,
-      careflow_id: payload.pathway.id,
-      activity_id: payload.activity.id,
-    }
-
     const { patientId, authorId, tags, text, category } =
       FieldsValidationSchema.parse(payload.fields)
 
@@ -51,7 +45,7 @@ export const createNonVisitNote: Action<
 
     try {
       helpers.log(
-        { meta, note },
+        { note },
         '[createNonVisitNote] Creating Elation non-visit note',
       )
 

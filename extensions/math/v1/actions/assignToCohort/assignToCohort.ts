@@ -17,12 +17,6 @@ export const assignToCohort: Action<typeof fields, typeof settings> = {
   dataPoints,
   previewable: true,
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
-    const meta = {
-      tenant_id: payload.pathway.tenant_id,
-      careflow_id: payload.pathway.id,
-      activity_id: payload.activity.id,
-    }
-
     try {
       const {
         fields: { input, numberOfCohorts },
@@ -35,10 +29,7 @@ export const assignToCohort: Action<typeof fields, typeof settings> = {
       const hashInt = parseInt(hash.substring(0, 8), 16)
       const cohortNumber = (hashInt % numberOfCohorts) + 1
 
-      helpers.log(
-        { meta, input, numberOfCohorts, cohortNumber },
-        'Assigned cohort',
-      )
+      helpers.log({ input, numberOfCohorts, cohortNumber }, 'Assigned cohort')
 
       await onComplete({
         data_points: {
@@ -46,7 +37,7 @@ export const assignToCohort: Action<typeof fields, typeof settings> = {
         },
       })
     } catch (err) {
-      helpers.log({ meta, err }, 'error', err as Error)
+      helpers.log({ err }, 'error', err as Error)
       if (err instanceof ZodError) {
         const error = fromZodError(err)
         await onError({

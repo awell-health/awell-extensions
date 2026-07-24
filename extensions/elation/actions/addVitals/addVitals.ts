@@ -48,13 +48,7 @@ export const addVitals: Action<
   previewable: true,
   dataPoints,
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
-    const meta = {
-      tenant_id: payload.pathway.tenant_id,
-      careflow_id: payload.pathway.id,
-      activity_id: payload.activity.id,
-    }
-
-    helpers.log({ meta, fields: payload.fields }, 'Processing addVitals')
+    helpers.log({ fields: payload.fields }, 'Processing addVitals')
 
     try {
       const { fields, settings } = validate({
@@ -90,7 +84,7 @@ export const addVitals: Action<
         wc: createMeasurement(fields.wc, fields.wcNote),
       }
 
-      helpers.log({ meta, body }, '[addVitals] Adding Elation vitals')
+      helpers.log({ body }, '[addVitals] Adding Elation vitals')
 
       const { id } = await api.addVitals(body)
 
@@ -100,7 +94,7 @@ export const addVitals: Action<
         },
       })
     } catch (err) {
-      helpers.log({ meta, err }, 'error', err as Error)
+      helpers.log({ err }, 'error', err as Error)
       const error = err as Error
       await onError({
         events: [

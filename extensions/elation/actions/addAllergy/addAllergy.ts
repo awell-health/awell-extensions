@@ -18,13 +18,7 @@ export const addAllergy: Action<
   previewable: true,
   dataPoints,
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
-    const meta = {
-      tenant_id: payload.pathway.tenant_id,
-      careflow_id: payload.pathway.id,
-      activity_id: payload.activity.id,
-    }
-
-    helpers.log({ meta, fields: payload.fields }, 'Processing addAllergy')
+    helpers.log({ fields: payload.fields }, 'Processing addAllergy')
 
     try {
       const { fields, settings } = validate({
@@ -45,10 +39,7 @@ export const addAllergy: Action<
         severity: fields.severity,
       }
 
-      helpers.log(
-        { meta, addAllergyInput },
-        '[addAllergy] Adding Elation allergy',
-      )
+      helpers.log({ addAllergyInput }, '[addAllergy] Adding Elation allergy')
 
       const { id } = await api.addAllergy(addAllergyInput)
 
@@ -58,7 +49,7 @@ export const addAllergy: Action<
         },
       })
     } catch (err) {
-      helpers.log({ meta, err }, 'error', err as Error)
+      helpers.log({ err }, 'error', err as Error)
       const error = err as Error
       await onError({
         events: [

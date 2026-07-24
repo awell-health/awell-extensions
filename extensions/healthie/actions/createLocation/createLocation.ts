@@ -23,13 +23,7 @@ export const createLocation: Action<
   dataPoints,
   previewable: true,
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
-    const meta = {
-      tenant_id: payload.pathway.tenant_id,
-      careflow_id: payload.pathway.id,
-      activity_id: payload.activity.id,
-    }
-
-    helpers.log({ meta, fields: payload.fields }, 'Processing createLocation')
+    helpers.log({ fields: payload.fields }, 'Processing createLocation')
 
     const { fields, settings } = payload
     const { id, name, country, state, city, zip, line1, line2 } = fields
@@ -88,7 +82,7 @@ export const createLocation: Action<
         })
       }
     } catch (err) {
-      helpers.log({ meta, err }, 'error', err as Error)
+      helpers.log({ err }, 'error', err as Error)
       if (err instanceof HealthieError) {
         const errors = mapHealthieToActivityError(err.errors)
         await onError({

@@ -18,12 +18,6 @@ export const createCallBroadcast: Action<
   dataPoints,
   previewable: true,
   onEvent: async ({ payload, onComplete, onError, helpers: { log } }) => {
-    const meta = {
-      tenant_id: payload.pathway.tenant_id,
-      careflow_id: payload.pathway.id,
-      activity_id: payload.activity.id,
-    }
-
     const {
       fields: {
         broadcastName: BroadcastName,
@@ -60,7 +54,7 @@ export const createCallBroadcast: Action<
       ContinueOnNextDay,
       Contacts: [{ PrimaryPhone: phoneNumber }],
     }
-    log({ meta, request }, 'Creating call broadcast via Text-Em-All')
+    log({ request }, 'Creating call broadcast via Text-Em-All')
     const resp = await client.createBroadcast(request)
     const data = resp.data
     if (resp.status === 200 && 'BroadcastID' in data) {

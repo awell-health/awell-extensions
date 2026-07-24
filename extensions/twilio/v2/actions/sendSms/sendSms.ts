@@ -19,13 +19,7 @@ export const sendSms: Action<typeof fields, typeof settings> = {
   dataPoints,
   previewable: true,
   onEvent: async ({ payload, onComplete, onError, helpers }) => {
-    const meta = {
-      tenant_id: payload.pathway.tenant_id,
-      careflow_id: payload.pathway.id,
-      activity_id: payload.activity.id,
-    }
-
-    helpers.log({ meta, fields: payload.fields }, 'Processing sendSms')
+    helpers.log({ fields: payload.fields }, 'Processing sendSms')
 
     try {
       const {
@@ -87,7 +81,7 @@ export const sendSms: Action<typeof fields, typeof settings> = {
         ],
       })
     } catch (error) {
-      helpers.log({ meta, error }, 'error', error as Error)
+      helpers.log({ error }, 'error', error as Error)
       if (isTwilioErrorResponse(error)) {
         await onError({
           events: [parseTwilioError(error)],

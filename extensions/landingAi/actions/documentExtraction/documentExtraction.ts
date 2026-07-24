@@ -19,12 +19,6 @@ export const documentExtraction: Action<
   previewable: true,
   dataPoints,
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
-    const meta = {
-      tenant_id: payload.pathway.tenant_id,
-      careflow_id: payload.pathway.id,
-      activity_id: payload.activity.id,
-    }
-
     const { fields, landingAiSdk } = await validatePayloadAndCreateSdk({
       fieldsSchema: FieldsValidationSchema,
       payload,
@@ -46,7 +40,7 @@ export const documentExtraction: Action<
     }
 
     helpers.log(
-      { meta, documentAnalysisRequest },
+      { documentAnalysisRequest },
       'Running LandingAI document extraction',
     )
     const { data } = await landingAiSdk.agenticDocumentAnalysis(

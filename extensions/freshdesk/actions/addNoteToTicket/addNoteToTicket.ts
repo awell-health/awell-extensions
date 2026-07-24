@@ -19,12 +19,6 @@ export const addNoteToTicket: Action<
   previewable: true,
   dataPoints,
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
-    const meta = {
-      tenant_id: payload.pathway.tenant_id,
-      careflow_id: payload.pathway.id,
-      activity_id: payload.activity.id,
-    }
-
     const { fields, freshdeskSdk } = await validatePayloadAndCreateSdk({
       fieldsSchema: FieldsValidationSchema,
       payload,
@@ -42,7 +36,7 @@ export const addNoteToTicket: Action<
         },
       }
 
-      helpers.log({ meta, addNoteInput }, 'Adding note to Freshdesk ticket')
+      helpers.log({ addNoteInput }, 'Adding note to Freshdesk ticket')
       await freshdeskSdk.addNote(addNoteInput)
 
       await onComplete()

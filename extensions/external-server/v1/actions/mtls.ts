@@ -56,16 +56,12 @@ export const mtls: Action<
     }
     const { fields, settings } = PayloadSchema.parse(payload)
     const clientPayload = fields.payload ?? {}
-    const meta = {
-      tenant_id: payload.pathway.tenant_id,
-      careflow_id: payload.pathway.id,
-      activity_id: payload.activity.id,
-    }
-    helpers.log({ meta, fields: payload.fields }, 'Processing response')
+
+    helpers.log({ fields: payload.fields }, 'Processing response')
 
     try {
       const requestBody = { data: clientPayload }
-      helpers.log({ meta, requestBody }, 'Sending mTLS request')
+      helpers.log({ requestBody }, 'Sending mTLS request')
       const { data, status } = await axios.post<{
         data_points: any
         events: any
@@ -82,7 +78,7 @@ export const mtls: Action<
         throw new Error(`Error: ${JSON.stringify(data)}`)
       }
     } catch (err) {
-      helpers.log({ meta, err }, 'error', err as Error)
+      helpers.log({ err }, 'error', err as Error)
       const error = err as Error
       await onError({
         events: [

@@ -18,12 +18,6 @@ export const parseDateToUnixTimestamp: Action<
   dataPoints,
   previewable: true,
   onEvent: async ({ payload, onComplete, onError, helpers }) => {
-    const meta = {
-      tenant_id: payload.pathway.tenant_id,
-      careflow_id: payload.pathway.id,
-      activity_id: payload.activity.id,
-    }
-
     try {
       const {
         fields: { date },
@@ -41,10 +35,7 @@ export const parseDateToUnixTimestamp: Action<
        */
       const unixTimeStamp = Math.floor(dateObj.getTime() / 1000)
 
-      helpers.log(
-        { meta, date, unixTimeStamp },
-        'Parsed date to unix timestamp',
-      )
+      helpers.log({ date, unixTimeStamp }, 'Parsed date to unix timestamp')
 
       await onComplete({
         data_points: {
@@ -52,7 +43,7 @@ export const parseDateToUnixTimestamp: Action<
         },
       })
     } catch (err) {
-      helpers.log({ meta, err }, 'error', err as Error)
+      helpers.log({ err }, 'error', err as Error)
       if (err instanceof ZodError) {
         const error = fromZodError(err)
         await onError({

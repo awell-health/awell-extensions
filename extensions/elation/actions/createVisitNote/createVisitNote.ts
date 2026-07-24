@@ -18,13 +18,7 @@ export const createVisitNote: Action<
   previewable: true,
   dataPoints,
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
-    const meta = {
-      tenant_id: payload.pathway.tenant_id,
-      careflow_id: payload.pathway.id,
-      activity_id: payload.activity.id,
-    }
-
-    helpers.log({ meta, fields: payload.fields }, 'Processing createVisitNote')
+    helpers.log({ fields: payload.fields }, 'Processing createVisitNote')
 
     try {
       const { fields, settings } = validate({
@@ -55,7 +49,7 @@ export const createVisitNote: Action<
       }
 
       helpers.log(
-        { meta, createVisitNoteInput },
+        { createVisitNoteInput },
         '[createVisitNote] Creating Elation visit note',
       )
 
@@ -67,7 +61,7 @@ export const createVisitNote: Action<
         },
       })
     } catch (err) {
-      helpers.log({ meta, err }, 'error', err as Error)
+      helpers.log({ err }, 'error', err as Error)
       const error = err as Error
       await onError({
         events: [

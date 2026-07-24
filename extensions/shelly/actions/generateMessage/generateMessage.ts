@@ -28,13 +28,7 @@ export const generateMessage: Action<
   dataPoints,
 
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
-    const meta = {
-      tenant_id: payload.pathway.tenant_id,
-      careflow_id: payload.pathway.id,
-      activity_id: payload.activity.id,
-    }
-
-    helpers.log({ meta, fields: payload.fields }, 'Processing generateMessage')
+    helpers.log({ fields: payload.fields }, 'Processing generateMessage')
 
     try {
       // 1. Validate input fields
@@ -70,7 +64,7 @@ export const generateMessage: Action<
         data_points: { subject, message: htmlMessage },
       })
     } catch (err) {
-      helpers.log({ meta, err }, 'error', err as Error)
+      helpers.log({ err }, 'error', err as Error)
       const error = err as Error
       await onError({
         events: [

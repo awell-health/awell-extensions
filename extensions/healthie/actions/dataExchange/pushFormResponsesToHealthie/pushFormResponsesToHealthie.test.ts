@@ -114,14 +114,9 @@ describe('pushFormResponsesToHealthie', () => {
      * two calls to GetFormResponse each form has a response
      */
     expect(awellSdkMock.orchestration.query).toHaveBeenCalledTimes(6)
-    const expectedMeta = {
-      tenant_id: '123',
-      careflow_id: '5eN4qWbxZGSA',
-      activity_id: 'X74HeDQ4N0gtdaSEuzF8s',
-    }
+
     expect(helpers.log).toHaveBeenCalledWith(
       expect.objectContaining({
-        meta: expectedMeta,
         status: mockCareflowActivitiesResponse.activities[0].status,
       }),
       '[getAllFormsInCurrentStep] Fetched current activity',
@@ -129,7 +124,6 @@ describe('pushFormResponsesToHealthie', () => {
     )
     expect(helpers.log).toHaveBeenCalledWith(
       expect.objectContaining({
-        meta: expectedMeta,
         formsData: expect.any(Array),
       }),
       '[pushFormResponsesToHealthie] Forms data',

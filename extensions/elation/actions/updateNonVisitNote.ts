@@ -106,12 +106,6 @@ export const updateNonVisitNote: Action<typeof fields, typeof settings> = {
   fields,
   previewable: true,
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
-    const meta = {
-      tenant_id: payload.pathway.tenant_id,
-      careflow_id: payload.pathway.id,
-      activity_id: payload.activity.id,
-    }
-
     try {
       const {
         nonVisitNoteId,
@@ -144,12 +138,12 @@ export const updateNonVisitNote: Action<typeof fields, typeof settings> = {
       })
 
       const api = makeAPIClient(payload.settings)
-      helpers.log({ meta, noteId, note }, 'Updating Elation non-visit note')
+      helpers.log({ noteId, note }, 'Updating Elation non-visit note')
       await api.updateNonVisitNote(noteId, note)
       await onComplete()
     } catch (err) {
       const message = (err as Error).message
-      helpers.log({ meta, err }, 'error', err as Error)
+      helpers.log({ err }, 'error', err as Error)
       await onError({
         events: [
           {

@@ -32,11 +32,6 @@ export const pushFormResponseToHealthie: Action<
         fieldsSchema: FieldsValidationSchema,
         payload,
       })
-    const meta = {
-      tenant_id: payload.pathway.tenant_id,
-      careflow_id: payload.pathway.id,
-      activity_id: payload.activity.id,
-    }
 
     const awellSdk = await helpers.awellSdk()
 
@@ -80,7 +75,7 @@ export const pushFormResponseToHealthie: Action<
       }
 
       helpers.log(
-        { meta, createFormAnswerGroupInput },
+        { createFormAnswerGroupInput },
         '[pushFormResponseToHealthie] Creating Healthie form answer group',
       )
 
@@ -107,7 +102,7 @@ export const pushFormResponseToHealthie: Action<
         }
 
         helpers.log(
-          { meta, lockFormAnswerGroupInput },
+          { lockFormAnswerGroupInput },
           '[pushFormResponseToHealthie] Locking Healthie form answer group',
         )
 

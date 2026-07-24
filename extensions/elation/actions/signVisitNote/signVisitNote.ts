@@ -18,12 +18,6 @@ export const signVisitNote: Action<
   previewable: true,
   dataPoints,
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
-    const meta = {
-      tenant_id: payload.pathway.tenant_id,
-      careflow_id: payload.pathway.id,
-      activity_id: payload.activity.id,
-    }
-
     const { visitNoteId, signedBy } = FieldsValidationSchema.parse(
       payload.fields,
     )
@@ -34,7 +28,7 @@ export const signVisitNote: Action<
 
     try {
       helpers.log(
-        { meta, signVisitNoteInput },
+        { signVisitNoteInput },
         '[signVisitNote] Signing Elation visit note',
       )
 

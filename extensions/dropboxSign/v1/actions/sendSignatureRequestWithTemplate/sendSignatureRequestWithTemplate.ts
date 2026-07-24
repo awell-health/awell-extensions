@@ -20,14 +20,8 @@ export const sendSignatureRequestWithTemplate: Action<
   dataPoints,
   previewable: false,
   onEvent: async ({ payload, onComplete, onError, helpers }) => {
-    const meta = {
-      tenant_id: payload.pathway.tenant_id,
-      careflow_id: payload.pathway.id,
-      activity_id: payload.activity.id,
-    }
-
     helpers.log(
-      { meta, fields: payload.fields },
+      { fields: payload.fields },
       'Processing sendSignatureRequestWithTemplate',
     )
 
@@ -92,7 +86,7 @@ export const sendSignatureRequestWithTemplate: Action<
         },
       })
     } catch (err) {
-      helpers.log({ meta, err }, 'error', err as Error)
+      helpers.log({ err }, 'error', err as Error)
       if (err instanceof ZodError) {
         const error = fromZodError(err)
         await onError({

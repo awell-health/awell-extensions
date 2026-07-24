@@ -18,13 +18,7 @@ export const queryPage: Action<
   previewable: true,
   dataPoints,
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
-    const meta = {
-      tenant_id: payload.pathway.tenant_id,
-      careflow_id: payload.pathway.id,
-      activity_id: payload.activity.id,
-    }
-
-    helpers.log({ meta, fields: payload.fields }, 'Processing queryPage')
+    helpers.log({ fields: payload.fields }, 'Processing queryPage')
 
     try {
       const { fields, airtopSdk } = await validatePayloadAndCreateSdk({
@@ -39,7 +33,7 @@ export const queryPage: Action<
       const createWindowRequest = {
         url: fields.pageUrl,
       }
-      helpers.log({ meta, createWindowRequest }, 'Creating Airtop window')
+      helpers.log({ createWindowRequest }, 'Creating Airtop window')
       const window = await airtopSdk.windows.create(
         session.data.id,
         createWindowRequest,
@@ -52,7 +46,7 @@ export const queryPage: Action<
           outputSchema: fields.jsonSchema,
         },
       }
-      helpers.log({ meta, pageQueryRequest }, 'Querying Airtop page')
+      helpers.log({ pageQueryRequest }, 'Querying Airtop page')
       const result = await airtopSdk.windows.pageQuery(
         session.data.id,
         window.data.windowId,
@@ -73,7 +67,7 @@ export const queryPage: Action<
         },
       })
     } catch (err) {
-      helpers.log({ meta, err }, 'error', err as Error)
+      helpers.log({ err }, 'error', err as Error)
       const error = err as Error
       await onError({
         events: [

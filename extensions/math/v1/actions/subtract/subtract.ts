@@ -13,13 +13,7 @@ export const subtract: Action<typeof fields, typeof settings> = {
   dataPoints,
   previewable: true,
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
-    const meta = {
-      tenant_id: payload.pathway.tenant_id,
-      careflow_id: payload.pathway.id,
-      activity_id: payload.activity.id,
-    }
-
-    helpers.log({ meta, fields: payload.fields }, 'Processing subtract')
+    helpers.log({ fields: payload.fields }, 'Processing subtract')
 
     try {
       const {
@@ -31,10 +25,7 @@ export const subtract: Action<typeof fields, typeof settings> = {
 
       const difference = minuend - subtrahend
 
-      helpers.log(
-        { meta, minuend, subtrahend, difference },
-        'Calculated difference',
-      )
+      helpers.log({ minuend, subtrahend, difference }, 'Calculated difference')
 
       await onComplete({
         data_points: {
@@ -43,7 +34,7 @@ export const subtract: Action<typeof fields, typeof settings> = {
         },
       })
     } catch (err) {
-      helpers.log({ meta, err }, 'error', err as Error)
+      helpers.log({ err }, 'error', err as Error)
       const error = err as Error
       await onError({
         events: [

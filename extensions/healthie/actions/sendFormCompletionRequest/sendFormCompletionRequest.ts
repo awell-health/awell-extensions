@@ -25,14 +25,8 @@ export const sendFormCompletionRequest: Action<typeof fields, typeof settings> =
       onError,
       helpers,
     }): Promise<void> => {
-      const meta = {
-        tenant_id: payload.pathway.tenant_id,
-        careflow_id: payload.pathway.id,
-        activity_id: payload.activity.id,
-      }
-
       helpers.log(
-        { meta, fields: payload.fields },
+        { fields: payload.fields },
         'Processing sendFormCompletionRequest',
       )
 
@@ -93,7 +87,7 @@ export const sendFormCompletionRequest: Action<typeof fields, typeof settings> =
           })
         }
       } catch (err) {
-        helpers.log({ meta, err }, 'error', err as Error)
+        helpers.log({ err }, 'error', err as Error)
         if (err instanceof HealthieError) {
           const errors = mapHealthieToActivityError(err.errors)
           await onError({

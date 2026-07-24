@@ -25,12 +25,6 @@ export const calculateDateDifference: Action<typeof fields, typeof settings> = {
   dataPoints,
   previewable: true,
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
-    const meta = {
-      tenant_id: payload.pathway.tenant_id,
-      careflow_id: payload.pathway.id,
-      activity_id: payload.activity.id,
-    }
-
     try {
       const {
         fields: { dateLeft, dateRight, unit },
@@ -74,7 +68,7 @@ export const calculateDateDifference: Action<typeof fields, typeof settings> = {
       const dateDifference = calculateDifference()
 
       helpers.log(
-        { meta, dateLeft, dateRight, unit, dateDifference },
+        { dateLeft, dateRight, unit, dateDifference },
         'Calculated date difference',
       )
 
@@ -84,7 +78,7 @@ export const calculateDateDifference: Action<typeof fields, typeof settings> = {
         },
       })
     } catch (err) {
-      helpers.log({ meta, err }, 'error', err as Error)
+      helpers.log({ err }, 'error', err as Error)
       if (err instanceof ZodError) {
         const error = fromZodError(err)
         await onError({

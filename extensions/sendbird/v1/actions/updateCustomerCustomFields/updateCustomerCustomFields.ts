@@ -26,14 +26,8 @@ export const updateCustomerCustomFields: Action<
   fields,
   previewable: true,
   onEvent: async ({ payload, onComplete, onError, helpers }) => {
-    const meta = {
-      tenant_id: payload.pathway.tenant_id,
-      careflow_id: payload.pathway.id,
-      activity_id: payload.activity.id,
-    }
-
     helpers.log(
-      { meta, fields: payload.fields },
+      { fields: payload.fields },
       'Processing updateCustomerCustomFields',
     )
 
@@ -143,7 +137,7 @@ export const updateCustomerCustomFields: Action<
       // if all checks passed, we can assume that the update was successful
       await onComplete()
     } catch (err) {
-      helpers.log({ meta, err }, 'error', err as Error)
+      helpers.log({ err }, 'error', err as Error)
       if (err instanceof ZodError) {
         const error = fromZodError(err)
         await onError({

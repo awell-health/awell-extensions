@@ -36,17 +36,13 @@ export const pushFormResponsesToHealthie: Action<
         fieldsSchema: FieldsValidationSchema,
         payload,
       })
-    const meta = {
-      tenant_id: payload.pathway.tenant_id,
-      careflow_id: payload.pathway.id,
-      activity_id: payload.activity.id,
-    }
+
     const log = (
       data: Record<string, unknown>,
       message: string,
       error?: Error,
     ): void => {
-      helpers.log({ ...data, meta }, message, error)
+      helpers.log({ ...data }, message, error)
     }
 
     const awellSdk = await helpers.awellSdk()
@@ -64,7 +60,6 @@ export const pushFormResponsesToHealthie: Action<
 
     helpers.log(
       {
-        meta,
         formsData,
       },
       '[pushFormResponsesToHealthie] Forms data',
@@ -73,7 +68,6 @@ export const pushFormResponsesToHealthie: Action<
     const formDataWithHealthieFormAnswers = formsData.map((formData) => {
       helpers.log(
         {
-          meta,
           formActivityId: formData.formActivityId,
           formId: formData.formId,
         },
@@ -101,7 +95,6 @@ export const pushFormResponsesToHealthie: Action<
 
     helpers.log(
       {
-        meta,
         mergedHealthieFormAnswers,
         mergedOmittedFormAnswers,
       },
@@ -113,7 +106,6 @@ export const pushFormResponsesToHealthie: Action<
 
     helpers.log(
       {
-        meta,
         lock,
       },
       '[pushFormResponsesToHealthie] Indicates whether to make form values editable in Healthie',
@@ -130,7 +122,6 @@ export const pushFormResponsesToHealthie: Action<
 
     helpers.log(
       {
-        meta,
         healthieFormAnswersLog,
       },
       '[pushFormResponsesToHealthie] Healthie form answers log',
@@ -148,7 +139,7 @@ export const pushFormResponsesToHealthie: Action<
       }
 
       helpers.log(
-        { meta, createFormAnswerGroupInput },
+        { createFormAnswerGroupInput },
         '[pushFormResponsesToHealthie] Creating Healthie form answer group',
       )
 
@@ -168,7 +159,6 @@ export const pushFormResponsesToHealthie: Action<
       if (isEmpty(formAnswerGroupId)) {
         helpers.log(
           {
-            meta,
             formAnswerGroupId,
           },
           '[pushFormResponsesToHealthie] Form answer group ID is empty',
@@ -183,7 +173,7 @@ export const pushFormResponsesToHealthie: Action<
         }
 
         helpers.log(
-          { meta, lockFormAnswerGroupInput },
+          { lockFormAnswerGroupInput },
           '[pushFormResponsesToHealthie] Locking Healthie form answer group',
         )
 
@@ -206,7 +196,7 @@ export const pushFormResponsesToHealthie: Action<
       })
     } catch (error) {
       helpers.log(
-        { meta, error },
+        { error },
         '[pushFormResponsesToHealthie] Error when pushing form responses to Healthie',
       )
       if (error instanceof HealthieError) {

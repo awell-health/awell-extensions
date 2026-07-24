@@ -14,14 +14,8 @@ export const uploadContactToCampaign = {
   dataPoints,
   previewable: false,
   onEvent: async ({ payload, onComplete, onError, helpers }) => {
-    const meta = {
-      tenant_id: payload.pathway.tenant_id,
-      careflow_id: payload.pathway.id,
-      activity_id: payload.activity.id,
-    }
-
     helpers.log(
-      { meta, fields: payload.fields },
+      { fields: payload.fields },
       'Processing uploadContactToCampaign',
     )
 
@@ -56,7 +50,7 @@ export const uploadContactToCampaign = {
         service_terms_reviewed: serviceTermsReviewed,
       }
 
-      helpers.log({ meta, requestBody }, 'Uploading contact via Gridspace')
+      helpers.log({ requestBody }, 'Uploading contact via Gridspace')
       const { num_uploaded_contacts = 0 } =
         await client.uploadContactsToCampaign(campaignId, requestBody)
 
@@ -77,7 +71,7 @@ export const uploadContactToCampaign = {
         },
       })
     } catch (err) {
-      helpers.log({ meta, err }, 'error', err as Error)
+      helpers.log({ err }, 'error', err as Error)
       const error = err as Error
       await onError({
         events: [

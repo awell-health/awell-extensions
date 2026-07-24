@@ -14,13 +14,7 @@ export const sendVoiceMessage: Action<typeof fields, typeof settings> = {
   fields,
   previewable: true,
   onEvent: async ({ payload, onComplete, onError, helpers }) => {
-    const meta = {
-      tenant_id: payload.pathway.tenant_id,
-      careflow_id: payload.pathway.id,
-      activity_id: payload.activity.id,
-    }
-
-    helpers.log({ meta, fields: payload.fields }, 'Processing sendVoiceMessage')
+    helpers.log({ fields: payload.fields }, 'Processing sendVoiceMessage')
 
     const {
       fields: { originator, recipient, body, language, voice },
@@ -92,7 +86,7 @@ export const sendVoiceMessage: Action<typeof fields, typeof settings> = {
         },
       )
     } catch (err) {
-      helpers.log({ meta, err }, 'error', err as Error)
+      helpers.log({ err }, 'error', err as Error)
       const error = err as Error
       await onError({
         events: [

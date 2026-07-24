@@ -44,11 +44,6 @@ describe('Delete booking', () => {
     expect(onComplete).toHaveBeenCalledWith()
     expect(helpers.log).toHaveBeenCalledWith(
       {
-        meta: {
-          tenant_id: basePayload.pathway.tenant_id,
-          careflow_id: basePayload.pathway.id,
-          activity_id: basePayload.activity.id,
-        },
         bookingId: String(sampleBooking.id),
         deleteBookingRequest: {
           allRemainingBookings: undefined,

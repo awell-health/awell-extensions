@@ -176,12 +176,6 @@ export const updatePatient: Action<
   previewable: true,
   dataPoints,
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
-    const meta = {
-      tenant_id: payload.pathway.tenant_id,
-      careflow_id: payload.pathway.id,
-      activity_id: payload.activity.id,
-    }
-
     try {
       const {
         patientId,
@@ -256,7 +250,7 @@ export const updatePatient: Action<
       }
 
       helpers.log(
-        { meta, patientId: id, updatedPatientFields },
+        { patientId: id, updatedPatientFields },
         'Updating Elation patient',
       )
 
@@ -264,7 +258,7 @@ export const updatePatient: Action<
       await onComplete()
     } catch (err) {
       const message = (err as Error).message
-      helpers.log({ meta, err }, 'error', err as Error)
+      helpers.log({ err }, 'error', err as Error)
       await onError({
         events: [
           {

@@ -15,12 +15,6 @@ export const arrayTest: Action<typeof fields, typeof settings> = {
   dataPoints,
   previewable: true,
   onEvent: async ({ payload, onComplete, onError, helpers }) => {
-    const meta = {
-      tenant_id: payload.pathway.tenant_id,
-      careflow_id: payload.pathway.id,
-      activity_id: payload.activity.id,
-    }
-
     try {
       const {
         stringArray,
@@ -30,9 +24,9 @@ export const arrayTest: Action<typeof fields, typeof settings> = {
       } = validateActionFields(payload.fields)
 
       const strings = [...stringArray, ...anotherStringArray]
-      helpers.log({ meta, strings }, '🚀 ~ onActivityCreated: ~ strings:')
+      helpers.log({ strings }, '🚀 ~ onActivityCreated: ~ strings:')
       const numbers = [...numericArray, ...anotherNumericArray]
-      helpers.log({ meta, numbers }, '🚀 ~ onActivityCreated: ~ numbers:')
+      helpers.log({ numbers }, '🚀 ~ onActivityCreated: ~ numbers:')
 
       await onComplete({
         data_points: {
@@ -41,7 +35,7 @@ export const arrayTest: Action<typeof fields, typeof settings> = {
         },
       })
     } catch (err) {
-      helpers.log({ meta, err }, 'error', err as Error)
+      helpers.log({ err }, 'error', err as Error)
       if (err instanceof ZodError) {
         const error = fromZodError(err)
         await onError({

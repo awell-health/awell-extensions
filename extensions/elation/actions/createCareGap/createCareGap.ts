@@ -17,12 +17,6 @@ export const createCareGap: Action<
   previewable: true,
   dataPoints,
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
-    const meta = {
-      tenant_id: payload.pathway.tenant_id,
-      careflow_id: payload.pathway.id,
-      activity_id: payload.activity.id,
-    }
-
     try {
       const {
         fields: {
@@ -64,11 +58,11 @@ export const createCareGap: Action<
         detail: detail ?? '',
       }
 
-      helpers.log({ meta, createCareGapRequest }, 'Creating Elation care gap')
+      helpers.log({ createCareGapRequest }, 'Creating Elation care gap')
 
       const careGap = await api.createCareGap(createCareGapRequest)
 
-      helpers.log({ meta, careGapId: careGap.id }, 'Created Elation care gap')
+      helpers.log({ careGapId: careGap.id }, 'Created Elation care gap')
 
       await onComplete({
         data_points: {
@@ -77,7 +71,7 @@ export const createCareGap: Action<
       })
     } catch (err) {
       const message = (err as Error).message
-      helpers.log({ meta, err }, 'error', err as Error)
+      helpers.log({ err }, 'error', err as Error)
       await onError({
         events: [
           {

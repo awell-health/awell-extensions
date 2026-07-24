@@ -25,13 +25,7 @@ export const sendChatMessage: Action<
   dataPoints,
   previewable: true,
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
-    const meta = {
-      tenant_id: payload.pathway.tenant_id,
-      careflow_id: payload.pathway.id,
-      activity_id: payload.activity.id,
-    }
-
-    helpers.log({ meta, fields: payload.fields }, 'Processing sendChatMessage')
+    helpers.log({ fields: payload.fields }, 'Processing sendChatMessage')
 
     const { fields, settings } = payload
     const { healthie_patient_id, provider_id, message } = fields
@@ -210,7 +204,7 @@ export const sendChatMessage: Action<
         })
       }
     } catch (err) {
-      helpers.log({ meta, err }, 'error', err as Error)
+      helpers.log({ err }, 'error', err as Error)
       if (err instanceof HealthieError) {
         const errors = mapHealthieToActivityError(err.errors)
         await onError({

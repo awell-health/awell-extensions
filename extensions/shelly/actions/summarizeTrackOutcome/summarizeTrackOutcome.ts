@@ -25,16 +25,7 @@ export const summarizeTrackOutcome: Action<
   dataPoints,
 
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
-    const meta = {
-      tenant_id: payload.pathway.tenant_id,
-      careflow_id: payload.pathway.id,
-      activity_id: payload.activity.id,
-    }
-
-    helpers.log(
-      { meta, fields: payload.fields },
-      'Processing summarizeTrackOutcome',
-    )
+    helpers.log({ fields: payload.fields }, 'Processing summarizeTrackOutcome')
 
     try {
       // 1. Validate input fields
@@ -122,7 +113,7 @@ export const summarizeTrackOutcome: Action<
         ],
       })
     } catch (err) {
-      helpers.log({ meta, err }, 'error', err as Error)
+      helpers.log({ err }, 'error', err as Error)
       const error = err as Error
       await onError({
         events: [

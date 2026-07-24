@@ -35,16 +35,7 @@ export const startConsolidatedQuery: Action<
   previewable: false,
   dataPoints,
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
-    const meta = {
-      tenant_id: payload.pathway.tenant_id,
-      careflow_id: payload.pathway.id,
-      activity_id: payload.activity.id,
-    }
-
-    helpers.log(
-      { meta, fields: payload.fields },
-      'Processing startConsolidatedQuery',
-    )
+    helpers.log({ fields: payload.fields }, 'Processing startConsolidatedQuery')
 
     try {
       const { patientId, resources, dateFrom, dateTo, conversionType } =
@@ -76,7 +67,7 @@ export const startConsolidatedQuery: Action<
         },
       })
     } catch (err) {
-      helpers.log({ meta, err }, 'error', err as Error)
+      helpers.log({ err }, 'error', err as Error)
       await handleErrorMessage(err, onError)
     }
   },

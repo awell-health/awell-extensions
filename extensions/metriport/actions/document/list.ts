@@ -21,13 +21,7 @@ export const listDocuments: Action<
   previewable: true,
   dataPoints,
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
-    const meta = {
-      tenant_id: payload.pathway.tenant_id,
-      careflow_id: payload.pathway.id,
-      activity_id: payload.activity.id,
-    }
-
-    helpers.log({ meta, fields: payload.fields }, 'Processing listDocs')
+    helpers.log({ fields: payload.fields }, 'Processing listDocs')
 
     try {
       const { patientId } = startQuerySchema.parse(payload.fields)
@@ -42,7 +36,7 @@ export const listDocuments: Action<
         },
       })
     } catch (err) {
-      helpers.log({ meta, err }, 'error', err as Error)
+      helpers.log({ err }, 'error', err as Error)
       await handleErrorMessage(err, onError)
     }
   },

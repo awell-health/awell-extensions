@@ -42,12 +42,6 @@ export const frontend: Action<
   },
   dataPoints,
   onEvent: async ({ payload, helpers: { log } }): Promise<void> => {
-    const meta = {
-      tenant_id: payload.pathway.tenant_id,
-      careflow_id: payload.pathway.id,
-      activity_id: payload.activity.id,
-    }
-
-    log({ meta, payload }, 'Frontend payload')
+    log({ payload }, 'Frontend payload')
   },
 }

@@ -15,13 +15,7 @@ export const scheduleSMS = {
   dataPoints,
   previewable: true,
   onEvent: async ({ payload, onComplete, onError, helpers }) => {
-    const meta = {
-      tenant_id: payload.pathway.tenant_id,
-      careflow_id: payload.pathway.id,
-      activity_id: payload.activity.id,
-    }
-
-    helpers.log({ meta, fields: payload.fields }, 'Processing scheduleSMS')
+    helpers.log({ fields: payload.fields }, 'Processing scheduleSMS')
 
     try {
       const {
@@ -70,7 +64,7 @@ export const scheduleSMS = {
         },
       }
 
-      helpers.log({ meta, requestBody }, 'Scheduling SMS via Braze')
+      helpers.log({ requestBody }, 'Scheduling SMS via Braze')
       const resp = await brazeClient.scheduleMessage(requestBody)
 
       await onComplete({
@@ -86,7 +80,7 @@ export const scheduleSMS = {
         },
       })
     } catch (err) {
-      helpers.log({ meta, err }, 'error', err as Error)
+      helpers.log({ err }, 'error', err as Error)
       const error = err as Error
       await onError({
         events: [

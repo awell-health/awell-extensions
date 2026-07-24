@@ -18,12 +18,6 @@ export const updatePatient: Action<typeof fields, typeof settings> = {
   fields,
   previewable: true,
   onEvent: async ({ payload, onComplete, onError, helpers }) => {
-    const meta = {
-      tenant_id: payload.pathway.tenant_id,
-      careflow_id: payload.pathway.id,
-      activity_id: payload.activity.id,
-    }
-
     try {
       const { fields, healthieSdk } = await validatePayloadAndCreateSdk({
         fieldsSchema: FieldsValidationSchema,
@@ -56,7 +50,7 @@ export const updatePatient: Action<typeof fields, typeof settings> = {
       }
 
       helpers.log(
-        { meta, updateClientInput },
+        { updateClientInput },
         '[updatePatient] Updating Healthie client',
       )
 

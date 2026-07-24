@@ -20,12 +20,6 @@ export const createTicket: Action<typeof fields, typeof settings> = {
   dataPoints,
   previewable: true,
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
-    const meta = {
-      tenant_id: payload.pathway.tenant_id,
-      careflow_id: payload.pathway.id,
-      activity_id: payload.activity.id,
-    }
-
     try {
       const {
         settings,
@@ -49,7 +43,7 @@ export const createTicket: Action<typeof fields, typeof settings> = {
         ...(!isNil(tag) && { tags: [tag] }),
       }
 
-      helpers.log({ meta, ticketData }, 'Creating Zendesk ticket')
+      helpers.log({ ticketData }, 'Creating Zendesk ticket')
       const response = await client.createTicket(ticketData)
 
       await onComplete({

@@ -20,11 +20,6 @@ export const createClinicalNote: Action<
   previewable: true,
   dataPoints,
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
-    const meta = {
-      tenant_id: payload.pathway.tenant_id,
-      careflow_id: payload.pathway.id,
-      activity_id: payload.activity.id,
-    }
     const {
       epicFhirR4Sdk,
       fields: { patientResourceId, encounterResourceId, status, type, note },
@@ -68,7 +63,7 @@ export const createClinicalNote: Action<
 
     try {
       helpers.log(
-        { meta, DocumentReferenceInput },
+        { DocumentReferenceInput },
         '[createClinicalNote] Creating Epic document reference',
       )
 

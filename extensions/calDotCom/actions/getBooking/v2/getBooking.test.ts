@@ -55,11 +55,6 @@ describe('Cal.com - Get booking (v2 api)', () => {
       expect(onError).not.toHaveBeenCalled()
       expect(helpers.log).toHaveBeenCalledWith(
         {
-          meta: {
-            tenant_id: payload.pathway.tenant_id,
-            careflow_id: payload.pathway.id,
-            activity_id: payload.activity.id,
-          },
           getBookingRequest: {
             bookingUid: 'booking_uid_123',
           },

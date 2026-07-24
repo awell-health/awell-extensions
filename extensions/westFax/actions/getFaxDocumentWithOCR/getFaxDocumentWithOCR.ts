@@ -20,16 +20,7 @@ export const getFaxDocumentWithOCR: Action<typeof fields, typeof settings> = {
   dataPoints,
   previewable: false,
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
-    const meta = {
-      tenant_id: payload.pathway.tenant_id,
-      careflow_id: payload.pathway.id,
-      activity_id: payload.activity.id,
-    }
-
-    helpers.log(
-      { meta, fields: payload.fields },
-      'Processing getFaxDocumentWithOCR',
-    )
+    helpers.log({ fields: payload.fields }, 'Processing getFaxDocumentWithOCR')
 
     const { fields, westFaxSdk } = await validatePayloadAndCreateSdk({
       fieldsSchema: FieldsValidationSchema,

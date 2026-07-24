@@ -86,12 +86,6 @@ export const postLetter: Action<
   previewable: true,
   dataPoints,
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
-    const meta = {
-      tenant_id: payload.pathway.tenant_id,
-      careflow_id: payload.pathway.id,
-      activity_id: payload.activity.id,
-    }
-
     try {
       const {
         patientId,
@@ -132,17 +126,17 @@ export const postLetter: Action<
         },
       })
 
-      helpers.log({ meta, letter }, 'Posting Elation letter')
+      helpers.log({ letter }, 'Posting Elation letter')
 
       const { id } = await api.postNewLetter(letter)
-      helpers.log({ meta, letterId: id }, 'Posted Elation letter')
+      helpers.log({ letterId: id }, 'Posted Elation letter')
       await onComplete({
         data_points: {
           letterId: String(id),
         },
       })
     } catch (err) {
-      helpers.log({ meta, err }, 'error', err as Error)
+      helpers.log({ err }, 'error', err as Error)
       if (err instanceof ZodError) {
         const error = fromZodError(err)
         await onError({

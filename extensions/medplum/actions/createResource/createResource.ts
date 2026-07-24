@@ -18,11 +18,6 @@ export const createResource: Action<
   previewable: false,
   dataPoints,
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
-    const meta = {
-      tenant_id: payload.pathway.tenant_id,
-      careflow_id: payload.pathway.id,
-      activity_id: payload.activity.id,
-    }
     const { fields: input, medplumSdk } = await validateAndCreateSdkClient({
       fieldsSchema: FieldsValidationSchema,
       payload,
@@ -65,7 +60,7 @@ export const createResource: Action<
 
       if (resourceData.resourceType === 'Bundle') {
         helpers.log(
-          { meta, resourceData },
+          { resourceData },
           '[createResource] Executing Medplum bundle',
         )
 
@@ -152,7 +147,7 @@ export const createResource: Action<
         })
       } else {
         helpers.log(
-          { meta, resourceData },
+          { resourceData },
           '[createResource] Creating Medplum resource',
         )
 

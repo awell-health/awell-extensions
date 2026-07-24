@@ -21,11 +21,6 @@ export const createPatient: Action<
   previewable: true,
   dataPoints,
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
-    const meta = {
-      tenant_id: payload.pathway.tenant_id,
-      careflow_id: payload.pathway.id,
-      activity_id: payload.activity.id,
-    }
     const {
       cernerFhirR4Sdk,
       fields: {
@@ -95,7 +90,7 @@ export const createPatient: Action<
 
     try {
       helpers.log(
-        { meta, PatientResource },
+        { PatientResource },
         '[createPatient] Creating Cerner patient',
       )
 

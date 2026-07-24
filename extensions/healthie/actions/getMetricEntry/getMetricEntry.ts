@@ -26,13 +26,7 @@ export const getMetricEntry: Action<
   dataPoints,
   previewable: true,
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
-    const meta = {
-      tenant_id: payload.pathway.tenant_id,
-      careflow_id: payload.pathway.id,
-      activity_id: payload.activity.id,
-    }
-
-    helpers.log({ meta, fields: payload.fields }, 'Processing getMetricEntry')
+    helpers.log({ fields: payload.fields }, 'Processing getMetricEntry')
 
     try {
       const {
@@ -75,7 +69,7 @@ export const getMetricEntry: Action<
         })
       }
     } catch (err) {
-      helpers.log({ meta, err }, 'error', err as Error)
+      helpers.log({ err }, 'error', err as Error)
       if (err instanceof ZodError) {
         const error = fromZodError(err)
         await onError({

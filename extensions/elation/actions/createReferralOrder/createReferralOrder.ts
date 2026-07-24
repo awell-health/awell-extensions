@@ -23,12 +23,6 @@ export const createReferralOrder: Action<
   previewable: true,
   dataPoints,
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
-    const meta = {
-      tenant_id: payload.pathway.tenant_id,
-      careflow_id: payload.pathway.id,
-      activity_id: payload.activity.id,
-    }
-
     try {
       const {
         patient,
@@ -66,7 +60,7 @@ export const createReferralOrder: Action<
       }
 
       helpers.log(
-        { meta, createReferralOrderRequest },
+        { createReferralOrderRequest },
         'Creating Elation referral order',
       )
 
@@ -84,7 +78,7 @@ export const createReferralOrder: Action<
       }
 
       helpers.log(
-        { meta, postLetterRequest },
+        { postLetterRequest },
         'Posting Elation referral order letter',
       )
 
@@ -96,7 +90,7 @@ export const createReferralOrder: Action<
         },
       })
     } catch (err) {
-      helpers.log({ meta, err }, 'error', err as Error)
+      helpers.log({ err }, 'error', err as Error)
       if (err instanceof AxiosError) {
         const responseData = (err as AxiosError).response?.data
         await onError({

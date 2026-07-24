@@ -28,12 +28,6 @@ export const sendMessageToChannel: Action<
   dataPoints,
   previewable: true,
   onEvent: async ({ payload, onComplete, onError, helpers }) => {
-    const meta = {
-      tenant_id: payload.pathway.tenant_id,
-      careflow_id: payload.pathway.id,
-      activity_id: payload.activity.id,
-    }
-
     try {
       const {
         settings: { botToken },
@@ -56,7 +50,7 @@ export const sendMessageToChannel: Action<
         text: messageWithLink,
       }
 
-      helpers.log({ meta, requestBody }, 'Sending message via Slack')
+      helpers.log({ requestBody }, 'Sending message via Slack')
       const response = await slackClient.postMessage(requestBody)
 
       await onComplete({

@@ -16,16 +16,7 @@ export const sendEmailWithSmtp: Action<
   previewable: true,
   dataPoints,
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
-    const meta = {
-      tenant_id: payload.pathway.tenant_id,
-      careflow_id: payload.pathway.id,
-      activity_id: payload.activity.id,
-    }
-
-    helpers.log(
-      { meta, fields: payload.fields },
-      'Processing sendEmailWithSmtp',
-    )
+    helpers.log({ fields: payload.fields }, 'Processing sendEmailWithSmtp')
 
     try {
       const { hubSpotSmtpSdk, fields } = await validatePayloadAndCreateSdks({
@@ -38,12 +29,12 @@ export const sendEmailWithSmtp: Action<
           'Could not instantiate SMTP client. Make sure the SMTP username and password are provided and valid.',
         )
 
-      helpers.log({ meta, fields }, 'Sending email via HubSpot SMTP')
+      helpers.log({ fields }, 'Sending email via HubSpot SMTP')
       await hubSpotSmtpSdk.sendEmail(fields)
 
       await onComplete()
     } catch (err) {
-      helpers.log({ meta, err }, 'error', err as Error)
+      helpers.log({ err }, 'error', err as Error)
       const error = err as Error
       await onError({
         events: [

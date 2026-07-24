@@ -23,13 +23,7 @@ export const dobCheck: Action<
     },
   },
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
-    const meta = {
-      tenant_id: payload.pathway.tenant_id,
-      careflow_id: payload.pathway.id,
-      activity_id: payload.activity.id,
-    }
-
-    helpers.log({ meta, fields: payload.fields }, 'Processing dobCheck')
+    helpers.log({ fields: payload.fields }, 'Processing dobCheck')
 
     try {
       validate({
@@ -44,7 +38,7 @@ export const dobCheck: Action<
        * Completion happens in Awell Hosted Pages
        */
     } catch (err) {
-      helpers.log({ meta, err }, 'error', err as Error)
+      helpers.log({ err }, 'error', err as Error)
       const error = err as Error
       await onError({
         events: [

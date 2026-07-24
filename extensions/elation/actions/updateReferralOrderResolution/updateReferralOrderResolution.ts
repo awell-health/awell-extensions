@@ -18,12 +18,6 @@ export const updateReferralOrderResolution: Action<
   previewable: true,
   dataPoints,
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
-    const meta = {
-      tenant_id: payload.pathway.tenant_id,
-      careflow_id: payload.pathway.id,
-      activity_id: payload.activity.id,
-    }
-
     const { referralOrderId, resolutionState, resolvingDocument } =
       FieldsValidationSchema.parse(payload.fields)
     const api = makeAPIClient(payload.settings)
@@ -36,7 +30,7 @@ export const updateReferralOrderResolution: Action<
 
     try {
       helpers.log(
-        { meta, updateReferralOrderInput },
+        { updateReferralOrderInput },
         '[updateReferralOrderResolution] Updating Elation referral order',
       )
 

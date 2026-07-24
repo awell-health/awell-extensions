@@ -14,13 +14,7 @@ export const sendCampaign = {
   dataPoints,
   previewable: true,
   onEvent: async ({ payload, onComplete, onError, helpers }) => {
-    const meta = {
-      tenant_id: payload.pathway.tenant_id,
-      careflow_id: payload.pathway.id,
-      activity_id: payload.activity.id,
-    }
-
-    helpers.log({ meta, fields: payload.fields }, 'Processing sendCampaign')
+    helpers.log({ fields: payload.fields }, 'Processing sendCampaign')
 
     try {
       const {
@@ -66,7 +60,7 @@ export const sendCampaign = {
         }),
       }
 
-      helpers.log({ meta, requestBody }, 'Sending campaign via Braze')
+      helpers.log({ requestBody }, 'Sending campaign via Braze')
       const resp = await brazeClient.sendCampaign(requestBody)
 
       await onComplete({
@@ -81,7 +75,7 @@ export const sendCampaign = {
         },
       })
     } catch (err) {
-      helpers.log({ meta, err }, 'error', err as Error)
+      helpers.log({ err }, 'error', err as Error)
       const error = err as Error
       await onError({
         events: [
