@@ -108,7 +108,22 @@ export const FieldsValidationSchema = z.object({
           return z.NEVER
         }
 
-        return parsedJson
+        // Filter out entries with empty string values so they are treated
+        // as "no update" rather than sending an invalid value to the API.
+        // This prevents validation failures (e.g. empty string failing
+        // telephone E.164 validation) from blocking the entire update.
+        const filtered = parsedJson.filter((item) => item.value)
+
+        if (isEmpty(filtered)) {
+          ctx.addIssue({
+            code: 'custom',
+            message:
+              'All baseline info values are empty strings. At least one non-empty value must be provided.',
+          })
+          return z.NEVER
+        }
+
+        return filtered
       } catch (e) {
         ctx.addIssue({ code: 'custom', message: 'Invalid JSON.' })
         return z.NEVER
