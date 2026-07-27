@@ -7,7 +7,7 @@ export const createMetriportApi = (
 ): MetriportMedicalApi => {
   const { apiKey, baseUrl } = settingsSchema.parse(payloadSettings)
 
-  if (baseUrl !== undefined && baseUrl.length > 0) {
+  if (baseUrl) {
     return new MetriportMedicalApi(apiKey, {
       baseAddress: baseUrl,
     })
