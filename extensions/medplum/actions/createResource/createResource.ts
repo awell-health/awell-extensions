@@ -65,6 +65,10 @@ export const createResource: Action<
         )
 
         const result = await medplumSdk.executeBatch(resourceData as Bundle)
+        helpers.log(
+          { batchResult: result },
+          '[Medplum extension] Medplum batch result'
+        )
 
         const resourceIds =
           result.entry
