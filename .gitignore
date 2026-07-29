@@ -32,3 +32,5 @@ dist/*
 .zed
 
 .playwright-mcp/
+
+docs/superpowers/specs/

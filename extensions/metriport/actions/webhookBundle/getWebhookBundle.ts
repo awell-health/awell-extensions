@@ -5,6 +5,7 @@ import { fields } from './fields'
 import { getWebhookBundleSchema } from './validation'
 import { dataPoints } from './dataPoints'
 import { fetchBundle } from './fetchBundle'
+import { buildTransactionBundle } from './bundle'
 
 export const getWebhookBundle: Action<
   typeof fields,
@@ -22,13 +23,30 @@ export const getWebhookBundle: Action<
   dataPoints,
   onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
     try {
-      const { url } = getWebhookBundleSchema.parse(payload.fields)
+      const { url, eventType, provenanceReason } = getWebhookBundleSchema.parse(
+        payload.fields,
+      )
 
       const bundle = await fetchBundle(url)
+
+      // Only ADT notifications carry Patient Encounter Bundles; for the other
+      // webhook types this is undefined and the data point is simply omitted.
+      // A collection bundle missing its Patient or Encounter throws instead —
+      // it claims to be an encounter bundle but cannot be imported, so failing
+      // the activity is better than silently emitting the raw bundle alone.
+      const transactionBundle = buildTransactionBundle({
+        bundle,
+        awellPatientId: payload.patient.id,
+        eventType,
+        reason: provenanceReason,
+      })
 
       await onComplete({
         data_points: {
           bundle: JSON.stringify(bundle),
+          ...(transactionBundle !== undefined
+            ? { transactionBundle: JSON.stringify(transactionBundle) }
+            : {}),
         },
       })
     } catch (err) {
