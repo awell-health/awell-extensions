@@ -5,4 +5,6 @@ export const getWebhookBundleSchema = z.object({
     .string({ errorMap: () => ({ message: 'Missing url' }) })
     .trim()
     .url({ message: 'A valid bundle URL is required' }),
+  eventType: z.string().trim().optional(),
+  provenanceReason: z.string().trim().optional(),
 })

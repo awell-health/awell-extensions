@@ -79,15 +79,74 @@ Visit [endpoint docs](https://docs.metriport.com/medical-api/api-reference/cohor
 
 Fetches the FHIR bundle from a Metriport webhook payload URL — e.g. the [Encounter Bundle](https://docs.metriport.com/medical-api/handling-data/patient-encounter-bundle) from an ADT notification, or a discharge summary. Pass the `bundleUrl` data point emitted by the **Enrollment** webhook; the action downloads the bundle and returns it on the `bundle` data point.
 
+When the payload is a Patient Encounter Bundle, the action also rewrites it into an executable FHIR transaction and returns that on the `transactionBundle` data point, ready to hand to the Medplum **Find or create resource** action.
+
 **NOTE: Metriport pre-signed URLs are only valid for 10 minutes, so this action should run early in the care flow, shortly after the enrollment webhook fires.**
 
 | Field | Type | Description |
 | --- | --- | --- |
 | `url` | string | The pre-signed payload URL to fetch (the webhook's `bundleUrl` data point). |
+| `eventType` | string (optional) | The Metriport notification type — wire this from the enrollment webhook's `eventType` data point. Recorded on the import Provenance so admit, transfer and discharge can be told apart. |
+| `provenanceReason` | text (optional) | Free-text reason recorded on the import Provenance, describing why the data was imported. |
 
 | Data point | Type | Description |
 | --- | --- | --- |
-| `bundle` | json | The FHIR bundle fetched from the URL. |
+| `bundle` | json | The FHIR bundle fetched from the URL, exactly as Metriport sent it. |
+| `transactionBundle` | json | The same data rewritten as an executable FHIR transaction. Omitted when the payload is not a Patient Encounter Bundle. |
+
+### Building the transaction bundle
+
+Metriport delivers a bundle of `type: 'collection'`, which is **not executable**. Handing it straight to Medplum does nothing useful: no entry carries `request` metadata saying what to do with it, and every internal reference points at a Metriport UUID that means nothing in Medplum. The action therefore builds a second, executable bundle rather than passing the original through.
+
+The transformation is a pure function with no Medplum access of its own — this extension holds Metriport credentials only. That rules out reading Medplum to reconcile against what is already there, so every lookup is expressed declaratively and resolved by the server when the transaction executes.
+
+**The Patient is never written.** Awell/Medplum is the source of truth for patient demographics, so the Patient entry is dropped entirely and every reference to it becomes a conditional reference:
+
+```
+Patient?identifier=https://awellhealth.com/patients|<awell patient id>
+```
+
+Omitting the entry guarantees structurally that a Metriport ADT feed can never overwrite the patient record.
+
+**Everything else is written idempotently.** Each Metriport resource is stamped with an identifier derived from its Metriport id and written with a conditional update:
+
+```
+identifier: { system: 'https://metriport.com/fhir/encounter', value: '<metriport id>' }
+request:    PUT Encounter?identifier=https://metriport.com/fhir/encounter|<metriport id>
+```
+
+A conditional update creates on zero matches and updates on one, so a redelivered notification updates in place instead of duplicating Conditions, Observations, Practitioners and Locations — and the admit and discharge notifications for one visit converge on a single Encounter. Existing identifiers are kept, so the Encounter keeps its HL7 `VN` visit number alongside ours.
+
+**References are rewritten to Metriport's own `fullUrl`s.** Metriport resolves its relationships correctly, but emits them in a form FHIR cannot match: entries carry `urn:uuid:` fullUrls while references to them are relative.
+
+```
+fullUrl:    urn:uuid:3ca5e8d2-7c84-45ab-91e7-834f8becde12
+reference:  Location/3ca5e8d2-7c84-45ab-91e7-834f8becde12
+```
+
+A transaction resolves an internal reference by matching it against `fullUrl` verbatim, and a relative reference does not match a `urn:uuid:` one — Medplum would read it as a reference to a *Medplum* Location with that id, which does not exist. Rewriting the reference to the entry's `fullUrl` closes the gap while keeping Metriport's identity. This is also why the result is a `transaction` and not a `batch`: `urn:uuid` resolution is a transaction feature.
+
+**`meta` is stripped from every resource.** Medplum's `meta.accounts` is inherited from the compartment of the Patient a resource references, but specifying `meta` at all on a create or update replaces those inherited accounts instead of adding to them. Metriport's Encounter arrives with a `meta`, so it is removed. `resource.id` is dropped too, for a separate reason: Medplum assigns identity, and the entry's `fullUrl` already carries the local identity the transaction needs.
+
+**Two entries are synthesised.** An `Organization` named *Metriport Realtime Monitoring*, created with `ifNoneExist` so an existing one is reused rather than overwritten; and a `Provenance` recording the import — what it created, when, which Metriport bundle it came from, and which ADT event triggered it (`patient.admit` → `A01`, `patient.transfer` → `A02`, `patient.discharge` → `A03`).
+
+`extensions/metriport/actions/webhookBundle/bundle/transform.test.ts` asserts the complete output for a real `patient.admit` bundle, if you want to see the whole before/after in one place.
+
+### Wiring it into a care flow
+
+1. **Enrollment** webhook fires and emits `bundleUrl` and `eventType`.
+2. **Get Webhook Bundle** — pass `bundleUrl` to `url` and `eventType` to `eventType`. Run this early; the URL expires after 10 minutes.
+3. Medplum **Find or create resource** — pass the `transactionBundle` data point to its `resourceJson` field. No changes to that action are needed; it detects a Bundle and executes it.
+
+**PREREQUISITE: for imported resources to be tagged with the Metriport organization, the Medplum Patient must already carry it in `meta.accounts` before the notification arrives.** Resources created without a `meta` inherit their accounts from the compartment of the Patient they reference, so tagging the Patient once causes every subsequent import to inherit it automatically. Note that this only covers resources *in* the patient compartment — `Location` and `Practitioner` are shared directory resources and are intentionally created untagged, since scoping a hospital or a physician to one patient's tenant would be wrong.
+
+**NOTE: the conditional Patient reference only resolves if your Medplum Patients carry an identifier under the `https://awellhealth.com/patients` system with the Awell patient id as its value. A conditional reference that matches no Patient fails the whole transaction.**
+
+### When the transaction bundle is omitted
+
+`Get Webhook Bundle` serves several Metriport webhook types and only ADT notifications carry encounter bundles. For any payload that is not a `collection` bundle, `transactionBundle` is simply omitted and `bundle` is emitted on its own — the action still succeeds.
+
+A `collection` bundle that is missing its Patient or Encounter entry is treated differently: that is an encounter bundle which does not describe an encounter, so the action **fails** rather than silently emitting a partial result.
 
 # Webhooks
 
