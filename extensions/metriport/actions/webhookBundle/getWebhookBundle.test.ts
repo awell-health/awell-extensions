@@ -7,7 +7,12 @@ jest.mock('./fetchBundle')
 
 const mockedFetchBundle = fetchBundle as jest.MockedFunction<typeof fetchBundle>
 
-const settings = { apiKey: 'test-api-key', baseUrl: '', webhookKey: '' }
+const settings = {
+  apiKey: 'test-api-key',
+  baseUrl: '',
+  webhookKey: '',
+  rateLimitDuration: '',
+}
 
 describe('Metriport - Get Webhook Bundle', () => {
   const onComplete = jest.fn()
