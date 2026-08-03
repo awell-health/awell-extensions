@@ -6,7 +6,7 @@ export const fields = {
     id: 'url',
     label: 'Bundle URL',
     description:
-      'The pre-signed Metriport payload URL to fetch the FHIR bundle from. This is the `bundleUrl` data point emitted by the enrollment webhook. Note: Metriport pre-signed URLs are only valid for 10 minutes, so this action should run shortly after the webhook fires.',
+      'The pre-signed Metriport payload URL to fetch the FHIR bundle from. This is the `bundleUrl` data point emitted by the realtime update webhook. Note: Metriport pre-signed URLs are only valid for 10 minutes, so this action should run shortly after the webhook fires.',
     type: FieldType.STRING,
     required: true,
   },
@@ -14,7 +14,7 @@ export const fields = {
     id: 'eventType',
     label: 'Event Type',
     description:
-      'The Metriport notification type, as emitted on the enrollment webhook `eventType` data point. Recorded on the Provenance of the importable bundle so admission, transfer and discharge imports can be told apart. Leave empty to omit it.',
+      'The Metriport notification type, as emitted on the realtime update webhook `eventType` data point. Recorded on the Provenance of the importable bundle so admission, transfer and discharge imports can be told apart. Leave empty to omit it.',
     type: FieldType.STRING,
     required: false,
     options: {

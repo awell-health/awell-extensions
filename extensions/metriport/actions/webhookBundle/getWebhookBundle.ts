@@ -16,7 +16,7 @@ export const getWebhookBundle: Action<
   category: Category.EHR_INTEGRATIONS,
   title: 'Get Webhook Bundle',
   description:
-    'Fetches the FHIR bundle from a Metriport webhook payload URL (e.g. the Encounter Bundle from an ADT notification, or a discharge summary). The URL is provided by the enrollment webhook on the `bundleUrl` data point and is only valid for 10 minutes.',
+    'Fetches the FHIR bundle from a Metriport webhook payload URL (e.g. the Encounter Bundle from an ADT notification, or a discharge summary). The URL is provided by the realtime update webhook on the `bundleUrl` data point and is only valid for 10 minutes.',
   fields,
   previewable: true,
   supports_automated_retries: true,

@@ -2,6 +2,7 @@
 
 ## August 2026
 
+- Rename the `enrollment` webhook to `realtimeUpdate`. The old name described what Awell does with the notification rather than what Metriport sends, which read confusingly next to the genuine enrolment concepts (the `Cohort` field, enrolling a patient into a care flow). Behaviour is unchanged. **Breaking: the webhook endpoint URL changes, so any webhook already configured in the Metriport dashboard must be repointed.**
 - `Date of Birth` on the `Create Patient` and `Update Patient` actions is now a date field rather than a free-text string, so care flows can map a date onto it directly instead of hand-formatting `YYYY-MM-DD`. The value is normalised to the date-only string Metriport expects, so care flows already passing `YYYY-MM-DD` are unaffected.
 
 ## July 2026
