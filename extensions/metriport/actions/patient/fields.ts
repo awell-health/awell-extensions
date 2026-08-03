@@ -33,7 +33,7 @@ export const createFields = {
   genderAtBirth: {
     id: 'genderAtBirth',
     label: 'Gender at Birth',
-    description: `The Patient's gender at birth, can be one of M or F`,
+    description: `The Patient's gender at birth. Accepts M, F, O or U as well as Male, Female, Other or Unknown`,
     type: FieldType.STRING,
     required: true,
   },

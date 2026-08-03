@@ -5,11 +5,39 @@ import {
   usStateForAddressSchema,
 } from '@metriport/api-sdk'
 
+/**
+ * Awell stores a patient's sex as `Male`, `Female` or `Unknown` while Metriport
+ * expects a single letter code (`M`, `F`, `O`, `U`). Anything already in
+ * Metriport's format is passed through untouched; anything we don't recognise
+ * is left alone so Metriport's schema rejects it, surfacing the bad patient
+ * data rather than quietly recording the sex as unknown.
+ */
+const genderAtBirthAliases: Record<
+  string,
+  z.infer<typeof genderAtBirthSchema>
+> = {
+  m: 'M',
+  male: 'M',
+  f: 'F',
+  female: 'F',
+  o: 'O',
+  other: 'O',
+  u: 'U',
+  unknown: 'U',
+  not_known: 'U',
+}
+
+export const genderAtBirthTransformSchema = z.preprocess((value) => {
+  if (typeof value !== 'string') return value
+
+  return genderAtBirthAliases[value.trim().toLowerCase()] ?? value
+}, genderAtBirthSchema)
+
 export const patientCreateSchema = z.object({
   firstName: z.string().min(1),
   lastName: z.string().min(1),
   dob: z.string().length(10),
-  genderAtBirth: genderAtBirthSchema,
+  genderAtBirth: genderAtBirthTransformSchema,
   addressLine1: z.string().min(1),
   addressLine2: z.string().optional(),
   city: z.string().min(1),
