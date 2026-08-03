@@ -94,11 +94,11 @@ export interface MetriportPingWebhook {
 }
 
 /**
- * The union of all payloads that can be received on the enrollment webhook
+ * The union of all payloads that can be received on the realtime update webhook
  * endpoint. Metriport POSTs every notification type to the same URL, so the
  * handler must discriminate on `meta.type`.
  */
-export type MetriportEnrollmentWebhookPayload =
+export type MetriportRealtimeUpdateWebhookPayload =
   | MetriportPatientAdmitWebhook
   | MetriportPatientDischargeWebhook
   | MetriportPatientTransferWebhook

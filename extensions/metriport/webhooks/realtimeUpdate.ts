@@ -13,7 +13,7 @@ import {
 import { isWebhookRequestAuthorized } from '../shared/verifyWebhookSignature'
 import {
   MetriportWebhookType,
-  type MetriportEnrollmentWebhookPayload,
+  type MetriportRealtimeUpdateWebhookPayload,
 } from './types'
 import { webhookPayloadSchema, type WebhookPayloadSchema } from './validation.zod'
 
@@ -74,14 +74,14 @@ const isDischargeSummary = (
 ): webhook is DischargeSummaryWebhook =>
   webhook.meta.type === MetriportWebhookType.DischargeSummary
 
-export const enrollment: Webhook<
+export const realtimeUpdate: Webhook<
   keyof typeof dataPoints,
-  MetriportEnrollmentWebhookPayload,
+  MetriportRealtimeUpdateWebhookPayload,
   typeof settings
 > = {
-  key: 'enrollment',
+  key: 'realtimeUpdate',
   description:
-    'Enrolls a patient when Metriport sends a real-time notification. The `eventType` data point carries the Metriport webhook type (`patient.admit` or `medical.discharge-summary`) so it can be distinguished on. The FHIR bundle is not fetched here — the pre-signed URL is passed on the `bundleUrl` data point and can be retrieved later with the "Get Webhook Bundle" action.',
+    'Starts a care flow when Metriport sends a real-time patient notification. The `eventType` data point carries the Metriport webhook type (`patient.admit` or `medical.discharge-summary`) so it can be distinguished on. The FHIR bundle is not fetched here — the pre-signed URL is passed on the `bundleUrl` data point and can be retrieved later with the "Get Webhook Bundle" action.',
   dataPoints,
   onEvent: async ({
     payload: { payload, rawBody, headers, settings, endpoint },
@@ -241,4 +241,4 @@ export const enrollment: Webhook<
   },
 }
 
-export type Enrollment = typeof enrollment
+export type RealtimeUpdate = typeof realtimeUpdate

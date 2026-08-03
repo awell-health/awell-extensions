@@ -77,16 +77,16 @@ Visit [endpoint docs](https://docs.metriport.com/medical-api/api-reference/cohor
 
 ## Get Webhook Bundle
 
-Fetches the FHIR bundle from a Metriport webhook payload URL — e.g. the [Encounter Bundle](https://docs.metriport.com/medical-api/handling-data/patient-encounter-bundle) from an ADT notification, or a discharge summary. Pass the `bundleUrl` data point emitted by the **Enrollment** webhook; the action downloads the bundle and returns it on the `bundle` data point.
+Fetches the FHIR bundle from a Metriport webhook payload URL — e.g. the [Encounter Bundle](https://docs.metriport.com/medical-api/handling-data/patient-encounter-bundle) from an ADT notification, or a discharge summary. Pass the `bundleUrl` data point emitted by the **Realtime Update** webhook; the action downloads the bundle and returns it on the `bundle` data point.
 
 When the payload is a Patient Encounter Bundle, the action also rewrites it into an executable FHIR transaction and returns that on the `transactionBundle` data point, ready to hand to the Medplum **Find or create resource** action.
 
-**NOTE: Metriport pre-signed URLs are only valid for 10 minutes, so this action should run early in the care flow, shortly after the enrollment webhook fires.**
+**NOTE: Metriport pre-signed URLs are only valid for 10 minutes, so this action should run early in the care flow, shortly after the realtime update webhook fires.**
 
 | Field | Type | Description |
 | --- | --- | --- |
 | `url` | string | The pre-signed payload URL to fetch (the webhook's `bundleUrl` data point). |
-| `eventType` | string (optional) | The Metriport notification type — wire this from the enrollment webhook's `eventType` data point. Recorded on the import Provenance so admit, transfer and discharge can be told apart. |
+| `eventType` | string (optional) | The Metriport notification type — wire this from the realtime update webhook's `eventType` data point. Recorded on the import Provenance so admit, transfer and discharge can be told apart. |
 | `provenanceReason` | text (optional) | Free-text reason recorded on the import Provenance, describing why the data was imported. |
 
 | Data point | Type | Description |
@@ -134,7 +134,7 @@ A transaction resolves an internal reference by matching it against `fullUrl` ve
 
 ### Wiring it into a care flow
 
-1. **Enrollment** webhook fires and emits `bundleUrl` and `eventType`.
+1. **Realtime Update** webhook fires and emits `bundleUrl` and `eventType`.
 2. **Get Webhook Bundle** — pass `bundleUrl` to `url` and `eventType` to `eventType`. Run this early; the URL expires after 10 minutes.
 3. Medplum **Find or create resource** — pass the `transactionBundle` data point to its `resourceJson` field. No changes to that action are needed; it detects a Bundle and executes it.
 
@@ -150,7 +150,7 @@ A `collection` bundle that is missing its Patient or Encounter entry is treated 
 
 # Webhooks
 
-## Enrollment
+## Realtime Update
 
 An enrollment trigger that starts a care flow when Metriport sends a [real-time patient notification](https://docs.metriport.com/medical-api/handling-data/realtime-patient-notifications).
 

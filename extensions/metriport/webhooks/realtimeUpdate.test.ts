@@ -1,9 +1,9 @@
 import crypto from 'crypto'
 import { TestHelpers } from '@awell-health/extensions-core'
 import {
-  enrollment as webhook,
+  realtimeUpdate as webhook,
   METRIPORT_PATIENT_IDENTIFIER_SYSTEM,
-} from './enrollment'
+} from './realtimeUpdate'
 import { MetriportWebhookType } from './types'
 
 const sign = (key: string, body: string): string =>
@@ -46,7 +46,7 @@ const dischargeSummaryPayload = {
   ],
 }
 
-describe('Metriport - Webhook - Enrollment', () => {
+describe('Metriport - Webhook - Realtime Update', () => {
   const { extensionWebhook, onSuccess, onError, helpers, clearMocks } =
     TestHelpers.fromWebhook(webhook)
 
