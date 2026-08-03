@@ -26,8 +26,8 @@ export const createFields = {
   dob: {
     id: 'dob',
     label: 'Date of Birth',
-    description: `The Patient's date of birth (DOB), formatted YYYY-MM-DD`,
-    type: FieldType.STRING,
+    description: `The Patient's date of birth (DOB)`,
+    type: FieldType.DATE,
     required: true,
   },
   genderAtBirth: {

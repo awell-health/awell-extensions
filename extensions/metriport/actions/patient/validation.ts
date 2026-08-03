@@ -1,4 +1,5 @@
 import * as z from 'zod'
+import { DateOnlySchema } from '@awell-health/extensions-core'
 import { optionalEmailSchema } from '../../../../src/utils/emailValidation'
 import {
   genderAtBirthSchema,
@@ -36,7 +37,12 @@ export const genderAtBirthTransformSchema = z.preprocess((value) => {
 export const patientCreateSchema = z.object({
   firstName: z.string().min(1),
   lastName: z.string().min(1),
-  dob: z.string().length(10),
+  /**
+   * Metriport expects a date-only string (YYYY-MM-DD). `DateOnlySchema`
+   * normalises whatever the DATE field hands over — a plain `1940-08-29` or a
+   * full ISO timestamp — down to the date part.
+   */
+  dob: DateOnlySchema,
   genderAtBirth: genderAtBirthTransformSchema,
   addressLine1: z.string().min(1),
   addressLine2: z.string().optional(),
