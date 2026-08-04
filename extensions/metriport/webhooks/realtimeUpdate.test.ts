@@ -1,10 +1,17 @@
 import crypto from 'crypto'
 import { TestHelpers } from '@awell-health/extensions-core'
+import { shouldDedupe } from '../shared/shouldDedupe'
 import {
   realtimeUpdate as webhook,
   METRIPORT_PATIENT_IDENTIFIER_SYSTEM,
 } from './realtimeUpdate'
 import { MetriportWebhookType } from './types'
+
+jest.mock('../shared/shouldDedupe', () => ({
+  shouldDedupe: jest.fn().mockReturnValue(false),
+}))
+
+const mockedShouldDedupe = jest.mocked(shouldDedupe)
 
 const sign = (key: string, body: string): string =>
   crypto.createHmac('sha256', key).update(body).digest('hex')
@@ -52,6 +59,9 @@ describe('Metriport - Webhook - Realtime Update', () => {
 
   beforeEach(() => {
     clearMocks()
+    // Deduping is production-only; default to off so the other suites don't
+    // construct a rate limiter.
+    mockedShouldDedupe.mockReturnValue(false)
   })
 
   const invoke = async (payload: unknown, headers = {}): Promise<void> => {
@@ -296,6 +306,10 @@ describe('Metriport - Webhook - Realtime Update', () => {
   describe('When rate limiting is configured', () => {
     const settingsWithRateLimit = { ...mockSettings, rateLimitDuration: '1 m' }
 
+    beforeEach(() => {
+      mockedShouldDedupe.mockReturnValue(true)
+    })
+
     const invokeWithSettings = async (
       payload: unknown,
       settings: Record<string, string>,
@@ -356,6 +370,16 @@ describe('Metriport - Webhook - Realtime Update', () => {
       expect(onError).not.toHaveBeenCalled()
       expect(onSuccess).toHaveBeenCalledTimes(1)
       // With no rateLimitDuration set the limiter is never constructed.
+      expect(helpers.rateLimiter).not.toHaveBeenCalled()
+    })
+
+    test('Should skip deduping entirely when the environment does not dedupe', async () => {
+      mockedShouldDedupe.mockReturnValue(false)
+
+      await invokeWithSettings(admitPayload, settingsWithRateLimit)
+
+      expect(onError).not.toHaveBeenCalled()
+      expect(onSuccess).toHaveBeenCalledTimes(1)
       expect(helpers.rateLimiter).not.toHaveBeenCalled()
     })
   })

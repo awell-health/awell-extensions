@@ -10,6 +10,7 @@ import {
   transformRateLimitDuration,
   type settings,
 } from '../settings'
+import { shouldDedupe } from '../shared/shouldDedupe'
 import { isWebhookRequestAuthorized } from '../shared/verifyWebhookSignature'
 import {
   MetriportWebhookType,
@@ -190,25 +191,30 @@ export const realtimeUpdate: Webhook<
       // a duplicate delivery of the same message within the configured window is
       // acknowledged with 200 OK (so Metriport stops retrying) but does not
       // re-enroll the patient. Distinct messages always pass.
-      const { success, data: durationString } =
-        rateLimitDurationSchema.safeParse(settings.rateLimitDuration)
-      if (success && !isNil(durationString)) {
-        const duration = transformRateLimitDuration(durationString)
-        const limiterName = `metriport-enrollment-${webhook.meta.type}-${endpoint?.id ?? 'global'}`
-        const limiter = rateLimiter(limiterName, {
-          requests: 1,
-          duration,
-        })
-        const key = webhook.meta.messageId
-        const { success } = await limiter.limit(key)
-        if (!success) {
-          await onError({
-            response: {
-              statusCode: 200,
-              message: `Rate limit exceeded on limiter ${limiterName} for messageId ${key}. 200 OK response sent to Metriport to prevent re-enrolling patient ${patientId} for a duplicate delivery of this message on endpoint ${endpoint?.url ?? 'global'}.`,
-            },
+      //
+      // We only add this rate limiter in production — see `shouldDedupe`.
+      //
+      if (shouldDedupe()) {
+        const { success, data: durationString } =
+          rateLimitDurationSchema.safeParse(settings.rateLimitDuration)
+        if (success && !isNil(durationString)) {
+          const duration = transformRateLimitDuration(durationString)
+          const limiterName = `metriport-enrollment-${webhook.meta.type}-${endpoint?.id ?? 'global'}`
+          const limiter = rateLimiter(limiterName, {
+            requests: 1,
+            duration,
           })
-          return
+          const key = webhook.meta.messageId
+          const { success } = await limiter.limit(key)
+          if (!success) {
+            await onError({
+              response: {
+                statusCode: 200,
+                message: `Rate limit exceeded on limiter ${limiterName} for messageId ${key}. 200 OK response sent to Metriport to prevent re-enrolling patient ${patientId} for a duplicate delivery of this message on endpoint ${endpoint?.url ?? 'global'}.`,
+              },
+            })
+            return
+          }
         }
       }
 
