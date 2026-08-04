@@ -34,12 +34,12 @@ const readJsonFile = (path: string, label: string): Record<string, unknown> => {
 }
 
 void yargs(hideBin(process.argv))
-  .scriptName('awell-ext')
+  .scriptName('yarn cli')
   .strict()
   .demandCommand(1, 'You must specify a command')
   .command(
     'list',
-    'List every registered extension with its action and webhook keys. Use this first to confirm a new extension is registered and keyed as expected. Example: awell-ext list\n',
+    'List every registered extension with its action and webhook keys. Use this first to confirm a new extension is registered and keyed as expected. Example: yarn cli list\n',
     () => {},
     () => {
       cmdList()
@@ -47,7 +47,7 @@ void yargs(hideBin(process.argv))
   )
   .command(
     'describe <target>',
-    "Print an action's input fields (id, type, required), data points, and settings status: <extension>/<action>. Use this to build the correct --fields JSON WITHOUT reading source. Prefer it over exploring config/fields.ts. Example: awell-ext describe slack/sendMessageToChannel --json\n",
+    "Print an action's input fields (id, type, required), data points, and settings status: <extension>/<action>. Use this to build the correct --fields JSON WITHOUT reading source. Prefer it over exploring config/fields.ts. Example: yarn cli describe slack/sendMessageToChannel --json\n",
     (y) =>
       y
         .positional('target', { type: 'string', demandOption: true })
@@ -66,7 +66,7 @@ void yargs(hideBin(process.argv))
   )
   .command(
     'env <extension>',
-    'Print the env var NAMES an extension expects (never values — safe to show). Use it to discover which settings map to which env vars. Example: awell-ext env slack\n',
+    'Print the env var NAMES an extension expects (never values — safe to show). Use it to discover which settings map to which env vars. Example: yarn cli env slack\n',
     (y) => y.positional('extension', { type: 'string', demandOption: true }),
     (argv) => {
       cmdEnv(String(argv.extension))
@@ -74,7 +74,7 @@ void yargs(hideBin(process.argv))
   )
   .command(
     'doctor <extension>',
-    'Show which settings are set vs missing in the current env (no values revealed). Run before `run` to diagnose missing credentials. Example: awell-ext doctor slack\n',
+    'Show which settings are set vs missing in the current env (no values revealed). Run before `run` to diagnose missing credentials. Example: yarn cli doctor slack\n',
     (y) => y.positional('extension', { type: 'string', demandOption: true }),
     (argv) => {
       cmdDoctor(String(argv.extension))
@@ -82,7 +82,7 @@ void yargs(hideBin(process.argv))
   )
   .command(
     'setup <extension>',
-    "Scaffold the extension's missing settings as empty stubs in .env for the user to fill in (non-interactive; existing values untouched). The user supplies the secret values in the file, then run `doctor` to verify. Example: awell-ext setup slack\n",
+    "Scaffold the extension's missing settings as empty stubs in .env for the user to fill in (non-interactive; existing values untouched). The user supplies the secret values in the file, then run `doctor` to verify. Example: yarn cli setup slack\n",
     (y) => y.positional('extension', { type: 'string', demandOption: true }),
     (argv) => {
       cmdSetup(String(argv.extension))
@@ -90,7 +90,7 @@ void yargs(hideBin(process.argv))
   )
   .command(
     'run <target>',
-    'Execute a real action handler and print its result (status, data_points, events, or uncaughtError). This is the primary runtime feedback loop — unlike `yarn test` it runs the real handler, not mocks. Run `doctor` first if the extension needs credentials. Example: awell-ext run slack/sendMessageToChannel --fields \'{"channel":"#general","message":"hi"}\' --json\n',
+    'Execute a real action handler and print its result (status, data_points, events, or uncaughtError). This is the primary runtime feedback loop — unlike `yarn test` it runs the real handler, not mocks. Run `doctor` first if the extension needs credentials. Example: yarn cli run slack/sendMessageToChannel --fields \'{"channel":"#general","message":"hi"}\' --json\n',
     (y) =>
       y
         .positional('target', { type: 'string', demandOption: true })
@@ -129,7 +129,7 @@ void yargs(hideBin(process.argv))
   )
   .command(
     'webhook replay <target>',
-    'Replay a vendor webhook payload through the real webhook handler: <extension>/<webhook>. Exercises payload parsing, patient-linking, and signature verification without waiting for a live event. Example: awell-ext webhook replay bland/callCompleted --payload-file ./fixture.json\n',
+    'Replay a vendor webhook payload through the real webhook handler: <extension>/<webhook>. Exercises payload parsing, patient-linking, and signature verification without waiting for a live event. Example: yarn cli webhook replay bland/callCompleted --payload-file ./fixture.json\n',
     (y) =>
       y
         .positional('target', { type: 'string', demandOption: true })
