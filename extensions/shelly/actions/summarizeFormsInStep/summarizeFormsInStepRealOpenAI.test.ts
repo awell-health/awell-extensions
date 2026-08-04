@@ -4,7 +4,7 @@ import 'dotenv/config'
 import { TestHelpers } from '@awell-health/extensions-core'
 import { generateTestPayload } from '@/tests'
 import { summarizeFormsInStep } from '.'
-import { DISCLAIMER_MSG_FORM } from '../../lib/constants'
+import { DISCLAIMER_MSG } from '../../lib/constants'
 import { detectLanguageWithLLM } from '../../lib/detectLanguageWithLLM'
 
 // Spy on detectLanguageWithLLM to verify it's called
@@ -136,7 +136,7 @@ describe.skip('summarizeFormsInStep - Real OpenAI calls', () => {
     expect(detectLanguageWithLLM).toHaveBeenCalled()
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
-        summary: expect.stringContaining(DISCLAIMER_MSG_FORM),
+        summary: expect.stringContaining(DISCLAIMER_MSG),
       },
     })
     expect(onError).not.toHaveBeenCalled()

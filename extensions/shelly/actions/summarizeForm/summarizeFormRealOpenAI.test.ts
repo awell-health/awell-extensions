@@ -15,15 +15,6 @@ jest.mock('../../lib/detectLanguageWithLLM', () => {
   }
 })
 
-// Mock getCareFlowDetails
-jest.mock('../../lib/getCareFlowDetails', () => ({
-  getCareFlowDetails: jest.fn().mockResolvedValue({
-    title: 'Test Care Flow',
-    id: 'whatever',
-    version: 3,
-  }),
-}))
-
 jest.setTimeout(30000) // Increase timeout if needed for real LLM calls
 
 const generateTestPayload = (overrides = {}) => {
@@ -166,7 +157,7 @@ describe.skip('summarizeForm - Real LLM calls with mocked Awell SDK', () => {
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
         summary: expect.stringContaining(
-          '<p><strong>Important Notice:</strong> The content provided is an AI-generated summary of form responses of version 3 of Care Flow "Test Care Flow" (ID: ai4rZaYEocjB)',
+          '<p>This is an AI-generated summary. It presents information already recorded in the care flow and does not generate, recommend, or make any clinical decision. Always review for accuracy and completeness.</p>',
         ),
       },
     })
@@ -272,7 +263,7 @@ describe.skip('summarizeForm - Real LLM calls with mocked Awell SDK', () => {
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
         summary: expect.stringContaining(
-          '<p><strong>Important Notice:</strong> The content provided is an AI-generated summary of form responses of version 3 of Care Flow "Test Care Flow" (ID: ai4rZaYEocjB)',
+          '<p>This is an AI-generated summary. It presents information already recorded in the care flow and does not generate, recommend, or make any clinical decision. Always review for accuracy and completeness.</p>',
         ),
       },
     })
@@ -373,7 +364,7 @@ describe.skip('summarizeForm - Real LLM calls with mocked Awell SDK', () => {
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
         summary: expect.stringContaining(
-          '<p><strong>Important Notice:</strong> The content provided is an AI-generated summary of form responses of version 3 of Care Flow "Test Care Flow" (ID: ai4rZaYEocjB)',
+          '<p>This is an AI-generated summary. It presents information already recorded in the care flow and does not generate, recommend, or make any clinical decision. Always review for accuracy and completeness.</p>',
         ),
       },
     })
@@ -474,7 +465,7 @@ describe.skip('summarizeForm - Real LLM calls with mocked Awell SDK', () => {
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
         summary: expect.stringContaining(
-          '<p><strong>Important Notice:</strong> The content provided is an AI-generated summary of form responses of version 3 of Care Flow "Test Care Flow" (ID: ai4rZaYEocjB)',
+          '<p>This is an AI-generated summary. It presents information already recorded in the care flow and does not generate, recommend, or make any clinical decision. Always review for accuracy and completeness.</p>',
         ),
       },
     })
@@ -554,7 +545,7 @@ describe.skip('summarizeForm - Real LLM calls with mocked Awell SDK', () => {
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
         summary: expect.stringContaining(
-          '<p><strong>Important Notice:</strong> The content provided is an AI-generated summary of form responses of version 3 of Care Flow "Test Care Flow" (ID: ai4rZaYEocjB)',
+          '<p>This is an AI-generated summary. It presents information already recorded in the care flow and does not generate, recommend, or make any clinical decision. Always review for accuracy and completeness.</p>',
         ),
       },
     })

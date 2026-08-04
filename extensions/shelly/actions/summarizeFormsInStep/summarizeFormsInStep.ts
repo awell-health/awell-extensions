@@ -3,7 +3,7 @@ import { fields, dataPoints, FieldsValidationSchema } from './config'
 import { getResponsesForAllForms } from '../../lib/getFormResponseText'
 import { summarizeFormWithLLM } from '../../lib/summarizeFormWithLLM'
 import { detectLanguageWithLLM } from '../../lib/detectLanguageWithLLM'
-import { DISCLAIMER_MSG_FORM } from '../../lib/constants'
+import { DISCLAIMER_MSG } from '../../lib/constants'
 import { getAllFormsInCurrentStep } from '../../../../src/lib/awell'
 import { markdownToHtml } from '../../../../src/utils'
 import { createOpenAIModel } from '../../../../src/lib/llm/openai'
@@ -76,7 +76,7 @@ export const summarizeFormsInStep: Action<
         formData: allFormsResponseText,
         summaryFormat,
         language: summaryLanguage,
-        disclaimerMessage: DISCLAIMER_MSG_FORM,
+        disclaimerMessage: DISCLAIMER_MSG,
         metadata,
         callbacks, // Add callbacks here
       })

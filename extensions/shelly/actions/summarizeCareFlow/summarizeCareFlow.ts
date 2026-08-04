@@ -89,7 +89,7 @@ export const summarizeCareFlow: Action<
       })
 
       const htmlSummary = await markdownToHtml(
-        `${DISCLAIMER_MSG}\n\n${summary}`,
+        `${summary}\n\n${DISCLAIMER_MSG}`,
       )
 
       await onComplete({

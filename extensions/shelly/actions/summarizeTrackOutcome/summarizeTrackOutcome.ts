@@ -6,9 +6,9 @@ import { summarizeTrackOutcomeWithLLM } from './lib/summarizeTrackOutcomeWithLLM
 import { createOpenAIModel } from '../../../../src/lib/llm/openai'
 import { OPENAI_MODELS } from '../../../../src/lib/llm/openai/constants'
 import { getTrackData } from '../../lib/getTrackData/index'
-import { getCareFlowDetails } from '../../lib/getCareFlowDetails'
 import { isNil } from 'lodash'
 import { addActivityEventLog } from '../../../../src/lib/awell/addEventLog'
+import { DISCLAIMER_MSG } from '../../lib/constants'
 
 export const summarizeTrackOutcome: Action<
   typeof fields,
@@ -89,18 +89,9 @@ export const summarizeTrackOutcome: Action<
         callbacks,
       })
 
-      // Get care flow details for the disclaimer
-      const careFlowDetails = await getCareFlowDetails(awellSdk, pathway.id)
-
-      // Create version string if version is available
-      let disclaimerMsg = ''
-      if (!isNil(careFlowDetails.version)) {
-        disclaimerMsg = `**Important Notice:** The content provided is an AI-generated summary of version ${careFlowDetails.version} of Care Flow "${careFlowDetails.title}" (ID: ${pathway.id}).`
-      } else {
-        disclaimerMsg = `**Important Notice:** The content provided is an AI-generated summary of Care Flow "${careFlowDetails.title}" (ID: ${pathway.id}).`
-      }
-
-      const htmlSummary = await markdownToHtml(`${disclaimerMsg}\n\n${summary}`)
+      const htmlSummary = await markdownToHtml(
+        `${summary}\n\n${DISCLAIMER_MSG}`,
+      )
 
       await onComplete({
         data_points: {
