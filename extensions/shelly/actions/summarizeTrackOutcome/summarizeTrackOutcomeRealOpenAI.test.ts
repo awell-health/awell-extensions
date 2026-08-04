@@ -12,15 +12,6 @@ jest.mock('../../lib/getTrackData/index', () => {
   }
 })
 
-// Mock getCareFlowDetails
-jest.mock('../../lib/getCareFlowDetails', () => ({
-  getCareFlowDetails: jest.fn().mockResolvedValue({
-    title: 'AI Actions Check',
-    id: 'xQ2P4uBn2cY8',
-    version: 6,
-  }),
-}))
-
 jest.setTimeout(30000) // Increase timeout for real LLM calls
 
 // Use describe.skip to prevent this test from running in normal CI/CD pipelines
@@ -119,7 +110,7 @@ describe.skip('summarizeTrackOutcome - Real LLM calls with mocked Awell SDK', ()
 
       // Verify the summary contains the disclaimer with version
       expect(summary).toContain(
-        '<p><strong>Important Notice:</strong> The content provided is an AI-generated summary of version 6 of Care Flow "AI Actions Check"',
+        '<p>This is an AI-generated summary. It presents information already recorded in the care flow and does not generate, recommend, or make any clinical decision. Always review for accuracy and completeness.</p>',
       )
 
       // Verify the summary contains relevant information about the track

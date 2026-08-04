@@ -2,6 +2,7 @@ import { TestHelpers } from '@awell-health/extensions-core'
 import { summarizeTrackOutcome } from '.'
 import { mockPathwayDetails } from './__mocks__/mockPathwayDetails'
 import { mockTrackData } from './__mocks__/mockTrackData'
+import { DISCLAIMER_MSG } from '../../lib/constants'
 
 // Mock getTrackData
 jest.mock('../../lib/getTrackData/index', () => {
@@ -11,15 +12,6 @@ jest.mock('../../lib/getTrackData/index', () => {
     getTrackData: jest.fn(),
   }
 })
-
-// Mock getCareFlowDetails
-jest.mock('../../lib/getCareFlowDetails', () => ({
-  getCareFlowDetails: jest.fn().mockResolvedValue({
-    title: 'AI Actions Check',
-    id: 'ty0CmaHm2jlX',
-    version: 6,
-  }),
-}))
 
 // Mock createOpenAIModel
 jest.mock('../../../../src/lib/llm/openai', () => ({
@@ -136,8 +128,8 @@ describe('summarizeTrackOutcome - Mocked LLM calls', () => {
       callbacks: expect.any(Array),
     })
 
-    // Verify the disclaimer is included
-    const expectedDisclaimerMsg = `<p><strong>Important Notice:</strong> The content provided is an AI-generated summary of version 6 of Care Flow "AI Actions Check" (ID: xQ2P4uBn2cY8).</p>`
+    // Verify the disclaimer is included at the bottom
+    const expectedDisclaimerMsg = `<p>${DISCLAIMER_MSG}</p>`
 
     // Verify onComplete was called with the expected data
     expect(onComplete).toHaveBeenCalled()
@@ -145,6 +137,7 @@ describe('summarizeTrackOutcome - Mocked LLM calls', () => {
 
     // Check for disclaimer
     expect(summaryData).toContain(expectedDisclaimerMsg)
+    expect(summaryData.trim().endsWith(expectedDisclaimerMsg)).toBe(true)
 
     // Check for key information from the mock LLM response
     expect(summaryData).toContain(
@@ -168,10 +161,6 @@ describe('summarizeTrackOutcome - Mocked LLM calls', () => {
     }
 
     helpers.awellSdk = jest.fn().mockResolvedValue(awellSdkMock)
-
-    // Reset the getCareFlowDetails mock to ensure it's not called
-    const { getCareFlowDetails } = require('../../lib/getCareFlowDetails')
-    getCareFlowDetails.mockReset()
 
     await extensionAction.onEvent({
       payload: basePayload,

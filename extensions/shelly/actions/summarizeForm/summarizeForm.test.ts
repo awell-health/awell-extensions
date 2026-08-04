@@ -6,15 +6,6 @@ import { mockFormDefinitionResponse } from './__mocks__/formDefinitionResponse'
 import { mockFormResponseResponse } from './__mocks__/formResponseResponse'
 import { markdownToHtml } from '../../../../src/utils'
 
-// Mock getCareFlowDetails
-jest.mock('../../lib/getCareFlowDetails', () => ({
-  getCareFlowDetails: jest.fn().mockResolvedValue({
-    title: 'Test Care Flow',
-    id: 'whatever',
-    version: 3,
-  }),
-}))
-
 // Mock the detectLanguageWithLLM function
 jest.mock('../../lib/detectLanguageWithLLM', () => ({
   detectLanguageWithLLM: jest.fn().mockImplementation(async () => 'English'),
@@ -325,7 +316,7 @@ describe('summarizeForm - Mocked LLM calls', () => {
       expect(summarizeFormWithLLM).toHaveBeenCalledWith(
         expect.objectContaining({
           disclaimerMessage:
-            '**Important Notice:** The content provided is an AI-generated summary of form responses of version 3 of Care Flow "Test Care Flow" (ID: ai4rZaYEocjB).',
+            'This is an AI-generated summary. It presents information already recorded in the care flow and does not generate, recommend, or make any clinical decision. Always review for accuracy and completeness.',
           language: 'English',
         }),
       )
@@ -376,7 +367,7 @@ describe('summarizeForm - Mocked LLM calls', () => {
       expect(summarizeFormWithLLM).toHaveBeenCalledWith(
         expect.objectContaining({
           disclaimerMessage:
-            '**Important Notice:** The content provided is an AI-generated summary of form responses of version 3 of Care Flow "Test Care Flow" (ID: ai4rZaYEocjB).',
+            'This is an AI-generated summary. It presents information already recorded in the care flow and does not generate, recommend, or make any clinical decision. Always review for accuracy and completeness.',
           language: 'Spanish',
           additionalInstructions:
             'Focus on medication details and side effects.',

@@ -14,8 +14,7 @@ import {
   getFormsInTrack,
 } from '../../../../src/lib/awell'
 import { markdownToHtml } from '../../../../src/utils'
-import { getCareFlowDetails } from '../../lib/getCareFlowDetails'
-import { isNil } from 'lodash'
+import { DISCLAIMER_MSG } from '../../lib/constants'
 
 /**
  * Awell Action: Form Summarization
@@ -67,12 +66,6 @@ export const summarizeForm: Action<
     })
 
     const awellSdk = await helpers.awellSdk()
-
-    // Get care flow details for the disclaimer
-    const careFlowDetails = await getCareFlowDetails(
-      awellSdk,
-      payload.pathway.id,
-    )
 
     // 3. Get form data based on scope and formSelection
     let formData: string
@@ -150,14 +143,6 @@ export const summarizeForm: Action<
       return
     }
 
-    // Create disclaimer message based on version availability
-    let disclaimerMessage = ''
-    if (!isNil(careFlowDetails.version)) {
-      disclaimerMessage = `**Important Notice:** The content provided is an AI-generated summary of form responses of version ${careFlowDetails.version} of Care Flow "${careFlowDetails.title}" (ID: ${payload.pathway.id}).`
-    } else {
-      disclaimerMessage = `**Important Notice:** The content provided is an AI-generated summary of form responses of Care Flow "${careFlowDetails.title}" (ID: ${payload.pathway.id}).`
-    }
-
     let summaryLanguage = language
 
     if (language === 'Default') {
@@ -180,7 +165,7 @@ export const summarizeForm: Action<
       formData,
       summaryFormat,
       language: summaryLanguage,
-      disclaimerMessage,
+      disclaimerMessage: DISCLAIMER_MSG,
       additionalInstructions,
       metadata,
       callbacks,

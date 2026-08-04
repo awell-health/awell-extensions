@@ -1,16 +1,13 @@
 import { ChatPromptTemplate } from '@langchain/core/prompts'
 
+const disclaimerInstructions = `
+  At the end of the summary, add two new lines and then write this exact disclaimer message without altering or translating it: "{disclaimerMessage}"
+`
+
 export const systemPromptBulletPoints = ChatPromptTemplate.fromTemplate(`
   You are an assistant tasked with summarizing forms completed by patients or healthcare professionals. Each form contains a title, questions, answers, possibly answer labels and answer options. Your objective is to create a concise summary of the form responses, tailored for a team of clinicians involved in patient care. The summary must cover all questions and provide an easy-to-review overview.
 
-  First, write the disclaimer message "{disclaimerMessage}" in specified language: {language}, following these rules:
-  - If specified language is Default or not specified: translate all parts of {disclaimerMessage} into the language of the form. If you cannot determine language use English.
-  - If specified language is other than Default (French, Spanish, bosnian, ...): translate ALL parts of {disclaimerMessage} into specified language: {language}, including ANY heading text such as "Important Notice" which MUST be translated too. It is critical that the entire disclaimer message is written in the same language as specified language: {language} without any English words remaining.
-    For example if the disclaimer message is "**Important Notice:** The content provided is an AI-generated summary." and specified language is Spanish, the disclaimer message in Spanish would be "**Aviso Importante:** El contenido proporcionado es un resumen generado por IA de las respuestas del formulario".
-    If the specified language is French than the same disclaimer message should be: "**Avis Important :** Le contenu fourni est un résumé généré par IA des réponses du formulario".
-  Then add two new lines after the disclaimer message.
-
-  Then adhere strictly to these step-by-step instructions:
+  First adhere strictly to these step-by-step instructions:
   1. **Begin the summary with the form title if available.**
   - Use title as is without alteration. Format is as title. 
   - Then add an empty line for separation. 
@@ -62,6 +59,8 @@ export const systemPromptBulletPoints = ChatPromptTemplate.fromTemplate(`
   **Additional Instructions:**
   {additionalInstructions}
 
+  ${disclaimerInstructions}
+
   ---
 
   **Content to Summarize:**
@@ -72,14 +71,7 @@ export const systemPromptBulletPoints = ChatPromptTemplate.fromTemplate(`
 export const systemPromptTextParagraph = ChatPromptTemplate.fromTemplate(`
   You are an assistant tasked with summarizing forms completed by patients or healthcare professionals. Each form contains a title, questions, answers, answer labels, and possible answer options. Your objective is to create a concise summary of the form responses, tailored for a team of clinicians involved in patient care. The summary must provide an easy-to-review overview.
 
-  First, write the disclaimer message "{disclaimerMessage}" in specified language: {language}, following these rules:
-  - If specified language is Default or not specified: translate all parts of {disclaimerMessage} into the language of the form. If you cannot determine language use English.
-  - If specified language is other than Default (French, Spanish, bosnian, ...): translate ALL parts of {disclaimerMessage} into specified language: {language}, including ANY heading text such as "Important Notice" which MUST be translated too. It is critical that the entire disclaimer message is written in the same language as specified language: {language} without any English words remaining.
-    For example if the disclaimer message is "**Important Notice:** The content provided is an AI-generated summary." and specified language is Spanish, the disclaimer message in Spanish would be "**Aviso Importante:** El contenido proporcionado es un resumen generado por IA de las respuestas del formulario".
-    If the specified language is French than the same disclaimer message should be: "**Avis Important :** Le contenu fourni est un résumé généré par IA des réponses du formulario".
-  Then add two new lines after the disclaimer message.
-  
-  Then adhere strictly to these step-by-step instructions:
+  First adhere strictly to these step-by-step instructions:
 
   1. **Begin the summary with the form title if available.**
   - Use title as is without alteration. Format is as title. 
@@ -118,6 +110,8 @@ export const systemPromptTextParagraph = ChatPromptTemplate.fromTemplate(`
 
   **Additional Instructions:**
   {additionalInstructions}
+
+  ${disclaimerInstructions}
 
   ---
 

@@ -84,8 +84,8 @@ describe('summarizeCareFlow - Mocked LLM calls', () => {
       }),
     })
 
-    const expected = `<p>${DISCLAIMER_MSG}</p>
-<p>Mocked care flow summary from LLM</p>`
+    const expected = `<p>Mocked care flow summary from LLM</p>
+<p>${DISCLAIMER_MSG}</p>`
 
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
