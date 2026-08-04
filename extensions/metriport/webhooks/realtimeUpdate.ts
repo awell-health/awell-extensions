@@ -22,8 +22,7 @@ import { webhookPayloadSchema, type WebhookPayloadSchema } from './validation.zo
  * The identifier system used to enroll a patient based on their Metriport
  * patient ID.
  */
-export const METRIPORT_PATIENT_IDENTIFIER_SYSTEM =
-  'https://metriport.com/fhir/patient'
+export const METRIPORT_PATIENT_IDENTIFIER_SYSTEM = 'https://metriport.com'
 
 const dataPoints = {
   eventType: {
