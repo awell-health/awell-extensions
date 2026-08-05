@@ -208,6 +208,61 @@ describe('summarizeTrackOutcome - Mocked LLM calls', () => {
     expect(onError).not.toHaveBeenCalled()
   })
 
+  it.each([
+    ['empty string', ''],
+    ['null', null],
+    ['whitespace only', '   '],
+  ])(
+    'Should fall back to the dynamic care flow disclaimer when disclaimerText is %s',
+    async (_label, disclaimerText) => {
+      const awellSdkMock = {
+        orchestration: {
+          query: jest.fn().mockImplementation(({ activity }) => {
+            if (activity) {
+              return Promise.resolve({
+                activity: {
+                  success: true,
+                  activity: {
+                    id: 'test-activity-id',
+                    context: {
+                      track_id: 'test-track-id',
+                    },
+                  },
+                },
+              })
+            }
+            return Promise.resolve({})
+          }),
+        },
+      }
+
+      helpers.awellSdk = jest.fn().mockResolvedValue(awellSdkMock)
+
+      await extensionAction.onEvent({
+        payload: {
+          ...basePayload,
+          fields: {
+            instructions: 'Summarize track outcome.',
+            disclaimerText: disclaimerText as string | undefined,
+            disclaimerPlacement: 'bottom',
+          },
+        },
+        onComplete,
+        onError,
+        helpers,
+        attempt: 1,
+      })
+
+      const summaryData = onComplete.mock.calls[0][0].data_points.outcomeSummary
+      const expectedDisclaimerMsg = `<p><strong>Important Notice:</strong> The content provided is an AI-generated summary of version 6 of Care Flow "AI Actions Check" (ID: xQ2P4uBn2cY8).</p>`
+
+      // Default dynamic disclaimer is used despite bottom placement being respected.
+      expect(summaryData).toContain(expectedDisclaimerMsg)
+      expect(summaryData.trim().endsWith(expectedDisclaimerMsg)).toBe(true)
+      expect(onError).not.toHaveBeenCalled()
+    },
+  )
+
   it('Should handle errors when SDK query fails', async () => {
     const awellSdkMock = {
       orchestration: {

@@ -378,6 +378,51 @@ describe('summarizeForm - Mocked LLM calls', () => {
       expect(onError).not.toHaveBeenCalled()
     })
 
+    it.each([
+      ['empty string', ''],
+      ['null', null],
+      ['whitespace only', '   '],
+    ])(
+      'Should fall back to the dynamic care flow disclaimer when disclaimerText is %s',
+      async (_label, disclaimerText) => {
+        const payload = generateTestPayload({
+          pathway: {
+            id: 'ai4rZaYEocjB',
+            definition_id: 'whatever',
+          },
+          activity: { id: 'X74HeDQ4N0gtdaSEuzF8s' },
+          fields: {
+            summaryFormat: 'Bullet-points',
+            language: 'English',
+            disclaimerText: disclaimerText as string | undefined,
+            disclaimerPlacement: 'bottom',
+          },
+          settings: {},
+        })
+
+        await extensionAction.onEvent({
+          payload,
+          onComplete,
+          onError,
+          helpers,
+          attempt: 1,
+        })
+
+        const {
+          summarizeFormWithLLM,
+        } = require('../../lib/summarizeFormWithLLM')
+
+        expect(summarizeFormWithLLM).toHaveBeenCalledWith(
+          expect.objectContaining({
+            disclaimerMessage:
+              '**Important Notice:** The content provided is an AI-generated summary of form responses of version 3 of Care Flow "Test Care Flow" (ID: ai4rZaYEocjB).',
+            disclaimerPlacement: 'bottom',
+          }),
+        )
+        expect(onError).not.toHaveBeenCalled()
+      },
+    )
+
     it('Should NOT use language detection when specific language is provided', async () => {
       const payload = generateTestPayload({
         pathway: {

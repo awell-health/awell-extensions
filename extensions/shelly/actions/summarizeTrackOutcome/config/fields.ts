@@ -41,6 +41,14 @@ export const fields = {
 
 export const FieldsValidationSchema = z.object({
   instructions: z.string().optional().default(''),
-  disclaimerText: z.string().optional(),
+  disclaimerText: z.preprocess(
+    (v) =>
+      v === null ||
+      v === undefined ||
+      (typeof v === 'string' && v.trim() === '')
+        ? undefined
+        : v,
+    z.string().optional(),
+  ),
   disclaimerPlacement: DisclaimerPlacementEnum.optional().default('top'),
 } satisfies Record<keyof typeof fields, ZodTypeAny>)
