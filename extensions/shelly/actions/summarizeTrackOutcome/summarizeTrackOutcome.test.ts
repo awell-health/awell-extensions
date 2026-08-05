@@ -145,6 +145,7 @@ describe('summarizeTrackOutcome - Mocked LLM calls', () => {
 
     // Check for disclaimer
     expect(summaryData).toContain(expectedDisclaimerMsg)
+    expect(summaryData.trim().startsWith(expectedDisclaimerMsg)).toBe(true)
 
     // Check for key information from the mock LLM response
     expect(summaryData).toContain(
@@ -157,6 +158,53 @@ describe('summarizeTrackOutcome - Mocked LLM calls', () => {
     expect(summaryData).toContain('follow-up blood pressure check')
 
     // Verify no errors occurred
+    expect(onError).not.toHaveBeenCalled()
+  })
+
+  it('Should use custom disclaimer text at the bottom when configured', async () => {
+    const awellSdkMock = {
+      orchestration: {
+        query: jest.fn().mockImplementation(({ activity }) => {
+          if (activity) {
+            return Promise.resolve({
+              activity: {
+                success: true,
+                activity: {
+                  id: 'test-activity-id',
+                  context: {
+                    track_id: 'test-track-id',
+                  },
+                },
+              },
+            })
+          }
+          return Promise.resolve({})
+        }),
+      },
+    }
+
+    helpers.awellSdk = jest.fn().mockResolvedValue(awellSdkMock)
+
+    await extensionAction.onEvent({
+      payload: {
+        ...basePayload,
+        fields: {
+          instructions: 'Summarize track outcome.',
+          disclaimerText: 'Custom track disclaimer.',
+          disclaimerPlacement: 'bottom',
+        },
+      },
+      onComplete,
+      onError,
+      helpers,
+      attempt: 1,
+    })
+
+    const summaryData = onComplete.mock.calls[0][0].data_points.outcomeSummary
+    const expectedDisclaimerMsg = '<p>Custom track disclaimer.</p>'
+
+    expect(summaryData).toContain(expectedDisclaimerMsg)
+    expect(summaryData.trim().endsWith(expectedDisclaimerMsg)).toBe(true)
     expect(onError).not.toHaveBeenCalled()
   })
 

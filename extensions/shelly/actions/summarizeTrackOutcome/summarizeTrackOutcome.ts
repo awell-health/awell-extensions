@@ -9,6 +9,7 @@ import { getTrackData } from '../../lib/getTrackData/index'
 import { getCareFlowDetails } from '../../lib/getCareFlowDetails'
 import { isNil } from 'lodash'
 import { addActivityEventLog } from '../../../../src/lib/awell/addEventLog'
+import { formatSummaryWithDisclaimer } from '../../lib/disclaimer'
 
 export const summarizeTrackOutcome: Action<
   typeof fields,
@@ -29,7 +30,8 @@ export const summarizeTrackOutcome: Action<
 
     try {
       // 1. Validate input fields
-      const { instructions } = FieldsValidationSchema.parse(payload.fields)
+      const { instructions, disclaimerText, disclaimerPlacement } =
+        FieldsValidationSchema.parse(payload.fields)
       const pathway = payload.pathway
 
       // 2. Initialize OpenAI model with metadata
@@ -100,7 +102,13 @@ export const summarizeTrackOutcome: Action<
         disclaimerMsg = `**Important Notice:** The content provided is an AI-generated summary of Care Flow "${careFlowDetails.title}" (ID: ${pathway.id}).`
       }
 
-      const htmlSummary = await markdownToHtml(`${disclaimerMsg}\n\n${summary}`)
+      const htmlSummary = await markdownToHtml(
+        formatSummaryWithDisclaimer({
+          summary,
+          disclaimer: disclaimerText ?? disclaimerMsg,
+          placement: disclaimerPlacement,
+        }),
+      )
 
       await onComplete({
         data_points: {

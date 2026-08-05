@@ -26,9 +26,8 @@ export const summarizeFormsInStep: Action<
 
     try {
       // 1. Validate input fields
-      const { summaryFormat, language } = FieldsValidationSchema.parse(
-        payload.fields,
-      )
+      const { summaryFormat, language, disclaimerText, disclaimerPlacement } =
+        FieldsValidationSchema.parse(payload.fields)
       const pathway = payload.pathway
 
       // 2. Initialize OpenAI model with hideDataForTracing enabled
@@ -76,7 +75,8 @@ export const summarizeFormsInStep: Action<
         formData: allFormsResponseText,
         summaryFormat,
         language: summaryLanguage,
-        disclaimerMessage: DISCLAIMER_MSG_FORM,
+        disclaimerMessage: disclaimerText ?? DISCLAIMER_MSG_FORM,
+        disclaimerPlacement,
         metadata,
         callbacks, // Add callbacks here
       })

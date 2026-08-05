@@ -96,6 +96,53 @@ describe('summarizeCareFlow - Mocked LLM calls', () => {
     expect(onError).not.toHaveBeenCalled()
   })
 
+  it('Should use custom disclaimer text at the bottom when configured', async () => {
+    const payload = generateTestPayload({
+      pathway: {
+        id: 'ai4rZaYEocjB',
+        definition_id: 'whatever',
+      },
+      fields: {
+        stakeholder: 'Clinician',
+        additionalInstructions: 'Summarize key activities.',
+        disclaimerText: 'Custom AI disclaimer.',
+        disclaimerPlacement: 'bottom',
+      },
+      settings: {
+        openAiApiKey: 'test-key',
+      },
+    })
+
+    const awellSdkMock = {
+      orchestration: {
+        query: jest.fn().mockResolvedValue({
+          careflowActivities: mockCareflowActivitiesResponse,
+        }),
+      },
+    }
+
+    helpers.awellSdk = jest.fn().mockResolvedValue(awellSdkMock)
+
+    await extensionAction.onEvent({
+      payload,
+      onComplete,
+      onError,
+      helpers,
+      attempt: 1,
+    })
+
+    const expected = `<p>Mocked care flow summary from LLM</p>
+<p>Custom AI disclaimer.</p>`
+
+    expect(onComplete).toHaveBeenCalledWith({
+      data_points: {
+        summary: expected,
+      },
+    })
+
+    expect(onError).not.toHaveBeenCalled()
+  })
+
   it('Should handle errors gracefully', async () => {
     const payload = generateTestPayload({
       pathway: {

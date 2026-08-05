@@ -6,6 +6,9 @@ export enum SummaryFormatEnum {
   TEXT_PARAGRAPH = 'Text paragraph',
 }
 
+const DisclaimerPlacementEnum = z.enum(['top', 'bottom'])
+export type DisclaimerPlacementType = z.infer<typeof DisclaimerPlacementEnum>
+
 const ScopeEnum = z.enum(['Step', 'Track'])
 export type ScopeType = z.infer<typeof ScopeEnum>
 
@@ -73,6 +76,30 @@ export const fields = {
     type: FieldType.TEXT,
     required: false,
   },
+  disclaimerText: {
+    id: 'disclaimerText',
+    label: 'Disclaimer text',
+    description:
+      'Optional disclaimer text override. If not provided, the default disclaimer is used.',
+    type: FieldType.TEXT,
+    required: false,
+  },
+  disclaimerPlacement: {
+    id: 'disclaimerPlacement',
+    label: 'Disclaimer placement',
+    description:
+      'Where to place the disclaimer in the generated summary. Defaults to top.',
+    type: FieldType.STRING,
+    required: false,
+    options: {
+      dropdownOptions: Object.values(DisclaimerPlacementEnum.enum).map(
+        (placement) => ({
+          label: placement,
+          value: placement,
+        }),
+      ),
+    },
+  },
 } satisfies Record<string, Field>
 
 // Step 3: Define the validation schema using zod
@@ -86,8 +113,13 @@ export const FieldsValidationSchema = z.object({
     .transform((value) =>
       Object.values(SummaryFormatEnum).includes(value as SummaryFormatEnum)
         ? value
-        : SummaryFormatEnum.BULLET_POINTS
+        : SummaryFormatEnum.BULLET_POINTS,
     ),
   language: z.string().optional().default('Default'),
-  additionalInstructions: z.string().optional().default('No additional instructions'),
+  additionalInstructions: z
+    .string()
+    .optional()
+    .default('No additional instructions'),
+  disclaimerText: z.string().optional(),
+  disclaimerPlacement: DisclaimerPlacementEnum.optional().default('top'),
 } satisfies Record<keyof typeof fields, ZodTypeAny>)
