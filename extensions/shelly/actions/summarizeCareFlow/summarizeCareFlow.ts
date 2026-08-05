@@ -1,6 +1,7 @@
 import { Category, type Action } from '@awell-health/extensions-core'
 import { fields, dataPoints, FieldsValidationSchema } from './config'
 import { DISCLAIMER_MSG } from '../../lib/constants'
+import { formatSummaryWithDisclaimer } from '../../lib/disclaimer'
 import { summarizeCareFlowWithLLM } from './lib/summarizeCareFlowWithLLM'
 import { markdownToHtml } from '../../../../src/utils'
 import { createOpenAIModel } from '../../../../src/lib/llm/openai'
@@ -24,8 +25,12 @@ export const summarizeCareFlow: Action<
 
     try {
       // 1. Validate input fields
-      const { additionalInstructions, stakeholder } =
-        FieldsValidationSchema.parse(payload.fields)
+      const {
+        additionalInstructions,
+        stakeholder,
+        disclaimerText,
+        disclaimerPlacement,
+      } = FieldsValidationSchema.parse(payload.fields)
       const pathway = payload.pathway
 
       // 2. Initialize OpenAI model with metadata
@@ -89,7 +94,11 @@ export const summarizeCareFlow: Action<
       })
 
       const htmlSummary = await markdownToHtml(
-        `${DISCLAIMER_MSG}\n\n${summary}`,
+        formatSummaryWithDisclaimer({
+          summary,
+          disclaimer: disclaimerText ?? DISCLAIMER_MSG,
+          placement: disclaimerPlacement,
+        }),
       )
 
       await onComplete({

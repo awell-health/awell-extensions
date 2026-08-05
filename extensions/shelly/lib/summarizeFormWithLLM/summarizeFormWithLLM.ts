@@ -2,6 +2,7 @@ import { systemPromptBulletPoints, systemPromptTextParagraph } from './prompt'
 import { type ChatOpenAI } from '@langchain/openai'
 import { type AIActionMetadata } from '../../../../src/lib/llm/openai/types'
 import type { BaseCallbackHandler } from '@langchain/core/callbacks/base'
+import { type DisclaimerPlacement } from '../disclaimer'
 
 /**
  * Uses LLM to summarize form data in a specified format and language.
@@ -27,6 +28,7 @@ export const summarizeFormWithLLM = async ({
   summaryFormat,
   language,
   disclaimerMessage,
+  disclaimerPlacement = 'top',
   additionalInstructions,
   metadata,
   callbacks,
@@ -36,6 +38,7 @@ export const summarizeFormWithLLM = async ({
   summaryFormat: string
   language: string
   disclaimerMessage: string
+  disclaimerPlacement?: DisclaimerPlacement
   additionalInstructions?: string
   metadata: AIActionMetadata
   callbacks?: BaseCallbackHandler[]
@@ -51,6 +54,7 @@ export const summarizeFormWithLLM = async ({
     language,
     input: formData,
     disclaimerMessage,
+    disclaimerPlacement,
     additionalInstructions:
       additionalInstructions ?? 'No additional instructions',
   })

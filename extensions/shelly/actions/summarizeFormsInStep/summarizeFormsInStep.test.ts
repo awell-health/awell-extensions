@@ -19,6 +19,15 @@ jest.mock('../../lib/detectLanguageWithLLM', () => ({
 }))
 
 // Mock the OpenAI modules
+
+jest.mock('../../lib/summarizeFormWithLLM', () => ({
+  summarizeFormWithLLM: jest
+    .fn()
+    .mockResolvedValue(
+      'Summary of multiple forms: Form 1 shows patient reported good health. Form 2 indicates normal vital signs.',
+    ),
+}))
+
 jest.mock('../../../../src/lib/llm/openai/createOpenAIModel', () => ({
   createOpenAIModel: jest.fn().mockResolvedValue({
     model: {
@@ -111,6 +120,86 @@ describe('summarizeFormsInStep - Mocked LLM calls', () => {
     })
     expect(onError).not.toHaveBeenCalled()
   })
+
+  it('Should pass custom disclaimer text and bottom placement to LLM', async () => {
+    const payload = generateTestPayload({
+      pathway: {
+        id: 'ai4rZaYEocjB',
+        definition_id: 'whatever',
+        tenant_id: 'test-tenant-id',
+      },
+      activity: { id: 'X74HeDQ4N0gtdaSEuzF8s' },
+      fields: {
+        summaryFormat: 'Bullet-points',
+        language: 'English',
+        disclaimerText: 'Custom forms-in-step disclaimer.',
+        disclaimerPlacement: 'bottom',
+      },
+      settings: {},
+    })
+
+    await extensionAction.onEvent({
+      payload,
+      onComplete,
+      onError,
+      helpers,
+      attempt: 1,
+    })
+
+    const { summarizeFormWithLLM } = require('../../lib/summarizeFormWithLLM')
+
+    expect(summarizeFormWithLLM).toHaveBeenCalledWith(
+      expect.objectContaining({
+        disclaimerMessage: 'Custom forms-in-step disclaimer.',
+        disclaimerPlacement: 'bottom',
+      }),
+    )
+    expect(onError).not.toHaveBeenCalled()
+  })
+
+  it.each([
+    ['empty string', ''],
+    ['null', null],
+    ['whitespace only', '   '],
+  ])(
+    'Should fall back to the default form disclaimer when disclaimerText is %s',
+    async (_label, disclaimerText) => {
+      const payload = generateTestPayload({
+        pathway: {
+          id: 'ai4rZaYEocjB',
+          definition_id: 'whatever',
+          tenant_id: 'test-tenant-id',
+        },
+        activity: { id: 'X74HeDQ4N0gtdaSEuzF8s' },
+        fields: {
+          summaryFormat: 'Bullet-points',
+          language: 'English',
+          disclaimerText: disclaimerText as string | undefined,
+          disclaimerPlacement: 'bottom',
+        },
+        settings: {},
+      })
+
+      await extensionAction.onEvent({
+        payload,
+        onComplete,
+        onError,
+        helpers,
+        attempt: 1,
+      })
+
+      const { summarizeFormWithLLM } = require('../../lib/summarizeFormWithLLM')
+      const { DISCLAIMER_MSG_FORM } = require('../../lib/constants')
+
+      expect(summarizeFormWithLLM).toHaveBeenCalledWith(
+        expect.objectContaining({
+          disclaimerMessage: DISCLAIMER_MSG_FORM,
+          disclaimerPlacement: 'bottom',
+        }),
+      )
+      expect(onError).not.toHaveBeenCalled()
+    },
+  )
 
   it('Should use language detection when language is Default', async () => {
     // Import the detectLanguageWithLLM function to spy on it

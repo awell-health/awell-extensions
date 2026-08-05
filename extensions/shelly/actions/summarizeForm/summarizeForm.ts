@@ -51,6 +51,8 @@ export const summarizeForm: Action<
       summaryFormat,
       language,
       additionalInstructions,
+      disclaimerText,
+      disclaimerPlacement,
     } = FieldsValidationSchema.parse(payload.fields)
 
     // 2. Initialize OpenAI model with metadata
@@ -180,7 +182,8 @@ export const summarizeForm: Action<
       formData,
       summaryFormat,
       language: summaryLanguage,
-      disclaimerMessage,
+      disclaimerMessage: disclaimerText ?? disclaimerMessage,
+      disclaimerPlacement,
       additionalInstructions,
       metadata,
       callbacks,

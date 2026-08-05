@@ -35,16 +35,14 @@ describe('summarizeFormWithLLM', () => {
     const mockedSummary =
       'Patient reports persistent sharp lower back pain for two weeks, exacerbated by bending or lifting, with numbness in the right leg. No recent injuries but has started a new job involving heavy lifting.'
 
-    mockModel.invoke.mockResolvedValueOnce(
-      new AIMessageChunk(mockedSummary)
-    )
+    mockModel.invoke.mockResolvedValueOnce(new AIMessageChunk(mockedSummary))
 
     const formName = 'General Health Questionnaire'
     const form = sampleForms[formName]
     const formData = form.questions
       .map(
         (question, index) =>
-          `Question: ${question}\nAnswer: ${form.answers[index]}\n`
+          `Question: ${question}\nAnswer: ${form.answers[index]}\n`,
       )
       .join('\n')
 
@@ -54,7 +52,7 @@ describe('summarizeFormWithLLM', () => {
       care_flow_id: 'test-pathway-id',
       tenant_id: 'test-tenant-id',
       org_slug: 'test-org-slug',
-      org_id: 'test-org-id'
+      org_id: 'test-org-id',
     }
 
     const summary = await summarizeFormWithLLM({
@@ -63,31 +61,29 @@ describe('summarizeFormWithLLM', () => {
       summaryFormat: 'Bullet-points',
       language: 'Default',
       disclaimerMessage: 'This is a test disclaimer message.',
-      metadata
+      metadata,
     })
 
     expect(summary).toBe(mockedSummary)
     expect(mockModel.invoke).toHaveBeenCalledTimes(1)
-    expect(mockModel.invoke).toHaveBeenCalledWith(
-      expect.anything(),
-      { metadata, runName: 'ShellySummarizeForm' }
-    )
+    expect(mockModel.invoke).toHaveBeenCalledWith(expect.anything(), {
+      metadata,
+      runName: 'ShellySummarizeForm',
+    })
   })
 
   it('should return a summary for the General Health Questionnaire with Text paragraph format', async () => {
     const mockedSummary =
       'The patient has been experiencing persistent back pain for two weeks, describing it as a sharp pain in the lower back that worsens when bending or lifting. Over-the-counter painkillers have been ineffective. While there are no recent injuries, the patient started a new job requiring heavy lifting. Additionally, the patient reports occasional numbness in the right leg.'
 
-    mockModel.invoke.mockResolvedValueOnce(
-      new AIMessageChunk(mockedSummary)
-    )
+    mockModel.invoke.mockResolvedValueOnce(new AIMessageChunk(mockedSummary))
 
     const formName = 'General Health Questionnaire'
     const form = sampleForms[formName]
     const formData = form.questions
       .map(
         (question, index) =>
-          `Question: ${question}\nAnswer: ${form.answers[index]}\n`
+          `Question: ${question}\nAnswer: ${form.answers[index]}\n`,
       )
       .join('\n')
 
@@ -97,7 +93,7 @@ describe('summarizeFormWithLLM', () => {
       care_flow_id: 'test-pathway-id',
       tenant_id: 'test-tenant-id',
       org_slug: 'test-org-slug',
-      org_id: 'test-org-id'
+      org_id: 'test-org-id',
     }
 
     const summary = await summarizeFormWithLLM({
@@ -106,14 +102,50 @@ describe('summarizeFormWithLLM', () => {
       summaryFormat: 'Text paragraph',
       language: 'Default',
       disclaimerMessage: 'This is a test disclaimer message.',
-      metadata
+      metadata,
+    })
+
+    expect(summary).toBe(mockedSummary)
+    expect(mockModel.invoke).toHaveBeenCalledTimes(1)
+    expect(mockModel.invoke).toHaveBeenCalledWith(expect.anything(), {
+      metadata,
+      runName: 'ShellySummarizeForm',
+    })
+  })
+
+  it('should include custom disclaimer text and bottom placement in the prompt', async () => {
+    const mockedSummary = 'Summary content.\n\nCustom translated disclaimer.'
+
+    mockModel.invoke.mockResolvedValueOnce(new AIMessageChunk(mockedSummary))
+
+    const metadata = {
+      activity_id: 'test-activity-id',
+      care_flow_definition_id: 'test-def-id',
+      care_flow_id: 'test-pathway-id',
+      tenant_id: 'test-tenant-id',
+      org_slug: 'test-org-slug',
+      org_id: 'test-org-id',
+    }
+
+    const summary = await summarizeFormWithLLM({
+      model: mockModel,
+      formData: 'Question: How are you?\nAnswer: Good',
+      summaryFormat: 'Bullet-points',
+      language: 'Spanish',
+      disclaimerMessage: 'Custom disclaimer.',
+      disclaimerPlacement: 'bottom',
+      metadata,
     })
 
     expect(summary).toBe(mockedSummary)
     expect(mockModel.invoke).toHaveBeenCalledTimes(1)
     expect(mockModel.invoke).toHaveBeenCalledWith(
-      expect.anything(),
-      { metadata, runName: 'ShellySummarizeForm' }
+      expect.stringContaining('Custom disclaimer.'),
+      { metadata, runName: 'ShellySummarizeForm' },
+    )
+    expect(mockModel.invoke).toHaveBeenCalledWith(
+      expect.stringContaining('**Disclaimer Placement:**\n  bottom'),
+      { metadata, runName: 'ShellySummarizeForm' },
     )
   })
 
@@ -127,7 +159,7 @@ describe('summarizeFormWithLLM', () => {
       care_flow_id: 'test-pathway-id',
       tenant_id: 'test-tenant-id',
       org_slug: 'test-org-slug',
-      org_id: 'test-org-id'
+      org_id: 'test-org-id',
     }
 
     await expect(
@@ -137,8 +169,8 @@ describe('summarizeFormWithLLM', () => {
         summaryFormat: 'Bullet-points',
         language: 'Default',
         disclaimerMessage: 'This is a test disclaimer message.',
-        metadata
-      })
+        metadata,
+      }),
     ).rejects.toThrow('Failed to generate form summary')
   })
 })
