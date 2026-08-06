@@ -157,24 +157,27 @@ A `collection` bundle that is missing its Patient or Encounter entry is treated 
 
 An enrollment trigger that starts a care flow when Metriport sends a [real-time patient notification](https://docs.metriport.com/medical-api/handling-data/realtime-patient-notifications).
 
-Metriport POSTs every notification type to the same endpoint, so this webhook discriminates on the notification `type` and only enrolls on two events. The `eventType` data point carries the raw Metriport webhook type:
+Metriport POSTs every notification type to the same endpoint. Four of them share one payload shape — a `meta` envelope plus a `payload` pointing at a pre-signed bundle URL — and this webhook enrolls a patient on all four:
 
-- `patient.admit` (HL7 ADT^A01) → `eventType` = `patient.admit`. The payload carries a pre-signed URL to the [FHIR Encounter Bundle](https://docs.metriport.com/medical-api/handling-data/patient-encounter-bundle).
-- `medical.discharge-summary` → `eventType` = `medical.discharge-summary`. This event is currently undocumented by Metriport and is modelled on the published `medical.*` webhook family (a `patients` array).
+- `patient.admit` (HL7 ADT^A01)
+- `patient.discharge` (HL7 ADT^A03)
+- `patient.transfer` (HL7 ADT^A02)
+- `medical.discharge-summary`
+
+The `eventType` data point carries the raw Metriport webhook type, so a care flow can branch on it. The payload's `url` is a pre-signed link to the [FHIR Encounter Bundle](https://docs.metriport.com/medical-api/handling-data/patient-encounter-bundle).
 
 The webhook validates the request, emits the data points (including the pre-signed bundle URL on `bundleUrl`), and replies immediately — it does **not** download the bundle. Fetch the bundle later in the care flow with the **Get Webhook Bundle** action, using the `bundleUrl` data point. Because the URL expires after 10 minutes, run that action early.
 
-Use the `eventType` data point in your care flow to branch on admit vs discharge. Every other notification type (`patient.discharge`, `patient.transfer`, ...) is acknowledged with a `200` but does not enroll a patient. Metriport [verification `ping` messages](https://docs.metriport.com/medical-api/getting-started/webhooks#the-ping-message) are answered with a `200` that echoes the ping value back as `pong: <value>`.
+Any other notification type Metriport sends — `medical.document-download`, `medical.consolidated-data`, and anything added in future — is acknowledged with a `200` and does not enroll a patient. A notification whose type *is* handled but whose payload is malformed fails loudly instead, so a genuine integration problem is not mistaken for an event we chose to ignore. Metriport [verification `ping` messages](https://docs.metriport.com/medical-api/getting-started/webhooks#the-ping-message) are answered with a `200` that echoes the ping value back as `pong: <value>`.
 
 ### Data points
 
 | Data point | Type | Description |
 | --- | --- | --- |
-| `eventType` | string | The Metriport webhook type: `patient.admit` or `medical.discharge-summary` |
+| `eventType` | string | The Metriport webhook type: `patient.admit`, `patient.discharge`, `patient.transfer` or `medical.discharge-summary` |
 | `metriportPatientId` | string | The Metriport patient ID (also used as the patient identifier for enrollment) |
 | `externalId` | string | Your external patient ID, if provided to Metriport |
-| `admitTimestamp` | date | When the patient was admitted (admit events only) |
-| `whenSourceSent` | date | When the source sent the notification, if available (admit events) |
+| `when` | date | When the event occurred — the admit time on an admit event, the discharge time on a discharge event |
 | `messageId` | string | The Metriport message ID for the notification |
 | `bundleUrl` | string | Pre-signed URL to the FHIR bundle; fetch it with the **Get Webhook Bundle** action (valid for 10 minutes) |
 

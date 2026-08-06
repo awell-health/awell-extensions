@@ -16,7 +16,12 @@ import {
   MetriportWebhookType,
   type MetriportRealtimeUpdateWebhookPayload,
 } from './types'
-import { webhookPayloadSchema, type WebhookPayloadSchema } from './validation.zod'
+import {
+  isAdtWebhookType,
+  pingWebhookSchema,
+  realtimeNotificationSchema,
+  webhookEnvelopeSchema,
+} from './validation.zod'
 
 /**
  * The identifier system used to enroll a patient based on their Metriport
@@ -37,12 +42,13 @@ const dataPoints = {
     key: 'externalId',
     valueType: 'string',
   },
-  admitTimestamp: {
-    key: 'admitTimestamp',
-    valueType: 'date',
-  },
-  whenSourceSent: {
-    key: 'whenSourceSent',
+  /**
+   * `meta.when` — the single event timestamp. It is the admit time on an admit
+   * event and the discharge time on a discharge event, which is why there are
+   * no per-event `*Timestamp` data points.
+   */
+  when: {
+    key: 'when',
     valueType: 'date',
   },
   messageId: {
@@ -57,23 +63,6 @@ const dataPoints = {
 
 type DataPoints = Record<keyof typeof dataPoints, string>
 
-type AdmitWebhook = Extract<
-  WebhookPayloadSchema,
-  { meta: { type: MetriportWebhookType.PatientAdmit } }
->
-type DischargeSummaryWebhook = Extract<
-  WebhookPayloadSchema,
-  { meta: { type: MetriportWebhookType.DischargeSummary } }
->
-
-const isAdmit = (webhook: WebhookPayloadSchema): webhook is AdmitWebhook =>
-  webhook.meta.type === MetriportWebhookType.PatientAdmit
-
-const isDischargeSummary = (
-  webhook: WebhookPayloadSchema,
-): webhook is DischargeSummaryWebhook =>
-  webhook.meta.type === MetriportWebhookType.DischargeSummary
-
 export const realtimeUpdate: Webhook<
   keyof typeof dataPoints,
   MetriportRealtimeUpdateWebhookPayload,
@@ -81,7 +70,7 @@ export const realtimeUpdate: Webhook<
 > = {
   key: 'realtimeUpdate',
   description:
-    'Starts a care flow when Metriport sends a real-time patient notification. The `eventType` data point carries the Metriport webhook type (`patient.admit` or `medical.discharge-summary`) so it can be distinguished on. The FHIR bundle is not fetched here — the pre-signed URL is passed on the `bundleUrl` data point and can be retrieved later with the "Get Webhook Bundle" action.',
+    'Starts a care flow when Metriport sends a real-time patient notification. Enrolls on `patient.admit`, `patient.discharge`, `patient.transfer` and `medical.discharge-summary`, which share one payload shape; the `eventType` data point carries the Metriport webhook type so it can be distinguished on. Any other notification type is acknowledged with a 200 without enrolling. The FHIR bundle is not fetched here — the pre-signed URL is passed on the `bundleUrl` data point and can be retrieved later with the "Get Webhook Bundle" action.',
   dataPoints,
   onEvent: async ({
     payload: { payload, rawBody, headers, settings, endpoint },
@@ -108,79 +97,53 @@ export const realtimeUpdate: Webhook<
         return
       }
 
-      const webhook = webhookPayloadSchema.parse(payload)
+      // Parsed permissively first. Metriport POSTs every webhook type to this
+      // one endpoint, so an unrecognised `meta.type` must be readable enough to
+      // acknowledge — rejecting it would make Metriport retry forever.
+      const envelope = webhookEnvelopeSchema.parse(payload)
+      const eventType = envelope.meta.type
 
       // Acknowledge Metriport's verification ping without enrolling anyone.
       // Metriport expects the response to echo back the ping value as `pong`.
       // https://docs.metriport.com/medical-api/getting-started/webhooks#the-ping-message
-      if ('ping' in webhook) {
+      if (eventType === MetriportWebhookType.Ping) {
+        const { ping } = pingWebhookSchema.parse(payload)
         await onError({
           response: {
             statusCode: 200,
-            message: `pong: ${webhook.ping}`,
+            message: `pong: ${ping}`,
           },
         })
         return
       }
 
-      // We enroll on admit (adt) and discharge-summary events only. Every other
-      // notification type (patient.discharge, patient.transfer, ...) is
-      // acknowledged with a 200 but does not enroll a patient.
+      if (!isAdtWebhookType(eventType)) {
+        await onError({
+          response: {
+            statusCode: 200,
+            message: `Ignoring unhandled event type: ${eventType}`,
+          },
+        })
+        return
+      }
+
+      // Strict from here on: the type is an ADT one, so a malformed payload is
+      // a real problem and must not be swallowed by the 200 above.
       //
       // The bundle referenced by `bundleUrl` is intentionally NOT fetched here:
       // we validate, emit the data points (including the URL), and reply
       // immediately. The bundle is fetched later via the "Get Webhook Bundle"
       // action.
-      let data_points: DataPoints
-      let patientId: string | undefined
+      const { meta, payload: event } = realtimeNotificationSchema.parse(payload)
+      const patientId = event.patientId
 
-      if (isAdmit(webhook)) {
-        const event = webhook.payload
-        patientId = event.patientId
-        data_points = {
-          eventType: webhook.meta.type,
-          metriportPatientId: event.patientId,
-          externalId: event.externalId ?? '',
-          admitTimestamp: event.admitTimestamp ?? '',
-          whenSourceSent: event.whenSourceSent ?? '',
-          messageId: webhook.meta.messageId,
-          bundleUrl: event.url ?? '',
-        }
-      } else if (isDischargeSummary(webhook)) {
-        // TBD: the `medical.discharge-summary` payload shape is not yet
-        // documented by Metriport — we're still discussing it with them. The
-        // handling below (patient entry in a `patients` array, bundle URL) is a
-        // best guess modelled on the published `medical.*` webhook family and
-        // should be revisited once the event is confirmed.
-        const patient = webhook.patients?.[0]
-        patientId = patient?.patientId ?? webhook.payload?.patientId
-        data_points = {
-          eventType: webhook.meta.type,
-          metriportPatientId: patientId ?? '',
-          externalId: patient?.externalId ?? webhook.payload?.externalId ?? '',
-          admitTimestamp: '',
-          whenSourceSent: '',
-          messageId: webhook.meta.messageId,
-          bundleUrl: patient?.url ?? webhook.payload?.url ?? '',
-        }
-      } else {
-        await onError({
-          response: {
-            statusCode: 200,
-            message: `Ignoring unhandled event type: ${webhook.meta.type}`,
-          },
-        })
-        return
-      }
-
-      if (isNil(patientId) || patientId.length === 0) {
-        await onError({
-          response: {
-            statusCode: 400,
-            message: 'Unable to determine the Metriport patient ID from the payload',
-          },
-        })
-        return
+      const data_points: DataPoints = {
+        eventType: meta.type,
+        metriportPatientId: patientId,
+        externalId: event.externalId ?? '',
+        when: meta.when,
+        messageId: meta.messageId,
+        bundleUrl: event.url,
       }
 
       // rate limiting
@@ -198,12 +161,12 @@ export const realtimeUpdate: Webhook<
           rateLimitDurationSchema.safeParse(settings.rateLimitDuration)
         if (success && !isNil(durationString)) {
           const duration = transformRateLimitDuration(durationString)
-          const limiterName = `metriport-enrollment-${webhook.meta.type}-${endpoint?.id ?? 'global'}`
+          const limiterName = `metriport-enrollment-${meta.type}-${endpoint?.id ?? 'global'}`
           const limiter = rateLimiter(limiterName, {
             requests: 1,
             duration,
           })
-          const key = webhook.meta.messageId
+          const key = meta.messageId
           const { success } = await limiter.limit(key)
           if (!success) {
             await onError({

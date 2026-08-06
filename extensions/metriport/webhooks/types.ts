@@ -16,8 +16,8 @@ export enum MetriportWebhookType {
   /** HL7 ADT^A02 transfer notification. */
   PatientTransfer = 'patient.transfer',
   /**
-   * Discharge summary notification. Currently undocumented by Metriport but
-   * modelled on the published `medical.*` webhook family (a `patients` array).
+   * Discharge summary notification. Undocumented by Metriport, but delivered
+   * with the same envelope and payload as the `patient.*` family.
    */
   DischargeSummary = 'medical.discharge-summary',
 }
@@ -35,57 +35,29 @@ export interface MetriportWebhookMeta {
 }
 
 /**
- * Payload shared by the ADT notification webhook types (admit / discharge /
- * transfer). `url` is a pre-signed link to the FHIR Encounter Bundle and is
- * only valid for 10 minutes.
+ * The payload shared by every real-time notification we enroll on. `url` is a
+ * pre-signed link to the FHIR bundle and is only valid for 10 minutes.
+ *
+ * Metriport also sends per-event timestamps (`admitTimestamp`,
+ * `dischargeTimestamp`, `whenSourceSent`); they are not modelled here because
+ * `meta.when` already carries the event's timestamp and nothing downstream
+ * consumes the others.
  * https://docs.metriport.com/medical-api/handling-data/patient-encounter-bundle
  */
-export interface MetriportAdtEventPayload {
+export interface MetriportRealtimeNotificationPayload {
   url: string
   patientId: string
   externalId?: string
   additionalIds?: Record<string, string[]>
-  admitTimestamp: string
-  dischargeTimestamp?: string
-  whenSourceSent?: string
 }
 
 /**
- * A single patient entry as delivered by the `medical.*` webhook family. The
- * discharge summary FHIR data may be embedded inline (`bundle`, as in
- * `medical.consolidated-data`) or referenced by a pre-signed `url`. Unknown
- * fields are preserved so nothing is lost while the event is undocumented.
+ * An ADT or discharge-summary notification. All four types share one shape, so
+ * `meta.type` is the only thing that distinguishes them.
  */
-export interface MetriportMedicalPatientEntry {
-  patientId: string
-  externalId?: string
-  additionalIds?: Record<string, string[]>
-  status?: string
-  bundle?: Bundle
-  url?: string
-  [key: string]: unknown
-}
-
-export interface MetriportPatientAdmitWebhook {
-  meta: MetriportWebhookMeta & { type: MetriportWebhookType.PatientAdmit }
-  payload: MetriportAdtEventPayload
-}
-
-export interface MetriportPatientDischargeWebhook {
-  meta: MetriportWebhookMeta & { type: MetriportWebhookType.PatientDischarge }
-  payload: MetriportAdtEventPayload & { dischargeTimestamp: string }
-}
-
-export interface MetriportPatientTransferWebhook {
-  meta: MetriportWebhookMeta & { type: MetriportWebhookType.PatientTransfer }
-  payload: MetriportAdtEventPayload
-}
-
-export interface MetriportDischargeSummaryWebhook {
-  meta: MetriportWebhookMeta & { type: MetriportWebhookType.DischargeSummary }
-  patients?: MetriportMedicalPatientEntry[]
-  /** Some notifications may carry a single top-level payload instead. */
-  payload?: MetriportAdtEventPayload
+export interface MetriportRealtimeNotificationWebhook {
+  meta: MetriportWebhookMeta
+  payload: MetriportRealtimeNotificationPayload
 }
 
 export interface MetriportPingWebhook {
@@ -96,13 +68,11 @@ export interface MetriportPingWebhook {
 /**
  * The union of all payloads that can be received on the realtime update webhook
  * endpoint. Metriport POSTs every notification type to the same URL, so the
- * handler must discriminate on `meta.type`.
+ * handler discriminates on `meta.type` and acknowledges anything it does not
+ * enroll on.
  */
 export type MetriportRealtimeUpdateWebhookPayload =
-  | MetriportPatientAdmitWebhook
-  | MetriportPatientDischargeWebhook
-  | MetriportPatientTransferWebhook
-  | MetriportDischargeSummaryWebhook
+  | MetriportRealtimeNotificationWebhook
   | MetriportPingWebhook
 
 /**
