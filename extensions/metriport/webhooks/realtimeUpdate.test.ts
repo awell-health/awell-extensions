@@ -22,36 +22,24 @@ const mockSettings = {
   webhookKey: '',
 }
 
-const admitPayload = {
+const notification = (
+  type: MetriportWebhookType,
+  overrides: Record<string, unknown> = {},
+): Record<string, unknown> => ({
   meta: {
     messageId: 'msg-1',
     when: '2026-07-21T10:00:00.000Z',
-    type: MetriportWebhookType.PatientAdmit,
+    type,
   },
   payload: {
     url: 'https://example.com/encounter-bundle',
     patientId: 'patient-123',
     externalId: 'external-abc',
-    admitTimestamp: '2026-07-21T09:00:00.000Z',
-    whenSourceSent: '2026-07-21T09:30:00.000Z',
+    ...overrides,
   },
-}
+})
 
-const dischargeSummaryPayload = {
-  meta: {
-    messageId: 'msg-2',
-    when: '2026-07-22T10:00:00.000Z',
-    type: MetriportWebhookType.DischargeSummary,
-  },
-  patients: [
-    {
-      patientId: 'patient-123',
-      externalId: 'external-abc',
-      status: 'completed',
-      url: 'https://example.com/discharge-summary',
-    },
-  ],
-}
+const admitPayload = notification(MetriportWebhookType.PatientAdmit)
 
 describe('Metriport - Webhook - Realtime Update', () => {
   const { extensionWebhook, onSuccess, onError, helpers, clearMocks } =
@@ -78,18 +66,22 @@ describe('Metriport - Webhook - Realtime Update', () => {
     })
   }
 
-  describe('When an admit (patient.admit) event is received', () => {
-    test('Should enroll the patient with eventType "patient.admit" and the bundle URL', async () => {
-      await invoke(admitPayload)
+  describe('When an enrolling notification is received', () => {
+    test.each([
+      MetriportWebhookType.PatientAdmit,
+      MetriportWebhookType.PatientDischarge,
+      MetriportWebhookType.PatientTransfer,
+      MetriportWebhookType.DischargeSummary,
+    ])('Should enroll the patient for %s', async (type) => {
+      await invoke(notification(type))
 
       expect(onError).not.toHaveBeenCalled()
       expect(onSuccess).toHaveBeenCalledWith({
         data_points: {
-          eventType: 'patient.admit',
+          eventType: type,
           metriportPatientId: 'patient-123',
           externalId: 'external-abc',
-          admitTimestamp: '2026-07-21T09:00:00.000Z',
-          whenSourceSent: '2026-07-21T09:30:00.000Z',
+          when: '2026-07-21T10:00:00.000Z',
           messageId: 'msg-1',
           bundleUrl: 'https://example.com/encounter-bundle',
         },
@@ -99,44 +91,24 @@ describe('Metriport - Webhook - Realtime Update', () => {
         },
       })
     })
-  })
 
-  describe('When a discharge summary event is received', () => {
-    test('Should enroll the patient with eventType "medical.discharge-summary" and the bundle URL', async () => {
-      await invoke(dischargeSummaryPayload)
-
-      expect(onError).not.toHaveBeenCalled()
-      expect(onSuccess).toHaveBeenCalledWith({
-        data_points: {
-          eventType: 'medical.discharge-summary',
-          metriportPatientId: 'patient-123',
-          externalId: 'external-abc',
-          admitTimestamp: '',
-          whenSourceSent: '',
-          messageId: 'msg-2',
-          bundleUrl: 'https://example.com/discharge-summary',
-        },
-        patient_identifier: {
-          system: METRIPORT_PATIENT_IDENTIFIER_SYSTEM,
-          value: 'patient-123',
-        },
-      })
-    })
-
-    test('Should enroll with an empty bundle URL when none is provided', async () => {
+    test('Should emit an empty externalId when Metriport does not send one', async () => {
       await invoke({
         meta: {
-          messageId: 'msg-3',
+          messageId: 'msg-2',
           when: '2026-07-22T10:00:00.000Z',
           type: MetriportWebhookType.DischargeSummary,
         },
-        patients: [{ patientId: 'patient-789', status: 'completed' }],
+        payload: {
+          url: 'https://example.com/discharge-summary',
+          patientId: 'patient-789',
+        },
       })
 
       expect(onError).not.toHaveBeenCalled()
       const call = onSuccess.mock.calls[0][0]
+      expect(call.data_points.externalId).toBe('')
       expect(call.data_points.metriportPatientId).toBe('patient-789')
-      expect(call.data_points.bundleUrl).toBe('')
     })
   })
 
@@ -152,7 +124,6 @@ describe('Metriport - Webhook - Realtime Update', () => {
           url: '  https://example.com/encounter-bundle  ',
           patientId: '  patient-123  ',
           externalId: '  external-abc  ',
-          admitTimestamp: '2026-07-21T09:00:00.000Z',
         },
       })
 
@@ -189,42 +160,32 @@ describe('Metriport - Webhook - Realtime Update', () => {
     })
   })
 
-  describe('When an unhandled ADT event is received', () => {
-    test('Should acknowledge a transfer with 200 and not enroll', async () => {
+  describe('When a notification type we do not handle is received', () => {
+    test('Should acknowledge an undocumented medical.* event with 200 and not enroll', async () => {
       await invoke({
         meta: {
-          messageId: 'msg-transfer',
+          messageId: 'msg-doc',
           when: '2026-07-21T10:00:00.000Z',
-          type: MetriportWebhookType.PatientTransfer,
+          type: 'medical.document-download',
         },
-        payload: {
-          url: 'https://example.com/bundle',
-          patientId: 'patient-123',
-          admitTimestamp: '2026-07-21T09:00:00.000Z',
-        },
+        patients: [{ patientId: 'patient-123', status: 'completed' }],
       })
 
       expect(onSuccess).not.toHaveBeenCalled()
       expect(onError).toHaveBeenCalledWith({
         response: {
           statusCode: 200,
-          message: `Ignoring unhandled event type: ${MetriportWebhookType.PatientTransfer}`,
+          message: 'Ignoring unhandled event type: medical.document-download',
         },
       })
     })
 
-    test('Should acknowledge a patient.discharge ADT notification with 200 and not enroll', async () => {
+    test('Should acknowledge an unknown type carrying no payload at all', async () => {
       await invoke({
         meta: {
-          messageId: 'msg-adt-discharge',
+          messageId: 'msg-unknown',
           when: '2026-07-21T10:00:00.000Z',
-          type: MetriportWebhookType.PatientDischarge,
-        },
-        payload: {
-          url: 'https://example.com/bundle',
-          patientId: 'patient-123',
-          admitTimestamp: '2026-07-21T09:00:00.000Z',
-          dischargeTimestamp: '2026-07-22T09:00:00.000Z',
+          type: 'something.entirely.new',
         },
       })
 
@@ -232,9 +193,53 @@ describe('Metriport - Webhook - Realtime Update', () => {
       expect(onError).toHaveBeenCalledWith({
         response: {
           statusCode: 200,
-          message: `Ignoring unhandled event type: ${MetriportWebhookType.PatientDischarge}`,
+          message: 'Ignoring unhandled event type: something.entirely.new',
         },
       })
+    })
+  })
+
+  describe('When a handled notification is malformed', () => {
+    test('Should error rather than silently acknowledging a missing payload', async () => {
+      await invoke({
+        meta: {
+          messageId: 'msg-bad',
+          when: '2026-07-21T10:00:00.000Z',
+          type: MetriportWebhookType.PatientAdmit,
+        },
+      })
+
+      expect(onSuccess).not.toHaveBeenCalled()
+      expect(onError).toHaveBeenCalledTimes(1)
+      expect(onError.mock.calls[0][0].response).toBeUndefined()
+    })
+
+    test('Should error when the bundle URL is not a URL', async () => {
+      await invoke(
+        notification(MetriportWebhookType.PatientAdmit, { url: 'not-a-url' }),
+      )
+
+      expect(onSuccess).not.toHaveBeenCalled()
+      expect(onError).toHaveBeenCalledTimes(1)
+    })
+
+    test('Should error when the patient id is empty', async () => {
+      await invoke(
+        notification(MetriportWebhookType.PatientAdmit, { patientId: '   ' }),
+      )
+
+      expect(onSuccess).not.toHaveBeenCalled()
+      expect(onError).toHaveBeenCalledTimes(1)
+    })
+  })
+
+  describe('When the envelope itself is unreadable', () => {
+    test('Should call onError when meta is incomplete', async () => {
+      await invoke({ meta: { type: 'not-a-real-type' } })
+
+      expect(onSuccess).not.toHaveBeenCalled()
+      expect(onError).toHaveBeenCalledTimes(1)
+      expect(onError.mock.calls[0][0].response).toBeUndefined()
     })
   })
 
@@ -269,7 +274,9 @@ describe('Metriport - Webhook - Realtime Update', () => {
           payload: admitPayload,
           settings: { ...mockSettings, webhookKey: 'secret' },
           rawBody,
-          headers: { 'x-metriport-signature': sign('wrong-key', rawBody.toString()) },
+          headers: {
+            'x-metriport-signature': sign('wrong-key', rawBody.toString()),
+          },
         },
         onSuccess,
         onError,
@@ -291,7 +298,9 @@ describe('Metriport - Webhook - Realtime Update', () => {
           payload: admitPayload,
           settings: { ...mockSettings, webhookKey: 'secret' },
           rawBody,
-          headers: { 'x-metriport-signature': sign('secret', rawBody.toString()) },
+          headers: {
+            'x-metriport-signature': sign('secret', rawBody.toString()),
+          },
         },
         onSuccess,
         onError,
@@ -328,9 +337,7 @@ describe('Metriport - Webhook - Realtime Update', () => {
     }
 
     test('Should build the limiter from meta.type + endpoint and rate-limit on messageId, then enroll when not a duplicate', async () => {
-      const limit = jest
-        .fn()
-        .mockResolvedValue({ success: true, result: {} })
+      const limit = jest.fn().mockResolvedValue({ success: true, result: {} })
       jest
         .mocked(helpers.rateLimiter)
         .mockReturnValueOnce({ limit, reset: jest.fn() })
@@ -347,9 +354,7 @@ describe('Metriport - Webhook - Realtime Update', () => {
     })
 
     test('Should acknowledge a duplicate delivery with 200 and not enroll', async () => {
-      const limit = jest
-        .fn()
-        .mockResolvedValue({ success: false, result: {} })
+      const limit = jest.fn().mockResolvedValue({ success: false, result: {} })
       jest
         .mocked(helpers.rateLimiter)
         .mockReturnValueOnce({ limit, reset: jest.fn() })
@@ -381,15 +386,6 @@ describe('Metriport - Webhook - Realtime Update', () => {
       expect(onError).not.toHaveBeenCalled()
       expect(onSuccess).toHaveBeenCalledTimes(1)
       expect(helpers.rateLimiter).not.toHaveBeenCalled()
-    })
-  })
-
-  describe('When the payload is invalid', () => {
-    test('Should call onError', async () => {
-      await invoke({ meta: { type: 'not-a-real-type' } })
-
-      expect(onSuccess).not.toHaveBeenCalled()
-      expect(onError).toHaveBeenCalledTimes(1)
     })
   })
 })

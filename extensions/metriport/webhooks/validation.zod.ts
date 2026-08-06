@@ -7,6 +7,24 @@ import { MetriportWebhookType } from './types'
  */
 const trimmedString = z.string().trim()
 
+/**
+ * The notification types that enroll a patient. All four share one payload
+ * shape; anything outside this list is acknowledged without enrolling.
+ */
+export const ENROLLING_WEBHOOK_TYPES = [
+  MetriportWebhookType.PatientAdmit,
+  MetriportWebhookType.PatientDischarge,
+  MetriportWebhookType.PatientTransfer,
+  MetriportWebhookType.DischargeSummary,
+] as const
+
+export type EnrollingWebhookType = (typeof ENROLLING_WEBHOOK_TYPES)[number]
+
+export const isEnrollingWebhookType = (
+  type: string,
+): type is EnrollingWebhookType =>
+  (ENROLLING_WEBHOOK_TYPES as readonly string[]).includes(type)
+
 const metaSchema = z.object({
   messageId: trimmedString,
   when: trimmedString,
@@ -14,80 +32,39 @@ const metaSchema = z.object({
   data: z.unknown().optional(),
 })
 
-const adtEventPayloadSchema = z.object({
-  url: trimmedString.url(),
-  patientId: trimmedString,
-  externalId: trimmedString.optional(),
-  additionalIds: z.record(z.array(trimmedString)).optional(),
-  admitTimestamp: trimmedString,
-  dischargeTimestamp: trimmedString.optional(),
-  whenSourceSent: trimmedString.optional(),
-})
-
 /**
- * A patient entry as sent by the `medical.*` webhook family. Only `patientId`
- * is required; everything else is optional and unknown fields are preserved
- * (`passthrough`) since the discharge summary event is undocumented.
+ * The permissive first pass. Metriport POSTs every webhook type to the same
+ * endpoint, so `type` is an open string here: an unrecognised notification has
+ * to be readable enough to acknowledge with a 200, or Metriport retries it
+ * forever.
  */
-const medicalPatientEntrySchema = z
+export const webhookEnvelopeSchema = z
   .object({
-    patientId: trimmedString,
-    externalId: trimmedString.optional(),
-    additionalIds: z.record(z.array(trimmedString)).optional(),
-    status: trimmedString.optional(),
-    bundle: z.unknown().optional(),
-    url: trimmedString.url().optional(),
+    meta: metaSchema.extend({ type: trimmedString }),
   })
   .passthrough()
 
-const patientAdmitWebhookSchema = z.object({
-  meta: metaSchema.extend({
-    type: z.literal(MetriportWebhookType.PatientAdmit),
-  }),
-  payload: adtEventPayloadSchema,
-})
-
-const patientDischargeWebhookSchema = z.object({
-  meta: metaSchema.extend({
-    type: z.literal(MetriportWebhookType.PatientDischarge),
-  }),
-  payload: adtEventPayloadSchema.extend({
-    dischargeTimestamp: trimmedString,
-  }),
-})
-
-const patientTransferWebhookSchema = z.object({
-  meta: metaSchema.extend({
-    type: z.literal(MetriportWebhookType.PatientTransfer),
-  }),
-  payload: adtEventPayloadSchema,
-})
-
-const dischargeSummaryWebhookSchema = z.object({
-  meta: metaSchema.extend({
-    type: z.literal(MetriportWebhookType.DischargeSummary),
-  }),
-  patients: z.array(medicalPatientEntrySchema).optional(),
-  payload: adtEventPayloadSchema.partial().optional(),
-})
-
-const pingWebhookSchema = z.object({
-  meta: metaSchema.extend({
-    type: z.literal(MetriportWebhookType.Ping),
-  }),
+export const pingWebhookSchema = z.object({
+  meta: metaSchema.extend({ type: z.literal(MetriportWebhookType.Ping) }),
   ping: trimmedString,
 })
 
 /**
- * Parses an incoming Metriport webhook. The discriminator (`meta.type`) is
- * nested, so we rely on a union rather than a discriminated union.
+ * The strict pass, applied only once `meta.type` is known to be one we enroll
+ * on. A handled event with a broken payload must fail loudly rather than be
+ * swallowed by the acknowledge-and-ignore path.
  */
-export const webhookPayloadSchema = z.union([
-  patientAdmitWebhookSchema,
-  patientDischargeWebhookSchema,
-  patientTransferWebhookSchema,
-  dischargeSummaryWebhookSchema,
-  pingWebhookSchema,
-])
+export const realtimeNotificationSchema = z.object({
+  meta: metaSchema.extend({ type: z.enum(ENROLLING_WEBHOOK_TYPES) }),
+  payload: z.object({
+    url: trimmedString.url(),
+    patientId: trimmedString.min(1),
+    externalId: trimmedString.optional(),
+    additionalIds: z.record(z.array(trimmedString)).optional(),
+  }),
+})
 
-export type WebhookPayloadSchema = z.infer<typeof webhookPayloadSchema>
+export type WebhookEnvelopeSchema = z.infer<typeof webhookEnvelopeSchema>
+export type RealtimeNotificationSchema = z.infer<
+  typeof realtimeNotificationSchema
+>
