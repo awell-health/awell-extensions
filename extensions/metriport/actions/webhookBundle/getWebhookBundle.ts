@@ -6,6 +6,7 @@ import { getWebhookBundleSchema } from './validation'
 import { dataPoints } from './dataPoints'
 import { fetchBundle } from './fetchBundle'
 import { buildTransactionBundle } from './bundle'
+import { findEncounterId } from './bundle/encounter'
 
 export const getWebhookBundle: Action<
   typeof fields,
@@ -41,9 +42,12 @@ export const getWebhookBundle: Action<
         reason: provenanceReason,
       })
 
+      const encounterId = findEncounterId(bundle)
+
       await onComplete({
         data_points: {
           bundle: JSON.stringify(bundle),
+          ...(encounterId !== undefined ? { encounterId } : {}),
           ...(transactionBundle !== undefined
             ? { transactionBundle: JSON.stringify(transactionBundle) }
             : {}),

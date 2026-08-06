@@ -14,4 +14,14 @@ export const dataPoints = {
     key: 'transactionBundle',
     valueType: 'json',
   },
+  /**
+   * Metriport's own UUID for the Encounter in the bundle — not a Medplum
+   * resource id. The imported Encounter is addressable in Medplum as
+   * `Encounter?identifier=https://metriport.com/fhir/encounter|<encounterId>`.
+   * Omitted when the bundle carries no Encounter.
+   */
+  encounterId: {
+    key: 'encounterId',
+    valueType: 'string',
+  },
 } satisfies Record<string, DataPointDefinition>
