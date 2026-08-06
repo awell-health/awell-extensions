@@ -50,6 +50,7 @@ describe('Metriport - Get Webhook Bundle', () => {
     expect(onComplete).toHaveBeenCalledWith({
       data_points: {
         bundle: JSON.stringify(bundle),
+        encounterId: 'enc-1',
       },
     })
   })
@@ -93,6 +94,7 @@ describe('Metriport - Get Webhook Bundle', () => {
 
     const dataPoints = onComplete.mock.calls[0][0].data_points
     expect(dataPoints.bundle).toBe(JSON.stringify(patientAdmitBundle))
+    expect(dataPoints.encounterId).toBe('c60544e1-2e37-45fb-8160-3d583902cfde')
 
     const transactionBundle = JSON.parse(dataPoints.transactionBundle)
     expect(transactionBundle.type).toBe('transaction')
@@ -132,6 +134,30 @@ describe('Metriport - Get Webhook Bundle', () => {
     expect(
       onComplete.mock.calls[0][0].data_points.transactionBundle,
     ).toBeUndefined()
+  })
+
+  test('Should omit the encounter id when the bundle has no Encounter', async () => {
+    mockedFetchBundle.mockResolvedValue({
+      resourceType: 'Bundle',
+      type: 'searchset',
+      entry: [{ resource: { resourceType: 'Patient', id: 'p1' } }],
+    } as never)
+
+    await getWebhookBundle.onActivityCreated!(
+      generateTestPayload({
+        fields: {
+          url: 'https://example.com/other-bundle',
+          eventType: undefined,
+          provenanceReason: undefined,
+        },
+        settings,
+      }),
+      onComplete,
+      onError,
+    )
+
+    expect(onError).not.toHaveBeenCalled()
+    expect(onComplete.mock.calls[0][0].data_points.encounterId).toBeUndefined()
   })
 
   test('Should call onError when a collection bundle has no Encounter', async () => {

@@ -81,6 +81,8 @@ Fetches the FHIR bundle from a Metriport webhook payload URL — e.g. the [Encou
 
 When the payload is a Patient Encounter Bundle, the action also rewrites it into an executable FHIR transaction and returns that on the `transactionBundle` data point, ready to hand to the Medplum **Find or create resource** action.
 
+The Encounter's Metriport id is returned separately on the `encounterId` data point, so a later step can address the imported Encounter without re-parsing the bundle.
+
 **NOTE: Metriport pre-signed URLs are only valid for 10 minutes, so this action should run early in the care flow, shortly after the realtime update webhook fires.**
 
 | Field | Type | Description |
@@ -93,6 +95,7 @@ When the payload is a Patient Encounter Bundle, the action also rewrites it into
 | --- | --- | --- |
 | `bundle` | json | The FHIR bundle fetched from the URL, exactly as Metriport sent it. |
 | `transactionBundle` | json | The same data rewritten as an executable FHIR transaction. Omitted when the payload is not a Patient Encounter Bundle. |
+| `encounterId` | string | Metriport's UUID for the Encounter in the bundle. Resolve the imported Encounter in Medplum with `Encounter?identifier=https://metriport.com/fhir/encounter\|<encounterId>`. Omitted when the bundle carries no Encounter. |
 
 ### Building the transaction bundle
 
