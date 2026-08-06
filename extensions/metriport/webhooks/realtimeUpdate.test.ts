@@ -66,7 +66,7 @@ describe('Metriport - Webhook - Realtime Update', () => {
     })
   }
 
-  describe('When an enrolling notification is received', () => {
+  describe('When an ADT notification is received', () => {
     test.each([
       MetriportWebhookType.PatientAdmit,
       MetriportWebhookType.PatientDischarge,

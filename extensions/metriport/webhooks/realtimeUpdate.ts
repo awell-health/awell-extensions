@@ -17,7 +17,7 @@ import {
   type MetriportRealtimeUpdateWebhookPayload,
 } from './types'
 import {
-  isEnrollingWebhookType,
+  isAdtWebhookType,
   pingWebhookSchema,
   realtimeNotificationSchema,
   webhookEnvelopeSchema,
@@ -117,7 +117,7 @@ export const realtimeUpdate: Webhook<
         return
       }
 
-      if (!isEnrollingWebhookType(eventType)) {
+      if (!isAdtWebhookType(eventType)) {
         await onError({
           response: {
             statusCode: 200,
@@ -127,8 +127,8 @@ export const realtimeUpdate: Webhook<
         return
       }
 
-      // Strict from here on: the type is one we enroll on, so a malformed
-      // payload is a real problem and must not be swallowed by the 200 above.
+      // Strict from here on: the type is an ADT one, so a malformed payload is
+      // a real problem and must not be swallowed by the 200 above.
       //
       // The bundle referenced by `bundleUrl` is intentionally NOT fetched here:
       // we validate, emit the data points (including the URL), and reply

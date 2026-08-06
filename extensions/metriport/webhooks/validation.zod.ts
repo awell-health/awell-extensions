@@ -8,22 +8,20 @@ import { MetriportWebhookType } from './types'
 const trimmedString = z.string().trim()
 
 /**
- * The notification types that enroll a patient. All four share one payload
- * shape; anything outside this list is acknowledged without enrolling.
+ * The ADT notification types. All four share one payload shape; anything
+ * outside this list is acknowledged without enrolling.
  */
-export const ENROLLING_WEBHOOK_TYPES = [
+export const ADT_WEBHOOK_TYPES = [
   MetriportWebhookType.PatientAdmit,
   MetriportWebhookType.PatientDischarge,
   MetriportWebhookType.PatientTransfer,
   MetriportWebhookType.DischargeSummary,
 ] as const
 
-export type EnrollingWebhookType = (typeof ENROLLING_WEBHOOK_TYPES)[number]
+export type AdtWebhookType = (typeof ADT_WEBHOOK_TYPES)[number]
 
-export const isEnrollingWebhookType = (
-  type: string,
-): type is EnrollingWebhookType =>
-  (ENROLLING_WEBHOOK_TYPES as readonly string[]).includes(type)
+export const isAdtWebhookType = (type: string): type is AdtWebhookType =>
+  (ADT_WEBHOOK_TYPES as readonly string[]).includes(type)
 
 const metaSchema = z.object({
   messageId: trimmedString,
@@ -50,12 +48,12 @@ export const pingWebhookSchema = z.object({
 })
 
 /**
- * The strict pass, applied only once `meta.type` is known to be one we enroll
- * on. A handled event with a broken payload must fail loudly rather than be
+ * The strict pass, applied only once `meta.type` is known to be an ADT type.
+ * A handled event with a broken payload must fail loudly rather than be
  * swallowed by the acknowledge-and-ignore path.
  */
 export const realtimeNotificationSchema = z.object({
-  meta: metaSchema.extend({ type: z.enum(ENROLLING_WEBHOOK_TYPES) }),
+  meta: metaSchema.extend({ type: z.enum(ADT_WEBHOOK_TYPES) }),
   payload: z.object({
     url: trimmedString.url(),
     patientId: trimmedString.min(1),
