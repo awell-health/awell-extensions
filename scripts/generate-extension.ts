@@ -288,7 +288,7 @@ export interface HelloWorldPayload {
 export const helloWorldWebhook: Webhook<keyof typeof dataPoints, HelloWorldPayload> = {
   key: 'helloWorldWebhook',
   dataPoints,
-  onWebhookReceived: async ({ payload }, onSuccess, onError) => {
+  onEvent: async ({ payload: { payload }, onSuccess, onError }) => {
     const { eventType, data, patient_id } = payload
 
     await onSuccess({
