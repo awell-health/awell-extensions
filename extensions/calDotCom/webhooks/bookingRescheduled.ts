@@ -22,7 +22,7 @@ export const bookingRescheduled: Webhook<
 > = {
   key: 'bookingRescheduled',
   dataPoints,
-  onWebhookReceived: async ({ payload, settings }, onSuccess, onError) => {
+  onEvent: async ({ payload: { payload, settings }, onSuccess, onError }) => {
     const {
       payload: { bookingId, uid },
     } = payload

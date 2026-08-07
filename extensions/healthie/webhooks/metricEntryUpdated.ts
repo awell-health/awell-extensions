@@ -23,7 +23,7 @@ export const metricEntryUpdated: Webhook<
 > = {
   key: 'metricEntryUpdated',
   dataPoints,
-  onWebhookReceived: async ({ payload, settings }, onSuccess, onError) => {
+  onEvent: async ({ payload: { payload, settings }, onSuccess, onError }) => {
     try {
       const { sdk } = await createSdk({ settings })
 

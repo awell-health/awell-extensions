@@ -53,7 +53,7 @@ describe('Metriport - Webhook - Realtime Update', () => {
   })
 
   const invoke = async (payload: unknown, headers = {}): Promise<void> => {
-    await extensionWebhook.onEvent!({
+    await extensionWebhook.onEvent({
       payload: {
         payload,
         settings: mockSettings,
@@ -247,7 +247,7 @@ describe('Metriport - Webhook - Realtime Update', () => {
     const rawBody = Buffer.from(JSON.stringify(admitPayload))
 
     test('Should reject requests with a missing signature header', async () => {
-      await extensionWebhook.onEvent!({
+      await extensionWebhook.onEvent({
         payload: {
           payload: admitPayload,
           settings: { ...mockSettings, webhookKey: 'secret' },
@@ -269,7 +269,7 @@ describe('Metriport - Webhook - Realtime Update', () => {
     })
 
     test('Should reject requests with an invalid signature', async () => {
-      await extensionWebhook.onEvent!({
+      await extensionWebhook.onEvent({
         payload: {
           payload: admitPayload,
           settings: { ...mockSettings, webhookKey: 'secret' },
@@ -293,7 +293,7 @@ describe('Metriport - Webhook - Realtime Update', () => {
     })
 
     test('Should accept requests with a valid HMAC-SHA256 signature over the raw body', async () => {
-      await extensionWebhook.onEvent!({
+      await extensionWebhook.onEvent({
         payload: {
           payload: admitPayload,
           settings: { ...mockSettings, webhookKey: 'secret' },
@@ -323,7 +323,7 @@ describe('Metriport - Webhook - Realtime Update', () => {
       payload: unknown,
       settings: Record<string, string>,
     ): Promise<void> => {
-      await extensionWebhook.onEvent!({
+      await extensionWebhook.onEvent({
         payload: {
           payload,
           settings,

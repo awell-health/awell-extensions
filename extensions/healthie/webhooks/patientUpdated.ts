@@ -19,7 +19,7 @@ export const patientUpdated: Webhook<
 > = {
   key: 'patientUpdated',
   dataPoints,
-  onWebhookReceived: async ({ payload, settings }, onSuccess, onError) => {
+  onEvent: async ({ payload: { payload, settings }, onSuccess, onError }) => {
     const validatedPayload = webhookPayloadSchema.parse(payload)
     const updatedPatientId = validatedPayload.resource_id.toString()
 
