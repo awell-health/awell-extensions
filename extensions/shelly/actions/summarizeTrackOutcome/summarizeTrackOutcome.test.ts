@@ -208,6 +208,103 @@ describe('summarizeTrackOutcome - Mocked LLM calls', () => {
     expect(onError).not.toHaveBeenCalled()
   })
 
+  it('Should use tenant disclaimer settings when action fields are absent', async () => {
+    const awellSdkMock = {
+      orchestration: {
+        query: jest.fn().mockImplementation(({ activity }) => {
+          if (activity) {
+            return Promise.resolve({
+              activity: {
+                success: true,
+                activity: {
+                  id: 'test-activity-id',
+                  context: {
+                    track_id: 'test-track-id',
+                  },
+                },
+              },
+            })
+          }
+          return Promise.resolve({})
+        }),
+      },
+    }
+
+    helpers.awellSdk = jest.fn().mockResolvedValue(awellSdkMock)
+
+    await extensionAction.onEvent({
+      payload: {
+        ...basePayload,
+        settings: {
+          disclaimerText: 'Tenant track disclaimer.',
+          disclaimerPlacement: 'bottom',
+        },
+      },
+      onComplete,
+      onError,
+      helpers,
+      attempt: 1,
+    })
+
+    const summaryData = onComplete.mock.calls[0][0].data_points.outcomeSummary
+    const expectedDisclaimerMsg = '<p>Tenant track disclaimer.</p>'
+
+    expect(summaryData).toContain(expectedDisclaimerMsg)
+    expect(summaryData.trim().endsWith(expectedDisclaimerMsg)).toBe(true)
+    expect(onError).not.toHaveBeenCalled()
+  })
+
+  it('Should let action disclaimer settings override tenant disclaimer settings', async () => {
+    const awellSdkMock = {
+      orchestration: {
+        query: jest.fn().mockImplementation(({ activity }) => {
+          if (activity) {
+            return Promise.resolve({
+              activity: {
+                success: true,
+                activity: {
+                  id: 'test-activity-id',
+                  context: {
+                    track_id: 'test-track-id',
+                  },
+                },
+              },
+            })
+          }
+          return Promise.resolve({})
+        }),
+      },
+    }
+
+    helpers.awellSdk = jest.fn().mockResolvedValue(awellSdkMock)
+
+    await extensionAction.onEvent({
+      payload: {
+        ...basePayload,
+        settings: {
+          disclaimerText: 'Tenant track disclaimer.',
+          disclaimerPlacement: 'bottom',
+        },
+        fields: {
+          instructions: 'Summarize track outcome.',
+          disclaimerText: 'Action track disclaimer.',
+          disclaimerPlacement: 'top',
+        },
+      },
+      onComplete,
+      onError,
+      helpers,
+      attempt: 1,
+    })
+
+    const summaryData = onComplete.mock.calls[0][0].data_points.outcomeSummary
+    const expectedDisclaimerMsg = '<p>Action track disclaimer.</p>'
+
+    expect(summaryData).toContain(expectedDisclaimerMsg)
+    expect(summaryData.trim().startsWith(expectedDisclaimerMsg)).toBe(true)
+    expect(onError).not.toHaveBeenCalled()
+  })
+
   it.each([
     ['empty string', ''],
     ['null', null],

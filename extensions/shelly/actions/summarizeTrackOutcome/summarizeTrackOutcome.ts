@@ -9,11 +9,15 @@ import { getTrackData } from '../../lib/getTrackData/index'
 import { getCareFlowDetails } from '../../lib/getCareFlowDetails'
 import { isNil } from 'lodash'
 import { addActivityEventLog } from '../../../../src/lib/awell/addEventLog'
-import { formatSummaryWithDisclaimer } from '../../lib/disclaimer'
+import { SettingsValidationSchema, type settings } from '../../settings'
+import {
+  formatSummaryWithDisclaimer,
+  resolveDisclaimerConfig,
+} from '../../lib/disclaimer'
 
 export const summarizeTrackOutcome: Action<
   typeof fields,
-  Record<string, never>,
+  typeof settings,
   keyof typeof dataPoints
 > = {
   key: 'summarizeTrackOutcome',
@@ -32,6 +36,10 @@ export const summarizeTrackOutcome: Action<
       // 1. Validate input fields
       const { instructions, disclaimerText, disclaimerPlacement } =
         FieldsValidationSchema.parse(payload.fields)
+      const {
+        disclaimerText: tenantDisclaimerText,
+        disclaimerPlacement: tenantDisclaimerPlacement,
+      } = SettingsValidationSchema.parse(payload.settings ?? {})
       const pathway = payload.pathway
 
       // 2. Initialize OpenAI model with metadata
@@ -102,11 +110,19 @@ export const summarizeTrackOutcome: Action<
         disclaimerMsg = `**Important Notice:** The content provided is an AI-generated summary of Care Flow "${careFlowDetails.title}" (ID: ${pathway.id}).`
       }
 
+      const { disclaimer, placement } = resolveDisclaimerConfig({
+        actionDisclaimerText: disclaimerText,
+        actionDisclaimerPlacement: disclaimerPlacement,
+        tenantDisclaimerText,
+        tenantDisclaimerPlacement,
+        defaultDisclaimer: disclaimerMsg,
+      })
+
       const htmlSummary = await markdownToHtml(
         formatSummaryWithDisclaimer({
           summary,
-          disclaimer: disclaimerText ?? disclaimerMsg,
-          placement: disclaimerPlacement,
+          disclaimer,
+          placement,
         }),
       )
 

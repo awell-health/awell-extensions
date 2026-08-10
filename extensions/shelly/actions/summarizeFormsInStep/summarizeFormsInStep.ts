@@ -4,6 +4,8 @@ import { getResponsesForAllForms } from '../../lib/getFormResponseText'
 import { summarizeFormWithLLM } from '../../lib/summarizeFormWithLLM'
 import { detectLanguageWithLLM } from '../../lib/detectLanguageWithLLM'
 import { DISCLAIMER_MSG_FORM } from '../../lib/constants'
+import { SettingsValidationSchema, type settings } from '../../settings'
+import { resolveDisclaimerConfig } from '../../lib/disclaimer'
 import { getAllFormsInCurrentStep } from '../../../../src/lib/awell'
 import { markdownToHtml } from '../../../../src/utils'
 import { createOpenAIModel } from '../../../../src/lib/llm/openai'
@@ -11,7 +13,7 @@ import { OPENAI_MODELS } from '../../../../src/lib/llm/openai/constants'
 
 export const summarizeFormsInStep: Action<
   typeof fields,
-  Record<string, never>,
+  typeof settings,
   keyof typeof dataPoints
 > = {
   key: 'summarizeFormsInStep',
@@ -28,6 +30,10 @@ export const summarizeFormsInStep: Action<
       // 1. Validate input fields
       const { summaryFormat, language, disclaimerText, disclaimerPlacement } =
         FieldsValidationSchema.parse(payload.fields)
+      const {
+        disclaimerText: tenantDisclaimerText,
+        disclaimerPlacement: tenantDisclaimerPlacement,
+      } = SettingsValidationSchema.parse(payload.settings ?? {})
       const pathway = payload.pathway
 
       // 2. Initialize OpenAI model with hideDataForTracing enabled
@@ -69,14 +75,22 @@ export const summarizeFormsInStep: Action<
         }
       }
 
+      const { disclaimer, placement } = resolveDisclaimerConfig({
+        actionDisclaimerText: disclaimerText,
+        actionDisclaimerPlacement: disclaimerPlacement,
+        tenantDisclaimerText,
+        tenantDisclaimerPlacement,
+        defaultDisclaimer: DISCLAIMER_MSG_FORM,
+      })
+
       // Summarize all forms' responses
       const summary = await summarizeFormWithLLM({
         model,
         formData: allFormsResponseText,
         summaryFormat,
         language: summaryLanguage,
-        disclaimerMessage: disclaimerText ?? DISCLAIMER_MSG_FORM,
-        disclaimerPlacement,
+        disclaimerMessage: disclaimer,
+        disclaimerPlacement: placement,
         metadata,
         callbacks, // Add callbacks here
       })

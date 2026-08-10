@@ -143,6 +143,100 @@ describe('summarizeCareFlow - Mocked LLM calls', () => {
     expect(onError).not.toHaveBeenCalled()
   })
 
+  it('Should use tenant disclaimer text and bottom placement when action fields are absent', async () => {
+    const payload = generateTestPayload({
+      pathway: {
+        id: 'ai4rZaYEocjB',
+        definition_id: 'whatever',
+      },
+      fields: {
+        stakeholder: 'Clinician',
+        additionalInstructions: 'Summarize key activities.',
+      },
+      settings: {
+        disclaimerText: 'Tenant AI disclaimer.',
+        disclaimerPlacement: 'bottom',
+      },
+    })
+
+    const awellSdkMock = {
+      orchestration: {
+        query: jest.fn().mockResolvedValue({
+          careflowActivities: mockCareflowActivitiesResponse,
+        }),
+      },
+    }
+
+    helpers.awellSdk = jest.fn().mockResolvedValue(awellSdkMock)
+
+    await extensionAction.onEvent({
+      payload,
+      onComplete,
+      onError,
+      helpers,
+      attempt: 1,
+    })
+
+    const expected = `<p>Mocked care flow summary from LLM</p>
+<p>Tenant AI disclaimer.</p>`
+
+    expect(onComplete).toHaveBeenCalledWith({
+      data_points: {
+        summary: expected,
+      },
+    })
+
+    expect(onError).not.toHaveBeenCalled()
+  })
+
+  it('Should let action disclaimer settings override tenant disclaimer settings', async () => {
+    const payload = generateTestPayload({
+      pathway: {
+        id: 'ai4rZaYEocjB',
+        definition_id: 'whatever',
+      },
+      fields: {
+        stakeholder: 'Clinician',
+        additionalInstructions: 'Summarize key activities.',
+        disclaimerText: 'Action AI disclaimer.',
+        disclaimerPlacement: 'top',
+      },
+      settings: {
+        disclaimerText: 'Tenant AI disclaimer.',
+        disclaimerPlacement: 'bottom',
+      },
+    })
+
+    const awellSdkMock = {
+      orchestration: {
+        query: jest.fn().mockResolvedValue({
+          careflowActivities: mockCareflowActivitiesResponse,
+        }),
+      },
+    }
+
+    helpers.awellSdk = jest.fn().mockResolvedValue(awellSdkMock)
+
+    await extensionAction.onEvent({
+      payload,
+      onComplete,
+      onError,
+      helpers,
+      attempt: 1,
+    })
+
+    const expected = `<p>Action AI disclaimer.</p>
+<p>Mocked care flow summary from LLM</p>`
+
+    expect(onComplete).toHaveBeenCalledWith({
+      data_points: {
+        summary: expected,
+      },
+    })
+
+    expect(onError).not.toHaveBeenCalled()
+  })
+
   it.each([
     ['empty string', ''],
     ['null', null],

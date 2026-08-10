@@ -16,6 +16,8 @@ import {
 import { markdownToHtml } from '../../../../src/utils'
 import { getCareFlowDetails } from '../../lib/getCareFlowDetails'
 import { isNil } from 'lodash'
+import { SettingsValidationSchema, type settings } from '../../settings'
+import { resolveDisclaimerConfig } from '../../lib/disclaimer'
 
 /**
  * Awell Action: Form Summarization
@@ -31,7 +33,7 @@ import { isNil } from 'lodash'
  */
 export const summarizeForm: Action<
   typeof fields,
-  Record<string, never>,
+  typeof settings,
   keyof typeof dataPoints
 > = {
   key: 'summarizeForm',
@@ -54,6 +56,10 @@ export const summarizeForm: Action<
       disclaimerText,
       disclaimerPlacement,
     } = FieldsValidationSchema.parse(payload.fields)
+    const {
+      disclaimerText: tenantDisclaimerText,
+      disclaimerPlacement: tenantDisclaimerPlacement,
+    } = SettingsValidationSchema.parse(payload.settings ?? {})
 
     // 2. Initialize OpenAI model with metadata
     const { model, metadata, callbacks } = await createOpenAIModel({
@@ -176,14 +182,22 @@ export const summarizeForm: Action<
       }
     }
 
+    const { disclaimer, placement } = resolveDisclaimerConfig({
+      actionDisclaimerText: disclaimerText,
+      actionDisclaimerPlacement: disclaimerPlacement,
+      tenantDisclaimerText,
+      tenantDisclaimerPlacement,
+      defaultDisclaimer: disclaimerMessage,
+    })
+
     // 4. Generate summary
     const summary = await summarizeFormWithLLM({
       model,
       formData,
       summaryFormat,
       language: summaryLanguage,
-      disclaimerMessage: disclaimerText ?? disclaimerMessage,
-      disclaimerPlacement,
+      disclaimerMessage: disclaimer,
+      disclaimerPlacement: placement,
       additionalInstructions,
       metadata,
       callbacks,

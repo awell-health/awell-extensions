@@ -378,6 +378,80 @@ describe('summarizeForm - Mocked LLM calls', () => {
       expect(onError).not.toHaveBeenCalled()
     })
 
+    it('Should use tenant disclaimer settings when action fields are absent', async () => {
+      const payload = generateTestPayload({
+        pathway: {
+          id: 'ai4rZaYEocjB',
+          definition_id: 'whatever',
+        },
+        activity: { id: 'X74HeDQ4N0gtdaSEuzF8s' },
+        fields: {
+          summaryFormat: 'Bullet-points',
+          language: 'English',
+        },
+        settings: {
+          disclaimerText: 'Tenant form disclaimer.',
+          disclaimerPlacement: 'bottom',
+        },
+      })
+
+      await extensionAction.onEvent({
+        payload,
+        onComplete,
+        onError,
+        helpers,
+        attempt: 1,
+      })
+
+      const { summarizeFormWithLLM } = require('../../lib/summarizeFormWithLLM')
+
+      expect(summarizeFormWithLLM).toHaveBeenCalledWith(
+        expect.objectContaining({
+          disclaimerMessage: 'Tenant form disclaimer.',
+          disclaimerPlacement: 'bottom',
+        }),
+      )
+      expect(onError).not.toHaveBeenCalled()
+    })
+
+    it('Should let action disclaimer settings override tenant disclaimer settings', async () => {
+      const payload = generateTestPayload({
+        pathway: {
+          id: 'ai4rZaYEocjB',
+          definition_id: 'whatever',
+        },
+        activity: { id: 'X74HeDQ4N0gtdaSEuzF8s' },
+        fields: {
+          summaryFormat: 'Bullet-points',
+          language: 'English',
+          disclaimerText: 'Action form disclaimer.',
+          disclaimerPlacement: 'top',
+        },
+        settings: {
+          disclaimerText: 'Tenant form disclaimer.',
+          disclaimerPlacement: 'bottom',
+        },
+      })
+
+      await extensionAction.onEvent({
+        payload,
+        onComplete,
+        onError,
+        helpers,
+        attempt: 1,
+      })
+
+      const { summarizeFormWithLLM } = require('../../lib/summarizeFormWithLLM')
+
+      expect(summarizeFormWithLLM).toHaveBeenCalledWith(
+        expect.objectContaining({
+          disclaimerMessage: 'Action form disclaimer.',
+          disclaimerPlacement: 'top',
+        }),
+      )
+      expect(onError).not.toHaveBeenCalled()
+    })
+
     it.each([
       ['empty string', ''],
       ['null', null],
