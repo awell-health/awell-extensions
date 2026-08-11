@@ -1,5 +1,10 @@
 import { type Field, FieldType } from '@awell-health/extensions-core'
 import z, { type ZodTypeAny } from 'zod'
+import { DISCLAIMER_MSG_FORM } from '../../../lib/constants'
+import {
+  DisclaimerPlacementEnum,
+  OptionalDisclaimerTextSchema,
+} from '../../../lib/disclaimer'
 
 // Step 1: Define the enum
 export enum SummaryFormatEnum {
@@ -7,7 +12,6 @@ export enum SummaryFormatEnum {
   TEXT_PARAGRAPH = 'Text paragraph',
 }
 
-const DisclaimerPlacementEnum = z.enum(['top', 'bottom'])
 export type DisclaimerPlacementType = z.infer<typeof DisclaimerPlacementEnum>
 
 // Step 2: Define the fields object
@@ -31,8 +35,7 @@ export const fields = {
   disclaimerText: {
     id: 'disclaimerText',
     label: 'Disclaimer text',
-    description:
-      'Optional disclaimer text override. If not provided, the default disclaimer is used.',
+    description: `Optional action-level disclaimer text override. If not provided, the tenant-level default is used when configured. Otherwise, the action keeps its existing default disclaimer (for example: ${DISCLAIMER_MSG_FORM}).`,
     type: FieldType.TEXT,
     required: false,
   },
@@ -40,7 +43,7 @@ export const fields = {
     id: 'disclaimerPlacement',
     label: 'Disclaimer placement',
     description:
-      'Where to place the disclaimer in the generated summary. Defaults to top.',
+      'Optional action-level disclaimer placement override. Use top or bottom. If not provided, the tenant-level default is used when configured. Otherwise, Shelly defaults to top.',
     type: FieldType.STRING,
     required: false,
     options: {
@@ -66,14 +69,6 @@ export const FieldsValidationSchema = z.object({
         : SummaryFormatEnum.BULLET_POINTS,
     ),
   language: z.string().optional().default('Default'),
-  disclaimerText: z.preprocess(
-    (v) =>
-      v === null ||
-      v === undefined ||
-      (typeof v === 'string' && v.trim() === '')
-        ? undefined
-        : v,
-    z.string().optional(),
-  ),
-  disclaimerPlacement: DisclaimerPlacementEnum.optional().default('top'),
+  disclaimerText: OptionalDisclaimerTextSchema,
+  disclaimerPlacement: DisclaimerPlacementEnum.optional(),
 } satisfies Record<keyof typeof fields, ZodTypeAny>)

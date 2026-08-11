@@ -1,7 +1,11 @@
 import { Category, type Action } from '@awell-health/extensions-core'
 import { fields, dataPoints, FieldsValidationSchema } from './config'
 import { DISCLAIMER_MSG } from '../../lib/constants'
-import { formatSummaryWithDisclaimer } from '../../lib/disclaimer'
+import { SettingsValidationSchema, type settings } from '../../settings'
+import {
+  formatSummaryWithDisclaimer,
+  resolveDisclaimerConfig,
+} from '../../lib/disclaimer'
 import { summarizeCareFlowWithLLM } from './lib/summarizeCareFlowWithLLM'
 import { markdownToHtml } from '../../../../src/utils'
 import { createOpenAIModel } from '../../../../src/lib/llm/openai'
@@ -9,7 +13,7 @@ import { OPENAI_MODELS } from '../../../../src/lib/llm/openai/constants'
 
 export const summarizeCareFlow: Action<
   typeof fields,
-  Record<string, never>,
+  typeof settings,
   keyof typeof dataPoints
 > = {
   key: 'summarizeCareFlow',
@@ -31,6 +35,10 @@ export const summarizeCareFlow: Action<
         disclaimerText,
         disclaimerPlacement,
       } = FieldsValidationSchema.parse(payload.fields)
+      const {
+        disclaimerText: tenantDisclaimerText,
+        disclaimerPlacement: tenantDisclaimerPlacement,
+      } = SettingsValidationSchema.parse(payload.settings ?? {})
       const pathway = payload.pathway
 
       // 2. Initialize OpenAI model with metadata
@@ -93,11 +101,19 @@ export const summarizeCareFlow: Action<
         callbacks,
       })
 
+      const { disclaimer, placement } = resolveDisclaimerConfig({
+        actionDisclaimerText: disclaimerText,
+        actionDisclaimerPlacement: disclaimerPlacement,
+        tenantDisclaimerText,
+        tenantDisclaimerPlacement,
+        defaultDisclaimer: DISCLAIMER_MSG,
+      })
+
       const htmlSummary = await markdownToHtml(
         formatSummaryWithDisclaimer({
           summary,
-          disclaimer: disclaimerText ?? DISCLAIMER_MSG,
-          placement: disclaimerPlacement,
+          disclaimer,
+          placement,
         }),
       )
 

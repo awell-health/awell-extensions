@@ -7,6 +7,23 @@ description: Smart tools to help with communication, information, and summaries 
 
 Shelly provides a set of smart tools that use artificial intelligence (most precisely Large Language Models) to help automate tasks and manage information within your care flow.
 
+## Disclaimer settings
+
+Shelly summary actions always include an AI-generated disclaimer. You can configure disclaimer behavior at two levels:
+
+- **Shelly extension settings (tenant-level defaults):** configure `Default disclaimer text` and `Default disclaimer placement` once for the tenant/organization. Existing care-flow action instances pick up these settings without being deleted and re-added.
+- **Action settings:** configure `Disclaimer text` and `Disclaimer placement` on an individual Shelly summary action when a specific care flow needs different wording or placement. Action-level settings take precedence over the tenant-level defaults.
+
+If neither tenant-level nor action-level settings are configured, Shelly preserves the existing defaults: care-flow summaries use `Important Notice: The content provided is an AI-generated summary.`, form summaries use `Important Notice: The content provided is an AI-generated summary of the form responses.`, dynamic form/track provenance disclaimers remain enabled where available, and placement defaults to `top`.
+
+For compliance wording similar to Wellpath's requirements, set the tenant-level `Default disclaimer text` to:
+
+```
+This is an AI-generated summary. It presents information already recorded in the care flow and does not generate, recommend, or make any clinical decision. Always review for accuracy and completeness.
+```
+
+Set `Default disclaimer placement` to `top` or `bottom`. Use action-level overrides only for individual summaries that need different wording or placement.
+
 ## Actions
 
 Below is a detailed look at each tool Shelly offers, what it needs to work, what it gives you back, and how to use it best.
