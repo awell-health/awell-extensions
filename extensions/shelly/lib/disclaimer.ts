@@ -18,10 +18,11 @@ export const OptionalDisclaimerTextSchema = z.preprocess(
   z.string().optional(),
 )
 
-export const OptionalDisclaimerPlacementSchema = z.preprocess(
-  (value) => (value === null || value === '' ? undefined : value),
-  DisclaimerPlacementEnum.optional(),
-)
+export const OptionalDisclaimerPlacementSchema = z.preprocess((value) => {
+  if (value === null || value === undefined || value === '') return undefined
+  if (typeof value === 'string') return value.trim().toLowerCase()
+  return value
+}, DisclaimerPlacementEnum.optional())
 
 export const resolveDisclaimerConfig = ({
   actionDisclaimerText,

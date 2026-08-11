@@ -24,7 +24,7 @@ export const settings = {
     obfuscated: false,
     required: false,
     description:
-      'Optional tenant-level default disclaimer placement for Shelly summaries. Enter "top" or "bottom". Action-level disclaimer placement overrides this setting. If neither is configured, Shelly uses "top".',
+      'Optional tenant-level default disclaimer placement for Shelly summaries. Options: "top" or "bottom" (case-insensitive). Action-level disclaimer placement overrides this setting. If neither is configured, Shelly uses "top".',
   },
 } satisfies Record<string, Setting>
 

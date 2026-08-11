@@ -233,6 +233,172 @@ describe('summarizeFormsInStep - Mocked LLM calls', () => {
     expect(onError).not.toHaveBeenCalled()
   })
 
+  it('Should let action disclaimer text override tenant text while tenant placement is used', async () => {
+    const payload = generateTestPayload({
+      pathway: {
+        id: 'ai4rZaYEocjB',
+        definition_id: 'whatever',
+        tenant_id: 'test-tenant-id',
+      },
+      activity: { id: 'X74HeDQ4N0gtdaSEuzF8s' },
+      fields: {
+        summaryFormat: 'Bullet-points',
+        language: 'English',
+        disclaimerText: 'Action forms-in-step disclaimer.',
+      },
+      settings: {
+        disclaimerText: 'Tenant forms-in-step disclaimer.',
+        disclaimerPlacement: 'bottom',
+      },
+    })
+
+    await extensionAction.onEvent({
+      payload,
+      onComplete,
+      onError,
+      helpers,
+      attempt: 1,
+    })
+
+    const { summarizeFormWithLLM } = require('../../lib/summarizeFormWithLLM')
+
+    expect(summarizeFormWithLLM).toHaveBeenCalledWith(
+      expect.objectContaining({
+        disclaimerMessage: 'Action forms-in-step disclaimer.',
+        disclaimerPlacement: 'bottom',
+      }),
+    )
+    expect(onError).not.toHaveBeenCalled()
+  })
+
+  it('Should let action disclaimer placement override tenant placement while tenant text is used', async () => {
+    const payload = generateTestPayload({
+      pathway: {
+        id: 'ai4rZaYEocjB',
+        definition_id: 'whatever',
+        tenant_id: 'test-tenant-id',
+      },
+      activity: { id: 'X74HeDQ4N0gtdaSEuzF8s' },
+      fields: {
+        summaryFormat: 'Bullet-points',
+        language: 'English',
+        disclaimerPlacement: 'top',
+      },
+      settings: {
+        disclaimerText: 'Tenant forms-in-step disclaimer.',
+        disclaimerPlacement: 'bottom',
+      },
+    })
+
+    await extensionAction.onEvent({
+      payload,
+      onComplete,
+      onError,
+      helpers,
+      attempt: 1,
+    })
+
+    const { summarizeFormWithLLM } = require('../../lib/summarizeFormWithLLM')
+
+    expect(summarizeFormWithLLM).toHaveBeenCalledWith(
+      expect.objectContaining({
+        disclaimerMessage: 'Tenant forms-in-step disclaimer.',
+        disclaimerPlacement: 'top',
+      }),
+    )
+    expect(onError).not.toHaveBeenCalled()
+  })
+
+  it.each([
+    ['empty string', ''],
+    ['null', null],
+    ['whitespace only', '   '],
+  ])(
+    'Should fall back to the default form disclaimer when tenant disclaimerText is %s',
+    async (_label, tenantDisclaimerText) => {
+      const payload = generateTestPayload({
+        pathway: {
+          id: 'ai4rZaYEocjB',
+          definition_id: 'whatever',
+          tenant_id: 'test-tenant-id',
+        },
+        activity: { id: 'X74HeDQ4N0gtdaSEuzF8s' },
+        fields: {
+          summaryFormat: 'Bullet-points',
+          language: 'English',
+        },
+        settings: {
+          disclaimerText: tenantDisclaimerText as string | undefined,
+          disclaimerPlacement: 'bottom',
+        },
+      })
+
+      await extensionAction.onEvent({
+        payload,
+        onComplete,
+        onError,
+        helpers,
+        attempt: 1,
+      })
+
+      const { summarizeFormWithLLM } = require('../../lib/summarizeFormWithLLM')
+      const { DISCLAIMER_MSG_FORM } = require('../../lib/constants')
+
+      expect(summarizeFormWithLLM).toHaveBeenCalledWith(
+        expect.objectContaining({
+          disclaimerMessage: DISCLAIMER_MSG_FORM,
+          disclaimerPlacement: 'bottom',
+        }),
+      )
+      expect(onError).not.toHaveBeenCalled()
+    },
+  )
+
+  it.each([
+    ['capitalized', 'Top', 'top'],
+    ['uppercase', 'BOTTOM', 'bottom'],
+    ['trailing whitespace', 'top ', 'top'],
+    ['surrounding whitespace', ' bottom ', 'bottom'],
+  ])(
+    'Should normalize tenant disclaimerPlacement %s to %s',
+    async (_label, tenantDisclaimerPlacement, expectedPlacement) => {
+      const payload = generateTestPayload({
+        pathway: {
+          id: 'ai4rZaYEocjB',
+          definition_id: 'whatever',
+          tenant_id: 'test-tenant-id',
+        },
+        activity: { id: 'X74HeDQ4N0gtdaSEuzF8s' },
+        fields: {
+          summaryFormat: 'Bullet-points',
+          language: 'English',
+        },
+        settings: {
+          disclaimerText: 'Tenant forms-in-step disclaimer.',
+          disclaimerPlacement: tenantDisclaimerPlacement,
+        },
+      })
+
+      await extensionAction.onEvent({
+        payload,
+        onComplete,
+        onError,
+        helpers,
+        attempt: 1,
+      })
+
+      const { summarizeFormWithLLM } = require('../../lib/summarizeFormWithLLM')
+
+      expect(summarizeFormWithLLM).toHaveBeenCalledWith(
+        expect.objectContaining({
+          disclaimerMessage: 'Tenant forms-in-step disclaimer.',
+          disclaimerPlacement: expectedPlacement,
+        }),
+      )
+      expect(onError).not.toHaveBeenCalled()
+    },
+  )
+
   it.each([
     ['empty string', ''],
     ['null', null],

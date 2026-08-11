@@ -305,6 +305,220 @@ describe('summarizeTrackOutcome - Mocked LLM calls', () => {
     expect(onError).not.toHaveBeenCalled()
   })
 
+  it('Should let action disclaimer text override tenant text while tenant placement is used', async () => {
+    const awellSdkMock = {
+      orchestration: {
+        query: jest.fn().mockImplementation(({ activity }) => {
+          if (activity) {
+            return Promise.resolve({
+              activity: {
+                success: true,
+                activity: {
+                  id: 'test-activity-id',
+                  context: {
+                    track_id: 'test-track-id',
+                  },
+                },
+              },
+            })
+          }
+          return Promise.resolve({})
+        }),
+      },
+    }
+
+    helpers.awellSdk = jest.fn().mockResolvedValue(awellSdkMock)
+
+    await extensionAction.onEvent({
+      payload: {
+        ...basePayload,
+        settings: {
+          disclaimerText: 'Tenant track disclaimer.',
+          disclaimerPlacement: 'bottom',
+        },
+        fields: {
+          instructions: 'Summarize track outcome.',
+          disclaimerText: 'Action track disclaimer.',
+        },
+      },
+      onComplete,
+      onError,
+      helpers,
+      attempt: 1,
+    })
+
+    const summaryData = onComplete.mock.calls[0][0].data_points.outcomeSummary
+    const expectedDisclaimerMsg = '<p>Action track disclaimer.</p>'
+
+    // Action text wins, tenant placement (bottom) wins
+    expect(summaryData).toContain(expectedDisclaimerMsg)
+    expect(summaryData.trim().endsWith(expectedDisclaimerMsg)).toBe(true)
+    expect(onError).not.toHaveBeenCalled()
+  })
+
+  it('Should let action disclaimer placement override tenant placement while tenant text is used', async () => {
+    const awellSdkMock = {
+      orchestration: {
+        query: jest.fn().mockImplementation(({ activity }) => {
+          if (activity) {
+            return Promise.resolve({
+              activity: {
+                success: true,
+                activity: {
+                  id: 'test-activity-id',
+                  context: {
+                    track_id: 'test-track-id',
+                  },
+                },
+              },
+            })
+          }
+          return Promise.resolve({})
+        }),
+      },
+    }
+
+    helpers.awellSdk = jest.fn().mockResolvedValue(awellSdkMock)
+
+    await extensionAction.onEvent({
+      payload: {
+        ...basePayload,
+        settings: {
+          disclaimerText: 'Tenant track disclaimer.',
+          disclaimerPlacement: 'bottom',
+        },
+        fields: {
+          instructions: 'Summarize track outcome.',
+          disclaimerPlacement: 'top',
+        },
+      },
+      onComplete,
+      onError,
+      helpers,
+      attempt: 1,
+    })
+
+    const summaryData = onComplete.mock.calls[0][0].data_points.outcomeSummary
+    const expectedDisclaimerMsg = '<p>Tenant track disclaimer.</p>'
+
+    // Tenant text wins (no action text), action placement (top) wins
+    expect(summaryData).toContain(expectedDisclaimerMsg)
+    expect(summaryData.trim().startsWith(expectedDisclaimerMsg)).toBe(true)
+    expect(onError).not.toHaveBeenCalled()
+  })
+
+  it.each([
+    ['empty string', ''],
+    ['null', null],
+    ['whitespace only', '   '],
+  ])(
+    'Should fall back to the dynamic care flow disclaimer when tenant disclaimerText is %s',
+    async (_label, tenantDisclaimerText) => {
+      const awellSdkMock = {
+        orchestration: {
+          query: jest.fn().mockImplementation(({ activity }) => {
+            if (activity) {
+              return Promise.resolve({
+                activity: {
+                  success: true,
+                  activity: {
+                    id: 'test-activity-id',
+                    context: {
+                      track_id: 'test-track-id',
+                    },
+                  },
+                },
+              })
+            }
+            return Promise.resolve({})
+          }),
+        },
+      }
+
+      helpers.awellSdk = jest.fn().mockResolvedValue(awellSdkMock)
+
+      await extensionAction.onEvent({
+        payload: {
+          ...basePayload,
+          settings: {
+            disclaimerText: tenantDisclaimerText as string | undefined,
+            disclaimerPlacement: 'bottom',
+          },
+        },
+        onComplete,
+        onError,
+        helpers,
+        attempt: 1,
+      })
+
+      const summaryData = onComplete.mock.calls[0][0].data_points.outcomeSummary
+      const expectedDisclaimerMsg = `<p><strong>Important Notice:</strong> The content provided is an AI-generated summary of version 6 of Care Flow "AI Actions Check" (ID: xQ2P4uBn2cY8).</p>`
+
+      // Default dynamic disclaimer is used, tenant placement (bottom) is respected
+      expect(summaryData).toContain(expectedDisclaimerMsg)
+      expect(summaryData.trim().endsWith(expectedDisclaimerMsg)).toBe(true)
+      expect(onError).not.toHaveBeenCalled()
+    },
+  )
+
+  it.each([
+    ['capitalized', 'Top', 'top'],
+    ['uppercase', 'BOTTOM', 'bottom'],
+    ['trailing whitespace', 'top ', 'top'],
+    ['surrounding whitespace', ' bottom ', 'bottom'],
+  ])(
+    'Should normalize tenant disclaimerPlacement %s to %s',
+    async (_label, tenantDisclaimerPlacement, expectedPlacement) => {
+      const awellSdkMock = {
+        orchestration: {
+          query: jest.fn().mockImplementation(({ activity }) => {
+            if (activity) {
+              return Promise.resolve({
+                activity: {
+                  success: true,
+                  activity: {
+                    id: 'test-activity-id',
+                    context: {
+                      track_id: 'test-track-id',
+                    },
+                  },
+                },
+              })
+            }
+            return Promise.resolve({})
+          }),
+        },
+      }
+
+      helpers.awellSdk = jest.fn().mockResolvedValue(awellSdkMock)
+
+      await extensionAction.onEvent({
+        payload: {
+          ...basePayload,
+          settings: {
+            disclaimerText: 'Tenant track disclaimer.',
+            disclaimerPlacement: tenantDisclaimerPlacement,
+          },
+        },
+        onComplete,
+        onError,
+        helpers,
+        attempt: 1,
+      })
+
+      const summaryData = onComplete.mock.calls[0][0].data_points.outcomeSummary
+      const expectedDisclaimerMsg = '<p>Tenant track disclaimer.</p>'
+
+      expect(summaryData).toContain(expectedDisclaimerMsg)
+      if (expectedPlacement === 'bottom') {
+        expect(summaryData.trim().endsWith(expectedDisclaimerMsg)).toBe(true)
+      } else {
+        expect(summaryData.trim().startsWith(expectedDisclaimerMsg)).toBe(true)
+      }
+      expect(onError).not.toHaveBeenCalled()
+    },
+  )
+
   it.each([
     ['empty string', ''],
     ['null', null],
