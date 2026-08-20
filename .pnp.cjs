@@ -93,7 +93,7 @@ const RAW_RUNTIME_STATE =
           ["jest-fetch-mock", "npm:3.2.0"],\
           ["jsdom", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:26.1.0"],\
           ["jsonwebtoken", "npm:9.0.3"],\
-          ["langsmith", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:0.5.19"],\
+          ["langsmith", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:0.9.0"],\
           ["libphonenumber-js", "npm:1.13.11"],\
           ["lint-staged", "npm:15.5.2"],\
           ["lodash", "npm:4.18.1"],\
@@ -446,7 +446,7 @@ const RAW_RUNTIME_STATE =
           ["jest-fetch-mock", "npm:3.2.0"],\
           ["jsdom", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:26.1.0"],\
           ["jsonwebtoken", "npm:9.0.3"],\
-          ["langsmith", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:0.5.19"],\
+          ["langsmith", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:0.9.0"],\
           ["libphonenumber-js", "npm:1.13.11"],\
           ["lint-staged", "npm:15.5.2"],\
           ["lodash", "npm:4.18.1"],\
@@ -3009,7 +3009,7 @@ const RAW_RUNTIME_STATE =
           ["@cfworker/json-schema", "npm:4.1.0"],\
           ["@standard-schema/spec", "npm:1.1.0"],\
           ["js-tiktoken", "npm:1.0.14"],\
-          ["langsmith", "virtual:fba5f30506a8157bb0004228455a9b5602f65942e10b02969b1d5027adb316ceefb3afe84aa6d7dd0baa663f6b59d13ddb4e929b0e7c95be63e78c3ee4c41bce#npm:0.5.19"],\
+          ["langsmith", "virtual:fba5f30506a8157bb0004228455a9b5602f65942e10b02969b1d5027adb316ceefb3afe84aa6d7dd0baa663f6b59d13ddb4e929b0e7c95be63e78c3ee4c41bce#npm:0.9.0"],\
           ["mustache", "npm:4.2.0"],\
           ["p-queue", "npm:6.6.2"],\
           ["zod", "npm:3.25.76"]\
@@ -11233,17 +11233,17 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["langsmith", [\
-      ["npm:0.5.19", {\
-        "packageLocation": "./.yarn/cache/langsmith-npm-0.5.19-bbf33faa39-d845e043f6.zip/node_modules/langsmith/",\
+      ["npm:0.9.0", {\
+        "packageLocation": "./.yarn/cache/langsmith-npm-0.9.0-115f5bcd44-711f16ff87.zip/node_modules/langsmith/",\
         "packageDependencies": [\
-          ["langsmith", "npm:0.5.19"]\
+          ["langsmith", "npm:0.9.0"]\
         ],\
         "linkType": "SOFT"\
       }],\
-      ["virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:0.5.19", {\
-        "packageLocation": "./.yarn/__virtual__/langsmith-virtual-7951477b70/0/cache/langsmith-npm-0.5.19-bbf33faa39-d845e043f6.zip/node_modules/langsmith/",\
+      ["virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:0.9.0", {\
+        "packageLocation": "./.yarn/__virtual__/langsmith-virtual-0f385017b0/0/cache/langsmith-npm-0.9.0-115f5bcd44-711f16ff87.zip/node_modules/langsmith/",\
         "packageDependencies": [\
-          ["langsmith", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:0.5.19"],\
+          ["langsmith", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:0.9.0"],\
           ["@opentelemetry/api", null],\
           ["@opentelemetry/exporter-trace-otlp-proto", null],\
           ["@opentelemetry/sdk-trace-base", null],\
@@ -11254,7 +11254,6 @@ const RAW_RUNTIME_STATE =
           ["@types/ws", null],\
           ["openai", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:6.44.0"],\
           ["p-queue", "npm:6.6.2"],\
-          ["uuid", "npm:10.0.0"],\
           ["ws", null]\
         ],\
         "packagePeers": [\
@@ -11271,10 +11270,10 @@ const RAW_RUNTIME_STATE =
         ],\
         "linkType": "HARD"\
       }],\
-      ["virtual:fba5f30506a8157bb0004228455a9b5602f65942e10b02969b1d5027adb316ceefb3afe84aa6d7dd0baa663f6b59d13ddb4e929b0e7c95be63e78c3ee4c41bce#npm:0.5.19", {\
-        "packageLocation": "./.yarn/__virtual__/langsmith-virtual-585b67bc58/0/cache/langsmith-npm-0.5.19-bbf33faa39-d845e043f6.zip/node_modules/langsmith/",\
+      ["virtual:fba5f30506a8157bb0004228455a9b5602f65942e10b02969b1d5027adb316ceefb3afe84aa6d7dd0baa663f6b59d13ddb4e929b0e7c95be63e78c3ee4c41bce#npm:0.9.0", {\
+        "packageLocation": "./.yarn/__virtual__/langsmith-virtual-59d2cb0d9a/0/cache/langsmith-npm-0.9.0-115f5bcd44-711f16ff87.zip/node_modules/langsmith/",\
         "packageDependencies": [\
-          ["langsmith", "virtual:fba5f30506a8157bb0004228455a9b5602f65942e10b02969b1d5027adb316ceefb3afe84aa6d7dd0baa663f6b59d13ddb4e929b0e7c95be63e78c3ee4c41bce#npm:0.5.19"],\
+          ["langsmith", "virtual:fba5f30506a8157bb0004228455a9b5602f65942e10b02969b1d5027adb316ceefb3afe84aa6d7dd0baa663f6b59d13ddb4e929b0e7c95be63e78c3ee4c41bce#npm:0.9.0"],\
           ["@opentelemetry/api", null],\
           ["@opentelemetry/exporter-trace-otlp-proto", null],\
           ["@opentelemetry/sdk-trace-base", null],\
@@ -11285,7 +11284,6 @@ const RAW_RUNTIME_STATE =
           ["@types/ws", null],\
           ["openai", null],\
           ["p-queue", "npm:6.6.2"],\
-          ["uuid", "npm:10.0.0"],\
           ["ws", null]\
         ],\
         "packagePeers": [\
@@ -15683,13 +15681,6 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["uuid", [\
-      ["npm:10.0.0", {\
-        "packageLocation": "./.yarn/cache/uuid-npm-10.0.0-4872b46ff8-35aa606148.zip/node_modules/uuid/",\
-        "packageDependencies": [\
-          ["uuid", "npm:10.0.0"]\
-        ],\
-        "linkType": "HARD"\
-      }],\
       ["npm:11.1.1", {\
         "packageLocation": "./.yarn/cache/uuid-npm-11.1.1-311687c807-16411d3dc1.zip/node_modules/uuid/",\
         "packageDependencies": [\

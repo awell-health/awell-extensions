@@ -289,7 +289,7 @@ __metadata:
     jest-fetch-mock: "npm:^3.2.0"
     jsdom: "npm:^26.1.0"
     jsonwebtoken: "npm:^9.0.3"
-    langsmith: "npm:0.5.19"
+    langsmith: "npm:^0.9.0"
     libphonenumber-js: "npm:^1.13.11"
     lint-staged: "npm:^15.5.2"
     lodash: "npm:^4.18.1"
@@ -8790,12 +8790,11 @@ __metadata:
   languageName: node
   linkType: hard
 
-"langsmith@npm:0.5.19":
-  version: 0.5.19
-  resolution: "langsmith@npm:0.5.19"
+"langsmith@npm:>=0.5.0 <1.0.0, langsmith@npm:^0.9.0":
+  version: 0.9.0
+  resolution: "langsmith@npm:0.9.0"
   dependencies:
     p-queue: "npm:6.6.2"
-    uuid: "npm:10.0.0"
   peerDependencies:
     "@opentelemetry/api": "*"
     "@opentelemetry/exporter-trace-otlp-proto": "*"
@@ -8813,7 +8812,7 @@ __metadata:
       optional: true
     ws:
       optional: true
-  checksum: 10/d845e043f6daf4709ec363b843ddec8e66146bd19c2a97f42dcffbf0eb45f178bc4d6d09daeb2b9e75ed91cca6b65709671548fa01fc22c1a7393736504f4dae
+  checksum: 10/711f16ff87d56d4d76c48604eb840d53034b1a5044876c6c151489d0e6eb21cf8b823f99e6a1981237100081b1e923fc83262b6fd9b901b40444190d0298dff1
   languageName: node
   linkType: hard
 
@@ -12701,15 +12700,6 @@ __metadata:
   version: 1.0.1
   resolution: "utils-merge@npm:1.0.1"
   checksum: 10/5d6949693d58cb2e636a84f3ee1c6e7b2f9c16cb1d42d0ecb386d8c025c69e327205aa1c69e2868cc06a01e5e20681fbba55a4e0ed0cce913d60334024eae798
-  languageName: node
-  linkType: hard
-
-"uuid@npm:10.0.0":
-  version: 10.0.0
-  resolution: "uuid@npm:10.0.0"
-  bin:
-    uuid: dist/bin/uuid
-  checksum: 10/35aa60614811a201ff90f8ca5e9ecb7076a75c3821e17f0f5ff72d44e36c2d35fcbc2ceee9c4ac7317f4cc41895da30e74f3885e30313bee48fda6338f250538
   languageName: node
   linkType: hard
 
