@@ -149,7 +149,6 @@
     "@fastify/busboy": "3.2.0",
     "follow-redirects": "1.16.0",
     "yaml": "2.8.3",
-    "brace-expansion": "2.1.0",
     "axios": "^1.19.0",
     "fast-xml-parser": "5.7.0",
     "undici": "7.24.1",
