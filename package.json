@@ -144,14 +144,12 @@
     "zod-validation-error": "^3.5.4"
   },
   "resolutions": {
-    "jsonpath-plus": "^10.2.0",
     "zod": "^3.25.76",
-    "@fastify/busboy": "3.2.0",
-    "follow-redirects": "1.16.0",
-    "yaml": "2.8.3",
+    "@langchain/core": "1.2.0",
     "axios": "^1.19.0",
-    "fast-xml-parser": "5.7.0",
-    "undici": "7.24.1",
-    "@langchain/core": "1.2.0"
+    "jsonpath-plus": "^10.2.0",
+    "undici": "^7.29.0",
+    "yaml": "^2.9.0",
+    "@fastify/busboy": "^3.2.1"
   }
 }
