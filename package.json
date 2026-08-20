@@ -93,7 +93,7 @@
   "dependencies": {
     "@airtop/sdk": "^0.1.47",
     "@awell-health/awell-sdk": "^0.1.32",
-    "@awell-health/extensions-core": "^1.1.18",
+    "@awell-health/extensions-core": "^1.1.20",
     "@awell-health/healthie-sdk": "^0.1.2",
     "@calcom/embed-react": "^1.5.3",
     "@dropbox/sign": "^1.11.0",

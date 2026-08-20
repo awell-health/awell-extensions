@@ -225,7 +225,7 @@ __metadata:
   dependencies:
     "@airtop/sdk": "npm:^0.1.47"
     "@awell-health/awell-sdk": "npm:^0.1.32"
-    "@awell-health/extensions-core": "npm:^1.1.18"
+    "@awell-health/extensions-core": "npm:^1.1.20"
     "@awell-health/healthie-sdk": "npm:^0.1.2"
     "@calcom/embed-react": "npm:^1.5.3"
     "@dropbox/sign": "npm:^1.11.0"
@@ -330,15 +330,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@awell-health/extensions-core@npm:^1.1.18":
-  version: 1.1.18
-  resolution: "@awell-health/extensions-core@npm:1.1.18"
+"@awell-health/extensions-core@npm:^1.1.20":
+  version: 1.1.20
+  resolution: "@awell-health/extensions-core@npm:1.1.20"
   dependencies:
     "@langchain/core": "npm:^1.2.0"
     "@langchain/openai": "npm:^1.5.1"
     "@types/json-schema": "npm:^7.0.15"
     "@types/react": "npm:^18.3.3"
-    axios: "npm:^1.16.1"
+    axios: "npm:^1.19.0"
     date-fns: "npm:^3.6.0"
     libphonenumber-js: "npm:^1.10.61"
     lodash: "npm:4.18.1"
@@ -348,7 +348,7 @@ __metadata:
     zod-validation-error: "npm:^3.2.0"
   peerDependencies:
     "@awell-health/awell-sdk": "*"
-  checksum: 10/f8b36a52399868bc7ea2fef26a8614459fbabbceedb2f11a4853c20b2dd0ad02eb08cff926318da89329713afcccdf5df3a91aa03825a6fa07415e46e642a4bd
+  checksum: 10/8dcc2b1e6c84a2d35d5b55bf0407cb20be6b0138764dfd30e22d5a5d25ae2201f87691b2f0afbbe3d12ae0e9a765bf227ddb5f067017493cd95b802031ae44c9
   languageName: node
   linkType: hard
 
