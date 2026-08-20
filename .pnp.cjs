@@ -28,7 +28,7 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./",\
         "packageDependencies": [\
           ["@airtop/sdk", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:0.1.47"],\
-          ["@awell-health/awell-sdk", "npm:0.1.31"],\
+          ["@awell-health/awell-sdk", "npm:0.1.32"],\
           ["@awell-health/extensions-core", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:1.1.18"],\
           ["@awell-health/healthie-sdk", "npm:0.1.2"],\
           ["@calcom/embed-react", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:1.5.3"],\
@@ -91,7 +91,7 @@ const RAW_RUNTIME_STATE =
           ["husky", "npm:9.1.7"],\
           ["jest", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:29.7.0"],\
           ["jest-fetch-mock", "npm:3.2.0"],\
-          ["jsdom", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:26.1.0"],\
+          ["jsdom", "virtual:049eed45d3849f67ed7f880735d5ee048a7d62bc90d33a158215f4adacd02cf17031abc4b91d07962efa1a0b45ace628d17384bb6f00b810e420e007c786efda#npm:26.1.0"],\
           ["jsonwebtoken", "npm:9.0.3"],\
           ["langsmith", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:0.9.0"],\
           ["libphonenumber-js", "npm:1.13.11"],\
@@ -381,7 +381,7 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["@awell-health/awell-extensions", "workspace:."],\
           ["@airtop/sdk", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:0.1.47"],\
-          ["@awell-health/awell-sdk", "npm:0.1.31"],\
+          ["@awell-health/awell-sdk", "npm:0.1.32"],\
           ["@awell-health/extensions-core", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:1.1.18"],\
           ["@awell-health/healthie-sdk", "npm:0.1.2"],\
           ["@calcom/embed-react", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:1.5.3"],\
@@ -444,7 +444,7 @@ const RAW_RUNTIME_STATE =
           ["husky", "npm:9.1.7"],\
           ["jest", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:29.7.0"],\
           ["jest-fetch-mock", "npm:3.2.0"],\
-          ["jsdom", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:26.1.0"],\
+          ["jsdom", "virtual:049eed45d3849f67ed7f880735d5ee048a7d62bc90d33a158215f4adacd02cf17031abc4b91d07962efa1a0b45ace628d17384bb6f00b810e420e007c786efda#npm:26.1.0"],\
           ["jsonwebtoken", "npm:9.0.3"],\
           ["langsmith", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:0.9.0"],\
           ["libphonenumber-js", "npm:1.13.11"],\
@@ -477,15 +477,13 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["@awell-health/awell-sdk", [\
-      ["npm:0.1.31", {\
-        "packageLocation": "./.yarn/cache/@awell-health-awell-sdk-npm-0.1.31-9d1b2aabf1-8561ff436e.zip/node_modules/@awell-health/awell-sdk/",\
+      ["npm:0.1.32", {\
+        "packageLocation": "./.yarn/cache/@awell-health-awell-sdk-npm-0.1.32-049eed45d3-ecb2ef23c7.zip/node_modules/@awell-health/awell-sdk/",\
         "packageDependencies": [\
-          ["@awell-health/awell-sdk", "npm:0.1.31"],\
-          ["@genql/cli", "npm:6.3.3"],\
+          ["@awell-health/awell-sdk", "npm:0.1.32"],\
           ["@medplum/fhirtypes", "npm:3.3.0"],\
-          ["crypto", "npm:1.0.1"],\
           ["date-fns", "npm:4.1.0"],\
-          ["jsdom", "virtual:9d1b2aabf149b619df3527f13405310f3066fbe5a0dbfddf872e3f681685b74c1d6a169b93ec1eae9d08c4319a295fa1741dc02155d0f5026e13d67edc02a1dc#npm:26.0.0"],\
+          ["jsdom", "virtual:049eed45d3849f67ed7f880735d5ee048a7d62bc90d33a158215f4adacd02cf17031abc4b91d07962efa1a0b45ace628d17384bb6f00b810e420e007c786efda#npm:26.1.0"],\
           ["lodash", "npm:4.18.1"]\
         ],\
         "linkType": "HARD"\
@@ -503,7 +501,7 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./.yarn/__virtual__/@awell-health-extensions-core-virtual-34c1e06930/0/cache/@awell-health-extensions-core-npm-1.1.18-99000253e1-f8b36a5239.zip/node_modules/@awell-health/extensions-core/",\
         "packageDependencies": [\
           ["@awell-health/extensions-core", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:1.1.18"],\
-          ["@awell-health/awell-sdk", "npm:0.1.31"],\
+          ["@awell-health/awell-sdk", "npm:0.1.32"],\
           ["@langchain/core", "npm:1.2.0"],\
           ["@langchain/openai", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:1.5.1"],\
           ["@types/awell-health__awell-sdk", null],\
@@ -2410,7 +2408,7 @@ const RAW_RUNTIME_STATE =
           ["isomorphic-ws", "virtual:1df138c7da413b16a0890e3c1801befbf099aec1361b44ec2842b975cc2ea858c28a08010f73b3d8b92c26d87bd26c5307daa374f8f38ffc90ac5a0c932ddd52#npm:5.0.0"],\
           ["tslib", "npm:2.7.0"],\
           ["value-or-promise", "npm:1.0.12"],\
-          ["ws", "virtual:be052ca5f45a15dae75188a0d241e72a3ad426f40465778db9ff84b830cf7d3f325015a8935c6baec2bf8de61a461e07544833ddf6ac7a3d5192f44691dca275#npm:8.18.0"]\
+          ["ws", "virtual:b6edd3a7df45b723b78c25ccd0f2ba4eaa0db85bb38c0d7903cdf3c1a076453edfd811fc22b6df384a377d376951fe6bdf7870405433d2c1d925e7ad6190635a#npm:8.18.0"]\
         ],\
         "packagePeers": [\
           "@types/graphql",\
@@ -6153,15 +6151,6 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
-    ["crypto", [\
-      ["npm:1.0.1", {\
-        "packageLocation": "./.yarn/cache/crypto-npm-1.0.1-7cb8e3dca6-087fe3165b.zip/node_modules/crypto/",\
-        "packageDependencies": [\
-          ["crypto", "npm:1.0.1"]\
-        ],\
-        "linkType": "HARD"\
-      }]\
-    ]],\
     ["crypto-js", [\
       ["npm:4.2.0", {\
         "packageLocation": "./.yarn/cache/crypto-js-npm-4.2.0-d6f7744e63-c7bcc56a6e.zip/node_modules/crypto-js/",\
@@ -6506,13 +6495,6 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["decimal.js", [\
-      ["npm:10.4.3", {\
-        "packageLocation": "./.yarn/cache/decimal.js-npm-10.4.3-e7d483387c-de663a7bc4.zip/node_modules/decimal.js/",\
-        "packageDependencies": [\
-          ["decimal.js", "npm:10.4.3"]\
-        ],\
-        "linkType": "HARD"\
-      }],\
       ["npm:10.6.0", {\
         "packageLocation": "./.yarn/cache/decimal.js-npm-10.6.0-a72c1b8a2f-c0d45842d4.zip/node_modules/decimal.js/",\
         "packageDependencies": [\
@@ -10082,7 +10064,7 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["isomorphic-ws", "virtual:1df138c7da413b16a0890e3c1801befbf099aec1361b44ec2842b975cc2ea858c28a08010f73b3d8b92c26d87bd26c5307daa374f8f38ffc90ac5a0c932ddd52#npm:5.0.0"],\
           ["@types/ws", "npm:8.5.12"],\
-          ["ws", "virtual:be052ca5f45a15dae75188a0d241e72a3ad426f40465778db9ff84b830cf7d3f325015a8935c6baec2bf8de61a461e07544833ddf6ac7a3d5192f44691dca275#npm:8.18.0"]\
+          ["ws", "virtual:b6edd3a7df45b723b78c25ccd0f2ba4eaa0db85bb38c0d7903cdf3c1a076453edfd811fc22b6df384a377d376951fe6bdf7870405433d2c1d925e7ad6190635a#npm:8.18.0"]\
         ],\
         "packagePeers": [\
           "@types/ws",\
@@ -10828,13 +10810,6 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["jsdom", [\
-      ["npm:26.0.0", {\
-        "packageLocation": "./.yarn/cache/jsdom-npm-26.0.0-01acafd498-8c230ee465.zip/node_modules/jsdom/",\
-        "packageDependencies": [\
-          ["jsdom", "npm:26.0.0"]\
-        ],\
-        "linkType": "SOFT"\
-      }],\
       ["npm:26.1.0", {\
         "packageLocation": "./.yarn/cache/jsdom-npm-26.1.0-3857255f02-39d78c4889.zip/node_modules/jsdom/",\
         "packageDependencies": [\
@@ -10842,10 +10817,10 @@ const RAW_RUNTIME_STATE =
         ],\
         "linkType": "SOFT"\
       }],\
-      ["virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:26.1.0", {\
-        "packageLocation": "./.yarn/__virtual__/jsdom-virtual-c8c1e5e43a/0/cache/jsdom-npm-26.1.0-3857255f02-39d78c4889.zip/node_modules/jsdom/",\
+      ["virtual:049eed45d3849f67ed7f880735d5ee048a7d62bc90d33a158215f4adacd02cf17031abc4b91d07962efa1a0b45ace628d17384bb6f00b810e420e007c786efda#npm:26.1.0", {\
+        "packageLocation": "./.yarn/__virtual__/jsdom-virtual-b6edd3a7df/0/cache/jsdom-npm-26.1.0-3857255f02-39d78c4889.zip/node_modules/jsdom/",\
         "packageDependencies": [\
-          ["jsdom", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:26.1.0"],\
+          ["jsdom", "virtual:049eed45d3849f67ed7f880735d5ee048a7d62bc90d33a158215f4adacd02cf17031abc4b91d07962efa1a0b45ace628d17384bb6f00b810e420e007c786efda#npm:26.1.0"],\
           ["@types/canvas", null],\
           ["canvas", null],\
           ["cssstyle", "npm:4.2.1"],\
@@ -10866,41 +10841,7 @@ const RAW_RUNTIME_STATE =
           ["whatwg-encoding", "npm:3.1.1"],\
           ["whatwg-mimetype", "npm:4.0.0"],\
           ["whatwg-url", "npm:14.2.0"],\
-          ["ws", "virtual:be052ca5f45a15dae75188a0d241e72a3ad426f40465778db9ff84b830cf7d3f325015a8935c6baec2bf8de61a461e07544833ddf6ac7a3d5192f44691dca275#npm:8.18.0"],\
-          ["xml-name-validator", "npm:5.0.0"]\
-        ],\
-        "packagePeers": [\
-          "@types/canvas",\
-          "canvas"\
-        ],\
-        "linkType": "HARD"\
-      }],\
-      ["virtual:9d1b2aabf149b619df3527f13405310f3066fbe5a0dbfddf872e3f681685b74c1d6a169b93ec1eae9d08c4319a295fa1741dc02155d0f5026e13d67edc02a1dc#npm:26.0.0", {\
-        "packageLocation": "./.yarn/__virtual__/jsdom-virtual-be052ca5f4/0/cache/jsdom-npm-26.0.0-01acafd498-8c230ee465.zip/node_modules/jsdom/",\
-        "packageDependencies": [\
-          ["jsdom", "virtual:9d1b2aabf149b619df3527f13405310f3066fbe5a0dbfddf872e3f681685b74c1d6a169b93ec1eae9d08c4319a295fa1741dc02155d0f5026e13d67edc02a1dc#npm:26.0.0"],\
-          ["@types/canvas", null],\
-          ["canvas", null],\
-          ["cssstyle", "npm:4.2.1"],\
-          ["data-urls", "npm:5.0.0"],\
-          ["decimal.js", "npm:10.4.3"],\
-          ["form-data", "npm:4.0.5"],\
-          ["html-encoding-sniffer", "npm:4.0.0"],\
-          ["http-proxy-agent", "npm:7.0.2"],\
-          ["https-proxy-agent", "npm:7.0.6"],\
-          ["is-potential-custom-element-name", "npm:1.0.1"],\
-          ["nwsapi", "npm:2.2.16"],\
-          ["parse5", "npm:7.2.1"],\
-          ["rrweb-cssom", "npm:0.8.0"],\
-          ["saxes", "npm:6.0.0"],\
-          ["symbol-tree", "npm:3.2.4"],\
-          ["tough-cookie", "npm:5.1.0"],\
-          ["w3c-xmlserializer", "npm:5.0.0"],\
-          ["webidl-conversions", "npm:7.0.0"],\
-          ["whatwg-encoding", "npm:3.1.1"],\
-          ["whatwg-mimetype", "npm:4.0.0"],\
-          ["whatwg-url", "npm:14.1.0"],\
-          ["ws", "virtual:be052ca5f45a15dae75188a0d241e72a3ad426f40465778db9ff84b830cf7d3f325015a8935c6baec2bf8de61a461e07544833ddf6ac7a3d5192f44691dca275#npm:8.18.0"],\
+          ["ws", "virtual:b6edd3a7df45b723b78c25ccd0f2ba4eaa0db85bb38c0d7903cdf3c1a076453edfd811fc22b6df384a377d376951fe6bdf7870405433d2c1d925e7ad6190635a#npm:8.18.0"],\
           ["xml-name-validator", "npm:5.0.0"]\
         ],\
         "packagePeers": [\
@@ -14921,14 +14862,6 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["tough-cookie", [\
-      ["npm:5.1.0", {\
-        "packageLocation": "./.yarn/cache/tough-cookie-npm-5.1.0-a5655b81b0-01908de89d.zip/node_modules/tough-cookie/",\
-        "packageDependencies": [\
-          ["tough-cookie", "npm:5.1.0"],\
-          ["tldts", "npm:6.1.71"]\
-        ],\
-        "linkType": "HARD"\
-      }],\
       ["npm:5.1.2", {\
         "packageLocation": "./.yarn/cache/tough-cookie-npm-5.1.2-bb11a20ec3-de430e6e6d.zip/node_modules/tough-cookie/",\
         "packageDependencies": [\
@@ -16146,10 +16079,10 @@ const RAW_RUNTIME_STATE =
         ],\
         "linkType": "HARD"\
       }],\
-      ["virtual:be052ca5f45a15dae75188a0d241e72a3ad426f40465778db9ff84b830cf7d3f325015a8935c6baec2bf8de61a461e07544833ddf6ac7a3d5192f44691dca275#npm:8.18.0", {\
-        "packageLocation": "./.yarn/__virtual__/ws-virtual-6ba2e25552/0/cache/ws-npm-8.18.0-56f68bc4d6-70dfe53f23.zip/node_modules/ws/",\
+      ["virtual:b6edd3a7df45b723b78c25ccd0f2ba4eaa0db85bb38c0d7903cdf3c1a076453edfd811fc22b6df384a377d376951fe6bdf7870405433d2c1d925e7ad6190635a#npm:8.18.0", {\
+        "packageLocation": "./.yarn/__virtual__/ws-virtual-1e64516745/0/cache/ws-npm-8.18.0-56f68bc4d6-70dfe53f23.zip/node_modules/ws/",\
         "packageDependencies": [\
-          ["ws", "virtual:be052ca5f45a15dae75188a0d241e72a3ad426f40465778db9ff84b830cf7d3f325015a8935c6baec2bf8de61a461e07544833ddf6ac7a3d5192f44691dca275#npm:8.18.0"],\
+          ["ws", "virtual:b6edd3a7df45b723b78c25ccd0f2ba4eaa0db85bb38c0d7903cdf3c1a076453edfd811fc22b6df384a377d376951fe6bdf7870405433d2c1d925e7ad6190635a#npm:8.18.0"],\
           ["@types/bufferutil", null],\
           ["@types/utf-8-validate", null],\
           ["bufferutil", null],\
