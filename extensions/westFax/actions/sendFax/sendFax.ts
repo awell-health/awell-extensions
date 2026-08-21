@@ -46,7 +46,7 @@ export const sendFax: Action<typeof fields, typeof settings> = {
       formData.append('Numbers1', number)
       if (addFaceSheet === true) {
         const faceSheetPdfBuffer = await getFaceSheet(defaultFaceSheet)
-        const faceSheetPdfBlob = new Blob([faceSheetPdfBuffer], {
+        const faceSheetPdfBlob = new Blob([new Uint8Array(faceSheetPdfBuffer)], {
           type: 'application/pdf',
         })
 
