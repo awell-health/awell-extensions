@@ -297,7 +297,7 @@ __metadata:
     marked: "npm:^14.1.4"
     messagebird: "npm:^4.0.1"
     node-fetch: "npm:2"
-    nodemailer: "npm:^8.0.11"
+    nodemailer: "npm:^9.0.5"
     oauth-1.0a: "npm:^2.2.6"
     openai: "npm:^6.44.0"
     prettier: "npm:^3.9.6"
@@ -940,8 +940,8 @@ __metadata:
   linkType: hard
 
 "@genql/cli@npm:^6.3.3":
-  version: 6.3.3
-  resolution: "@genql/cli@npm:6.3.3"
+  version: 6.3.4
+  resolution: "@genql/cli@npm:6.3.4"
   dependencies:
     "@graphql-tools/graphql-file-loader": "npm:^7.5.17"
     "@graphql-tools/load": "npm:^7.8.14"
@@ -959,7 +959,7 @@ __metadata:
     yargs: "npm:^15.3.1"
   bin:
     genql: dist/cli.js
-  checksum: 10/cd0aae14742a92032d4635df1eba8e6816ed25969270256b300689fca7952a5f5cca1606d36e964dc3dc52dfae9ed80ee1ac5548091448ace56c3c3d655b1994
+  checksum: 10/a2c88af9d49134c396fd1ebd909df357e0ecb131c2a1464a70f915dfb71604ee72e053576bf6a2f4fac8773ad29ea66992ff5469c404aff56939c99f247027a8
   languageName: node
   linkType: hard
 
@@ -3108,26 +3108,26 @@ __metadata:
   linkType: hard
 
 "ajv@npm:^6.12.4":
-  version: 6.14.0
-  resolution: "ajv@npm:6.14.0"
+  version: 6.15.0
+  resolution: "ajv@npm:6.15.0"
   dependencies:
     fast-deep-equal: "npm:^3.1.1"
     fast-json-stable-stringify: "npm:^2.0.0"
     json-schema-traverse: "npm:^0.4.1"
     uri-js: "npm:^4.2.2"
-  checksum: 10/c71f14dd2b6f2535d043f74019c8169f7aeb1106bafbb741af96f34fdbf932255c919ddd46344043d03b62ea0ccb319f83667ec5eedf612393f29054fe5ce4a5
+  checksum: 10/0916dda09c152fb5857bc1cc7ce61718e9cec5b7faeff44a74f5e324eed8a556e1a84856724ea322a067b436ecad9f74ac8295fd395449788cca52f0c25bd5fb
   languageName: node
   linkType: hard
 
 "ajv@npm:^8.12.0":
-  version: 8.18.0
-  resolution: "ajv@npm:8.18.0"
+  version: 8.20.0
+  resolution: "ajv@npm:8.20.0"
   dependencies:
     fast-deep-equal: "npm:^3.1.3"
     fast-uri: "npm:^3.0.1"
     json-schema-traverse: "npm:^1.0.0"
     require-from-string: "npm:^2.0.2"
-  checksum: 10/bfed9de827a2b27c6d4084324eda76a4e32bdde27410b3e9b81d06e6f8f5c78370fc6b93fe1d869f1939ff1d7c4ae8896960995acb8425e3e9288c8884247c48
+  checksum: 10/5ce59c0537f4c2aca9a758b412659ec70acb4d5dde971c10ecf21d2e3d799f99acdb4a08e1f5fb2e067c8542930398aae793bb996bb07d3feb81dae22fe2ada9
   languageName: node
   linkType: hard
 
@@ -6084,9 +6084,9 @@ __metadata:
   linkType: hard
 
 "fast-uri@npm:^3.0.1":
-  version: 3.1.5
-  resolution: "fast-uri@npm:3.1.5"
-  checksum: 10/784bef687ca3ecfb4587a05104a4d41101796f0fec72be47a9abed743b10109e69a24d1ad0854ee7d2705912dc2ca9d93e03d35b65df0a3da0339e05b5d83b5c
+  version: 3.1.6
+  resolution: "fast-uri@npm:3.1.6"
+  checksum: 10/de34fceafd3a1d917989a1116b092d9b6ebe6fa3c9e908a308b988a6455449fa0a0256b6ef628aa7da80f1f84031d704c290d6ba0ea4c6f4c42b7974a3bd43ae
   languageName: node
   linkType: hard
 
@@ -8414,25 +8414,25 @@ __metadata:
   linkType: hard
 
 "js-yaml@npm:^3.13.1":
-  version: 3.14.2
-  resolution: "js-yaml@npm:3.14.2"
+  version: 3.15.2
+  resolution: "js-yaml@npm:3.15.2"
   dependencies:
     argparse: "npm:^1.0.7"
     esprima: "npm:^4.0.0"
   bin:
     js-yaml: bin/js-yaml.js
-  checksum: 10/172e0b6007b0bf0fc8d2469c94424f7dd765c64a047d2b790831fecef2204a4054eabf4d911eb73ab8c9a3256ab8ba1ee8d655b789bf24bf059c772acc2075a1
+  checksum: 10/320b5471c1b7309a15d9c0068ba273e2da7382a369038a9746c92ef649087c3d6d2a5c676810154efb4eb2ca9584179c8ae14e2fc2e4bd558d964e6bf4fafd3d
   languageName: node
   linkType: hard
 
 "js-yaml@npm:^4.0.0, js-yaml@npm:^4.1.0":
-  version: 4.1.1
-  resolution: "js-yaml@npm:4.1.1"
+  version: 4.3.2
+  resolution: "js-yaml@npm:4.3.2"
   dependencies:
     argparse: "npm:^2.0.1"
   bin:
     js-yaml: bin/js-yaml.js
-  checksum: 10/a52d0519f0f4ef5b4adc1cde466cb54c50d56e2b4a983b9d5c9c0f2f99462047007a6274d7e95617a21d3c91fde3ee6115536ed70991cd645ba8521058b78f77
+  checksum: 10/05c44b9c73e4901d92703b155e76518df64bf01ac62e4c036b47de4b391e19b72e32656e8954d51b436307f08cc9d0c0d4ec617d061cf2f65fffee9f3114bee7
   languageName: node
   linkType: hard
 
@@ -9721,10 +9721,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"nodemailer@npm:^8.0.11":
-  version: 8.0.11
-  resolution: "nodemailer@npm:8.0.11"
-  checksum: 10/81f74337c99d5af0ced47558d7e0bf629b5f4c4f5403fd7e515430b3ce982fdf72ab09a18040822090c640e3707d7e32172de66265e5f04097150d1c07b4b567
+"nodemailer@npm:^9.0.5":
+  version: 9.0.5
+  resolution: "nodemailer@npm:9.0.5"
+  checksum: 10/22a56ec9585d3239dadc603f52e2d1da8194603f44dbba0de9c2291e180c7109a95c29e68e0e54e5fa586e38674e4e11d29e73f440fb338fd1d7e9bccbe6e497
   languageName: node
   linkType: hard
 
@@ -10633,16 +10633,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"qs@npm:^6.10.3, qs@npm:^6.10.5, qs@npm:^6.11.0, qs@npm:^6.13.1":
-  version: 6.15.1
-  resolution: "qs@npm:6.15.1"
-  dependencies:
-    side-channel: "npm:^1.1.0"
-  checksum: 10/ec10b9957446b3f4a38000940f6374720b4e2985209b89df197066038c951472ea24cd98d6bc6df73a0cbec75bc056f638032e3fb447345017ff7e0f0a2693ac
-  languageName: node
-  linkType: hard
-
-"qs@npm:^6.14.1, qs@npm:~6.15.1":
+"qs@npm:^6.10.3, qs@npm:^6.10.5, qs@npm:^6.11.0, qs@npm:^6.13.1, qs@npm:^6.14.1, qs@npm:~6.15.1":
   version: 6.15.3
   resolution: "qs@npm:6.15.3"
   dependencies:
