@@ -131,7 +131,7 @@
     "marked": "^14.1.4",
     "messagebird": "^4.0.1",
     "node-fetch": "2",
-    "nodemailer": "^8.0.11",
+    "nodemailer": "^9.0.5",
     "oauth-1.0a": "^2.2.6",
     "openai": "^6.44.0",
     "qrcode": "^1.5.4",
