@@ -8829,14 +8829,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"libphonenumber-js@npm:^1.10.61":
-  version: 1.11.8
-  resolution: "libphonenumber-js@npm:1.11.8"
-  checksum: 10/3c98336d60cf85d7e4abfca2a8add70db8b63f59ea736820c2eeddf0bd28cce62f513bddfd8d297bf83e9d069bc036b62c05ca994e84d7f714d905d6ed91489d
-  languageName: node
-  linkType: hard
-
-"libphonenumber-js@npm:^1.13.11":
+"libphonenumber-js@npm:^1.10.61, libphonenumber-js@npm:^1.13.11":
   version: 1.13.11
   resolution: "libphonenumber-js@npm:1.13.11"
   checksum: 10/a74f7f56b62b80a8f44c60ad7a2a5c7268dd0ff9e524eb557e27ea1b44f782d3061898220c4a9d058f88ed84d1e1c4b592a07a592b766ca9d7b72171a1a859d4

@@ -509,7 +509,7 @@ const RAW_RUNTIME_STATE =
           ["@types/react", "npm:18.3.24"],\
           ["axios", "npm:1.19.0"],\
           ["date-fns", "npm:3.6.0"],\
-          ["libphonenumber-js", "npm:1.11.8"],\
+          ["libphonenumber-js", "npm:1.13.11"],\
           ["lodash", "npm:4.18.1"],\
           ["openai", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:6.44.0"],\
           ["rate-limiter-flexible", "npm:5.0.5"],\
@@ -11302,13 +11302,6 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["libphonenumber-js", [\
-      ["npm:1.11.8", {\
-        "packageLocation": "./.yarn/cache/libphonenumber-js-npm-1.11.8-28e2f34409-3c98336d60.zip/node_modules/libphonenumber-js/",\
-        "packageDependencies": [\
-          ["libphonenumber-js", "npm:1.11.8"]\
-        ],\
-        "linkType": "HARD"\
-      }],\
       ["npm:1.13.11", {\
         "packageLocation": "./.yarn/cache/libphonenumber-js-npm-1.13.11-ae1c50b281-a74f7f56b6.zip/node_modules/libphonenumber-js/",\
         "packageDependencies": [\
