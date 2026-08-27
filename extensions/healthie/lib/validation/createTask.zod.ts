@@ -18,13 +18,19 @@ const reminderSchema = z
     /**
      * If `isReminderEnabled` is false or undefined,
      * then all other reminder properties are obsolete.
+     *
+     * `.optional()` is required on `z.literal(undefined)` in zod 4: unlike
+     * zod 3, a bare `z.literal(undefined)` no longer accepts an *absent* key,
+     * only a key explicitly set to `undefined`.
      */
     z.object({
-      reminderIntervalType: z.literal(undefined),
-      reminderIntervalValue: z.literal(undefined),
-      reminderIntervalValueOnce: z.literal(undefined),
-      isReminderEnabled: z.union([z.literal(false), z.literal(undefined)]),
-      reminderTime: z.literal(undefined),
+      reminderIntervalType: z.literal(undefined).optional(),
+      reminderIntervalValue: z.literal(undefined).optional(),
+      reminderIntervalValueOnce: z.literal(undefined).optional(),
+      isReminderEnabled: z
+        .union([z.literal(false), z.literal(undefined)])
+        .optional(),
+      reminderTime: z.literal(undefined).optional(),
     }),
     /**
      * If `isReminderEnabled` is true,
@@ -33,8 +39,8 @@ const reminderSchema = z
      */
     z.object({
       reminderIntervalType: z.literal(intervalTypeEnum.enum.daily),
-      reminderIntervalValue: z.literal(undefined),
-      reminderIntervalValueOnce: z.literal(undefined),
+      reminderIntervalValue: z.literal(undefined).optional(),
+      reminderIntervalValueOnce: z.literal(undefined).optional(),
       isReminderEnabled: z.literal(true),
       reminderTime: z.coerce.number(),
     }),
@@ -63,7 +69,7 @@ const reminderSchema = z
             )}`,
           },
         ),
-      reminderIntervalValueOnce: z.literal(undefined),
+      reminderIntervalValueOnce: z.literal(undefined).optional(),
       isReminderEnabled: z.literal(true),
       reminderTime: z.coerce.number(),
     }),

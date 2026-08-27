@@ -7,7 +7,7 @@ import { getConsolidatedQueryStatusFields } from './fields'
 import { consolidatedQueryStatusDataPoints as dataPoints } from './dataPoints'
 import { z } from 'zod'
 
-const getConsolidatedQueryStatusSchema = z.object({
+export const getConsolidatedQueryStatusSchema = z.object({
   patientId: z.string({ error: 'Missing patientId' }).min(1),
 })
 

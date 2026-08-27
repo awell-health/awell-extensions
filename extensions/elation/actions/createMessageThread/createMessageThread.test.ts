@@ -119,6 +119,31 @@ describe('createMessageThread action', () => {
       expect(onComplete).not.toHaveBeenCalled()
       expect(mockCreateMessageThread).not.toHaveBeenCalled()
     })
+
+    it('reports the zod 4 issue wording for an invalid patientId', async () => {
+      await extensionAction.onEvent({
+        payload: createTestPayload({ ...validFields, patientId: 'invalid_id' }),
+        onComplete,
+        onError,
+        helpers,
+        attempt: 1,
+      })
+
+      // This action does not go through `fromZodError`; it forwards
+      // `ZodError.message`, which is the JSON-serialised issue list. Pinned so
+      // that wording drift in zod / extensions-core surfaces here instead of
+      // silently changing what care teams see.
+      const { message } = onError.mock.calls[0][0].events[0].error
+      expect(JSON.parse(message)).toEqual([
+        {
+          expected: 'number',
+          code: 'invalid_type',
+          received: 'NaN',
+          path: ['patientId'],
+          message: 'Requires a valid ID (number)',
+        },
+      ])
+    })
   })
 
   describe('error handling', () => {
