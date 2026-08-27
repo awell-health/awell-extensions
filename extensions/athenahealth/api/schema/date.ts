@@ -11,13 +11,10 @@ export const AthenaDateOnlySchema = z.string().transform((arg, ctx) => {
 
   if (!isValid(date)) {
     ctx.addIssue({
-      code: 'custom',
+      code: 'invalid_format',
+      format: 'date',
+      input: arg,
       message: 'Not able to parse athena date',
-      params: {
-        reason: 'invalid_date',
-        received: arg,
-        expectedFormat: 'MM/DD/YYYY',
-      },
     })
     return z.NEVER
   }

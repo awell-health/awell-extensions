@@ -10,9 +10,10 @@ export const AwellToAthenaDateOnlySchema = z.string().transform((arg, ctx) => {
 
   if (!isValid(date)) {
     ctx.addIssue({
-      code: 'custom',
+      code: 'invalid_format',
+      format: 'date',
+      input: arg,
       message: 'No valid date',
-      params: { reason: 'invalid_date', received: arg },
     })
     return z.NEVER
   }
