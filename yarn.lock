@@ -232,7 +232,7 @@ __metadata:
     "@faker-js/faker": "npm:^8.4.1"
     "@graphql-codegen/cli": "npm:^3.3.1"
     "@hubspot/api-client": "npm:^13.5.0"
-    "@langchain/core": "npm:1.2.0"
+    "@langchain/core": "npm:^1.2.9"
     "@langchain/openai": "npm:1.5.1"
     "@mailchimp/mailchimp_transactional": "npm:^1.4.1"
     "@medplum/core": "npm:^3.1.4"
@@ -1781,9 +1781,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@langchain/core@npm:1.2.0":
-  version: 1.2.0
-  resolution: "@langchain/core@npm:1.2.0"
+"@langchain/core@npm:^1.2.0, @langchain/core@npm:^1.2.9":
+  version: 1.2.9
+  resolution: "@langchain/core@npm:1.2.9"
   dependencies:
     "@cfworker/json-schema": "npm:^4.0.2"
     "@standard-schema/spec": "npm:^1.1.0"
@@ -1792,7 +1792,7 @@ __metadata:
     mustache: "npm:^4.2.0"
     p-queue: "npm:^6.6.2"
     zod: "npm:^3.25.76 || ^4"
-  checksum: 10/91a38209dca7581d58cc1a7a8da73d5aea711a8c602858e1811fb1f8f37522ec568654fb5055bd865e8783cc2d349395042cb72a9c60d8b9daa3c88e058f62c7
+  checksum: 10/52da0c1171da2f4897e7606f29628c2165b2539607447e74139f48efde0c32a412be78ceef12fc4c77bc6eff755d32e5921e36a35af87eb6973391ff1b9387d5
   languageName: node
   linkType: hard
 
