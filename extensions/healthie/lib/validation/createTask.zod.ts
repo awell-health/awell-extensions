@@ -94,9 +94,9 @@ const reminderSchema = z
         fatal: true,
         path: ['reminderIntervalValueOnce'],
         message: 'Value is not a valid ISO8601 date',
-        input: value.reminderIntervalValueOnce,
         params: {
           reason: 'invalid_date',
+          received: value.reminderIntervalValueOnce,
           detail:
             'reminderIntervalType is "once" but neither reminderIntervalValue nor reminderIntervalValueOnce is set',
         },
