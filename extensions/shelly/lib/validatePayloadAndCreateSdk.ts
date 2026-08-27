@@ -27,7 +27,7 @@ export const validatePayloadAndCreateSdk: ValidatePayloadAndCreateSdk = async ({
 }) => {
   const { settings, fields } = validate({
     schema: z.object({
-      fields: fieldsSchema,
+      fields: fieldsSchema as z.ZodType<z.infer<typeof fieldsSchema>>,
       settings: z.object({}),
       pathway: z.object({
         id: z.string(),

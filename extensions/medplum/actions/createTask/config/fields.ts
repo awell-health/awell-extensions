@@ -4,7 +4,7 @@ import {
   TaskIntentSchema,
   TaskStatusSchema,
 } from '../../../../../src/lib/fhir/schemas/Task'
-import { type ZodObject, type ZodTypeAny } from 'zod'
+import { type ZodObject, type ZodType } from 'zod'
 import { CreateTaskSchema } from '../../../fhir/schemas/resources'
 
 export const fields = {
@@ -86,5 +86,5 @@ export const fields = {
 } satisfies Record<string, Field>
 
 export const FieldsValidationSchema = CreateTaskSchema satisfies ZodObject<
-  Record<keyof typeof fields, ZodTypeAny>
+  Record<keyof typeof fields, ZodType>
 >

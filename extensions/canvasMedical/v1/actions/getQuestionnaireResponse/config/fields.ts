@@ -1,5 +1,5 @@
 import { FieldType, type Field } from '@awell-health/extensions-core'
-import { z, type ZodTypeAny } from 'zod'
+import { z, type ZodType } from 'zod'
 
 export const fields = {
   questionnaireResponseId: {
@@ -13,6 +13,6 @@ export const fields = {
 
 export const fieldsValidationSchema = z.object({
   questionnaireResponseId: z.string().nonempty({
-    message: 'Missing "Questionnaire Response ID"',
+    error: 'Missing "Questionnaire Response ID"',
   }),
-} satisfies Record<keyof typeof fields, ZodTypeAny>)
+} satisfies Record<keyof typeof fields, ZodType>)

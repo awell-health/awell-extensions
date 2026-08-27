@@ -1,5 +1,5 @@
 import { type Setting } from '@awell-health/extensions-core'
-import { z, type ZodTypeAny } from 'zod'
+import { z, type ZodType } from 'zod'
 
 export const settings = {
   botToken: {
@@ -13,5 +13,7 @@ export const settings = {
 } satisfies Record<string, Setting>
 
 export const SettingsValidationSchema = z.object({
-  botToken: z.string().min(1, { message: 'Missing Slack bot token' }),
-} satisfies Record<keyof typeof settings, ZodTypeAny>)
+  botToken: z.string().min(1, {
+    error: 'Missing Slack bot token',
+  }),
+} satisfies Record<keyof typeof settings, ZodType>)

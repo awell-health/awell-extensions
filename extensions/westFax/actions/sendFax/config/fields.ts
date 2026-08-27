@@ -3,7 +3,7 @@ import {
   FieldType,
   makeStringOptional,
 } from '@awell-health/extensions-core'
-import { type ZodTypeAny, z } from 'zod'
+import { z, type ZodType } from 'zod'
 
 export const fields = {
   productId: {
@@ -49,4 +49,4 @@ export const FieldsValidationSchema = z.object({
   number: z.string().min(1),
   content: z.string().min(1),
   addFaceSheet: z.boolean().optional(),
-} satisfies Record<keyof typeof fields, ZodTypeAny>)
+} satisfies Record<keyof typeof fields, ZodType>)

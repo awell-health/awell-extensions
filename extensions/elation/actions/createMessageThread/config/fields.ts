@@ -4,7 +4,7 @@ import {
   NumericIdSchema,
   type Field,
 } from '@awell-health/extensions-core'
-import z, { type ZodTypeAny } from 'zod'
+import z, { type ZodType } from 'zod'
 
 export const fields = {
   patientId: {
@@ -75,22 +75,30 @@ export const fields = {
   },
 } satisfies Record<string, Field>
 
+const DateTimeSchemaFromString = DateTimeOptionalSchema as unknown as z.ZodType<
+  string | undefined,
+  string
+>
+
 export const FieldsValidationSchema = z.object({
   patientId: NumericIdSchema,
   senderId: NumericIdSchema,
   practiceId: NumericIdSchema,
-  documentDate: z
-    .string()
-    .optional()
-    .default(() => new Date().toISOString())
-    .pipe(DateTimeOptionalSchema),
-  chartDate: z
-    .string()
-    .optional()
-    .default(() => new Date().toISOString())
-    .pipe(DateTimeOptionalSchema),
+  // Defaults to "now" when the field is unset. Non-string inputs (e.g. null)
+  // are rejected, matching the pre-zod-4 `z.string().optional().default(...)`
+  // behaviour, instead of being coerced to the Unix epoch. The cast narrows
+  // DateTimeOptionalSchema's `unknown` input (zod 4 `z.coerce`) so it can be
+  // the target of a string pipe.
+  documentDate: z.preprocess(
+    (value) => (value === undefined ? new Date().toISOString() : value),
+    z.string().pipe(DateTimeSchemaFromString),
+  ),
+  chartDate: z.preprocess(
+    (value) => (value === undefined ? new Date().toISOString() : value),
+    z.string().pipe(DateTimeSchemaFromString),
+  ),
   messageBody: z.string().min(1),
   recipientId: NumericIdSchema.optional(),
   groupId: NumericIdSchema.optional(),
   isUrgent: z.boolean().optional().default(false),
-} satisfies Record<keyof typeof fields, ZodTypeAny>)
+} satisfies Record<keyof typeof fields, ZodType>)

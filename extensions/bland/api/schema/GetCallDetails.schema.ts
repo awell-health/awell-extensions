@@ -14,7 +14,7 @@ export const GetCallDetailsResponseSchema = z.object({
   to: z.string(),
   from: z.string(),
   completed: z.boolean(),
-  created_at: z.string().datetime(),
+  created_at: z.iso.datetime(),
   inbound: z.boolean(),
   queue_status: z.string(),
   max_duration: z.number(),
@@ -26,7 +26,7 @@ export const GetCallDetailsResponseSchema = z.object({
   metadata: z.record(z.string(), z.unknown()),
   summary: z.string(),
   price: z.number(),
-  started_at: z.string().datetime(),
+  started_at: z.iso.datetime(),
   local_dialing: z.boolean(),
   call_ended_by: z.string(),
   pathway_logs: z.unknown().nullable(),
@@ -43,11 +43,11 @@ export const GetCallDetailsResponseSchema = z.object({
       id: z.number(),
       user: z.string(),
       text: z.string(),
-      created_at: z.string().datetime(),
+      created_at: z.iso.datetime(),
     }),
   ),
   corrected_duration: z.string(),
-  end_at: z.string().datetime(),
+  end_at: z.iso.datetime(),
 })
 
 export type GetCallDetailsResponseType = z.infer<

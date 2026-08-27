@@ -5,6 +5,7 @@ export const mockCreateTaskResponse: TaskResponse = {
   description: 'description',
   status: 'INCOMPLETE',
   createdDateTime: '08:32:17ZT083217Z',
+  comments: undefined,
   creator: {
     id: 'someId',
   },

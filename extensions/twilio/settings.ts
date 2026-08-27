@@ -2,7 +2,7 @@ import {
   E164PhoneValidationOptionalSchema,
   type Setting,
 } from '@awell-health/extensions-core'
-import { z, type ZodTypeAny } from 'zod'
+import { z, type ZodType } from 'zod'
 
 export const settings = {
   accountSid: {
@@ -75,8 +75,12 @@ export const settings = {
 } satisfies Record<string, Setting>
 
 export const SettingsValidationSchema = z.object({
-  accountSid: z.string().min(1, { message: 'Missing Twilio account SID' }),
-  authToken: z.string().min(1, { message: 'Missing Twilio auth token' }),
+  accountSid: z.string().min(1, {
+    error: 'Missing Twilio account SID',
+  }),
+  authToken: z.string().min(1, {
+    error: 'Missing Twilio auth token',
+  }),
   clientId: z.string().optional(),
   region: z.enum(['IE1', 'AU1', 'US1']).optional(),
   fromNumber: E164PhoneValidationOptionalSchema,
@@ -99,4 +103,4 @@ export const SettingsValidationSchema = z.object({
 
       return arg
     }),
-} satisfies Record<keyof typeof settings, ZodTypeAny>)
+} satisfies Record<keyof typeof settings, ZodType>)

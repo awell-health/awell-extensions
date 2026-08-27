@@ -1,5 +1,5 @@
 import { type Setting } from '@awell-health/extensions-core'
-import { z, type ZodTypeAny } from 'zod'
+import { z, type ZodType } from 'zod'
 import {
   DISCLAIMER_MSG,
   DISCLAIMER_MSG_FORM,
@@ -31,4 +31,4 @@ export const settings = {
 export const SettingsValidationSchema = z.object({
   disclaimerText: OptionalDisclaimerTextSchema,
   disclaimerPlacement: OptionalDisclaimerPlacementSchema,
-} satisfies Record<keyof typeof settings, ZodTypeAny>)
+} satisfies Record<keyof typeof settings, ZodType>)

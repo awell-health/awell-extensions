@@ -1,4 +1,4 @@
-import { z, type ZodTypeAny } from 'zod'
+import { z, type ZodType } from 'zod'
 import { type Setting } from '@awell-health/extensions-core'
 import { APIRegionSchema } from './api/apiConfig'
 
@@ -38,4 +38,4 @@ export const SettingsValidationSchema = z.object({
   region: APIRegionSchema.default('US'),
   clientId: z.string().nonempty(),
   clientSecret: z.string().nonempty(),
-} satisfies Record<keyof typeof settings, ZodTypeAny>)
+} satisfies Record<keyof typeof settings, ZodType>)

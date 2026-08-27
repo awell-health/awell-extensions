@@ -3,7 +3,7 @@ import {
   StringType,
   type Field,
 } from '@awell-health/extensions-core'
-import z, { type ZodTypeAny } from 'zod'
+import z, { type ZodType } from 'zod'
 
 export const fields = {
   contactCenterNumber: {
@@ -37,4 +37,4 @@ export const FieldsValidationSchema = z.object({
   contactCenterNumber: z.string().min(1),
   to: z.string().min(1),
   body: z.string().min(1).max(500),
-} satisfies Record<keyof typeof fields, ZodTypeAny>)
+} satisfies Record<keyof typeof fields, ZodType>)

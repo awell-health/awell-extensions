@@ -5,5 +5,5 @@ import { z } from 'zod'
  * required numbers
  */
 export const stringId = z.coerce.string({
-  invalid_type_error: 'Requires a valid ID',
+  error: 'Requires a valid ID',
 })

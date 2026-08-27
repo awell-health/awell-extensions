@@ -1,6 +1,6 @@
 import { type Setting } from '@awell-health/extensions-core'
 import { isNil } from 'lodash'
-import { z, type ZodTypeAny } from 'zod'
+import { z, type ZodType } from 'zod'
 
 export const settings = {
   integrationKey: {
@@ -59,7 +59,7 @@ export const SettingsValidationSchema = z.object({
   userId: z.string(),
   rsaKey: z.string(),
   baseApiUrl: z
-    .union([z.string().url().optional(), z.literal('')])
+    .union([z.url().optional(), z.literal('')])
     .transform((value) => {
       if (isNil(value) || value === '') {
         // default value
@@ -69,7 +69,7 @@ export const SettingsValidationSchema = z.object({
       return value
     }),
   returnUrlTemplate: z
-    .union([z.string().url().optional(), z.literal('')])
+    .union([z.url().optional(), z.literal('')])
     .transform((value) => {
       if (isNil(value) || value === '') {
         // default value
@@ -78,10 +78,10 @@ export const SettingsValidationSchema = z.object({
 
       return value
     }),
-} satisfies Record<keyof typeof settings, ZodTypeAny>)
+} satisfies Record<keyof typeof settings, ZodType>)
 
 export const validateSettings = (
-  settings: unknown
+  settings: unknown,
 ): z.infer<typeof SettingsValidationSchema> => {
   const parsedData = SettingsValidationSchema.parse(settings)
 

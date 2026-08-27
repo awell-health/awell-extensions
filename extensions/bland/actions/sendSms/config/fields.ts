@@ -3,7 +3,7 @@ import {
   StringType,
   type Field,
 } from '@awell-health/extensions-core'
-import z, { type ZodTypeAny } from 'zod'
+import z, { type ZodType } from 'zod'
 import {
   dropdownOptionsBoolean,
   dropdownOptionsBooleanSchema,
@@ -127,4 +127,4 @@ export const FieldsValidationSchema = z.object({
   warningMessage: z.string().optional(),
   requestData: JsonObjectSchema.optional(),
   metadata: JsonObjectSchema.optional(),
-} satisfies Record<keyof typeof fields, ZodTypeAny>)
+} satisfies Record<keyof typeof fields, ZodType>)

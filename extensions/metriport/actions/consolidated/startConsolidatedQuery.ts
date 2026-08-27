@@ -11,10 +11,8 @@ import { startConsolidatedQueryFields } from './fields'
 import { consolidatedQueryDataPoints as dataPoints } from './dataPoints'
 import { z } from 'zod'
 
-const startConsolidatedQuerySchema = z.object({
-  patientId: z
-    .string({ errorMap: () => ({ message: 'Missing patientId' }) })
-    .min(1),
+export const startConsolidatedQuerySchema = z.object({
+  patientId: z.string({ error: 'Missing patientId' }).min(1),
   resources: z.string().optional(),
   dateFrom: z.string().optional(),
   dateTo: z.string().optional(),

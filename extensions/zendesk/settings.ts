@@ -28,12 +28,12 @@ export const settings = {
 
 export const SettingsValidationSchema = z.object({
   subdomain: z.string().nonempty({
-    message: 'Missing "Zendesk Subdomain" in the extension settings.',
+    error: 'Missing "Zendesk Subdomain" in the extension settings.',
   }),
-  user_email: z.string().email({
-    message: 'Invalid "User Email" in the extension settings.',
+  user_email: z.email({
+    error: 'Invalid "User Email" in the extension settings.',
   }),
   api_token: z.string().nonempty({
-    message: 'Missing "API Token" in the extension settings.',
+    error: 'Missing "API Token" in the extension settings.',
   }),
 })

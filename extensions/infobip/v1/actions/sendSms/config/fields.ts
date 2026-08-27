@@ -1,4 +1,4 @@
-import { z, type ZodTypeAny } from 'zod'
+import { z, type ZodType } from 'zod'
 import {
   type Field,
   FieldType,
@@ -38,4 +38,4 @@ export const FieldsValidationSchema = z.object({
   from: makeStringOptional(z.string()),
   to: z.string(),
   text: z.string(),
-} satisfies Record<keyof typeof fields, ZodTypeAny>)
+} satisfies Record<keyof typeof fields, ZodType>)

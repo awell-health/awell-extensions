@@ -1,4 +1,4 @@
-import { z, type ZodTypeAny } from 'zod'
+import { z, type ZodType } from 'zod'
 import {
   type Field,
   FieldType,
@@ -58,10 +58,7 @@ export const fields = {
   },
 } satisfies Record<string, Field>
 
-const priorityEnum = z.enum<
-  TicketPriority,
-  [TicketPriority, ...TicketPriority[]]
->(Object.values(TicketPriority) as [TicketPriority, ...TicketPriority[]])
+const priorityEnum = z.enum(TicketPriority)
 
 export const FieldsValidationSchema = z.object({
   customerId: z.coerce.number(),
@@ -69,10 +66,10 @@ export const FieldsValidationSchema = z.object({
   relatedChannelUrls: makeStringOptional(
     validateCommaSeparatedList(
       (value) => z.string().safeParse(value).success,
-      false
-    )
+      false,
+    ),
   ),
   groupKey: makeStringOptional(z.string().regex(/^[a-z0-9\-_]*$/)),
   priority: makeStringOptional(priorityEnum),
   customFields: makeStringOptional(CustomFieldsValidationSchema),
-} satisfies Record<keyof typeof fields, ZodTypeAny>)
+} satisfies Record<keyof typeof fields, ZodType>)

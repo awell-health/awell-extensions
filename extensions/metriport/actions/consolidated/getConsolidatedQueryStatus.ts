@@ -7,10 +7,8 @@ import { getConsolidatedQueryStatusFields } from './fields'
 import { consolidatedQueryStatusDataPoints as dataPoints } from './dataPoints'
 import { z } from 'zod'
 
-const getConsolidatedQueryStatusSchema = z.object({
-  patientId: z
-    .string({ errorMap: () => ({ message: 'Missing patientId' }) })
-    .min(1),
+export const getConsolidatedQueryStatusSchema = z.object({
+  patientId: z.string({ error: 'Missing patientId' }).min(1),
 })
 
 export const getConsolidatedQueryStatus: Action<
@@ -43,7 +41,7 @@ export const getConsolidatedQueryStatus: Action<
 
       await onComplete({
         data_points: {
-          status: resp.status,
+          status: resp.status as string,
           queries: JSON.stringify(resp.queries),
         },
       })

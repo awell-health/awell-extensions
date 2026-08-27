@@ -45,7 +45,9 @@ const PayloadSchema = z.object({
   fields: z.object({
     extension: z.string(),
     action: z.string(),
-    input: z.any(),
+    // zod 4: an any/unknown key is required unless marked optional; an unset
+    // care-flow field arrives as an absent key, so keep v3 behaviour explicitly.
+    input: z.any().optional(),
   }),
   settings: z.object({
     url: z.string(),
@@ -75,7 +77,7 @@ export const externalServer: Action<
     }>(
       `${settings.url}/${fields.extension}/${fields.action}`,
       { data: clientPayload },
-      { headers: { 'Content-Type': 'application/json' } }
+      { headers: { 'Content-Type': 'application/json' } },
     )
     // eslint-disable-next-line @typescript-eslint/naming-convention
     const { data_points, events, response } = data

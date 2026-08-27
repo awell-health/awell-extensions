@@ -48,7 +48,7 @@ export const sendEmail: Action<typeof fields, typeof settings> = {
               isNil(value.fields.fromName)
             ) {
               ctx.addIssue({
-                code: z.ZodIssueCode.custom,
+                code: 'custom',
                 fatal: true,
                 message:
                   '"fromName" is missing in both settings and in the action field.',
@@ -61,7 +61,7 @@ export const sendEmail: Action<typeof fields, typeof settings> = {
               isNil(value.fields.fromEmail)
             ) {
               ctx.addIssue({
-                code: z.ZodIssueCode.custom,
+                code: 'custom',
                 fatal: true,
                 message:
                   '"fromEmail" is missing in both settings and in the action field.',

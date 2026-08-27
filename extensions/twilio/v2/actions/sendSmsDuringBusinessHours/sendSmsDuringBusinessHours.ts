@@ -56,7 +56,7 @@ export const sendSmsDuringBusinessHours: Action<
               isNil(value.fields.messagingServiceSid)
             ) {
               ctx.addIssue({
-                code: z.ZodIssueCode.custom,
+                code: 'custom',
                 fatal: true,
                 message:
                   '"Messaging Service SID" is missing in both settings and in the action field.',

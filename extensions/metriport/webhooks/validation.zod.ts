@@ -36,11 +36,9 @@ const metaSchema = z.object({
  * to be readable enough to acknowledge with a 200, or Metriport retries it
  * forever.
  */
-export const webhookEnvelopeSchema = z
-  .object({
-    meta: metaSchema.extend({ type: trimmedString }),
-  })
-  .passthrough()
+export const webhookEnvelopeSchema = z.looseObject({
+  meta: metaSchema.extend({ type: trimmedString }),
+})
 
 export const pingWebhookSchema = z.object({
   meta: metaSchema.extend({ type: z.literal(MetriportWebhookType.Ping) }),
@@ -58,7 +56,7 @@ export const realtimeNotificationSchema = z.object({
     url: trimmedString.url(),
     patientId: trimmedString.min(1),
     externalId: trimmedString.optional(),
-    additionalIds: z.record(z.array(trimmedString)).optional(),
+    additionalIds: z.record(z.string(), z.array(trimmedString)).optional(),
   }),
 })
 

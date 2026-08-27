@@ -9,7 +9,7 @@ import {
 export const UpdateTicketInputSchema = z.object({
   name: z.string().optional(),
   requester_id: z.number().optional(),
-  email: z.string().email().optional(),
+  email: z.email().optional(),
   facebook_id: z.string().optional(),
   phone: z.string().optional(),
   twitter_id: z.string().optional(),

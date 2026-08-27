@@ -1,5 +1,5 @@
 import { type Setting } from '@awell-health/extensions-core'
-import { z, type ZodTypeAny } from 'zod'
+import { z, type ZodType } from 'zod'
 import { isEmpty, isNil, lowerCase } from 'lodash'
 
 export const settings = {
@@ -42,10 +42,10 @@ export const SettingsValidationSchema = z.object({
 
       return false
     }),
-} satisfies Record<keyof typeof settings, ZodTypeAny>)
+} satisfies Record<keyof typeof settings, ZodType>)
 
 export const validateSettings = (
-  settings: unknown
+  settings: unknown,
 ): z.infer<typeof SettingsValidationSchema> => {
   const parsedData = SettingsValidationSchema.parse(settings)
 

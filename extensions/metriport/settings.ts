@@ -51,7 +51,7 @@ export const rateLimitDurationSchema = z.string().refine(
     }
   },
   {
-    message:
+    error:
       'Duration must be in format {number} {unit} where unit is seconds, minutes, hours or days',
   },
 )
@@ -59,8 +59,7 @@ export const rateLimitDurationSchema = z.string().refine(
 const parseDurationUnit = (
   unit: string | undefined,
 ): 'seconds' | 'minutes' | 'hours' | 'days' => {
-  if (isNil(unit) || isEmpty(unit))
-    throw new Error('Duration unit is required')
+  if (isNil(unit) || isEmpty(unit)) throw new Error('Duration unit is required')
 
   const normalized = unit.toLowerCase().trim()
 

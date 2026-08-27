@@ -1,4 +1,4 @@
-import { z, type ZodTypeAny } from 'zod'
+import { z, type ZodType } from 'zod'
 import {
   type Field,
   FieldType,
@@ -58,16 +58,16 @@ export const fields = {
 export const FieldsValidationSchema = z
   .object({
     campaignId: NumericIdSchema,
-    recipientEmail: makeStringOptional(z.string().email()),
+    recipientEmail: makeStringOptional(z.email()),
     recipientUserId: makeStringOptional(z.string()),
     dataFields: makeStringOptional(StringTransformToJson),
     allowRepeatMarketingSends: z.boolean().optional(),
     metadata: makeStringOptional(StringTransformToJson),
-  } satisfies Record<keyof typeof fields, ZodTypeAny>)
+  } satisfies Record<keyof typeof fields, ZodType>)
   .superRefine((value, context) => {
     if (isEmpty(value.recipientEmail) && isEmpty(value.recipientUserId)) {
       context.addIssue({
-        code: z.ZodIssueCode.custom,
+        code: 'custom',
         fatal: true,
         message:
           'Both "recipient email" and "recipient user ID" are empty. Please provide one of them.',
@@ -76,7 +76,7 @@ export const FieldsValidationSchema = z
 
     if (!isEmpty(value.recipientEmail) && !isEmpty(value.recipientUserId)) {
       context.addIssue({
-        code: z.ZodIssueCode.custom,
+        code: 'custom',
         fatal: true,
         message:
           'Both "recipient email" and "recipient user ID" are provided. Please provide only one of them.',

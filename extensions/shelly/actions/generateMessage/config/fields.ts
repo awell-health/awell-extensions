@@ -1,5 +1,5 @@
-import { type Field, FieldType } from '@awell-health/extensions-core';
-import z, { type ZodTypeAny } from 'zod';
+import { type Field, FieldType } from '@awell-health/extensions-core'
+import z, { type ZodType } from 'zod'
 
 /**
  * Fields definitions for the message form.
@@ -32,32 +32,35 @@ export const fields = {
   language: {
     id: 'language',
     label: 'Language',
-    description: '[Optional]Specify the language of the message; defaults to English.',
+    description:
+      '[Optional]Specify the language of the message; defaults to English.',
     type: FieldType.STRING,
     required: false,
   },
-} satisfies Record<string, Field>;
+} satisfies Record<string, Field>
 
 /**
  * Validation schema for the fields using Zod.
  */
 const fieldSchemas = {
-  communicationObjective: z.string().min(1, 'Communication objective is required'),
+  communicationObjective: z
+    .string()
+    .min(1, 'Communication objective is required'),
   personalizationInput: z.string().optional().default(''),
   stakeholder: z
     .string()
     .optional()
     .transform((val): string => {
-      if (val === undefined || val === '') return 'Patient';
-      return val;
+      if (val === undefined || val === '') return 'Patient'
+      return val
     }),
   language: z
     .string()
     .optional()
     .transform((val): string => {
-      if (val === undefined || val === '') return 'English';
-      return val;
+      if (val === undefined || val === '') return 'English'
+      return val
     }),
-} satisfies Record<keyof typeof fields, ZodTypeAny>;
+} satisfies Record<keyof typeof fields, ZodType>
 
-export const FieldsValidationSchema = z.object(fieldSchemas);
+export const FieldsValidationSchema = z.object(fieldSchemas)

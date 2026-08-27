@@ -1,5 +1,5 @@
 import { lowerCase } from 'lodash'
-import { z, type ZodTypeAny } from 'zod'
+import { z, type ZodType } from 'zod'
 import { type Setting } from '@awell-health/extensions-core'
 import { getEmailValidation } from '../../src/lib/awell'
 
@@ -52,7 +52,7 @@ export const settings = {
 } satisfies Record<string, Setting>
 
 export const RegionValidationSchema = z.optional(
-  z.enum(['EU', 'eu', 'US', 'us'])
+  z.enum(['EU', 'eu', 'US', 'us']),
 )
 
 export const SettingsValidationSchema = z.object({
@@ -68,10 +68,10 @@ export const SettingsValidationSchema = z.object({
 
     return false
   }),
-} satisfies Record<keyof typeof settings, ZodTypeAny>)
+} satisfies Record<keyof typeof settings, ZodType>)
 
 export const validateSettings = (
-  settings: unknown
+  settings: unknown,
 ): z.infer<typeof SettingsValidationSchema> => {
   const parsedData = SettingsValidationSchema.parse(settings)
 

@@ -22,7 +22,7 @@ export const validatePayloadAndCreateClient: ValidateAndCreateClient = async ({
     settings,
   } = validate({
     schema: z.object({
-      fields: fieldsSchema,
+      fields: fieldsSchema as z.ZodType<z.infer<typeof fieldsSchema>>,
       settings: SettingsValidationSchema,
     }),
     payload,

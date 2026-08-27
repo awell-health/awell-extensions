@@ -404,7 +404,7 @@ describe('Assign to cohort', () => {
             error: {
               category: 'WRONG_INPUT',
               message:
-                'Validation error: String must contain at least 1 character(s) at "fields.input"',
+                'Validation error: Too small: expected string to have >=1 characters at "fields.input"',
             },
           }),
         ],
@@ -433,7 +433,8 @@ describe('Assign to cohort', () => {
             text: { en: 'ZodValidationError' },
             error: {
               category: 'WRONG_INPUT',
-              message: 'Validation error: Required at "fields.input"',
+              message:
+                'Validation error: Invalid input: expected string, received undefined at "fields.input"',
             },
           }),
         ],
@@ -463,7 +464,7 @@ describe('Assign to cohort', () => {
             error: {
               category: 'WRONG_INPUT',
               message:
-                'Validation error: Expected number, received nan at "fields.numberOfCohorts"',
+                'Validation error: Invalid input: expected number, received NaN at "fields.numberOfCohorts"',
             },
           }),
         ],
@@ -493,7 +494,7 @@ describe('Assign to cohort', () => {
             error: {
               category: 'WRONG_INPUT',
               message:
-                'Validation error: Number must be greater than or equal to 1 at "fields.numberOfCohorts"',
+                'Validation error: Too small: expected number to be >=1 at "fields.numberOfCohorts"',
             },
           }),
         ],
@@ -523,7 +524,7 @@ describe('Assign to cohort', () => {
             error: {
               category: 'WRONG_INPUT',
               message:
-                'Validation error: Number must be greater than or equal to 1 at "fields.numberOfCohorts"',
+                'Validation error: Too small: expected number to be >=1 at "fields.numberOfCohorts"',
             },
           }),
         ],

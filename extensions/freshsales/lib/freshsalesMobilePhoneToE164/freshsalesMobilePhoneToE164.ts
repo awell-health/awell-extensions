@@ -31,9 +31,7 @@ export const freshsalesMobilePhoneToE164 = (
   const withInternationalPrefix = `+${cleanedPhone}`
 
   E164PhoneValidationSchema.parse(withInternationalPrefix, {
-    errorMap: () => ({
-      message: FreshSalesMobilePhoneToE164ErrorMessage,
-    }),
+    error: () => FreshSalesMobilePhoneToE164ErrorMessage,
   })
 
   return withInternationalPrefix

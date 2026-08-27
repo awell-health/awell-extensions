@@ -1,4 +1,4 @@
-import { z, type ZodTypeAny } from 'zod'
+import { z, type ZodType } from 'zod'
 import {
   E164PhoneValidationOptionalSchema,
   DateOnlyOptionalSchema,
@@ -17,8 +17,7 @@ export const fields = {
     type: FieldType.STRING,
     stringType: StringType.PHONE,
     required: false,
-    description:
-      'Search for text messages sent from a specific phone number'
+    description: 'Search for text messages sent from a specific phone number',
   },
   recipient: {
     id: 'recipient',
@@ -31,15 +30,15 @@ export const fields = {
   page_size: {
     id: 'page_size',
     label: 'Page Size',
-    description: 'The number of results per page. Minimum is 1 and maximum is 1000.',
+    description:
+      'The number of results per page. Minimum is 1 and maximum is 1000.',
     type: FieldType.NUMERIC,
     required: false,
   },
   date_sent_after: {
     id: 'date_sent_after',
     label: 'Sent date after than',
-    description:
-      'Search for messages sent after a given date',
+    description: 'Search for messages sent after a given date',
     type: FieldType.DATE,
     required: false,
   },
@@ -67,10 +66,14 @@ export const FieldsValidationSchema = z.object({
   from: E164PhoneValidationOptionalSchema,
   page_size: z
     .number()
-    .min(1, { message: 'Page size must be at least one' })
-    .max(1000, { message: 'Cannot fetch more than 1000 messages' })
+    .min(1, {
+      error: 'Page size must be at least one',
+    })
+    .max(1000, {
+      error: 'Cannot fetch more than 1000 messages',
+    })
     .default(50),
   date_sent: DateOnlyOptionalSchema.transform(toDate),
   date_sent_after: DateOnlyOptionalSchema.transform(toDate),
   date_sent_before: DateOnlyOptionalSchema.transform(toDate),
-} satisfies Record<keyof typeof fields, ZodTypeAny>)
+} satisfies Record<keyof typeof fields, ZodType>)

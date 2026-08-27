@@ -1,7 +1,7 @@
 import { type BaselineInfoInput } from '@awell-health/awell-sdk'
 import { type Field, FieldType } from '@awell-health/extensions-core'
 import { isEmpty, isNil } from 'lodash'
-import { z, type ZodTypeAny } from 'zod'
+import { z, type ZodType } from 'zod'
 
 export const fields = {
   careFlowDefinitionId: {
@@ -68,7 +68,7 @@ export const FieldsValidationSchema = z.object({
             ctx.addIssue({
               code: 'custom',
               message: `Item "${String(
-                obj
+                obj,
               )}" in baseline info array is not an object.`,
             })
             return z.NEVER
@@ -105,4 +105,4 @@ export const FieldsValidationSchema = z.object({
         return z.NEVER
       }
     }),
-} satisfies Record<keyof typeof fields, ZodTypeAny>)
+} satisfies Record<keyof typeof fields, ZodType>)

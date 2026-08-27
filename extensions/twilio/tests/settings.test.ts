@@ -12,7 +12,7 @@ describe('Settings', () => {
     const result = SettingsValidationSchema.safeParse(settings)
 
     if (!result.success) {
-      console.log(result.error.errors)
+      console.log(result.error.issues)
     }
 
     expect(result.success).toBe(true)

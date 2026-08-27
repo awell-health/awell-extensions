@@ -1,4 +1,4 @@
-import { z, type ZodTypeAny } from 'zod'
+import { z, type ZodType } from 'zod'
 import {
   type Field,
   FieldType,
@@ -67,10 +67,9 @@ export const fields = {
   },
 } satisfies Record<string, Field>
 
-const resourceTypeEnum = z.enum<
-  ResourceType,
-  [ResourceType, ...ResourceType[]]
->([ResourceType.CONTACT, ResourceType.DEAL, ResourceType.LEAD])
+const resourceTypeEnum = z
+  .enum([ResourceType.CONTACT, ResourceType.DEAL, ResourceType.LEAD])
+  .transform((value) => value as ResourceType)
 
 export const FieldsValidationSchema = z.object({
   content: z.string().nonempty(),
@@ -80,4 +79,4 @@ export const FieldsValidationSchema = z.object({
   resourceId: makeStringOptional(NumericIdSchema),
   completed: z.boolean().optional(),
   remindAt: DateTimeOptionalSchema,
-} satisfies Record<keyof typeof fields, ZodTypeAny>)
+} satisfies Record<keyof typeof fields, ZodType>)

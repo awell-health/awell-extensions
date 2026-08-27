@@ -7,10 +7,8 @@ import { startNetworkQueryFields } from './fields'
 import { networkQueryDataPoints as dataPoints } from './dataPoints'
 import { z } from 'zod'
 
-const startNetworkQuerySchema = z.object({
-  patientId: z
-    .string({ errorMap: () => ({ message: 'Missing patientId' }) })
-    .min(1),
+export const startNetworkQuerySchema = z.object({
+  patientId: z.string({ error: 'Missing patientId' }).min(1),
 })
 
 export const startNetworkQuery: Action<

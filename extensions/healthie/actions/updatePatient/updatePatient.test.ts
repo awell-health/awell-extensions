@@ -47,7 +47,7 @@ describe('Healthie - updatePatient', () => {
     const result = FieldsValidationSchema.safeParse(fields)
 
     if (!result.success) {
-      console.log(result.error.errors)
+      console.log(result.error.issues)
     }
 
     expect(result.success).toBe(true)
@@ -76,13 +76,12 @@ describe('Healthie - updatePatient', () => {
 
     expect(result.success).toBe(false)
 
-    if (result?.error?.errors) {
-      expect(result.error.errors[0]).toEqual({
+    if (result?.error?.issues) {
+      expect(result.error.issues[0]).toMatchObject({
         code: 'invalid_type',
         expected: 'string',
-        received: 'undefined',
         path: ['id'],
-        message: 'Required',
+        message: 'Invalid input: expected string, received undefined',
       })
     }
   })

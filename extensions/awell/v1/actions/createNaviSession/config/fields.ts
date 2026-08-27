@@ -1,5 +1,5 @@
 import { type Field, FieldType } from '@awell-health/extensions-core'
-import { z, type ZodTypeAny } from 'zod'
+import { z, type ZodType } from 'zod'
 import { isEmpty } from 'lodash'
 
 export const fields = {
@@ -38,4 +38,4 @@ export const FieldsValidationSchema = z.object({
       }
       return parsed
     }),
-} satisfies Record<keyof typeof fields, ZodTypeAny>)
+} satisfies Record<keyof typeof fields, ZodType>)

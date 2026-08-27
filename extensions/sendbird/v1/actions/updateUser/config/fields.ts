@@ -1,4 +1,4 @@
-import { z, type ZodTypeAny } from 'zod'
+import { z, type ZodType } from 'zod'
 import {
   type Field,
   FieldType,
@@ -43,5 +43,5 @@ export const FieldsValidationSchema = z.object({
   userId: z.string().nonempty(),
   nickname: makeStringOptional(z.string().max(80)),
   issueAccessToken: z.boolean().optional(),
-  profileUrl: makeStringOptional(z.string().url()),
-} satisfies Record<keyof typeof fields, ZodTypeAny>)
+  profileUrl: makeStringOptional(z.url()),
+} satisfies Record<keyof typeof fields, ZodType>)

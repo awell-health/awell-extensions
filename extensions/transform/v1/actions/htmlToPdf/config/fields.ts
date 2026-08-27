@@ -1,4 +1,4 @@
-import { z, type ZodTypeAny } from 'zod'
+import { z, ZodType } from 'zod'
 import { type Field, FieldType } from '@awell-health/extensions-core'
 
 export const fields = {

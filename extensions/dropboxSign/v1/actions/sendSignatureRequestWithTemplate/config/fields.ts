@@ -1,5 +1,5 @@
 import { type Field, FieldType } from '@awell-health/extensions-core'
-import { z, type ZodTypeAny } from 'zod'
+import { z, type ZodType } from 'zod'
 
 export const fields = {
   signerRole: {
@@ -67,16 +67,16 @@ export const fields = {
 export const FieldsValidationSchema = z.object({
   signerRole: z.string(),
   signerName: z.string(),
-  signerEmailAddress: z.string().email(),
+  signerEmailAddress: z.email(),
   templateId: z.string(),
   title: z.optional(z.string()),
   subject: z.optional(z.string()),
   message: z.optional(z.string()),
-  signingRedirectUrl: z.optional(z.string().url()),
-} satisfies Record<keyof typeof fields, ZodTypeAny>)
+  signingRedirectUrl: z.optional(z.url()),
+} satisfies Record<keyof typeof fields, ZodType>)
 
 export const validateActionFields = (
-  fields: unknown
+  fields: unknown,
 ): z.infer<typeof FieldsValidationSchema> => {
   const parsedData = FieldsValidationSchema.parse(fields)
 

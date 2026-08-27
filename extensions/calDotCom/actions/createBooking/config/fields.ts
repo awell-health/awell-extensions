@@ -1,4 +1,4 @@
-import { z, type ZodTypeAny } from 'zod'
+import { z, type ZodType } from 'zod'
 import {
   type Field,
   FieldType,
@@ -134,7 +134,7 @@ export const JsonStringValidationSchema = z
 export const ResponsesValidationSchema = JsonStringValidationSchema.transform(
   (
     value,
-    ctx
+    ctx,
   ): {
     name: string
     email: string
@@ -155,7 +155,7 @@ export const ResponsesValidationSchema = JsonStringValidationSchema.transform(
       metadata: object
       location: string
     }
-  }
+  },
 )
 
 export const FieldsValidationSchema = z.object({
@@ -170,4 +170,4 @@ export const FieldsValidationSchema = z.object({
   recurringEventId: makeStringOptional(NumericIdSchema),
   description: makeStringOptional(z.string()),
   status: makeStringOptional(statusEnum),
-} satisfies Record<keyof typeof fields, ZodTypeAny>)
+} satisfies Record<keyof typeof fields, ZodType>)

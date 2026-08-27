@@ -9,7 +9,7 @@ import {
   ModelSchema,
   VoicemailActionSchema,
 } from '../../../api/schema/atoms'
-import z, { type ZodTypeAny } from 'zod'
+import z, { type ZodType } from 'zod'
 import { getTimezoneOptions } from '../../../../awell/v1/actions/updatePatient/config/getTimezones'
 import {
   dropdownOptionsBoolean,
@@ -344,7 +344,8 @@ export const fields = {
   completeExtensionActivityAsync: {
     id: 'completeExtensionActivityAsync',
     label: 'Complete extension activity async',
-    description: 'Whether to complete the extension activity async. When true, the extension activity will be completed asynchronously via a webhook.',
+    description:
+      'Whether to complete the extension activity async. When true, the extension activity will be completed asynchronously via a webhook.',
     type: FieldType.BOOLEAN,
     required: false,
   },
@@ -405,4 +406,4 @@ export const FieldsValidationSchema = z.object({
   analysisSchema: JsonObjectSchema.optional(),
   otherData: JsonObjectSchema.optional(),
   completeExtensionActivityAsync: z.boolean().default(false),
-} satisfies Record<keyof typeof fields, ZodTypeAny>)
+} satisfies Record<keyof typeof fields, ZodType>)

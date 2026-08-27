@@ -1,4 +1,4 @@
-import { string, z, type ZodTypeAny } from 'zod'
+import { string, z, type ZodType } from 'zod'
 import {
   type Field,
   FieldType,
@@ -32,18 +32,15 @@ export const fields = {
   },
 } satisfies Record<string, Field>
 
-const priorityEnum = z.enum<
-  TicketPriority,
-  [TicketPriority, ...TicketPriority[]]
->(Object.values(TicketPriority) as [TicketPriority, ...TicketPriority[]])
+const priorityEnum = z.enum(TicketPriority)
 
 export const FieldsValidationSchema = z.object({
   ticketId: z.coerce.number(),
   relatedChannelUrls: string(
     validateCommaSeparatedList(
       (value) => z.string().safeParse(value).success,
-      false
-    )
+      false,
+    ),
   ),
   priority: priorityEnum,
-} satisfies Record<keyof typeof fields, ZodTypeAny>)
+} satisfies Record<keyof typeof fields, ZodType>)

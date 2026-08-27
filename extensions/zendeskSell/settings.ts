@@ -1,5 +1,5 @@
 import { type Setting } from '@awell-health/extensions-core'
-import { z, type ZodTypeAny } from 'zod'
+import { z, type ZodType } from 'zod'
 
 export const settings = {
   salesApiToken: {
@@ -14,6 +14,6 @@ export const settings = {
 
 export const SettingsValidationSchema = z.object({
   salesApiToken: z.string().nonempty({
-    message: 'Missing "Sales API token" in the extension settings.',
+    error: 'Missing "Sales API token" in the extension settings.',
   }),
-} satisfies Record<keyof typeof settings, ZodTypeAny>)
+} satisfies Record<keyof typeof settings, ZodType>)

@@ -8,7 +8,7 @@ import {
 } from './atoms'
 
 export const SendCallInputSchema = z
-  .object({
+  .looseObject({
     pathway_id: z.string().optional(),
     pathway_version: z.number().optional(),
     phone_number: z.string().min(1), // For best results, use the E.164 format.
@@ -63,7 +63,6 @@ export const SendCallInputSchema = z
     analysis_schema: z.record(z.string(), z.any()).optional(),
     answered_by_enabled: z.boolean().optional(),
   })
-  .passthrough()
   .refine(
     (data) => {
       if (isNil(data.pathway_id) && isEmpty(data.pathway_id)) {
@@ -72,8 +71,8 @@ export const SendCallInputSchema = z
       return true
     },
     {
-      message: '`task` is required when not providing a `pathway_id`',
       path: ['task'],
+      error: '`task` is required when not providing a `pathway_id`',
     },
   )
   .refine((data) => {
@@ -94,7 +93,7 @@ export type SendCallInputType = z.infer<typeof SendCallInputSchema>
 
 export const SendCallResponseSchema = z.object({
   status: z.string(),
-  call_id: z.string().uuid(),
+  call_id: z.guid(),
   message: z.string(),
 })
 

@@ -49,7 +49,7 @@ describe('Healthie - createPatient', () => {
     const result = FieldsValidationSchema.safeParse(fields)
 
     if (!result.success) {
-      console.log(result.error.errors)
+      console.log(result.error.issues)
     }
 
     expect(result.success).toBe(true)

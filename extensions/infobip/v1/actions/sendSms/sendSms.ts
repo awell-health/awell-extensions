@@ -32,7 +32,7 @@ export const sendSms: Action<typeof fields, typeof settings> = {
               isEmpty(value.settings.fromPhoneNumber)
             ) {
               ctx.addIssue({
-                code: z.ZodIssueCode.custom,
+                code: 'custom',
                 fatal: true,
                 message:
                   '"From" number is missing in both settings and in the action fields.',

@@ -18,7 +18,7 @@ const telecomSchema = z.object({
       z.object({
         url: z.string(),
         valueBoolean: z.boolean(),
-      })
+      }),
     )
     .optional(),
   system: z.string(),
@@ -35,7 +35,7 @@ const contactSchema = z.object({
     .array(
       z.object({
         text: z.string(),
-      })
+      }),
     )
     .optional(),
   telecom: z
@@ -43,7 +43,7 @@ const contactSchema = z.object({
       z.object({
         system: z.string(),
         value: z.string(),
-      })
+      }),
     )
     .optional(),
   extension: z
@@ -51,14 +51,14 @@ const contactSchema = z.object({
       z.object({
         url: z.string(),
         valueBoolean: z.boolean(),
-      })
+      }),
     )
     .optional(),
 })
 
 const photoSchema = z.object({
   data: z.string().optional(),
-  url: z.string().url().optional(),
+  url: z.url().optional(),
 })
 
 export const patientSchema = z.object({

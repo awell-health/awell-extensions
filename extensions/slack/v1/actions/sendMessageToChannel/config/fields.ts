@@ -1,4 +1,4 @@
-import { z, type ZodTypeAny } from 'zod'
+import { z, type ZodType } from 'zod'
 import { type Field, FieldType } from '@awell-health/extensions-core'
 
 export const fields = {
@@ -20,6 +20,10 @@ export const fields = {
 } satisfies Record<string, Field>
 
 export const FieldsValidationSchema = z.object({
-  channel: z.string().min(1, { message: 'Channel is required' }),
-  message: z.string().min(1, { message: 'Message is required' }),
-} satisfies Record<keyof typeof fields, ZodTypeAny>)
+  channel: z.string().min(1, {
+    error: 'Channel is required',
+  }),
+  message: z.string().min(1, {
+    error: 'Message is required',
+  }),
+} satisfies Record<keyof typeof fields, ZodType>)

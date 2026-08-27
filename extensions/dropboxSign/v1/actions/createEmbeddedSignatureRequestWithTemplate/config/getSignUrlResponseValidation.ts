@@ -4,7 +4,7 @@ import { z } from 'zod'
 export const ResponseValidationSchema = z.object({
   body: z.object({
     embedded: z.object({
-      signUrl: z.string().url(),
+      signUrl: z.url(),
       expiresAt: z
         .number()
         .transform((unixTimestamp) => fromUnixTime(unixTimestamp))
@@ -14,7 +14,7 @@ export const ResponseValidationSchema = z.object({
 })
 
 export const validateGetSignUrlResponse = (
-  fields: unknown
+  fields: unknown,
 ): z.infer<typeof ResponseValidationSchema> => {
   const parsedData = ResponseValidationSchema.parse(fields)
 

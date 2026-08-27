@@ -5,10 +5,12 @@ import { z } from 'zod'
  * Get the zod validation schema for email addresses
  * We need the local part to allows special characters like accents (é) as per modern email standards (UTF-8 encoding).
  */
-export const getEmailValidation = (): z.ZodTypeAny => {
+export const getEmailValidation = (): z.ZodString => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
-  return z.string().regex(emailRegex, { message: 'Invalid email address' })
+  return z.string().regex(emailRegex, {
+    error: 'Invalid email address',
+  })
 }
 
 /**
@@ -32,7 +34,7 @@ export const CommaSeparatedEmailsValidationSchema = z
         if (isEmpty(trimmedEmail)) return undefined
         return trimmedEmail
       })
-      .filter((email) => email !== undefined) as string[]
+      .filter((email) => email !== undefined)
   })
   /**
    * Validate each email address
