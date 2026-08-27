@@ -27,4 +27,5 @@ export const UpdateTicketResponseMock = {
   updated_at: '2015-08-24T11:59:05Z',
   due_by: '2015-08-27T11:30:00Z',
   fr_due_by: '2015-08-25T11:30:00Z',
+  association_type: null,
 } satisfies UpdateTicketResponseType
