@@ -75,17 +75,27 @@ export const fields = {
   },
 } satisfies Record<string, Field>
 
+const DateTimeSchemaFromString = DateTimeOptionalSchema as unknown as z.ZodType<
+  string | undefined,
+  string
+>
+
 export const FieldsValidationSchema = z.object({
   patientId: NumericIdSchema,
   senderId: NumericIdSchema,
   practiceId: NumericIdSchema,
+  // Defaults to "now" when the field is unset. Non-string inputs (e.g. null)
+  // are rejected, matching the pre-zod-4 `z.string().optional().default(...)`
+  // behaviour, instead of being coerced to the Unix epoch. The cast narrows
+  // DateTimeOptionalSchema's `unknown` input (zod 4 `z.coerce`) so it can be
+  // the target of a string pipe.
   documentDate: z.preprocess(
     (value) => (value === undefined ? new Date().toISOString() : value),
-    DateTimeOptionalSchema,
+    z.string().pipe(DateTimeSchemaFromString),
   ),
   chartDate: z.preprocess(
     (value) => (value === undefined ? new Date().toISOString() : value),
-    DateTimeOptionalSchema,
+    z.string().pipe(DateTimeSchemaFromString),
   ),
   messageBody: z.string().min(1),
   recipientId: NumericIdSchema.optional(),

@@ -79,9 +79,22 @@ describe('createMessageThread action', () => {
       expect(validatedFields.isUrgent).toBe(false)
     })
 
+    it('should treat an empty-string date as undefined and reject null', () => {
+      const validated = FieldsValidationSchema.parse({
+        ...validFields,
+        documentDate: '',
+      })
+      expect(validated.documentDate).toBeUndefined()
+      expect(() =>
+        FieldsValidationSchema.parse({ ...validFields, chartDate: null }),
+      ).toThrow()
+    })
+
     it.each([
       ['invalid patientId', { patientId: 'invalid_id' }],
       ['missing messageBody', { messageBody: undefined }],
+      ['null documentDate', { documentDate: null }],
+      ['null chartDate', { chartDate: null }],
     ])('should call onError for %s', async (_, invalidFields) => {
       const payload = createTestPayload(invalidFields)
 

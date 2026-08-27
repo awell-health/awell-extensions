@@ -30,7 +30,9 @@ const dataPoints = {
 
 const PayloadSchema = z.object({
   fields: z.object({
-    payload: z.any(),
+    // zod 4: an any/unknown key is required unless marked optional; an unset
+    // care-flow field arrives as an absent key, so keep v3 behaviour explicitly.
+    payload: z.any().optional(),
   }),
   settings: z.object({
     url: z.string(),
