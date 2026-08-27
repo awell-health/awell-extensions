@@ -1,4 +1,4 @@
-import { z, type ZodTypeAny } from 'zod'
+import { z, type ZodType } from 'zod'
 import { type Setting } from '@awell-health/extensions-core'
 import { getEmailValidation } from '../../src/lib/awell'
 
@@ -28,11 +28,11 @@ export const settings = {
 } satisfies Record<string, Setting>
 
 export const RegionValidationSchema = z.optional(
-  z.enum(['EU', 'eu', 'US', 'us'])
+  z.enum(['EU', 'eu', 'US', 'us']),
 )
 
 export const SettingsValidationSchema = z.object({
   apiKey: z.string(),
   fromName: z.string(),
   fromEmail: getEmailValidation(),
-} satisfies Record<keyof typeof settings, ZodTypeAny>)
+} satisfies Record<keyof typeof settings, ZodType>)

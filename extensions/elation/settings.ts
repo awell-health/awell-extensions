@@ -1,6 +1,9 @@
-import { RateLimitConfig, type Setting } from '@awell-health/extensions-core'
+import {
+  type RateLimitConfig,
+  type Setting,
+} from '@awell-health/extensions-core'
 import { isEmpty, isFinite, isNil } from 'lodash'
-import { z, type ZodTypeAny } from 'zod'
+import { z, type ZodType } from 'zod'
 
 export const settings = {
   base_url: {
@@ -71,7 +74,7 @@ export const rateLimitDurationSchema = z.string().refine(
     }
   },
   {
-    message:
+    error:
       'Duration must be in format {number} {unit} where unit is seconds, minutes, hours or days',
   },
 )
@@ -89,7 +92,7 @@ export const SettingsValidationSchema = z.object({
   username: z.string().optional(),
   password: z.string().optional(),
   rateLimitDuration: rateLimitDurationSchema.optional(),
-} satisfies Record<keyof typeof settings, ZodTypeAny>)
+} satisfies Record<keyof typeof settings, ZodType>)
 
 export type SettingsType = z.infer<typeof SettingsValidationSchema>
 

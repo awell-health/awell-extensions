@@ -1,5 +1,5 @@
 import { type Setting } from '@awell-health/extensions-core'
-import { z, type ZodTypeAny } from 'zod'
+import { z, type ZodType } from 'zod'
 
 export const settings = {
   accessToken: {
@@ -7,10 +7,13 @@ export const settings = {
     key: 'accessToken',
     obfuscated: true,
     required: true,
-    description: 'Find your Access Token at https://application.textline.com/organization/api_settings.',
+    description:
+      'Find your Access Token at https://application.textline.com/organization/api_settings.',
   },
 } satisfies Record<string, Setting>
 
 export const SettingsValidationSchema = z.object({
-  accessToken: z.string().min(1, { message: 'Missing TextLine password' }),
-} satisfies Record<keyof typeof settings, ZodTypeAny>)
+  accessToken: z.string().min(1, {
+    error: 'Missing TextLine password',
+  }),
+} satisfies Record<keyof typeof settings, ZodType>)

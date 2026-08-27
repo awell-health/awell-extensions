@@ -3,7 +3,7 @@ import { z } from 'zod'
 export const AddNoteInputSchema = z.object({
   body: z.string().min(1).describe('Content of the note in HTML'),
   incoming: z.boolean().optional(),
-  notify_emails: z.array(z.string().email()).optional(),
+  notify_emails: z.array(z.email()).optional(),
   private: z.boolean().optional(),
   user_id: z.number().optional(),
 })
@@ -19,7 +19,7 @@ export const AddNoteResponseSchema = z.object({
   user_id: z.number(),
   support_email: z.unknown().nullable(),
   ticket_id: z.number(),
-  notified_to: z.array(z.string().email()),
+  notified_to: z.array(z.email()),
   attachments: z.array(z.unknown()),
   created_at: z.string(),
   updated_at: z.string(),

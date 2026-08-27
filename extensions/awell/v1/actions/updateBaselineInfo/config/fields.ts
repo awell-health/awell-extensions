@@ -1,5 +1,5 @@
 import { type Field, FieldType } from '@awell-health/extensions-core'
-import { z, type ZodTypeAny } from 'zod'
+import { z, type ZodType } from 'zod'
 import { type BaselineInfoInput } from '../../../gql/graphql'
 import { isEmpty, isNil } from 'lodash'
 
@@ -114,4 +114,4 @@ export const FieldsValidationSchema = z.object({
         return z.NEVER
       }
     }),
-} satisfies Record<keyof typeof fields, ZodTypeAny>)
+} satisfies Record<keyof typeof fields, ZodType>)

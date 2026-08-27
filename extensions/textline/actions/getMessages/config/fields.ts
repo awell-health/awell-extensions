@@ -1,4 +1,4 @@
-import { z, type ZodTypeAny } from 'zod'
+import { z, type ZodType } from 'zod'
 import { E164PhoneValidationOptionalSchema } from '@awell-health/extensions-core'
 import {
   type Field,
@@ -26,7 +26,8 @@ export const fields = {
   departmentId: {
     id: 'departmentId',
     label: 'Department Id',
-    description: 'The ID of the department from which you want to retrieve the message. Defaults to to your first department.',
+    description:
+      'The ID of the department from which you want to retrieve the message. Defaults to to your first department.',
     type: FieldType.STRING,
     required: false,
   },
@@ -35,9 +36,9 @@ export const fields = {
 export const FieldsValidationSchema = z.object({
   phoneNumber: E164PhoneValidationOptionalSchema,
   afterMessageId: z.optional(
-    z
-      .string()
-      .min(10, { message: 'Message ID needs to be bigger than 10 characters.' })
+    z.string().min(10, {
+      error: 'Message ID needs to be bigger than 10 characters.',
+    }),
   ),
-  departmentId: z.optional(z.string())
-} satisfies Record<keyof typeof fields, ZodTypeAny>)
+  departmentId: z.optional(z.string()),
+} satisfies Record<keyof typeof fields, ZodType>)

@@ -1,4 +1,4 @@
-import { z, type ZodTypeAny } from 'zod'
+import { z, type ZodType } from 'zod'
 import {
   type Field,
   FieldType,
@@ -54,7 +54,7 @@ export const FieldsValidationSchema = z.object({
   patientId: NumericIdSchema,
   physicianId: NumericIdSchema.optional(),
   practiceId: NumericIdSchema.optional(),
-  from_date: z.string().datetime().optional(),
-  to_date: z.string().datetime().optional(),
+  from_date: z.iso.datetime().optional(),
+  to_date: z.iso.datetime().optional(),
   event_type: z.literal('appointment').optional(),
-} satisfies Record<keyof typeof fields, ZodTypeAny>)
+} satisfies Record<keyof typeof fields, ZodType>)

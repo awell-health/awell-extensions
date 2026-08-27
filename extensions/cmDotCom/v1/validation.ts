@@ -7,7 +7,7 @@ export const FromNameValidationSchema = z
     z.string().max(11),
     // 16 digits
     z.string().max(16).regex(/^\d+$/, {
-      message:
+      error:
         '"From/sender name" can contain either up to 11 alphanumerical characters or up to 16 digits',
     }),
   ])

@@ -1,5 +1,5 @@
 import { type Setting } from '@awell-health/extensions-core'
-import { z, type ZodTypeAny } from 'zod'
+import { z, type ZodType } from 'zod'
 
 export const settings = {
   cloudName: {
@@ -32,4 +32,4 @@ export const SettingsValidationSchema = z.object({
   cloudName: z.string(),
   uploadPreset: z.string(),
   folder: z.optional(z.string()),
-} satisfies Record<keyof typeof settings, ZodTypeAny>)
+} satisfies Record<keyof typeof settings, ZodType>)

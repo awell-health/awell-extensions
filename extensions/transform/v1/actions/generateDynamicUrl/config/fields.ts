@@ -1,4 +1,4 @@
-import { z, type ZodTypeAny } from 'zod'
+import { z, type ZodType } from 'zod'
 import { type Field, FieldType } from '@awell-health/extensions-core'
 
 export const fields = {
@@ -21,11 +21,8 @@ export const fields = {
 } satisfies Record<string, Field>
 
 export const FieldsValidationSchema = z.object({
-  urlTemplate: z
-    .string()
-    .url()
-    .refine((input) => input.includes('[placeholder]'), {
-      message: 'Your URL template does not include a [placeholder]',
-    }),
+  urlTemplate: z.url().refine((input) => input.includes('[placeholder]'), {
+    error: 'Your URL template does not include a [placeholder]',
+  }),
   value: z.string().optional(),
-} satisfies Record<keyof typeof fields, ZodTypeAny>)
+} satisfies Record<keyof typeof fields, ZodType>)

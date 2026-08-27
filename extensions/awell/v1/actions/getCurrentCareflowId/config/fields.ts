@@ -1,6 +1,8 @@
 import { type Field } from '@awell-health/extensions-core'
-import { z, type ZodTypeAny } from 'zod'
+import { z, type ZodType } from 'zod'
 
 export const fields = {} satisfies Record<string, Field>
 
-export const FieldsValidationSchema = z.object({} satisfies Record<keyof typeof fields, ZodTypeAny>)
+export const FieldsValidationSchema = z.object(
+  {} satisfies Record<keyof typeof fields, ZodType>,
+)

@@ -1,6 +1,6 @@
 import { type Field, FieldType } from '@awell-health/extensions-core'
 import { isEmpty } from '@medplum/core'
-import z, { type ZodTypeAny } from 'zod'
+import z, { type ZodType } from 'zod'
 
 export const fields = {
   messageDataPoint: {
@@ -71,4 +71,4 @@ export const FieldsValidationSchema = z.object({
     }
   }),
   instructions: z.string().optional(),
-} satisfies Record<keyof typeof fields, ZodTypeAny>)
+} satisfies Record<keyof typeof fields, ZodType>)

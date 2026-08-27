@@ -1,4 +1,4 @@
-import { z, type ZodTypeAny } from 'zod'
+import { z, type ZodType } from 'zod'
 import { FieldType, type Field } from '@awell-health/extensions-core'
 
 export const fields = {
@@ -12,5 +12,5 @@ export const fields = {
 } satisfies Record<string, Field>
 
 export const FieldsValidationSchema = z.object({
-  email: z.string().email().min(1),
-} satisfies Record<keyof typeof fields, ZodTypeAny>)
+  email: z.email().min(1),
+} satisfies Record<keyof typeof fields, ZodType>)

@@ -1,6 +1,6 @@
 import { FieldType, type Field } from '@awell-health/extensions-core'
 import { isEmpty, isNil } from 'lodash'
-import z, { type ZodTypeAny } from 'zod'
+import z, { type ZodType } from 'zod'
 
 export const fields = {
   ticketId: {
@@ -65,4 +65,4 @@ export const FieldsValidationSchema = z.object({
     }),
   private: z.boolean().optional(),
   userId: z.coerce.number().optional(),
-} satisfies Record<keyof typeof fields, ZodTypeAny>)
+} satisfies Record<keyof typeof fields, ZodType>)

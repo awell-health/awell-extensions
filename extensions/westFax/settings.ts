@@ -1,5 +1,5 @@
 import { type Setting } from '@awell-health/extensions-core'
-import { z, type ZodTypeAny } from 'zod'
+import { z, type ZodType } from 'zod'
 
 export const settings = {
   username: {
@@ -36,11 +36,11 @@ export const settings = {
 
 export const SettingsValidationSchema = z.object({
   username: z.string().min(1, {
-    message: 'Missing "Ursername in the extension settings."',
+    error: 'Missing "Ursername in the extension settings."',
   }),
   password: z.string().min(1, {
-    message: 'Missing "Password in the extension settings."',
+    error: 'Missing "Password in the extension settings."',
   }),
   productId: z.string().optional(),
-  faceSheetUrl: z.string().url().optional().or(z.literal('')),
-} satisfies Record<keyof typeof settings, ZodTypeAny>)
+  faceSheetUrl: z.url().optional().or(z.literal('')),
+} satisfies Record<keyof typeof settings, ZodType>)

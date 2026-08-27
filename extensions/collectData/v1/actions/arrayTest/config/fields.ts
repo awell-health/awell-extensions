@@ -1,4 +1,4 @@
-import { z, type ZodTypeAny } from 'zod'
+import { z, type ZodType } from 'zod'
 import { type Field, FieldType } from '@awell-health/extensions-core'
 
 export const fields = {
@@ -71,14 +71,22 @@ export const fields = {
 // the numeric array is received as a string, so we need to parse it to an array
 
 export const FieldsValidationSchema = z.object({
-  stringArray: z.string().transform((str) => str.split(',').map((s) => s.trim())),
-  numericArray: z.string().transform((str) => str.split(',').map((s) => Number(s.trim()))),
-  anotherStringArray: z.string().transform((str) => str.split(',').map((s) => s.trim())),
-  anotherNumericArray: z.string().transform((str) => str.split(',').map((s) => Number(s.trim()))),
-} satisfies Record<keyof typeof fields, ZodTypeAny>)
+  stringArray: z
+    .string()
+    .transform((str) => str.split(',').map((s) => s.trim())),
+  numericArray: z
+    .string()
+    .transform((str) => str.split(',').map((s) => Number(s.trim()))),
+  anotherStringArray: z
+    .string()
+    .transform((str) => str.split(',').map((s) => s.trim())),
+  anotherNumericArray: z
+    .string()
+    .transform((str) => str.split(',').map((s) => Number(s.trim()))),
+} satisfies Record<keyof typeof fields, ZodType>)
 
 export const validateActionFields = (
-  fields: unknown
+  fields: unknown,
 ): z.infer<typeof FieldsValidationSchema> => {
   const parsedData = FieldsValidationSchema.parse(fields)
 

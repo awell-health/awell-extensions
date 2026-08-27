@@ -1,5 +1,5 @@
 import { isNil } from 'lodash'
-import { z, type ZodTypeAny } from 'zod'
+import { z, type ZodType } from 'zod'
 import { type Field, FieldType, type json } from '@awell-health/extensions-core'
 import { CommaSeparatedEmailsValidationSchema } from '../../../../../../src/lib/awell'
 
@@ -44,8 +44,8 @@ export const FieldsValidationSchema = z.object({
   to: CommaSeparatedEmailsValidationSchema.refine(
     (emails) => emails.length > 0,
     {
-      message: 'At least one email address is required',
-    }
+      error: 'At least one email address is required',
+    },
   ),
   subject: z.string(),
   template: z.string(),
@@ -61,10 +61,10 @@ export const FieldsValidationSchema = z.object({
         return z.NEVER
       }
     }),
-} satisfies Record<keyof typeof fields, ZodTypeAny>)
+} satisfies Record<keyof typeof fields, ZodType>)
 
 export const validateActionFields = (
-  fields: unknown
+  fields: unknown,
 ): z.infer<typeof FieldsValidationSchema> => {
   const parsedData = FieldsValidationSchema.parse(fields)
 

@@ -42,7 +42,7 @@ export const sendSms: Action<typeof fields, typeof settings> = {
             // if both `from` values missing - throw error
             if (isNil(value.settings.fromNumber) && isNil(value.fields.from)) {
               ctx.addIssue({
-                code: z.ZodIssueCode.custom,
+                code: 'custom',
                 fatal: true,
                 message:
                   '"From" number is missing in both settings and in the action field.',

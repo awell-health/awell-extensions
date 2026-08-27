@@ -1,5 +1,5 @@
 import { type Setting } from '@awell-health/extensions-core'
-import { z, type ZodTypeAny } from 'zod'
+import { z, type ZodType } from 'zod'
 
 export const settings = {
   testModeSecretKey: {
@@ -59,4 +59,4 @@ export const SettingsValidationSchema = z.object({
   testModePublishableKey: z.string().min(1),
   hostedPagesEnvironmentVariable: z.string().min(1),
   mode: z.enum(['Live', 'Test']),
-} satisfies Record<keyof typeof settings, ZodTypeAny>)
+} satisfies Record<keyof typeof settings, ZodType>)

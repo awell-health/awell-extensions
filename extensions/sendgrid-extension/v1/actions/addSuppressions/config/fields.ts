@@ -1,4 +1,4 @@
-import { z, type ZodTypeAny } from 'zod'
+import { z, type ZodType } from 'zod'
 import {
   type Field,
   FieldType,
@@ -28,6 +28,6 @@ export const FieldsValidationSchema = z.object({
   email: getEmailValidation(),
   groups: validateCommaSeparatedList(
     (value) => NumericIdSchema.safeParse(value).success,
-    true
+    true,
   ).optional(),
-} satisfies Record<keyof typeof fields, ZodTypeAny>)
+} satisfies Record<keyof typeof fields, ZodType>)

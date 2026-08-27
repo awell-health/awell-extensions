@@ -1,5 +1,5 @@
 import { type Setting } from '@awell-health/extensions-core'
-import { z, type ZodTypeAny } from 'zod'
+import { z, type ZodType } from 'zod'
 
 export const settings = {
   applicationId: {
@@ -30,12 +30,12 @@ export const settings = {
 
 export const SettingsValidationSchema = z.object({
   applicationId: z.string().nonempty({
-    message: 'Missing "Application ID in the extension settings."',
+    error: 'Missing "Application ID in the extension settings."',
   }),
   chatApiToken: z.string().nonempty({
-    message: 'Missing "Chat API token in the extension settings."',
+    error: 'Missing "Chat API token in the extension settings."',
   }),
   deskApiToken: z.string().nonempty({
-    message: 'Missing "Desk API token in the extension settings."',
+    error: 'Missing "Desk API token in the extension settings."',
   }),
-} satisfies Record<keyof typeof settings, ZodTypeAny>)
+} satisfies Record<keyof typeof settings, ZodType>)

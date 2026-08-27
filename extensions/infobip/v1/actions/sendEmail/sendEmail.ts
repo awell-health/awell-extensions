@@ -32,7 +32,7 @@ export const sendEmail: Action<typeof fields, typeof settings> = {
               isEmpty(value.settings.fromEmail)
             ) {
               ctx.addIssue({
-                code: z.ZodIssueCode.custom,
+                code: 'custom',
                 fatal: true,
                 message:
                   '"From" email is missing in both settings and in the action fields.',

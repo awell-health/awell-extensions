@@ -1,5 +1,5 @@
 import { type Field, FieldType } from '@awell-health/extensions-core'
-import z, { type ZodTypeAny } from 'zod'
+import z, { type ZodType } from 'zod'
 import { DISCLAIMER_MSG_FORM } from '../../../lib/constants'
 import {
   DisclaimerPlacementEnum,
@@ -71,4 +71,4 @@ export const FieldsValidationSchema = z.object({
   language: z.string().optional().default('Default'),
   disclaimerText: OptionalDisclaimerTextSchema,
   disclaimerPlacement: DisclaimerPlacementEnum.optional(),
-} satisfies Record<keyof typeof fields, ZodTypeAny>)
+} satisfies Record<keyof typeof fields, ZodType>)

@@ -1,5 +1,5 @@
 import { FieldType, type Field } from '@awell-health/extensions-core'
-import { type ZodObject, type ZodTypeAny } from 'zod'
+import { type ZodObject, type ZodType } from 'zod'
 import { CreateServiceRequestSchema } from '../../../fhir/schemas/resources/serviceRequest.schema'
 import {
   ServiceRequestStatusSchema,
@@ -63,5 +63,5 @@ export const fields = {
 
 export const FieldsValidationSchema =
   CreateServiceRequestSchema satisfies ZodObject<
-    Record<keyof typeof fields, ZodTypeAny>
+    Record<keyof typeof fields, ZodType>
   >

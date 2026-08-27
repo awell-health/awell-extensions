@@ -1,4 +1,4 @@
-import { z, type ZodTypeAny } from 'zod'
+import { z, type ZodType } from 'zod'
 import {
   type Field,
   FieldType,
@@ -41,7 +41,7 @@ export const fields = {
 } satisfies Record<string, Field>
 
 export const FieldsValidationSchema = z.object({
-  to: z.string().email(),
+  to: z.email(),
   subject: makeStringOptional(z.string()),
   templateId: z.number(),
   placeholders: z
@@ -56,4 +56,4 @@ export const FieldsValidationSchema = z.object({
         return z.NEVER
       }
     }),
-} satisfies Record<keyof typeof fields, ZodTypeAny>)
+} satisfies Record<keyof typeof fields, ZodType>)

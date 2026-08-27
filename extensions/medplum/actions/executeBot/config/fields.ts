@@ -1,6 +1,6 @@
 import { FieldType, type json, type Field } from '@awell-health/extensions-core'
 import { isNil } from 'lodash'
-import { z, type ZodTypeAny } from 'zod'
+import { z, type ZodType } from 'zod'
 
 export const fields = {
   botId: {
@@ -22,7 +22,7 @@ export const fields = {
 
 export const FieldsValidationSchema = z.object({
   botId: z.string().nonempty({
-    message: 'Missing "Bot ID"',
+    error: 'Missing "Bot ID"',
   }),
   body: z
     .optional(z.string())
@@ -36,4 +36,4 @@ export const FieldsValidationSchema = z.object({
         return z.NEVER
       }
     }),
-} satisfies Record<keyof typeof fields, ZodTypeAny>)
+} satisfies Record<keyof typeof fields, ZodType>)

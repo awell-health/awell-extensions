@@ -43,7 +43,7 @@ export const TaskSchema = z.object({
   id: z.string(),
   title: z.string(),
   description: z.string(),
-  due_at: z.string().datetime(),
+  due_at: z.iso.datetime(),
   status: TaskStatusSchema,
   task_type: z.string(),
   task_data: z.object({
@@ -51,9 +51,9 @@ export const TaskSchema = z.object({
     pathway: z.unknown(), // TODO: Add pathway schema
     activity: z.unknown(), // TODO: Add activity schema
   }),
-  completed_at: z.string().datetime().nullable(),
-  created_at: z.string().datetime(),
-  updated_at: z.string().datetime(),
+  completed_at: z.iso.datetime().nullable(),
+  created_at: z.iso.datetime(),
+  updated_at: z.iso.datetime(),
   patient_id: z.string(),
   performer: UserSchema.nullable().optional(),
   patient: z.unknown(), // TODO: Add patient schema

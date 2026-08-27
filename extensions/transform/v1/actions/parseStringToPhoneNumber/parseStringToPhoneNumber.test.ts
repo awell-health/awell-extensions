@@ -85,7 +85,7 @@ describe('Transform - Parse text to phone number', () => {
           expect(zodError.issues).toEqual(
             expect.arrayContaining([
               expect.objectContaining({
-                message: 'Phone number is invalid (INVALID_COUNTRY)',
+                error: 'Phone number is invalid (INVALID_COUNTRY)',
               }),
             ]),
           )
@@ -118,7 +118,7 @@ describe('Transform - Parse text to phone number', () => {
           expect(zodError.issues).toEqual(
             expect.arrayContaining([
               expect.objectContaining({
-                message: 'Phone number is invalid (INVALID_COUNTRY)',
+                error: 'Phone number is invalid (INVALID_COUNTRY)',
               }),
             ]),
           )
@@ -149,7 +149,7 @@ describe('Transform - Parse text to phone number', () => {
           expect(zodError.issues).toEqual(
             expect.arrayContaining([
               expect.objectContaining({
-                message: 'Phone number is invalid (TOO_SHORT)',
+                error: 'Phone number is invalid (TOO_SHORT)',
               }),
             ]),
           )

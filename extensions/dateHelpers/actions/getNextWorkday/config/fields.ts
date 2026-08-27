@@ -1,4 +1,4 @@
-import { z, type ZodTypeAny } from 'zod'
+import { z, type ZodType } from 'zod'
 import { FieldType, type Field } from '@awell-health/extensions-core'
 
 export const fields = {
@@ -32,4 +32,4 @@ export const FieldsValidationSchema = z.object({
   referenceDate: z.optional(z.coerce.date()),
   includeReferenceDate: z.boolean().optional().default(true),
   timezone: z.string().optional().default('America/Chicago'),
-} satisfies Record<keyof typeof fields, ZodTypeAny>)
+} satisfies Record<keyof typeof fields, ZodType>)

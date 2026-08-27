@@ -1,6 +1,6 @@
 import { type Field, FieldType } from '@awell-health/extensions-core'
 import { isEmpty, isNil } from 'lodash'
-import z, { type ZodTypeAny } from 'zod'
+import z, { type ZodType } from 'zod'
 
 const IdentifierOptionsSchema = z.enum(['id', 'email', 'cio_id'])
 
@@ -77,4 +77,4 @@ export const FieldsValidationSchema = z.object({
         return z.NEVER
       }
     }),
-} satisfies Record<keyof typeof fields, ZodTypeAny>)
+} satisfies Record<keyof typeof fields, ZodType>)

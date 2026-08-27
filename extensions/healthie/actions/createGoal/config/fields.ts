@@ -1,6 +1,6 @@
 import { FieldType, type Field } from '@awell-health/extensions-core'
 import { format, isAfter } from 'date-fns'
-import z, { type ZodTypeAny } from 'zod'
+import z, { type ZodType } from 'zod'
 
 export const fields = {
   healthiePatientId: {
@@ -53,7 +53,9 @@ export const FieldsValidationSchema = z.object({
     .union([z.coerce.date(), z.literal('')])
     .optional()
     .transform((date) =>
-      date !== undefined && date !== '' ? format(date, 'yyyy-MM-dd') : undefined
+      date !== undefined && date !== ''
+        ? format(date, 'yyyy-MM-dd')
+        : undefined,
     )
     .refine(
       (dueDateString) => {
@@ -64,6 +66,6 @@ export const FieldsValidationSchema = z.object({
       },
       {
         message: 'Due date must be at least 1 day in the future.',
-      }
+      },
     ),
-} satisfies Record<keyof typeof fields, ZodTypeAny>)
+} satisfies Record<keyof typeof fields, ZodType>)

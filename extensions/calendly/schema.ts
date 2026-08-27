@@ -1,7 +1,7 @@
 import { z } from 'zod'
 import { TriggerEvent } from './types'
 
-export const triggerEventSchema = z.nativeEnum(TriggerEvent)
+export const triggerEventSchema = z.enum(TriggerEvent)
 
 const questionAndAnswerSchema = z.object({
   question: z.string(),
@@ -43,7 +43,7 @@ export const baseWebhookPayloadSchema = z.object({
         z.object({
           user: z.string(),
           user_email: z.string(),
-        })
+        }),
       ),
       location: z.any(),
       name: z.string(),
@@ -60,7 +60,7 @@ export const baseWebhookPayloadSchema = z.object({
           email: z.string(),
           created_at: z.string(),
           updated_at: z.string().optional(),
-        })
+        }),
       ),
     }),
     uri: z.string(),

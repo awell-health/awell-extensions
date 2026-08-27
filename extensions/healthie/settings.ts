@@ -1,5 +1,5 @@
 import { type Setting } from '@awell-health/extensions-core'
-import { z, type ZodTypeAny } from 'zod'
+import { z, type ZodType } from 'zod'
 
 export const settings = {
   apiUrl: {
@@ -28,13 +28,13 @@ export const settings = {
 
 export const SettingsValidationSchema = z.object({
   apiUrl: z.string().nonempty({
-    message: 'Missing "API URL in the extension settings."',
+    error: 'Missing "API URL in the extension settings."',
   }),
   apiKey: z.string().nonempty({
-    message: 'Missing "API key in the extension settings."',
+    error: 'Missing "API key in the extension settings."',
   }),
   formAnswerMaxSizeKB: z
     .string()
     .optional()
     .transform((val) => (val ? parseInt(val) : undefined)),
-} satisfies Record<keyof typeof settings, ZodTypeAny>)
+} satisfies Record<keyof typeof settings, ZodType>)

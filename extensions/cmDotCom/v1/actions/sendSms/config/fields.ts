@@ -1,4 +1,4 @@
-import { z, type ZodTypeAny } from 'zod'
+import { z, type ZodType } from 'zod'
 import { E164PhoneValidationSchema } from '@awell-health/extensions-core'
 import {
   type Field,
@@ -37,4 +37,4 @@ export const FieldsValidationSchema = z.object({
   fromName: FromNameValidationSchema,
   recipient: E164PhoneValidationSchema,
   message: z.string(),
-} satisfies Record<keyof typeof fields, ZodTypeAny>)
+} satisfies Record<keyof typeof fields, ZodType>)

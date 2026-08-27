@@ -3,7 +3,7 @@ import {
   StringType,
   type Field,
 } from '@awell-health/extensions-core'
-import { type ZodObject, type ZodTypeAny } from 'zod'
+import { type ZodObject, type ZodType } from 'zod'
 import { PatientSchema } from '../../../fhir/schemas'
 
 export const fields = {
@@ -88,5 +88,5 @@ export const fields = {
 } satisfies Record<string, Field>
 
 export const FieldsValidationSchema = PatientSchema satisfies ZodObject<
-  Record<keyof typeof fields, ZodTypeAny>
+  Record<keyof typeof fields, ZodType>
 >

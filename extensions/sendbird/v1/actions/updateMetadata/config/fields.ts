@@ -1,4 +1,4 @@
-import { z, type ZodTypeAny } from 'zod'
+import { z, type ZodType } from 'zod'
 import { type Field, FieldType } from '@awell-health/extensions-core'
 import { MetadataValidationSchema } from '../../../validation'
 
@@ -23,4 +23,4 @@ export const fields = {
 export const FieldsValidationSchema = z.object({
   userId: z.string().nonempty(),
   metadata: MetadataValidationSchema,
-} satisfies Record<keyof typeof fields, ZodTypeAny>)
+} satisfies Record<keyof typeof fields, ZodType>)

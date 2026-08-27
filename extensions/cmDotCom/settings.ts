@@ -1,5 +1,5 @@
 import { type Setting } from '@awell-health/extensions-core'
-import { z, type ZodTypeAny } from 'zod'
+import { z, type ZodType } from 'zod'
 import { FromNameValidationSchema } from './v1/validation'
 
 export const settings = {
@@ -22,10 +22,8 @@ export const settings = {
 } satisfies Record<string, Setting>
 
 export const SettingsValidationSchema = z.object({
-  productToken: z
-    .string()
-    .nonempty({
-      message: 'Missing "product token in the extension settings."',
-    }),
+  productToken: z.string().nonempty({
+    error: 'Missing "product token in the extension settings."',
+  }),
   fromName: FromNameValidationSchema,
-} satisfies Record<keyof typeof settings, ZodTypeAny>)
+} satisfies Record<keyof typeof settings, ZodType>)

@@ -1,5 +1,5 @@
 import { type Setting } from '@awell-health/extensions-core'
-import { z, type ZodTypeAny } from 'zod'
+import { z, type ZodType } from 'zod'
 import { constructPrivateKey } from './lib/api/auth/constructPrivateKey'
 
 export const settings = {
@@ -38,14 +38,16 @@ export const settings = {
     label: 'KID',
     required: false,
     obfuscated: false,
-    description: 'For apps using JSON Web Key Sets (including dynamically registed clients), set this value to the kid of the target public key from your key set',
+    description:
+      'For apps using JSON Web Key Sets (including dynamically registed clients), set this value to the kid of the target public key from your key set',
   },
   jku: {
     key: 'jku',
     label: 'JKU',
     required: false,
     obfuscated: false,
-    description: 'For apps using JSON Web Key Set URLs, optionally set this value to the URL you registered on your application',
+    description:
+      'For apps using JSON Web Key Set URLs, optionally set this value to the URL you registered on your application',
   },
 } satisfies Record<string, Setting>
 
@@ -61,4 +63,4 @@ export const SettingsValidationSchema = z.object({
   privateKey: z.string().min(1).transform(constructPrivateKey),
   kid: z.string().optional(),
   jku: z.string().optional(),
-} satisfies Record<keyof typeof settings, ZodTypeAny>)
+} satisfies Record<keyof typeof settings, ZodType>)

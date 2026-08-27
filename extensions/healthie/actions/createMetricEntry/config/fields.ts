@@ -1,5 +1,5 @@
 import { type Field, FieldType } from '@awell-health/extensions-core'
-import { z, type ZodTypeAny } from 'zod'
+import { z, type ZodType } from 'zod'
 
 export const fields = {
   userId: {
@@ -29,4 +29,4 @@ export const FieldsValidationSchema = z.object({
   userId: z.string().nonempty(),
   category: z.string().nonempty(),
   metricStat: z.number(),
-} satisfies Record<keyof typeof fields, ZodTypeAny>)
+} satisfies Record<keyof typeof fields, ZodType>)

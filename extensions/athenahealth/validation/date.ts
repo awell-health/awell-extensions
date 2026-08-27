@@ -10,7 +10,7 @@ export const AwellToAthenaDateOnlySchema = z.string().transform((arg, ctx) => {
 
   if (!isValid(date)) {
     ctx.addIssue({
-      code: z.ZodIssueCode.custom,
+      code: 'custom',
       message: 'No valid date',
     })
     return z.NEVER
@@ -20,5 +20,5 @@ export const AwellToAthenaDateOnlySchema = z.string().transform((arg, ctx) => {
 })
 
 export const AwellToAthenaDateOnlyOptionalSchema = makeStringOptional(
-  AwellToAthenaDateOnlySchema
+  AwellToAthenaDateOnlySchema,
 )

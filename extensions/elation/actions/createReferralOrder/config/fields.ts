@@ -1,4 +1,4 @@
-import { z, type ZodTypeAny } from 'zod'
+import { z, type ZodType } from 'zod'
 import { NumericIdSchema } from '@awell-health/extensions-core'
 import { type Field, FieldType } from '@awell-health/extensions-core'
 import { AuthorizationForSchema } from '../../../validation/referralOrder.zod'
@@ -39,10 +39,12 @@ export const fields = {
     required: true,
     description: '',
     options: {
-      dropdownOptions: Object.values(AuthorizationForSchema.enum).map((template) => ({
-        label: template,
-        value: template,
-      })),
+      dropdownOptions: Object.values(AuthorizationForSchema.enum).map(
+        (template) => ({
+          label: template,
+          value: template,
+        }),
+      ),
     },
   },
   consultant_name: {
@@ -69,4 +71,4 @@ export const FieldsValidationSchema = z.object({
   authorization_for: AuthorizationForSchema,
   consultant_name: z.string(),
   specialty: z.string(),
-} satisfies Record<keyof typeof fields, ZodTypeAny>)
+} satisfies Record<keyof typeof fields, ZodType>)

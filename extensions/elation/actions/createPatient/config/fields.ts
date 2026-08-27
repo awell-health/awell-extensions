@@ -1,4 +1,4 @@
-import { z, type ZodTypeAny } from 'zod'
+import { z, type ZodType } from 'zod'
 import {
   DateOnlySchema,
   FieldType,
@@ -250,4 +250,4 @@ export const FieldsValidationSchema = z.object({
         .split(',')
         .map((tag) => tag.trim())
     }),
-} satisfies Record<keyof typeof fields, ZodTypeAny>)
+} satisfies Record<keyof typeof fields, ZodType>)

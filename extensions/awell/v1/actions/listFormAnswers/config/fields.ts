@@ -1,5 +1,5 @@
 import { type Field, FieldType } from '@awell-health/extensions-core'
-import { z, type ZodTypeAny } from 'zod'
+import { z, type ZodType } from 'zod'
 
 const LanguageEnum = z.enum(['English', 'Dutch', 'French'])
 export type OutputLanguageType = z.infer<typeof LanguageEnum>
@@ -87,4 +87,4 @@ export const FieldsValidationSchema = z.object({
   includeDescriptions: z.boolean().optional().default(true),
   includeMissingAnswers: z.boolean().optional().default(true),
   separator: z.string().optional(),
-} satisfies Record<keyof typeof fields, ZodTypeAny>)
+} satisfies Record<keyof typeof fields, ZodType>)

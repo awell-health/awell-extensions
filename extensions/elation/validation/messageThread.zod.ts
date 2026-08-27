@@ -11,11 +11,11 @@ export const ThreadMemberSchema = z
       .string()
       .nullable()
       .refine((val) => val === null || !isNaN(Date.parse(val)), {
-        message: "Invalid date format for 'ack_time'",
+        error: "Invalid date format for 'ack_time'",
       }),
   })
   .refine((data) => !(data.user !== null && data.group !== null), {
-    message:
+    error:
       'Should only ever be one of either a user or group set for the thread member', // Updated error message to match docs
   })
 
@@ -30,18 +30,18 @@ export const messageThreadSchema = z.object({
   sender: z.number().int().positive(),
   practice: z.number().int().positive(),
   document_date: z.string().refine((val) => !isNaN(Date.parse(val)), {
-    message: "Invalid date format for 'document_date'",
+    error: "Invalid date format for 'document_date'",
   }),
   chart_date: z.string().refine((val) => !isNaN(Date.parse(val)), {
-    message: "Invalid date format for 'chart_date'",
+    error: "Invalid date format for 'chart_date'",
   }),
   is_urgent: z.boolean(),
   members: z.array(CreateThreadMemberSchema),
   messages: z.array(
     z.object({
-      body: z.string().min(1, 'Message body is required'),
+      body: z.string().min(1, { error: 'Message body is required' }),
       send_date: z.string().refine((val) => !isNaN(Date.parse(val)), {
-        message: "Invalid date format for 'send_date'",
+        error: "Invalid date format for 'send_date'",
       }),
       sender: z.number().int().positive(),
     }),

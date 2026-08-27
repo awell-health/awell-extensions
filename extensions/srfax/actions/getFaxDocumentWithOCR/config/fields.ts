@@ -1,6 +1,6 @@
 import { type Field, FieldType } from '@awell-health/extensions-core'
 import { isEmpty, isNil } from 'lodash'
-import { type ZodTypeAny, z } from 'zod'
+import { z, type ZodType } from 'zod'
 
 export const zOcrProvider = z.enum(['awell-landing-ai'])
 
@@ -12,7 +12,8 @@ export const fields = {
   faxId: {
     id: 'faxId',
     label: 'Fax Id',
-    description: 'SRFax FaxDetailsID (the number after the "|" in FileName) or full FileName',
+    description:
+      'SRFax FaxDetailsID (the number after the "|" in FileName) or full FileName',
     type: FieldType.STRING,
     required: true,
   },
@@ -23,10 +24,12 @@ export const fields = {
     type: FieldType.STRING,
     required: true,
     options: {
-      dropdownOptions: Object.entries(OcrProviderOptions).map(([key, value]) => ({
-        label: value,
-        value: key,
-      })),
+      dropdownOptions: Object.entries(OcrProviderOptions).map(
+        ([key, value]) => ({
+          label: value,
+          value: key,
+        }),
+      ),
     },
   },
   ocrProviderApiKey: {
@@ -67,4 +70,4 @@ export const FieldsValidationSchema = z.object({
         return z.NEVER
       }
     }),
-} satisfies Record<keyof typeof fields, ZodTypeAny>)
+} satisfies Record<keyof typeof fields, ZodType>)

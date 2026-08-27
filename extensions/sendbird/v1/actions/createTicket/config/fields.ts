@@ -1,4 +1,4 @@
-import { z, type ZodTypeAny } from 'zod'
+import { z, type ZodType } from 'zod'
 import {
   type Field,
   FieldType,
@@ -66,10 +66,10 @@ export const FieldsValidationSchema = z.object({
   relatedChannelUrls: makeStringOptional(
     validateCommaSeparatedList(
       (value) => z.string().safeParse(value).success,
-      false
-    )
+      false,
+    ),
   ),
   groupKey: makeStringOptional(z.string().regex(/^[a-z0-9\-_]*$/)),
   priority: makeStringOptional(priorityEnum),
   customFields: makeStringOptional(CustomFieldsValidationSchema),
-} satisfies Record<keyof typeof fields, ZodTypeAny>)
+} satisfies Record<keyof typeof fields, ZodType>)

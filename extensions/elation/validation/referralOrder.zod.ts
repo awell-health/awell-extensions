@@ -26,8 +26,8 @@ export const resolutionSchema = z.object({
   resolving_document: z.number().nullable(),
   state: ResolutionStateSchema,
   note: z.string().nullable(),
-  created_date: z.string().datetime(), // Validates ISO datetime strings
-  deleted_date: z.string().datetime().nullable(),
+  created_date: z.iso.datetime(), // Validates ISO datetime strings
+  deleted_date: z.iso.datetime().nullable(),
 })
 
 export const icdCodesSchema = z.array(
@@ -44,7 +44,7 @@ export const referralOrderSchema = z.object({
   auth_number: z.string().nullable(),
   consultant_name: z.string(),
   short_consultant_name: z.string().optional(),
-  date_for_reEval: z.string().datetime().nullable(),
+  date_for_reEval: z.iso.datetime().nullable(),
   authorization_for_short: AuthorizationForShortSchema.nullable().optional(),
   practice: NumericIdSchema,
   patient: NumericIdSchema,

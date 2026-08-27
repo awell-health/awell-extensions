@@ -4,7 +4,7 @@ import {
   StatusSchema,
 } from '../../../lib/api/customFhirSchemas/DocumentReference'
 import { startCase } from 'lodash'
-import z, { type ZodTypeAny } from 'zod'
+import z, { type ZodType } from 'zod'
 
 export const fields = {
   patientResourceId: {
@@ -59,4 +59,4 @@ export const FieldsValidationSchema = z.object({
   status: StatusSchema,
   type: TypeSchema,
   note: z.string().min(1),
-} satisfies Record<keyof typeof fields, ZodTypeAny>)
+} satisfies Record<keyof typeof fields, ZodType>)

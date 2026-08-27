@@ -1,5 +1,5 @@
 import { type Setting } from '@awell-health/extensions-core'
-import { z, type ZodTypeAny } from 'zod'
+import { z, type ZodType } from 'zod'
 import { DEFAULT_API_VERSION } from './api/constants'
 
 export const settings = {
@@ -57,4 +57,4 @@ export const SettingsValidationSchema = z.object({
   username: z.string().optional(),
   password: z.string().optional(),
   apiVersion: z.string().optional(),
-} satisfies Record<keyof typeof settings, ZodTypeAny>)
+} satisfies Record<keyof typeof settings, ZodType>)

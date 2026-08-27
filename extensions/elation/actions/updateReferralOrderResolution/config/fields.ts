@@ -1,4 +1,4 @@
-import { z, type ZodTypeAny } from 'zod'
+import { z, type ZodType } from 'zod'
 import {
   type Field,
   FieldType,
@@ -44,4 +44,4 @@ export const FieldsValidationSchema = z.object({
   // Making it optional as making it required would break the extension for existing workflows
   // I'll make it required once we've updated the Suvida flows
   resolvingDocument: NumericIdSchema.optional(),
-} satisfies Record<keyof typeof fields, ZodTypeAny>)
+} satisfies Record<keyof typeof fields, ZodType>)

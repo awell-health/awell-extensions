@@ -11,7 +11,7 @@ export const AthenaDateOnlySchema = z.string().transform((arg, ctx) => {
 
   if (!isValid(date)) {
     ctx.addIssue({
-      code: z.ZodIssueCode.custom,
+      code: 'custom',
       message: 'Not able to parse athena date',
     })
     return z.NEVER

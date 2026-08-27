@@ -1,5 +1,5 @@
 import { isEmpty, isNil } from 'lodash'
-import { z, type ZodTypeAny } from 'zod'
+import { z, type ZodType } from 'zod'
 import { FieldType, type Field } from '@awell-health/extensions-core'
 import { enumPathwayStatus, type PathwayStatus } from '@awell-health/awell-sdk'
 
@@ -67,4 +67,4 @@ export const FieldsValidationSchema = z.object({
       ),
   ),
   dayRange: z.optional(z.number()),
-} satisfies Record<keyof typeof fields, ZodTypeAny>)
+} satisfies Record<keyof typeof fields, ZodType>)

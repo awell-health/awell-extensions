@@ -1,3 +1,5 @@
 import { z } from 'zod'
 
-export const idSchema = z.string().nonempty({ message: 'Missing id' })
+export const idSchema = z.string().nonempty({
+  error: 'Missing id',
+})

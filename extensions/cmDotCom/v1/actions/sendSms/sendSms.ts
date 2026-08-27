@@ -38,7 +38,7 @@ export const sendSms: Action<typeof fields, typeof settings> = {
               isNil(value.fields.fromName)
             ) {
               ctx.addIssue({
-                code: z.ZodIssueCode.custom,
+                code: 'custom',
                 fatal: true,
                 message:
                   '"fromName" is missing in both settings and in the action field.',

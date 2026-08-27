@@ -1,4 +1,4 @@
-import { z, type ZodTypeAny } from 'zod'
+import { z, type ZodType } from 'zod'
 import { FieldType, type Field } from '@awell-health/extensions-core'
 
 export const fields = {
@@ -30,10 +30,10 @@ export const fields = {
 
 export const FieldsValidationSchema = z.object({
   workingHoursStart: z.string().regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/, {
-    message: 'Working hours start must be in HH:MM format (e.g., "09:00")',
+    error: 'Working hours start must be in HH:MM format (e.g., "09:00")',
   }),
   workingHoursEnd: z.string().regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/, {
-    message: 'Working hours end must be in HH:MM format (e.g., "17:00")',
+    error: 'Working hours end must be in HH:MM format (e.g., "17:00")',
   }),
   timezone: z.string().optional().default('UTC'),
-} satisfies Record<keyof typeof fields, ZodTypeAny>)
+} satisfies Record<keyof typeof fields, ZodType>)

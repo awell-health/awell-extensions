@@ -3,7 +3,7 @@ import {
   FieldType,
   NumericIdSchema,
 } from '@awell-health/extensions-core'
-import z, { type ZodTypeAny } from 'zod'
+import z, { type ZodType } from 'zod'
 
 /**
  * Available Templates
@@ -107,4 +107,4 @@ export const FieldsValidationSchema = z.object({
   text: z.string(),
   type: z.string().optional(),
   confidential: z.boolean().optional(),
-} satisfies Record<keyof typeof fields, ZodTypeAny>)
+} satisfies Record<keyof typeof fields, ZodType>)

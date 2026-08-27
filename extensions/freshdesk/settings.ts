@@ -1,5 +1,5 @@
 import { type Setting } from '@awell-health/extensions-core'
-import { z, type ZodTypeAny } from 'zod'
+import { z, type ZodType } from 'zod'
 
 export const FRESHDESK_IDENTIFIER_SYSTEM = 'http://freshdesk.io/'
 
@@ -24,4 +24,4 @@ export const settings = {
 export const SettingsValidationSchema = z.object({
   domain: z.string().min(1),
   apiKey: z.string().min(1),
-} satisfies Record<keyof typeof settings, ZodTypeAny>)
+} satisfies Record<keyof typeof settings, ZodType>)

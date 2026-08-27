@@ -23,8 +23,8 @@ const CommentSchema = z.object({
   comment: z.object({
     id: z.string(),
     text: z.string(),
-    created_at: z.string().datetime(),
-    updated_at: z.string().datetime(),
+    created_at: z.iso.datetime(),
+    updated_at: z.iso.datetime(),
     task_id: z.string(),
     created_by: UserSchema,
     updated_by: UserSchema,

@@ -3,7 +3,7 @@ import {
   FieldType,
   StringType,
 } from '@awell-health/extensions-core'
-import { z, type ZodTypeAny } from 'zod'
+import { z, type ZodType } from 'zod'
 import { formatISO } from 'date-fns'
 import { Sex } from '../../../gql/graphql'
 import { E164PhoneValidationOptionalSchema } from '@awell-health/extensions-core'
@@ -165,4 +165,4 @@ export const FieldsValidationSchema = z.object({
         }
       }, 'Invalid timezone. Must be a valid IANA timezone format'),
   ),
-} satisfies Record<keyof typeof fields, ZodTypeAny>)
+} satisfies Record<keyof typeof fields, ZodType>)

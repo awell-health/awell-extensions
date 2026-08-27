@@ -1,4 +1,4 @@
-import { z, type ZodTypeAny } from 'zod'
+import { z, type ZodType } from 'zod'
 import {
   type Field,
   FieldType,
@@ -50,14 +50,14 @@ export const fields = {
 
 export const FieldsValidationSchema = z.object({
   label: z.string().min(1),
-  url: z.string().url(),
+  url: z.url(),
   headers: makeStringOptional(JsonStringValidationSchema),
   queryParam: makeStringOptional(z.string()),
   mandatory: z.boolean(),
-} satisfies Record<keyof typeof fields, ZodTypeAny>)
+} satisfies Record<keyof typeof fields, ZodType>)
 
 export const validateActionFields = (
-  fields: unknown
+  fields: unknown,
 ): z.infer<typeof FieldsValidationSchema> => {
   const parsedData = FieldsValidationSchema.parse(fields)
 

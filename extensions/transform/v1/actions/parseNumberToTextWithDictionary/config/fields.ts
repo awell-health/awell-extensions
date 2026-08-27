@@ -1,4 +1,4 @@
-import { z, type ZodTypeAny } from 'zod'
+import { z, type ZodType } from 'zod'
 import { type Field, FieldType } from '@awell-health/extensions-core'
 import { isEmpty, isNil } from 'lodash'
 
@@ -39,4 +39,4 @@ export const DictionarySchema = z
 export const FieldsValidationSchema = z.object({
   number: z.union([z.number(), z.nan()]),
   dictionary: DictionarySchema,
-} satisfies Record<keyof typeof fields, ZodTypeAny>)
+} satisfies Record<keyof typeof fields, ZodType>)

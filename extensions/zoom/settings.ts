@@ -1,5 +1,5 @@
 import { type Setting } from '@awell-health/extensions-core'
-import { z, type ZodTypeAny } from 'zod'
+import { z, type ZodType } from 'zod'
 
 export const settings = {
   accountId: {
@@ -29,4 +29,4 @@ export const SettingsValidationSchema = z.object({
   accountId: z.string().min(1),
   clientId: z.string().min(1),
   clientSecret: z.string().min(1),
-} satisfies Record<keyof typeof settings, ZodTypeAny>)
+} satisfies Record<keyof typeof settings, ZodType>)

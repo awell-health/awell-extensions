@@ -59,9 +59,9 @@ const reminderSchema = z
           },
           {
             message: `Should be comma-separated list of days: ${intervalValueWeeklyEnum.options.join(
-              ', '
+              ', ',
             )}`,
-          }
+          },
         ),
       reminderIntervalValueOnce: z.literal(undefined),
       isReminderEnabled: z.literal(true),
@@ -90,7 +90,7 @@ const reminderSchema = z
       isNil(value.reminderIntervalValueOnce)
     ) {
       context.addIssue({
-        code: z.ZodIssueCode.custom,
+        code: 'custom',
         fatal: true,
         path: ['reminderIntervalValueOnce'],
         message: 'Value is not a valid ISO8601 date',
@@ -116,7 +116,7 @@ const reminderSchema = z
                 reminderIntervalValueOnce ?? reminderIntervalValue,
               reminder_time: reminderTime,
             },
-    })
+    }),
   )
 
 export const createTaskSchema = z

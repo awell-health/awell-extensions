@@ -4,7 +4,7 @@ import {
   NumericIdSchema,
   type Field,
 } from '@awell-health/extensions-core'
-import z, { type ZodTypeAny } from 'zod'
+import z, { type ZodType } from 'zod'
 
 export const fields = {
   patientId: {
@@ -91,4 +91,4 @@ export const FieldsValidationSchema = z.object({
   recipientId: NumericIdSchema.optional(),
   groupId: NumericIdSchema.optional(),
   isUrgent: z.boolean().optional().default(false),
-} satisfies Record<keyof typeof fields, ZodTypeAny>)
+} satisfies Record<keyof typeof fields, ZodType>)

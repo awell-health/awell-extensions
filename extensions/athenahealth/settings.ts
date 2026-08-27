@@ -1,5 +1,5 @@
 import { type Setting } from '@awell-health/extensions-core'
-import { z, type ZodTypeAny } from 'zod'
+import { z, type ZodType } from 'zod'
 
 export const settings = {
   auth_url: {
@@ -53,8 +53,8 @@ export const settings = {
 export const SettingsValidationSchema = z.object({
   client_id: z.string().min(1),
   client_secret: z.string().min(1),
-  auth_url: z.string().url(),
-  api_url: z.string().url(),
+  auth_url: z.url(),
+  api_url: z.url(),
   scope: z.string().min(1),
   practiceId: z.string().min(1),
-} satisfies Record<keyof typeof settings, ZodTypeAny>)
+} satisfies Record<keyof typeof settings, ZodType>)

@@ -1,4 +1,4 @@
-import { z, type ZodTypeAny } from 'zod'
+import { z, type ZodType } from 'zod'
 import { type Field, FieldType } from '@awell-health/extensions-core'
 
 export const fields = {
@@ -29,10 +29,10 @@ export const FieldsValidationSchema = z.object({
   clientLabel: z.string(),
   flowLabel: z.string(),
   variantLabel: z.optional(z.string()),
-} satisfies Record<keyof typeof fields, ZodTypeAny>)
+} satisfies Record<keyof typeof fields, ZodType>)
 
 export const validateActionFields = (
-  fields: unknown
+  fields: unknown,
 ): z.infer<typeof FieldsValidationSchema> => {
   const parsedData = FieldsValidationSchema.parse(fields)
 
