@@ -284,6 +284,7 @@ __metadata:
     graphql-request: "npm:5.1.0"
     graphql-tag: "npm:^2.12.7"
     gray-matter: "npm:^4.0.3"
+    helmet: "npm:^8.3.0"
     husky: "npm:^9.1.7"
     jest: "npm:^29.7.0"
     jest-fetch-mock: "npm:^3.2.0"
@@ -6945,6 +6946,13 @@ __metadata:
     capital-case: "npm:^1.0.4"
     tslib: "npm:^2.0.3"
   checksum: 10/571c83eeb25e8130d172218712f807c0b96d62b020981400bccc1503a7cf14b09b8b10498a962d2739eccf231d950e3848ba7d420b58a6acd2f9283439546cd9
+  languageName: node
+  linkType: hard
+
+"helmet@npm:^8.3.0":
+  version: 8.3.0
+  resolution: "helmet@npm:8.3.0"
+  checksum: 10/077db98df8f8ea749aeab0f56eabe1f37d0ca2ae475c095bc30adf850fe714ea67469dc94b6a6e1b786cde25a40452784e20b728e59c63baa2b18ba12518a6fe
   languageName: node
   linkType: hard
 

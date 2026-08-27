@@ -88,6 +88,7 @@ const RAW_RUNTIME_STATE =
           ["graphql-request", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:5.1.0"],\
           ["graphql-tag", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:2.12.7"],\
           ["gray-matter", "npm:4.0.3"],\
+          ["helmet", "npm:8.3.0"],\
           ["husky", "npm:9.1.7"],\
           ["jest", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:29.7.0"],\
           ["jest-fetch-mock", "npm:3.2.0"],\
@@ -441,6 +442,7 @@ const RAW_RUNTIME_STATE =
           ["graphql-request", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:5.1.0"],\
           ["graphql-tag", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:2.12.7"],\
           ["gray-matter", "npm:4.0.3"],\
+          ["helmet", "npm:8.3.0"],\
           ["husky", "npm:9.1.7"],\
           ["jest", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:29.7.0"],\
           ["jest-fetch-mock", "npm:3.2.0"],\
@@ -9149,6 +9151,15 @@ const RAW_RUNTIME_STATE =
           ["header-case", "npm:2.0.4"],\
           ["capital-case", "npm:1.0.4"],\
           ["tslib", "npm:2.7.0"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["helmet", [\
+      ["npm:8.3.0", {\
+        "packageLocation": "./.yarn/cache/helmet-npm-8.3.0-010a4aefcf-077db98df8.zip/node_modules/helmet/",\
+        "packageDependencies": [\
+          ["helmet", "npm:8.3.0"]\
         ],\
         "linkType": "HARD"\
       }]\

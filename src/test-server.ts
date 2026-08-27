@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import express from 'express'
 import bodyParser from 'body-parser'
+import helmet from 'helmet'
 import {
   type NewActivityPayload,
   type OnCompleteCallback,
@@ -12,6 +13,7 @@ import { extensions } from '../extensions'
 const app = express()
 const port = 3000
 
+app.use(helmet())
 app.use(bodyParser.json())
 
 app.post('/', async (req, res) => {
