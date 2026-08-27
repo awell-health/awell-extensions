@@ -1,12 +1,10 @@
 import { z } from 'zod'
 
 export const startQuerySchema = z.object({
-  patientId: z
-    .string({ errorMap: () => ({ message: 'Missing patientId' }) })
-    .min(1),
+  patientId: z.string({ error: 'Missing patientId' }).min(1),
   facilityId: z.string().optional(),
 })
 
 export const getUrlSchema = z.object({
-  fileName: z.string({ errorMap: () => ({ message: 'Missing fileName' }) }),
+  fileName: z.string({ error: 'Missing fileName' }),
 })

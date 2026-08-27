@@ -12,7 +12,7 @@ import { z } from 'zod'
  */
 const parseStructuredDataSchema = z.object({
   extracted_data: z
-    .record(z.any())
+    .record(z.string(), z.any())
     .describe('Extracted data matching the schema'),
   confidence_level: z
     .number()

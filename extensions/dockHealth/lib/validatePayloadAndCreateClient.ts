@@ -38,7 +38,7 @@ export const validatePayloadAndCreateClient: ValidateAndCreateClient = async ({
     settings,
   } = validate({
     schema: z.object({
-      fields: fieldsSchema,
+      fields: fieldsSchema as z.ZodType<z.infer<typeof fieldsSchema>>,
       settings: DockSettingsSchema,
       pathway: z.object({ id: z.string() }),
       activity: z.object({ id: z.string() }),

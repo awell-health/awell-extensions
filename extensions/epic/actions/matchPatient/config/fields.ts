@@ -32,7 +32,7 @@ export const fields = {
     type: FieldType.STRING,
     required: true,
     options: {
-      dropdownOptions: GenderSchema._def.values.map((value) => ({
+      dropdownOptions: GenderSchema.options.map((value) => ({
         value,
         label: startCase(value),
       })),

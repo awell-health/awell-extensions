@@ -51,5 +51,5 @@ export const FieldsValidationSchema = z.object({
         message: 'All values must be defined',
       }
     )
-    .pipe(z.record(z.unknown())),
+    .pipe(z.record(z.string(), z.unknown())),
 } satisfies Record<keyof typeof fields, ZodTypeAny>)

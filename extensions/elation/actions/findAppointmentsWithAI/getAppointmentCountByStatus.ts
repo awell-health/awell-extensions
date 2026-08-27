@@ -4,7 +4,7 @@ import { statusEnum } from '../../validation/appointment.zod'
 export const getAppointmentCountsByStatus = (
   appointments: AppointmentResponse[],
 ): Record<string, number> => {
-  return Object.values(statusEnum.Values).reduce<Record<string, number>>(
+  return Object.values(statusEnum.enum).reduce<Record<string, number>>(
     (acc, status) => {
       const cnt = appointments.filter(
         (appointment) => appointment?.status.status === status,

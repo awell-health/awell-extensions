@@ -93,7 +93,7 @@
   "dependencies": {
     "@airtop/sdk": "^0.1.47",
     "@awell-health/awell-sdk": "^0.1.32",
-    "@awell-health/extensions-core": "^1.1.20",
+    "@awell-health/extensions-core": "^1.1.21",
     "@awell-health/healthie-sdk": "^0.1.2",
     "@calcom/embed-react": "^1.5.3",
     "@dropbox/sign": "^1.11.0",
@@ -140,11 +140,11 @@
     "stripe": "^15.12.0",
     "twilio": "^5.13.1",
     "tzdata": "^1.0.50",
-    "zod": "^3.25.76",
-    "zod-validation-error": "^3.5.4"
+    "zod": "^4.4.3",
+    "zod-validation-error": "^5.0.0"
   },
   "resolutions": {
-    "zod": "^3.25.76",
+    "zod": "^4.4.3",
     "@langchain/core": "1.2.0",
     "axios": "^1.19.0",
     "jsonpath-plus": "^10.2.0",

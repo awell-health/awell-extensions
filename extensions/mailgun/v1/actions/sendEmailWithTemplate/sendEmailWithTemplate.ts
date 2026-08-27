@@ -33,7 +33,7 @@ export const sendEmailWithTemplate: Action<typeof fields, typeof settings> = {
       })
 
       const res = await mg.messages.create(domain, {
-        from: `${fromName} <${fromEmail as string}>`,
+        from: `${fromName} <${fromEmail}>`,
         to,
         subject,
         template,

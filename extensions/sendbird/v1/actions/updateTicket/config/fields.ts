@@ -32,10 +32,7 @@ export const fields = {
   },
 } satisfies Record<string, Field>
 
-const priorityEnum = z.enum<
-  TicketPriority,
-  [TicketPriority, ...TicketPriority[]]
->(Object.values(TicketPriority) as [TicketPriority, ...TicketPriority[]])
+const priorityEnum = z.enum(TicketPriority)
 
 export const FieldsValidationSchema = z.object({
   ticketId: z.coerce.number(),

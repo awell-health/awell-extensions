@@ -67,10 +67,9 @@ export const fields = {
   },
 } satisfies Record<string, Field>
 
-const resourceTypeEnum = z.enum<
-  ResourceType,
-  [ResourceType, ...ResourceType[]]
->([ResourceType.CONTACT, ResourceType.DEAL, ResourceType.LEAD])
+const resourceTypeEnum = z
+  .enum([ResourceType.CONTACT, ResourceType.DEAL, ResourceType.LEAD])
+  .transform((value) => value as ResourceType)
 
 export const FieldsValidationSchema = z.object({
   content: z.string().nonempty(),

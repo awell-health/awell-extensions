@@ -32,7 +32,7 @@ export const validatePayloadAndCreateSdks: ValidatePayloadAndCreateSdks =
       settings,
     } = validate({
       schema: z.object({
-        fields: fieldsSchema,
+        fields: fieldsSchema as z.ZodType<z.infer<typeof fieldsSchema>>,
         settings: SettingsValidationSchema,
       }),
       payload,

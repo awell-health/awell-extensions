@@ -22,8 +22,8 @@ export const IdentifiersSchema = z
   )
 
 export const TrackPersonEventInputSchema = z.object({
-  type: z.literal(EventType.Values.person),
-  action: z.literal(ActionType.Values.event),
+  type: z.literal(EventType.enum.person),
+  action: z.literal(ActionType.enum.event),
   identifiers: IdentifiersSchema,
   name: z.string().min(1),
   attributes: z.record(z.string(), z.string()).optional(),

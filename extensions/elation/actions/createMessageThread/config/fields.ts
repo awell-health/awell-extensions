@@ -79,16 +79,14 @@ export const FieldsValidationSchema = z.object({
   patientId: NumericIdSchema,
   senderId: NumericIdSchema,
   practiceId: NumericIdSchema,
-  documentDate: z
-    .string()
-    .optional()
-    .default(() => new Date().toISOString())
-    .pipe(DateTimeOptionalSchema),
-  chartDate: z
-    .string()
-    .optional()
-    .default(() => new Date().toISOString())
-    .pipe(DateTimeOptionalSchema),
+  documentDate: z.preprocess(
+    (value) => (value === undefined ? new Date().toISOString() : value),
+    DateTimeOptionalSchema,
+  ),
+  chartDate: z.preprocess(
+    (value) => (value === undefined ? new Date().toISOString() : value),
+    DateTimeOptionalSchema,
+  ),
   messageBody: z.string().min(1),
   recipientId: NumericIdSchema.optional(),
   groupId: NumericIdSchema.optional(),

@@ -90,7 +90,7 @@ const reminderSchema = z
       isNil(value.reminderIntervalValueOnce)
     ) {
       context.addIssue({
-        code: z.ZodIssueCode.invalid_date,
+        code: z.ZodIssueCode.custom,
         fatal: true,
         path: ['reminderIntervalValueOnce'],
         message: 'Value is not a valid ISO8601 date',

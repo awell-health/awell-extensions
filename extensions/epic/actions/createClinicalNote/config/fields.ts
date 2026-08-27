@@ -27,7 +27,7 @@ export const fields = {
     type: FieldType.STRING,
     required: true,
     options: {
-      dropdownOptions: StatusSchema._def.values.map((value) => ({
+      dropdownOptions: StatusSchema.options.map((value) => ({
         value,
         label: startCase(value),
       })),
@@ -39,7 +39,7 @@ export const fields = {
     type: FieldType.STRING,
     required: true,
     options: {
-      dropdownOptions: TypeSchema._def.values.map((value) => ({
+      dropdownOptions: TypeSchema.options.map((value) => ({
         value,
         label: startCase(value),
       })),

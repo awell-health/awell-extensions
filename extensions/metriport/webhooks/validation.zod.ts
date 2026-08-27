@@ -58,7 +58,7 @@ export const realtimeNotificationSchema = z.object({
     url: trimmedString.url(),
     patientId: trimmedString.min(1),
     externalId: trimmedString.optional(),
-    additionalIds: z.record(z.array(trimmedString)).optional(),
+    additionalIds: z.record(z.string(), z.array(trimmedString)).optional(),
   }),
 })
 
