@@ -5,6 +5,7 @@ import { hideBin } from 'yargs/helpers'
 import * as fs from 'fs'
 import * as path from 'path'
 import * as readline from 'readline'
+import { assertValidExtensionKey } from './lib/extensionKey'
 
 const EXTENSIONS_DIR = path.join(__dirname, '..', 'extensions')
 
@@ -115,7 +116,9 @@ async function gatherConfig(): Promise<ExtensionConfig> {
     // Extension key
     const defaultKey = toCamelCase(name)
     const keyInput = await question(rl, `Extension key [${defaultKey}]: `)
-    const key = keyInput.length > 0 ? keyInput : defaultKey
+    const key = assertValidExtensionKey(
+      keyInput.length > 0 ? keyInput : defaultKey,
+    )
 
     // Description
     const descriptionInput = await question(rl, 'Extension description: ')
@@ -442,7 +445,10 @@ function updateExtensionsIndex(config: ExtensionConfig): void {
 }
 
 async function generateExtension(config: ExtensionConfig): Promise<void> {
-  const extDir = path.join(EXTENSIONS_DIR, config.key)
+  // Validate before joining: path.join normalises '..' away, so a hostile key
+  // cannot be detected afterwards. Covers both the interactive and --key /
+  // --name (toCamelCase) entry points.
+  const extDir = path.join(EXTENSIONS_DIR, assertValidExtensionKey(config.key))
 
   // Check if extension already exists
   if (fs.existsSync(extDir)) {
