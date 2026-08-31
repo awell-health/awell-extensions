@@ -69,6 +69,34 @@ Visit [endpoint docs](https://docs.metriport.com/medical-api/api-reference/docum
 
 **NOTE: This endpoint returns a URL which you can use to download the specified Document using the file name provided from the List Documents endpoint.**
 
+## Get Facility by Name
+
+Gets the Facility with the given name, so a care flow can resolve a human-readable Facility name into the `facilityId` that the Patient and Document actions require.
+
+Metriport has no endpoint to filter Facilities by name, so this action lists all Facilities in your Organization and matches in memory. The name is matched case-insensitively and ignoring surrounding whitespace, and must match **exactly one** Facility: the action errors if no Facility matches, and also if several do, rather than guessing which one was meant.
+
+Visit [endpoint docs](https://docs.metriport.com/medical-api/api-reference/facility/list-facilities) for more info.
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `facilityName` | string | The name of the Facility to look up. Matched case-insensitively, ignoring surrounding whitespace, and must match exactly one Facility in your Organization. |
+
+The data points mirror the Facility object Metriport returns from [Get Facility](https://docs.metriport.com/medical-api/api-reference/facility/get-facility), one data point per response field:
+
+| Data point | Type | Metriport field | Description |
+| --- | --- | --- | --- |
+| `facilityId` | string | `id` | Metriport's UUID for the Facility. This is the `facilityId` the Patient and Document actions take. |
+| `facilityName` | string | `name` | The Facility name, as stored at Metriport — the canonical casing and spacing, not the name that was searched for. |
+| `npi` | string | `npi` | The Facility's National Provider Identifier. |
+| `tin` | string | `tin` | The Facility's Taxpayer Identification Number. Optional at Metriport; left unset when absent. |
+| `active` | boolean | `active` | Whether the Facility is active. Optional at Metriport; left unset when absent. |
+| `addressLine1` | string | `address.addressLine1` | Street address line 1. |
+| `addressLine2` | string | `address.addressLine2` | Street address line 2. Optional; left unset when absent. |
+| `city` | string | `address.city` | Address city. |
+| `state` | string | `address.state` | Two-letter US state or territory code. |
+| `zip` | string | `address.zip` | Address ZIP code. |
+| `country` | string | `address.country` | Address country — always `USA` at Metriport today. Left unset when absent. |
+
 ## Remove Patient from Cohort
 
 Removes the specified Patient from a cohort.
