@@ -4,13 +4,15 @@ on:
   release:
     types: [published]
 
-permissions:
-  id-token: write # Required for OIDC
-  contents: read
+# Nothing granted by default -- see create-release.yml. Same shape, not separately flagged.
+permissions: {}
 
 jobs:
   publish:
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write # Required for OIDC
+      contents: read
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
