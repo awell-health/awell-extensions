@@ -135,6 +135,7 @@
     "oauth-1.0a": "^2.2.6",
     "openai": "^6.44.0",
     "qrcode": "^1.5.4",
+    "request-filtering-agent": "^2.0.1",
     "sanitize-html": ">=2.17.0 <2.17.6",
     "stripe": "^15.12.0",
     "twilio": "^5.13.1",

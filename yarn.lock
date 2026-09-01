@@ -302,6 +302,7 @@ __metadata:
     openai: "npm:^6.44.0"
     prettier: "npm:^3.9.6"
     qrcode: "npm:^1.5.4"
+    request-filtering-agent: "npm:^2.0.1"
     rimraf: "npm:^4.4.1"
     sanitize-html: "npm:>=2.17.0 <2.17.6"
     stripe: "npm:^15.12.0"
@@ -7257,6 +7258,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"ipaddr.js@npm:^2.1.0":
+  version: 2.5.0
+  resolution: "ipaddr.js@npm:2.5.0"
+  checksum: 10/fa742655845845e38c3b6883c9bd9ff1d1619c73fe1d2ae97d96687daf3b8775394059135d9a91492c3f84019054ad876a9f73c43d2ecbe892aeb4b7ffb414f0
+  languageName: node
+  linkType: hard
+
 "is-array-buffer@npm:^3.0.4":
   version: 3.0.4
   resolution: "is-array-buffer@npm:3.0.4"
@@ -10805,6 +10813,15 @@ __metadata:
   version: 3.0.0
   resolution: "remove-undefined-objects@npm:3.0.0"
   checksum: 10/d0e4a323da9270cb1395e56d4b57832b1ede61f64ffa7bc60bc5c2d00ce52bd750058fa5e67f3869db44c153eb73d6b5ea8f6864c5c5c8592b271f8e6d7d9d6c
+  languageName: node
+  linkType: hard
+
+"request-filtering-agent@npm:^2.0.1":
+  version: 2.0.1
+  resolution: "request-filtering-agent@npm:2.0.1"
+  dependencies:
+    ipaddr.js: "npm:^2.1.0"
+  checksum: 10/dbe4d2631d343fb72fc4c32550b3d0fb6a5e8a8825df374b70192009ce35cb518a13433b40dcd993982a56e3f76f9ac6a52a5a10ea08ab455af13b01fc53dce5
   languageName: node
   linkType: hard
 

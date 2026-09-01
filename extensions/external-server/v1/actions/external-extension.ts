@@ -9,6 +9,7 @@ import { Category } from '@awell-health/extensions-core'
 import { type settings } from '../../settings'
 import { z } from 'zod'
 import axios from 'axios'
+import { useAgent } from 'request-filtering-agent'
 
 const fields: Fields = {
   extension: {
@@ -70,14 +71,22 @@ export const externalServer: Action<
   onActivityCreated: async (payload, onComplete, onError) => {
     const { fields, settings } = PayloadSchema.parse(payload)
     const clientPayload = fields.input ?? { fields: {}, settings: {} }
+    // settings.url arrives in the event payload. The filtering agent refuses private, loopback and
+    // reserved addresses -- after DNS resolution, so a hostname that resolves inward is caught too.
+    // AIK_js_ssrf flags the call regardless of the agent.
     const { data, status } = await axios.post<{
       data_points: any
       events: any
       response: 'success' | 'failure'
     }>(
+      // nosemgrep: AIK_js_ssrf
       `${settings.url}/${fields.extension}/${fields.action}`,
       { data: clientPayload },
-      { headers: { 'Content-Type': 'application/json' } },
+      {
+        headers: { 'Content-Type': 'application/json' },
+        httpAgent: useAgent(settings.url),
+        httpsAgent: useAgent(settings.url),
+      },
     )
     // eslint-disable-next-line @typescript-eslint/naming-convention
     const { data_points, events, response } = data
