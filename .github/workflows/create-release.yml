@@ -5,12 +5,15 @@ on:
     branches:
       - main
 
-permissions:
-  contents: write
+# Nothing is granted by default; the single job below asks for exactly what it needs. Scoping at
+# the workflow level hands the same token to every job, including any added later. Aikido 215263921.
+permissions: {}
 
 jobs:
   create-release:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write # creates the release commit, tag and GitHub release
     # Skip if this is a version bump commit from this workflow
     if: "!startsWith(github.event.head_commit.message, 'chore: release v')"
     steps:
