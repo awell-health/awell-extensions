@@ -106,6 +106,7 @@ const RAW_RUNTIME_STATE =
           ["openai", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:6.44.0"],\
           ["prettier", "npm:3.9.6"],\
           ["qrcode", "npm:1.5.4"],\
+          ["request-filtering-agent", "npm:2.0.1"],\
           ["rimraf", "npm:4.4.1"],\
           ["sanitize-html", "npm:2.17.5"],\
           ["stripe", "npm:15.12.0"],\
@@ -458,6 +459,7 @@ const RAW_RUNTIME_STATE =
           ["openai", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:6.44.0"],\
           ["prettier", "npm:3.9.6"],\
           ["qrcode", "npm:1.5.4"],\
+          ["request-filtering-agent", "npm:2.0.1"],\
           ["rimraf", "npm:4.4.1"],\
           ["sanitize-html", "npm:2.17.5"],\
           ["stripe", "npm:15.12.0"],\
@@ -9486,6 +9488,13 @@ const RAW_RUNTIME_STATE =
           ["ipaddr.js", "npm:1.9.1"]\
         ],\
         "linkType": "HARD"\
+      }],\
+      ["npm:2.5.0", {\
+        "packageLocation": "./.yarn/cache/ipaddr.js-npm-2.5.0-6c540d49e5-fa74265584.zip/node_modules/ipaddr.js/",\
+        "packageDependencies": [\
+          ["ipaddr.js", "npm:2.5.0"]\
+        ],\
+        "linkType": "HARD"\
       }]\
     ]],\
     ["is-array-buffer", [\
@@ -13534,6 +13543,16 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./.yarn/cache/remove-undefined-objects-npm-3.0.0-43eafa7243-d0e4a323da.zip/node_modules/remove-undefined-objects/",\
         "packageDependencies": [\
           ["remove-undefined-objects", "npm:3.0.0"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["request-filtering-agent", [\
+      ["npm:2.0.1", {\
+        "packageLocation": "./.yarn/cache/request-filtering-agent-npm-2.0.1-5d582ebec3-dbe4d2631d.zip/node_modules/request-filtering-agent/",\
+        "packageDependencies": [\
+          ["request-filtering-agent", "npm:2.0.1"],\
+          ["ipaddr.js", "npm:2.5.0"]\
         ],\
         "linkType": "HARD"\
       }]\

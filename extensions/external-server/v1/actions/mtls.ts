@@ -9,6 +9,7 @@ import { Category } from '@awell-health/extensions-core'
 import { type settings } from '../../settings'
 import { z } from 'zod'
 import axios from 'axios'
+import { RequestFilteringHttpsAgent } from 'request-filtering-agent'
 import { isNil } from 'lodash'
 
 const fields: Fields = {
@@ -64,14 +65,29 @@ export const mtls: Action<
     try {
       const requestBody = { data: clientPayload }
       helpers.log({ requestBody }, 'Sending mTLS request')
+      /**
+       * helpers.httpsAgent() is built by the host and carries the tenant's mTLS client
+       * certificate. axios accepts a single https agent, so we cannot simply add a filtering
+       * agent alongside it -- instead the filtering agent is constructed from the mTLS agent's
+       * own TLS options, giving one agent that presents the client certificate AND refuses
+       * private, loopback and reserved addresses (after DNS resolution, so a hostname that
+       * resolves inward is caught too). Both host implementations return a plain https.Agent,
+       * so copying its options is lossless; see docs/standards/sast-finding-remediation.md.
+       */
+      const mtlsAgent = helpers.httpsAgent()
       const { data, status } = await axios.post<{
         data_points: any
         events: any
         response: 'success' | 'failure'
-      }>(`${settings.url}`, requestBody, {
-        headers: { 'Content-Type': 'application/json' },
-        httpsAgent: helpers.httpsAgent(),
-      })
+      }>(
+        // nosemgrep: AIK_js_ssrf
+        `${settings.url}`,
+        requestBody,
+        {
+          headers: { 'Content-Type': 'application/json' },
+          httpsAgent: new RequestFilteringHttpsAgent({ ...mtlsAgent?.options }),
+        },
+      )
       if (status === 200) {
         await onComplete({
           data_points: { response: JSON.stringify(data) },

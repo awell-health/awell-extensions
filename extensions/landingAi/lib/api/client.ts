@@ -5,6 +5,7 @@ import {
   type AgenticDocumentAnalysisInputType,
   type AgenticDocumentAnalysisResponseType,
 } from './schema'
+import { useAgent } from 'request-filtering-agent'
 import { isNil } from 'lodash'
 
 export class LandingAiApiClient {
@@ -35,16 +36,26 @@ export class LandingAiApiClient {
      */
     if (mode === 'remoteFile') {
       if (!isNil(input.body.pdf)) {
+        // A care-flow-supplied URL fetched from inside the cluster. The filtering agent refuses
+        // private, loopback and reserved addresses -- after DNS resolution, so a hostname that
+        // resolves inward is caught too. AIK_js_ssrf flags the call regardless of the agent.
+        // nosemgrep: AIK_js_ssrf
         const fileRes = await axios.get<Readable>(input.body.pdf, {
           responseType: 'stream',
+          httpAgent: useAgent(input.body.pdf),
+          httpsAgent: useAgent(input.body.pdf),
         })
         form.append('pdf', fileRes.data, {
           filename: 'document.pdf',
           contentType: 'application/pdf',
         })
       } else if (!isNil(input.body.image)) {
+        // See the pdf branch above.
+        // nosemgrep: AIK_js_ssrf
         const fileRes = await axios.get<Readable>(input.body.image, {
           responseType: 'stream',
+          httpAgent: useAgent(input.body.image),
+          httpsAgent: useAgent(input.body.image),
         })
         form.append('image', fileRes.data, {
           filename: 'document.png',
