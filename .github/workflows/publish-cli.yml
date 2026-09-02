@@ -1,0 +1,138 @@
+name: Publish extension CLI
+
+# Publishes @awell-health/extension-cli (the `cli/` workspace) to npm whenever
+# anything under cli/ lands on main.
+#
+# Versioning is automatic, mirroring create-release.yml for the root package:
+# contributors never hand-edit cli/package.json's version (check-repo-conventions.sh
+# blocks that), CI bumps the patch and pushes it back.
+#
+# The bump commit carries [skip ci] so it re-triggers neither this workflow
+# (cli/package.json matches the path filter) nor create-release.yml.
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'cli/**'
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Build and pack only — do not bump, push or publish'
+        type: boolean
+        default: false
+
+# Nothing granted by default -- see create-release.yml.
+permissions: {}
+
+env:
+  WORKSPACE: '@awell-health/extension-cli'
+
+jobs:
+  publish-cli:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.VERSION_BUMP_TOKEN }}
+          fetch-depth: 0
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install dependencies
+        run: yarn
+
+      - name: Lint and typecheck the CLI
+        run: |
+          yarn eslint "cli/**/*.ts"
+          yarn tsc -p cli/tsconfig.json --noEmit
+
+      - name: Run CLI unit tests
+        run: yarn test-file "cli/src"
+
+      # Nothing below this point runs unless the checks above passed, so a broken
+      # commit never bumps the version or reaches npm.
+
+      - name: Bump the patch version and push it back to main
+        if: ${{ !inputs.dry_run }}
+        id: bump
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          current=$(jq -r '.version' cli/package.json)
+          published=$(yarn npm info "$WORKSPACE" --fields version --json 2>/dev/null | jq -r '.version // empty' || true)
+
+          # Very first release: ship exactly the version the repo declares, so
+          # cli/package.json's 0.1.0 is what actually lands on npm.
+          if [ -z "$published" ]; then
+            echo "version=$current" >> "$GITHUB_OUTPUT"
+            echo "First publish of $WORKSPACE — releasing $current as declared, no bump."
+            exit 0
+          fi
+
+          # create-release.yml pushes to main on every push, so a merge touching
+          # cli/** races with it by construction. Rebuild the bump on top of
+          # whatever main looks like now and retry rather than failing the release.
+          for attempt in 1 2 3 4 5; do
+            git fetch --quiet origin main
+            git reset --quiet --hard origin/main
+
+            current=$(jq -r '.version' cli/package.json)
+
+            # Bump from whichever is higher, so a half-finished release can't try
+            # to republish a version that already exists on npm.
+            base=$(printf '%s\n%s\n' "$current" "$published" | sort -V | tail -1)
+            next=$(printf '%s' "$base" | awk -F. '{printf "%d.%d.%d", $1, $2, $3 + 1}')
+
+            jq --arg v "$next" '.version = $v' cli/package.json > cli/package.json.tmp
+            mv cli/package.json.tmp cli/package.json
+
+            git add cli/package.json
+            git commit --quiet -m "chore: release extension-cli v$next [skip ci]"
+
+            if git push --quiet origin HEAD:main; then
+              echo "version=$next" >> "$GITHUB_OUTPUT"
+              echo "Bumped $WORKSPACE to $next (was $current, latest on npm $published)"
+              exit 0
+            fi
+
+            echo "Push rejected (attempt $attempt) — main moved. Retrying."
+            sleep $(( attempt * 5 ))
+          done
+
+          echo "Could not push the version bump after 5 attempts."
+          exit 1
+
+      - name: Build the CLI package
+        run: yarn workspace "$WORKSPACE" run build
+
+      - name: Pack (dry run)
+        if: ${{ inputs.dry_run }}
+        run: |
+          yarn workspace "$WORKSPACE" pack --out /tmp/extension-cli.tgz
+          tar tzf /tmp/extension-cli.tgz
+          echo "Dry run only — nothing bumped, pushed or published."
+
+      - name: Setup .yarnrc.yml
+        if: ${{ !inputs.dry_run }}
+        run: |
+          yarn config set npmAlwaysAuth true
+          yarn config set npmAuthToken $NPM_AUTH_TOKEN
+        env:
+          NPM_AUTH_TOKEN: ${{ secrets.NPM_AWELL_HEALTH_PUBLISHER }}
+
+      - name: Publish to NPM Registry
+        if: ${{ !inputs.dry_run }}
+        run: |
+          set -euo pipefail
+          yarn workspace "$WORKSPACE" npm publish
+          echo "Published $WORKSPACE@${{ steps.bump.outputs.version }}"

@@ -17,6 +17,7 @@
     "cli/**/*.ts"
   ],
   "exclude": [
-    "**/scripts/*.ts"
+    "**/scripts/*.ts",
+    "cli/dist"
   ]
 }

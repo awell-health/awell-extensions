@@ -13,6 +13,7 @@ node_modules
 
 # Compiled typescript
 dist/*
+cli/dist/
 
 .DS_Store
 

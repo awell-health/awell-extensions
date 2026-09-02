@@ -15,7 +15,8 @@
     ".yarn",
     "**/*.test.ts",
     "**/__tests__/**",
-    "**/__mocks__/**"
+    "**/__mocks__/**",
+    "cli/dist"
   ]
 }
 

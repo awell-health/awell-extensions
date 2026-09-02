@@ -1,16 +1,43 @@
 {
   "name": "@awell-health/extension-cli",
   "version": "0.1.0",
-  "private": true,
-  "description": "Dev CLI to list, describe, and run Awell extensions against their real handlers. Currently consumed in-repo (the entry point in src/index.ts wires in this repo's extension registry); the dependency surface below is declared here so the tool can be extracted into its own package later.",
+  "description": "Dev CLI to list, describe, and run Awell extensions against their real handlers. Registry-agnostic: the consuming repo injects its own extensions via runCli().",
+  "license": "UNLICENSED",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/awell-health/awell-extensions.git",
+    "directory": "cli"
+  },
+  "homepage": "https://github.com/awell-health/awell-extensions/tree/main/cli#readme",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "!dist/**/*.test.*",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "clean": "rimraf dist"
+  },
   "dependencies": {
-    "@awell-health/extensions-core": "1.1.17",
-    "yargs": "*"
+    "dotenv": "^16.4.0 || ^17.0.0",
+    "yargs": "^17.7.2"
+  },
+  "peerDependencies": {
+    "@awell-health/extensions-core": ">=1.1.17 <2"
   },
   "devDependencies": {
-    "@types/node": "*",
-    "@types/yargs": "*",
-    "ts-node": "*",
-    "typescript": "*"
+    "@awell-health/awell-sdk": "^0.1.32",
+    "@awell-health/extensions-core": "^1.1.21",
+    "@types/node": "^20.19.43",
+    "@types/yargs": "^17.0.35",
+    "typescript": "^5.9.3"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "publishConfig": {
+    "access": "restricted"
   }
 }

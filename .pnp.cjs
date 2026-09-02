@@ -13,12 +13,17 @@ const RAW_RUNTIME_STATE =
     {\
       "name": "@awell-health/awell-extensions",\
       "reference": "workspace:."\
+    },\
+    {\
+      "name": "@awell-health/extension-cli",\
+      "reference": "workspace:cli"\
     }\
   ],\
   "enableTopLevelFallback": true,\
   "ignorePatternData": "(^(?:\\\\.yarn\\\\/sdks(?:\\\\/(?!\\\\.{1,2}(?:\\\\/|$))(?:(?:(?!(?:^|\\\\/)\\\\.{1,2}(?:\\\\/|$)).)*?)|$))$)",\
   "fallbackExclusionList": [\
-    ["@awell-health/awell-extensions", ["workspace:."]]\
+    ["@awell-health/awell-extensions", ["workspace:."]],\
+    ["@awell-health/extension-cli", ["workspace:cli"]]\
   ],\
   "fallbackPool": [\
   ],\
@@ -487,6 +492,22 @@ const RAW_RUNTIME_STATE =
           ["lodash", "npm:4.18.1"]\
         ],\
         "linkType": "HARD"\
+      }]\
+    ]],\
+    ["@awell-health/extension-cli", [\
+      ["workspace:cli", {\
+        "packageLocation": "./cli/",\
+        "packageDependencies": [\
+          ["@awell-health/extension-cli", "workspace:cli"],\
+          ["@awell-health/awell-sdk", "npm:0.1.32"],\
+          ["@awell-health/extensions-core", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:1.1.21"],\
+          ["@types/node", "npm:20.19.43"],\
+          ["@types/yargs", "npm:17.0.35"],\
+          ["dotenv", "npm:17.4.2"],\
+          ["typescript", "patch:typescript@npm%3A5.9.3#optional!builtin<compat/typescript>::version=5.9.3&hash=5786d5"],\
+          ["yargs", "npm:17.7.3"]\
+        ],\
+        "linkType": "SOFT"\
       }]\
     ]],\
     ["@awell-health/extensions-core", [\
@@ -4018,6 +4039,14 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["@types/node", [\
+      ["npm:20.19.43", {\
+        "packageLocation": "./.yarn/cache/@types-node-npm-20.19.43-198d0ea14c-cb060ea17e.zip/node_modules/@types/node/",\
+        "packageDependencies": [\
+          ["@types/node", "npm:20.19.43"],\
+          ["undici-types", "npm:6.21.0"]\
+        ],\
+        "linkType": "HARD"\
+      }],\
       ["npm:22.19.17", {\
         "packageLocation": "./.yarn/cache/@types-node-npm-22.19.17-d804b75d05-8adcf9c2e9.zip/node_modules/@types/node/",\
         "packageDependencies": [\
@@ -6820,6 +6849,13 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./.yarn/cache/dotenv-npm-16.6.1-01334288ea-1d18971443.zip/node_modules/dotenv/",\
         "packageDependencies": [\
           ["dotenv", "npm:16.6.1"]\
+        ],\
+        "linkType": "HARD"\
+      }],\
+      ["npm:17.4.2", {\
+        "packageLocation": "./.yarn/cache/dotenv-npm-17.4.2-46ee0c966e-ca1b6f54d5.zip/node_modules/dotenv/",\
+        "packageDependencies": [\
+          ["dotenv", "npm:17.4.2"]\
         ],\
         "linkType": "HARD"\
       }]\

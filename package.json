@@ -2,6 +2,9 @@
   "name": "@awell-health/awell-extensions",
   "version": "2.1.170",
   "packageManager": "yarn@4.5.3",
+  "workspaces": [
+    "cli"
+  ],
   "main": "dist/src/index.js",
   "repository": {
     "type": "git",
@@ -25,7 +28,7 @@
     "test-server": "ts-node-dev --respawn --transpile-only ./src/test-server.ts",
     "prepare": "husky",
     "generate-extension": "ts-node ./scripts/generate-extension.ts",
-    "cli": "ts-node --transpile-only ./cli/src/index.ts"
+    "cli": "ts-node --transpile-only ./cli/local.ts"
   },
   "types": "dist/src/index.d.ts",
   "exports": {

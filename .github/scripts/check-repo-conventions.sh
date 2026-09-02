@@ -12,25 +12,34 @@ set -euo pipefail
 
 DIFF_RANGE="${1:---cached}"
 ROOT_PACKAGE_JSON="package.json"
+CLI_PACKAGE_JSON="cli/package.json"
 EXTENSIONS_DIR="extensions"
 
 fail=0
 
 # ---------------------------------------------------------------------------
-# Check 1 — Block manual version bumps in root package.json
-# CI (create-release.yml) auto-bumps patch on every merge to main. A manual
-# bump in a PR conflicts and gets overwritten. See skills/pr-conventions/SKILL.md §0/§10.
+# Check 1 — Block manual version bumps in auto-versioned package.json files
+# Both of these are bumped by CI on merge to main -- the root package by
+# create-release.yml, the CLI workspace by publish-cli.yml. A manual bump in a
+# PR conflicts and gets overwritten. See skills/pr-conventions/SKILL.md §0/§10.
 # ---------------------------------------------------------------------------
-if git diff "$DIFF_RANGE" --name-only -- "$ROOT_PACKAGE_JSON" 2>/dev/null | grep -q .; then
-  if git diff "$DIFF_RANGE" -U0 -- "$ROOT_PACKAGE_JSON" 2>/dev/null \
-      | grep -E '^[+-][[:space:]]*"version"[[:space:]]*:' >/dev/null; then
-    echo "❌ Blocked: do not bump the \"version\" field in $ROOT_PACKAGE_JSON."
-    echo "   CI (create-release.yml) auto-bumps patch on every merge to main;"
-    echo "   a manual bump conflicts and is overwritten."
-    echo "   See skills/pr-conventions/SKILL.md §0 and §10."
-    fail=1
-  fi
-fi
+check_no_manual_version_bump() {
+  manifest="$1"
+  workflow="$2"
+
+  git diff "$DIFF_RANGE" --name-only -- "$manifest" 2>/dev/null | grep -q . || return 0
+  git diff "$DIFF_RANGE" -U0 -- "$manifest" 2>/dev/null \
+    | grep -E '^[+-][[:space:]]*"version"[[:space:]]*:' >/dev/null || return 0
+
+  echo "❌ Blocked: do not bump the \"version\" field in $manifest."
+  echo "   CI ($workflow) auto-bumps patch on every merge to main;"
+  echo "   a manual bump conflicts and is overwritten."
+  echo "   See skills/pr-conventions/SKILL.md §0 and §10."
+  fail=1
+}
+
+check_no_manual_version_bump "$ROOT_PACKAGE_JSON" "create-release.yml"
+check_no_manual_version_bump "$CLI_PACKAGE_JSON" "publish-cli.yml"
 
 # ---------------------------------------------------------------------------
 # Check 2 — Block JSON manifest files at extension roots

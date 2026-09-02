@@ -25,7 +25,7 @@ Derived from analysing the last ~200 PRs and ~50 commits on `main` in this repo.
 
 - **Default branch is `main`.** Open all PRs against `main` unless explicitly told otherwise.
 - **Squash merge is the dominant practice.** Your PR title becomes the squash commit subject on `main` (with ` (#NNN)` appended). Write the PR title as if it were the commit title.
-- **Do NOT bump `package.json` version.** CI (`create-release.yml`) auto-bumps patch on every merge to `main` and publishes to npm. A version bump in your PR will conflict / be overwritten.
+- **Do NOT bump any `package.json` version.** CI auto-bumps patch on every merge to `main` and publishes to npm — the root package via `create-release.yml`, and `cli/package.json` via `publish-cli.yml` whenever `cli/**` changes. A version bump in your PR will conflict / be overwritten.
 - **Do NOT add a `release/*` branch.** Those are owned by the release workflow for beta testing.
 - **Do NOT manually add `Review effort 1/5`–`5/5` labels.** CodiumAI PR-Agent applies them automatically.
 - **No `CONTRIBUTING.md` or `.github/PULL_REQUEST_TEMPLATE.md` exists in-repo.** External contributing guidelines live at https://developers.awellhealth.com/awell-extensions/docs/getting-started/contributing-guidelines — your PR should still follow the de facto structure in §5 below.
@@ -206,7 +206,7 @@ Everything else (`Review effort 1/5`–`5/5`, `dependencies`, `bot`) is applied 
 - [ ] `yarn lint` passes (not enforced by CI but requested)
 - [ ] If you added a new extension: it's registered in `extensions/index.ts`, has non-empty `README.md` (frontmatter) + `CHANGELOG.md`, every `Field.id` equals its key
 - [ ] If you modified an existing extension: its `CHANGELOG.md` has a new entry under `## Unreleased` (or the appropriate section)
-- [ ] **You did NOT bump `package.json` version** (CI does that)
+- [ ] **You did NOT bump any `package.json` version** — root or `cli/` (CI does that)
 - [ ] PR targets `main`
 
 ---
@@ -261,7 +261,7 @@ This repo values small PRs. From the last 30 merged PRs the median is **4 files 
 
 ## 10. Common gotchas
 
-- **Don't bump `package.json` version.** This is the most common agent mistake. CI bumps patch on every merge; a manual bump in your PR conflicts and gets overwritten.
+- **Don't bump a `package.json` version** (root or `cli/`). This is the most common agent mistake. CI bumps patch on every merge; a manual bump in your PR conflicts and gets overwritten.
 - **Don't open PRs against `release/*`.** Those branches are owned by the release workflow.
 - **Don't add `(#NNN)` to your PR title.** GitHub adds it on squash.
 - **Don't pre-add `chore: release ...` style commits.** Those are CI-authored.

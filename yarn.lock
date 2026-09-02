@@ -330,6 +330,22 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@awell-health/extension-cli@workspace:cli":
+  version: 0.0.0-use.local
+  resolution: "@awell-health/extension-cli@workspace:cli"
+  dependencies:
+    "@awell-health/awell-sdk": "npm:^0.1.32"
+    "@awell-health/extensions-core": "npm:^1.1.21"
+    "@types/node": "npm:^20.19.43"
+    "@types/yargs": "npm:^17.0.35"
+    dotenv: "npm:^16.4.0 || ^17.0.0"
+    typescript: "npm:^5.9.3"
+    yargs: "npm:^17.7.2"
+  peerDependencies:
+    "@awell-health/extensions-core": ">=1.1.17 <2"
+  languageName: unknown
+  linkType: soft
+
 "@awell-health/extensions-core@npm:^1.1.21":
   version: 1.1.21
   resolution: "@awell-health/extensions-core@npm:1.1.21"
@@ -2649,6 +2665,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/node@npm:^20.19.43":
+  version: 20.19.43
+  resolution: "@types/node@npm:20.19.43"
+  dependencies:
+    undici-types: "npm:~6.21.0"
+  checksum: 10/cb060ea17ef9f1fc9d47cfb00098175b25fc6f6bae3c08a89ec7ba1be3353445ccf8af62d88c591e6413c09713f7705a71684a27ef01d2bccac4be96b00cacac
+  languageName: node
+  linkType: hard
+
 "@types/node@npm:^22":
   version: 22.19.17
   resolution: "@types/node@npm:22.19.17"
@@ -4956,6 +4981,13 @@ __metadata:
   version: 16.4.7
   resolution: "dotenv@npm:16.4.7"
   checksum: 10/f13bfe97db88f0df4ec505eeffb8925ec51f2d56a3d0b6d916964d8b4af494e6fb1633ba5d09089b552e77ab2a25de58d70259b2c5ed45ec148221835fc99a0c
+  languageName: node
+  linkType: hard
+
+"dotenv@npm:^16.4.0 || ^17.0.0":
+  version: 17.4.2
+  resolution: "dotenv@npm:17.4.2"
+  checksum: 10/ca1b6f54d58e39914901e1518958e86083aca8deb5aa2e7f2a51acd53291d97852479b0ab26ed949b6a45a0e9adcc7b0d1c3c72375e8ea670f7005e341c6daba
   languageName: node
   linkType: hard
 
@@ -13210,7 +13242,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"yargs@npm:^17.7.3":
+"yargs@npm:^17.7.2, yargs@npm:^17.7.3":
   version: 17.7.3
   resolution: "yargs@npm:17.7.3"
   dependencies:
