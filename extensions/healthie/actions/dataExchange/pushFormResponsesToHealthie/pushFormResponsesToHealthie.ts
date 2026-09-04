@@ -16,6 +16,7 @@ import {
   HealthieError,
   mapHealthieToActivityError,
 } from '../../../lib/sdk/graphql-codegen/errors'
+import { type CreateFormAnswerGroupInput } from '../../../lib/sdk/graphql-codegen/generated/sdk'
 
 export const pushFormResponsesToHealthie: Action<
   typeof fields,
@@ -128,7 +129,7 @@ export const pushFormResponsesToHealthie: Action<
     )
 
     try {
-      const createFormAnswerGroupInput = {
+      const createFormAnswerGroupInput: CreateFormAnswerGroupInput = {
         finished: true,
         custom_module_form_id: fields.healthieFormId,
         user_id: fields.healthiePatientId,
@@ -136,6 +137,7 @@ export const pushFormResponsesToHealthie: Action<
           ...input,
           user_id: fields.healthiePatientId,
         })),
+        metadata: fields.metadataFormAnswerGroup,
       }
 
       helpers.log(
