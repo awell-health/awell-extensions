@@ -1,5 +1,10 @@
 # Metriport changelog
 
+## September 2026
+
+- Add `Enroll in Monitoring` action: creates a Patient and enrolls them in real-time monitoring in one step. It takes the same Patient details as `Create Patient` but a **Cohort Name** instead of a Facility ID; by convention a Cohort and its Facility share a name, so both are resolved from that one input. Facility and Cohort lists are cached in memory for 24 hours per API credential, refreshing early (at most once a minute) when a name is not found.
+- **Breaking: remove the `Cohort` field from `Create Patient` and `Update Patient`.** Real-time monitoring enrollment now lives on `Enroll in Monitoring`; care flows that passed a cohort ID to `Create Patient` should switch to the new action.
+
 ## August 2026
 
 - Rename the `enrollment` webhook to `realtimeUpdate`. The old name described what Awell does with the notification rather than what Metriport sends, which read confusingly next to the genuine enrolment concepts (the `Cohort` field, enrolling a patient into a care flow). Behaviour is unchanged. **Breaking: the webhook endpoint URL changes, so any webhook already configured in the Metriport dashboard must be repointed.**

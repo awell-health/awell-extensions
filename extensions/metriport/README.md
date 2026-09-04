@@ -21,11 +21,19 @@ In order to set up this extension, **you will need to provide a Metriport API ke
 
 ## Create Patient
 
-Creates a Patient in Metriport for the specified Facility where the Patient is receiving care.
-
-Optionally, providing a **Cohort** ID enrolls the Patient in real-time monitoring by adding them to that cohort. Note that enrolling a Patient in real-time monitoring has downstream consequences: once you start receiving updates about the Patient, you are expected to contribute data back to Metriport.
+Creates a Patient in Metriport for the specified Facility where the Patient is receiving care. The Patient is not enrolled in real-time monitoring; use **Enroll in Monitoring** for that.
 
 Visit [endpoint docs](https://docs.metriport.com/medical-api/api-reference/patient/create-patient) for more info.
+
+## Enroll in Monitoring
+
+Creates a Patient in Metriport and enrolls them in real-time monitoring in one step. It takes the same Patient details as **Create Patient**, but instead of a Facility ID it takes a **Cohort Name**. By convention a Cohort and the Facility its Patients receive care at share the same name, so the action looks both up by that name: the Patient is created in the matching Facility and added to the matching Cohort.
+
+Names are matched case-insensitively, ignoring surrounding whitespace, and must identify exactly one Cohort and exactly one Facility. Both lists are cached in memory for 24 hours; a name that is not in the cached list triggers an early refresh (at most once a minute) before the action fails, so a Cohort or Facility created recently is still found.
+
+Note that enrolling a Patient in real-time monitoring has downstream consequences: once you start receiving updates about the Patient, you are expected to contribute data back to Metriport.
+
+Visit the endpoint docs for [create patient](https://docs.metriport.com/medical-api/api-reference/patient/create-patient), [list facilities](https://docs.metriport.com/medical-api/api-reference/facility/list-facilities) and [list cohorts](https://docs.metriport.com/medical-api/api-reference/cohort/list-cohorts) for more info.
 
 ## Update Patient
 
