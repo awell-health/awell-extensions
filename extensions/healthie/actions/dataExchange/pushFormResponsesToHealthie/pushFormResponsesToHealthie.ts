@@ -137,7 +137,9 @@ export const pushFormResponsesToHealthie: Action<
           ...input,
           user_id: fields.healthiePatientId,
         })),
-        metadata: fields.metadataFormAnswerGroup,
+        metadata: isEmpty(fields.metadataFormAnswerGroup)
+          ? undefined
+          : JSON.stringify(fields.metadataFormAnswerGroup),
       }
 
       helpers.log(
