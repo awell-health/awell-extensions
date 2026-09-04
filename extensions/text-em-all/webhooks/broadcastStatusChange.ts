@@ -21,7 +21,7 @@ export const broadcastStatusChange: Webhook<
 > = {
   key: 'broadcastStatusChange',
   dataPoints,
-  onWebhookReceived: async ({ payload }, onSuccess, onError) => {
+  onEvent: async ({ payload: { payload }, onSuccess, onError }) => {
     const { notification, payload: broadcastStatusNotification } = payload
 
     const skippedStatuses = ['created', 'ready', 'paused', 'resumed']
