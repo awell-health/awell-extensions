@@ -11,6 +11,7 @@ import { getConsolidatedQueryStatus } from './consolidated/getConsolidatedQueryS
 import { getWebhookBundle } from './webhookBundle/getWebhookBundle'
 import { removePatientFromCohort } from './cohort/removePatientFromCohort'
 import { getFacilityByName } from './facility/getFacilityByName'
+import { enrollInMonitoring } from './monitoring/enrollInMonitoring'
 
 export const actions = {
   getPatient,
@@ -26,4 +27,5 @@ export const actions = {
   getWebhookBundle,
   removePatientFromCohort,
   getFacilityByName,
+  enrollInMonitoring,
 }

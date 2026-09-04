@@ -22,7 +22,7 @@ export const createPatient: Action<
   category: Category.EHR_INTEGRATIONS,
   title: 'Create Patient',
   description:
-    'Creates a Patient in Metriport for the specified Facility where the Patient is receiving care. Passing in a cohort ID will register that patient for real-time monitoring.',
+    'Creates a Patient in Metriport for the specified Facility where the Patient is receiving care. To enroll the Patient in real-time monitoring, use the Enroll in Monitoring action instead.',
   fields: createFields,
   previewable: true,
   supports_automated_retries: true,
@@ -73,10 +73,6 @@ export const convertToMetriportPatient = (
       phone: patient.phone,
       email: patient.email,
     },
-    cohorts:
-      patient.cohort !== undefined && patient.cohort.length > 0
-        ? [patient.cohort]
-        : [],
   }
 
   if (

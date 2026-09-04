@@ -2,10 +2,11 @@ import { fromZodError } from 'zod-validation-error'
 import { ZodError } from 'zod'
 import { AxiosError } from 'axios'
 import { type OnErrorCallback } from '@awell-health/extensions-core'
+import { NameLookupError } from './nameLookup'
 
 export const handleErrorMessage = async (
   err: any,
-  onError: OnErrorCallback
+  onError: OnErrorCallback,
 ): Promise<void> => {
   if (err instanceof ZodError) {
     const error = fromZodError(err)
@@ -17,6 +18,19 @@ export const handleErrorMessage = async (
           error: {
             category: 'WRONG_INPUT',
             message: error.message,
+          },
+        },
+      ],
+    })
+  } else if (err instanceof NameLookupError) {
+    await onError({
+      events: [
+        {
+          date: new Date().toISOString(),
+          text: { en: err.message },
+          error: {
+            category: 'WRONG_INPUT',
+            message: err.message,
           },
         },
       ],
