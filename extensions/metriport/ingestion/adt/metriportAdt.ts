@@ -6,7 +6,6 @@ import {
 import { isNil, isUndefined, omitBy } from 'lodash'
 import { fetchBundle } from '../../shared/fetchBundle'
 import { type settings } from '../../settings'
-import { METRIPORT_IDENTIFIER_SYSTEM } from '../../shared/identifierSystem'
 import { MetriportWebhookType } from '../../webhooks/types'
 import { isAdtWebhookType } from '../../webhooks/validation.zod'
 import { demographicsFrom, findEncounter, visitIdFrom } from './bundle'
@@ -72,15 +71,10 @@ export const metriportAdt = withSettings<typeof settings>().endpoint({
       },
     ]
   },
-  identity: {
-    // The extension's own `identifier.system`. The SDK still requires it here;
-    // once `identity.system` is optional in extensions-core the runtime
-    // defaults it from the extension and this line goes.
-    system: METRIPORT_IDENTIFIER_SYSTEM,
-    // `externalId` is the id the patient was created in Metriport with, not
-    // Metriport's UUID, so every other feed about the patient matches on it.
-    resolveValue: (record) => record.externalId,
-  },
+  // No `system`: the runtime defaults it to the extension's `identifier.system`.
+  // `externalId` is the id the patient was created in Metriport with, not
+  // Metriport's UUID, so every other feed about the patient matches on it.
+  identifier: { resolveValue: (record) => record.externalId },
   run: async ({ record, store, events }) => {
     store.save('patient', demographicsFrom(record.bundle))
 
