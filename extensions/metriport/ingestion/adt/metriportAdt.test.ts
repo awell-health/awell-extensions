@@ -294,11 +294,11 @@ describe('Metriport - Ingestion - ADT notifications', () => {
     })
   })
 
-  describe('identity', () => {
-    test('resolves externalId under the extension identifier system, not the Metriport UUID', () => {
-      expect(metriportAdt.identity.system).toBe(Metriport.identifier?.system)
+  describe('identifier', () => {
+    test('resolves externalId, not the Metriport UUID, under the extension identifier system', () => {
+      expect(metriportAdt.identifier.system).toBeUndefined()
       expect(
-        metriportAdt.identity.resolveValue(
+        metriportAdt.identifier.resolveValue(
           record(MetriportWebhookType.PatientAdmit),
         ),
       ).toBe('mrn-12345')
