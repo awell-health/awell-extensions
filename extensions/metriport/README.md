@@ -15,6 +15,16 @@ To learn more visit [https://www.metriport.com/](https://www.metriport.com/)
 
 In order to set up this extension, **you will need to provide a Metriport API key**. You can obtain an API key via the Metriport dashboard by selecting the `Developers tab`. To learn more on how to get started with Metriport visit our [quick start docs](https://docs.metriport.com/medical-api/getting-started/quickstart) for our Medical API. Also, to better understand how our API keys work check out the [API Keys section](https://docs.metriport.com/home/api-info/api-keys) of our docs as well.
 
+# Ingestion
+
+## Metriport ADT notifications (`metriportAdt`)
+
+An ingestion endpoint for Metriport's [real-time patient notifications](https://docs.metriport.com/medical-api/handling-data/realtime-patient-notifications). Point the webhook URL in the Metriport dashboard at it and set the **Webhook Key** setting: every request is verified against Metriport's HMAC-SHA256 `x-metriport-signature` and the verification ping is answered with `pong`.
+
+Handled notification types are `patient.admit`, `patient.transfer`, `patient.discharge` and `medical.discharge-summary`. For each, the FHIR bundle behind the pre-signed `payload.url` is downloaded and the patient is resolved on `payload.externalId` (the id you gave Metriport when creating the patient, i.e. your own MRN). The endpoint saves the patient's demographics from the bundle and one encounter keyed on the visit number, so all four notifications about one visit update the same encounter (`in-progress` until the discharge, `finished` after it, with the last transfer destination as its location). Any other notification type is acknowledged and produces nothing.
+
+Events published, for care flows to trigger on: `patient.admitted`, `patient.transferred`, `patient.discharged` and `document.available` (on a discharge summary). Every handled notification also publishes `fhir.bundle-received`, which FHIR data movement listens for; it carries no clinical data, the bundle is looked up by ingestion id.
+
 # Custom Actions
 
 **GENERAL NOTE: Make sure to create Organizations and Facilities in Metriport before using this extension. A Patient must be associated with a Facility by providing the facilityId when stated in the actions.**
