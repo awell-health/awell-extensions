@@ -3,6 +3,7 @@ import { type Extension } from '@awell-health/extensions-core'
 import { settings } from './settings'
 import { AuthorType, Category } from '@awell-health/extensions-core'
 import { webhooks } from './webhooks'
+import { ingestion } from './ingestion'
 
 export const Metriport: Extension = {
   key: 'metriport',
@@ -19,4 +20,7 @@ export const Metriport: Extension = {
   settings,
   actions,
   webhooks,
+  /** The external system whose keys the ingestion endpoint stamps. */
+  identifier: { system: 'https://metriport.com' },
+  ingestion,
 }
