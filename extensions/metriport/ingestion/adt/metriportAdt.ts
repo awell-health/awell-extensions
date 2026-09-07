@@ -6,22 +6,12 @@ import {
 import { isNil, isUndefined, omitBy } from 'lodash'
 import { fetchBundle } from '../../shared/fetchBundle'
 import { type settings } from '../../settings'
+import { METRIPORT_IDENTIFIER_SYSTEM } from '../../shared/identifierSystem'
 import { MetriportWebhookType } from '../../webhooks/types'
 import { isAdtWebhookType } from '../../webhooks/validation.zod'
 import { demographicsFrom, findEncounter, visitIdFrom } from './bundle'
 import { adtRecordSchema, notificationSchema } from './schemas'
 import { verify } from './verify'
-
-/**
- * The namespace of `payload.externalId`: the id the customer gave Metriport
- * when they created the patient, which is their own MRN rather than
- * Metriport's UUID. Every other feed into the same care flow matches on it.
- *
- * v0 of the SDK takes `identity.system` as a constant, so the customer's own
- * namespace cannot be read from settings yet; this one URL stands for "the
- * externalId as relayed by Metriport" until it can.
- */
-export const EXTERNAL_ID_IDENTIFIER_SYSTEM = 'https://metriport.com/external-id'
 
 export const METRIPORT_ENCOUNTER_IDENTIFIER_SYSTEM =
   'https://metriport.com/encounter'
@@ -83,7 +73,12 @@ export const metriportAdt = withSettings<typeof settings>().endpoint({
     ]
   },
   identity: {
-    system: EXTERNAL_ID_IDENTIFIER_SYSTEM,
+    // The extension's own `identifier.system`. The SDK still requires it here;
+    // once `identity.system` is optional in extensions-core the runtime
+    // defaults it from the extension and this line goes.
+    system: METRIPORT_IDENTIFIER_SYSTEM,
+    // `externalId` is the id the patient was created in Metriport with, not
+    // Metriport's UUID, so every other feed about the patient matches on it.
     resolveValue: (record) => record.externalId,
   },
   run: async ({ record, store, events }) => {

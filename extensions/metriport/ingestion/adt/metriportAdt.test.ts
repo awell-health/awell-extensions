@@ -7,10 +7,10 @@ import {
 import { Metriport } from '../..'
 import { patientAdmitBundle } from '../../actions/webhookBundle/bundle/__testdata__/patientAdmitBundle'
 import { fetchBundle } from '../../shared/fetchBundle'
+import { METRIPORT_IDENTIFIER_SYSTEM } from '../../shared/identifierSystem'
 import { MetriportWebhookType } from '../../webhooks/types'
 import { dischargeSummaryBundle } from './__testdata__/dischargeSummaryBundle'
 import {
-  EXTERNAL_ID_IDENTIFIER_SYSTEM,
   METRIPORT_ENCOUNTER_IDENTIFIER_SYSTEM,
   metriportAdt,
 } from './metriportAdt'
@@ -102,7 +102,9 @@ describe('Metriport - Ingestion - ADT notifications', () => {
   describe('extension registration', () => {
     test('declares the ingestion endpoint and the identifier system it stamps', () => {
       expect(Metriport.ingestion).toContain(metriportAdt)
-      expect(Metriport.identifier).toEqual({ system: 'https://metriport.com' })
+      expect(Metriport.identifier).toEqual({
+        system: METRIPORT_IDENTIFIER_SYSTEM,
+      })
     })
 
     test('is a webhook-sourced endpoint keyed metriportAdt', () => {
@@ -293,8 +295,8 @@ describe('Metriport - Ingestion - ADT notifications', () => {
   })
 
   describe('identity', () => {
-    test("resolves the customer's own MRN (externalId), not the Metriport UUID", () => {
-      expect(metriportAdt.identity.system).toBe(EXTERNAL_ID_IDENTIFIER_SYSTEM)
+    test('resolves externalId under the extension identifier system, not the Metriport UUID', () => {
+      expect(metriportAdt.identity.system).toBe(Metriport.identifier?.system)
       expect(
         metriportAdt.identity.resolveValue(
           record(MetriportWebhookType.PatientAdmit),
