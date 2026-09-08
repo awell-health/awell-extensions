@@ -23,8 +23,12 @@ const parseJsonArg = (
   }
 }
 
+// `path` is always one of the operator's own `--*-file` CLI arguments (fields,
+// headers) on a local dev tool; there is no untrusted caller. Register:
+// docs/standards/sast-finding-remediation.md
 const readJsonFile = (path: string, label: string): Record<string, unknown> => {
   try {
+    // nosemgrep: AIK_ts_generic_path_traversal
     return JSON.parse(readFileSync(path, 'utf8')) as Record<string, unknown>
   } catch (err) {
     throw new Error(
@@ -156,9 +160,11 @@ void yargs(hideBin(process.argv))
       if (extensionKey === undefined || webhookKey === undefined) {
         throw new Error('Target must be <extension>/<webhook>')
       }
+      // `--payload-file` is the operator's own fixture path (see readJsonFile).
       const payload =
         argv.payloadFile !== undefined
-          ? JSON.parse(readFileSync(argv.payloadFile, 'utf8'))
+          ? // nosemgrep: AIK_ts_generic_path_traversal
+            JSON.parse(readFileSync(argv.payloadFile, 'utf8'))
           : argv.payload !== undefined
             ? JSON.parse(argv.payload)
             : {}
