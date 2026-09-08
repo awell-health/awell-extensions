@@ -4,9 +4,14 @@ import matter from 'gray-matter';
 import { algoliasearch } from 'algoliasearch';
 import { globSync } from 'glob';
 
-// Read environment variables
-const ALGOLIA_APP_ID = process.env.ALGOLIA_APP_ID || 'O53UAVSSKA';
-const ALGOLIA_ADMIN_KEY = process.env.ALGOLIA_ADMIN_KEY || 'f5f192b7de58b933d0a954cb7ba558b3';
+// Read environment variables. Both come from the workflow's secrets; there is deliberately no
+// fallback: a hardcoded admin key here was a leaked credential, and a missing variable should
+// fail the job rather than silently upload with a baked-in key.
+const { ALGOLIA_APP_ID, ALGOLIA_ADMIN_KEY } = process.env;
+if (!ALGOLIA_APP_ID || !ALGOLIA_ADMIN_KEY) {
+  console.error('ALGOLIA_APP_ID and ALGOLIA_ADMIN_KEY must be set in the environment');
+  process.exit(1);
+}
 const INDEX_NAME = 'awell_developers';
 const EXCLUDE_EXTENSIONS = ['wellinks', 'hello-world', 'avaAi'];
 
