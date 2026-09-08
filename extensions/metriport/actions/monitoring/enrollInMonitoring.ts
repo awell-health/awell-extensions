@@ -1,5 +1,8 @@
-import { type Action } from '@awell-health/extensions-core'
-import { Category } from '@awell-health/extensions-core'
+import {
+  type Action,
+  type DataPointDefinition,
+  Category,
+} from '@awell-health/extensions-core'
 import { type settings } from '../../settings'
 import { createMetriportApi } from '../../client'
 import { handleErrorMessage } from '../../shared/errorHandler'
@@ -12,6 +15,18 @@ import { convertToMetriportPatient } from '../patient/create'
 import { patientIdDataPoint } from '../patient/dataPoints'
 import { enrollInMonitoringFields } from './fields'
 import { enrollInMonitoringSchema } from './validation'
+
+const enrollInMonitoringDataPoints = {
+  ...patientIdDataPoint,
+  cohortId: {
+    key: 'cohortId',
+    valueType: 'string',
+  },
+  facilityId: {
+    key: 'facilityId',
+    valueType: 'string',
+  },
+} satisfies Record<string, DataPointDefinition>
 
 /**
  * Joins the messages of every rejected lookup into one error. It stays a
@@ -34,7 +49,7 @@ const combineLookupErrors = (
 export const enrollInMonitoring: Action<
   typeof enrollInMonitoringFields,
   typeof settings,
-  keyof typeof patientIdDataPoint
+  keyof typeof enrollInMonitoringDataPoints
 > = {
   key: 'enrollInMonitoring',
   category: Category.EHR_INTEGRATIONS,
@@ -44,7 +59,7 @@ export const enrollInMonitoring: Action<
   fields: enrollInMonitoringFields,
   previewable: true,
   supports_automated_retries: true,
-  dataPoints: patientIdDataPoint,
+  dataPoints: enrollInMonitoringDataPoints,
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
     helpers.log({ fields: payload.fields }, 'Processing enrollInMonitoring')
 
@@ -78,6 +93,8 @@ export const enrollInMonitoring: Action<
       await onComplete({
         data_points: {
           patientId: String(id),
+          cohortId: cohort.id,
+          facilityId: facility.id,
         },
       })
     } catch (err) {
