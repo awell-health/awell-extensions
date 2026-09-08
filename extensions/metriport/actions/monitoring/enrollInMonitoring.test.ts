@@ -99,7 +99,11 @@ describe('Metriport - Enroll in Monitoring', () => {
       'facility-1',
     )
     expect(onComplete).toHaveBeenCalledWith({
-      data_points: { patientId: 'patient-1' },
+      data_points: {
+        patientId: 'patient-1',
+        cohortId: 'cohort-1',
+        facilityId: 'facility-1',
+      },
     })
   })
 
