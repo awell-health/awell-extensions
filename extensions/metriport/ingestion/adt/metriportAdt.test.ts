@@ -1,6 +1,6 @@
 import crypto from 'crypto'
 import {
-  PayloadError,
+  PayloadValidationError,
   TestHelpers,
   VerificationError,
 } from '@awell-health/extensions-core'
@@ -266,7 +266,7 @@ describe('Metriport - Ingestion - ADT notifications', () => {
 
       await expect(
         getRecords(notification(MetriportWebhookType.PatientAdmit)),
-      ).rejects.toThrow(PayloadError)
+      ).rejects.toThrow(PayloadValidationError)
     })
 
     test('rejects a handled notification with no payload rather than acknowledging it', async () => {
@@ -278,7 +278,7 @@ describe('Metriport - Ingestion - ADT notifications', () => {
             type: MetriportWebhookType.PatientAdmit,
           },
         }),
-      ).rejects.toThrow(PayloadError)
+      ).rejects.toThrow(PayloadValidationError)
     })
 
     test('a record without an externalId fails the record schema, so no patient is minted for it', async () => {
