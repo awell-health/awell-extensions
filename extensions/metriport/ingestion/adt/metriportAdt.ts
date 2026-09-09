@@ -1,5 +1,5 @@
 import {
-  PayloadError,
+  PayloadValidationError,
   unhandled,
   withSettings,
 } from '@awell-health/extensions-core'
@@ -45,14 +45,16 @@ export const metriportAdt = withSettings<typeof settings>().endpoint({
     // Strict from here on: the type is one we handle, so a malformed payload is
     // a real problem and must not be swallowed by the acknowledge path above.
     if (isNil(payload)) {
-      throw new PayloadError(`${meta.type} notification carries no payload`)
+      throw new PayloadValidationError(
+        `${meta.type} notification carries no payload`,
+      )
     }
 
     const bundle = await fetchBundle(payload.url)
     const encounter = findEncounter(bundle)
     const visitId = isNil(encounter) ? undefined : visitIdFrom(encounter)
     if (isNil(visitId)) {
-      throw new PayloadError(
+      throw new PayloadValidationError(
         `${meta.type} bundle at ${payload.url} carries no Encounter to key the visit on`,
       )
     }
