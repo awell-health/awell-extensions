@@ -105,4 +105,52 @@ describe('Transform - htmlToPdf', () => {
 
     expect(htmlToBase64PdfSpy).toHaveBeenCalledWith('hello-world', options)
   })
+
+  test('Should parse options when Awell delivers them as a JSON string', async () => {
+    const options = {
+      format: 'A4',
+      printBackground: true,
+      margin: { top: '20mm', right: '15mm', bottom: '20mm', left: '15mm' },
+    }
+
+    const mockOnActivityCreateParams = generateTestPayload({
+      fields: {
+        htmlString: 'hello-world',
+        options: JSON.stringify(options),
+      },
+      settings: {},
+    })
+
+    await htmlToPdf.onEvent({
+      payload: mockOnActivityCreateParams,
+      onComplete,
+      onError,
+      helpers,
+      attempt: 1,
+    })
+
+    expect(onError).not.toHaveBeenCalled()
+    expect(htmlToBase64PdfSpy).toHaveBeenCalledWith('hello-world', options)
+  })
+
+  test('Should fail validation when options is not valid JSON', async () => {
+    const mockOnActivityCreateParams = generateTestPayload({
+      fields: {
+        htmlString: 'hello-world',
+        options: '{not json',
+      },
+      settings: {},
+    })
+
+    await htmlToPdf.onEvent({
+      payload: mockOnActivityCreateParams,
+      onComplete,
+      onError,
+      helpers,
+      attempt: 1,
+    })
+
+    expect(onError).toHaveBeenCalled()
+    expect(htmlToBase64PdfSpy).not.toHaveBeenCalled()
+  })
 })
