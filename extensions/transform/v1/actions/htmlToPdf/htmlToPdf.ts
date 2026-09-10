@@ -17,7 +17,7 @@ export const htmlToPdf: Action<
   category: Category.DATA,
   fields,
   dataPoints,
-  previewable: false,
+  previewable: true,
   onEvent: async ({ payload, onComplete, onError, helpers }) => {
     helpers.log({ fields: payload.fields }, 'Processing htmlToPdf')
 
