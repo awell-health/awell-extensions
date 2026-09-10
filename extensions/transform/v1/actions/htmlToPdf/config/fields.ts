@@ -33,7 +33,7 @@ const OptionsSchema = z
     if (typeof value !== 'string') return value
 
     const trimmed = value.trim()
-    if (isEmpty(trimmed)) return undefined
+    if (isEmpty(trimmed) || isNil(trimmed)) return undefined
 
     try {
       const parsed = JSON.parse(trimmed)
