@@ -36,18 +36,15 @@ export const handleErrorMessage = async (
       ],
     })
   } else if (err instanceof AxiosError) {
+    const message = formatAxiosError(err)
     await onError({
       events: [
         {
           date: new Date().toISOString(),
-          text: {
-            en: `${err.status ?? '(no status code)'} Error: ${err.message}`,
-          },
+          text: { en: message },
           error: {
             category: 'SERVER_ERROR',
-            message: `${err.status ?? '(no status code)'} Error: ${
-              err.message
-            }`,
+            message,
           },
         },
       ],
@@ -67,4 +64,34 @@ export const handleErrorMessage = async (
       ],
     })
   }
+}
+
+/**
+ * Metriport error bodies follow RFC 7807: `title` names the problem
+ * ("Missing or invalid parameters") and `detail` explains it
+ * ("Invalid uuid, on [facilityId]"). The Axios message only says
+ * "Request failed with status code 400", so prefer the body and fall back
+ * to the Axios message only when the body carries neither field.
+ */
+const formatAxiosError = (err: AxiosError): string => {
+  const status = err.status ?? '(no status code)'
+  const title = getBodyString(err, 'title')
+  const detail = getBodyString(err, 'detail')
+
+  if (title !== undefined && detail !== undefined) {
+    return `${status} ${title}: ${detail}`
+  }
+  if (title !== undefined) {
+    return `${status} ${title}`
+  }
+  return `${status} Error: ${detail ?? err.message}`
+}
+
+const getBodyString = (err: AxiosError, key: string): string | undefined => {
+  const data: unknown = err.response?.data
+  if (typeof data !== 'object' || data === null || !(key in data)) {
+    return undefined
+  }
+  const value = (data as Record<string, unknown>)[key]
+  return typeof value === 'string' && value !== '' ? value : undefined
 }

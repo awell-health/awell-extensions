@@ -69,10 +69,13 @@ export const convertToMetriportPatient = (
       country: patient.country,
     },
     personalIdentifiers: [],
-    contact: {
-      phone: patient.phone,
-      email: patient.email,
-    },
+  }
+
+  if (patient.phone || patient.email) {
+    patientMetriport.contact = {
+      phone: patient.phone || undefined,
+      email: patient.email || undefined,
+    }
   }
 
   if (
