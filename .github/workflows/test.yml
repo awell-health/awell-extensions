@@ -80,7 +80,6 @@ jobs:
       packages: write
       contents: read
     runs-on: ubuntu-latest
-    continue-on-error: true
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -95,17 +94,38 @@ jobs:
       - name: Install dependencies
         run: yarn
 
+      # Always exits 0, so this check stays green rather than showing a
+      # permanently red check that everyone learns to ignore. The findings go to
+      # the job summary instead. Make this strict once the backlog is cleared.
       - name: Lint
         run: |
-          echo "::notice::Advisory only - lint failures here do not block the PR."
-          yarn lint
+          set -uo pipefail
+          yarn lint 2>&1 | tee lint.txt || true
+          {
+            echo "### Lint (advisory - does not block)"
+            if grep -q "problems" lint.txt; then
+              echo ""
+              echo "\`\`\`"
+              grep -E "problems|potentially fixable" lint.txt || true
+              echo "\`\`\`"
+              echo ""
+              echo "Pre-existing backlog on \`main\`; see the job log for the full list."
+            else
+              echo ""
+              echo "No lint problems reported."
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
 
   # Single stable check to gate on, so branch protection does not have to name
   # each shard. Keep this job's name in sync with skills/pr-conventions §0.
   test:
     name: test
     needs: [build, test-shard]
-    if: always()
+    # Not `always()`: on a cancelled run (e.g. superseded by a newer commit via
+    # the concurrency rule above) `always()` would still run this job and report
+    # a spurious failure. `!cancelled()` skips it then, but still runs it - and
+    # so reports a real failure - when a dependency actually fails.
+    if: ${{ !cancelled() }}
     runs-on: ubuntu-latest
     steps:
       - name: Verify build and all test shards passed
