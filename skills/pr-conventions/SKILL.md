@@ -29,7 +29,7 @@ Derived from analysing the last ~200 PRs and ~50 commits on `main` in this repo.
 - **Do NOT add a `release/*` branch.** Those are owned by the release workflow for beta testing.
 - **Do NOT manually add `Review effort 1/5`–`5/5` labels.** CodiumAI PR-Agent applies them automatically.
 - **No `CONTRIBUTING.md` or `.github/PULL_REQUEST_TEMPLATE.md` exists in-repo.** External contributing guidelines live at https://developers.awellhealth.com/awell-extensions/docs/getting-started/contributing-guidelines — your PR should still follow the de facto structure in §5 below.
-- **Required CI check:** `test` job in `.github/workflows/test.yml` (runs `yarn install`, `yarn build`, `yarn test` on Node 22). Lint is NOT enforced by CI but is requested in the root README — run it locally.
+- **Required CI check:** `test` job in `.github/workflows/test.yml` — an aggregate gate that passes only when the `build` job (`yarn build` + `yarn tsc --noEmit -p tsconfig.json`) and all four sharded `test-shard` jobs (`yarn test --shard=<n>/4`) succeed, on Node 22. Gate on `test`, not on the individual shards. A parallel `lint (advisory)` job runs `yarn lint` but does NOT block (45 pre-existing errors on `main`) — still run lint locally.
 - **No signed-commit requirement.** No GPG signing needed.
 - **Branches are deleted on merge** (repo setting).
 - **Deterministic enforcement in place:** the no-version-bump rule in this section is enforced in CI by `.github/workflows/conventions.yml` (which runs `.github/scripts/check-repo-conventions.sh`). The PR-title rule in §3 is enforced by `.github/workflows/pr-title.yml`. Both block the action — they are not prompt-based. Other rules in this file are prompt-based guidance.

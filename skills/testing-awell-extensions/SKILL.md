@@ -97,6 +97,7 @@ yarn test-file sendMessageToChannel        # scope by action/file name (regex, m
 yarn test-file extensions/slack/           # scope to a whole extension
 yarn test                                  # ⚠️ ALL 300+ test files + the global field-validation flood — only for a full run
 yarn test-local                            # include *.local.test.ts (hit real APIs)
+yarn compile                               # type-check — Jest no longer does this for you
 ```
 
 > **Footgun — do not append a path to `yarn test`.** The `test` script ends in `--testPathIgnorePatterns`, a greedy array option. `yarn test extensions/slack/foo.test.ts` makes Jest treat `foo.test.ts` as an *ignore* pattern — so it runs **every other** test (300+ files, thousands of lines, and the noisy global `extensions.test.ts` field check) and skips the one you wanted. Always use `yarn test-file <pattern>` (it pins `--testPathPattern`), and never run bare `yarn test` just to check a single extension.
