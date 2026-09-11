@@ -21,7 +21,18 @@ In order to set up this extension, you will need to provide a:
 
 ### Send email
 
-Allows for sending a plain email to a recipient.
+Allows for sending a plain email to a recipient, optionally with a single file attachment.
+
+**Inputs:**
+
+- **To** (required): recipient email address(es), comma-separated.
+- **Subject** (required)
+- **Body** (required): HTML content of the email.
+- **Attachment content (base64)** (optional): the base64-encoded file to attach. Typically bound to the `base64Pdf` data point produced by the Transform extension's "HTML to PDF" action.
+- **Attachment filename** (optional, required when attachment content is set): the filename the recipient sees, including extension, e.g. `Health-Snapshot.pdf`.
+- **Attachment content type** (optional): MIME type of the attachment. Defaults to `application/pdf`.
+
+Leave the attachment fields empty to send the email without an attachment. Attachments are limited to 20 MB (decoded) to stay under Mailgun's 25 MB message limit.
 
 ### Send email with a template
 

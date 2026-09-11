@@ -4,25 +4,45 @@ import { Category } from '@awell-health/extensions-core'
 import { validateSettings, type settings } from '../../../settings'
 import mailgunSdk from '../../../common/sdk/mailgunSdk'
 import { getApiUrl } from '../../../common/utils'
-import { validateActionFields } from './config/fields'
+import { buildAttachment, validateActionFields } from './config/fields'
 import { fromZodError } from 'zod-validation-error'
 import { ZodError } from 'zod'
+import { isNil } from 'lodash'
 import { addActivityEventLog } from '../../../../../src/lib/awell/addEventLog'
 
 export const sendEmail: Action<typeof fields, typeof settings> = {
   key: 'sendEmail',
   title: 'Send email',
-  description: 'Send an email to a recipient of your choice.',
+  description:
+    'Send an email to a recipient of your choice, optionally with a file attachment.',
   category: Category.COMMUNICATION,
   fields,
   previewable: false,
   onEvent: async ({ payload, onComplete, onError, helpers }) => {
-    helpers.log({ fields: payload.fields }, 'Processing sendEmail')
+    /**
+     * The attachment content can be a large base64 string; log its size
+     * rather than the content itself.
+     */
+    const { attachmentContent, ...loggableFields } = payload.fields
+    helpers.log(
+      {
+        fields: {
+          ...loggableFields,
+          attachmentContentLength: isNil(attachmentContent)
+            ? 0
+            : String(attachmentContent).length,
+        },
+      },
+      'Processing sendEmail',
+    )
 
     try {
-      const { to, subject, body } = validateActionFields(payload.fields)
+      const validatedFields = validateActionFields(payload.fields)
+      const { to, subject, body } = validatedFields
       const { apiKey, domain, region, fromName, fromEmail, testMode } =
         validateSettings(payload.settings)
+
+      const attachment = buildAttachment(validatedFields)
 
       const mg = mailgunSdk.client({
         username: 'api',
@@ -36,14 +56,20 @@ export const sendEmail: Action<typeof fields, typeof settings> = {
         subject,
         html: body,
         'o:testmode': testMode,
+        ...(attachment !== undefined && { attachment }),
       })
+
+      const attachmentSummary =
+        attachment === undefined
+          ? ''
+          : `, with attachment "${attachment.filename}" (${attachment.data.length} bytes, ${attachment.contentType})`
 
       await onComplete({
         events: [
           addActivityEventLog({
             message: `Mailgun accepted the request, message ID: ${String(
               res?.id,
-            )}`,
+            )}${attachmentSummary}`,
           }),
         ],
       })
