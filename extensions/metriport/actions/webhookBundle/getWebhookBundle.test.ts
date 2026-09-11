@@ -1,9 +1,9 @@
 import { generateTestPayload } from '@/tests'
 import { getWebhookBundle } from './getWebhookBundle'
-import { fetchBundle } from './fetchBundle'
+import { fetchBundle } from '../../shared/fetchBundle'
 import { patientAdmitBundle } from './bundle/__testdata__/patientAdmitBundle'
 
-jest.mock('./fetchBundle')
+jest.mock('../../shared/fetchBundle')
 
 const mockedFetchBundle = fetchBundle as jest.MockedFunction<typeof fetchBundle>
 
