@@ -341,46 +341,10 @@ describe('Metriport - Ingestion - ADT notifications', () => {
       ])
     })
 
-    test('saves only the patient and the encounter', async () => {
+    test('saves only the encounter; the patient is created by identifier resolution, not written here', async () => {
       await run(record(MetriportWebhookType.PatientAdmit))
 
-      expect(store.save.mock.calls.map(([name]) => name)).toEqual([
-        'patient',
-        'encounter',
-      ])
-    })
-
-    test('writes patient demographics from the bundle', async () => {
-      await run(record(MetriportWebhookType.PatientAdmit))
-
-      expect(store.save).toHaveBeenCalledWith('patient', {
-        name: [{ use: 'official', family: 'Johnson', given: ['Sarah'] }],
-        gender: 'female',
-        birthDate: '1975-06-15',
-      })
-    })
-
-    test('omits demographics the bundle does not state rather than writing them as undefined', async () => {
-      const withoutBirthDate = {
-        ...patientAdmitBundle,
-        entry: patientAdmitBundle.entry?.map((entry) =>
-          entry.resource?.resourceType === 'Patient'
-            ? {
-                ...entry,
-                resource: { ...entry.resource, birthDate: undefined },
-              }
-            : entry,
-        ),
-      }
-
-      await run(
-        record(MetriportWebhookType.PatientAdmit, { bundle: withoutBirthDate }),
-      )
-
-      const [, demographics] = store.save.mock.calls.find(
-        ([name]) => name === 'patient',
-      ) as [string, Record<string, unknown>]
-      expect(Object.keys(demographics)).toEqual(['name', 'gender'])
+      expect(store.save.mock.calls.map(([name]) => name)).toEqual(['encounter'])
     })
 
     test('admit, transfer and discharge converge on one encounter keyed on the visit id', async () => {
@@ -437,7 +401,7 @@ describe('Metriport - Ingestion - ADT notifications', () => {
       })
     })
 
-    test('a discharge summary converges on the same, closed encounter and publishes documentAvailable', async () => {
+    test('a discharge summary converges on the same, closed encounter and publishes discharge.summary-received', async () => {
       await run(
         record(MetriportWebhookType.DischargeSummary, {
           bundle: dischargeSummaryBundle,
@@ -456,11 +420,10 @@ describe('Metriport - Ingestion - ADT notifications', () => {
           endedAt: '2024-07-25T14:10:00.000Z',
         },
       ])
-      expect(store.save.mock.calls.map(([name]) => name)).toEqual([
-        'patient',
-        'encounter',
-      ])
-      expect(events.publish).toHaveBeenCalledWith({ key: 'document.available' })
+      expect(store.save.mock.calls.map(([name]) => name)).toEqual(['encounter'])
+      expect(events.publish).toHaveBeenCalledWith({
+        key: 'discharge.summary-received',
+      })
       expect(events.publish).toHaveBeenCalledWith({
         key: 'fhir.bundle-received',
       })

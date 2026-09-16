@@ -1,9 +1,4 @@
-import {
-  type Bundle,
-  type Encounter,
-  type Patient,
-  type Resource,
-} from '@medplum/fhirtypes'
+import { type Bundle, type Encounter, type Resource } from '@medplum/fhirtypes'
 
 /** The first resource of the given type in the bundle, if any. */
 const findResource = <T extends Resource>(
@@ -26,21 +21,4 @@ export const visitIdFrom = (encounter: Encounter): string | undefined => {
     identifier.type?.coding?.some((coding) => coding.code === 'VN'),
   )?.value
   return visitNumber ?? encounter.id
-}
-
-/**
- * Demographics as the bundle's Patient states them. Identity is the subject's
- * key, so no identifier is written here; this is the same write path a
- * correction on a later delivery takes. Only what the ADT feed reliably
- * carries for now; the rest of the bundle is modelled later.
- */
-export const demographicsFrom = (bundle: Bundle): Record<string, unknown> => {
-  const patient = findResource<Patient>(bundle, 'Patient')
-  return {
-    ...(patient?.name !== undefined ? { name: patient.name } : {}),
-    ...(patient?.gender !== undefined ? { gender: patient.gender } : {}),
-    ...(patient?.birthDate !== undefined
-      ? { birthDate: patient.birthDate }
-      : {}),
-  }
 }

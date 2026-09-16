@@ -8,9 +8,8 @@ import { fetchBundle } from '../../shared/fetchBundle'
 import { type settings } from '../../settings'
 import { MetriportWebhookType } from '../../webhooks/types'
 import { isAdtWebhookType } from '../../webhooks/validation.zod'
-import { demographicsFrom, findEncounter, visitIdFrom } from './bundle'
+import { findEncounter, visitIdFrom } from './bundle'
 import { adtRecordSchema, notificationSchema } from './schemas'
-import { verify } from './verify'
 
 export const METRIPORT_ENCOUNTER_IDENTIFIER_SYSTEM =
   'https://metriport.com/encounter'
@@ -21,9 +20,10 @@ export const METRIPORT_ENCOUNTER_IDENTIFIER_SYSTEM =
  * bundle, valid for 600 s). Admit, transfer, discharge and the discharge
  * summary all converge on one encounter keyed on the visit.
  *
- * Only the patient and the encounter are saved for now. The rest of what the
+ * Only the encounter is saved for now. The patient is created by identifier
+ * resolution and its demographics are not written yet; the rest of what the
  * bundle carries (facility, conditions, the discharge summary document) is
- * modelled later; the bundle itself is retained by the runtime and reaches
+ * modelled later. The bundle itself is retained by the runtime and reaches
  * FHIR data movement through `fhir.bundle-received`.
  * https://docs.metriport.com/medical-api/handling-data/realtime-patient-notifications
  */
@@ -33,8 +33,8 @@ export const metriportAdt = withSettings<typeof settings>().endpoint({
   description:
     'Receives Metriport real-time patient notifications. Handles `patient.admit`, `patient.transfer`, `patient.discharge` and `medical.discharge-summary`, downloading the FHIR bundle each points at; any other notification type is acknowledged without producing a record.',
   source: 'webhook',
-  // TODO: Enable verify for pre-release
-  // verify,
+  // TODO: enable verification after the pre-release: `import { verify } from './verify'`
+  // and set `verify` here. The verifier and its tests are kept in verify.ts.
   schema: { envelope: notificationSchema, payload: adtRecordSchema },
   getRecords: async ({ envelope }) => {
     const { meta, payload } = envelope
