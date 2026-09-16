@@ -17,6 +17,13 @@ export const fields = {
     type: FieldType.STRING,
     required: true,
   },
+  failIfNotFound: {
+    id: 'failIfNotFound',
+    label: 'Fail if patient not found?',
+    description:
+      'If true, the action fails when the search returns no patient, which allows it to be retried. Use this when the patient may not exist in Medplum yet. If false (default), the action completes with an empty patient.',
+    type: FieldType.BOOLEAN,
+  },
 } satisfies Record<string, Field>
 
 export const FieldsValidationSchema = z.object({
@@ -26,4 +33,5 @@ export const FieldsValidationSchema = z.object({
   value: z.string().nonempty({
     error: 'Missing "Search Value"',
   }),
+  failIfNotFound: z.boolean().optional().default(false),
 } satisfies Record<keyof typeof fields, ZodType>)

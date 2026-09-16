@@ -6,4 +6,4 @@ export {
 export { mockAppointmentResponse } from './mockAppointment'
 export { mockCreateServiceRequestResponse } from './mockServiceRequest'
 export { mockCreateTaskResponse } from './mockTask'
-export { MedplumClient } from './MedplumClient'
+export { MedplumClient, NOT_FOUND_SEARCH_VALUE } from './MedplumClient'
