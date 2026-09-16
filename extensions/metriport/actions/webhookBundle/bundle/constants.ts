@@ -1,17 +1,20 @@
 /**
+ * The identifier every Metriport-sourced resource is stamped with, which lets
+ * each be written with a conditional update. Shared with the ingestion
+ * endpoint, which keys the Awell objects it saves the same way.
+ */
+export {
+  METRIPORT_IDENTIFIER_SYSTEM_PREFIX,
+  metriportIdentifierSystem,
+} from '../../../shared/identifierSystem'
+
+/**
  * Identifier system for the Awell patient id, used to resolve the Medplum
  * Patient by conditional reference rather than by lookup.
  */
 export const AWELL_PATIENT_IDENTIFIER_SYSTEM =
   'https://awellhealth.com/patients'
 
-/**
- * Prefix for the identifier we stamp on every Metriport-sourced resource,
- * completed with the lowercased resource type — e.g.
- * `https://metriport.com/fhir/encounter`. Lets each resource be written with a
- * conditional update, which makes a redelivered notification idempotent.
- */
-export const METRIPORT_IDENTIFIER_SYSTEM_PREFIX = 'https://metriport.com/fhir/'
 
 /** Identifier system for the source bundle, recorded on `Provenance.entity`. */
 export const METRIPORT_BUNDLE_IDENTIFIER_SYSTEM =
@@ -42,9 +45,6 @@ export const RESOURCE_TYPES_WITHOUT_IDENTIFIER = [
   'AuditEvent',
   'Binary',
 ]
-
-export const metriportIdentifierSystem = (resourceType: string): string =>
-  `${METRIPORT_IDENTIFIER_SYSTEM_PREFIX}${resourceType.toLowerCase()}`
 
 export const awellPatientReference = (awellPatientId: string): string =>
   `Patient?identifier=${AWELL_PATIENT_IDENTIFIER_SYSTEM}|${awellPatientId}`

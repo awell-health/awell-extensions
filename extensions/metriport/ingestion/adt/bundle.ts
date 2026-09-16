@@ -1,4 +1,10 @@
-import { type Bundle, type Encounter, type Resource } from '@medplum/fhirtypes'
+import {
+  type Bundle,
+  type Encounter,
+  type Reference,
+  type Resource,
+} from '@medplum/fhirtypes'
+import { isNil } from 'lodash'
 
 /** The first resource of the given type in the bundle, if any. */
 const findResource = <T extends Resource>(
@@ -10,6 +16,35 @@ const findResource = <T extends Resource>(
 
 export const findEncounter = (bundle: Bundle): Encounter | undefined =>
   findResource<Encounter>(bundle, 'Encounter')
+
+/**
+ * The resource a reference inside the bundle points at.
+ *
+ * Both forms have to be matched, because Metriport mixes them: entries are
+ * keyed by a `urn:uuid:` `fullUrl` while references between them use the
+ * relative `<Type>/<id>` form, which FHIR does not consider a match for that
+ * fullUrl. The transformation in `actions/webhookBundle/bundle/references.ts`
+ * closes the same gap from the other side, by rewriting the references.
+ *
+ * The relative form also states the type, and it is checked: a
+ * `diagnosis.condition` may point at a Procedure rather than a Condition, and
+ * that is a resource this mapping has nowhere to put.
+ */
+export const resolveReference = <T extends Resource>(
+  bundle: Bundle,
+  reference?: Reference,
+): T | undefined => {
+  const pointer = reference?.reference
+  if (isNil(pointer)) return undefined
+
+  const [type, id] = pointer.split('/')
+
+  return bundle.entry?.find(
+    (entry) =>
+      entry.fullUrl === pointer ||
+      (entry.resource?.resourceType === type && entry.resource?.id === id),
+  )?.resource as T | undefined
+}
 
 /**
  * The key every message about one visit converges on: the Encounter's visit

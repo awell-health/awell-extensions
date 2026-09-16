@@ -5,9 +5,17 @@ import {
   VerificationError,
 } from '@awell-health/extensions-core'
 import { Metriport } from '../..'
-import { patientAdmitBundle } from '../../actions/webhookBundle/bundle/__testdata__/patientAdmitBundle'
+import {
+  METRIPORT_CONDITION_ID,
+  METRIPORT_LOCATION_ID,
+  METRIPORT_PRACTITIONER_ID,
+  patientAdmitBundle,
+} from '../../actions/webhookBundle/bundle/__testdata__/patientAdmitBundle'
 import { fetchBundle } from '../../shared/fetchBundle'
-import { METRIPORT_IDENTIFIER_SYSTEM } from '../../shared/identifierSystem'
+import {
+  METRIPORT_IDENTIFIER_SYSTEM,
+  metriportIdentifierSystem,
+} from '../../shared/identifierSystem'
 import { MetriportWebhookType } from '../../webhooks/types'
 import { dischargeSummaryBundle } from './__testdata__/dischargeSummaryBundle'
 import {
@@ -95,9 +103,22 @@ describe('Metriport - Ingestion - ADT notifications', () => {
   }
 
   const encounterSaves = (): Array<Record<string, unknown>> =>
+    savesOf('Encounter')
+
+  const savesOf = (name: string): Array<Record<string, unknown>> =>
     store.save.mock.calls
-      .filter(([name]) => name === 'encounter')
+      .filter(([saved]) => saved === name)
       .map(([, data]) => data)
+
+  /** A record as the endpoint itself produces it, details and all. */
+  const recordFrom = async (
+    event: AdtRecord['event'],
+    payload: Record<string, unknown> = {},
+  ): Promise<AdtRecord> => {
+    mockedFetchBundle.mockResolvedValue(patientAdmitBundle)
+    const [rec] = await getRecords(notification(event, payload))
+    return adtRecordSchema.parse(rec)
+  }
 
   describe('extension registration', () => {
     test('declares the ingestion endpoint and the identifier system it stamps', () => {
@@ -306,6 +327,94 @@ describe('Metriport - Ingestion - ADT notifications', () => {
   })
 
   describe('run', () => {
+    test('saves every resource the encounter points at before the encounter that links them', async () => {
+      await run(await recordFrom(MetriportWebhookType.PatientAdmit))
+
+      expect(store.save.mock.calls.map(([name]) => name)).toEqual([
+        'Location',
+        'Practitioner',
+        'Condition',
+        'Encounter',
+      ])
+    })
+
+    test('keys each saved resource on its Metriport id, so a redelivery upserts', async () => {
+      await run(await recordFrom(MetriportWebhookType.PatientAdmit))
+
+      expect(savesOf('Location')[0]).toEqual({
+        identifier: {
+          system: metriportIdentifierSystem('Location'),
+          value: METRIPORT_LOCATION_ID,
+        },
+        name: 'Memorial Hospital',
+        status: 'active',
+        type: 'HOSP',
+      })
+      expect(savesOf('Practitioner')[0]).toEqual({
+        identifier: {
+          system: metriportIdentifierSystem('Practitioner'),
+          value: METRIPORT_PRACTITIONER_ID,
+        },
+        name: 'Dr. Maria Rodriguez',
+        prefix: 'Dr.',
+        given: 'Maria',
+        family: 'Rodriguez',
+        qualifications: ['MD'],
+      })
+      expect(savesOf('Condition')[0]).toEqual({
+        identifier: {
+          system: metriportIdentifierSystem('Condition'),
+          value: METRIPORT_CONDITION_ID,
+        },
+        text: 'Stable Angina',
+        codes: [
+          {
+            system: 'http://snomed.info/sct',
+            code: '194828000',
+            display: 'Stable angina',
+          },
+        ],
+        clinicalStatus: 'active',
+        verificationStatus: 'confirmed',
+        category: 'encounter-diagnosis',
+        onsetAt: '2024-03-15T14:20:00.000Z',
+        recordedAt: '2024-03-15T16:45:00.000Z',
+      })
+    })
+
+    test('links the encounter to the Awell ids its own saves handed back', async () => {
+      await run(await recordFrom(MetriportWebhookType.PatientAdmit))
+
+      expect(encounterSaves()[0]).toMatchObject({
+        class: 'AMB',
+        serviceType: {
+          codes: [{ code: '394592004', display: 'Cardiology' }],
+          text: 'Cardiology',
+        },
+        reason: 'Chest pain',
+        locations: [{ locationId: 'Location-1' }],
+        participants: [
+          {
+            practitionerId: 'Practitioner-1',
+            role: 'ATND',
+            startedAt: '2024-03-15T14:20:00.000Z',
+          },
+        ],
+        diagnoses: [{ conditionId: 'Condition-1', use: 'AD', rank: 1 }],
+      })
+    })
+
+    test('never carries the encounter link onto the resource it describes', async () => {
+      await run(await recordFrom(MetriportWebhookType.PatientAdmit))
+
+      savesOf('Condition')
+        .concat(savesOf('Location'), savesOf('Practitioner'))
+        .forEach((save) => {
+          expect(save).not.toHaveProperty('encounter')
+          expect(save).not.toHaveProperty('metriportId')
+        })
+    })
+
     test('writes the transfer destination onto the encounter as its location', async () => {
       await run(
         record(MetriportWebhookType.PatientTransfer, { location: 'Ward 4' }),
@@ -341,10 +450,12 @@ describe('Metriport - Ingestion - ADT notifications', () => {
       ])
     })
 
-    test('saves only the encounter; the patient is created by identifier resolution, not written here', async () => {
-      await run(record(MetriportWebhookType.PatientAdmit))
+    test('saves no patient: it is created by identifier resolution, not written here', async () => {
+      await run(await recordFrom(MetriportWebhookType.PatientAdmit))
 
-      expect(store.save.mock.calls.map(([name]) => name)).toEqual(['encounter'])
+      expect(store.save.mock.calls.map(([name]) => name)).not.toContain(
+        'Patient',
+      )
     })
 
     test('admit, transfer and discharge converge on one encounter keyed on the visit id', async () => {
@@ -420,7 +531,7 @@ describe('Metriport - Ingestion - ADT notifications', () => {
           endedAt: '2024-07-25T14:10:00.000Z',
         },
       ])
-      expect(store.save.mock.calls.map(([name]) => name)).toEqual(['encounter'])
+      expect(store.save.mock.calls.map(([name]) => name)).toEqual(['Encounter'])
       expect(events.publish).toHaveBeenCalledWith({
         key: 'discharge.summary-received',
       })

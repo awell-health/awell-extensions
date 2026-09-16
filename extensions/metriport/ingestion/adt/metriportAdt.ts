@@ -9,6 +9,8 @@ import { type settings } from '../../settings'
 import { MetriportWebhookType } from '../../webhooks/types'
 import { isAdtWebhookType } from '../../webhooks/validation.zod'
 import { findEncounter, visitIdFrom } from './bundle'
+import { encounterDetailsFrom } from './encounter'
+import { saveLinkedResources } from './links'
 import { adtRecordSchema, notificationSchema } from './schemas'
 
 export const METRIPORT_ENCOUNTER_IDENTIFIER_SYSTEM =
@@ -20,11 +22,15 @@ export const METRIPORT_ENCOUNTER_IDENTIFIER_SYSTEM =
  * bundle, valid for 600 s). Admit, transfer, discharge and the discharge
  * summary all converge on one encounter keyed on the visit.
  *
- * Only the encounter is saved for now. The patient is created by identifier
- * resolution and its demographics are not written yet; the rest of what the
- * bundle carries (facility, conditions, the discharge summary document) is
- * modelled later. The bundle itself is retained by the runtime and reaches
- * FHIR data movement through `fhir.bundle-received`.
+ * The Encounter is the hub. Every resource it points at — the Location it
+ * happened in, the Practitioners who took part, the Conditions it diagnosed —
+ * is saved as an object of its own and linked from the Encounter, keyed on
+ * Metriport's resource id so redelivery upserts. The patient is created by
+ * identifier resolution and its demographics are not written yet; the
+ * discharge summary document is modelled later. The bundle itself is retained
+ * by the runtime and reaches FHIR data movement through
+ * `fhir.bundle-received`, so what is simplified here is the Awell view of the
+ * visit, never the record of it.
  * https://docs.metriport.com/medical-api/handling-data/realtime-patient-notifications
  */
 export const metriportAdt = withSettings<typeof settings>().endpoint({
@@ -54,7 +60,7 @@ export const metriportAdt = withSettings<typeof settings>().endpoint({
     const bundle = await fetchBundle(payload.url)
     const encounter = findEncounter(bundle)
     const visitId = isNil(encounter) ? undefined : visitIdFrom(encounter)
-    if (isNil(visitId)) {
+    if (isNil(encounter) || isNil(visitId)) {
       throw new PayloadValidationError(
         `${meta.type} bundle at ${payload.url} carries no Encounter to key the visit on`,
       )
@@ -67,9 +73,13 @@ export const metriportAdt = withSettings<typeof settings>().endpoint({
         externalId: payload.externalId,
         metriportPatientId: payload.patientId,
         visitId,
-        admittedAt: payload.admitTimestamp ?? encounter?.period?.start,
-        dischargedAt: payload.dischargeTimestamp ?? encounter?.period?.end,
+        admittedAt: payload.admitTimestamp ?? encounter.period?.start,
+        dischargedAt: payload.dischargeTimestamp ?? encounter.period?.end,
         location: payload.transfers?.at(-1)?.destinationLocation,
+        // Everything the Encounter points at, resolved here rather than in
+        // `run`: the bundle digging belongs on this side, and what comes out
+        // is validated by the record schema and retained for replay.
+        ...encounterDetailsFrom(bundle, encounter),
         bundle,
       },
     ]
@@ -83,12 +93,19 @@ export const metriportAdt = withSettings<typeof settings>().endpoint({
       record.event === MetriportWebhookType.PatientDischarge ||
       record.event === MetriportWebhookType.DischargeSummary
 
+    // Saved before the Encounter, because the Encounter is the hub: it links
+    // to them, and a link needs the Awell id the save hands back.
+    const { locations, participants, diagnoses } = saveLinkedResources(
+      store,
+      record,
+    )
+
     // Upsert key: every message about this visit converges on ONE encounter.
     // Only what this message knows is written: an admit carries no discharge
     // time and a discharge no location, and neither should clear what an
     // earlier message about the same visit already set.
     store.save(
-      'encounter',
+      'Encounter',
       omitBy(
         {
           identifier: {
@@ -99,6 +116,12 @@ export const metriportAdt = withSettings<typeof settings>().endpoint({
           startedAt: record.admittedAt,
           endedAt: record.dischargedAt,
           location: record.location,
+          class: record.class,
+          serviceType: record.serviceType,
+          reason: record.reason,
+          locations,
+          participants,
+          diagnoses,
         },
         isUndefined,
       ),
