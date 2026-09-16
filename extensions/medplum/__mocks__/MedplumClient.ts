@@ -12,6 +12,12 @@ import {
   type Resource,
 } from '@medplum/fhirtypes'
 
+/**
+ * Search for this value to make the mock return an empty searchset,
+ * i.e. a patient that does not (yet) exist in Medplum.
+ */
+export const NOT_FOUND_SEARCH_VALUE = 'patient-that-does-not-exist'
+
 export class MedplumClient {
   constructor(config?: { clientId?: string; baseUrl?: string }) {
     // Store config for potential testing verification
@@ -58,7 +64,11 @@ export class MedplumClient {
   executeBot = jest.fn(() => 'Bot executed!')
 
   search = jest.fn((resourceType: string, query: any) => {
-    if (resourceType === 'Patient') {
+    const searchesForUnknownPatient = Object.values(query ?? {}).includes(
+      NOT_FOUND_SEARCH_VALUE,
+    )
+
+    if (resourceType === 'Patient' && !searchesForUnknownPatient) {
       return {
         resourceType: 'Bundle',
         type: 'searchset',

@@ -14,6 +14,7 @@ export const searchPatient: Action<
   description: 'Search for patients in Medplum using parameters',
   fields,
   previewable: true,
+  supports_automated_retries: true,
   dataPoints,
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
     helpers.log({ fields: payload.fields }, 'Processing searchPatient')
@@ -30,6 +31,23 @@ export const searchPatient: Action<
       const bundle = await medplumSdk.search('Patient', searchParams)
 
       const patient = bundle.entry?.[0]?.resource ?? null
+
+      if (patient === null && input.failIfNotFound) {
+        const message = `No patient found in Medplum for "${input.parameter}" = "${input.value}"`
+        await onError({
+          events: [
+            {
+              date: new Date().toISOString(),
+              text: { en: message },
+              error: {
+                category: 'SERVER_ERROR',
+                message,
+              },
+            },
+          ],
+        })
+        return
+      }
 
       await onComplete({
         data_points: {
