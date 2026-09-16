@@ -1,0 +1,1 @@
+export { ticketEvent } from './ticketEvent'

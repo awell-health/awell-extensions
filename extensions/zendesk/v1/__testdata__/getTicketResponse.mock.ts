@@ -1,0 +1,63 @@
+import { type GetTicketResponse } from '../client'
+
+export const getTicketResponseMock = {
+  ticket: {
+    id: 35436,
+    url: 'https://test-company.zendesk.com/api/v2/tickets/35436.json',
+    external_id: 'awell-patient-123',
+    subject: 'Kit retrieval request',
+    raw_subject: 'Kit retrieval request',
+    description: 'The patient asked for the kit to be picked up.',
+    status: 'open',
+    priority: 'high',
+    type: 'task',
+    requester_id: 20978392,
+    submitter_id: 76872,
+    assignee_id: 235323,
+    group_id: 98738,
+    organization_id: 509974,
+    brand_id: 360002,
+    tags: ['kit_retrieval', 'enterprise'],
+    custom_fields: [{ id: 27642, value: '745' }],
+    created_at: '2026-09-15T10:00:00Z',
+    updated_at: '2026-09-16T08:30:00Z',
+    via: { channel: 'web', source: { from: {}, to: {}, rel: null } },
+  },
+  users: [
+    {
+      id: 20978392,
+      name: 'Jane Requester',
+      email: 'jane@example.com',
+      role: 'end-user',
+    },
+    {
+      id: 235323,
+      name: 'Alex Agent',
+      email: 'alex@test-company.com',
+      role: 'agent',
+    },
+  ],
+} satisfies GetTicketResponse
+
+export const expectedTicketDataPoints = {
+  ticketId: '35436',
+  ticketUrl: 'https://test-company.zendesk.com/agent/tickets/35436',
+  subject: 'Kit retrieval request',
+  description: 'The patient asked for the kit to be picked up.',
+  status: 'open',
+  priority: 'high',
+  type: 'task',
+  tags: JSON.stringify(['kit_retrieval', 'enterprise']),
+  externalId: 'awell-patient-123',
+  requesterId: '20978392',
+  requesterName: 'Jane Requester',
+  requesterEmail: 'jane@example.com',
+  assigneeId: '235323',
+  groupId: '98738',
+  organizationId: '509974',
+  channel: 'web',
+  createdAt: '2026-09-15T10:00:00Z',
+  updatedAt: '2026-09-16T08:30:00Z',
+  customFields: JSON.stringify([{ id: 27642, value: '745' }]),
+  ticket: JSON.stringify(getTicketResponseMock.ticket),
+}
