@@ -1,5 +1,5 @@
 import { Category, type Action } from '@awell-health/extensions-core'
-import { type Activity } from '@awell-health/awell-sdk'
+import { type Activity, type AwellSdk } from '@awell-health/awell-sdk'
 import { fields, dataPoints, FieldsValidationSchema } from './config'
 import { markdownToHtml } from '../../../../src/utils'
 import { summarizeTrackOutcomeWithLLM } from './lib/summarizeTrackOutcomeWithLLM'
@@ -34,8 +34,12 @@ export const summarizeTrackOutcome: Action<
 
     try {
       // 1. Validate input fields
-      const { instructions, disclaimerText, disclaimerPlacement } =
-        FieldsValidationSchema.parse(payload.fields)
+      const {
+        instructions,
+        trackId: trackIdField,
+        disclaimerText,
+        disclaimerPlacement,
+      } = FieldsValidationSchema.parse(payload.fields)
       const {
         disclaimerText: tenantDisclaimerText,
         disclaimerPlacement: tenantDisclaimerPlacement,
@@ -53,34 +57,10 @@ export const summarizeTrackOutcome: Action<
 
       const awellSdk = await helpers.awellSdk()
 
-      // Get activity details to find track_id
-      const activityId = payload.activity.id
-      const activityDetails = await awellSdk.orchestration.query({
-        activity: {
-          __args: {
-            id: activityId,
-          },
-          success: true,
-          activity: {
-            id: true,
-            context: {
-              track_id: true,
-            },
-          },
-        },
-      })
-
-      const currentActivity = activityDetails?.activity?.activity
-
-      if (isNil(currentActivity) || !activityDetails.activity.success) {
-        throw new Error(`Failed to fetch activity ${activityId}`)
-      }
-
-      const trackId = currentActivity.context?.track_id
-
-      if (isNil(trackId) || trackId.trim() === '') {
-        throw new Error('Could not find track ID for the current activity')
-      }
+      // An explicit Track ID field wins, otherwise use the current activity's track
+      const trackId =
+        trackIdField ??
+        (await getCurrentTrackId({ awellSdk, activityId: payload.activity.id }))
 
       // 3. Get track data including forms and decision path
       const trackData = await getTrackData({
@@ -153,4 +133,41 @@ export const summarizeTrackOutcome: Action<
       })
     }
   },
+}
+
+const getCurrentTrackId = async ({
+  awellSdk,
+  activityId,
+}: {
+  awellSdk: AwellSdk
+  activityId: string
+}): Promise<string> => {
+  const activityDetails = await awellSdk.orchestration.query({
+    activity: {
+      __args: {
+        id: activityId,
+      },
+      success: true,
+      activity: {
+        id: true,
+        context: {
+          track_id: true,
+        },
+      },
+    },
+  })
+
+  const currentActivity = activityDetails?.activity?.activity
+
+  if (isNil(currentActivity) || !activityDetails.activity.success) {
+    throw new Error(`Failed to fetch activity ${activityId}`)
+  }
+
+  const trackId = currentActivity.context?.track_id
+
+  if (isNil(trackId) || trackId.trim() === '') {
+    throw new Error('Could not find track ID for the current activity')
+  }
+
+  return trackId
 }

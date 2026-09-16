@@ -24,11 +24,14 @@ type GetAllFormsInCurrentStep = ({
   awellSdk,
   pathwayId,
   activityId,
+  stepId,
   log,
 }: {
   awellSdk: AwellSdk
   pathwayId: string
   activityId: string
+  /** Read forms from this step instead of the current activity's step */
+  stepId?: string
   log?: Log
 }) => Promise<
   Array<{
@@ -43,6 +46,7 @@ export const getAllFormsInCurrentStep: GetAllFormsInCurrentStep = async ({
   awellSdk,
   pathwayId,
   activityId,
+  stepId,
   log,
 }) => {
   const activity_response = await awellSdk.orchestration
@@ -95,7 +99,7 @@ export const getAllFormsInCurrentStep: GetAllFormsInCurrentStep = async ({
     stepId: currentActivity.context?.step_id,
   })
 
-  const currentStepId = currentActivity.context?.step_id
+  const currentStepId = stepId ?? currentActivity.context?.step_id
 
   if (isNil(currentStepId)) {
     logDebug(log, 'Could not find step ID of the current activity', {

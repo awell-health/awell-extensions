@@ -80,6 +80,13 @@ describe('summarizeTrackOutcome - Mocked LLM calls', () => {
     jest.clearAllMocks()
     const { getTrackData } = require('../../lib/getTrackData/index')
     getTrackData.mockResolvedValue(mockTrackData)
+    // Restore after tests that call getCareFlowDetails.mockReset()
+    const { getCareFlowDetails } = require('../../lib/getCareFlowDetails')
+    getCareFlowDetails.mockResolvedValue({
+      title: 'AI Actions Check',
+      id: 'ty0CmaHm2jlX',
+      version: 6,
+    })
     jest.spyOn(console, 'error').mockImplementation(() => {}) // Suppress console.error
   })
 
@@ -660,5 +667,35 @@ describe('summarizeTrackOutcome - Mocked LLM calls', () => {
       ],
     })
     expect(onComplete).not.toHaveBeenCalled()
+  })
+
+  it('Should use the given Track ID without looking up the current activity', async () => {
+    const { getTrackData } = require('../../lib/getTrackData/index')
+    const awellSdkMock = {
+      orchestration: {
+        query: jest.fn().mockResolvedValue(mockPathwayDetails),
+      },
+    }
+    helpers.awellSdk = jest.fn().mockResolvedValue(awellSdkMock)
+
+    await extensionAction.onEvent({
+      payload: {
+        ...basePayload,
+        fields: { ...basePayload.fields, trackId: 'other-track-id' },
+      },
+      onComplete,
+      onError,
+      helpers,
+      attempt: 1,
+    })
+
+    expect(getTrackData).toHaveBeenCalledWith(
+      expect.objectContaining({ trackId: 'other-track-id' }),
+    )
+    expect(awellSdkMock.orchestration.query).not.toHaveBeenCalledWith(
+      expect.objectContaining({ activity: expect.anything() }),
+    )
+    expect(onComplete).toHaveBeenCalled()
+    expect(onError).not.toHaveBeenCalled()
   })
 })
