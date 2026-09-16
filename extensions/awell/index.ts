@@ -20,6 +20,7 @@ import {
 import { type Extension } from '@awell-health/extensions-core'
 import { settings } from './settings'
 import { webhooks } from './v1/webhooks'
+import { ingestion } from './v1/ingestion'
 import { AuthorType, Category } from '@awell-health/extensions-core'
 
 export const Awell: Extension = {
@@ -53,4 +54,6 @@ export const Awell: Extension = {
     getCurrentCareflowId,
   },
   webhooks,
+  identifier: { system: 'https://awellhealth.com' },
+  ingestion,
 }
