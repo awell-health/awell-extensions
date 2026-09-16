@@ -7,7 +7,8 @@ export const createMetriportApi = (
 ): MetriportMedicalApi => {
   const { apiKey, baseUrl } = settingsSchema.parse(payloadSettings)
 
-  if (baseUrl) {
+  // An empty setting means "not configured", the same as an absent one.
+  if (baseUrl !== undefined && baseUrl !== '') {
     return new MetriportMedicalApi(apiKey, {
       baseAddress: baseUrl,
     })

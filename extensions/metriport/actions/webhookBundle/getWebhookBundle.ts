@@ -4,7 +4,7 @@ import { handleErrorMessage } from '../../shared/errorHandler'
 import { fields } from './fields'
 import { getWebhookBundleSchema } from './validation'
 import { dataPoints } from './dataPoints'
-import { fetchBundle } from './fetchBundle'
+import { fetchBundle } from '../../shared/fetchBundle'
 import { buildTransactionBundle } from './bundle'
 import { findEncounterId } from './bundle/encounter'
 
