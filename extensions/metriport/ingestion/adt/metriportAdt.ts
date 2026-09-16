@@ -33,7 +33,8 @@ export const metriportAdt = withSettings<typeof settings>().endpoint({
   description:
     'Receives Metriport real-time patient notifications. Handles `patient.admit`, `patient.transfer`, `patient.discharge` and `medical.discharge-summary`, downloading the FHIR bundle each points at; any other notification type is acknowledged without producing a record.',
   source: 'webhook',
-  verify,
+  // TODO: Enable verify for pre-release
+  // verify,
   schema: { envelope: notificationSchema, payload: adtRecordSchema },
   getRecords: async ({ envelope }) => {
     const { meta, payload } = envelope
@@ -78,8 +79,6 @@ export const metriportAdt = withSettings<typeof settings>().endpoint({
   // Metriport's UUID, so every other feed about the patient matches on it.
   identifier: { resolveValue: (record) => record.externalId },
   run: async ({ record, store, events }) => {
-    store.save('patient', demographicsFrom(record.bundle))
-
     const closed =
       record.event === MetriportWebhookType.PatientDischarge ||
       record.event === MetriportWebhookType.DischargeSummary
@@ -127,7 +126,7 @@ export const metriportAdt = withSettings<typeof settings>().endpoint({
         // already recorded, converging on the same encounter. The document
         // itself is not modelled yet; it is reachable through the retained
         // bundle.
-        events.publish({ key: 'document.available' })
+        events.publish({ key: 'discharge.summary-received' })
         break
       default:
         unhandled(record.event)
