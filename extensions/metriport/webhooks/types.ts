@@ -19,7 +19,7 @@ export enum MetriportWebhookType {
    * Discharge summary notification. Undocumented by Metriport, but delivered
    * with the same envelope and payload as the `patient.*` family.
    */
-  DischargeSummary = 'medical.discharge-summary',
+  DischargeSummary = 'patient.discharge-summary',
 }
 
 /**

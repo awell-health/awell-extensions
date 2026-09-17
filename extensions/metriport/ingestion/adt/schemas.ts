@@ -1,4 +1,4 @@
-import { type Bundle } from '@medplum/fhirtypes'
+import { type Bundle, type Encounter } from '@medplum/fhirtypes'
 import { z } from 'zod'
 import { ADT_WEBHOOK_TYPES } from '../../webhooks/validation.zod'
 
@@ -50,6 +50,18 @@ const bundleSchema = z.custom<Bundle>(
 )
 
 /**
+ * A FHIR element carried verbatim. Only its being an object (or array of them)
+ * is checked here; the type is the fhirtypes one so `run` and the tests see the
+ * real shape. How it is written to the workbench is `run`'s concern.
+ */
+const fhir = <T>(): z.ZodOptional<z.ZodCustom<T, T>> =>
+  z
+    .custom<T>((value) => typeof value === 'object' && value !== null, {
+      error: 'Expected a FHIR element',
+    })
+    .optional()
+
+/**
  * The record: our shape, and closed. `getRecords` has already dropped what we
  * do not handle, so `event` is the union we own and `run` can switch over it
  * exhaustively.
@@ -68,8 +80,13 @@ export const adtRecordSchema = z.object({
   visitId: z.string().min(1),
   admittedAt: z.string().optional(),
   dischargedAt: z.string().optional(),
-  /** Where the patient now is, as the last transfer on the notification names it. */
-  location: z.string().optional(),
+  /** The Encounter's own elements, verbatim. */
+  subject: fhir<NonNullable<Encounter['subject']>>(),
+  class: fhir<NonNullable<Encounter['class']>>(),
+  serviceType: fhir<NonNullable<Encounter['serviceType']>>(),
+  reasonCode: fhir<NonNullable<Encounter['reasonCode']>>(),
+  location: fhir<NonNullable<Encounter['location']>>(),
+  diagnosis: fhir<NonNullable<Encounter['diagnosis']>>(),
   bundle: bundleSchema,
 })
 

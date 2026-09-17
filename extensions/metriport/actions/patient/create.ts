@@ -65,7 +65,7 @@ export const convertToMetriportPatient = (
       addressLine2: patient.addressLine2,
       city: patient.city,
       state: patient.state,
-      zip: patient.zip,
+      zip: patient.zip.slice(0, 5),
       country: patient.country,
     },
     personalIdentifiers: [],

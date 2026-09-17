@@ -19,6 +19,16 @@ const convert = (
     patientCreateSchema.parse({ ...baseFields, ...overrides }),
   )
 
+describe('convertToMetriportPatient.address.zip', () => {
+  test('truncates a ZIP+4 code to the first 5 digits', () => {
+    expect(convert({ zip: '94105-1234' }).address.zip).toBe('94105')
+  })
+
+  test('leaves a 5 digit ZIP code unchanged', () => {
+    expect(convert({ zip: '94105' }).address.zip).toBe('94105')
+  })
+})
+
 describe('convertToMetriportPatient.contact', () => {
   test('includes phone and email when both are provided', () => {
     expect(

@@ -21,7 +21,7 @@ In order to set up this extension, **you will need to provide a Metriport API ke
 
 An ingestion endpoint for Metriport's [real-time patient notifications](https://docs.metriport.com/medical-api/handling-data/realtime-patient-notifications). Point the webhook URL in the Metriport dashboard at it. Request verification (Metriport's HMAC-SHA256 `x-metriport-signature`, with the verification ping answered by `pong`) is implemented but switched off for the pre-release; it will be enabled, and the **Webhook Key** setting required, before general availability.
 
-Handled notification types are `patient.admit`, `patient.transfer`, `patient.discharge` and `medical.discharge-summary`. For each, the FHIR bundle behind the pre-signed `payload.url` is downloaded and the patient is resolved on `payload.externalId` (the id you gave Metriport when creating the patient, i.e. your own MRN). The endpoint saves one encounter keyed on the visit number (the patient itself is created by that resolution; demographics are not written yet), so all four notifications about one visit update the same encounter (`in-progress` until the discharge, `finished` after it, with the last transfer destination as its location). Any other notification type is acknowledged and produces nothing.
+Handled notification types are `patient.admit`, `patient.transfer`, `patient.discharge` and `patient.discharge-summary`. For each, the FHIR bundle behind the pre-signed `payload.url` is downloaded and the patient is resolved on `payload.externalId` (the id you gave Metriport when creating the patient, i.e. your own MRN). The endpoint saves one encounter keyed on the visit number (the patient itself is created by that resolution; demographics are not written yet), so all four notifications about one visit update the same encounter (`in-progress` until the discharge, `finished` after it, with the last transfer destination as its location). Any other notification type is acknowledged and produces nothing.
 
 Events published, for care flows to trigger on: `patient.admitted`, `patient.transferred`, `patient.discharged` and `discharge.summary-received` (on a discharge summary). Every handled notification also publishes `fhir.bundle-received`, which FHIR data movement listens for; it carries no clinical data, the bundle is looked up by ingestion id.
 
@@ -208,7 +208,7 @@ Metriport POSTs every notification type to the same endpoint. Four of them share
 - `patient.admit` (HL7 ADT^A01)
 - `patient.discharge` (HL7 ADT^A03)
 - `patient.transfer` (HL7 ADT^A02)
-- `medical.discharge-summary`
+- `patient.discharge-summary`
 
 The `eventType` data point carries the raw Metriport webhook type, so a care flow can branch on it. The payload's `url` is a pre-signed link to the [FHIR Encounter Bundle](https://docs.metriport.com/medical-api/handling-data/patient-encounter-bundle).
 
@@ -220,7 +220,7 @@ Any other notification type Metriport sends — `medical.document-download`, `me
 
 | Data point | Type | Description |
 | --- | --- | --- |
-| `eventType` | string | The Metriport webhook type: `patient.admit`, `patient.discharge`, `patient.transfer` or `medical.discharge-summary` |
+| `eventType` | string | The Metriport webhook type: `patient.admit`, `patient.discharge`, `patient.transfer` or `patient.discharge-summary` |
 | `metriportPatientId` | string | The Metriport patient ID (also used as the patient identifier for enrollment) |
 | `externalId` | string | Your external patient ID, if provided to Metriport |
 | `when` | date | When the event occurred — the admit time on an admit event, the discharge time on a discharge event |

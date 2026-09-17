@@ -1,6 +1,7 @@
 import { type Extension } from '@awell-health/extensions-core'
 import { AuthorType, Category } from '@awell-health/extensions-core'
 import * as actions from './v1/actions'
+import { webhooks } from './v1/webhooks'
 import { settings } from './settings'
 
 export const Zendesk: Extension = {
@@ -16,4 +17,5 @@ export const Zendesk: Extension = {
   },
   actions,
   settings,
+  webhooks,
 }
