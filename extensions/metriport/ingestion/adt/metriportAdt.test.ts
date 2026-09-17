@@ -1,4 +1,5 @@
 import crypto from 'crypto'
+import { type Encounter } from '@medplum/fhirtypes'
 import {
   PayloadValidationError,
   TestHelpers,
@@ -11,6 +12,7 @@ import { METRIPORT_IDENTIFIER_SYSTEM } from '../../shared/identifierSystem'
 import { MetriportWebhookType } from '../../webhooks/types'
 import { dischargeSummaryBundle } from './__testdata__/dischargeSummaryBundle'
 import {
+  ENCOUNTER_DATA_SOURCE,
   METRIPORT_ENCOUNTER_IDENTIFIER_SYSTEM,
   metriportAdt,
 } from './metriportAdt'
@@ -29,6 +31,11 @@ const settings = {
 
 const VISIT_ID = '987654321'
 const BUNDLE_URL = 'https://example.com/encounter-bundle'
+
+/** The Encounter in `patientAdmitBundle`, the source of every saved detail. */
+const admitEncounter = patientAdmitBundle.entry?.find(
+  (entry) => entry.resource?.resourceType === 'Encounter',
+)?.resource as Encounter
 
 const notification = (
   type: string,
@@ -96,7 +103,7 @@ describe('Metriport - Ingestion - ADT notifications', () => {
 
   const encounterSaves = (): Array<Record<string, unknown>> =>
     store.save.mock.calls
-      .filter(([name]) => name === 'encounter')
+      .filter(([name]) => name === ENCOUNTER_DATA_SOURCE)
       .map(([, data]) => data)
 
   describe('extension registration', () => {
@@ -163,7 +170,6 @@ describe('Metriport - Ingestion - ADT notifications', () => {
         admittedAt: '2026-07-21T09:50:00.000Z',
         bundle: patientAdmitBundle,
       })
-      expect((records[0] as AdtRecord).location).toBeUndefined()
       expect(adtRecordSchema.safeParse(records[0]).success).toBe(true)
     })
 
@@ -209,25 +215,21 @@ describe('Metriport - Ingestion - ADT notifications', () => {
       )
     })
 
-    test('takes the location from the last transfer destination on the notification', async () => {
+    test('takes the location from the Encounter, not from the notification transfers', async () => {
       mockedFetchBundle.mockResolvedValue(patientAdmitBundle)
 
-      const [rec] = await getRecords(
+      const [rec] = (await getRecords(
         notification(MetriportWebhookType.PatientTransfer, {
           transfers: [
-            {
-              timestamp: '2026-07-21T11:00:00.000Z',
-              destinationLocation: 'ED',
-            },
             {
               timestamp: '2026-07-21T12:00:00.000Z',
               destinationLocation: 'Ward 4',
             },
           ],
         }),
-      )
+      )) as AdtRecord[]
 
-      expect((rec as AdtRecord).location).toBe('Ward 4')
+      expect(rec.location).toEqual(admitEncounter.location)
     })
 
     test('falls back to the Encounter period when the notification carries no timestamps', async () => {
@@ -255,6 +257,62 @@ describe('Metriport - Ingestion - ADT notifications', () => {
 
       expect(rec.admittedAt).toBe('2026-07-21T09:50:00.000Z')
       expect(rec.dischargedAt).toBe('2026-07-24T08:00:00.000Z')
+    })
+
+    test('lifts the Encounter elements verbatim', async () => {
+      mockedFetchBundle.mockResolvedValue(patientAdmitBundle)
+
+      const [rec] = (await getRecords(
+        notification(MetriportWebhookType.PatientAdmit),
+      )) as AdtRecord[]
+
+      expect(rec).toMatchObject({
+        subject: {
+          reference: 'Patient/78a4d9e5-f2b3-42c8-9a84-52f3e21c2b9d',
+          type: 'Patient',
+          display: 'Sarah Johnson',
+        },
+        class: {
+          system: 'http://terminology.hl7.org/CodeSystem/v3-ActCode',
+          code: 'AMB',
+          display: 'Ambulatory',
+        },
+        serviceType: {
+          coding: [{ code: '394592004', display: 'Cardiology' }],
+          text: 'Cardiology',
+        },
+        reasonCode: [{ text: 'Chest pain' }],
+        location: [
+          {
+            location: {
+              reference: 'Location/3ca5e8d2-7c84-45ab-91e7-834f8becde12',
+              type: 'Location',
+              display: 'Memorial Hospital',
+            },
+          },
+        ],
+        diagnosis: admitEncounter.diagnosis,
+      })
+      expect(rec.diagnosis?.[0].condition?.display).toBe('Stable Angina')
+      expect(adtRecordSchema.safeParse(rec).success).toBe(true)
+    })
+
+    test('leaves out what the Encounter does not carry rather than writing blanks', async () => {
+      mockedFetchBundle.mockResolvedValue(dischargeSummaryBundle)
+
+      const [rec] = (await getRecords(
+        notification(MetriportWebhookType.DischargeSummary),
+      )) as AdtRecord[]
+
+      expect(rec.class?.code).toBe('IMP')
+      expect(rec.subject).toEqual({
+        reference: 'Patient/78a4d9e5-f2b3-42c8-9a84-52f3e21c2b9d',
+      })
+      expect(rec.serviceType).toBeUndefined()
+      expect(rec.reasonCode).toBeUndefined()
+      expect(rec.location).toBeUndefined()
+      expect(rec.diagnosis).toBeUndefined()
+      expect(adtRecordSchema.safeParse(rec).success).toBe(true)
     })
 
     test('rejects a handled notification whose bundle carries no Encounter', async () => {
@@ -306,18 +364,55 @@ describe('Metriport - Ingestion - ADT notifications', () => {
   })
 
   describe('run', () => {
-    test('writes the transfer destination onto the encounter as its location', async () => {
+    test('writes the Encounter elements as JSON under the workbench field names, deriving the display labels', async () => {
       await run(
-        record(MetriportWebhookType.PatientTransfer, { location: 'Ward 4' }),
+        record(MetriportWebhookType.PatientAdmit, {
+          subject: admitEncounter.subject,
+          class: admitEncounter.class,
+          serviceType: admitEncounter.serviceType,
+          reasonCode: admitEncounter.reasonCode,
+          location: admitEncounter.location,
+          diagnosis: admitEncounter.diagnosis,
+        }),
       )
 
-      expect(encounterSaves()[0].location).toBe('Ward 4')
+      expect(encounterSaves()[0]).toEqual({
+        identifier: {
+          system: METRIPORT_ENCOUNTER_IDENTIFIER_SYSTEM,
+          value: VISIT_ID,
+        },
+        status: 'in-progress',
+        startedAt: '2026-07-21T09:50:00.000Z',
+        subject: admitEncounter.subject,
+        class: admitEncounter.class,
+        class_display: 'Ambulatory',
+        serviceType: admitEncounter.serviceType,
+        serviceType_display: 'Cardiology',
+        reason: admitEncounter.reasonCode,
+        location: admitEncounter.location,
+        diagnosis: admitEncounter.diagnosis,
+      })
+    })
+
+    test('falls back to the service type text for its display, and writes no display for a class without one', async () => {
+      await run(
+        record(MetriportWebhookType.PatientAdmit, {
+          class: { code: 'IMP' },
+          serviceType: { coding: [{ code: '394592004' }], text: 'Cardiology' },
+        }),
+      )
+
+      const [save] = encounterSaves()
+      expect(save.serviceType_display).toBe('Cardiology')
+      expect(save).not.toHaveProperty('class_display')
     })
 
     test('writes only what the message knows, so a later message never clears an earlier one', async () => {
       await run(record(MetriportWebhookType.PatientAdmit))
       await run(
-        record(MetriportWebhookType.PatientTransfer, { location: 'Ward 4' }),
+        record(MetriportWebhookType.PatientTransfer, {
+          location: admitEncounter.location,
+        }),
       )
       await run(
         record(MetriportWebhookType.PatientDischarge, {
@@ -344,7 +439,9 @@ describe('Metriport - Ingestion - ADT notifications', () => {
     test('saves only the encounter; the patient is created by identifier resolution, not written here', async () => {
       await run(record(MetriportWebhookType.PatientAdmit))
 
-      expect(store.save.mock.calls.map(([name]) => name)).toEqual(['encounter'])
+      expect(store.save.mock.calls.map(([name]) => name)).toEqual([
+        ENCOUNTER_DATA_SOURCE,
+      ])
     })
 
     test('admit, transfer and discharge converge on one encounter keyed on the visit id', async () => {
@@ -420,7 +517,9 @@ describe('Metriport - Ingestion - ADT notifications', () => {
           endedAt: '2024-07-25T14:10:00.000Z',
         },
       ])
-      expect(store.save.mock.calls.map(([name]) => name)).toEqual(['encounter'])
+      expect(store.save.mock.calls.map(([name]) => name)).toEqual([
+        ENCOUNTER_DATA_SOURCE,
+      ])
       expect(events.publish).toHaveBeenCalledWith({
         key: 'discharge.summary-received',
       })
