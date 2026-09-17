@@ -29,7 +29,7 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["@airtop/sdk", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:0.1.47"],\
           ["@awell-health/awell-sdk", "npm:0.1.32"],\
-          ["@awell-health/extensions-core", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:1.3.1"],\
+          ["@awell-health/extensions-core", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:1.3.3"],\
           ["@awell-health/healthie-sdk", "npm:0.1.2"],\
           ["@calcom/embed-react", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:1.5.3"],\
           ["@dropbox/sign", "npm:1.11.0"],\
@@ -382,7 +382,7 @@ const RAW_RUNTIME_STATE =
           ["@awell-health/awell-extensions", "workspace:."],\
           ["@airtop/sdk", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:0.1.47"],\
           ["@awell-health/awell-sdk", "npm:0.1.32"],\
-          ["@awell-health/extensions-core", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:1.3.1"],\
+          ["@awell-health/extensions-core", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:1.3.3"],\
           ["@awell-health/healthie-sdk", "npm:0.1.2"],\
           ["@calcom/embed-react", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:1.5.3"],\
           ["@dropbox/sign", "npm:1.11.0"],\
@@ -490,17 +490,17 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["@awell-health/extensions-core", [\
-      ["npm:1.3.1", {\
-        "packageLocation": "./.yarn/cache/@awell-health-extensions-core-npm-1.3.1-d74c1673be-4bfa41755c.zip/node_modules/@awell-health/extensions-core/",\
+      ["npm:1.3.3", {\
+        "packageLocation": "./.yarn/cache/@awell-health-extensions-core-npm-1.3.3-95faae72e9-8e78a43e09.zip/node_modules/@awell-health/extensions-core/",\
         "packageDependencies": [\
-          ["@awell-health/extensions-core", "npm:1.3.1"]\
+          ["@awell-health/extensions-core", "npm:1.3.3"]\
         ],\
         "linkType": "SOFT"\
       }],\
-      ["virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:1.3.1", {\
-        "packageLocation": "./.yarn/__virtual__/@awell-health-extensions-core-virtual-38c9a13e3e/0/cache/@awell-health-extensions-core-npm-1.3.1-d74c1673be-4bfa41755c.zip/node_modules/@awell-health/extensions-core/",\
+      ["virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:1.3.3", {\
+        "packageLocation": "./.yarn/__virtual__/@awell-health-extensions-core-virtual-b849bc91c2/0/cache/@awell-health-extensions-core-npm-1.3.3-95faae72e9-8e78a43e09.zip/node_modules/@awell-health/extensions-core/",\
         "packageDependencies": [\
-          ["@awell-health/extensions-core", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:1.3.1"],\
+          ["@awell-health/extensions-core", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:1.3.3"],\
           ["@awell-health/awell-sdk", "npm:0.1.32"],\
           ["@langchain/core", "npm:1.2.9"],\
           ["@langchain/openai", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:1.5.1"],\
@@ -513,6 +513,7 @@ const RAW_RUNTIME_STATE =
           ["lodash", "npm:4.18.1"],\
           ["openai", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:6.44.0"],\
           ["rate-limiter-flexible", "npm:5.0.5"],\
+          ["structured-headers", "npm:2.1.0"],\
           ["zod", "npm:4.4.3"],\
           ["zod-validation-error", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:5.0.0"]\
         ],\
@@ -14666,6 +14667,15 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["strnum", "npm:2.4.2"],\
           ["anynum", "npm:1.0.1"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["structured-headers", [\
+      ["npm:2.1.0", {\
+        "packageLocation": "./.yarn/cache/structured-headers-npm-2.1.0-190d3e906a-bac983d3c4.zip/node_modules/structured-headers/",\
+        "packageDependencies": [\
+          ["structured-headers", "npm:2.1.0"]\
         ],\
         "linkType": "HARD"\
       }]\
