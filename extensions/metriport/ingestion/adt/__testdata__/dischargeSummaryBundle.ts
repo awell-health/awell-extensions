@@ -1,7 +1,7 @@
 import { type Bundle } from '@medplum/fhirtypes'
 
 /**
- * A `medical.discharge-summary` bundle: the FHIR conversion of the matching
+ * A `patient.discharge-summary` bundle: the FHIR conversion of the matching
  * source document, not the ADT Patient Encounter Bundle. It still carries the
  * Encounter for the same visit (visit number `987654321`, the one in
  * `patientAdmitBundle`) so the summary converges on the encounter the ADT
