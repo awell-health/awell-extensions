@@ -669,11 +669,22 @@ describe('summarizeTrackOutcome - Mocked LLM calls', () => {
     expect(onComplete).not.toHaveBeenCalled()
   })
 
-  it('Should use the given Track ID without looking up the current activity', async () => {
+  it('Should resolve the given Track ID without looking up the current activity', async () => {
     const { getTrackData } = require('../../lib/getTrackData/index')
     const awellSdkMock = {
       orchestration: {
-        query: jest.fn().mockResolvedValue(mockPathwayDetails),
+        query: jest.fn().mockImplementation(({ careflowTracks }) => {
+          if (careflowTracks) {
+            return Promise.resolve({
+              careflowTracks: {
+                tracks: [
+                  { id: 'runtime-track-id', definition_id: 'studio-track-id' },
+                ],
+              },
+            })
+          }
+          return Promise.resolve(mockPathwayDetails)
+        }),
       },
     }
     helpers.awellSdk = jest.fn().mockResolvedValue(awellSdkMock)
@@ -681,7 +692,7 @@ describe('summarizeTrackOutcome - Mocked LLM calls', () => {
     await extensionAction.onEvent({
       payload: {
         ...basePayload,
-        fields: { ...basePayload.fields, trackId: 'other-track-id' },
+        fields: { ...basePayload.fields, trackId: 'studio-track-id' },
       },
       onComplete,
       onError,
@@ -690,7 +701,7 @@ describe('summarizeTrackOutcome - Mocked LLM calls', () => {
     })
 
     expect(getTrackData).toHaveBeenCalledWith(
-      expect.objectContaining({ trackId: 'other-track-id' }),
+      expect.objectContaining({ trackId: 'runtime-track-id' }),
     )
     expect(awellSdkMock.orchestration.query).not.toHaveBeenCalledWith(
       expect.objectContaining({ activity: expect.anything() }),

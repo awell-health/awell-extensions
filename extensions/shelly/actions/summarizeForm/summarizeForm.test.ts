@@ -131,9 +131,8 @@ const buildStepMockQuery = () =>
  * fire before any response queries, so mock order is:
  * activity → stepActivities → formDef1 → formDef2 → formResp1 → formResp2
  */
-const buildStepAllMockQuery = () =>
-  jest
-    .fn()
+const buildStepAllMockQuery = (mock = jest.fn()) =>
+  mock
     // First query: get current activity
     .mockResolvedValueOnce({
       activity: {
@@ -897,8 +896,23 @@ describe('summarizeForm - Mocked LLM calls', () => {
   })
 
   describe('stepId provided', () => {
+    // First query resolves the Studio step ID to the runtime step ID
+    const stepLookupResponse = {
+      careflowActivities: {
+        success: true,
+        activities: [
+          {
+            object: { id: 'studio-step-id', type: 'STEP', name: 'Other step' },
+            context: { step_id: 'runtime-step-id' },
+          },
+        ],
+      },
+    }
+
     it('Should summarize the latest form of the given step and ignore scope', async () => {
-      const mockQuery = buildStepAllMockQuery()
+      const mockQuery = buildStepAllMockQuery(
+        jest.fn().mockResolvedValueOnce(stepLookupResponse),
+      )
       helpers.awellSdk = jest.fn().mockReturnValue({
         orchestration: { query: mockQuery },
       })
@@ -908,7 +922,7 @@ describe('summarizeForm - Mocked LLM calls', () => {
         activity: { id: 'X74HeDQ4N0gtdaSEuzF8s' },
         fields: {
           scope: 'Track',
-          stepId: 'other-step-id',
+          stepId: 'studio-step-id',
           formSelection: 'Latest',
           language: 'English',
         },
@@ -923,12 +937,12 @@ describe('summarizeForm - Mocked LLM calls', () => {
         attempt: 1,
       })
 
-      // Forms are read from the given step, not from the track
+      // Forms are read from the resolved step, not from the track
       expect(mockQuery).toHaveBeenNthCalledWith(
-        2,
+        3,
         expect.objectContaining({
           pathwayStepActivities: expect.objectContaining({
-            __args: { pathway_id: 'ai4rZaYEocjB', step_id: 'other-step-id' },
+            __args: { pathway_id: 'ai4rZaYEocjB', step_id: 'runtime-step-id' },
           }),
         }),
       )
@@ -948,6 +962,7 @@ describe('summarizeForm - Mocked LLM calls', () => {
         orchestration: {
           query: jest
             .fn()
+            .mockResolvedValueOnce(stepLookupResponse)
             .mockResolvedValueOnce({
               activity: {
                 success: true,
@@ -968,7 +983,7 @@ describe('summarizeForm - Mocked LLM calls', () => {
       const payload = generateTestPayload({
         pathway: { id: 'ai4rZaYEocjB', definition_id: 'whatever' },
         activity: { id: 'X74HeDQ4N0gtdaSEuzF8s' },
-        fields: { stepId: 'other-step-id', language: 'English' },
+        fields: { stepId: 'studio-step-id', language: 'English' },
         settings: {},
       })
 
@@ -986,7 +1001,7 @@ describe('summarizeForm - Mocked LLM calls', () => {
           expect.objectContaining({
             error: {
               category: 'WRONG_INPUT',
-              message: 'No completed form found in step other-step-id',
+              message: 'No completed form found in step studio-step-id',
             },
           }),
         ],

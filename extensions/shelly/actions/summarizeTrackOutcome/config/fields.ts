@@ -22,7 +22,7 @@ export const fields = {
     id: 'trackId',
     label: 'Track ID',
     description:
-      '[Optional] ID of the track to summarize. Defaults to the track this action runs in. Copy it from the track in Awell Studio.',
+      '[Optional] ID of the track to summarize. Defaults to the track this action runs in. Copy the track ID from Awell Studio. The track must have been activated in the care flow.',
     type: FieldType.STRING,
     required: false,
   },

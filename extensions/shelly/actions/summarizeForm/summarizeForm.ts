@@ -10,8 +10,9 @@ import {
 } from '../../lib/getFormResponseText'
 import {
   getLatestFormInCurrentStep,
-  getAllFormsInCurrentStep,
+  getFormsInStep,
   getFormsInTrack,
+  resolveStepId,
 } from '../../../../src/lib/awell'
 import { markdownToHtml } from '../../../../src/utils'
 import { getCareFlowDetails } from '../../lib/getCareFlowDetails'
@@ -120,12 +121,20 @@ export const summarizeForm: Action<
       )
       formData = getFormResponseText({ formDefinition, formResponse }).result
     } else {
+      // The Step ID field holds a Studio definition ID; map it to the runtime ID
+      const runtimeStepId = isNil(stepId)
+        ? undefined
+        : await resolveStepId({
+            awellSdk,
+            pathwayId: payload.pathway.id,
+            stepId,
+          })
       formData = toFormData(
-        await getAllFormsInCurrentStep({
+        await getFormsInStep({
           awellSdk,
           pathwayId: payload.pathway.id,
           activityId: payload.activity.id,
-          stepId,
+          stepId: runtimeStepId,
         }),
       )
     }

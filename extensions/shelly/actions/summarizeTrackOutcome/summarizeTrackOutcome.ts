@@ -9,6 +9,7 @@ import { getTrackData } from '../../lib/getTrackData/index'
 import { getCareFlowDetails } from '../../lib/getCareFlowDetails'
 import { isNil } from 'lodash'
 import { addActivityEventLog } from '../../../../src/lib/awell/addEventLog'
+import { resolveTrackId } from '../../../../src/lib/awell'
 import { SettingsValidationSchema, type settings } from '../../settings'
 import {
   formatSummaryWithDisclaimer,
@@ -57,10 +58,15 @@ export const summarizeTrackOutcome: Action<
 
       const awellSdk = await helpers.awellSdk()
 
-      // An explicit Track ID field wins, otherwise use the current activity's track
-      const trackId =
-        trackIdField ??
-        (await getCurrentTrackId({ awellSdk, activityId: payload.activity.id }))
+      // The Track ID field holds a Studio definition ID; map it to the runtime ID.
+      // Without it, use the current activity's track.
+      const trackId = isNil(trackIdField)
+        ? await getCurrentTrackId({ awellSdk, activityId: payload.activity.id })
+        : await resolveTrackId({
+            awellSdk,
+            pathwayId: pathway.id,
+            trackId: trackIdField,
+          })
 
       // 3. Get track data including forms and decision path
       const trackData = await getTrackData({

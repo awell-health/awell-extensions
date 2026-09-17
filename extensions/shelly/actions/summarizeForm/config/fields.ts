@@ -39,7 +39,7 @@ export const fields = {
     id: 'stepId',
     label: 'Step ID',
     description:
-      '[Optional] ID of a step in this care flow (e.g. a step in another track) whose forms should be summarized. Copy it from the step in Awell Studio. When set, "Scope" is ignored.',
+      '[Optional] ID of a step in this care flow (e.g. a step in another track) whose forms should be summarized. Copy the step ID from Awell Studio. The step must have been activated in the care flow. When set, "Scope" is ignored.',
     type: FieldType.STRING,
     required: false,
   },
