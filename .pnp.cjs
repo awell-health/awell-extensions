@@ -68,6 +68,7 @@ const RAW_RUNTIME_STATE =
           ["axios", "npm:1.19.0"],\
           ["body-parser", "npm:1.20.6"],\
           ["cheerio", "npm:1.2.0"],\
+          ["cloudinary", "npm:2.11.0"],\
           ["crypto-js", "npm:4.2.0"],\
           ["date-fns", "npm:2.30.0"],\
           ["date-fns-tz", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:2.0.1"],\
@@ -421,6 +422,7 @@ const RAW_RUNTIME_STATE =
           ["axios", "npm:1.19.0"],\
           ["body-parser", "npm:1.20.6"],\
           ["cheerio", "npm:1.2.0"],\
+          ["cloudinary", "npm:2.11.0"],\
           ["crypto-js", "npm:4.2.0"],\
           ["date-fns", "npm:2.30.0"],\
           ["date-fns-tz", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:2.0.1"],\
@@ -5878,6 +5880,16 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./.yarn/cache/clone-npm-1.0.4-a610fcbcf9-d06418b733.zip/node_modules/clone/",\
         "packageDependencies": [\
           ["clone", "npm:1.0.4"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["cloudinary", [\
+      ["npm:2.11.0", {\
+        "packageLocation": "./.yarn/cache/cloudinary-npm-2.11.0-06b29aeb7e-7b49dd4b49.zip/node_modules/cloudinary/",\
+        "packageDependencies": [\
+          ["cloudinary", "npm:2.11.0"],\
+          ["lodash", "npm:4.18.1"]\
         ],\
         "linkType": "HARD"\
       }]\
