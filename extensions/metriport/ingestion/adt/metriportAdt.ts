@@ -45,7 +45,7 @@ export const metriportAdt = withSettings<typeof settings>().endpoint({
   key: 'metriportAdt',
   title: 'Metriport ADT notifications',
   description:
-    'Receives Metriport real-time patient notifications. Handles `patient.admit`, `patient.transfer`, `patient.discharge` and `medical.discharge-summary`, downloading the FHIR bundle each points at; any other notification type is acknowledged without producing a record.',
+    'Receives Metriport real-time patient notifications. Handles `patient.admit`, `patient.transfer`, `patient.discharge` and `patient.discharge-summary`, downloading the FHIR bundle each points at; any other notification type is acknowledged without producing a record.',
   source: 'webhook',
   // TODO: enable verification after the pre-release: `import { verify } from './verify'`
   // and set `verify` here. The verifier and its tests are kept in verify.ts.

@@ -70,7 +70,7 @@ export const realtimeUpdate: Webhook<
 > = {
   key: 'realtimeUpdate',
   description:
-    'Starts a care flow when Metriport sends a real-time patient notification. Enrolls on `patient.admit`, `patient.discharge`, `patient.transfer` and `medical.discharge-summary`, which share one payload shape; the `eventType` data point carries the Metriport webhook type so it can be distinguished on. Any other notification type is acknowledged with a 200 without enrolling. The FHIR bundle is not fetched here — the pre-signed URL is passed on the `bundleUrl` data point and can be retrieved later with the "Get Webhook Bundle" action.',
+    'Starts a care flow when Metriport sends a real-time patient notification. Enrolls on `patient.admit`, `patient.discharge`, `patient.transfer` and `patient.discharge-summary`, which share one payload shape; the `eventType` data point carries the Metriport webhook type so it can be distinguished on. Any other notification type is acknowledged with a 200 without enrolling. The FHIR bundle is not fetched here — the pre-signed URL is passed on the `bundleUrl` data point and can be retrieved later with the "Get Webhook Bundle" action.',
   dataPoints,
   onEvent: async ({
     payload: { payload, rawBody, headers, settings, endpoint },
