@@ -3,6 +3,7 @@ import {
   unhandled,
   withSettings,
 } from '@awell-health/extensions-core'
+import { type CodeableConcept } from '@medplum/fhirtypes'
 import { isNil, isUndefined, omitBy } from 'lodash'
 import { fetchBundle } from '../../shared/fetchBundle'
 import { type settings } from '../../settings'
@@ -14,16 +15,29 @@ import { adtRecordSchema, notificationSchema } from './schemas'
 export const METRIPORT_ENCOUNTER_IDENTIFIER_SYSTEM =
   'https://metriport.com/encounter'
 
+/** The workbench data source the encounter is written to. */
+export const ENCOUNTER_DATA_SOURCE = 'ds-54abfd83-3a15-4103-9bf3-f4e85a4c6c87'
+
+/**
+ * A label for a CodeableConcept: the first coding's display, else its text.
+ * The `_display` columns are an Awell convenience so a care flow can read a
+ * label without digging into a coding; the record itself stays FHIR.
+ */
+const displayOf = (concept: CodeableConcept | undefined): string | undefined =>
+  concept?.coding?.[0]?.display ?? concept?.text
+
 /**
  * Metriport posts every real-time notification to one URL, discriminated on
  * `meta.type`, with the clinical data behind a presigned `payload.url` (a FHIR
  * bundle, valid for 600 s). Admit, transfer, discharge and the discharge
  * summary all converge on one encounter keyed on the visit.
  *
- * Only the encounter is saved for now. The patient is created by identifier
- * resolution and its demographics are not written yet; the rest of what the
- * bundle carries (facility, conditions, the discharge summary document) is
- * modelled later. The bundle itself is retained by the runtime and reaches
+ * Only the encounter is saved for now: its visit key and period, and the
+ * Encounter's subject, class, service type, reason, location and diagnosis as
+ * the FHIR objects they are. The patient is created by identifier resolution
+ * and its demographics are not written yet; the rest of what the bundle
+ * carries (facility, the Condition resources, the discharge summary document)
+ * is modelled later. The bundle itself is retained by the runtime and reaches
  * FHIR data movement through `fhir.bundle-received`.
  * https://docs.metriport.com/medical-api/handling-data/realtime-patient-notifications
  */
@@ -54,7 +68,7 @@ export const metriportAdt = withSettings<typeof settings>().endpoint({
     const bundle = await fetchBundle(payload.url)
     const encounter = findEncounter(bundle)
     const visitId = isNil(encounter) ? undefined : visitIdFrom(encounter)
-    if (isNil(visitId)) {
+    if (isNil(encounter) || isNil(visitId)) {
       throw new PayloadValidationError(
         `${meta.type} bundle at ${payload.url} carries no Encounter to key the visit on`,
       )
@@ -67,9 +81,16 @@ export const metriportAdt = withSettings<typeof settings>().endpoint({
         externalId: payload.externalId,
         metriportPatientId: payload.patientId,
         visitId,
-        admittedAt: payload.admitTimestamp ?? encounter?.period?.start,
-        dischargedAt: payload.dischargeTimestamp ?? encounter?.period?.end,
-        location: payload.transfers?.at(-1)?.destinationLocation,
+        admittedAt: payload.admitTimestamp ?? encounter.period?.start,
+        dischargedAt: payload.dischargeTimestamp ?? encounter.period?.end,
+        // Verbatim FHIR. What the Encounter does not carry stays undefined, so
+        // a later message about the visit never blanks what an earlier one wrote.
+        subject: encounter.subject,
+        class: encounter.class,
+        serviceType: encounter.serviceType,
+        reasonCode: encounter.reasonCode,
+        location: encounter.location,
+        diagnosis: encounter.diagnosis,
         bundle,
       },
     ]
@@ -85,10 +106,10 @@ export const metriportAdt = withSettings<typeof settings>().endpoint({
 
     // Upsert key: every message about this visit converges on ONE encounter.
     // Only what this message knows is written: an admit carries no discharge
-    // time and a discharge no location, and neither should clear what an
-    // earlier message about the same visit already set.
+    // time and a discharge summary no service type, and neither should clear
+    // what an earlier message about the same visit already set.
     store.save(
-      'encounter',
+      ENCOUNTER_DATA_SOURCE,
       omitBy(
         {
           identifier: {
@@ -98,7 +119,14 @@ export const metriportAdt = withSettings<typeof settings>().endpoint({
           status: closed ? 'finished' : 'in-progress',
           startedAt: record.admittedAt,
           endedAt: record.dischargedAt,
+          subject: record.subject,
+          class: record.class,
+          class_display: record.class?.display,
+          serviceType: record.serviceType,
+          serviceType_display: displayOf(record.serviceType),
+          reason: record.reasonCode,
           location: record.location,
+          diagnosis: record.diagnosis,
         },
         isUndefined,
       ),
