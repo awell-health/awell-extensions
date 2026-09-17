@@ -1,0 +1,1 @@
+export { getTicket } from './getTicket'
