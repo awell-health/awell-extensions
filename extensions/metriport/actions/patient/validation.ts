@@ -7,11 +7,13 @@ import {
 } from '@metriport/api-sdk'
 
 /**
- * Awell stores a patient's sex as `Male`, `Female` or `Unknown` while Metriport
- * expects a single letter code (`M`, `F`, `O`, `U`). Anything already in
- * Metriport's format is passed through untouched; anything we don't recognise
- * is left alone so Metriport's schema rejects it, surfacing the bad patient
- * data rather than quietly recording the sex as unknown.
+ * Awell stores a patient's sex as free text (e.g. `Male`, `Female`,
+ * `Non-Binary`) while Metriport expects a single letter code (`M`, `F`, `O`,
+ * `U`). Anything that maps to `M` or `F` is recognised explicitly, as is
+ * anything that explicitly spells out "unknown". Every other given value
+ * (including things we've never seen, like `Non-Binary`) becomes `O` rather
+ * than being rejected. `U` is otherwise reserved for when no value was given
+ * at all.
  */
 const genderAtBirthAliases: Record<
   string,
@@ -19,8 +21,10 @@ const genderAtBirthAliases: Record<
 > = {
   m: 'M',
   male: 'M',
+  man: 'M',
   f: 'F',
   female: 'F',
+  woman: 'F',
   o: 'O',
   other: 'O',
   u: 'U',
@@ -29,9 +33,13 @@ const genderAtBirthAliases: Record<
 }
 
 export const genderAtBirthTransformSchema = z.preprocess((value) => {
+  if (value === undefined || value === null) return 'U'
   if (typeof value !== 'string') return value
 
-  return genderAtBirthAliases[value.trim().toLowerCase()] ?? value
+  const normalized = value.trim().toLowerCase()
+  if (normalized === '') return 'U'
+
+  return genderAtBirthAliases[normalized] ?? 'O'
 }, genderAtBirthSchema)
 
 export const patientCreateSchema = z.object({
