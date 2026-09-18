@@ -7,11 +7,12 @@ describe('genderAtBirthTransformSchema', () => {
   test.each([
     ['Male', 'M'],
     ['Female', 'F'],
-    ['Other', 'O'],
-    ['Unknown', 'U'],
-    ['NOT_KNOWN', 'U'],
     [' female ', 'F'],
     ['m', 'M'],
+    ['Unknown', 'U'],
+    ['NOT_KNOWN', 'U'],
+    ['Man', 'M'],
+    ['Woman', 'F'],
   ])('maps the Awell value "%s" to "%s"', (input, expected) => {
     expect(genderAtBirthTransformSchema.parse(input)).toBe(expected)
   })
@@ -23,7 +24,23 @@ describe('genderAtBirthTransformSchema', () => {
     },
   )
 
-  test.each(['', 'Man', 'X', undefined, null, 1])('rejects %p', (input) => {
+  test.each(['Other', 'Non-Binary', 'X'])(
+    'maps the unrecognised value "%s" to "O"',
+    (input) => {
+      expect(genderAtBirthTransformSchema.parse(input)).toBe('O')
+    },
+  )
+
+  test.each([
+    ['an empty string', ''],
+    ['a whitespace-only string', '   '],
+    ['undefined', undefined],
+    ['null', null],
+  ])('maps %s (no value given) to "U"', (_label, input) => {
+    expect(genderAtBirthTransformSchema.parse(input)).toBe('U')
+  })
+
+  test.each([1, {}, []])('rejects %p', (input) => {
     expect(() => genderAtBirthTransformSchema.parse(input)).toThrow()
   })
 })
