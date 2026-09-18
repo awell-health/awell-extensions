@@ -29,7 +29,6 @@ describe('getAllFormsInCurrentStep', () => {
     }) as jest.Mocked<AwellSdk>
 
     const mockQuery = awellSdkMock.orchestration.query as jest.Mock
-
   })
 
   test('Should return all forms in the current step sorted by date ascending (chronological)', async () => {
@@ -70,5 +69,37 @@ describe('getAllFormsInCurrentStep', () => {
     expect(result[0].formActivityId).toBe('form_activity_1')
     expect(result[1].formActivityId).toBe('form_activity_2')
     expect(result).toHaveLength(2)
+  })
+
+  test('Should query the given stepId instead of the current activity step', async () => {
+    const mockQuery = awellSdkMock.orchestration.query as jest.Mock
+
+    mockQuery
+      .mockResolvedValueOnce({
+        activity: {
+          activity: mockCareflowActivitiesResponse.activities[0],
+          success: true,
+        },
+      })
+      .mockResolvedValueOnce({
+        pathwayStepActivities: { success: true, activities: [] },
+      })
+
+    const result = await getAllFormsInCurrentStep({
+      awellSdk: awellSdkMock,
+      pathwayId: 'whatever',
+      activityId: 'X74HeDQ4N0gtdaSEuzF8s',
+      stepId: 'other-step-id',
+    })
+
+    expect(result).toHaveLength(0)
+    expect(mockQuery).toHaveBeenNthCalledWith(
+      2,
+      expect.objectContaining({
+        pathwayStepActivities: expect.objectContaining({
+          __args: { pathway_id: 'whatever', step_id: 'other-step-id' },
+        }),
+      }),
+    )
   })
 })

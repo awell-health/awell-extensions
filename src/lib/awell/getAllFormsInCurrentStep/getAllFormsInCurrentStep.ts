@@ -20,15 +20,18 @@ const logDebug = (
   log?.(data, `[getAllFormsInCurrentStep] ${message}`)
 }
 
-type GetAllFormsInCurrentStep = ({
+type GetFormsInStep = ({
   awellSdk,
   pathwayId,
   activityId,
+  stepId,
   log,
 }: {
   awellSdk: AwellSdk
   pathwayId: string
   activityId: string
+  /** Runtime step ID to read forms from instead of the current activity's step */
+  stepId?: string
   log?: Log
 }) => Promise<
   Array<{
@@ -39,10 +42,15 @@ type GetAllFormsInCurrentStep = ({
   }>
 >
 
-export const getAllFormsInCurrentStep: GetAllFormsInCurrentStep = async ({
+/**
+ * Returns all completed forms in a step of the care flow: the current
+ * activity's step by default, or the step given by `stepId` (a runtime step ID).
+ */
+export const getFormsInStep: GetFormsInStep = async ({
   awellSdk,
   pathwayId,
   activityId,
+  stepId,
   log,
 }) => {
   const activity_response = await awellSdk.orchestration
@@ -95,7 +103,7 @@ export const getAllFormsInCurrentStep: GetAllFormsInCurrentStep = async ({
     stepId: currentActivity.context?.step_id,
   })
 
-  const currentStepId = currentActivity.context?.step_id
+  const currentStepId = stepId ?? currentActivity.context?.step_id
 
   if (isNil(currentStepId)) {
     logDebug(log, 'Could not find step ID of the current activity', {
@@ -229,3 +237,7 @@ export const getAllFormsInCurrentStep: GetAllFormsInCurrentStep = async ({
     }),
   )
 }
+
+/** All completed forms in the current activity's step. */
+export const getAllFormsInCurrentStep: GetFormsInStep = async (args) =>
+  await getFormsInStep(args)

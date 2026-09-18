@@ -10,8 +10,9 @@ import {
 } from '../../lib/getFormResponseText'
 import {
   getLatestFormInCurrentStep,
-  getAllFormsInCurrentStep,
+  getFormsInStep,
   getFormsInTrack,
+  resolveStepId,
 } from '../../../../src/lib/awell'
 import { markdownToHtml } from '../../../../src/utils'
 import { getCareFlowDetails } from '../../lib/getCareFlowDetails'
@@ -27,7 +28,8 @@ import { resolveDisclaimerConfig } from '../../lib/disclaimer'
  * 2. Includes appropriate disclaimer
  *
  * Supports configurable scope (Step or Track) and form selection (Latest or All),
- * matching the behavior of the listFormAnswers action.
+ * matching the behavior of the listFormAnswers action. An optional step ID lets
+ * the action read forms from another step (e.g. in another track) of the care flow.
  *
  * @returns HTML-formatted summary
  */
@@ -40,7 +42,7 @@ export const summarizeForm: Action<
   category: Category.WORKFLOW,
   title: 'Summarize Form',
   description:
-    'Summarize form responses with AI. Defaults to the latest form in the current step, but can summarize all forms in the step or across the track.',
+    'Summarize form responses with AI. Defaults to the latest form in the current step, but can summarize all forms in the step, across the track, or in a specific step (by ID).',
   fields,
   previewable: false,
   dataPoints,
@@ -49,6 +51,7 @@ export const summarizeForm: Action<
     // 1. Validate input fields
     const {
       scope,
+      stepId,
       formSelection,
       summaryFormat,
       language,
@@ -82,63 +85,63 @@ export const summarizeForm: Action<
       payload.pathway.id,
     )
 
-    // 3. Get form data based on scope and formSelection
+    // 3. Get form data based on scope and formSelection.
+    // An explicit step ID always targets that step, regardless of scope.
+    type FormsData = Parameters<typeof getResponsesForAllForms>[0]['formsData']
+    const toFormData = (forms: FormsData): string => {
+      if (formSelection === 'All') {
+        return getResponsesForAllForms({ formsData: forms }).result
+      }
+      const latestForm = forms[forms.length - 1]
+      if (isNil(latestForm)) return ''
+      return getFormResponseText({
+        formDefinition: latestForm.formDefinition,
+        formResponse: latestForm.formResponse,
+      }).result
+    }
+
     let formData: string
 
-    if (scope === 'Step') {
-      if (formSelection === 'Latest') {
-        // Single latest form in step (original behavior)
-        const { formDefinition, formResponse } =
-          await getLatestFormInCurrentStep({
-            awellSdk,
-            pathwayId: payload.pathway.id,
-            activityId: payload.activity.id,
-          })
-
-        const { result } = getFormResponseText({
-          formDefinition,
-          formResponse,
-        })
-        formData = result
-      } else {
-        // All forms in step
-        const formsData = await getAllFormsInCurrentStep({
+    if (scope === 'Track' && isNil(stepId)) {
+      formData = toFormData(
+        await getFormsInTrack({
           awellSdk,
           pathwayId: payload.pathway.id,
           activityId: payload.activity.id,
-        })
-
-        const { result } = getResponsesForAllForms({ formsData })
-        formData = result
-      }
+        }),
+      )
+    } else if (formSelection === 'Latest' && isNil(stepId)) {
+      // Single latest form in current step (original behavior)
+      const { formDefinition, formResponse } = await getLatestFormInCurrentStep(
+        {
+          awellSdk,
+          pathwayId: payload.pathway.id,
+          activityId: payload.activity.id,
+        },
+      )
+      formData = getFormResponseText({ formDefinition, formResponse }).result
     } else {
-      // scope === 'Track'
-      const allFormsInTrack = await getFormsInTrack({
-        awellSdk,
-        pathwayId: payload.pathway.id,
-        activityId: payload.activity.id,
-      })
-
-      if (formSelection === 'Latest') {
-        // Latest form in track
-        if (allFormsInTrack.length === 0) {
-          formData = ''
-        } else {
-          const latestForm = allFormsInTrack[allFormsInTrack.length - 1]
-          const { result } = getFormResponseText({
-            formDefinition: latestForm.formDefinition,
-            formResponse: latestForm.formResponse,
+      // The Step ID field holds a Studio definition ID; map it to the runtime ID
+      const runtimeStepId = isNil(stepId)
+        ? undefined
+        : await resolveStepId({
+            awellSdk,
+            pathwayId: payload.pathway.id,
+            stepId,
           })
-          formData = result
-        }
-      } else {
-        // All forms in track
-        const { result } = getResponsesForAllForms({
-          formsData: allFormsInTrack,
-        })
-        formData = result
-      }
+      formData = toFormData(
+        await getFormsInStep({
+          awellSdk,
+          pathwayId: payload.pathway.id,
+          activityId: payload.activity.id,
+          stepId: runtimeStepId,
+        }),
+      )
     }
+
+    const scopeLabel = isNil(stepId)
+      ? `the current ${scope.toLowerCase()}`
+      : `step ${stepId}`
 
     if (formData === '') {
       await onError({
@@ -146,11 +149,11 @@ export const summarizeForm: Action<
           {
             date: new Date().toISOString(),
             text: {
-              en: `No completed form found in the current ${scope.toLowerCase()}`,
+              en: `No completed form found in ${scopeLabel}`,
             },
             error: {
               category: 'WRONG_INPUT',
-              message: `No completed form found in the current ${scope.toLowerCase()}`,
+              message: `No completed form found in ${scopeLabel}`,
             },
           },
         ],

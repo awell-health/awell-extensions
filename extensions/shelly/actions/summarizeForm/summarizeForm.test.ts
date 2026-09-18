@@ -131,9 +131,8 @@ const buildStepMockQuery = () =>
  * fire before any response queries, so mock order is:
  * activity → stepActivities → formDef1 → formDef2 → formResp1 → formResp2
  */
-const buildStepAllMockQuery = () =>
-  jest
-    .fn()
+const buildStepAllMockQuery = (mock = jest.fn()) =>
+  mock
     // First query: get current activity
     .mockResolvedValueOnce({
       activity: {
@@ -893,6 +892,120 @@ describe('summarizeForm - Mocked LLM calls', () => {
       )
 
       expect(onComplete).not.toHaveBeenCalled()
+    })
+  })
+
+  describe('stepId provided', () => {
+    // First query resolves the Studio step ID to the runtime step ID
+    const stepLookupResponse = {
+      careflowActivities: {
+        success: true,
+        activities: [
+          {
+            object: { id: 'studio-step-id', type: 'STEP', name: 'Other step' },
+            context: { step_id: 'runtime-step-id' },
+          },
+        ],
+      },
+    }
+
+    it('Should summarize the latest form of the given step and ignore scope', async () => {
+      const mockQuery = buildStepAllMockQuery(
+        jest.fn().mockResolvedValueOnce(stepLookupResponse),
+      )
+      helpers.awellSdk = jest.fn().mockReturnValue({
+        orchestration: { query: mockQuery },
+      })
+
+      const payload = generateTestPayload({
+        pathway: { id: 'ai4rZaYEocjB', definition_id: 'whatever' },
+        activity: { id: 'X74HeDQ4N0gtdaSEuzF8s' },
+        fields: {
+          scope: 'Track',
+          stepId: 'studio-step-id',
+          formSelection: 'Latest',
+          language: 'English',
+        },
+        settings: {},
+      })
+
+      await extensionAction.onEvent({
+        payload,
+        onComplete,
+        onError,
+        helpers,
+        attempt: 1,
+      })
+
+      // Forms are read from the resolved step, not from the track
+      expect(mockQuery).toHaveBeenNthCalledWith(
+        3,
+        expect.objectContaining({
+          pathwayStepActivities: expect.objectContaining({
+            __args: { pathway_id: 'ai4rZaYEocjB', step_id: 'runtime-step-id' },
+          }),
+        }),
+      )
+      // Latest = only the last form is summarized
+      const { summarizeFormWithLLM } = require('../../lib/summarizeFormWithLLM')
+      expect(summarizeFormWithLLM).toHaveBeenCalledWith(
+        expect.objectContaining({
+          formData: expect.not.stringContaining('Next Form'),
+        }),
+      )
+      expect(onComplete).toHaveBeenCalled()
+      expect(onError).not.toHaveBeenCalled()
+    })
+
+    it('Should report the step ID when the given step has no completed form', async () => {
+      helpers.awellSdk = jest.fn().mockReturnValue({
+        orchestration: {
+          query: jest
+            .fn()
+            .mockResolvedValueOnce(stepLookupResponse)
+            .mockResolvedValueOnce({
+              activity: {
+                success: true,
+                activity: {
+                  id: 'X74HeDQ4N0gtdaSEuzF8s',
+                  date: '2024-09-11T22:56:59.607Z',
+                  object: { id: 'OGhjJKF5LRmo', type: 'FORM' },
+                  context: { step_id: 'Xkn5dkyPA5uW' },
+                },
+              },
+            })
+            .mockResolvedValueOnce({
+              pathwayStepActivities: { success: true, activities: [] },
+            }),
+        },
+      })
+
+      const payload = generateTestPayload({
+        pathway: { id: 'ai4rZaYEocjB', definition_id: 'whatever' },
+        activity: { id: 'X74HeDQ4N0gtdaSEuzF8s' },
+        fields: { stepId: 'studio-step-id', language: 'English' },
+        settings: {},
+      })
+
+      await extensionAction.onEvent({
+        payload,
+        onComplete,
+        onError,
+        helpers,
+        attempt: 1,
+      })
+
+      expect(onComplete).not.toHaveBeenCalled()
+      expect(onError).toHaveBeenCalledWith({
+        events: [
+          expect.objectContaining({
+            error: {
+              category: 'WRONG_INPUT',
+              message: 'No completed form found in step studio-step-id',
+            },
+          }),
+        ],
+      })
     })
   })
 })
