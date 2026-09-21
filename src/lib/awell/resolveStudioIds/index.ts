@@ -1,1 +1,1 @@
-export { resolveStepId, resolveTrackId } from './resolveStudioIds'
+export { resolveStepIds, resolveTrackIds } from './resolveStudioIds'

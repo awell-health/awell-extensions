@@ -12,11 +12,11 @@ import {
   getLatestFormInCurrentStep,
   getFormsInStep,
   getFormsInTrack,
-  resolveStepId,
+  resolveStepIds,
 } from '../../../../src/lib/awell'
 import { markdownToHtml } from '../../../../src/utils'
 import { getCareFlowDetails } from '../../lib/getCareFlowDetails'
-import { isNil } from 'lodash'
+import { isNil, sortBy } from 'lodash'
 import { SettingsValidationSchema, type settings } from '../../settings'
 import { resolveDisclaimerConfig } from '../../lib/disclaimer'
 
@@ -51,7 +51,7 @@ export const summarizeForm: Action<
     // 1. Validate input fields
     const {
       scope,
-      stepId,
+      stepId: stepIds,
       formSelection,
       summaryFormat,
       language,
@@ -102,7 +102,7 @@ export const summarizeForm: Action<
 
     let formData: string
 
-    if (scope === 'Track' && isNil(stepId)) {
+    if (scope === 'Track' && isNil(stepIds)) {
       formData = toFormData(
         await getFormsInTrack({
           awellSdk,
@@ -110,7 +110,7 @@ export const summarizeForm: Action<
           activityId: payload.activity.id,
         }),
       )
-    } else if (formSelection === 'Latest' && isNil(stepId)) {
+    } else if (formSelection === 'Latest' && isNil(stepIds)) {
       // Single latest form in current step (original behavior)
       const { formDefinition, formResponse } = await getLatestFormInCurrentStep(
         {
@@ -121,27 +121,32 @@ export const summarizeForm: Action<
       )
       formData = getFormResponseText({ formDefinition, formResponse }).result
     } else {
-      // The Step ID field holds a Studio definition ID; map it to the runtime ID
-      const runtimeStepId = isNil(stepId)
-        ? undefined
-        : await resolveStepId({
+      // The Step ID field holds Studio definition IDs; keep the steps that were
+      // activated, mapped to their runtime IDs. Without it, use the current step.
+      const runtimeStepIds = isNil(stepIds)
+        ? [undefined]
+        : await resolveStepIds({
             awellSdk,
             pathwayId: payload.pathway.id,
-            stepId,
+            stepIds,
           })
-      formData = toFormData(
-        await getFormsInStep({
-          awellSdk,
-          pathwayId: payload.pathway.id,
-          activityId: payload.activity.id,
-          stepId: runtimeStepId,
-        }),
+      const formsPerStep = await Promise.all(
+        runtimeStepIds.map(
+          async (stepId) =>
+            await getFormsInStep({
+              awellSdk,
+              pathwayId: payload.pathway.id,
+              activityId: payload.activity.id,
+              stepId,
+            }),
+        ),
       )
+      formData = toFormData(sortBy(formsPerStep.flat(), 'date'))
     }
 
-    const scopeLabel = isNil(stepId)
+    const scopeLabel = isNil(stepIds)
       ? `the current ${scope.toLowerCase()}`
-      : `step ${stepId}`
+      : `step(s) ${stepIds.join(', ')}`
 
     if (formData === '') {
       await onError({

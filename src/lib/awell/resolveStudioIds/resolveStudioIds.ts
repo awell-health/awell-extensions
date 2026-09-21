@@ -1,51 +1,62 @@
 import { type AwellSdk } from '@awell-health/awell-sdk'
-import { isNil } from 'lodash'
+import { isEmpty, uniq } from 'lodash'
 
 /**
  * Care flow authors copy track and step IDs from Awell Studio. Those are
  * *definition* IDs, while the orchestration queries expect the runtime IDs
  * found in an activity's context. These helpers map one to the other for a
- * given care flow. A runtime ID passed in is returned unchanged.
+ * given care flow. Runtime IDs passed in are matched as-is.
+ *
+ * Both accept several IDs and return the runtime IDs of those that were
+ * activated in the care flow, so an author can list every step or track that
+ * *might* have run and let the action pick up the one that did.
  */
 
-export const resolveTrackId = async ({
+const quote = (ids: string[]): string => ids.map((id) => `"${id}"`).join(', ')
+
+/** Runtime IDs of the activated tracks, most recently started first. */
+export const resolveTrackIds = async ({
   awellSdk,
   pathwayId,
-  trackId,
+  trackIds,
 }: {
   awellSdk: AwellSdk
   pathwayId: string
-  trackId: string
-}): Promise<string> => {
+  trackIds: string[]
+}): Promise<string[]> => {
   const { careflowTracks } = await awellSdk.orchestration.query({
     careflowTracks: {
       __args: { careflow_id: pathwayId },
-      tracks: { id: true, definition_id: true },
+      tracks: { id: true, definition_id: true, start_date: true },
     },
   })
 
-  const track = careflowTracks.tracks.find(
-    (t) => t.id === trackId || t.definition_id === trackId,
-  )
+  const runtimeTrackIds = careflowTracks.tracks
+    .filter(
+      (t) => trackIds.includes(t.id) || trackIds.includes(t.definition_id),
+    )
+    .sort((a, b) => b.start_date.localeCompare(a.start_date))
+    .map((t) => t.id)
 
-  if (isNil(track)) {
+  if (isEmpty(runtimeTrackIds)) {
     throw new Error(
-      `Track "${trackId}" not found in care flow ${pathwayId}. Has the track been activated?`,
+      `None of the tracks ${quote(trackIds)} were found in care flow ${pathwayId}. Has one of them been activated?`,
     )
   }
 
-  return track.id
+  return uniq(runtimeTrackIds)
 }
 
-export const resolveStepId = async ({
+/** Runtime IDs of the activated steps. */
+export const resolveStepIds = async ({
   awellSdk,
   pathwayId,
-  stepId,
+  stepIds,
 }: {
   awellSdk: AwellSdk
   pathwayId: string
-  stepId: string
-}): Promise<string> => {
+  stepIds: string[]
+}): Promise<string[]> => {
   const { careflowActivities } = await awellSdk.orchestration.query({
     careflowActivities: {
       __args: {
@@ -61,18 +72,21 @@ export const resolveStepId = async ({
   })
 
   // A STEP activity's object.id is the Studio definition ID; its context holds the runtime ID
-  const stepActivity = careflowActivities.activities.find(
-    (a) =>
-      a.object.type === 'STEP' &&
-      (a.object.id === stepId || a.context?.step_id === stepId),
-  )
-  const runtimeStepId = stepActivity?.context?.step_id
+  const runtimeStepIds = careflowActivities.activities
+    .filter(
+      (a) =>
+        a.object.type === 'STEP' &&
+        (stepIds.includes(a.object.id) ||
+          stepIds.includes(a.context?.step_id ?? '')),
+    )
+    .map((a) => a.context?.step_id)
+    .filter((id): id is string => !isEmpty(id))
 
-  if (isNil(runtimeStepId)) {
+  if (isEmpty(runtimeStepIds)) {
     throw new Error(
-      `Step "${stepId}" not found in care flow ${pathwayId}. Has the step been activated?`,
+      `None of the steps ${quote(stepIds)} were found in care flow ${pathwayId}. Has one of them been activated?`,
     )
   }
 
-  return runtimeStepId
+  return uniq(runtimeStepIds)
 }

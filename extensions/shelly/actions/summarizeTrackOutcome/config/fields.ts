@@ -20,9 +20,9 @@ export const fields = {
   },
   trackId: {
     id: 'trackId',
-    label: 'Track ID',
+    label: 'Track ID(s)',
     description:
-      '[Optional] ID of the track to summarize. Defaults to the track this action runs in. Copy the track ID from Awell Studio. The track must have been activated in the care flow.',
+      '[Optional] One or more track IDs, separated by commas. Defaults to the track this action runs in. Copy the track IDs from Awell Studio. Tracks that were not activated in the care flow are skipped; if several were, the most recently started one is summarized.',
     type: FieldType.STRING,
     required: false,
   },
@@ -55,9 +55,14 @@ export const FieldsValidationSchema = z.object({
   instructions: z.string().optional().default(''),
   trackId: z
     .string()
-    .trim()
     .optional()
-    .transform((val) => (isEmpty(val) ? undefined : val)),
+    .transform((val) => {
+      const ids = (val ?? '')
+        .split(',')
+        .map((id) => id.trim())
+        .filter((id) => id !== '')
+      return isEmpty(ids) ? undefined : ids
+    }),
   disclaimerText: OptionalDisclaimerTextSchema,
   disclaimerPlacement: DisclaimerPlacementEnum.optional(),
 } satisfies Record<keyof typeof fields, ZodType>)

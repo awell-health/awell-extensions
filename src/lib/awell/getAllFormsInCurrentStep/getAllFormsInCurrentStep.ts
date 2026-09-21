@@ -37,6 +37,7 @@ type GetFormsInStep = ({
   Array<{
     formActivityId: string
     formId: string
+    date: string
     formDefinition: Form
     formResponse: FormResponse
   }>
@@ -231,6 +232,7 @@ export const getFormsInStep: GetFormsInStep = async ({
       return {
         formActivityId: formActivity.id,
         formId: formActivity.object.id,
+        date: formActivity.date,
         formDefinition,
         formResponse,
       }

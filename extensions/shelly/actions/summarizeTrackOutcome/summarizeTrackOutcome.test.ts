@@ -669,7 +669,7 @@ describe('summarizeTrackOutcome - Mocked LLM calls', () => {
     expect(onComplete).not.toHaveBeenCalled()
   })
 
-  it('Should resolve the given Track ID without looking up the current activity', async () => {
+  it('Should resolve the listed Track IDs to the most recently started activated track', async () => {
     const { getTrackData } = require('../../lib/getTrackData/index')
     const awellSdkMock = {
       orchestration: {
@@ -678,7 +678,16 @@ describe('summarizeTrackOutcome - Mocked LLM calls', () => {
             return Promise.resolve({
               careflowTracks: {
                 tracks: [
-                  { id: 'runtime-track-id', definition_id: 'studio-track-id' },
+                  {
+                    id: 'older-runtime-id',
+                    definition_id: 'older-studio-id',
+                    start_date: '2026-01-01T00:00:00.000Z',
+                  },
+                  {
+                    id: 'runtime-track-id',
+                    definition_id: 'studio-track-id',
+                    start_date: '2026-02-01T00:00:00.000Z',
+                  },
                 ],
               },
             })
@@ -692,7 +701,10 @@ describe('summarizeTrackOutcome - Mocked LLM calls', () => {
     await extensionAction.onEvent({
       payload: {
         ...basePayload,
-        fields: { ...basePayload.fields, trackId: 'studio-track-id' },
+        fields: {
+          ...basePayload.fields,
+          trackId: 'never-activated, older-studio-id, studio-track-id',
+        },
       },
       onComplete,
       onError,

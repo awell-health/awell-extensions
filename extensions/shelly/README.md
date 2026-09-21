@@ -169,7 +169,7 @@ This tool analyzes patient-reported data from forms and generates concise, relev
 
 **What it needs (Inputs):**
 - `Scope` (Optional): Where to look for forms: "Step" (default) or "Track".
-- `Step ID` (Optional): ID of a step in this care flow whose forms should be summarized, e.g. a step in another track. Copy the step ID from Awell Studio; the action maps it to the running care flow. The step must have been activated. When set, `Scope` is ignored.
+- `Step ID(s)` (Optional): One or more step IDs, separated by commas, whose forms should be summarized, e.g. steps in other tracks. Copy the step IDs from Awell Studio; the action maps them to the running care flow. Steps that were not activated are skipped, so you can list every step that *might* have run and let the action pick up the one that did. `Form selection` applies across the matched steps. When set, `Scope` is ignored.
 - `Form selection` (Optional): "Latest" (default) summarizes the most recent completed form in the scope, "All" summarizes every completed form.
 - `Summary Format` (Required): Preferred format for the summary ("Bullet Points" or "Paragraph").
 - `Language` (Optional): Desired language for the summary. If not set, it automatically detects the form's language.
@@ -253,7 +253,7 @@ This tool analyzes the progression through a specific track in a care flow, high
 
 **What it needs (Inputs):**
 - `Instructions` (Optional): Specific focus for the analysis (e.g., "Summarize outcome, focus on semantic information in form and messages").
-- `Track ID` (Optional): ID of the track to summarize. Defaults to the track this action runs in. Copy the track ID from Awell Studio; the action maps it to the running care flow. The track must have been activated.
+- `Track ID(s)` (Optional): One or more track IDs, separated by commas. Defaults to the track this action runs in. Copy the track IDs from Awell Studio; the action maps them to the running care flow. Tracks that were not activated are skipped; if several were, the most recently started one is summarized.
 
 **What it gives back (Outputs):**
 - `Outcome Summary`: A comprehensive summary of the track's progression and outcomes (in HTML format).
