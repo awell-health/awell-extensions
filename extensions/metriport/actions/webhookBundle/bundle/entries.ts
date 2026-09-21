@@ -54,6 +54,8 @@ export const buildResourceEntry = (
     )
   }
 
+  log?.({ resourceType, id }, '[Metriport bundle] Building resource entry')
+
   // Shallow clone, then drop the two fields Medplum must assign itself. Nested
   // objects are shared with the input, but nothing nested is modified — the
   // identifier list below is replaced rather than appended to in place.
@@ -77,7 +79,7 @@ export const buildResourceEntry = (
 
   log?.(
     { resourceType, identifiers: rawIdentifier },
-    '[Metriport bundle] Building resource entry',
+    '[Metriport bundle] Existing identifiers on resource',
   )
 
   if (!rawIdentifier || Array.isArray(rawIdentifier)) {
