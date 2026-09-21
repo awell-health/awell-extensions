@@ -141,6 +141,21 @@ describe('buildTransactionBundle — shape', () => {
     })
   })
 
+  test('passes the log function through to each Metriport resource entry', () => {
+    const log = jest.fn()
+
+    build({ log })
+
+    expect(log).toHaveBeenCalledWith(
+      expect.objectContaining({ resourceType: 'Encounter' }),
+      expect.any(String),
+    )
+    expect(log).toHaveBeenCalledWith(
+      expect.objectContaining({ resourceType: 'Condition' }),
+      expect.any(String),
+    )
+  })
+
   test('preserves the Encounter visit-number identifier alongside ours', () => {
     const encounter = entryFor(build({}) as Bundle, 'Encounter')
 
