@@ -1,6 +1,6 @@
 import { type Field, FieldType } from '@awell-health/extensions-core'
 import z, { type ZodType } from 'zod'
-import { isEmpty } from 'lodash'
+import { IdListSchema } from '../../../lib/idList'
 import { DISCLAIMER_MSG } from '../../../lib/constants'
 import {
   DisclaimerPlacementEnum,
@@ -53,16 +53,7 @@ export const fields = {
 
 export const FieldsValidationSchema = z.object({
   instructions: z.string().optional().default(''),
-  trackId: z
-    .string()
-    .optional()
-    .transform((val) => {
-      const ids = (val ?? '')
-        .split(',')
-        .map((id) => id.trim())
-        .filter((id) => id !== '')
-      return isEmpty(ids) ? undefined : ids
-    }),
+  trackId: IdListSchema,
   disclaimerText: OptionalDisclaimerTextSchema,
   disclaimerPlacement: DisclaimerPlacementEnum.optional(),
 } satisfies Record<keyof typeof fields, ZodType>)

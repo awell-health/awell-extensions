@@ -69,6 +69,7 @@ describe('summarizeTrackOutcome - Mocked LLM calls', () => {
     },
     fields: {
       instructions: 'Summarize track outcome.',
+      trackId: null as unknown as string, // Studio may send null for an empty field
     },
     patient: {
       id: 'test-patient-id',

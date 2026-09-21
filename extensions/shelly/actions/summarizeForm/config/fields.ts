@@ -1,6 +1,6 @@
 import { type Field, FieldType } from '@awell-health/extensions-core'
 import z, { type ZodType } from 'zod'
-import { isEmpty } from 'lodash'
+import { IdListSchema } from '../../../lib/idList'
 import { DISCLAIMER_MSG_FORM } from '../../../lib/constants'
 import {
   DisclaimerPlacementEnum,
@@ -117,16 +117,7 @@ export const fields = {
 // Step 3: Define the validation schema using zod
 export const FieldsValidationSchema = z.object({
   scope: ScopeEnum.default('Step'),
-  stepId: z
-    .string()
-    .optional()
-    .transform((val) => {
-      const ids = (val ?? '')
-        .split(',')
-        .map((id) => id.trim())
-        .filter((id) => id !== '')
-      return isEmpty(ids) ? undefined : ids
-    }),
+  stepId: IdListSchema,
   formSelection: FormSelectionEnum.default('Latest'),
   summaryFormat: z
     .enum([SummaryFormatEnum.BULLET_POINTS, SummaryFormatEnum.TEXT_PARAGRAPH])

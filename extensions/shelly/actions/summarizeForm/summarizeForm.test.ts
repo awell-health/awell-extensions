@@ -302,6 +302,7 @@ describe('summarizeForm - Mocked LLM calls', () => {
         fields: {
           summaryFormat: 'Bullet-points',
           language: 'Default',
+          stepId: null as unknown as string, // Studio may send null for an empty field
         },
         settings: {},
       })
