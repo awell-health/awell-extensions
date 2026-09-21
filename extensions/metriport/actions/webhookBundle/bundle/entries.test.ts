@@ -49,6 +49,37 @@ describe('buildResourceEntry', () => {
     ])
   })
 
+  test('leaves the identifier untouched when it is a single object rather than an array', () => {
+    const entry = buildResourceEntry({
+      resourceType: 'Encounter',
+      id: 'metriport-encounter-1',
+      status: 'in-progress',
+      class: { code: 'AMB' },
+      identifier: { value: '987654321' } as any,
+    })
+
+    expect((entry.resource as any).identifier).toEqual({
+      value: '987654321',
+    })
+  })
+
+  test('still targets the Metriport identifier in the request URL even though it was not stamped', () => {
+    const entry = buildResourceEntry({
+      resourceType: 'Encounter',
+      id: 'metriport-encounter-1',
+      status: 'in-progress',
+      class: { code: 'AMB' },
+      identifier: { value: '987654321' } as any,
+    })
+
+    expect(entry.request).toEqual({
+      method: 'PUT',
+      url: `Encounter?identifier=${metriportIdentifierSystem(
+        'Encounter',
+      )}|metriport-encounter-1`,
+    })
+  })
+
   test('does not stamp a duplicate identifier when one is already present', () => {
     const entry = buildResourceEntry({
       resourceType: 'Encounter',
@@ -122,6 +153,34 @@ describe('buildResourceEntry', () => {
 
     expect(entry.request).toEqual({ method: 'POST', url: 'Binary' })
     expect((entry.resource as any).identifier).toBeUndefined()
+  })
+
+  test('logs the resource type and its existing identifiers', () => {
+    const log = jest.fn()
+
+    buildResourceEntry(
+      {
+        resourceType: 'Encounter',
+        id: 'metriport-encounter-1',
+        status: 'in-progress',
+        class: { code: 'AMB' },
+        identifier: [{ value: '987654321' }],
+      },
+      undefined,
+      log,
+    )
+
+    expect(log).toHaveBeenCalledWith(
+      { resourceType: 'Encounter', id: 'metriport-encounter-1' },
+      expect.any(String),
+    )
+    expect(log).toHaveBeenCalledWith(
+      {
+        resourceType: 'Encounter',
+        identifiers: [{ value: '987654321' }],
+      },
+      expect.any(String),
+    )
   })
 
   test('does not mutate the resource it is given', () => {

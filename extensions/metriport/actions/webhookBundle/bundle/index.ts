@@ -3,6 +3,7 @@ import {
   type BundleEntry,
   type Resource,
 } from '@medplum/fhirtypes'
+import { type Helpers } from '@awell-health/extensions-core'
 import { buildAccountOrganizationEntry } from './account'
 import { buildResourceEntry } from './entries'
 import { buildProvenance } from './provenance'
@@ -19,6 +20,8 @@ export interface BuildTransactionBundleArgs {
   reason?: string
   /** Fallback for `Provenance.recorded`; injectable so tests stay deterministic. */
   now?: string
+  /** Structured logger from the action's `helpers`; omitted in tests. */
+  log?: Helpers['log']
 }
 
 /**
@@ -48,6 +51,7 @@ export const buildTransactionBundle = ({
   eventType,
   reason,
   now,
+  log,
 }: BuildTransactionBundleArgs): Bundle | undefined => {
   if (bundle.type !== 'collection') return undefined
 
@@ -89,6 +93,7 @@ export const buildTransactionBundle = ({
       buildResourceEntry(
         rewriteReferences(entry.resource, referenceMap),
         entry.fullUrl,
+        log,
       ),
     )
 

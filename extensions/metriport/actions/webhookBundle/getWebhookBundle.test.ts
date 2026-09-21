@@ -1,4 +1,5 @@
 import { generateTestPayload } from '@/tests'
+import { TestHelpers } from '@awell-health/extensions-core'
 import { getWebhookBundle } from './getWebhookBundle'
 import { fetchBundle } from '../../shared/fetchBundle'
 import { patientAdmitBundle } from './bundle/__testdata__/patientAdmitBundle'
@@ -15,11 +16,12 @@ const settings = {
 }
 
 describe('Metriport - Get Webhook Bundle', () => {
-  const onComplete = jest.fn()
-  const onError = jest.fn()
+  const { onComplete, onError, helpers, clearMocks } =
+    TestHelpers.fromAction(getWebhookBundle)
 
   beforeEach(() => {
     jest.clearAllMocks()
+    clearMocks()
   })
 
   test('Should fetch the bundle from the URL and return it as a data point', async () => {
@@ -30,8 +32,8 @@ describe('Metriport - Get Webhook Bundle', () => {
     }
     mockedFetchBundle.mockResolvedValue(bundle as never)
 
-    await getWebhookBundle.onActivityCreated!(
-      generateTestPayload({
+    await getWebhookBundle.onEvent!({
+      payload: generateTestPayload({
         fields: {
           url: 'https://example.com/encounter-bundle',
           eventType: undefined,
@@ -41,7 +43,9 @@ describe('Metriport - Get Webhook Bundle', () => {
       }),
       onComplete,
       onError,
-    )
+      helpers,
+      attempt: 1,
+    })
 
     expect(mockedFetchBundle).toHaveBeenCalledWith(
       'https://example.com/encounter-bundle',
@@ -56,8 +60,8 @@ describe('Metriport - Get Webhook Bundle', () => {
   })
 
   test('Should call onError when the URL is invalid', async () => {
-    await getWebhookBundle.onActivityCreated!(
-      generateTestPayload({
+    await getWebhookBundle.onEvent!({
+      payload: generateTestPayload({
         fields: {
           url: 'not-a-url',
           eventType: undefined,
@@ -67,7 +71,9 @@ describe('Metriport - Get Webhook Bundle', () => {
       }),
       onComplete,
       onError,
-    )
+      helpers,
+      attempt: 1,
+    })
 
     expect(mockedFetchBundle).not.toHaveBeenCalled()
     expect(onComplete).not.toHaveBeenCalled()
@@ -77,8 +83,8 @@ describe('Metriport - Get Webhook Bundle', () => {
   test('Should emit an importable transaction bundle for an encounter bundle', async () => {
     mockedFetchBundle.mockResolvedValue(patientAdmitBundle as never)
 
-    await getWebhookBundle.onActivityCreated!(
-      generateTestPayload({
+    await getWebhookBundle.onEvent!({
+      payload: generateTestPayload({
         fields: {
           url: 'https://example.com/encounter-bundle',
           eventType: 'patient.admit',
@@ -88,7 +94,9 @@ describe('Metriport - Get Webhook Bundle', () => {
       }),
       onComplete,
       onError,
-    )
+      helpers,
+      attempt: 1,
+    })
 
     expect(onError).not.toHaveBeenCalled()
 
@@ -117,8 +125,8 @@ describe('Metriport - Get Webhook Bundle', () => {
       entry: [],
     } as never)
 
-    await getWebhookBundle.onActivityCreated!(
-      generateTestPayload({
+    await getWebhookBundle.onEvent!({
+      payload: generateTestPayload({
         fields: {
           url: 'https://example.com/other-bundle',
           eventType: undefined,
@@ -128,7 +136,9 @@ describe('Metriport - Get Webhook Bundle', () => {
       }),
       onComplete,
       onError,
-    )
+      helpers,
+      attempt: 1,
+    })
 
     expect(onError).not.toHaveBeenCalled()
     expect(
@@ -143,8 +153,8 @@ describe('Metriport - Get Webhook Bundle', () => {
       entry: [{ resource: { resourceType: 'Patient', id: 'p1' } }],
     } as never)
 
-    await getWebhookBundle.onActivityCreated!(
-      generateTestPayload({
+    await getWebhookBundle.onEvent!({
+      payload: generateTestPayload({
         fields: {
           url: 'https://example.com/other-bundle',
           eventType: undefined,
@@ -154,7 +164,9 @@ describe('Metriport - Get Webhook Bundle', () => {
       }),
       onComplete,
       onError,
-    )
+      helpers,
+      attempt: 1,
+    })
 
     expect(onError).not.toHaveBeenCalled()
     expect(onComplete.mock.calls[0][0].data_points.encounterId).toBeUndefined()
@@ -167,8 +179,8 @@ describe('Metriport - Get Webhook Bundle', () => {
       entry: [{ resource: { resourceType: 'Patient', id: 'p1' } }],
     } as never)
 
-    await getWebhookBundle.onActivityCreated!(
-      generateTestPayload({
+    await getWebhookBundle.onEvent!({
+      payload: generateTestPayload({
         fields: {
           url: 'https://example.com/encounter-bundle',
           eventType: undefined,
@@ -178,7 +190,9 @@ describe('Metriport - Get Webhook Bundle', () => {
       }),
       onComplete,
       onError,
-    )
+      helpers,
+      attempt: 1,
+    })
 
     expect(onComplete).not.toHaveBeenCalled()
     expect(onError).toHaveBeenCalledTimes(1)
@@ -190,8 +204,8 @@ describe('Metriport - Get Webhook Bundle', () => {
   test('Should call onError when the fetch fails', async () => {
     mockedFetchBundle.mockRejectedValue(new Error('URL expired'))
 
-    await getWebhookBundle.onActivityCreated!(
-      generateTestPayload({
+    await getWebhookBundle.onEvent!({
+      payload: generateTestPayload({
         fields: {
           url: 'https://example.com/encounter-bundle',
           eventType: undefined,
@@ -201,7 +215,9 @@ describe('Metriport - Get Webhook Bundle', () => {
       }),
       onComplete,
       onError,
-    )
+      helpers,
+      attempt: 1,
+    })
 
     expect(onComplete).not.toHaveBeenCalled()
     expect(onError).toHaveBeenCalledTimes(1)

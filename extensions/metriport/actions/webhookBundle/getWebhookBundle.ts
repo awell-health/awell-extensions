@@ -22,7 +22,7 @@ export const getWebhookBundle: Action<
   previewable: true,
   supports_automated_retries: true,
   dataPoints,
-  onActivityCreated: async (payload, onComplete, onError): Promise<void> => {
+  onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
     try {
       const { url, eventType, provenanceReason } = getWebhookBundleSchema.parse(
         payload.fields,
@@ -40,6 +40,7 @@ export const getWebhookBundle: Action<
         awellPatientId: payload.patient.id,
         eventType,
         reason: provenanceReason,
+        log: helpers.log,
       })
 
       const encounterId = findEncounterId(bundle)

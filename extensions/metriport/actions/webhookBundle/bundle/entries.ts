@@ -3,6 +3,7 @@ import {
   type Identifier,
   type Resource,
 } from '@medplum/fhirtypes'
+import { type Helpers } from '@awell-health/extensions-core'
 import {
   RESOURCE_TYPES_WITHOUT_IDENTIFIER,
   metriportIdentifierSystem,
@@ -32,10 +33,18 @@ import {
  *
  * Resource types with no `identifier` element in FHIR R4 cannot be addressed by
  * a conditional update, so they fall back to POST.
+ *
+ * `identifier` is 0..* per the FHIR spec, but Metriport resources have been
+ * seen with a single object instead of an array. That's non-conformant data,
+ * not a shape we can confidently normalize, so it is left untouched rather
+ * than being recast into a list and appended to. The conditional update is
+ * still attempted, but since the resource never receives our stamp, it won't
+ * be found on redelivery — this case is not reconciled idempotently.
  */
 export const buildResourceEntry = (
   resource: Resource,
   fullUrl?: string,
+  log?: Helpers['log'],
 ): BundleEntry => {
   const { id, resourceType } = resource
 
@@ -44,6 +53,8 @@ export const buildResourceEntry = (
       `[Metriport bundle] ${resourceType} entry is missing an id, so it cannot be reconciled`,
     )
   }
+
+  log?.({ resourceType, id }, '[Metriport bundle] Building resource entry')
 
   // Shallow clone, then drop the two fields Medplum must assign itself. Nested
   // objects are shared with the input, but nothing nested is modified — the
@@ -63,15 +74,24 @@ export const buildResourceEntry = (
   }
 
   const system = metriportIdentifierSystem(resourceType)
-  const identifiable = stripped as { identifier?: Identifier[] }
-  const existing = identifiable.identifier ?? []
-  const alreadyStamped = existing.some(
-    (identifier) => identifier.system === system && identifier.value === id,
+  const identifiable = stripped as { identifier?: Identifier[] | Identifier }
+  const rawIdentifier = identifiable.identifier
+
+  log?.(
+    { resourceType, identifiers: rawIdentifier },
+    '[Metriport bundle] Existing identifiers on resource',
   )
 
-  identifiable.identifier = alreadyStamped
-    ? existing
-    : [...existing, { system, value: id }]
+  if (!rawIdentifier || Array.isArray(rawIdentifier)) {
+    const existing = rawIdentifier ?? []
+    const alreadyStamped = existing.some(
+      (identifier) => identifier.system === system && identifier.value === id,
+    )
+
+    identifiable.identifier = alreadyStamped
+      ? existing
+      : [...existing, { system, value: id }]
+  }
 
   return {
     fullUrl: localIdentity,
