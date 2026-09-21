@@ -253,7 +253,7 @@ This tool analyzes the progression through a specific track in a care flow, high
 
 **What it needs (Inputs):**
 - `Instructions` (Optional): Specific focus for the analysis (e.g., "Summarize outcome, focus on semantic information in form and messages").
-- `Track ID(s)` (Optional): One or more track IDs, separated by commas. Defaults to the track this action runs in. Copy the track IDs from Awell Studio; the action maps them to the running care flow. Tracks that were not activated are skipped; if several were, the most recently started one is summarized.
+- `Track ID(s)` (Optional): One or more track IDs, separated by commas. Defaults to the track this action runs in. Copy the track IDs from Awell Studio; the action maps them to the running care flow. Tracks that were not activated are skipped; all that were are summarized together.
 
 **What it gives back (Outputs):**
 - `Outcome Summary`: A comprehensive summary of the track's progression and outcomes (in HTML format).

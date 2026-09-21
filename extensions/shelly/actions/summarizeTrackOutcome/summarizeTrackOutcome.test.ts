@@ -670,7 +670,7 @@ describe('summarizeTrackOutcome - Mocked LLM calls', () => {
     expect(onComplete).not.toHaveBeenCalled()
   })
 
-  it('Should resolve the listed Track IDs to the most recently started activated track', async () => {
+  it('Should summarize every listed track that was activated', async () => {
     const { getTrackData } = require('../../lib/getTrackData/index')
     const awellSdkMock = {
       orchestration: {
@@ -713,8 +713,12 @@ describe('summarizeTrackOutcome - Mocked LLM calls', () => {
       attempt: 1,
     })
 
+    expect(getTrackData).toHaveBeenCalledTimes(2)
     expect(getTrackData).toHaveBeenCalledWith(
       expect.objectContaining({ trackId: 'runtime-track-id' }),
+    )
+    expect(getTrackData).toHaveBeenCalledWith(
+      expect.objectContaining({ trackId: 'older-runtime-id' }),
     )
     expect(awellSdkMock.orchestration.query).not.toHaveBeenCalledWith(
       expect.objectContaining({ activity: expect.anything() }),

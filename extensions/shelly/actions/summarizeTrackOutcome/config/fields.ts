@@ -22,7 +22,7 @@ export const fields = {
     id: 'trackId',
     label: 'Track ID(s)',
     description:
-      '[Optional] One or more track IDs, separated by commas. Defaults to the track this action runs in. Copy the track IDs from Awell Studio. Tracks that were not activated in the care flow are skipped; if several were, the most recently started one is summarized.',
+      '[Optional] One or more track IDs, separated by commas. Defaults to the track this action runs in. Copy the track IDs from Awell Studio. Tracks that were not activated in the care flow are skipped; all that were are summarized together.',
     type: FieldType.STRING,
     required: false,
   },
