@@ -1,4 +1,4 @@
-import { resolveStepId, resolveTrackId } from '.'
+import { resolveStepIds, resolveTrackIds } from '.'
 import { type AwellSdk } from '@awell-health/awell-sdk'
 
 const mockQuery = jest.fn()
@@ -10,45 +10,60 @@ beforeEach(() => {
   mockQuery.mockReset()
 })
 
-describe('resolveTrackId', () => {
+describe('resolveTrackIds', () => {
   beforeEach(() => {
     mockQuery.mockResolvedValue({
       careflowTracks: {
         tracks: [
-          { id: 'CtCOBOm5HZP4', definition_id: 'dSk3J6wUbLH0vlZKg3jzr' },
+          {
+            id: 'old-runtime',
+            definition_id: 'old-studio',
+            start_date: '2026-01-01T00:00:00.000Z',
+          },
+          {
+            id: 'CtCOBOm5HZP4',
+            definition_id: 'dSk3J6wUbLH0vlZKg3jzr',
+            start_date: '2026-02-01T00:00:00.000Z',
+          },
         ],
       },
     })
   })
 
-  test('maps a Studio definition ID to the runtime track ID', async () => {
+  test('returns runtime IDs of the activated tracks, most recent first', async () => {
     await expect(
-      resolveTrackId({
+      resolveTrackIds({
         awellSdk,
         pathwayId: 'pathway-1',
-        trackId: 'dSk3J6wUbLH0vlZKg3jzr',
+        trackIds: ['never-activated', 'old-studio', 'dSk3J6wUbLH0vlZKg3jzr'],
       }),
-    ).resolves.toBe('CtCOBOm5HZP4')
+    ).resolves.toEqual(['CtCOBOm5HZP4', 'old-runtime'])
   })
 
-  test('returns a runtime track ID unchanged', async () => {
+  test('accepts a runtime track ID as-is', async () => {
     await expect(
-      resolveTrackId({
+      resolveTrackIds({
         awellSdk,
         pathwayId: 'pathway-1',
-        trackId: 'CtCOBOm5HZP4',
+        trackIds: ['CtCOBOm5HZP4'],
       }),
-    ).resolves.toBe('CtCOBOm5HZP4')
+    ).resolves.toEqual(['CtCOBOm5HZP4'])
   })
 
-  test('throws when the track is not in the care flow', async () => {
+  test('throws when none of the tracks were activated', async () => {
     await expect(
-      resolveTrackId({ awellSdk, pathwayId: 'pathway-1', trackId: 'nope' }),
-    ).rejects.toThrow('Track "nope" not found in care flow pathway-1')
+      resolveTrackIds({
+        awellSdk,
+        pathwayId: 'pathway-1',
+        trackIds: ['a', 'b'],
+      }),
+    ).rejects.toThrow(
+      'None of the tracks "a", "b" were found in care flow pathway-1',
+    )
   })
 })
 
-describe('resolveStepId', () => {
+describe('resolveStepIds', () => {
   beforeEach(() => {
     mockQuery.mockResolvedValue({
       careflowActivities: {
@@ -57,23 +72,32 @@ describe('resolveStepId', () => {
             object: { id: 'dSk3J6wUbLH0vlZKg3jzr', type: 'TRACK' },
             context: { step_id: null },
           },
+          // Same step activated twice
           {
             object: { id: 'eGAhFfPCuQl1HcK03DUyJ', type: 'STEP' },
             context: { step_id: '9PpK498pKNWI' },
+          },
+          {
+            object: { id: 'eGAhFfPCuQl1HcK03DUyJ', type: 'STEP' },
+            context: { step_id: '9PpK498pKNWI' },
+          },
+          {
+            object: { id: 'K7EAy-tZpiP2maEIMmppO', type: 'STEP' },
+            context: { step_id: 'EnDUW6j1Hw96' },
           },
         ],
       },
     })
   })
 
-  test('maps a Studio definition ID to the runtime step ID', async () => {
+  test('returns unique runtime IDs of the activated steps and skips the rest', async () => {
     await expect(
-      resolveStepId({
+      resolveStepIds({
         awellSdk,
         pathwayId: 'pathway-1',
-        stepId: 'eGAhFfPCuQl1HcK03DUyJ',
+        stepIds: ['never-activated', 'eGAhFfPCuQl1HcK03DUyJ', 'EnDUW6j1Hw96'],
       }),
-    ).resolves.toBe('9PpK498pKNWI')
+    ).resolves.toEqual(['9PpK498pKNWI', 'EnDUW6j1Hw96'])
     expect(mockQuery).toHaveBeenCalledWith(
       expect.objectContaining({
         careflowActivities: expect.objectContaining({
@@ -85,19 +109,11 @@ describe('resolveStepId', () => {
     )
   })
 
-  test('returns a runtime step ID unchanged', async () => {
+  test('throws when none of the steps were activated', async () => {
     await expect(
-      resolveStepId({
-        awellSdk,
-        pathwayId: 'pathway-1',
-        stepId: '9PpK498pKNWI',
-      }),
-    ).resolves.toBe('9PpK498pKNWI')
-  })
-
-  test('throws when the step was never activated in the care flow', async () => {
-    await expect(
-      resolveStepId({ awellSdk, pathwayId: 'pathway-1', stepId: 'nope' }),
-    ).rejects.toThrow('Step "nope" not found in care flow pathway-1')
+      resolveStepIds({ awellSdk, pathwayId: 'pathway-1', stepIds: ['nope'] }),
+    ).rejects.toThrow(
+      'None of the steps "nope" were found in care flow pathway-1',
+    )
   })
 })

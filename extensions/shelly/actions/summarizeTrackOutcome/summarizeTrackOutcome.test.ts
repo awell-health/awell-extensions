@@ -69,6 +69,7 @@ describe('summarizeTrackOutcome - Mocked LLM calls', () => {
     },
     fields: {
       instructions: 'Summarize track outcome.',
+      trackId: null as unknown as string, // Studio may send null for an empty field
     },
     patient: {
       id: 'test-patient-id',
@@ -669,7 +670,7 @@ describe('summarizeTrackOutcome - Mocked LLM calls', () => {
     expect(onComplete).not.toHaveBeenCalled()
   })
 
-  it('Should resolve the given Track ID without looking up the current activity', async () => {
+  it('Should summarize every listed track that was activated', async () => {
     const { getTrackData } = require('../../lib/getTrackData/index')
     const awellSdkMock = {
       orchestration: {
@@ -678,7 +679,16 @@ describe('summarizeTrackOutcome - Mocked LLM calls', () => {
             return Promise.resolve({
               careflowTracks: {
                 tracks: [
-                  { id: 'runtime-track-id', definition_id: 'studio-track-id' },
+                  {
+                    id: 'older-runtime-id',
+                    definition_id: 'older-studio-id',
+                    start_date: '2026-01-01T00:00:00.000Z',
+                  },
+                  {
+                    id: 'runtime-track-id',
+                    definition_id: 'studio-track-id',
+                    start_date: '2026-02-01T00:00:00.000Z',
+                  },
                 ],
               },
             })
@@ -692,7 +702,10 @@ describe('summarizeTrackOutcome - Mocked LLM calls', () => {
     await extensionAction.onEvent({
       payload: {
         ...basePayload,
-        fields: { ...basePayload.fields, trackId: 'studio-track-id' },
+        fields: {
+          ...basePayload.fields,
+          trackId: 'never-activated, older-studio-id, studio-track-id',
+        },
       },
       onComplete,
       onError,
@@ -700,8 +713,12 @@ describe('summarizeTrackOutcome - Mocked LLM calls', () => {
       attempt: 1,
     })
 
+    expect(getTrackData).toHaveBeenCalledTimes(2)
     expect(getTrackData).toHaveBeenCalledWith(
       expect.objectContaining({ trackId: 'runtime-track-id' }),
+    )
+    expect(getTrackData).toHaveBeenCalledWith(
+      expect.objectContaining({ trackId: 'older-runtime-id' }),
     )
     expect(awellSdkMock.orchestration.query).not.toHaveBeenCalledWith(
       expect.objectContaining({ activity: expect.anything() }),

@@ -1,6 +1,6 @@
 import { type Field, FieldType } from '@awell-health/extensions-core'
 import z, { type ZodType } from 'zod'
-import { isEmpty } from 'lodash'
+import { IdListSchema } from '../../../lib/idList'
 import { DISCLAIMER_MSG } from '../../../lib/constants'
 import {
   DisclaimerPlacementEnum,
@@ -20,9 +20,9 @@ export const fields = {
   },
   trackId: {
     id: 'trackId',
-    label: 'Track ID',
+    label: 'Track ID(s)',
     description:
-      '[Optional] ID of the track to summarize. Defaults to the track this action runs in. Copy the track ID from Awell Studio. The track must have been activated in the care flow.',
+      '[Optional] One or more track IDs, separated by commas. Defaults to the track this action runs in. Copy the track IDs from Awell Studio. Tracks that were not activated in the care flow are skipped; all that were are summarized together.',
     type: FieldType.STRING,
     required: false,
   },
@@ -53,11 +53,7 @@ export const fields = {
 
 export const FieldsValidationSchema = z.object({
   instructions: z.string().optional().default(''),
-  trackId: z
-    .string()
-    .trim()
-    .optional()
-    .transform((val) => (isEmpty(val) ? undefined : val)),
+  trackId: IdListSchema,
   disclaimerText: OptionalDisclaimerTextSchema,
   disclaimerPlacement: DisclaimerPlacementEnum.optional(),
 } satisfies Record<keyof typeof fields, ZodType>)

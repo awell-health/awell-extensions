@@ -1,6 +1,6 @@
 import { type Field, FieldType } from '@awell-health/extensions-core'
 import z, { type ZodType } from 'zod'
-import { isEmpty } from 'lodash'
+import { IdListSchema } from '../../../lib/idList'
 import { DISCLAIMER_MSG_FORM } from '../../../lib/constants'
 import {
   DisclaimerPlacementEnum,
@@ -37,9 +37,9 @@ export const fields = {
   },
   stepId: {
     id: 'stepId',
-    label: 'Step ID',
+    label: 'Step ID(s)',
     description:
-      '[Optional] ID of a step in this care flow (e.g. a step in another track) whose forms should be summarized. Copy the step ID from Awell Studio. The step must have been activated in the care flow. When set, "Scope" is ignored.',
+      '[Optional] One or more IDs, separated by commas, of steps in this care flow (e.g. in other tracks) whose forms should be summarized. Copy the step IDs from Awell Studio. Steps that were not activated in the care flow are skipped; at least one must have been. When set, "Scope" is ignored.',
     type: FieldType.STRING,
     required: false,
   },
@@ -117,11 +117,7 @@ export const fields = {
 // Step 3: Define the validation schema using zod
 export const FieldsValidationSchema = z.object({
   scope: ScopeEnum.default('Step'),
-  stepId: z
-    .string()
-    .trim()
-    .optional()
-    .transform((val) => (isEmpty(val) ? undefined : val)),
+  stepId: IdListSchema,
   formSelection: FormSelectionEnum.default('Latest'),
   summaryFormat: z
     .enum([SummaryFormatEnum.BULLET_POINTS, SummaryFormatEnum.TEXT_PARAGRAPH])

@@ -302,6 +302,7 @@ describe('summarizeForm - Mocked LLM calls', () => {
         fields: {
           summaryFormat: 'Bullet-points',
           language: 'Default',
+          stepId: null as unknown as string, // Studio may send null for an empty field
         },
         settings: {},
       })
@@ -922,7 +923,7 @@ describe('summarizeForm - Mocked LLM calls', () => {
         activity: { id: 'X74HeDQ4N0gtdaSEuzF8s' },
         fields: {
           scope: 'Track',
-          stepId: 'studio-step-id',
+          stepId: 'never-activated-step, studio-step-id',
           formSelection: 'Latest',
           language: 'English',
         },
@@ -983,7 +984,10 @@ describe('summarizeForm - Mocked LLM calls', () => {
       const payload = generateTestPayload({
         pathway: { id: 'ai4rZaYEocjB', definition_id: 'whatever' },
         activity: { id: 'X74HeDQ4N0gtdaSEuzF8s' },
-        fields: { stepId: 'studio-step-id', language: 'English' },
+        fields: {
+          stepId: 'studio-step-id,never-activated-step',
+          language: 'English',
+        },
         settings: {},
       })
 
@@ -1001,7 +1005,8 @@ describe('summarizeForm - Mocked LLM calls', () => {
           expect.objectContaining({
             error: {
               category: 'WRONG_INPUT',
-              message: 'No completed form found in step studio-step-id',
+              message:
+                'No completed form found in step(s) studio-step-id, never-activated-step',
             },
           }),
         ],
