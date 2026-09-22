@@ -36,6 +36,33 @@ describe('Send email with template', () => {
     clearMocks()
   })
 
+  // Studio fields are pasted, and a pasted template id brings its line break with it. SendGrid
+  // rejects `d-…\n` as "not a valid GUID", which on 2026-09-22 was the single largest class of
+  // failed activity in production: 26 failures in one care flow definition, and the same mistake
+  // present in four action definitions across two definitions.
+  test('Should trim surrounding whitespace from the template id', async () => {
+    await sendEmailWithTemplate.onEvent!({
+      payload: generateTestPayload({
+        ...payload,
+        fields: {
+          ...payload.fields,
+          templateId: 'd-d64bc0efc7c940c9b05ea75bb8a2da80\n',
+        },
+      }),
+      onComplete,
+      onError,
+      helpers,
+      attempt: 1,
+    })
+
+    expect(onError).not.toHaveBeenCalled()
+    expect(SendgridClientMockImplementation.mail.send).toHaveBeenCalledWith(
+      expect.objectContaining({
+        templateId: 'd-d64bc0efc7c940c9b05ea75bb8a2da80',
+      }),
+    )
+  })
+
   test('Should call the onComplete callback', async () => {
     await sendEmailWithTemplate.onEvent!({
       payload: basePayload,

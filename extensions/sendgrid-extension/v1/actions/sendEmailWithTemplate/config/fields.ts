@@ -62,7 +62,10 @@ export const FieldsValidationSchema = z.object({
   subject: z.optional(
     z.string().transform((str) => (isEmpty(str) ? undefined : str)),
   ),
-  templateId: z.string(),
+  // Trimmed because this field is pasted, and a pasted template id brings its line break with
+  // it. SendGrid rejects `d-<id>\n` outright as "not a valid GUID", and doing it here fixes every
+  // care flow already authored that way rather than only the ones edited from now on.
+  templateId: z.string().trim(),
   dynamicTemplateData: z
     .optional(z.string())
     .transform((str, ctx): TemplateData => {
