@@ -102,15 +102,27 @@ class InfobipEmailAPI {
 
   send = async (message: EmailInput): Promise<AxiosResponse<BaseResponse>> => {
     const formData = new FormData()
+    const { attachment, ...textFields } = message
 
-    for (const key in message) {
-      if (Object.hasOwnProperty.call(message, key)) {
+    for (const key in textFields) {
+      if (Object.hasOwnProperty.call(textFields, key)) {
         // @ts-expect-error this is okay
-        const value = message[key]
+        const value = textFields[key]
         if (value !== undefined && value !== '') {
           formData.append(key, value.toString())
         }
       }
+    }
+
+    /**
+     * Files must be appended as binary parts with a filename and content type;
+     * stringifying a Buffer (as the loop above does) would corrupt it.
+     */
+    if (attachment !== undefined) {
+      formData.append('attachment', attachment.data, {
+        filename: attachment.filename,
+        contentType: attachment.contentType,
+      })
     }
 
     return await this._baseApi.post<FormData, BaseResponse>(
