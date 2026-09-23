@@ -1,5 +1,6 @@
 import axios, { type AxiosInstance, type AxiosResponse } from 'axios'
 import { SettingsValidationSchema } from '../../settings'
+import { getAuthFromSettings, getAuthorizationHeader, type ZendeskAuth } from './auth'
 import {
   type CreateTicketInput,
   type CreateTicketResponse,
@@ -11,16 +12,25 @@ import {
 export class ZendeskAPIClient {
   private readonly client: AxiosInstance
 
-  constructor(subdomain: string, userEmail: string, apiToken: string) {
-    const credentials = `${userEmail}/token:${apiToken}`
-    const encodedCredentials = Buffer.from(credentials).toString('base64')
-
+  constructor(
+    private readonly subdomain: string,
+    private readonly auth: ZendeskAuth,
+  ) {
     this.client = axios.create({
       baseURL: `https://${subdomain}.zendesk.com`,
       headers: {
-        Authorization: `Basic ${encodedCredentials}`,
         'Content-Type': 'application/json',
       },
+    })
+
+    // The Authorization header is resolved per request so OAuth access
+    // tokens can be fetched lazily and refreshed when they expire.
+    this.client.interceptors.request.use(async (config) => {
+      config.headers.Authorization = await getAuthorizationHeader(
+        this.subdomain,
+        this.auth,
+      )
+      return config
     })
   }
 
@@ -63,8 +73,7 @@ export class ZendeskAPIClient {
 export const makeAPIClient = (
   payloadSettings: Record<string, string | undefined>,
 ): ZendeskAPIClient => {
-  const { subdomain, user_email, api_token } =
-    SettingsValidationSchema.parse(payloadSettings)
+  const settings = SettingsValidationSchema.parse(payloadSettings)
 
-  return new ZendeskAPIClient(subdomain, user_email, api_token)
+  return new ZendeskAPIClient(settings.subdomain, getAuthFromSettings(settings))
 }
