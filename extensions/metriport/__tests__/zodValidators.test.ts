@@ -24,11 +24,15 @@ describe('metriport patientId schemas (zod 4)', () => {
       const issue = result.error?.issues[0]
       expect(issue?.path).toEqual(['patientId'])
       expect(issue?.code).toBe('too_small')
-      // zod 4 changed the default wording from
-      // "String must contain at least 1 character(s)" to
-      // "Too small: expected string to have >=1 characters". The custom
-      // `error: 'Missing patientId'` only applies to the invalid_type issue.
-      expect(issue?.message).toMatch(/Too small/)
+      // From zod 4.5.0 a schema-level `error` is the default for EVERY issue on
+      // that schema, not just invalid_type -- so `error: 'Missing patientId'`
+      // now answers the .min(1) violation too, where 4.4.3 fell back to
+      // "Too small: expected string to have >=1 characters". The issue code is
+      // unchanged, so only the human-readable text moves. That reads better
+      // here: an empty required patientId IS missing. To get a distinct message
+      // per constraint, pass one to the constraint itself --
+      // `z.string({ error: 'A' }).min(1, { error: 'B' })` still yields 'B'.
+      expect(issue?.message).toBe('Missing patientId')
     })
 
     it('rejects a missing patientId with the custom message', () => {
