@@ -114,3 +114,17 @@ export interface ZendeskApiErrorResponse {
     }
   }
 }
+
+/**
+ * Response of the OAuth client credentials grant.
+ * https://developer.zendesk.com/api-reference/ticketing/oauth/grant_type_tokens/
+ */
+export const zOAuthTokenResponse = z.object({
+  access_token: z.string().min(1),
+  token_type: z.string().optional(),
+  /** Seconds until expiry. Zendesk defaults to 30 minutes. */
+  expires_in: z.number().nullish(),
+  scope: z.string().optional(),
+})
+
+export type OAuthTokenResponse = z.infer<typeof zOAuthTokenResponse>

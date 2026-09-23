@@ -7,8 +7,13 @@ import {
 export const triggerWebhookPayload = {
   ticket_id: '35436',
   event_type: 'kit_retrieval_requested',
-  ticket_status: 'open',
+  subject: 'Kit retrieval request',
+  status: 'open',
+  tags: 'kit_retrieval enterprise',
+  external_id: 'awell-patient-123',
+  requester_name: 'Jane Requester',
   requester_email: 'jane@example.com',
+  ticket_url: 'test-company.zendesk.com/agent/tickets/35436',
 } satisfies TriggerWebhookPayload
 
 /** Envelope Zendesk sends for a webhook subscribed to ticket events. */
