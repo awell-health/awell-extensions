@@ -1,3 +1,12 @@
+export interface EmailAttachment {
+  /** Filename shown to the recipient, including extension */
+  filename: string
+  /** Decoded file bytes */
+  data: Buffer
+  /** MIME type, e.g. application/pdf */
+  contentType: string
+}
+
 export interface EmailInput {
   from?: string
   to: string[]
@@ -7,6 +16,11 @@ export interface EmailInput {
   html?: string
   replyTo?: string
   defaultPlaceholders?: string
+  /**
+   * Sent as a binary multipart part named `attachment`
+   * (Infobip: POST /email/3/send, `attachment` is an array of binary files).
+   */
+  attachment?: EmailAttachment
 }
 
 export interface SmsInput {

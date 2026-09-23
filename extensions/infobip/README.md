@@ -24,7 +24,17 @@ Send a text message to a recipient.
 
 ### Send email
 
-Sends a simple email to a recipient.
+Sends a simple email to a recipient, optionally with a single file attachment.
+
+**Inputs:**
+
+- **From** (optional): defaults to the "From email" in the extension settings.
+- **To** (required), **Subject** (required), **Content** (required, HTML).
+- **Attachment content (base64)** (optional): the base64-encoded file to attach, typically the `base64Pdf` data point produced by the Transform extension's "HTML to PDF" action.
+- **Attachment filename** (optional, required when attachment content is set): the filename the recipient sees, including extension, e.g. `Report.pdf`.
+- **Attachment content type** (optional): MIME type of the attachment. Defaults to `application/pdf`.
+
+Leave the attachment fields empty to send without an attachment. Infobip limits emails to 10 MB in total, so attachments are capped at 9 MB (decoded).
 
 ### Send email with template
 
