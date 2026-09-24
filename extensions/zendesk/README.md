@@ -23,7 +23,7 @@ Zendesk is [removing API tokens](https://support.zendesk.com/hc/en-us/articles/1
 3. Save and copy the **Secret**. Zendesk shows it only once.
 4. In Awell, fill in **OAuth Client Identifier** and **OAuth Client Secret**.
 
-The extension exchanges these for short-lived access tokens using the client credentials grant and refreshes them automatically. API calls are attributed to the Zendesk user who created the OAuth client.
+The extension exchanges these for short-lived access tokens using the client credentials grant (via the shared extensions-core OAuth client, which caches and refreshes them automatically). API calls are attributed to the Zendesk user who created the OAuth client.
 
 ### Authentication with a user email and API token (legacy)
 
