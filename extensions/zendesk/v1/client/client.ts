@@ -1,6 +1,15 @@
-import axios, { type AxiosInstance, type AxiosResponse } from 'axios'
+import {
+  APIClient,
+  DataWrapper,
+  type DataWrapperCtor,
+} from '@awell-health/extensions-core'
 import { SettingsValidationSchema } from '../../settings'
-import { getAuthFromSettings, getAuthorizationHeader, type ZendeskAuth } from './auth'
+import {
+  type AuthorizationScheme,
+  getZendeskBaseUrl,
+  makeZendeskAuth,
+  type ZendeskAuth,
+} from './auth'
 import {
   type CreateTicketInput,
   type CreateTicketResponse,
@@ -9,38 +18,23 @@ import {
   zGetTicketResponse,
 } from './types'
 
-export class ZendeskAPIClient {
-  private readonly client: AxiosInstance
-
-  constructor(
-    private readonly subdomain: string,
-    private readonly auth: ZendeskAuth,
-  ) {
-    this.client = axios.create({
-      baseURL: `https://${subdomain}.zendesk.com`,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-
-    // The Authorization header is resolved per request so OAuth access
-    // tokens can be fetched lazily and refreshed when they expire.
-    this.client.interceptors.request.use(async (config) => {
-      config.headers.Authorization = await getAuthorizationHeader(
-        this.subdomain,
-        this.auth,
-      )
-      return config
-    })
+export class ZendeskDataWrapper extends DataWrapper {
+  constructor(token: string, baseUrl: string, scheme: AuthorizationScheme) {
+    super(token, baseUrl)
+    // DataWrapper sets a top-level `Bearer` default; legacy API token auth
+    // needs `Basic`, so overwrite that same default (not `headers.common`,
+    // which the top-level value would take precedence over).
+    this._client.defaults.headers.Authorization = `${scheme} ${token}`
   }
 
   public async createTicket(
     data: CreateTicketInput,
   ): Promise<CreateTicketResponse> {
-    const response: AxiosResponse<CreateTicketResponse> =
-      await this.client.post('/api/v2/tickets', { ticket: data })
-
-    return response.data
+    return await this.Request<CreateTicketResponse>({
+      method: 'POST',
+      url: '/api/v2/tickets',
+      data: { ticket: data },
+    })
   }
 
   /**
@@ -50,23 +44,69 @@ export class ZendeskAPIClient {
    * https://developer.zendesk.com/api-reference/ticketing/tickets/tickets/#show-ticket
    */
   public async getTicket(ticketId: string): Promise<GetTicketResponse> {
-    const response: AxiosResponse<unknown> = await this.client.get(
-      `/api/v2/tickets/${encodeURIComponent(ticketId)}`,
-      { params: { include: 'users' } },
-    )
+    const data = await this.Request<unknown>({
+      method: 'GET',
+      url: `/api/v2/tickets/${encodeURIComponent(ticketId)}`,
+      params: { include: 'users' },
+    })
 
-    return zGetTicketResponse.parse(response.data)
-  }
-
-  public async deleteTicket(ticketId: string): Promise<void> {
-    await this.client.delete(`/api/v2/tickets/${ticketId}`)
+    return zGetTicketResponse.parse(data)
   }
 
   public async updateTicket(
     ticketId: string,
     data: UpdateTicketInput,
   ): Promise<void> {
-    await this.client.put(`/api/v2/tickets/${ticketId}`, { ticket: data })
+    await this.Request<unknown>({
+      method: 'PUT',
+      url: `/api/v2/tickets/${encodeURIComponent(ticketId)}`,
+      data: { ticket: data },
+    })
+  }
+
+  public async deleteTicket(ticketId: string): Promise<void> {
+    await this.Request<unknown>({
+      method: 'DELETE',
+      url: `/api/v2/tickets/${encodeURIComponent(ticketId)}`,
+    })
+  }
+}
+
+export class ZendeskAPIClient extends APIClient<ZendeskDataWrapper> {
+  readonly ctor: DataWrapperCtor<ZendeskDataWrapper> = (token, baseUrl) =>
+    new ZendeskDataWrapper(token, baseUrl, this.scheme)
+
+  constructor(
+    subdomain: string,
+    private readonly scheme: AuthorizationScheme,
+    auth: ZendeskAuth['auth'],
+  ) {
+    super({ auth, baseUrl: getZendeskBaseUrl(subdomain) })
+  }
+
+  public async createTicket(
+    data: CreateTicketInput,
+  ): Promise<CreateTicketResponse> {
+    return await this.FetchData(async (dw) => await dw.createTicket(data))
+  }
+
+  public async getTicket(ticketId: string): Promise<GetTicketResponse> {
+    return await this.FetchData(async (dw) => await dw.getTicket(ticketId))
+  }
+
+  public async updateTicket(
+    ticketId: string,
+    data: UpdateTicketInput,
+  ): Promise<void> {
+    await this.FetchData(async (dw) => {
+      await dw.updateTicket(ticketId, data)
+    })
+  }
+
+  public async deleteTicket(ticketId: string): Promise<void> {
+    await this.FetchData(async (dw) => {
+      await dw.deleteTicket(ticketId)
+    })
   }
 }
 
@@ -74,6 +114,7 @@ export const makeAPIClient = (
   payloadSettings: Record<string, string | undefined>,
 ): ZendeskAPIClient => {
   const settings = SettingsValidationSchema.parse(payloadSettings)
+  const { auth, scheme } = makeZendeskAuth(settings)
 
-  return new ZendeskAPIClient(settings.subdomain, getAuthFromSettings(settings))
+  return new ZendeskAPIClient(settings.subdomain, scheme, auth)
 }
