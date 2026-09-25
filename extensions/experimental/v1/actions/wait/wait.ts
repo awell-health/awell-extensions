@@ -23,7 +23,7 @@ const sleep = async (ms: number): Promise<void> => {
 export const wait: Action<typeof fields, typeof settings> = {
   key: 'wait',
   category: Category.WORKFLOW,
-  title: 'Wait',
+  title: 'Wait (DEPRECATED)',
   description: 'Wait n number of seconds before completing',
   fields,
   dataPoints,
