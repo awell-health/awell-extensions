@@ -20,7 +20,7 @@ export const eventWebhook: Webhook<
 > = {
   key: 'eventWebhook',
   dataPoints,
-  onWebhookReceived: async ({ payload }, onSuccess, onError) => {
+  onEvent: async ({ payload: { payload }, onSuccess, onError }) => {
     const {
       user: { id: value },
       eventType,

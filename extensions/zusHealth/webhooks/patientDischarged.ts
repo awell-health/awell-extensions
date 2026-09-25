@@ -70,7 +70,7 @@ export const patientDischarged: Webhook<
 > = {
   key: 'patientDischarged',
   dataPoints,
-  onWebhookReceived: async ({ payload, settings }, onSuccess, onError) => {
+  onEvent: async ({ payload: { payload, settings }, onSuccess, onError }) => {
     try {
       let { resourceId } = payload
 

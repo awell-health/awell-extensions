@@ -14,7 +14,7 @@ describe('Webhook - Call completed', () => {
     test('Should call onError and not call onSuccess', async () => {
       const { call_id, ...payloadWithoutCallId } = callCompletedPayload
 
-      await extensionWebhook.onEvent!({
+      await extensionWebhook.onEvent({
         payload: {
           payload: payloadWithoutCallId as any,
           settings: { apiKey: 'api-key' },
@@ -38,7 +38,7 @@ describe('Webhook - Call completed', () => {
 
   describe('When payload is valid', () => {
     test('Should call onSuccess, which starts the care flow', async () => {
-      await extensionWebhook.onEvent!({
+      await extensionWebhook.onEvent({
         payload: {
           payload: callCompletedPayload,
           settings: {

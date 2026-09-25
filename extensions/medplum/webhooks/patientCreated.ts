@@ -20,7 +20,7 @@ export const patientCreated: Webhook<
 > = {
   key: 'patientCreated',
   dataPoints,
-  onWebhookReceived: async ({ payload }, onSuccess, onError) => {
+  onEvent: async ({ payload: { payload }, onSuccess, onError }) => {
     const patientId = payload.id
 
     if (isNil(patientId)) {

@@ -92,7 +92,7 @@ export const eventCanceled: Webhook<
 > = {
   key: 'eventCanceled',
   dataPoints,
-  onWebhookReceived: async ({ payload }, onSuccess, onError) => {
+  onEvent: async ({ payload: { payload }, onSuccess, onError }) => {
     const {
       payload: {
         email,

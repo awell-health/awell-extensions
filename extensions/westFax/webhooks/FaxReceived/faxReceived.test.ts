@@ -12,7 +12,7 @@ describe('WestFax - Webhook - Fax received', () => {
 
   describe('When payload is valid', () => {
     test('Should call onSuccess, which starts the care flow', async () => {
-      await extensionWebhook.onEvent!({
+      await extensionWebhook.onEvent({
         payload: {
           payload: faxReceivedPayload,
           settings: {

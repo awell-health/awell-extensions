@@ -1,6 +1,6 @@
+import { TestHelpers } from '@awell-health/extensions-core'
 import { eventCanceled } from '../webhooks/eventCanceled'
 import { testInviteeCanceled } from '../__mocks__/objects'
-import { type OnWebhookReceivedParams } from '@awell-health/extensions-core'
 import {
   type CalendlyInviteeCanceledWebhook,
   type CalendlyWebhookPayload,
@@ -9,36 +9,34 @@ import _ from 'lodash'
 import { ZodError } from 'zod'
 
 describe('Test event canceled', () => {
-  const onComplete = jest.fn()
-  const onError = jest.fn()
-  const buildOnWebhookReceivedParams = <Payload>({
-    payload,
-  }: {
-    payload: Payload
-  }): OnWebhookReceivedParams<Payload> => {
-    return {
+  const { extensionWebhook, onSuccess, onError, helpers, clearMocks } =
+    TestHelpers.fromWebhook(eventCanceled)
+
+  const buildOnEventParams = <Payload>({ payload }: { payload: Payload }) => ({
+    payload: {
       payload,
       rawBody: Buffer.from(JSON.stringify(payload)),
       headers: {},
       settings: {},
-    }
-  }
+    },
+    onSuccess,
+    onError,
+    helpers,
+  })
 
   beforeEach(() => {
-    jest.clearAllMocks()
+    clearMocks()
   })
 
   it('should return the correct data points', async () => {
     const event = testInviteeCanceled
-    const evt = eventCanceled.onWebhookReceived!(
-      buildOnWebhookReceivedParams<CalendlyInviteeCanceledWebhook>({
+    const evt = extensionWebhook.onEvent(
+      buildOnEventParams<CalendlyInviteeCanceledWebhook>({
         payload: event,
       }),
-      onComplete,
-      onError
     )
     await expect(evt).resolves.toBeUndefined()
-    expect(onComplete).toBeCalled()
+    expect(onSuccess).toBeCalled()
   })
 
   it.each([
@@ -62,19 +60,17 @@ describe('Test event canceled', () => {
         cancellation_reason: 'ouch',
       },
     },
-  ])('onComplete should always be called $name', async (params) => {
+  ])('onSuccess should always be called $name', async (params) => {
     const { payload, output } = params
     const merged = _.merge({}, testInviteeCanceled, { payload })
-    const evt = eventCanceled.onWebhookReceived!(
-      buildOnWebhookReceivedParams<CalendlyWebhookPayload>({
+    const evt = extensionWebhook.onEvent(
+      buildOnEventParams<CalendlyWebhookPayload>({
         payload: merged,
       }),
-      onComplete,
-      onError
     )
     await expect(evt).resolves.toBeUndefined()
-    expect(onComplete).toHaveBeenCalledWith(
-      expect.objectContaining({ data_points: expect.objectContaining(output) })
+    expect(onSuccess).toHaveBeenCalledWith(
+      expect.objectContaining({ data_points: expect.objectContaining(output) }),
     )
   })
 
@@ -92,12 +88,10 @@ describe('Test event canceled', () => {
   ])('Error should throw: $name', async (params) => {
     const { payload, error } = params
     const merged = _.merge({}, testInviteeCanceled, { payload })
-    const evt = eventCanceled.onWebhookReceived!(
-      buildOnWebhookReceivedParams<CalendlyWebhookPayload>({
+    const evt = extensionWebhook.onEvent(
+      buildOnEventParams<CalendlyWebhookPayload>({
         payload: merged,
       }),
-      onComplete,
-      onError
     )
     await expect(evt).rejects.toThrow(error)
   })
