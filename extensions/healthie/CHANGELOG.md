@@ -1,5 +1,9 @@
 # Healthie changelog
 
+## September 2026
+
+- "Create charting note" action: outputs the ID of the created form answer group as the `formAnswerGroupId` data point.
+
 ## January 2024
 
 - Add "Check patient tag" action

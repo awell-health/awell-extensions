@@ -45,7 +45,7 @@ Removes a tag (identified by an `id`) from a patient.
 
 ## Create charting note
 
-Creates a charting note with the provided `note_content`.
+Creates a charting note with the provided `note_content`. The ID of the created form answer group is available as the `formAnswerGroupId` data point.
 
 **Prerequisites and set-up:**
 

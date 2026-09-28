@@ -8,16 +8,21 @@ import {
   HealthieError,
   mapHealthieToActivityError,
 } from '../../lib/sdk/graphql-codegen/errors'
-import { fields } from './config'
+import { datapoints, fields } from './config'
 import { addActivityEventLog } from '../../../../src/lib/awell/addEventLog'
 
-export const createChartingNote: Action<typeof fields, typeof settings> = {
+export const createChartingNote: Action<
+  typeof fields,
+  typeof settings,
+  keyof typeof datapoints
+> = {
   key: 'createChartingNote',
   category: Category.EHR_INTEGRATIONS,
   title: 'Create charting note',
   description: 'Create a charting note in Healthie.',
   fields,
   previewable: true,
+  dataPoints: datapoints,
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
     helpers.log({ fields: payload.fields }, 'Processing createChartingNote')
 
@@ -114,7 +119,7 @@ export const createChartingNote: Action<typeof fields, typeof settings> = {
           return
         }
 
-        await sdk.createFormAnswerGroup({
+        const { data: formAnswerGroupData } = await sdk.createFormAnswerGroup({
           input: {
             finished: true,
             custom_module_form_id: form_id,
@@ -131,7 +136,13 @@ export const createChartingNote: Action<typeof fields, typeof settings> = {
           },
         })
 
+        const formAnswerGroupId =
+          formAnswerGroupData.createFormAnswerGroup?.form_answer_group?.id
+
         await onComplete({
+          data_points: isNil(formAnswerGroupId)
+            ? undefined
+            : { formAnswerGroupId },
           events: [
             addActivityEventLog({
               message: `Note content: ${note_content}`,
