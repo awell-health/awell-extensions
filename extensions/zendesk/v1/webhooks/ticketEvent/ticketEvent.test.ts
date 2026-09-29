@@ -34,6 +34,15 @@ const axios404 = new AxiosError('Not found', '404', undefined, undefined, {
   config: {} as any,
 } as AxiosResponse)
 
+const axiosErrorWithStatus = (status: number): AxiosError =>
+  new AxiosError(`HTTP ${status}`, String(status), undefined, undefined, {
+    status,
+    statusText: '',
+    data: {},
+    headers: {},
+    config: {} as any,
+  } as AxiosResponse)
+
 describe('Zendesk - Webhook - Ticket event', () => {
   const { extensionWebhook, onSuccess, onError, helpers, clearMocks } =
     TestHelpers.fromWebhook(webhook)
@@ -219,8 +228,43 @@ describe('Zendesk - Webhook - Ticket event', () => {
       })
     })
 
-    test('Should fall back to the trigger body when the ticket is not found', async () => {
+    test('Should respond 404 and not start a care flow when the ticket is not found', async () => {
       mockZendeskAPIClient.getTicket.mockRejectedValue(axios404)
+
+      await extensionWebhook.onEvent!({
+        payload: {
+          payload: triggerWebhookPayload,
+          settings,
+          rawBody: Buffer.from(''),
+          headers: {},
+        },
+        onSuccess,
+        onError,
+        helpers,
+      })
+
+      expect(onSuccess).not.toHaveBeenCalled()
+      expect(onError).toHaveBeenCalledWith({
+        response: expect.objectContaining({ statusCode: 404 }),
+      })
+    })
+
+    test.each([
+      [
+        axiosErrorWithStatus(401),
+        'Zendesk rejected the credentials (HTTP 401)',
+      ],
+      [
+        axiosErrorWithStatus(403),
+        'Zendesk rejected the credentials (HTTP 403)',
+      ],
+      [axiosErrorWithStatus(500), 'Zendesk responded with HTTP 500'],
+      [
+        new AxiosError('connect ECONNREFUSED 10.0.0.1:443', 'ECONNREFUSED'),
+        'the Zendesk API could not be reached',
+      ],
+    ])('Should fall back and describe %s', async (error, reason) => {
+      mockZendeskAPIClient.getTicket.mockRejectedValue(error)
 
       await extensionWebhook.onEvent!({
         payload: {
@@ -239,15 +283,75 @@ describe('Zendesk - Webhook - Ticket event', () => {
         data_points: expect.objectContaining({
           ticketId: '35436',
           ticketFetched: 'false',
-          subject: 'Kit retrieval request',
           requesterEmail: 'jane@example.com',
         }),
         events: [
           expect.objectContaining({
-            text: { en: expect.stringContaining('not found') },
+            text: { en: expect.stringContaining(`because ${reason}.`) },
           }),
         ],
       })
+      const { events } = onSuccess.mock.calls[0][0]
+      expect(events[0].text.en).not.toContain('10.0.0.1')
+    })
+
+    test('Should normalise a pasted host when only the credentials are missing', async () => {
+      await extensionWebhook.onEvent!({
+        payload: {
+          payload: { ticket_id: '35436' },
+          settings: {
+            subdomain: 'acme.zendesk.com',
+            user_email: undefined,
+            api_token: undefined,
+            oauth_client_id: undefined,
+            oauth_client_secret: undefined,
+          },
+          rawBody: Buffer.from(''),
+          headers: {},
+        },
+        onSuccess,
+        onError,
+        helpers,
+      })
+
+      expect(onSuccess).toHaveBeenCalledWith(
+        expect.objectContaining({
+          data_points: expect.objectContaining({
+            ticketUrl: 'https://acme.zendesk.com/agent/tickets/35436',
+          }),
+        }),
+      )
+    })
+
+    test('Should drop a body ticket URL that is not a Zendesk host', async () => {
+      const payload = {
+        ticket_id: '35436',
+        ticket_url: 'https://evil.example.com/agent/tickets/35436',
+      }
+
+      await extensionWebhook.onEvent!({
+        payload: {
+          payload,
+          settings: {
+            subdomain: undefined,
+            user_email: undefined,
+            api_token: undefined,
+            oauth_client_id: undefined,
+            oauth_client_secret: undefined,
+          },
+          rawBody: Buffer.from(''),
+          headers: {},
+        },
+        onSuccess,
+        onError,
+        helpers,
+      })
+
+      expect(onSuccess).toHaveBeenCalledWith(
+        expect.objectContaining({
+          data_points: expect.objectContaining({ ticketUrl: '' }),
+        }),
+      )
     })
 
     test('Should build the ticket URL from the body when no subdomain is configured', async () => {
@@ -306,7 +410,9 @@ describe('Zendesk - Webhook - Ticket event', () => {
           tags: JSON.stringify(['kit_retrieval']),
         }),
         events: [
-          expect.objectContaining({ text: { en: expect.stringContaining('boom') } }),
+          expect.objectContaining({
+            text: { en: expect.stringContaining('of an unexpected error') },
+          }),
         ],
       })
       // Key order changes after zod parsing, so compare the parsed object.

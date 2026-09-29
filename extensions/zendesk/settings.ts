@@ -70,20 +70,33 @@ const optionalString = z
 export const MISSING_CREDENTIALS_MESSAGE =
   'Missing Zendesk credentials in the extension settings. Provide either an "OAuth Client Identifier" and "OAuth Client Secret" (recommended), or a "User Email" and "API Token".'
 
+/**
+ * The subdomain is interpolated into `https://{subdomain}.zendesk.com`, and
+ * credentials are sent to that host, so it must be a single DNS label.
+ * Anything else (`evil.com#`, `a/b`, `a@b`) would change the request host.
+ */
+const DNS_LABEL = /^[a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?$/i
+
+export const zSubdomain = z
+  .string({
+    error: 'Missing "Zendesk Subdomain" in the extension settings.',
+  })
+  .trim()
+  .nonempty({
+    error: 'Missing "Zendesk Subdomain" in the extension settings.',
+  })
+  // Tolerate a full host being pasted in ("company.zendesk.com").
+  .transform((value) =>
+    value.replace(/^https?:\/\//i, '').replace(/\.zendesk\.com(\/.*)?$/i, ''),
+  )
+  .refine((value) => DNS_LABEL.test(value), {
+    error:
+      'Invalid "Zendesk Subdomain" in the extension settings. Use only the subdomain, e.g. "company" for company.zendesk.com.',
+  })
+
 export const SettingsValidationSchema = z
   .object({
-    subdomain: z
-      .string({
-        error: 'Missing "Zendesk Subdomain" in the extension settings.',
-      })
-      .trim()
-      .nonempty({
-        error: 'Missing "Zendesk Subdomain" in the extension settings.',
-      })
-      // Tolerate a full host being pasted in ("company.zendesk.com").
-      .transform((value) =>
-        value.replace(/^https?:\/\//, '').replace(/\.zendesk\.com.*$/i, ''),
-      ),
+    subdomain: zSubdomain,
     oauth_client_id: optionalString,
     oauth_client_secret: optionalString,
     user_email: optionalString,

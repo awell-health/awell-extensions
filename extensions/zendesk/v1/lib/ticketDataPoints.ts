@@ -96,14 +96,12 @@ export const ticketDataPoints = {
 
 export type TicketDataPoints = Record<keyof typeof ticketDataPoints, string>
 
-const toString = (value: unknown): string =>
-  isNil(value) ? '' : String(value)
+const toString = (value: unknown): string => (isNil(value) ? '' : String(value))
 
 export const getTicketUrl = (
   subdomain: string,
   ticketId: number | string,
-): string =>
-  `https://${subdomain}.zendesk.com/agent/tickets/${ticketId}`
+): string => `https://${subdomain}.zendesk.com/agent/tickets/${ticketId}`
 
 /**
  * Maps a Show Ticket response (with side-loaded users) to string data points.
@@ -147,7 +145,9 @@ export const ticketToDataPoints = ({
  * Splits `{{ticket.tags}}` (space separated) or a comma separated string into
  * an array; passes arrays through.
  */
-const normaliseTags = (tags: string[] | string | null | undefined): string[] => {
+const normaliseTags = (
+  tags: string[] | string | null | undefined,
+): string[] => {
   if (isNil(tags)) return []
   if (Array.isArray(tags)) return tags
   return tags
@@ -156,8 +156,24 @@ const normaliseTags = (tags: string[] | string | null | undefined): string[] => 
     .filter((tag) => tag.length > 0)
 }
 
-const ensureHttps = (url: string): string =>
-  /^https?:\/\//i.test(url) ? url : `https://${url}`
+/**
+ * The body is unverified, so only a link to a Zendesk host is passed on to
+ * the care flow; anything else becomes an empty string.
+ */
+const toZendeskUrl = (url: string | null | undefined): string => {
+  const trimmed = url?.trim() ?? ''
+  if (trimmed.length === 0) return ''
+  try {
+    const parsed = new URL(
+      /^https?:\/\//i.test(trimmed) ? trimmed : `https://${trimmed}`,
+    )
+    return parsed.hostname.toLowerCase().endsWith('.zendesk.com')
+      ? parsed.toString()
+      : ''
+  } catch {
+    return ''
+  }
+}
 
 /**
  * Builds the ticket data points from the webhook body alone. Used when the
@@ -202,12 +218,9 @@ export const payloadToDataPoints = ({
 
   const trigger = zTriggerWebhookPayload.parse(payload)
   const ticketId = String(trigger.ticket_id).trim()
-  const bodyUrl = trigger.ticket_url ?? trigger.url
   const ticketUrl = !isNil(subdomain)
     ? getTicketUrl(subdomain, ticketId)
-    : isNil(bodyUrl) || bodyUrl.trim().length === 0
-      ? ''
-      : ensureHttps(bodyUrl.trim())
+    : toZendeskUrl(trigger.ticket_url ?? trigger.url)
 
   return {
     ticketId,

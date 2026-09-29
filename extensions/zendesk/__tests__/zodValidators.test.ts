@@ -76,6 +76,7 @@ describe('zendesk SettingsValidationSchema - authentication methods', () => {
     ['company.zendesk.com', 'company'],
     ['https://company.zendesk.com/', 'company'],
     [' company ', 'company'],
+    ['HTTPS://Company.Zendesk.com/agent', 'Company'],
   ])('normalises subdomain %j to %j', (input, expected) => {
     const result = SettingsValidationSchema.safeParse({
       subdomain: input,
@@ -85,4 +86,19 @@ describe('zendesk SettingsValidationSchema - authentication methods', () => {
     expect(result.success).toBe(true)
     expect(result.data?.subdomain).toBe(expected)
   })
+
+  it.each(['evil.com#', 'evil.com/x', 'a@b', 'a:8080', 'a.b', '-company'])(
+    'rejects subdomain %j that would change the request host',
+    (input) => {
+      const result = SettingsValidationSchema.safeParse({
+        subdomain: input,
+        user_email: 'a@b.co',
+        api_token: 'token',
+      })
+      expect(result.success).toBe(false)
+      expect(result.error?.issues[0].message).toContain(
+        'Invalid "Zendesk Subdomain"',
+      )
+    },
+  )
 })

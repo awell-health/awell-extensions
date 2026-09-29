@@ -1,11 +1,14 @@
 import {
-  type ActivityEvent,
   type DataPointDefinition,
   type Webhook,
 } from '@awell-health/extensions-core'
 import { isAxiosError } from 'axios'
 import { isNil } from 'lodash'
-import { type settings, SettingsValidationSchema } from '../../../settings'
+import {
+  type settings,
+  SettingsValidationSchema,
+  zSubdomain,
+} from '../../../settings'
 import { makeAPIClient } from '../../client'
 import {
   payloadToDataPoints,
@@ -35,17 +38,23 @@ const dataPoints = {
   },
 } satisfies Record<string, DataPointDefinition>
 
+/**
+ * Fixed descriptions only: the text ends up in a customer-visible activity
+ * event, so raw error messages are logged but never surfaced.
+ */
 const describeFetchError = (err: unknown): string => {
-  if (isAxiosError(err)) {
-    const status = err.response?.status
-    if (status === 404) return 'the ticket was not found in the configured Zendesk account (404)'
-    if (status === 401 || status === 403)
-      return `Zendesk rejected the credentials (${status})`
-    if (!isNil(status)) return `Zendesk responded with HTTP ${status}`
-    return `the Zendesk API could not be reached (${err.code ?? err.message})`
-  }
-  return err instanceof Error ? err.message : 'unknown error'
+  if (!isAxiosError(err)) return 'of an unexpected error'
+  const status = err.response?.status
+  if (status === 401 || status === 403)
+    return `Zendesk rejected the credentials (HTTP ${status})`
+  if (!isNil(status)) return `Zendesk responded with HTTP ${status}`
+  return 'the Zendesk API could not be reached'
 }
+
+type FetchTicketResult =
+  | { status: 'fetched'; data: TicketDataPoints }
+  | { status: 'notFound' }
+  | { status: 'failed'; reason: string }
 
 export const ticketEvent: Webhook<
   keyof typeof dataPoints,
@@ -77,60 +86,79 @@ export const ticketEvent: Webhook<
     const { ticketId, eventType } = resolveTicketEvent(parsedPayload.data)
     helpers.log({ ticketId, eventType }, 'Zendesk ticket event received')
 
-    const parsedSettings = SettingsValidationSchema.safeParse(settings)
+    const fetchTicket = async (): Promise<FetchTicketResult> => {
+      const parsedSettings = SettingsValidationSchema.safeParse(settings)
+      if (!parsedSettings.success) {
+        const issues = parsedSettings.error.issues.map((i) => i.message)
+        return {
+          status: 'failed',
+          reason: `the extension settings are incomplete (${issues.join('; ')})`,
+        }
+      }
 
-    let ticketData: TicketDataPoints | undefined
-    let fallbackReason: string | undefined
-
-    if (!parsedSettings.success) {
-      fallbackReason = `the extension settings are incomplete (${parsedSettings.error.issues
-        .map((issue) => issue.message)
-        .join('; ')})`
-    } else {
       try {
         const client = makeAPIClient(parsedSettings.data)
         const response = await client.getTicket(ticketId)
-        ticketData = ticketToDataPoints({
-          response,
-          subdomain: parsedSettings.data.subdomain,
-        })
+        return {
+          status: 'fetched',
+          data: ticketToDataPoints({
+            response,
+            subdomain: parsedSettings.data.subdomain,
+          }),
+        }
       } catch (err) {
-        fallbackReason = describeFetchError(err)
+        // A genuine Zendesk webhook refers to a ticket that exists, so a 404
+        // means a misrouted or forged request rather than a reason to fall
+        // back to the unverified body.
+        if (isAxiosError(err) && err.response?.status === 404)
+          return { status: 'notFound' }
+        helpers.log(
+          { ticketId },
+          'Failed to fetch Zendesk ticket',
+          err instanceof Error ? err : undefined,
+        )
+        return { status: 'failed', reason: describeFetchError(err) }
       }
     }
 
-    const ticketFetched = !isNil(ticketData)
-    const events: ActivityEvent[] = []
+    const result = await fetchTicket()
 
-    if (!ticketFetched) {
-      const rawSubdomain = settings.subdomain?.trim()
-      const subdomain = parsedSettings.success
-        ? parsedSettings.data.subdomain
-        : isNil(rawSubdomain) || rawSubdomain.length === 0
-          ? undefined
-          : rawSubdomain
-
-      ticketData = payloadToDataPoints({
-        payload: parsedPayload.data,
-        subdomain,
+    if (result.status === 'notFound') {
+      await onError({
+        response: {
+          statusCode: 404,
+          message: `Ticket ${ticketId} was not found in Zendesk`,
+        },
       })
-
-      const message = `Ticket ${ticketId} could not be fetched from Zendesk because ${fallbackReason ?? 'of an unknown error'}. Data points were populated from the webhook payload only.`
-      helpers.log({ ticketId, fallbackReason }, message)
-      events.push({
-        date: new Date().toISOString(),
-        text: { en: message },
-      })
+      return
     }
+
+    const commonDataPoints = {
+      eventType,
+      ticketFetched: String(result.status === 'fetched'),
+      payload: JSON.stringify(payload),
+    }
+
+    if (result.status === 'fetched') {
+      await onSuccess({
+        data_points: { ...result.data, ...commonDataPoints },
+      })
+      return
+    }
+
+    const subdomain = zSubdomain.safeParse(settings.subdomain)
+    const message = `Ticket ${ticketId} could not be fetched from Zendesk because ${result.reason}. Data points were populated from the webhook payload only.`
+    helpers.log({ ticketId, reason: result.reason }, message)
 
     await onSuccess({
       data_points: {
-        ...(ticketData as TicketDataPoints),
-        eventType,
-        ticketFetched: String(ticketFetched),
-        payload: JSON.stringify(payload),
+        ...payloadToDataPoints({
+          payload: parsedPayload.data,
+          subdomain: subdomain.success ? subdomain.data : undefined,
+        }),
+        ...commonDataPoints,
       },
-      ...(events.length > 0 && { events }),
+      events: [{ date: new Date().toISOString(), text: { en: message } }],
     })
   },
 }

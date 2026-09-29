@@ -92,7 +92,7 @@ Deletes a support ticket in Zendesk. This action permanently removes the ticket 
 
 Starts a care flow when Zendesk sends a webhook about a ticket. The webhook only needs the ticket ID: the extension fetches the full ticket from the Zendesk API (using the extension settings) so the data points do not depend on what is included in the request body.
 
-If the ticket cannot be fetched (credentials missing or invalid, ticket not found in the configured account, Zendesk API unavailable), the care flow still starts. The data points are then populated from the request body instead, the `ticketFetched` data point is `false`, and an activity event explains why. Including the optional fields in the body below therefore makes the integration resilient.
+If the ticket cannot be fetched (credentials missing or invalid, Zendesk API unavailable), the care flow still starts. The data points are then populated from the request body instead, the `ticketFetched` data point is `false`, and an activity event explains why. Including the optional fields in the body below therefore makes the integration resilient.
 
 Zendesk lets you connect a webhook in one of two ways. The Ticket event webhook supports both.
 
@@ -138,4 +138,7 @@ Note: a webhook's connection method cannot be changed after it is created, and Z
 
 **Responses:**
 - `400` when the body contains neither a `ticket_id` nor a Zendesk ticket event
-- `200` otherwise, including when the ticket could not be fetched (see `ticketFetched`)
+- `404` when Zendesk reports that the ticket does not exist in the configured account; no care flow is started, because a genuine webhook always refers to an existing ticket
+- `200` otherwise, including when the ticket could not be fetched for another reason (see `ticketFetched`)
+
+The request body is not verified when the ticket cannot be fetched, so flows that act on requester details should branch on `ticketFetched`. A ticket URL from the body is only passed on when it points at a `*.zendesk.com` host.
