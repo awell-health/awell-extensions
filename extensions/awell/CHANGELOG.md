@@ -1,5 +1,9 @@
 # Awell changelog
 
+## Unreleased
+
+- New action "Get Hosted Pages Link": fetches the static Hosted Pages link for a stakeholder in a care flow. The stakeholder field is optional and defaults to the patient when left empty.
+
 ## April 2024
 
 Two new action were added: "Get patient by identifier" and "Add identifier to patient".

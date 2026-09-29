@@ -6,24 +6,18 @@ import { z } from 'zod'
 import { addActivityEventLog } from '../../../../../src/lib/awell/addEventLog'
 import { getStakeholderId } from '../../../../../src/lib/awell/getStakeholderId'
 
-const delay = async (ms: number): Promise<void> => {
-  await new Promise<void>((resolve) => setTimeout(resolve, ms))
-}
-
-export const startHostedPagesSession: Action<typeof fields, typeof settings> = {
-  key: 'startHostedPagesSession',
+export const getHostedPagesLink: Action<typeof fields, typeof settings> = {
+  key: 'getHostedPagesLink',
   category: Category.WORKFLOW,
-  title: 'Start Hosted Pages Session',
-  description: 'Start a new Hosted Pages session for a given stakeholder',
+  title: 'Get Hosted Pages Link',
+  description:
+    'Fetch the static Hosted Pages link for a stakeholder (defaults to the patient)',
   fields,
   dataPoints,
   previewable: false,
   supports_automated_retries: true,
   onEvent: async ({ payload, onComplete, onError, helpers }): Promise<void> => {
-    helpers.log(
-      { fields: payload.fields },
-      'Processing startHostedPagesSession',
-    )
+    helpers.log({ fields: payload.fields }, 'Processing getHostedPagesLink')
 
     try {
       const {
@@ -34,9 +28,6 @@ export const startHostedPagesSession: Action<typeof fields, typeof settings> = {
         }),
         payload,
       })
-
-      // To make sure the care flow activated the activity for the stakeholder :-)
-      await delay(4000)
 
       const sdk = await helpers.awellSdk()
 
@@ -66,26 +57,34 @@ export const startHostedPagesSession: Action<typeof fields, typeof settings> = {
         stakeholder,
       })
 
-      const res = await sdk.orchestration.mutation({
-        startHostedActivitySession: {
+      const res = await sdk.orchestration.query({
+        hostedPagesLink: {
           __args: {
-            input: {
-              pathway_id: careFlowId,
-              stakeholder_id: stakeholderId,
-            },
+            pathway_id: careFlowId,
+            stakeholder_id: stakeholderId,
           },
           success: true,
-          session_url: true,
+          hosted_pages_link: {
+            id: true,
+            url: true,
+          },
         },
       })
 
+      const linkUrl = res.hostedPagesLink.hosted_pages_link?.url
+
+      if (linkUrl === undefined || linkUrl === null)
+        throw new Error(
+          `Could not find a Hosted Pages link for stakeholder ${stakeholder} in care flow ${careFlowId}. There may be no activity for this stakeholder in this care flow.`,
+        )
+
       await onComplete({
         data_points: {
-          sessionUrl: res.startHostedActivitySession.session_url,
+          linkUrl,
         },
         events: [
           addActivityEventLog({
-            message: `Session started for care flow instance id ${careFlowId} and stakeholder ${stakeholder} (${stakeholderId}). Session URL is ${res.startHostedActivitySession.session_url}.`,
+            message: `Fetched the Hosted Pages link for care flow instance id ${careFlowId} and stakeholder ${stakeholder} (${stakeholderId}). Link URL is ${linkUrl}.`,
           }),
         ],
       })
