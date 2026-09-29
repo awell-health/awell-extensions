@@ -85,6 +85,19 @@ This action allows you to read the most recent data point value of a given data 
 **Example:**
 If the data point you want to read the value from is of type `number`, then you should use the `valueNumber` data point.
 
+### Get Hosted Pages Link
+
+Fetches the static Hosted Pages link for a stakeholder in a care flow. Unlike "Start Hosted Pages Session", this does not start a session - it returns the persistent link that can be shared with (or re-used by) the stakeholder, e.g. to send it in a reminder message.
+
+**Action fields:**
+
+- careFlowId (required): the instance ID of the care flow to fetch the link for.
+- stakeholder (optional): the name of the stakeholder to fetch the link for. Defaults to the patient when left empty. There must be activity for the stakeholder in the care flow, otherwise no link exists yet and the action will error.
+
+**Data points:**
+
+- linkUrl: the static Hosted Pages link for the stakeholder.
+
 ## Webhooks
 
 Webhooks in the Awell extension offer ways to trigger a care flow based on the end of another care flow, or from any event that happens in your system (via the pathwayStart webhook).

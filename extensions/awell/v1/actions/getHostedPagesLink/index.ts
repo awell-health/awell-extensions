@@ -1,0 +1,1 @@
+export { getHostedPagesLink } from './getHostedPagesLink'
