@@ -29,6 +29,8 @@ describe('Update ticket', () => {
       subdomain: 'test-company',
       user_email: 'test@example.com',
       api_token: 'test-api-token',
+      oauth_client_id: undefined,
+      oauth_client_secret: undefined,
     }
 
     const mockFields = {
@@ -75,6 +77,8 @@ describe('Update ticket', () => {
       subdomain: 'test-company',
       user_email: 'test@example.com',
       api_token: 'test-api-token',
+      oauth_client_id: undefined,
+      oauth_client_secret: undefined,
     }
 
     const mockFields = {
@@ -123,6 +127,8 @@ describe('Update ticket', () => {
       subdomain: 'test-company',
       user_email: 'test@example.com',
       api_token: 'test-api-token',
+      oauth_client_id: undefined,
+      oauth_client_secret: undefined,
     }
 
     const mockFields = {
@@ -170,6 +176,8 @@ describe('Update ticket', () => {
       subdomain: 'test-company',
       user_email: 'test@example.com',
       api_token: 'test-api-token',
+      oauth_client_id: undefined,
+      oauth_client_secret: undefined,
     }
 
     const mockFields = {
