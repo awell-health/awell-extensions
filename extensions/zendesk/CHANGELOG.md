@@ -13,7 +13,7 @@ All notable changes to this project will be documented in this file.
 
 - "User Email" and "API Token" settings are now optional (legacy) and only required when the OAuth settings are empty.
 - The "Zendesk Subdomain" setting accepts a pasted host (`company.zendesk.com`, `https://company.zendesk.com/`) and is normalised to the subdomain. Values that are not a single DNS label are rejected, so credentials can only be sent to a `*.zendesk.com` host.
-- The subdomain setting tolerates a full host being pasted (e.g. "company.zendesk.com" is normalised to "company").
+- API calls now go through the extensions-core `APIClient`, which retries a failed call once after 250ms (and, on a 401, fetches a fresh OAuth token first). **Known limitation:** this also applies to "Create Ticket", so a request that Zendesk processed but whose response was lost (for example a timeout) can create a duplicate ticket. Sending a Zendesk `Idempotency-Key` would prevent this and is not done yet.
 
 ## [1.1.0] - 2026-09-16
 

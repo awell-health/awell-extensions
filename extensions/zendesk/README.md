@@ -49,6 +49,8 @@ Creates a new support ticket in Zendesk with the specified details.
 - Ticket ID: The unique identifier of the created ticket
 - Ticket URL: Direct link to the ticket in Zendesk agent interface
 
+**Note:** a failed request is retried once. If Zendesk created the ticket but the response was lost (for example a timeout), the retry can create a duplicate ticket.
+
 ### Get Ticket
 
 Retrieves a support ticket from Zendesk, including the requester's name and email.

@@ -9,8 +9,14 @@ import { type ValidatedSettings } from '../../settings'
 /**
  * Token cache shared by all Zendesk clients in this process. The OAuth
  * classes in extensions-core key entries by a hash of the grant request, so
- * one cache serves every Zendesk account. The platform can substitute a
- * distributed cache; see the extensions-core `CacheService` interface.
+ * one cache serves every Zendesk account.
+ *
+ * The cache is per process: every pod fetches its own tokens (about one
+ * request per account per 30 minutes) and `InMemoryCache` keeps at most 5
+ * entries (LRU). extensions-core only ships `InMemoryCache` and `NoCache`, so
+ * this matches the other OAuth extensions (athenahealth, talkDesk, dockHealth,
+ * elation). A shared cache would need a new `CacheService` implementation and
+ * a way to hand it to extensions.
  */
 export const zendeskCacheService = new cache.InMemoryCache()
 

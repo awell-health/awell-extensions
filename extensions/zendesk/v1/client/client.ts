@@ -72,6 +72,12 @@ export class ZendeskDataWrapper extends DataWrapper {
   }
 }
 
+/**
+ * Calls go through the extensions-core `APIClient`. Its `FetchData` retries a
+ * failed call once after 250ms, whatever the error was; on a 401 it also
+ * discards the cached token first, which is how an expired or revoked OAuth
+ * token is replaced. The retry applies to `createTicket` as well.
+ */
 export class ZendeskAPIClient extends APIClient<ZendeskDataWrapper> {
   readonly ctor: DataWrapperCtor<ZendeskDataWrapper> = (token, baseUrl) =>
     new ZendeskDataWrapper(token, baseUrl, this.scheme)
@@ -84,6 +90,17 @@ export class ZendeskAPIClient extends APIClient<ZendeskDataWrapper> {
     super({ auth, baseUrl: getZendeskBaseUrl(subdomain) })
   }
 
+  /**
+   * May create a duplicate ticket. Creating a ticket is not idempotent and
+   * `FetchData` retries a failed attempt once (see the class comment), so a
+   * request that Zendesk processed but whose response was lost (timeout,
+   * connection reset, 5xx from an intermediary) is sent again and creates a
+   * second ticket. Before this client moved to `APIClient` there was no retry.
+   *
+   * Zendesk supports an `Idempotency-Key` header on ticket creation that would
+   * make the retry safe; this client does not send one yet.
+   * https://developer.zendesk.com/api-reference/ticketing/tickets/tickets/#create-ticket
+   */
   public async createTicket(
     data: CreateTicketInput,
   ): Promise<CreateTicketResponse> {
