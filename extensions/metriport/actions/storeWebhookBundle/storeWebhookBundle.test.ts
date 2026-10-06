@@ -3,6 +3,8 @@ import { TestHelpers } from '@awell-health/extensions-core'
 import { storeWebhookBundle } from './storeWebhookBundle'
 import { fetchBundle } from '../../shared/fetchBundle'
 import { patientAdmitBundle } from '../webhookBundle/bundle/__testdata__/patientAdmitBundle'
+import { dischargeSummaryBundle } from '../../ingestion/adt/__testdata__/dischargeSummaryBundle'
+import { getWebhookBundle } from '../webhookBundle/getWebhookBundle'
 
 jest.mock('../../shared/fetchBundle')
 
@@ -134,6 +136,41 @@ describe('Metriport - Store Webhook Bundle', () => {
     ).toBeUndefined()
     expect(onComplete.mock.calls[0][0].data_points.encounterId).toBeUndefined()
   })
+
+  // The Medplum bots that sync Tasks read `encounter_id` from the care flow's
+  // baseline data points, and the care flow fills it from this output. A flow
+  // that moves to this action must get the same value Get Webhook Bundle gave it.
+  test.each([
+    ['an admit', patientAdmitBundle, 'patient.admit'],
+    ['a discharge summary', dischargeSummaryBundle, 'patient.discharge-summary'],
+  ])(
+    'Should return, as a plain data point, the Encounter id that Get Webhook Bundle returns for %s',
+    async (_name, bundle, eventType) => {
+      mockedFetchBundle.mockResolvedValue(bundle as never)
+      const previous = TestHelpers.fromAction(getWebhookBundle)
+      await getWebhookBundle.onEvent!({
+        payload: generateTestPayload({
+          fields: {
+            url: 'https://example.com/encounter-bundle',
+            eventType,
+            provenanceReason: undefined,
+          },
+          settings,
+        }),
+        onComplete: previous.onComplete,
+        onError: previous.onError,
+        helpers: previous.helpers,
+        attempt: 1,
+      })
+
+      await run({ eventType })
+
+      const before = previous.onComplete.mock.calls[0][0].data_points.encounterId
+      const after = onComplete.mock.calls[0][0].data_points.encounterId
+      expect(before).toBe('c60544e1-2e37-45fb-8160-3d583902cfde')
+      expect(after).toBe(before)
+    },
+  )
 
   test('Should not write what the bundle identifies to the log', async () => {
     mockedFetchBundle.mockResolvedValue(patientAdmitBundle as never)

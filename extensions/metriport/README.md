@@ -219,6 +219,8 @@ A reference is opaque: pass it on, do not build or parse one. Stored bundles are
 2. **Store Webhook Bundle** — pass `bundleUrl` to `url` and `eventType` to `eventType`.
 3. Medplum **Execute stored bundle** — pass the `transactionBundleRef` data point to its `bundleRef` field.
 
+**If the Medplum bots that sync Tasks should link them to the Encounter**, map this action's `encounterId` data point to the care flow's baseline `encounter_id` data point. The bots read `encounter_id` from the baseline data points, and the mapping belongs to the action in the care flow, so a flow that moves from **Get Webhook Bundle** to this action needs it set again. `encounterId` itself is the same value in both.
+
 # Webhooks
 
 ## Realtime Update
