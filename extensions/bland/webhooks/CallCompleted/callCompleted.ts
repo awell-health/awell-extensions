@@ -4,6 +4,7 @@ import {
   type Webhook,
 } from '@awell-health/extensions-core'
 import { type settings } from '../../settings'
+import { isWebhookRequestAuthorized } from '../verifyWebhookSignature'
 import { type CallCompletedWebhookPayload } from './types'
 
 const dataPoints = {
@@ -45,6 +46,23 @@ export const callCompleted: Webhook<
     onSuccess,
     onError,
   }) => {
+    if (
+      !isWebhookRequestAuthorized({
+        signingSecret: settings.signingSecret,
+        rawBody,
+        payload,
+        headers,
+      })
+    ) {
+      await onError({
+        response: {
+          statusCode: 401,
+          message: 'Invalid or missing X-Webhook-Signature header',
+        },
+      })
+      return
+    }
+
     const callId = payload?.call_id
     const awellPatientId: string | undefined =
       payload?.variables?.metadata?.awell_patient_id ??

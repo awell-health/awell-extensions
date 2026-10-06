@@ -4,6 +4,7 @@ import {
   type Webhook,
 } from '@awell-health/extensions-core'
 import { type settings } from '../../settings'
+import { isWebhookRequestAuthorized } from '../verifyWebhookSignature'
 import { type CompletedBlandTextWebhookPayload } from './types'
 
 const dataPoints = {
@@ -58,7 +59,28 @@ export const completedBlandText: Webhook<
   description:
     'Triggered when a Bland SMS conversation ends (status webhook with channel "sms").',
   dataPoints,
-  onEvent: async ({ payload: { payload }, onSuccess, onError }) => {
+  onEvent: async ({
+    payload: { payload, rawBody, headers, settings },
+    onSuccess,
+    onError,
+  }) => {
+    if (
+      !isWebhookRequestAuthorized({
+        signingSecret: settings.signingSecret,
+        rawBody,
+        payload,
+        headers,
+      })
+    ) {
+      await onError({
+        response: {
+          statusCode: 401,
+          message: 'Invalid or missing X-Webhook-Signature header',
+        },
+      })
+      return
+    }
+
     const conversationId = payload?.conversation_id
     const awellPatientId: string | undefined =
       payload?.metadata?.awell_patient_id ??
