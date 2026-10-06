@@ -39,6 +39,10 @@ export const createHelpers = (): Helpers => ({
     reset: async () => undefined,
   }),
   openAIModelConfig: async () => notSupported('openAIModelConfig'),
+  objectStore: {
+    put: async () => notSupported('objectStore.put'),
+    get: async () => notSupported('objectStore.get'),
+  },
   log: (
     data: Record<string, unknown>,
     message: string,

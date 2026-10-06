@@ -1,5 +1,10 @@
 # Metriport changelog
 
+## October 2026
+
+- Add `Store Webhook Bundle` action: fetches the FHIR bundle from a Metriport webhook payload URL like `Get Webhook Bundle`, but stores the bundle and its importable transaction rewrite and returns references to them (`bundleRef`, `transactionBundleRef`) instead of the bundles, so a bundle larger than the 5 MiB limit on messages inside Awell, such as a discharge summary, no longer blocks the care flow. Pair it with the Medplum `Execute stored bundle` action. `Get Webhook Bundle` is unchanged.
+- A bundle download is now limited to 100 MB and 60 seconds (it had neither limit), for `Get Webhook Bundle`, `Store Webhook Bundle` and the `metriportAdt` endpoint. A larger bundle now fails with a clear error instead of exhausting the memory of the pod that runs every tenant's jobs.
+
 ## September 2026
 
 - Add the `metriportAdt` ingestion endpoint (`source: 'webhook'`): receives Metriport real-time notifications, handles `patient.admit`, `patient.transfer`, `patient.discharge` and `patient.discharge-summary`, downloads the FHIR bundle each points at, and saves one encounter per visit (the patient is created by identifier resolution; demographics are not written yet), so admit, transfer, discharge and the summary converge on the same encounter. Publishes `patient.admitted` / `patient.transferred` / `patient.discharged` / `discharge.summary-received` for care flows and `fhir.bundle-received` for FHIR data movement. Any other notification type is acknowledged without producing a record; HMAC-SHA256 signature verification (with the ping answered by `pong`) is implemented but switched off for the pre-release. The extension now declares `identifier.system` (`https://metriport.com`).

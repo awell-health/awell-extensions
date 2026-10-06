@@ -197,6 +197,28 @@ A transaction resolves an internal reference by matching it against `fullUrl` ve
 
 A `collection` bundle that is missing its Patient or Encounter entry is treated differently: that is an encounter bundle which does not describe an encounter, so the action **fails** rather than silently emitting a partial result.
 
+## Store Webhook Bundle
+
+Fetches the FHIR bundle from a Metriport webhook payload URL like **Get Webhook Bundle**, but stores it and returns references to it instead of the bundle. Use it when a bundle can be too large to pass between care flow steps: a discharge summary can be larger than the 5 MiB limit on messages inside Awell, which the `bundle` and `transactionBundle` data points of **Get Webhook Bundle** would then hit.
+
+It takes the same fields as **Get Webhook Bundle**: `url`, `eventType` and `provenanceReason`.
+
+| Data point | Type | Description |
+| --- | --- | --- |
+| `bundleRef` | string | Reference to the stored bundle, exactly as Metriport sent it. |
+| `transactionBundleRef` | string | Reference to the stored executable FHIR transaction (see "Building the transaction bundle" above). Omitted when the payload is not a Patient Encounter Bundle. |
+| `encounterId` | string | Metriport's UUID for the Encounter in the bundle. Omitted when the bundle carries no Encounter. |
+
+A reference is opaque: pass it on, do not build or parse one. Stored bundles are named after the activity, so a retried action replaces what the failed attempt stored. The action cannot be previewed.
+
+**NOTE: Metriport pre-signed URLs are only valid for 10 minutes, so this action should run early in the care flow, shortly after the realtime update webhook fires.**
+
+### Wiring it into a care flow
+
+1. **Realtime Update** webhook fires and emits `bundleUrl` and `eventType`.
+2. **Store Webhook Bundle** — pass `bundleUrl` to `url` and `eventType` to `eventType`.
+3. Medplum **Execute stored bundle** — pass the `transactionBundleRef` data point to its `bundleRef` field.
+
 # Webhooks
 
 ## Realtime Update
