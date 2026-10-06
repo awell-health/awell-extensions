@@ -97,26 +97,36 @@ describe('Medplum - Execute stored bundle', () => {
     expect(mockExecuteBatch).toHaveBeenCalledWith(transaction)
     expect(onError).not.toHaveBeenCalled()
     expect(onComplete).toHaveBeenCalledWith({
-      data_points: {
-        bundleId: 'bundle-123',
-        bundleType: 'transaction-response',
-        resourceIds: 'patient-1,observation-2',
-        resourcesCreated: JSON.stringify([
-          {
-            id: 'patient-1',
-            resourceType: 'Patient',
-            status: '201 Created',
-            location: 'Patient/patient-1',
-          },
-          {
-            id: 'observation-2',
-            resourceType: 'Observation',
-            status: '201 Created',
-            location: 'Observation/observation-2',
-          },
-        ]),
-      },
+      data_points: { bundleId: 'bundle-123', bundleType: 'transaction-response' },
     })
+  })
+
+  test('Should declare only the data points it returns', () => {
+    expect(Object.keys(executeStoredBundle.dataPoints ?? {}).sort()).toEqual([
+      'bundleId',
+      'bundleType',
+    ])
+  })
+
+  // What Medplum did with each resource would grow with the bundle: a result
+  // with an entry per resource can itself be larger than a NATS message.
+  test('Should return a small result however many resources the bundle creates', async () => {
+    const entries = Array.from({ length: 30_000 }, (_, i) => ({
+      response: {
+        status: '201 Created',
+        location: `Observation/observation-${i}/_history/1`,
+      },
+    }))
+    mockExecuteBatch.mockResolvedValue({ ...transactionResponse, entry: entries })
+    const ref = await helpers.objectStore.put(
+      'bundle.json',
+      JSON.stringify(transaction),
+    )
+
+    await run(ref)
+
+    expect(onError).not.toHaveBeenCalled()
+    expect(JSON.stringify(onComplete.mock.calls[0][0]).length).toBeLessThan(200)
   })
 
   test('Should execute a bundle too large to pass between care flow steps', async () => {

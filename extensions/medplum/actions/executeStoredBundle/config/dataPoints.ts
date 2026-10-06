@@ -1,3 +1,3 @@
-import { batchResultDataPoints } from '../../../utils'
+import { bundleResultDataPoints } from '../../../utils'
 
-export const dataPoints = batchResultDataPoints
+export const dataPoints = bundleResultDataPoints

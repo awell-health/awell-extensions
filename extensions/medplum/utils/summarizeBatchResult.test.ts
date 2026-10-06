@@ -1,5 +1,5 @@
 import { type Bundle } from '@medplum/fhirtypes'
-import { summarizeBatchResult } from './summarizeBatchResult'
+import { summarizeBatchResult, summarizeBundleResult } from './summarizeBatchResult'
 
 const summarize = (
   entry: Bundle['entry'],
@@ -72,5 +72,28 @@ describe('Medplum - summarizeBatchResult', () => {
     expect(JSON.parse(result.resourcesCreated)).toEqual([
       { id: 't1', resourceType: 'Task', status: '200 OK', location: 'Task/t1' },
     ])
+  })
+})
+
+describe('Medplum - summarizeBundleResult', () => {
+  test('Should return the id and type of the result and nothing about its entries', () => {
+    const result = {
+      resourceType: 'Bundle',
+      id: 'bundle-1',
+      type: 'transaction-response',
+      entry: [{ response: { status: '201 Created', location: 'Patient/p1/_history/1' } }],
+    } as Bundle
+
+    expect(summarizeBundleResult(result)).toEqual({
+      bundleId: 'bundle-1',
+      bundleType: 'transaction-response',
+    })
+  })
+
+  test('Should give empty strings for a result with neither', () => {
+    expect(summarizeBundleResult({ resourceType: 'Bundle' } as Bundle)).toEqual({
+      bundleId: '',
+      bundleType: '',
+    })
   })
 })

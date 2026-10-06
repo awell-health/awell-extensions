@@ -1,6 +1,6 @@
 import { Category, type Action } from '@awell-health/extensions-core'
 import { type settings } from '../../settings'
-import { summarizeBatchResult, validateAndCreateSdkClient } from '../../utils'
+import { summarizeBundleResult, validateAndCreateSdkClient } from '../../utils'
 import { fields, dataPoints, FieldsValidationSchema } from './config'
 
 export const executeStoredBundle: Action<
@@ -56,7 +56,9 @@ export const executeStoredBundle: Action<
 
       const result = await medplumSdk.executeBatch(bundle)
 
-      await onComplete({ data_points: summarizeBatchResult(result) })
+      // Not what Medplum did with each resource: that grows with the bundle, and
+      // a bundle too large to pass between steps can be answered by one too large.
+      await onComplete({ data_points: summarizeBundleResult(result) })
     } catch (error) {
       const message = `Failed to execute bundle: ${(error as Error).message}`
       await onError({

@@ -3,13 +3,30 @@ import { type Bundle } from '@medplum/fhirtypes'
 
 const LOCATION = /(?:^|\/)([^/]+)\/([^/]+)(?:\/|$)/
 
-/** The data points `summarizeBatchResult` fills, for each action that returns them. */
-export const batchResultDataPoints = {
+/** The data points `summarizeBundleResult` fills: what the result is, not what is in it. */
+export const bundleResultDataPoints = {
   bundleId: { key: 'bundleId', valueType: 'string' },
   bundleType: { key: 'bundleType', valueType: 'string' },
+} satisfies Record<string, DataPointDefinition>
+
+/**
+ * The data points `summarizeBatchResult` fills. The last two grow with the
+ * number of entries, so an action whose bundle can be large leaves them out and
+ * returns only `bundleResultDataPoints`.
+ */
+export const batchResultDataPoints = {
+  ...bundleResultDataPoints,
   resourceIds: { key: 'resourceIds', valueType: 'string' },
   resourcesCreated: { key: 'resourcesCreated', valueType: 'json' },
 } satisfies Record<string, DataPointDefinition>
+
+/** The id and type of an executed bundle's result. */
+export const summarizeBundleResult = (
+  result: Bundle,
+): { bundleId: string; bundleType: string } => ({
+  bundleId: result.id ?? '',
+  bundleType: result.type ?? '',
+})
 
 /**
  * The data points that describe what Medplum did with an executed bundle: the
@@ -90,9 +107,8 @@ export const summarizeBatchResult = (
       .filter((resource) => resource.id !== '') ?? []
 
   return {
-    bundleId: result.id ?? '',
+    ...summarizeBundleResult(result),
     resourceIds,
-    bundleType: result.type ?? '',
     resourcesCreated: JSON.stringify(resourcesCreated),
   }
 }
