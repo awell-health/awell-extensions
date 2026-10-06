@@ -69,12 +69,13 @@ export const callCompleted: Webhook<
       payload?.metadata?.awell_patient_id
 
     if (isNil(callId)) {
-      return await onError({
+      await onError({
         response: {
           statusCode: 400,
           message: 'Missing call_id in payload',
         },
       })
+      return
     }
 
     await onSuccess({

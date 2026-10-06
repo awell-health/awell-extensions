@@ -167,11 +167,17 @@ describe('completedBlandText - signing secret', () => {
     )
   })
 
-  test('Should not check the signature when no secret is configured', async () => {
-    await receive({}, null)
+  test.each([
+    ['undefined', null],
+    ['an empty string', ''],
+  ])(
+    'Should not check the signature, and change nothing, when the secret is %s',
+    async (_name, signingSecret) => {
+      await receive({}, signingSecret)
 
-    expect(onError).not.toHaveBeenCalled()
-    expect(onSuccess).toHaveBeenCalledTimes(1)
-  })
+      expect(onError).not.toHaveBeenCalled()
+      expect(onSuccess).toHaveBeenCalledTimes(1)
+    },
+  )
 })
 
