@@ -1,6 +1,8 @@
 import { type DataPointDefinition } from '@awell-health/extensions-core'
+import { batchResultDataPoints } from '../../../utils'
 
 export const dataPoints = {
+  ...batchResultDataPoints,
   resourceId: {
     key: 'resourceId',
     valueType: 'string',
@@ -8,22 +10,6 @@ export const dataPoints = {
   resourceType: {
     key: 'resourceType',
     valueType: 'string',
-  },
-  bundleId: {
-    key: 'bundleId',
-    valueType: 'string',
-  },
-  bundleType: {
-    key: 'bundleType',
-    valueType: 'string',
-  },
-  resourceIds: {
-    key: 'resourceIds',
-    valueType: 'string',
-  },
-  resourcesCreated: {
-    key: 'resourcesCreated',
-    valueType: 'json',
   },
   wasResourceFound: {
     key: 'wasResourceFound',

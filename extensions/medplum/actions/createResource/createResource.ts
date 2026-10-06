@@ -1,7 +1,7 @@
 import { Category, type Action } from '@awell-health/extensions-core'
 import { type settings } from '../../settings'
 import { fields, dataPoints, FieldsValidationSchema } from './config'
-import { validateAndCreateSdkClient } from '../../utils'
+import { summarizeBatchResult, validateAndCreateSdkClient } from '../../utils'
 import { type Bundle } from '@medplum/fhirtypes'
 
 export const createResource: Action<
@@ -70,82 +70,9 @@ export const createResource: Action<
           '[Medplum extension] Medplum batch result'
         )
 
-        const resourceIds =
-          result.entry
-            ?.map((entry) => {
-              if (
-                entry.response?.location !== undefined &&
-                entry.response.location !== ''
-              ) {
-                const match = entry.response.location.match(
-                  /(?:^|\/)([^/]+)\/([^/]+)(?:\/|$)/,
-                )
-                return match !== null ? match[2] : undefined
-              }
-              return entry.resource?.id
-            })
-            .filter((id): id is string => id !== undefined && id !== '')
-            .join(',') ?? ''
-
-        const resourcesCreated =
-          result.entry
-            ?.map((entry) => {
-              let id: string | undefined
-              let resourceType: string | undefined
-              let location: string | undefined
-
-              if (
-                entry.response?.location !== undefined &&
-                entry.response.location !== ''
-              ) {
-                const match = entry.response.location.match(
-                  /(?:^|\/)([^/]+)\/([^/]+)(?:\/|$)/,
-                )
-                if (match !== null) {
-                  resourceType = match[1]
-                  id = match[2]
-                  location = `${resourceType}/${id}`
-                }
-              }
-
-              if (
-                (id === undefined || id === '') &&
-                entry.resource?.id !== undefined &&
-                entry.resource.id !== ''
-              ) {
-                id = entry.resource.id
-              }
-              if (
-                (resourceType === undefined || resourceType === '') &&
-                entry.resource?.resourceType !== undefined
-              ) {
-                resourceType = entry.resource.resourceType
-              }
-              if (
-                (location === undefined || location === '') &&
-                resourceType !== undefined &&
-                resourceType !== '' &&
-                id !== undefined &&
-                id !== ''
-              ) {
-                location = `${resourceType}/${id}`
-              }
-
-              return {
-                id: id ?? '',
-                resourceType: resourceType ?? '',
-                status: entry.response?.status ?? '',
-                location: location ?? '',
-              }
-            })
-            .filter((resource) => resource.id !== '') ?? []
-
         await onComplete({
           data_points: {
-            bundleId: result.id ?? '',
-            resourceIds,
-            bundleType: result.type ?? '',
-            resourcesCreated: JSON.stringify(resourcesCreated),
+            ...summarizeBatchResult(result),
             wasResourceFound: 'false',
           },
         })

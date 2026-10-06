@@ -9,6 +9,7 @@ import { startNetworkQuery } from './network/startNetworkQuery'
 import { startConsolidatedQuery } from './consolidated/startConsolidatedQuery'
 import { getConsolidatedQueryStatus } from './consolidated/getConsolidatedQueryStatus'
 import { getWebhookBundle } from './webhookBundle/getWebhookBundle'
+import { storeWebhookBundle } from './storeWebhookBundle/storeWebhookBundle'
 import { removePatientFromCohort } from './cohort/removePatientFromCohort'
 import { getFacilityByName } from './facility/getFacilityByName'
 import { enrollInMonitoring } from './monitoring/enrollInMonitoring'
@@ -25,6 +26,7 @@ export const actions = {
   startConsolidatedQuery,
   getConsolidatedQueryStatus,
   getWebhookBundle,
+  storeWebhookBundle,
   removePatientFromCohort,
   getFacilityByName,
   enrollInMonitoring,
