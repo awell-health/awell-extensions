@@ -11,6 +11,10 @@ With Bland.ai you can build, test, and deploy AI phone calling agents.
 
 To set up this extension, you will need to provide an API key for Bland.
 
+Optionally, add the **Webhook signing secret** to have Awell verify that webhooks really come from Bland. Create it in the Bland dev portal under Account Settings, Keys tab, "Replace Secret" (it is shown only once). Bland then signs each webhook with an HMAC-SHA256 of the body using the secret and sends the hex digest in the `X-Webhook-Signature` header. Awell recomputes it and rejects a webhook with no signature or a wrong one with a `401`. When the setting is empty, webhooks are not verified.
+
+The signature proves who sent a webhook, not when: Bland's documentation describes no timestamp, so a captured request could be sent again. See [Bland's webhook signing guide](https://docs.bland.ai/tutorials/webhook-signing).
+
 ## Actions
 
 ### Send call (with Pathway)
