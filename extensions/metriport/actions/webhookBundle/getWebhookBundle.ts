@@ -26,7 +26,7 @@ export const getWebhookBundle: Action<
         payload.fields,
       )
 
-      const { bundle, transactionBundle, encounterId } =
+      const { bundle, transactionBundle, encounterId, dischargeSummary } =
         await fetchWebhookBundle({
           url,
           awellPatientId: payload.patient.id,
@@ -42,6 +42,7 @@ export const getWebhookBundle: Action<
           ...(transactionBundle !== undefined
             ? { transactionBundle: JSON.stringify(transactionBundle) }
             : {}),
+          ...dischargeSummary,
         },
       })
     } catch (err) {

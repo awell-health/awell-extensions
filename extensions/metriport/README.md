@@ -142,6 +142,29 @@ The Encounter's Metriport id is returned separately on the `encounterId` data po
 | `bundle` | json | The FHIR bundle fetched from the URL, exactly as Metriport sent it. |
 | `transactionBundle` | json | The same data rewritten as an executable FHIR transaction. Omitted when the payload is not a Patient Encounter Bundle. |
 | `encounterId` | string | Metriport's UUID for the Encounter in the bundle. Resolve the imported Encounter in Medplum with `Encounter?identifier=https://metriport.com/fhir/encounter\|<encounterId>`. Omitted when the bundle carries no Encounter. |
+| `reasonForVisit` … `dischargeSummaryCoverage` | string / json | The discharge summary fields, only for a `patient.discharge-summary` bundle. See "Discharge summary fields" below. |
+
+### Discharge summary fields
+
+A `patient.discharge-summary` bundle is Metriport's FHIR conversion of the HIE's discharge summary document: one `Composition` plus the patient's encounter history and the clinical resources the document references. The Composition's sections carry title-only narratives, so there is no text to read off them; the content lives in the resources each section points at. Both bundle actions lift the fields a care team asks for out of those resources and return them as plain data points, so a care flow, Panels or an analytics export can use them without parsing the bundle. For any other bundle the fields are all omitted.
+
+Every field is read relative to the encounter the Composition is about (`Composition.encounter`), **not** the first Encounter in the bundle, which is just the patient's oldest visit. Each is omitted, never empty, when the document does not carry it.
+
+| Data point | Type | Where it comes from |
+| --- | --- | --- |
+| `reasonForVisit` | string | The encounter's `reasonCode` texts, `; `-separated. |
+| `visitDiagnosis` | string | The encounter's diagnoses as `<text> (<ICD-10-CM code>)`, `; `-separated, from `Encounter.diagnosis`, else from the Conditions categorised `encounter-diagnosis` that point at the encounter. |
+| `planOfTreatment` | string | The CarePlans in the Plan of care section (LOINC `18776-5`): description, then one line per activity. |
+| `procedures` | string | The Procedures in the Procedures section (`47519-4`) as `<name> (<date>)`, `; `-separated. |
+| `procedureNote` | string | The notes those Procedures report to (`Procedure.report`), each headed by the report's name. The source files these under Results rather than in a section of their own. |
+| `dischargeDisposition` | string | `Encounter.hospitalization.dischargeDisposition` as text. |
+| `dischargeDispositionCode` | string | The same, as its code (`home`, `snf`, `rehab`, …, from `http://terminology.hl7.org/CodeSystem/discharge-disposition`). |
+| `dischargeInstructions` | string | The note in the Hospital discharge instructions section (`8653-8`), else in the Discharge instructions document section (`74213-0`). |
+| `dischargeSummaryCoverage` | json | `{ documentType, documentTypeText, sections, fields }`: the Composition's LOINC type, the section codes it carried, and which of the fields above were found. Lets coverage be measured instead of guessed. |
+
+Notes are carried as base64 `DiagnosticReport.presentedForm` attachments, `text/html` or `text/plain` depending on the source EHR. HTML is reduced to plain text (paragraphs and breaks become line breaks, tags and entities are dropped or decoded); anything that is not `text/*`, such as a PDF, yields nothing. A single field is capped at 100,000 characters, far above any note seen, purely so a pathological document cannot push the activity result over the message size limit.
+
+This is built against the documents seen from two source EHR families, keyed on section LOINC codes because the titles differ between them ("Plan of Treatment" in one, "Treatment Plan" in the other). It targets the common pattern, not every variant: a document that files a field somewhere else simply does not yield it, and `dischargeSummaryCoverage` says so.
 
 ### Building the transaction bundle
 
@@ -208,6 +231,7 @@ It takes the same fields as **Get Webhook Bundle**: `url`, `eventType` and `prov
 | `bundleRef` | string | Reference to the stored bundle, exactly as Metriport sent it. |
 | `transactionBundleRef` | string | Reference to the stored executable FHIR transaction (see "Building the transaction bundle" above). Omitted when the payload is not a Patient Encounter Bundle. |
 | `encounterId` | string | Metriport's UUID for the Encounter in the bundle. Omitted when the bundle carries no Encounter. |
+| `reasonForVisit` … `dischargeSummaryCoverage` | string / json | The discharge summary fields, only for a `patient.discharge-summary` bundle, exactly as **Get Webhook Bundle** returns them (see "Discharge summary fields" above). They are small, so they travel as plain data points even though the bundle itself is stored. |
 
 A reference is opaque: pass it on, do not build or parse one. Stored bundles are named after the activity, so a retried action replaces what the failed attempt stored. The action cannot be previewed.
 

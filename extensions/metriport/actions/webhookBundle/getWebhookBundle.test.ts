@@ -3,6 +3,7 @@ import { TestHelpers } from '@awell-health/extensions-core'
 import { getWebhookBundle } from './getWebhookBundle'
 import { fetchBundle } from '../../shared/fetchBundle'
 import { patientAdmitBundle } from './bundle/__testdata__/patientAdmitBundle'
+import { progressNoteDischargeSummaryBundle } from './dischargeSummary/__testdata__/progressNoteDischargeSummaryBundle'
 
 jest.mock('../../shared/fetchBundle')
 
@@ -116,6 +117,38 @@ describe('Metriport - Get Webhook Bundle', () => {
     ).resource
     expect(provenance.reason).toEqual([{ text: 'Inpatient admission' }])
     expect(provenance.activity.coding[0].code).toBe('A01')
+  })
+
+  test('Should emit the discharge summary fields for a discharge summary document', async () => {
+    mockedFetchBundle.mockResolvedValue(progressNoteDischargeSummaryBundle as never)
+
+    await getWebhookBundle.onEvent!({
+      payload: generateTestPayload({
+        fields: {
+          url: 'https://example.com/discharge-summary',
+          eventType: 'patient.discharge-summary',
+          provenanceReason: undefined,
+        },
+        settings,
+      }),
+      onComplete,
+      onError,
+      helpers,
+      attempt: 1,
+    })
+
+    expect(onError).not.toHaveBeenCalled()
+    const dataPoints = onComplete.mock.calls[0][0].data_points
+    expect(dataPoints).toMatchObject({
+      bundle: JSON.stringify(progressNoteDischargeSummaryBundle),
+      reasonForVisit: 'Chest pain',
+      dischargeDisposition: 'Home',
+      dischargeDispositionCode: 'home',
+      dischargeInstructions: expect.stringContaining('Take aspirin 81 mg daily.'),
+    })
+    expect(JSON.parse(dataPoints.dischargeSummaryCoverage).fields).toContain(
+      'procedureNote',
+    )
   })
 
   test('Should omit the transaction bundle when the payload is not an encounter bundle', async () => {

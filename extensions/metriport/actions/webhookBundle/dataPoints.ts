@@ -1,4 +1,5 @@
 import { type DataPointDefinition } from '@awell-health/extensions-core'
+import { dischargeSummaryDataPoints } from './dischargeSummary'
 
 export const dataPoints = {
   bundle: {
@@ -24,4 +25,9 @@ export const dataPoints = {
     key: 'encounterId',
     valueType: 'string',
   },
+  /**
+   * The discharge summary fields, present only when the bundle is a
+   * `patient.discharge-summary` document. See `dischargeSummary/`.
+   */
+  ...dischargeSummaryDataPoints,
 } satisfies Record<string, DataPointDefinition>

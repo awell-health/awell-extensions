@@ -3,11 +3,16 @@ import { type Helpers } from '@awell-health/extensions-core'
 import { fetchBundle } from '../../shared/fetchBundle'
 import { buildTransactionBundle } from './bundle'
 import { findEncounterId } from './bundle/encounter'
+import {
+  extractDischargeSummary,
+  type DischargeSummaryFields,
+} from './dischargeSummary'
 
 /**
  * Downloads a Metriport webhook bundle and derives what both bundle actions
- * hand on: the importable transaction rewrite and the Encounter's id. They
- * differ only in how they publish the result.
+ * hand on: the importable transaction rewrite, the Encounter's id, and, for a
+ * discharge summary, the fields lifted from the document. They differ only in
+ * how they publish the result.
  */
 export const fetchWebhookBundle = async ({
   url,
@@ -25,6 +30,8 @@ export const fetchWebhookBundle = async ({
   bundle: Bundle
   transactionBundle: Bundle | undefined
   encounterId: string | undefined
+  /** Undefined for any bundle that is not a discharge summary document. */
+  dischargeSummary: DischargeSummaryFields | undefined
 }> => {
   const bundle = await fetchBundle(url)
 
@@ -41,5 +48,10 @@ export const fetchWebhookBundle = async ({
     log,
   })
 
-  return { bundle, transactionBundle, encounterId: findEncounterId(bundle) }
+  return {
+    bundle,
+    transactionBundle,
+    encounterId: findEncounterId(bundle),
+    dischargeSummary: extractDischargeSummary(bundle),
+  }
 }
