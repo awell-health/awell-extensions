@@ -51,7 +51,22 @@ describe('Send email', () => {
     expect(InfobipClientMockImplementation.emailApi.send).toHaveBeenCalledWith(
       mockedEmailData,
     )
-    expect(onComplete).toHaveBeenCalled()
+    expect(onComplete).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data_points: {
+          bulkId: 'xyz',
+          messageId: '123',
+          messageStatus: 'PENDING_ACCEPTED',
+        },
+        events: [
+          expect.objectContaining({
+            text: {
+              en: expect.stringContaining('message ID 123'),
+            },
+          }),
+        ],
+      }),
+    )
     expect(onError).not.toHaveBeenCalled()
   })
 
