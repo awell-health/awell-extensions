@@ -2,6 +2,8 @@ import { GraphQLClient } from 'graphql-request'
 import {
   type DeletePatientInput,
   type StopPathwayInput,
+  type PauseCareFlowInput,
+  type UnpauseCareFlowInput,
   type EmptyPayload,
   type StartPathwayInput,
   type StartPathwayPayload,
@@ -33,6 +35,8 @@ import {
   deletePatientMutation,
   startPathwayMutation,
   stopPathwayMutation,
+  pauseCareFlowMutation,
+  unpauseCareFlowMutation,
   updatePatientMutation,
   searchPatientByPatientCodeQuery,
   updateBaselineInfoMutation,
@@ -87,7 +91,7 @@ export default class AwellSdk {
   async deletePatient(input: DeletePatientInput): Promise<boolean> {
     const data = await this.client.request<{ deletePatient: EmptyPayload }>(
       deletePatientMutation,
-      { input }
+      { input },
     )
 
     if (data.deletePatient.success) {
@@ -102,7 +106,7 @@ export default class AwellSdk {
       stopPathwayMutation,
       {
         input,
-      }
+      },
     )
 
     if (data.stopPathway.success) {
@@ -112,8 +116,33 @@ export default class AwellSdk {
     throw new Error('Stop pathway failed.')
   }
 
+  async pauseCareFlow(input: PauseCareFlowInput): Promise<boolean> {
+    const data = await this.client.request<{ pauseCareFlow: EmptyPayload }>(
+      pauseCareFlowMutation,
+      { input },
+    )
+
+    if (data.pauseCareFlow.success) {
+      return true
+    }
+
+    throw new Error('Pause care flow failed.')
+  }
+
+  async unpauseCareFlow(input: UnpauseCareFlowInput): Promise<boolean> {
+    const data = await this.client.request<{
+      unpauseCareFlow: EmptyPayload
+    }>(unpauseCareFlowMutation, { input })
+
+    if (data.unpauseCareFlow.success) {
+      return true
+    }
+
+    throw new Error('Unpause care flow failed.')
+  }
+
   async searchPatientsByPatientCode(
-    input: QuerySearchPatientsByPatientCodeArgs
+    input: QuerySearchPatientsByPatientCodeArgs,
   ): Promise<
     Array<
       Pick<User, 'id'> & {
@@ -134,7 +163,7 @@ export default class AwellSdk {
               patient_code: patient.profile?.patient_code,
             },
           }
-        }
+        },
       )
 
       return patientIdsArray
@@ -170,7 +199,7 @@ export default class AwellSdk {
   }
 
   async addIdentifierToPatient(
-    input: AddIdentifierToPatientInput
+    input: AddIdentifierToPatientInput,
   ): Promise<boolean> {
     const data = await this.client.request<{
       addIdentifierToPatient: { code: string; success: boolean }
@@ -184,7 +213,7 @@ export default class AwellSdk {
   }
 
   async getCareflowActivities(
-    input: QueryCareflowActivitiesArgs
+    input: QueryCareflowActivitiesArgs,
   ): Promise<Activity[]> {
     const data = await this.client.request<{
       careflowActivities: ActivitiesPayload
@@ -219,12 +248,12 @@ export default class AwellSdk {
     }
 
     throw new Error(
-      `Retrieving form response for activity ${input.activity_id} failed`
+      `Retrieving form response for activity ${input.activity_id} failed`,
     )
   }
 
   async getCalculationResults(
-    input: QueryCalculationResultsArgs
+    input: QueryCalculationResultsArgs,
   ): Promise<SingleCalculationResult[]> {
     const data = await this.client.request<{
       calculationResults: CalculationResultsPayload
@@ -235,7 +264,7 @@ export default class AwellSdk {
     }
 
     throw new Error(
-      `Retrieving calculation results for activity ${input.activity_id} failed`
+      `Retrieving calculation results for activity ${input.activity_id} failed`,
     )
   }
 }

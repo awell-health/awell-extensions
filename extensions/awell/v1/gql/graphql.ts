@@ -967,6 +967,7 @@ export type Mutation = {
   deletePatient: EmptyPayload
   evaluateFormRules: EvaluateFormRulesPayload
   markMessageAsRead: MarkMessageAsReadPayload
+  pauseCareFlow: EmptyPayload
   /** Retrieve patient demographics from an external system */
   requestPatientDemographics: PatientDemographicsPayload
   retryActivity: EmptyPayload
@@ -992,6 +993,7 @@ export type Mutation = {
   stopTrack: StopTrackPayload
   submitChecklist: SubmitChecklistPayload
   submitFormResponse: SubmitFormResponsePayload
+  unpauseCareFlow: EmptyPayload
   unscheduleTracks: CancelScheduledTracksPayload
   updateBaselineInfo: EmptyPayload
   updatePatient: UpdatePatientPayload
@@ -1103,6 +1105,14 @@ export type MutationStartPathwayArgs = {
 
 export type MutationStartPathwayWithPatientIdentifierArgs = {
   input: StartPathwayWithPatientIdentifierInput
+}
+
+export type MutationPauseCareFlowArgs = {
+  input: PauseCareFlowInput
+}
+
+export type MutationUnpauseCareFlowArgs = {
+  input: UnpauseCareFlowInput
 }
 
 export type MutationStopPathwayArgs = {
@@ -1286,6 +1296,7 @@ export enum PathwayStatus {
   Active = 'active',
   Completed = 'completed',
   MissingBaselineInfo = 'missing_baseline_info',
+  Paused = 'paused',
   Starting = 'starting',
   Stopped = 'stopped',
 }
@@ -2022,6 +2033,15 @@ export type StartPathwayWithPatientIdentifierPayload = Payload & {
   patient_id: Scalars['String']['output']
   stakeholders: Array<Stakeholder>
   success: Scalars['Boolean']['output']
+}
+
+export type PauseCareFlowInput = {
+  careflow_id: Scalars['String']['input']
+  reason?: InputMaybe<Scalars['String']['input']>
+}
+
+export type UnpauseCareFlowInput = {
+  careflow_id: Scalars['String']['input']
 }
 
 export type StopPathwayInput = {

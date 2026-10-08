@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- New actions "Pause care flow" and "Unpause care flow": pause one or more care flows (defaults to the current care flow) and resume them later via the `pauseCareFlow` and `unpauseCareFlow` orchestration mutations.
 - New action "Get Hosted Pages Link": fetches the static Hosted Pages link for a stakeholder in a care flow. The stakeholder field is optional and defaults to the patient when left empty.
 
 ## April 2024
