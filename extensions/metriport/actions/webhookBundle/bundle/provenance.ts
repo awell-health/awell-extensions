@@ -1,6 +1,7 @@
 import {
   type BundleEntry,
   type CodeableConcept,
+  type Coding,
   type Provenance,
 } from '@medplum/fhirtypes'
 import {
@@ -57,6 +58,10 @@ export const eventTypeToActivity = (
  *
  * POST rather than a conditional update: Provenance has no `identifier` element
  * in FHIR R4, and each delivery is a distinct import event.
+ *
+ * With an `idempotencyTag` it is a conditional update on that tag instead, for
+ * an import that is sent in several bundles and is rerun after a failure part
+ * way: the rerun replaces the Provenance of a chunk rather than adding another.
  */
 export const buildProvenance = ({
   targetReferences,
@@ -64,17 +69,20 @@ export const buildProvenance = ({
   recorded,
   reason,
   eventType,
+  idempotencyTag,
 }: {
   targetReferences: string[]
   sourceBundleId: string | undefined
   recorded: string
   reason?: string
   eventType?: string
+  idempotencyTag?: Required<Pick<Coding, 'system' | 'code'>>
 }): BundleEntry<Provenance> => {
   const activity = eventTypeToActivity(eventType)
 
   const provenance: Provenance = {
     resourceType: 'Provenance',
+    ...(idempotencyTag !== undefined ? { meta: { tag: [idempotencyTag] } } : {}),
     target: targetReferences.map((reference) => ({ reference })),
     recorded,
     agent: [
@@ -112,6 +120,12 @@ export const buildProvenance = ({
   return {
     fullUrl: PROVENANCE_FULL_URL,
     resource: provenance,
-    request: { method: 'POST', url: 'Provenance' },
+    request:
+      idempotencyTag === undefined
+        ? { method: 'POST', url: 'Provenance' }
+        : {
+            method: 'PUT',
+            url: `Provenance?_tag=${idempotencyTag.system}|${idempotencyTag.code}`,
+          },
   }
 }

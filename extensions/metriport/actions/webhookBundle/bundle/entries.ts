@@ -5,6 +5,7 @@ import {
 } from '@medplum/fhirtypes'
 import { type Helpers } from '@awell-health/extensions-core'
 import {
+  METRIPORT_SOURCE_TAG_SYSTEM,
   RESOURCE_TYPES_WITHOUT_IDENTIFIER,
   metriportIdentifierSystem,
 } from './constants'
@@ -82,7 +83,7 @@ export const buildResourceEntry = (
     '[Metriport bundle] Existing identifiers on resource',
   )
 
-  if (!rawIdentifier || Array.isArray(rawIdentifier)) {
+  if (rawIdentifier === undefined || Array.isArray(rawIdentifier)) {
     const existing = rawIdentifier ?? []
     const alreadyStamped = existing.some(
       (identifier) => identifier.system === system && identifier.value === id,
@@ -99,6 +100,32 @@ export const buildResourceEntry = (
     request: {
       method: 'PUT',
       url: `${resourceType}?identifier=${system}|${id}`,
+    },
+  }
+}
+
+/**
+ * Makes an entry safe to send again. `buildResourceEntry` writes a resource that
+ * has no `identifier` element with a POST, so sending it twice makes two. For an
+ * import that is sent in chunks and rerun after a failure part way, that entry is
+ * written with a tag naming its source resource instead, and a conditional
+ * update on that tag replaces it. Any other entry is already a conditional
+ * update and is returned as it is.
+ */
+export const tagForIdempotentRerun = (
+  entry: BundleEntry,
+  key: string,
+): BundleEntry => {
+  const resource = entry.resource
+  if (entry.request?.method !== 'POST' || resource === undefined) return entry
+
+  const tag = { system: METRIPORT_SOURCE_TAG_SYSTEM, code: key }
+  return {
+    ...entry,
+    resource: { ...resource, meta: { ...resource.meta, tag: [tag] } },
+    request: {
+      method: 'PUT',
+      url: `${resource.resourceType}?_tag=${tag.system}|${tag.code}`,
     },
   }
 }

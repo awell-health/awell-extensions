@@ -134,3 +134,34 @@ describe('rewriteReferences', () => {
     })
   })
 })
+
+describe('rewriteReferences with a function', () => {
+  test('rewrites each reference the function has an answer for, and leaves the rest', () => {
+    const rewritten = rewriteReferences(
+      {
+        subject: { reference: 'Patient/p1' },
+        encounter: { reference: 'Encounter/e1' },
+        performer: [{ reference: 'Practitioner/not-in-the-bundle' }],
+        note: [{ text: 'Encounter/e1' }],
+      },
+      (reference) =>
+        reference === 'Encounter/e1' ? 'urn:uuid:e1' : reference === 'Patient/p1' ? 'Patient?x=1' : undefined,
+    )
+
+    expect(rewritten).toEqual({
+      subject: { reference: 'Patient?x=1' },
+      encounter: { reference: 'urn:uuid:e1' },
+      performer: [{ reference: 'Practitioner/not-in-the-bundle' }],
+      // Only a `reference` is rewritten, not any text that looks like one.
+      note: [{ text: 'Encounter/e1' }],
+    })
+  })
+
+  test('does not change the resource it is given', () => {
+    const resource = { encounter: { reference: 'Encounter/e1' } }
+
+    rewriteReferences(resource, () => 'urn:uuid:e1')
+
+    expect(resource).toEqual({ encounter: { reference: 'Encounter/e1' } })
+  })
+})

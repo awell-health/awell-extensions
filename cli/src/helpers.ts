@@ -42,6 +42,8 @@ export const createHelpers = (): Helpers => ({
   objectStore: {
     put: async () => notSupported('objectStore.put'),
     get: async () => notSupported('objectStore.get'),
+    putStream: async () => notSupported('objectStore.putStream'),
+    getStream: async () => notSupported('objectStore.getStream'),
   },
   log: (
     data: Record<string, unknown>,

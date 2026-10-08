@@ -178,3 +178,36 @@ describe('buildProvenance', () => {
     expect(entry.resource?.meta).toBeUndefined()
   })
 })
+
+describe('buildProvenance with an idempotency tag', () => {
+  const tag = { system: 'https://metriport.com/fhir/import-chunk', code: 'bundle-1:3' }
+  const build = (): ReturnType<typeof buildProvenance> =>
+    buildProvenance({
+      targetReferences: ['urn:uuid:encounter-1'],
+      sourceBundleId: 'bundle-1',
+      recorded: '2025-03-15T16:45:10.000Z',
+      idempotencyTag: tag,
+    })
+
+  test('is a conditional update on the tag, so that a rerun replaces it instead of adding another', () => {
+    expect(build().request).toEqual({
+      method: 'PUT',
+      url: 'Provenance?_tag=https://metriport.com/fhir/import-chunk|bundle-1:3',
+    })
+  })
+
+  test('carries the tag the update looks for', () => {
+    expect(build().resource?.meta?.tag).toEqual([tag])
+  })
+
+  test('is still a POST without a tag, as before', () => {
+    const entry = buildProvenance({
+      targetReferences: ['urn:uuid:encounter-1'],
+      sourceBundleId: 'bundle-1',
+      recorded: '2025-03-15T16:45:10.000Z',
+    })
+
+    expect(entry.request?.method).toBe('POST')
+    expect(entry.resource?.meta).toBeUndefined()
+  })
+})

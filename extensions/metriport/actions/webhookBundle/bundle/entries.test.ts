@@ -1,4 +1,4 @@
-import { buildResourceEntry } from './entries'
+import { buildResourceEntry, tagForIdempotentRerun } from './entries'
 import { metriportIdentifierSystem } from './constants'
 
 describe('buildResourceEntry', () => {
@@ -194,5 +194,33 @@ describe('buildResourceEntry', () => {
 
     expect(resource.id).toBe('metriport-location-1')
     expect(resource.meta).toEqual({ versionId: '0.1.0' })
+  })
+})
+
+describe('tagForIdempotentRerun', () => {
+  test('turns the POST of a resource that has no identifier into a conditional update on a tag', () => {
+    const posted = buildResourceEntry({ resourceType: 'Binary', id: 'bin-1', contentType: 'text/plain' } as never)
+    expect(posted.request?.method).toBe('POST')
+
+    const entry = tagForIdempotentRerun(posted, 'Binary/bin-1')
+
+    expect(entry.request).toEqual({
+      method: 'PUT',
+      url: 'Binary?_tag=https://metriport.com/fhir/source|Binary/bin-1',
+    })
+    expect((entry.resource as any).meta.tag).toEqual([
+      { system: 'https://metriport.com/fhir/source', code: 'Binary/bin-1' },
+    ])
+    expect(entry.fullUrl).toBe(posted.fullUrl)
+  })
+
+  test('leaves a conditional update on an identifier as it is', () => {
+    const entry = buildResourceEntry({
+      resourceType: 'Condition',
+      id: 'c1',
+      subject: { reference: 'Patient/p1' },
+    })
+
+    expect(tagForIdempotentRerun(entry, 'Condition/c1')).toBe(entry)
   })
 })

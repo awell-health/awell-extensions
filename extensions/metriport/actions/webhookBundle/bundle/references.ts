@@ -44,12 +44,22 @@ export const buildReferenceMap = (
 }
 
 /**
+ * Answers for a reference: what to rewrite it to, or nothing to leave it as it
+ * is. For when what a reference becomes depends on more than the reference, as
+ * it does when a bundle is sent in chunks.
+ */
+export type ReferenceResolver = (reference: string) => string | undefined
+
+/**
  * Recursively rewrites every `reference` field found in the map, returning a
  * new object. Only the `reference` key is considered, so values that merely
  * look like references (a `display` of "Patient/123", say) are left alone, as
  * are absolute URLs and references to resources outside the bundle.
  */
-export const rewriteReferences = <T>(value: T, map: ReferenceMap): T => {
+export const rewriteReferences = <T>(
+  value: T,
+  map: ReferenceMap | ReferenceResolver,
+): T => {
   if (Array.isArray(value)) {
     return value.map((item) => rewriteReferences(item, map)) as unknown as T
   }
@@ -60,7 +70,7 @@ export const rewriteReferences = <T>(value: T, map: ReferenceMap): T => {
 
   for (const [key, child] of Object.entries(value)) {
     if (key === 'reference' && typeof child === 'string') {
-      result[key] = map[child] ?? child
+      result[key] = (typeof map === 'function' ? map(child) : map[child]) ?? child
     } else {
       result[key] = rewriteReferences(child, map)
     }

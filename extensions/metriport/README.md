@@ -222,18 +222,31 @@ A `collection` bundle that is missing its Patient or Encounter entry is treated 
 
 ## Store Webhook Bundle
 
-Fetches the FHIR bundle from a Metriport webhook payload URL like **Get Webhook Bundle**, but stores it and returns references to it instead of the bundle. Use it when a bundle can be too large to pass between care flow steps: a discharge summary can be larger than the 5 MiB limit on messages inside Awell, which the `bundle` and `transactionBundle` data points of **Get Webhook Bundle** would then hit.
+Downloads the FHIR bundle from a Metriport webhook payload URL like **Get Webhook Bundle**, but into storage and without loading it into memory, and returns references instead of the bundle. Use it when a bundle can be too large to pass between care flow steps: a discharge summary can be larger than the 5 MiB limit on messages inside Awell, which the `bundle` and `transactionBundle` data points of **Get Webhook Bundle** would then hit, and can reach 100 MB, which is more than a job can hold in memory several times over while it parses, rewrites and sends it.
 
 It takes the same fields as **Get Webhook Bundle**: `url`, `eventType` and `provenanceReason`.
 
 | Data point | Type | Description |
 | --- | --- | --- |
-| `bundleRef` | string | Reference to the stored bundle, exactly as Metriport sent it. |
-| `transactionBundleRef` | string | Reference to the stored executable FHIR transaction (see "Building the transaction bundle" above). Omitted when the payload is not a Patient Encounter Bundle. |
+| `bundleRef` | string | Reference to the stored bundle, byte for byte as Metriport sent it. |
+| `transactionBundleRef` | string | Reference to the list of stored executable FHIR transactions the bundle was split into (see "How a large bundle is handled" below), for the Medplum **Execute stored bundle** action. Omitted when the payload is not a Patient Encounter Bundle. |
 | `encounterId` | string | Metriport's UUID for the Encounter in the bundle. Omitted when the bundle carries no Encounter. |
 | `reasonForVisit` … `dischargeSummaryCoverage` | string / json | The discharge summary fields, only for a `patient.discharge-summary` bundle, exactly as **Get Webhook Bundle** returns them (see "Discharge summary fields" above). They are small, so they travel as plain data points even though the bundle itself is stored. |
 
 A reference is opaque: pass it on, do not build or parse one. Stored bundles are named after the activity, so a retried action replaces what the failed attempt stored. The action cannot be previewed.
+
+### How a large bundle is handled
+
+1. **Download.** The bundle goes from the pre-signed URL into storage as it arrives, with nothing parsed on the way, so what is held does not grow with its size. It starts at once, as the URL only lasts 10 minutes; once the bundle is stored the URL no longer matters. A download that sends nothing for 60 seconds, takes more than 5 minutes, or is over 250 MB fails. The stored size is compared with the `Content-Length` the server sent (when it sent one, and did not compress the body), so a connection cut short fails the action instead of leaving a truncated bundle that the next step would read as whole.
+2. **Read back.** The stored bundle is read a resource at a time, several times: once for what can only be known of the whole of it (its resources, how their references resolve, the order they have to be written in), then once for each step of that order. What is kept in between is an index of a few short strings per resource: about 11 MB for a 100 MB bundle of 31,000 resources, measured, and never the resources.
+3. **Split.** The bundle is cut into transactions of at most 200 resources and 4 MiB, each stored as its own object, and the list of them in the order to execute them is what `transactionBundleRef` points at. A single resource that is over the limits on its own gets a transaction of its own.
+   - **Order.** A `urn:uuid` reference only resolves inside its own transaction, so a reference to a resource in another transaction is a conditional one (`Encounter?identifier=https://metriport.com/fhir/encounter|…`), which only resolves to something already written. Resources are therefore written after the resources they refer to.
+   - **Records.** Resources that refer to each other, such as an Encounter and its diagnoses, cannot be put in order, so they are written together in one transaction, never split, where the references between them resolve.
+   - **Rerun.** Every entry is a conditional update on the identifier Metriport's id is stamped as (or, for a resource type that has no `identifier`, on a tag), or a conditional create, and the same bundle always makes the same transactions, so running the import again after a failure part way replaces what was written and adds nothing.
+   - **Provenance.** One per transaction, for the resources of that transaction, in place of the one for the whole bundle that **Get Webhook Bundle** writes. Each is a conditional update on a tag of the source bundle and the transaction number, so a rerun replaces it.
+   - **Limits.** A reference to a resource that is not in the bundle is left as it is. A reference that cannot be satisfied in order fails the transaction that holds it, and the **Execute stored bundle** action says which one.
+
+The raw bundle stays stored if it is then rejected (a `collection` with no Patient or Encounter, or a resource with no id): only the transactions are not written.
 
 **NOTE: Metriport pre-signed URLs are only valid for 10 minutes, so this action should run early in the care flow, shortly after the realtime update webhook fires.**
 
