@@ -229,4 +229,46 @@ describe('Update ticket', () => {
       ],
     })
   })
+  test('Should accept a numeric ticket ID, as sent when the field is bound to a number data point', async () => {
+    const payload = {
+      fields: {
+        ticket_id: 302589,
+        comment: 'Automated call summary',
+        priority: 'high',
+        status: 'open',
+      },
+      settings: {
+        subdomain: 'test-company',
+        user_email: 'test@example.com',
+        api_token: 'test-api-token',
+        oauth_client_id: undefined,
+        oauth_client_secret: undefined,
+      },
+      pathway: {
+        id: 'test-pathway-id',
+        definition_id: 'test-definition-id',
+        tenant_id: 'test-tenant-id',
+        org_slug: 'test-org-slug',
+        org_id: 'test-org-id',
+      },
+      activity: { id: 'test-activity-id' },
+      patient: { id: 'test-patient-id' },
+    }
+
+    await updateTicket.onEvent!({
+      payload: payload as any,
+      onComplete,
+      onError,
+      helpers,
+      attempt: 1,
+    })
+
+    expect(mockZendeskAPIClient.updateTicket).toHaveBeenCalledWith('302589', {
+      comment: { body: 'Automated call summary' },
+      priority: 'high',
+      status: 'open',
+    })
+    expect(onError).not.toHaveBeenCalled()
+    expect(onComplete).toHaveBeenCalledWith({})
+  })
 })

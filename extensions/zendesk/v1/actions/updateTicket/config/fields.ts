@@ -4,6 +4,7 @@ import {
   FieldType,
   StringType,
   makeStringOptional,
+  NumericIdSchema,
 } from '@awell-health/extensions-core'
 
 const priorityEnum = z.enum(['urgent', 'high', 'normal', 'low'])
@@ -61,7 +62,7 @@ export const fields = {
 } satisfies Record<string, Field>
 
 export const FieldsValidationSchema = z.object({
-  ticket_id: z.string().nonempty(),
+  ticket_id: NumericIdSchema,
   comment: z.string().optional(),
   priority: makeStringOptional(priorityEnum),
   status: makeStringOptional(statusEnum),
