@@ -263,7 +263,8 @@ describe('Metriport to Medplum - memory while a very large bundle is split', () 
     let bundleBytes = 0
     for (const piece of bundleText({ observations })) bundleBytes += Buffer.byteLength(piece)
 
-    const memory = retainedMemory()
+    // The index is objects and strings on the heap; the bytes of the Buffers a stream passes are not what is held.
+    const memory = retainedMemory({ includeExternal: false })
     let written = 0
     let reads = 0
     const generatedStore: Pick<ObjectStore, 'getStream' | 'put'> = {
@@ -306,6 +307,6 @@ describe('Metriport to Medplum - memory while a very large bundle is split', () 
     // What is held is an index of the resources, a few short strings each, and one
     // chunk at a time: a fraction of the bundle, which parsed whole would hold
     // several times its size.
-    expect(memory.growth()).toBeLessThan(bundleBytes * 0.4)
+    expect(memory.growth()).toBeLessThan(bundleBytes * 0.25)
   }, 300000)
 })
