@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.2.1] - 2026-10-07
+
+### Fixed
+
+- "Update Ticket" rejected the ticket ID with `expected string` when the field was bound to a number data point. The field is numeric in Studio, so it now uses the same `NumericIdSchema` as "Get Ticket" and "Delete Ticket" and accepts both numbers and numeric strings.
+
 ## [1.2.0] - 2026-09-23
 
 ### Added
