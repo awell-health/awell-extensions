@@ -30,18 +30,35 @@ const isContentEncoded = (headers: Record<string, unknown> | undefined): boolean
   return encoding !== '' && encoding !== 'identity'
 }
 
-/** Passes bytes through and fails the stream once more than the limit has gone by. */
-const limitBytes = (source: Readable): Readable => {
+/**
+ * Passes bytes through and fails the stream once more than the limit has gone by,
+ * or when nothing has come for `idleTimeoutMs`: the socket's own timeout is not
+ * relied on to end a body that has started and then stopped.
+ */
+const limitBytes = (source: Readable, idleTimeoutMs: number): Readable => {
   let received = 0
-  const limited = new Transform({
+  let idle: NodeJS.Timeout | undefined
+  const watch = (): void => {
+    if (idle !== undefined) clearTimeout(idle)
+    idle = setTimeout(() => {
+      limited.destroy(new Error(`The bundle download stopped sending for ${idleTimeoutMs} ms`))
+    }, idleTimeoutMs)
+    idle.unref()
+  }
+  const limited: Transform = new Transform({
     transform: (chunk: Buffer, _encoding, callback) => {
+      watch()
       received += chunk.length
       if (received > MAX_STORED_BUNDLE_BYTES) callback(new Error(TOO_LARGE))
       else callback(null, chunk)
     },
   })
   source.once('error', (err) => limited.destroy(err))
-  limited.once('close', () => source.destroy())
+  limited.once('close', () => {
+    if (idle !== undefined) clearTimeout(idle)
+    source.destroy()
+  })
+  watch()
   source.pipe(limited)
   return limited
 }
@@ -65,11 +82,14 @@ export const downloadBundle = async ({
   url,
   name,
   objectStore,
+  idleTimeoutMs = DOWNLOAD_BUNDLE_IDLE_TIMEOUT_MS,
 }: {
   url: string
   /** The object name: the same name on a retry replaces what a failed attempt stored. */
   name: string
   objectStore: ObjectStore
+  /** How long a body may send nothing for. */
+  idleTimeoutMs?: number
 }): Promise<{ ref: string; bytes: number }> => {
   // The URL arrives in a webhook payload. The filtering agent refuses private, loopback and
   // reserved addresses -- after DNS resolution, so a hostname that resolves inward is caught too.
@@ -91,7 +111,7 @@ export const downloadBundle = async ({
     throw new Error(TOO_LARGE)
   }
 
-  const { ref, size } = await objectStore.putStream(name, limitBytes(body), {
+  const { ref, size } = await objectStore.putStream(name, limitBytes(body, idleTimeoutMs), {
     contentType: 'application/json',
   })
 

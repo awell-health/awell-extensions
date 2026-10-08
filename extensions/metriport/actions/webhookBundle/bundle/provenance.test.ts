@@ -179,28 +179,38 @@ describe('buildProvenance', () => {
   })
 })
 
-describe('buildProvenance with an idempotency tag', () => {
-  const tag = { system: 'https://metriport.com/fhir/import-chunk', code: 'bundle-1:3' }
+describe('buildProvenance with an idempotency key', () => {
+  const key = { system: 'https://metriport.com/fhir/import-chunk', code: 'bundle-1:3' }
   const build = (): ReturnType<typeof buildProvenance> =>
     buildProvenance({
       targetReferences: ['urn:uuid:encounter-1'],
       sourceBundleId: 'bundle-1',
       recorded: '2025-03-15T16:45:10.000Z',
-      idempotencyTag: tag,
+      idempotencyKey: key,
     })
 
-  test('is a conditional update on the tag, so that a rerun replaces it instead of adding another', () => {
+  test('is a conditional update on the key, so that a rerun replaces it instead of adding another', () => {
     expect(build().request).toEqual({
       method: 'PUT',
-      url: 'Provenance?_tag=https://metriport.com/fhir/import-chunk|bundle-1:3',
+      url: 'Provenance?agent-type=https://metriport.com/fhir/import-chunk|bundle-1:3',
     })
   })
 
-  test('carries the tag the update looks for', () => {
-    expect(build().resource?.meta?.tag).toEqual([tag])
+  test('carries the key as a coding of the agent type, which is what the update searches', () => {
+    const codings = build().resource?.agent?.[0].type?.coding
+
+    expect(codings).toContainEqual(key)
+    // The participant type it always had stays.
+    expect(codings?.[0].code).toBe('assembler')
   })
 
-  test('is still a POST without a tag, as before', () => {
+  // Medplum reserves `meta`: specifying it makes the server overwrite what the
+  // resource would inherit from the patient.
+  test('does not specify meta', () => {
+    expect(build().resource?.meta).toBeUndefined()
+  })
+
+  test('is still a POST without a key, as before', () => {
     const entry = buildProvenance({
       targetReferences: ['urn:uuid:encounter-1'],
       sourceBundleId: 'bundle-1',
@@ -208,6 +218,6 @@ describe('buildProvenance with an idempotency tag', () => {
     })
 
     expect(entry.request?.method).toBe('POST')
-    expect(entry.resource?.meta).toBeUndefined()
+    expect(entry.resource?.agent?.[0].type?.coding).toHaveLength(1)
   })
 })

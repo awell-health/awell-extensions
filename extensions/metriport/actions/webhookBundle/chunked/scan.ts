@@ -1,6 +1,36 @@
 import { type ObjectStore } from '@awell-health/extensions-core'
+import { RESOURCE_TYPES_WITHOUT_IDENTIFIER } from '../bundle/constants'
 import { orderByDependency } from './order'
-import { readBundleEntries, type BundleHeader } from './readBundle'
+import { detach, readBundleEntries, type BundleHeader } from './readBundle'
+
+/**
+ * What the scan will take on. They bound what is held, and how many times the
+ * stored bundle is read afterwards: a bundle that is small in bytes can be a very
+ * large number of tiny resources, or one chain of references a thousand deep, and
+ * the import runs in a process that other tenants' jobs share.
+ */
+export interface ScanLimits {
+  /** Resources in the bundle. What is held is a few short strings for each. */
+  maxResources: number
+  /** Levels of references. Each is another read of the whole stored bundle. */
+  maxDepth: number
+  /** Resources in one group of resources that refer to each other, which is held whole, and sent in one transaction. */
+  maxRecordResources: number
+}
+
+export const MAX_BUNDLE_RESOURCES = 300_000
+export const MAX_DEPENDENCY_DEPTH = 64
+export const MAX_RECORD_RESOURCES = 5_000
+
+/**
+ * What a FHIR id and a resource type are allowed to be. They are put in the
+ * searches that write and find a resource, where a `,` or a `|` or a `&` would
+ * change what is searched for and so what is replaced.
+ */
+const FHIR_ID = /^[A-Za-z0-9\-.]{1,64}$/
+const RESOURCE_TYPE = /^[A-Z][A-Za-z]{0,63}$/
+
+export const isFhirId = (text: string): boolean => FHIR_ID.test(text)
 
 export interface BundleScan {
   header: BundleHeader
@@ -13,6 +43,8 @@ export interface BundleScan {
   encounterId: string | undefined
   /** The type of the first resource other than a Patient with no id: it cannot be reconciled. */
   firstWithoutId: string | undefined
+  /** The position of the first resource other than a Patient whose id or type is not valid FHIR. */
+  firstInvalid: number | undefined
   /**
    * Each resource a reference can mean, by every form a reference to it takes in
    * the bundle (`Type/id`, `urn:uuid:id` and its `fullUrl`), mapped to its key
@@ -30,17 +62,7 @@ export interface BundleScan {
    * group. A group is written in one transaction, never split between chunks.
    */
   groupOf: ReadonlyMap<string, number>
-  /** The highest rank, or -1 when there is nothing to write. */
-  maxRank: number
 }
-
-/**
- * A copy of a string that holds nothing but itself. A string the parser hands
- * back is a slice of the chunk it was read from, and a slice keeps the whole
- * chunk alive: every string kept for the length of the scan would keep a chunk
- * of the bundle, and together they would keep the bundle.
- */
-const detach = (text: string): string => Buffer.from(text, 'utf8').toString('utf8')
 
 /**
  * One copy of each string that is kept. The same few resources are referred to
@@ -92,7 +114,13 @@ const referencesOf = (
 export const scanBundle = async (
   store: Pick<ObjectStore, 'getStream'>,
   ref: string,
+  limits: Partial<ScanLimits> = {},
 ): Promise<BundleScan> => {
+  const {
+    maxResources = MAX_BUNDLE_RESOURCES,
+    maxDepth = MAX_DEPENDENCY_DEPTH,
+    maxRecordResources = MAX_RECORD_RESOURCES,
+  } = limits
   const header: BundleHeader = {}
   const intern = internPool()
   const keyOf = new Map<string, string>()
@@ -103,11 +131,16 @@ export const scanBundle = async (
   let hasComposition = false
   let encounterId: string | undefined
   let firstWithoutId: string | undefined
+  let firstInvalid: number | undefined
 
-  for await (const { entry } of readBundleEntries(store, ref, header)) {
+  for await (const { entry, index: position } of readBundleEntries(store, ref, header)) {
     const resource = entry.resource
     if (resource === undefined) continue
     entryCount++
+    // Stops the read: leaving the loop closes the stored bundle.
+    if (entryCount > maxResources) {
+      throw new Error(`[Metriport bundle] The bundle has more than ${maxResources} resources`)
+    }
 
     const { resourceType, id } = resource
     if (resourceType === 'Patient') hasPatient = true
@@ -120,6 +153,13 @@ export const scanBundle = async (
     if (id === undefined) {
       if (resourceType !== 'Patient') firstWithoutId ??= resourceType
       continue
+    }
+
+    if (
+      resourceType !== 'Patient' &&
+      (!isFhirId(id) || !RESOURCE_TYPE.test(resourceType))
+    ) {
+      firstInvalid ??= position
     }
 
     const key = intern(`${resourceType}/${id}`)
@@ -142,10 +182,40 @@ export const scanBundle = async (
     }
     dependencies.set(key, [...targets])
   }
+  // A resource with no `identifier` element cannot be the target of a conditional
+  // reference from another chunk. What refers to it is written with it, which is
+  // what a cycle is, so the reference is made to run both ways.
+  const withoutIdentifier = (key: string): boolean =>
+    RESOURCE_TYPES_WITHOUT_IDENTIFIER.includes(key.slice(0, key.indexOf('/')))
+  const reverse: Array<[string, string]> = []
+  for (const [key, targets] of dependencies) {
+    for (const target of targets) if (withoutIdentifier(target)) reverse.push([target, key])
+  }
+  for (const [target, key] of reverse) {
+    const targets = dependencies.get(target) as string[]
+    if (!targets.includes(key)) targets.push(key)
+  }
+
   const { ranks, groups: groupOf } = orderByDependency(dependencies)
+
   // Not `Math.max(...ranks.values())`: a spread of that many arguments overflows the stack.
-  let maxRank = -1
-  for (const rank of ranks.values()) if (rank > maxRank) maxRank = rank
+  for (const rank of ranks.values()) {
+    if (rank > maxDepth) {
+      throw new Error(
+        `[Metriport bundle] The references between the resources are nested more than ${maxDepth} levels deep`,
+      )
+    }
+  }
+  const groupSizes = new Map<number, number>()
+  for (const group of groupOf.values()) {
+    const size = (groupSizes.get(group) ?? 0) + 1
+    if (size > maxRecordResources) {
+      throw new Error(
+        `[Metriport bundle] Resources that refer to each other are more than ${maxRecordResources} in one group`,
+      )
+    }
+    groupSizes.set(group, size)
+  }
 
   return {
     header,
@@ -155,9 +225,9 @@ export const scanBundle = async (
     hasComposition,
     encounterId,
     firstWithoutId,
+    firstInvalid,
     keyOf,
     ranks,
     groupOf,
-    maxRank,
   }
 }

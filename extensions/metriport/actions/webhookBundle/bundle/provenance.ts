@@ -59,9 +59,13 @@ export const eventTypeToActivity = (
  * POST rather than a conditional update: Provenance has no `identifier` element
  * in FHIR R4, and each delivery is a distinct import event.
  *
- * With an `idempotencyTag` it is a conditional update on that tag instead, for
+ * With an `idempotencyKey` it is a conditional update on that key instead, for
  * an import that is sent in several bundles and is rerun after a failure part
  * way: the rerun replaces the Provenance of a chunk rather than adding another.
+ * The key is a second coding of the agent's type, which Provenance is searched by
+ * (`agent-type`) in standard FHIR. It is not put in `meta`, which Medplum
+ * reserves: specifying it makes the server overwrite what a resource would
+ * inherit from the patient.
  */
 export const buildProvenance = ({
   targetReferences,
@@ -69,20 +73,19 @@ export const buildProvenance = ({
   recorded,
   reason,
   eventType,
-  idempotencyTag,
+  idempotencyKey,
 }: {
   targetReferences: string[]
   sourceBundleId: string | undefined
   recorded: string
   reason?: string
   eventType?: string
-  idempotencyTag?: Required<Pick<Coding, 'system' | 'code'>>
+  idempotencyKey?: Required<Pick<Coding, 'system' | 'code'>>
 }): BundleEntry<Provenance> => {
   const activity = eventTypeToActivity(eventType)
 
   const provenance: Provenance = {
     resourceType: 'Provenance',
-    ...(idempotencyTag !== undefined ? { meta: { tag: [idempotencyTag] } } : {}),
     target: targetReferences.map((reference) => ({ reference })),
     recorded,
     agent: [
@@ -95,6 +98,7 @@ export const buildProvenance = ({
               code: 'assembler',
               display: 'Assembler',
             },
+            ...(idempotencyKey !== undefined ? [idempotencyKey] : []),
           ],
         },
         who: { reference: ACCOUNT_ORGANIZATION_FULL_URL },
@@ -121,11 +125,11 @@ export const buildProvenance = ({
     fullUrl: PROVENANCE_FULL_URL,
     resource: provenance,
     request:
-      idempotencyTag === undefined
+      idempotencyKey === undefined
         ? { method: 'POST', url: 'Provenance' }
         : {
             method: 'PUT',
-            url: `Provenance?_tag=${idempotencyTag.system}|${idempotencyTag.code}`,
+            url: `Provenance?agent-type=${idempotencyKey.system}|${idempotencyKey.code}`,
           },
   }
 }

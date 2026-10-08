@@ -361,13 +361,23 @@ describe('Metriport - Store Webhook Bundle', () => {
     })
   })
 
-  test('Should write the same objects, by name, when it is run again for the same activity', async () => {
+  test('Should write the same objects, by name, and no others, when it is run again for the same activity', async () => {
     serve(patientAdmitBundle)
 
     await run({ eventType: 'patient.admit' })
+    const named = (): string[] =>
+      [
+        ...(helpers.objectStore.putStream as jest.Mock).mock.calls.map(([name]) => name),
+        ...(helpers.objectStore.put as jest.Mock).mock.calls.map(([name]) => name),
+      ].sort()
+    const first = named()
+    clearMocks()
+    serve(patientAdmitBundle)
     await run({ eventType: 'patient.admit' })
 
-    expect(onComplete.mock.calls[1][0]).toEqual(onComplete.mock.calls[0][0])
+    expect(onComplete.mock.calls[0][0].data_points.transactionBundleRef).toBeDefined()
+    expect(named()).toEqual(first)
+    expect(first.length).toBeGreaterThan(2)
   })
 
   test('Should call onError and store nothing when the URL is invalid', async () => {

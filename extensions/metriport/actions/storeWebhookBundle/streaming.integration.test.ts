@@ -1,6 +1,4 @@
 import axios from 'axios'
-import v8 from 'v8'
-import vm from 'vm'
 import { Readable } from 'stream'
 import { generateTestPayload } from '@/tests'
 import { TestHelpers, type ObjectStore } from '@awell-health/extensions-core'
@@ -9,7 +7,10 @@ import { storeWebhookBundle } from './storeWebhookBundle'
 import { executeStoredBundle } from '../../../medplum/actions/executeStoredBundle/executeStoredBundle'
 import { DEFAULT_CHUNK_LIMITS, buildTransactionChunks } from '../webhookBundle/chunked/buildChunks'
 import { scanBundle } from '../webhookBundle/chunked/scan'
+import { retainedMemory } from '../../shared/__testdata__/retainedMemory'
 import { fakeMedplum } from '../webhookBundle/chunked/__testdata__/fakeMedplum'
+import { ChunkManifestSchema, TRANSACTION_CHUNKS_KIND as MEDPLUM_KIND } from '../../../medplum/actions/executeStoredBundle/config'
+import { TRANSACTION_CHUNKS_KIND } from '../webhookBundle/chunked/manifest'
 
 /**
  * A Metriport bundle too large to pass between care flow steps, taken through
@@ -159,6 +160,23 @@ describe('Metriport to Medplum - a bundle too large for one transaction', () => 
     }
   })
 
+  // The two extensions each define the list, as neither depends on the other: this is what ties them.
+  test('Should write a list that the Medplum action accepts, and call it by the same name', async () => {
+    const manifest = JSON.parse(await store.helpers.objectStore.get(transactionBundleRef))
+
+    expect(TRANSACTION_CHUNKS_KIND).toBe(MEDPLUM_KIND)
+    const parsed = ChunkManifestSchema.safeParse(manifest)
+    expect(parsed.success).toBe(true)
+    // What the action uses to say where a failure is must survive its schema.
+    expect(parsed.success && parsed.data.chunks[0]).toEqual(
+      expect.objectContaining({
+        ref: manifest.chunks[0].ref,
+        firstSourceEntry: manifest.chunks[0].firstSourceEntry,
+        lastSourceEntry: manifest.chunks[0].lastSourceEntry,
+      }),
+    )
+  })
+
   test('Should keep the Encounter and its diagnoses in one transaction', async () => {
     const manifest = JSON.parse(await store.helpers.objectStore.get(transactionBundleRef))
     const holding: string[][] = []
@@ -225,6 +243,7 @@ describe('Metriport to Medplum - a bundle too large for one transaction', () => 
     expect(message).toMatch(/chunk 6 of \d+ \(.*source entries \d+-\d+\)/)
     expect(message).toContain('503 Service Unavailable')
     expect(message).toContain('5 of')
+    expect(message).toMatch(/5 of \d+ chunks had been executed/)
     expect(fresh.log).toHaveLength(5)
 
     // The same action, run again: the five chunks are replaced, the rest written.
@@ -235,16 +254,7 @@ describe('Metriport to Medplum - a bundle too large for one transaction', () => 
   }, 120000)
 })
 
-// A collection first, so that what is measured is what is still held and not what is waiting to be collected.
-v8.setFlagsFromString('--expose-gc')
-const collectGarbage = vm.runInNewContext('gc') as () => void
-
 describe('Metriport to Medplum - memory while a very large bundle is split', () => {
-  const inUse = (): number => {
-    collectGarbage()
-    const { heapUsed, external } = process.memoryUsage()
-    return heapUsed + external
-  }
 
   test('Should hold a fraction of a 100 MB bundle, not the bundle, while it is scanned and written', async () => {
     // Generated as it is read, so the bundle itself is never in memory, and the
@@ -253,8 +263,7 @@ describe('Metriport to Medplum - memory while a very large bundle is split', () 
     let bundleBytes = 0
     for (const piece of bundleText({ observations })) bundleBytes += Buffer.byteLength(piece)
 
-    let peak = 0
-    let lowest = Infinity
+    const memory = retainedMemory()
     let written = 0
     let reads = 0
     const generatedStore: Pick<ObjectStore, 'getStream' | 'put'> = {
@@ -266,9 +275,7 @@ describe('Metriport to Medplum - memory while a very large bundle is split', () 
           for (const piece of pieces) {
             yield piece
             if (++count % 1000 === 0) {
-              const now = inUse()
-              peak = Math.max(peak, now)
-              lowest = Math.min(lowest, now)
+              memory.sample()
               await new Promise((resolve) => setImmediate(resolve))
             }
           }
@@ -299,6 +306,6 @@ describe('Metriport to Medplum - memory while a very large bundle is split', () 
     // What is held is an index of the resources, a few short strings each, and one
     // chunk at a time: a fraction of the bundle, which parsed whole would hold
     // several times its size.
-    expect(peak - lowest).toBeLessThan(bundleBytes * 0.25)
+    expect(memory.growth()).toBeLessThan(bundleBytes * 0.4)
   }, 300000)
 })

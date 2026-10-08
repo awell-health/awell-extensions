@@ -13,7 +13,10 @@ import { type Bundle, type BundleEntry, type Resource } from '@medplum/fhirtypes
  * - a conditional create (`ifNoneExist`) skips what already exists;
  * - a plain POST always creates.
  *
- * It matches `identifier=system|value`, `_tag=system|code` and `name:exact=...`.
+ * - an entry that specifies `meta` fails: Medplum reserves it, and specifying it
+ *   makes the server overwrite what a resource would inherit from the patient.
+ *
+ * It matches `identifier=system|value`, `agent-type=system|code` and `name:exact=...`.
  */
 export interface FakeMedplum {
   /** What is stored, for assertions. */
@@ -41,7 +44,7 @@ export const fakeMedplum = ({
   const keysOf = (resource: Resource): string[] => {
     const record = resource as {
       identifier?: Array<{ system?: string; value?: string }> | { system?: string; value?: string }
-      meta?: { tag?: Array<{ system?: string; code?: string }> }
+      agent?: Array<{ type?: { coding?: Array<{ system?: string; code?: string }> } }>
       name?: unknown
     }
     const type = resource.resourceType
@@ -49,7 +52,11 @@ export const fakeMedplum = ({
     if (Array.isArray(record.identifier)) {
       for (const i of record.identifier) keys.push(`${type}?identifier=${String(i.system)}|${String(i.value)}`)
     }
-    for (const t of record.meta?.tag ?? []) keys.push(`${type}?_tag=${String(t.system)}|${String(t.code)}`)
+    for (const agent of record.agent ?? []) {
+      for (const c of agent.type?.coding ?? []) {
+        keys.push(`${type}?agent-type=${String(c.system)}|${String(c.code)}`)
+      }
+    }
     if (typeof record.name === 'string') keys.push(`${type}?name:exact=${record.name}`)
     return keys
   }
@@ -66,7 +73,7 @@ export const fakeMedplum = ({
     return index
   }
 
-  const SEARCHES = ['identifier=', '_tag=', 'name:exact=']
+  const SEARCHES = ['identifier=', 'agent-type=', 'name:exact=']
   const search = (index: Map<string, Item[]>, resourceType: string, query: string): Item[] => {
     if (!SEARCHES.some((name) => query.startsWith(name))) {
       throw new Error(`The fake does not match the search ${query}`)
@@ -116,6 +123,9 @@ export const fakeMedplum = ({
           const resource = entry.resource
           const request = entry.request
           if (resource === undefined || request === undefined) fail(400, 'An entry needs a resource and a request')
+          if ((resource as { meta?: unknown }).meta !== undefined) {
+            fail(400, 'An entry must not specify meta: Medplum reserves it')
+          }
 
           for (const reference of referencesIn(resource)) {
             if (reference.startsWith('urn:uuid:')) {

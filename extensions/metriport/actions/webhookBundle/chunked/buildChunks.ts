@@ -1,14 +1,14 @@
+import { createHash } from 'crypto'
 import { type BundleEntry, type Resource } from '@medplum/fhirtypes'
 import { type ObjectStore } from '@awell-health/extensions-core'
 import { buildAccountOrganizationEntry } from '../bundle/account'
 import {
-  METRIPORT_IMPORT_CHUNK_TAG_SYSTEM,
-  METRIPORT_SOURCE_TAG_SYSTEM,
+  METRIPORT_IMPORT_CHUNK_SYSTEM,
   RESOURCE_TYPES_WITHOUT_IDENTIFIER,
   awellPatientReference,
   metriportIdentifierSystem,
 } from '../bundle/constants'
-import { buildResourceEntry, tagForIdempotentRerun } from '../bundle/entries'
+import { buildResourceEntry } from '../bundle/entries'
 import { buildProvenance } from '../bundle/provenance'
 import { rewriteReferences } from '../bundle/references'
 import { chunked, type ChunkLimits } from './chunked'
@@ -18,7 +18,7 @@ import {
   type TransactionChunksManifest,
 } from './manifest'
 import { readBundleEntries } from './readBundle'
-import { type BundleScan } from './scan'
+import { isFhirId, type BundleScan } from './scan'
 
 /**
  * How big a transaction is sent to Medplum. A transaction is all or nothing in
@@ -31,6 +31,16 @@ export const DEFAULT_CHUNK_LIMITS: ChunkLimits = {
   maxBytes: 4 * 1024 * 1024,
 }
 
+/**
+ * A piece of text for a search: itself when it is a valid FHIR id, else a digest
+ * of it, as the bundle's own id is whatever the source sent and a `,` or a `|` or
+ * a `&` in it would change what is searched for.
+ */
+const keyPart = (text: string): string =>
+  isFhirId(text)
+    ? text
+    : createHash('sha256').update(text).digest('hex').slice(0, 32)
+
 interface SourceEntry {
   entry: BundleEntry & { resource: Resource }
   /** Its position in the source bundle. */
@@ -41,15 +51,16 @@ interface SourceEntry {
   bytes: number
 }
 
-/** A reference to a resource a chunk before this one wrote, by what it was written with. */
-const conditionalReference = (key: string): string => {
+/**
+ * A reference to a resource a chunk before this one wrote, by the identifier it
+ * was written with. A resource type that has no identifier element has none, but
+ * nothing refers to one from another chunk: what refers to it is written with it.
+ */
+const conditionalReference = (key: string): string | undefined => {
   const slash = key.indexOf('/')
   const resourceType = key.slice(0, slash)
-  const id = key.slice(slash + 1)
-  // What has no identifier is written with a tag instead, and found by it.
-  return RESOURCE_TYPES_WITHOUT_IDENTIFIER.includes(resourceType)
-    ? `${resourceType}?_tag=${METRIPORT_SOURCE_TAG_SYSTEM}|${key}`
-    : `${resourceType}?identifier=${metriportIdentifierSystem(resourceType)}|${id}`
+  if (RESOURCE_TYPES_WITHOUT_IDENTIFIER.includes(resourceType)) return undefined
+  return `${resourceType}?identifier=${metriportIdentifierSystem(resourceType)}|${key.slice(slash + 1)}`
 }
 
 /**
@@ -70,15 +81,19 @@ const conditionalReference = (key: string): string => {
  *   its diagnoses, cannot be ordered, so they are one record: written in one
  *   chunk, never split, however small the limit, where the references between
  *   them resolve. They are held together in memory until the pass that writes
- *   them ends, which is a few resources, not the bundle.
+ *   them ends, which is a few resources, not the bundle. A resource type with no
+ *   `identifier` element is in the record of every resource that refers to it, as
+ *   it cannot be referred to conditionally from another chunk.
  * - **Rerun.** Every entry is a conditional update on what identifies it, or a
  *   conditional create, so sending a chunk again, or all of them again after a
  *   failure part way, replaces what is there and adds nothing. The chunks are the
  *   same bytes every time for the same source, so a rerun replaces the same
- *   resources, and what has no `identifier` element is tagged to be found by.
+ *   resources. The one exception is a resource type that has no `identifier`
+ *   element, which is written with a POST and written again; Medplum reserves
+ *   `meta`, so it cannot be tagged to be found by.
  * - **Provenance.** One per chunk, for the resources of that chunk: a single one
  *   for a whole bundle would be a resource of its own size. Each is a conditional
- *   update on a tag of the source bundle and the chunk, so a rerun replaces it.
+ *   update on a key of the source bundle and the chunk, so a rerun replaces it.
  *
  * A record that is larger than the limits is written whole, in a chunk of its
  * own.
@@ -120,6 +135,12 @@ export const buildTransactionChunks = async ({
   if (scan.firstWithoutId !== undefined) {
     throw new Error(
       `[Metriport bundle] ${scan.firstWithoutId} entry is missing an id, so it cannot be reconciled`,
+    )
+  }
+  // Not quoted: it is what a hostile bundle would say, and it is put in searches.
+  if (scan.firstInvalid !== undefined) {
+    throw new Error(
+      `[Metriport bundle] Entry ${scan.firstInvalid} has an id or resource type that is not valid FHIR`,
     )
   }
 
@@ -184,11 +205,8 @@ export const buildTransactionChunks = async ({
       return inChunk.get(target) ?? conditionalReference(target)
     }
 
-    const resourceEntries = group.map(({ entry, key }) =>
-      tagForIdempotentRerun(
-        buildResourceEntry(rewriteReferences(entry.resource, resolve), entry.fullUrl),
-        key,
-      ),
+    const resourceEntries = group.map(({ entry }) =>
+      buildResourceEntry(rewriteReferences(entry.resource, resolve), entry.fullUrl),
     )
 
     const provenance = buildProvenance({
@@ -199,9 +217,9 @@ export const buildTransactionChunks = async ({
       recorded,
       reason,
       eventType,
-      idempotencyTag: {
-        system: METRIPORT_IMPORT_CHUNK_TAG_SYSTEM,
-        code: `${sourceBundleId ?? sourceRef}:${number}`,
+      idempotencyKey: {
+        system: METRIPORT_IMPORT_CHUNK_SYSTEM,
+        code: `${keyPart(sourceBundleId ?? sourceRef)}:${number}`,
       },
     })
 

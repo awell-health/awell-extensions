@@ -1,4 +1,4 @@
-import { buildResourceEntry, tagForIdempotentRerun } from './entries'
+import { buildResourceEntry } from './entries'
 import { metriportIdentifierSystem } from './constants'
 
 describe('buildResourceEntry', () => {
@@ -197,30 +197,16 @@ describe('buildResourceEntry', () => {
   })
 })
 
-describe('tagForIdempotentRerun', () => {
-  test('turns the POST of a resource that has no identifier into a conditional update on a tag', () => {
-    const posted = buildResourceEntry({ resourceType: 'Binary', id: 'bin-1', contentType: 'text/plain' } as never)
-    expect(posted.request?.method).toBe('POST')
-
-    const entry = tagForIdempotentRerun(posted, 'Binary/bin-1')
-
-    expect(entry.request).toEqual({
-      method: 'PUT',
-      url: 'Binary?_tag=https://metriport.com/fhir/source|Binary/bin-1',
-    })
-    expect((entry.resource as any).meta.tag).toEqual([
-      { system: 'https://metriport.com/fhir/source', code: 'Binary/bin-1' },
-    ])
-    expect(entry.fullUrl).toBe(posted.fullUrl)
-  })
-
-  test('leaves a conditional update on an identifier as it is', () => {
+describe('buildResourceEntry and meta', () => {
+  // Medplum reserves `meta`: specifying it makes the server overwrite what the
+  // resource would inherit from the patient, so no entry specifies it.
+  test.each(['Condition', 'Binary'])('does not specify meta on a %s, even one that arrives with it', (resourceType) => {
     const entry = buildResourceEntry({
-      resourceType: 'Condition',
-      id: 'c1',
-      subject: { reference: 'Patient/p1' },
-    })
+      resourceType,
+      id: 'x1',
+      meta: { tag: [{ system: 'a', code: 'b' }], account: { reference: 'Organization/other' } },
+    } as never)
 
-    expect(tagForIdempotentRerun(entry, 'Condition/c1')).toBe(entry)
+    expect((entry.resource as { meta?: unknown }).meta).toBeUndefined()
   })
 })

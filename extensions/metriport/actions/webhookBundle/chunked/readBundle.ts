@@ -5,6 +5,14 @@ import { streamArray } from 'stream-json/streamers/StreamArray'
 import { type BundleEntry } from '@medplum/fhirtypes'
 import { type ObjectStore } from '@awell-health/extensions-core'
 
+/**
+ * A copy of a string that holds nothing but itself. A string the parser hands
+ * back is a slice of the chunk it was read from, and a slice keeps the whole
+ * chunk alive: every string kept for the length of a read would keep a chunk of
+ * the bundle, and together they would keep the bundle.
+ */
+export const detach = (text: string): string => Buffer.from(text, 'utf8').toString('utf8')
+
 /** The top-level fields of a bundle that the import needs besides its entries. */
 export interface BundleHeader {
   id?: string
@@ -49,7 +57,7 @@ const noteHeader = (header: BundleHeader): Transform => {
           break
         case 'stringValue':
           if (depth === 1 && key !== undefined && HEADER_FIELDS.has(key)) {
-            header[key as keyof BundleHeader] = Buffer.from(String(token.value), 'utf8').toString('utf8')
+            header[key as keyof BundleHeader] = detach(String(token.value))
           }
           key = undefined
           break

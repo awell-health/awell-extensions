@@ -18,14 +18,10 @@ export const METRIPORT_BUNDLE_IDENTIFIER_SYSTEM =
   'https://metriport.com/fhir/bundle'
 
 /**
- * Tag system for what an import writes that has no identifier to be found by.
- * A resource without an `identifier` element is written with a tag instead,
- * which a conditional update finds on a rerun.
+ * Coding system for the key that identifies the Provenance of one chunk of an
+ * import, so that a rerun finds it and replaces it.
  */
-export const METRIPORT_SOURCE_TAG_SYSTEM = 'https://metriport.com/fhir/source'
-
-/** Tag system for the Provenance of one chunk of an import, for the same reason. */
-export const METRIPORT_IMPORT_CHUNK_TAG_SYSTEM =
+export const METRIPORT_IMPORT_CHUNK_SYSTEM =
   'https://metriport.com/fhir/import-chunk'
 
 /** Name of the Organization used as the account for imported resources. */

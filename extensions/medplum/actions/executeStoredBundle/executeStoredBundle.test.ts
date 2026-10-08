@@ -312,8 +312,49 @@ describe('Medplum - Execute stored bundle', () => {
       ])
       expect(helpers.objectStore.get).toHaveBeenCalledWith(refs[2])
       expect(onComplete).toHaveBeenCalledWith({
-        data_points: { bundleId: '', bundleType: 'transaction', chunkCount: '3', entryCount: '3' },
+        // No bundleId: each transaction has its own result, and none stands for all of them.
+        data_points: { bundleType: 'transaction', chunkCount: '3', entryCount: '3' },
       })
+    })
+
+    test('Should count the entries sent, not the chunks, when the chunks differ in size', async () => {
+      mockExecuteBatch.mockResolvedValue(transactionResponse)
+      const entriesIn = (n: number): typeof transaction => ({
+        ...transaction,
+        entry: Array.from({ length: n }, (_, i) => ({
+          resource: { resourceType: 'Observation', status: 'final', code: { text: `entry ${i}` } },
+          request: { method: 'PUT', url: `Observation?identifier=x|${i}` },
+        })) as never,
+      })
+      const refs: string[] = []
+      for (const [i, n] of [1, 4, 2].entries()) {
+        refs.push(await helpers.objectStore.put(`sizes/${i}.json`, JSON.stringify(entriesIn(n))))
+      }
+      const manifestRef = await helpers.objectStore.put(
+        'sizes/manifest.json',
+        JSON.stringify(manifestOf(refs.map((ref) => ({ ref })))),
+      )
+
+      await run(manifestRef)
+
+      expect(onComplete).toHaveBeenCalledWith({
+        data_points: { bundleType: 'transaction', chunkCount: '3', entryCount: '7' },
+      })
+    })
+
+    test('Should say which chunk failed, without a source range, when the manifest does not give one', async () => {
+      mockExecuteBatch.mockRejectedValue(new Error('Medplum said no'))
+      const ref = await helpers.objectStore.put('c/1.json', JSON.stringify(chunkOf(1)))
+      const manifestRef = await helpers.objectStore.put(
+        'c/manifest.json',
+        JSON.stringify({ kind: 'transaction-chunks', version: 1, chunks: [{ ref }] }),
+      )
+
+      await run(manifestRef)
+
+      const message = JSON.stringify(onError.mock.calls[0][0])
+      expect(message).toContain(`chunk 1 of 1 (${ref}) failed: Medplum said no`)
+      expect(message).not.toContain('source entries')
     })
 
     test('Should send one chunk at a time: a later one may refer to what an earlier one wrote', async () => {
@@ -425,7 +466,7 @@ describe('Medplum - Execute stored bundle', () => {
 
       expect(mockExecuteBatch).not.toHaveBeenCalled()
       expect(onComplete).toHaveBeenCalledWith({
-        data_points: { bundleId: '', bundleType: 'transaction', chunkCount: '0', entryCount: '0' },
+        data_points: { bundleType: 'transaction', chunkCount: '0', entryCount: '0' },
       })
     })
 

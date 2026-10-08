@@ -37,13 +37,15 @@ const asExecutableBundle = (value: unknown, ref: string): Bundle => {
   return bundle
 }
 
-const isChunkManifest = (value: unknown): boolean =>
+/** What says a stored object is a list of chunks and not a bundle: whether it is a valid one is another question. */
+const isChunkManifest = (value: unknown): value is { kind: typeof TRANSACTION_CHUNKS_KIND } =>
   typeof value === 'object' &&
   value !== null &&
   (value as { kind?: unknown }).kind === TRANSACTION_CHUNKS_KIND
 
 interface Executed {
-  bundleId: string
+  /** The id of Medplum's result, for one bundle: each chunk has its own, and none stands for all. */
+  bundleId?: string
   bundleType: string
   chunkCount: number
   entryCount: number
@@ -70,7 +72,6 @@ const executeChunks = async ({
 }): Promise<Executed> => {
   const total = manifest.chunks.length
   let entryCount = 0
-  let bundleType = 'transaction'
 
   helpers.log({ bundleRef, chunks: total }, '[executeStoredBundle] Executing Medplum bundle in chunks')
 
@@ -83,7 +84,6 @@ const executeChunks = async ({
       )
       await medplumSdk.executeBatch(bundle)
       entryCount += bundle.entry?.length ?? 0
-      bundleType = bundle.type
       helpers.log(
         { bundleRef, chunk: index + 1, chunks: total, entries: bundle.entry?.length ?? 0 },
         `[executeStoredBundle] Executed ${position}`,
@@ -100,7 +100,8 @@ const executeChunks = async ({
     }
   }
 
-  return { bundleId: '', bundleType, chunkCount: total, entryCount }
+  // What the chunks are written as: a transaction each.
+  return { bundleType: 'transaction', chunkCount: total, entryCount }
 }
 
 export const executeStoredBundle: Action<
@@ -167,7 +168,7 @@ export const executeStoredBundle: Action<
       // a bundle too large to pass between steps can be answered by one too large.
       await onComplete({
         data_points: {
-          bundleId: executed.bundleId,
+          ...(executed.bundleId !== undefined ? { bundleId: executed.bundleId } : {}),
           bundleType: executed.bundleType,
           chunkCount: String(executed.chunkCount),
           entryCount: String(executed.entryCount),

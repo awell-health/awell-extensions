@@ -8,6 +8,7 @@ import {
   MAX_STORED_BUNDLE_BYTES,
   downloadBundle,
 } from './downloadBundle'
+import { retainedMemory } from './__testdata__/retainedMemory'
 
 jest.mock('axios')
 jest.mock('request-filtering-agent', () => ({
@@ -189,18 +190,45 @@ describe('Metriport - downloadBundle', () => {
     }, 60000)
   })
 
+  test('Should fail a body that stops sending, whatever the socket does about it, and store nothing', async () => {
+    async function* stalls(): AsyncGenerator<Buffer> {
+      yield Buffer.from('{"resourceType":')
+      await new Promise(() => undefined)
+    }
+    respondWith({ body: Readable.from(stalls(), { objectMode: false }) })
+
+    await expect(
+      downloadBundle({
+        url: URL_OF_BUNDLE,
+        name: 'metriport/act-stall/bundle.json',
+        objectStore,
+        idleTimeoutMs: 50,
+      }),
+    ).rejects.toThrow(/stopped sending/)
+
+    await expect(objectStore.get('memory://metriport/act-stall/bundle.json')).rejects.toThrow()
+  })
+
+  test('Should not mind a body that is slow but keeps sending', async () => {
+    async function* slow(): AsyncGenerator<Buffer> {
+      for (let i = 0; i < 6; i++) {
+        await new Promise((resolve) => setTimeout(resolve, 20))
+        yield Buffer.from('xx')
+      }
+    }
+    respondWith({ body: Readable.from(slow(), { objectMode: false }) })
+
+    await expect(
+      // Far longer than the gaps between pieces, so a busy machine does not make it a stall.
+      downloadBundle({ url: URL_OF_BUNDLE, name: 'a.json', objectStore, idleTimeoutMs: 2000 }),
+    ).resolves.toEqual(expect.objectContaining({ bytes: 12 }))
+  })
+
   test('Should hold a bounded amount of memory however large the bundle is', async () => {
     // Just under the limit: the point is a body far larger than the memory held.
     const total = 240 * 1024 * 1024
     const piece = 64 * 1024
-    const inUse = (): number => {
-      const { heapUsed, external } = process.memoryUsage()
-      return heapUsed + external
-    }
-    // Against the lowest level seen, not the level at the start: the tests
-    // before this one leave garbage that is collected while this one runs.
-    let peak = 0
-    let lowest = Infinity
+    const memory = retainedMemory()
     async function* generated(): AsyncGenerator<Buffer> {
       let count = 0
       for (let sent = 0; sent < total; sent += piece) {
@@ -209,10 +237,8 @@ describe('Metriport - downloadBundle', () => {
         // Measured here, while the download is under way: a timer would never
         // run, as a stream between memory and memory never leaves the microtask
         // queue. The turn of the event loop is what a real socket gives.
-        if (++count % 32 === 0) {
-          const now = inUse()
-          peak = Math.max(peak, now)
-          lowest = Math.min(lowest, now)
+        if (++count % 128 === 0) {
+          memory.sample()
           await new Promise((resolve) => setImmediate(resolve))
         }
       }
@@ -238,6 +264,6 @@ describe('Metriport - downloadBundle', () => {
 
     expect(bytes).toBe(total)
     // Buffering the body would take at least `total`.
-    expect(peak - lowest).toBeLessThan(total / 2)
-  }, 60000)
+    expect(memory.growth()).toBeLessThan(total / 4)
+  }, 120000)
 })

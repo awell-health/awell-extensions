@@ -6,6 +6,11 @@
  */
 export const TRANSACTION_CHUNKS_KIND = 'transaction-chunks'
 
+/**
+ * What the Medplum action reads of this is `kind`, `version` and, for each chunk,
+ * `ref` and the source entries. The rest is for whoever is looking into an
+ * import: how it was cut, how large, and where it came from.
+ */
 export interface TransactionChunk {
   /** Reference to the stored transaction bundle. */
   ref: string

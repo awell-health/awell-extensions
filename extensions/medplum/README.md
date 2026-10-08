@@ -26,7 +26,7 @@ What the reference points at is one of:
 
 | Data point | Type | Description |
 | --- | --- | --- |
-| `bundleId` | string | The id of the result Medplum gave, for a single bundle. Empty for a list of transactions, which have one each. |
+| `bundleId` | string | The id of the result Medplum gave, for a single bundle. Omitted for a list of transactions, which have one each. |
 | `bundleType` | string | The type of the bundle executed. |
 | `chunkCount` | number | How many bundles were sent to Medplum: 1 for a stored bundle. |
 | `entryCount` | number | How many entries those bundles held, in all, including the account Organization and the Provenance each transaction of a split bundle carries. |

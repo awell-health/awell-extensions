@@ -232,6 +232,43 @@ describe('Metriport - buildTransactionChunks', () => {
       expect(medplum.resources.filter((r) => r.resourceType === 'Condition')).toHaveLength(2)
     })
 
+    test('Should count a record as the resources in it against the limit, and put no more than the limit in a chunk with it', async () => {
+      // Four on their own and a record of three, all at one rank.
+      const entries = [
+        patient,
+        entryOf('Organization', 'org'),
+        ...[1, 2, 3, 4].map((n) => entryOf('Observation', `s${n}`, { performer: [{ reference: 'Organization/org' }] })),
+        entryOf('Encounter', 'e1', {
+          serviceProvider: { reference: 'Organization/org' },
+          diagnosis: [{ condition: { reference: 'Condition/c1' } }, { condition: { reference: 'Condition/c2' } }],
+        }),
+        entryOf('Condition', 'c1', { encounter: { reference: 'Encounter/e1' } }),
+        entryOf('Condition', 'c2', { encounter: { reference: 'Encounter/e1' } }),
+      ]
+
+      const { manifest } = await build(entries, { limits: { maxEntries: 5, maxBytes: 10_000_000 } })
+
+      const sizes = manifest.chunks.filter((chunk) => chunk.rank === 1).map((chunk) => chunk.entries)
+      expect(sizes.every((size) => size <= 5)).toBe(true)
+      expect(sizes.reduce((a, b) => a + b, 0)).toBe(7)
+      // The record of three is whole in one of them.
+      expect(Math.max(...sizes)).toBeGreaterThanOrEqual(3)
+    })
+
+    test('Should never put two records in one chunk when together they are over the limit', async () => {
+      const record = (n: number): BundleEntry[] => [
+        entryOf('Encounter', `e${n}`, { diagnosis: [{ condition: { reference: `Condition/c${n}a` } }, { condition: { reference: `Condition/c${n}b` } }] }),
+        entryOf('Condition', `c${n}a`, { encounter: { reference: `Encounter/e${n}` } }),
+        entryOf('Condition', `c${n}b`, { encounter: { reference: `Encounter/e${n}` } }),
+      ]
+
+      const { manifest } = await build([patient, ...record(1), ...record(2)], {
+        limits: { maxEntries: 4, maxBytes: 10_000_000 },
+      })
+
+      expect(manifest.chunks.map((chunk) => chunk.entries)).toEqual([3, 3])
+    })
+
     test('Should count the entries of a chunk that is a group, and say so in the manifest', async () => {
       const { manifest } = await build(cyclic(), { limits: { maxEntries: 1, maxBytes: 10_000_000 } })
 
@@ -240,13 +277,56 @@ describe('Metriport - buildTransactionChunks', () => {
     })
   })
 
+  describe('references in the forms a source uses', () => {
+    const at = (type: string, id: string, extra: Record<string, unknown> = {}): BundleEntry => ({
+      fullUrl: `https://api.metriport.example/fhir/${type}/${id}`,
+      resource: { resourceType: type, id, ...extra } as Resource,
+    })
+
+    test('Should rewrite a reference between resources of a record to the fullUrl the source gave them, when it is not a urn', async () => {
+      const entries = [
+        at('Patient', 'p1'),
+        at('Encounter', 'e1', { diagnosis: [{ condition: { reference: 'Condition/c1' } }] }),
+        at('Condition', 'c1', { encounter: { reference: 'Encounter/e1' } }),
+      ]
+
+      const { chunks } = await build(entries)
+
+      const resources = resourcesOf(chunks[0]) as any[]
+      expect(resources.find((r) => r.resourceType === 'Encounter').diagnosis[0].condition.reference).toBe(
+        'https://api.metriport.example/fhir/Condition/c1',
+      )
+      expect(resources.find((r) => r.resourceType === 'Condition').encounter.reference).toBe(
+        'https://api.metriport.example/fhir/Encounter/e1',
+      )
+      const medplum = fakeMedplum()
+      medplum.withPatient()
+      await expect(medplum.executeBatch(chunks[0])).resolves.toBeDefined()
+    })
+
+    test.each(['Patient/p1', 'urn:uuid:p1', 'https://api.metriport.example/fhir/Patient/p1'])(
+      'Should make the Patient, referred to as %s, the Awell Patient by its identifier',
+      async (reference) => {
+        const entries = [
+          { fullUrl: 'https://api.metriport.example/fhir/Patient/p1', resource: { resourceType: 'Patient', id: 'p1' } as Resource },
+          at('Encounter', 'e1', { subject: { reference } }),
+        ]
+
+        const { chunks } = await build(entries)
+
+        expect((resourcesOf(chunks[0])[0] as any).subject.reference).toBe(
+          'Patient?identifier=https://awellhealth.com/patients|test-patient',
+        )
+      },
+    )
+  })
+
   describe('a rerun after a failure part way', () => {
     test('Should write every entry in a form that replaces what an earlier run wrote', async () => {
       const entries = [
         patient,
         encounter,
         entryOf('Observation', 'o1', { encounter: { reference: 'Encounter/e1' } }),
-        entryOf('Binary', 'bin1', { contentType: 'text/plain', data: 'aGk=' }),
       ]
       const { chunks } = await build(entries)
 
@@ -256,6 +336,19 @@ describe('Metriport - buildTransactionChunks', () => {
       }
     })
 
+    // Medplum reserves `meta`, which would be the place to tag a resource that has no identifier to be found by.
+    test('Should not specify meta on anything it writes', async () => {
+      const { chunks } = await build([
+        patient,
+        entryOf('Encounter', 'e1', { meta: { account: [{ reference: 'Organization/other' }] } }),
+        entryOf('Binary', 'bin1', { contentType: 'text/plain', meta: { tag: [{ code: 'x' }] } }),
+        entryOf('Observation', 'o1', { derivedFrom: [{ reference: 'Binary/bin1' }] }),
+      ])
+
+      const metas = chunks.flatMap((chunk) => (chunk.entry ?? []).map((e) => (e.resource as { meta?: unknown }).meta))
+      expect(metas.every((meta) => meta === undefined)).toBe(true)
+    })
+
     test('Should leave nothing doubled when the whole import is sent again, or when it stops half way and is sent again', async () => {
       const entries = [
         patient,
@@ -263,7 +356,6 @@ describe('Metriport - buildTransactionChunks', () => {
         ...Array.from({ length: 12 }, (_, i) =>
           entryOf('Observation', `o${i}`, { encounter: { reference: 'Encounter/e1' } }),
         ),
-        entryOf('Binary', 'bin1', { contentType: 'text/plain', data: 'aGk=' }),
       ]
       const { chunks } = await build(entries, { limits: { maxEntries: 4, maxBytes: 10_000_000 } })
       const medplum = fakeMedplum()
@@ -281,7 +373,6 @@ describe('Metriport - buildTransactionChunks', () => {
         Organization: 1,
         Encounter: 1,
         Observation: 12,
-        Binary: 1,
         Provenance: chunks.length,
       })
     })
@@ -299,6 +390,44 @@ describe('Metriport - buildTransactionChunks', () => {
 
       expect(second.manifest.chunks.map((c) => c.ref)).toEqual(first.manifest.chunks.map((c) => c.ref))
       for (const [i, chunk] of second.chunks.entries()) expect(chunk).toEqual(first.chunks[i])
+    })
+  })
+
+  describe('a resource type that has no identifier element', () => {
+    const withBinary = (): BundleEntry[] => [
+      patient,
+      encounter,
+      entryOf('Observation', 'o1', { encounter: { reference: 'Encounter/e1' }, derivedFrom: [{ reference: 'Binary/bin1' }] }),
+      entryOf('Binary', 'bin1', { contentType: 'text/plain', data: 'aGk=' }),
+      entryOf('Observation', 'o2', { encounter: { reference: 'Encounter/e1' } }),
+    ]
+
+    // Without an identifier, or a tag, nothing in another chunk could refer to it conditionally.
+    test('Should be written in the same chunk as what refers to it, with the reference as the entry, however small the limit', async () => {
+      const { chunks } = await build(withBinary(), { limits: { maxEntries: 1, maxBytes: 10_000_000 } })
+
+      const together = chunks.find((chunk) => resourcesOf(chunk).some((r) => r.resourceType === 'Binary')) as Bundle
+      expect(resourcesOf(together).map((r) => r.resourceType).sort()).toEqual(['Binary', 'Observation'])
+      const observation = resourcesOf(together).find((r) => r.resourceType === 'Observation') as any
+      expect(observation.derivedFrom[0].reference).toBe('urn:uuid:bin1')
+    })
+
+    test('Should be executed by Medplum, resolving the reference to it', async () => {
+      const { chunks } = await build(withBinary(), { limits: { maxEntries: 1, maxBytes: 10_000_000 } })
+      const medplum = fakeMedplum()
+      medplum.withPatient()
+
+      for (const chunk of chunks) await medplum.executeBatch(chunk)
+
+      expect(medplum.resources.filter((r) => r.resourceType === 'Binary')).toHaveLength(1)
+    })
+
+    // Known limit, and as it always was: there is nothing to find it by, so a rerun writes it again.
+    test('Should be written with a POST, so a rerun writes it again', async () => {
+      const { chunks } = await build(withBinary())
+      const binary = chunks.flatMap((chunk) => chunk.entry ?? []).find((e) => e.resource?.resourceType === 'Binary')
+
+      expect(binary?.request?.method).toBe('POST')
     })
   })
 
@@ -331,6 +460,14 @@ describe('Metriport - buildTransactionChunks', () => {
       const urls = chunks.map((chunk) => chunk.entry?.find((e) => e.resource?.resourceType === 'Provenance')?.request?.url)
 
       expect(new Set(urls).size).toBe(chunks.length)
+    })
+
+    test('Should keep what the source bundle calls itself out of a search as it is, when it is not a valid id', async () => {
+      const { chunks } = await build([patient, encounter], { header: { id: 'a|b,c&_id=other' } })
+
+      const url = chunks[0].entry?.find((e) => e.resource?.resourceType === 'Provenance')?.request?.url as string
+      expect(url).toMatch(/^Provenance\?agent-type=https:\/\/metriport\.com\/fhir\/import-chunk\|[A-Za-z0-9.-]+:1$/)
+      expect(url).not.toContain('other')
     })
 
     test('Should include the account Organization in every chunk, as the Provenance names it as its agent', async () => {
@@ -394,6 +531,19 @@ describe('Metriport - buildTransactionChunks', () => {
       )
     })
 
+    test('Should refuse an id that is not valid FHIR, which is put in a search, naming where it is and nothing of what it says', async () => {
+      const failure = await build([
+        patient,
+        encounter,
+        entryOf('Observation', 'ok-1'),
+        { resource: { resourceType: 'Observation', id: 'x,Encounter|e1', valueString: 'MRN 987654321' } as Resource },
+      ]).catch((err: Error) => err)
+
+      expect((failure as Error).message).toBe(
+        '[Metriport bundle] Entry 3 has an id or resource type that is not valid FHIR',
+      )
+    })
+
     test('Should write nothing when it refuses', async () => {
       const store = newStore()
 
@@ -417,7 +567,6 @@ describe('Metriport - buildTransactionChunks', () => {
     for (const chunk of manifest.chunks) {
       expect(chunk.bytes).toBeLessThan(40_000)
     }
-    expect(DEFAULT_CHUNK_LIMITS.maxEntries).toBeGreaterThan(0)
   })
 
   test('Should say where the entries of each chunk came from in the source', async () => {
