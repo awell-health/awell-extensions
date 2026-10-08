@@ -3,13 +3,20 @@ import { z, type ZodType } from 'zod'
 import { FieldType, type Field } from '@awell-health/extensions-core'
 import { enumPathwayStatus, type PathwayStatus } from '@awell-health/awell-sdk'
 
+/**
+ * The published SDK enum predates the `paused` care flow status, so it is added here
+ * explicitly. Drop the manual addition once the SDK enum includes it.
+ */
+export const possiblePathwayStatuses: string[] = [
+  ...Object.values(enumPathwayStatus),
+  'paused',
+]
+
 export const fields = {
   pathwayStatus: {
     id: 'pathwayStatus',
     label: 'Pathway status',
-    description: `A comma-separated string of care flow statuses that will be used when looking for care flows the patient is already enrolled in. By default, we only look at active care flows. Possible values are: ${Object.values(
-      enumPathwayStatus,
-    ).join(', ')}.`,
+    description: `A comma-separated string of care flow statuses that will be used when looking for care flows the patient is already enrolled in. By default, we only look at active care flows. Possible values are: ${possiblePathwayStatuses.join(', ')}.`,
     type: FieldType.STRING,
     required: false,
     /**
@@ -50,10 +57,8 @@ export const FieldsValidationSchema = z.object({
       .transform((chars) => chars.replace(/[\s"]/g, '')) // Strip whitespace and quotation marks
       .transform((chars) => chars.split(','))
       .transform((strArray) => {
-        const possibleStatuses = Object.values(enumPathwayStatus)
-
         return strArray.filter((str) =>
-          possibleStatuses.includes(str as PathwayStatus),
+          possiblePathwayStatuses.includes(str),
         ) as PathwayStatus[]
       }),
   ),

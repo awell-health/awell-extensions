@@ -37,6 +37,29 @@ Please read the documentation on [our developer hub](https://developers.awellhea
 
 Stops the care flow the patient is currently enrolled in. A reason is why you are stopping the care flow is mandatory.
 
+### Pause care flow
+
+Pauses one or more care flows. A paused care flow can be resumed later with the "Unpause care flow" action or the `unpauseCareFlow` API mutation, without starting over.
+
+What pausing does:
+
+- Nothing in the paused care flow progresses: no new steps, messages, forms, actions or tracks are activated. Tracks added while paused (ad hoc tracks, triggers) only activate on resume.
+- Timers keep counting from their original start and are not extended by the pause. A timer that runs out during the pause does not activate the next step until the care flow is resumed, at which point it fires immediately.
+- A paused care flow cannot run its own actions, so the resume signal has to come from outside: the API, or another care flow that runs "Unpause care flow".
+
+**Action fields:**
+
+- careFlowIds: a comma-separated string of care flow IDs to pause. When left empty, the care flow this action runs in is paused.
+- reason: an optional reason that is stored with the care flow.
+
+### Unpause care flow
+
+Resumes one or more paused care flows.
+
+**Action fields:**
+
+- careFlowIds: a comma-separated string of paused care flow IDs to resume. This field is required because a paused care flow cannot run actions, so the care flow to resume is always a different one than the care flow this action runs in.
+
 ### Update patient
 
 Allows updating patient data for the patient currently enrolled in the care flow.
@@ -47,7 +70,7 @@ Checks whether the patient is already enrolled in a care flow definition. The ca
 
 **Action fields:**
 
-- pathwayStatus: a comma-separated string of care flow statuses that will be used when looking for care flows the patient is already enrolled in. By default, we only look at active care flows. Options: "active", "completed", "missing_baseline_info", "starting", and "stopped".
+- pathwayStatus: a comma-separated string of care flow statuses that will be used when looking for care flows the patient is already enrolled in. By default, we only look at active care flows. Options: "active", "completed", "missing_baseline_info", "paused", "starting", and "stopped".
 - careFlowDefinitionIds: a comma-separated string of care flow definition ids that will be used when looking for care flows the patient is already enrolled in. By default, we only search for care flows that match the current care flow definition id (i.e. is the patient already included in the current care flow?).
 
 **Data points:**
@@ -74,7 +97,7 @@ This action lets you check if a patient with a specific identifier already exist
 
 ### Add identifier to patient
 
-This action allows you to add a unique identifier to the current patient's profile. If the patient already has an identifier with the same system but a different value, this action will update the existing identifier with the new value provided. 
+This action allows you to add a unique identifier to the current patient's profile. If the patient already has an identifier with the same system but a different value, this action will update the existing identifier with the new value provided.
 
 First, it checks if this identifier (system and value) is already associated with another patient. If it's safe to proceed, it will add or update the identifier as needed. However, if another patient already has this identifier, the action will stop and notify you, preventing duplicates. To avoid conflicts, we recommend first running the "Get patient by identifier" action to check for any existing matches.
 
