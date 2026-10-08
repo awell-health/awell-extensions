@@ -4,6 +4,7 @@ import { storeWebhookBundle } from './storeWebhookBundle'
 import { fetchBundle } from '../../shared/fetchBundle'
 import { patientAdmitBundle } from '../webhookBundle/bundle/__testdata__/patientAdmitBundle'
 import { dischargeSummaryBundle } from '../../ingestion/adt/__testdata__/dischargeSummaryBundle'
+import { progressNoteDischargeSummaryBundle } from '../webhookBundle/dischargeSummary/__testdata__/progressNoteDischargeSummaryBundle'
 import { getWebhookBundle } from '../webhookBundle/getWebhookBundle'
 
 jest.mock('../../shared/fetchBundle')
@@ -171,6 +172,47 @@ describe('Metriport - Store Webhook Bundle', () => {
       expect(after).toBe(before)
     },
   )
+
+  test('Should return the discharge summary fields as plain data points for a discharge summary document', async () => {
+    mockedFetchBundle.mockResolvedValue(progressNoteDischargeSummaryBundle as never)
+
+    await run({ eventType: 'patient.discharge-summary' })
+
+    expect(onError).not.toHaveBeenCalled()
+    const dataPoints = onComplete.mock.calls[0][0].data_points
+    expect(dataPoints).toMatchObject({
+      bundleRef: expect.any(String),
+      transactionBundleRef: expect.any(String),
+      reasonForVisit: 'Chest pain',
+      visitDiagnosis: 'Chest pain, unspecified (R07.9); Essential hypertension (I10)',
+      planOfTreatment: expect.stringContaining('cardiology'),
+      procedures: expect.stringContaining('CT Head WO contrast'),
+      procedureNote: expect.stringContaining('No acute intracranial abnormality'),
+      dischargeDisposition: 'Home',
+      dischargeDispositionCode: 'home',
+      dischargeInstructions: expect.stringContaining('Take aspirin 81 mg daily.'),
+    })
+    expect(JSON.parse(dataPoints.dischargeSummaryCoverage).documentType).toBe(
+      '11506-3',
+    )
+    // The fields are what the care flow reads; the bundle itself stays stored.
+    expect(JSON.stringify(onComplete.mock.calls[0][0]).length).toBeLessThan(
+      5000,
+    )
+  })
+
+  test('Should not return discharge summary fields for an encounter bundle', async () => {
+    mockedFetchBundle.mockResolvedValue(patientAdmitBundle as never)
+
+    await run({ eventType: 'patient.admit' })
+
+    const dataPoints = onComplete.mock.calls[0][0].data_points
+    expect(Object.keys(dataPoints).sort()).toEqual([
+      'bundleRef',
+      'encounterId',
+      'transactionBundleRef',
+    ])
+  })
 
   test('Should not write what the bundle identifies to the log', async () => {
     mockedFetchBundle.mockResolvedValue(patientAdmitBundle as never)
