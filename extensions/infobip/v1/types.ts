@@ -31,9 +31,17 @@ export interface SmsInput {
   }>
 }
 
+export interface MessageStatus {
+  groupId?: number
+  groupName?: string
+  id?: number
+  name?: string
+  description?: string
+}
+
 export interface BaseResponse {
   bulkId: string
-  messages: Array<{ messageId: string; to: string }>
+  messages: Array<{ messageId: string; to: string; status?: MessageStatus }>
 }
 
 export interface ResponseError {
