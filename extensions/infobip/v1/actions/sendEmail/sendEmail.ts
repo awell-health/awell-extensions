@@ -79,11 +79,16 @@ export const sendEmail: Action<
        * so the message can be traced in Infobip's logs without guessing.
        */
       const first = res?.data?.messages?.[0]
-      const bulkId = res?.data?.bulkId ?? ''
-      const messageId = first?.messageId ?? ''
-      const messageStatus = first?.status?.name ?? first?.status?.groupName ?? ''
+      // Infobip's spec types these as strings; coerce anyway so a numeric id
+      // can never land in a string data point.
+      const bulkId = isNil(res?.data?.bulkId) ? '' : String(res.data.bulkId)
+      const messageId = isNil(first?.messageId) ? '' : String(first.messageId)
+      const messageStatus = isNil(first?.status?.name ?? first?.status?.groupName)
+        ? ''
+        : String(first?.status?.name ?? first?.status?.groupName)
       const statusText = [first?.status?.groupName, first?.status?.name]
-        .filter((v) => !isEmpty(v))
+        .filter((v) => !isNil(v) && !isEmpty(String(v)))
+        .map(String)
         .join(' / ')
 
       await onComplete({

@@ -70,6 +70,29 @@ describe('Send email', () => {
     expect(onError).not.toHaveBeenCalled()
   })
 
+  test('Should store bulkId and messageId as strings even if Infobip returns numbers', async () => {
+    InfobipClientMockImplementation.emailApi.send.mockResolvedValueOnce({
+      data: {
+        bulkId: 123456,
+        messages: [{ messageId: 987654, to: mockedEmailData.to[0], status: { name: 'PENDING_ACCEPTED' } }],
+      },
+    } as never)
+
+    await sendEmail.onEvent!({
+      payload: basePayload,
+      onComplete,
+      onError,
+      helpers,
+      attempt: 1,
+    })
+
+    expect(onComplete).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data_points: { bulkId: '123456', messageId: '987654', messageStatus: 'PENDING_ACCEPTED' },
+      }),
+    )
+  })
+
   test('Should not pass an attachment when the attachment fields are empty strings', async () => {
     await sendEmail.onEvent!({
       payload: generateTestPayload({
