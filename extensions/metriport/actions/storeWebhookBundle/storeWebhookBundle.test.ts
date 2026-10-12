@@ -206,8 +206,9 @@ describe('Metriport - Store Webhook Bundle', () => {
     )
   })
 
-  test('Should not return the Encounter fields for a discharge summary document', async () => {
-    mockedFetchBundle.mockResolvedValue(progressNoteDischargeSummaryBundle as never)
+  test('Should not return the Encounter fields for a discharge summary event', async () => {
+    // The event, not the bundle's contents, says it is a discharge summary.
+    mockedFetchBundle.mockResolvedValue(patientAdmitBundle as never)
 
     await run({ eventType: 'patient.discharge-summary' })
 

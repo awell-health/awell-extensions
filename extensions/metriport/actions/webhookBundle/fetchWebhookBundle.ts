@@ -12,6 +12,8 @@ import {
   type DischargeSummaryFields,
 } from './dischargeSummary'
 
+const DISCHARGE_SUMMARY_EVENT = 'patient.discharge-summary'
+
 /**
  * Downloads a Metriport webhook bundle and derives what both bundle actions
  * hand on: the importable transaction rewrite, the Encounter's id and fields,
@@ -34,7 +36,7 @@ export const fetchWebhookBundle = async ({
   bundle: Bundle
   transactionBundle: Bundle | undefined
   encounterId: string | undefined
-  /** Empty when the bundle carries no Encounter, or is a discharge summary. */
+  /** Empty when the bundle carries no Encounter, or for a discharge summary event. */
   encounterFields: EncounterFields
   /** Undefined for any bundle that is not a discharge summary document. */
   dischargeSummary: DischargeSummaryFields | undefined
@@ -54,15 +56,15 @@ export const fetchWebhookBundle = async ({
     log,
   })
 
-  const dischargeSummary = extractDischargeSummary(bundle)
-
   return {
     bundle,
     transactionBundle,
     encounterId: findEncounterId(bundle),
     // A discharge summary hands on its own fields instead.
     encounterFields:
-      dischargeSummary === undefined ? extractEncounterFields(bundle) : {},
-    dischargeSummary,
+      eventType === DISCHARGE_SUMMARY_EVENT
+        ? {}
+        : extractEncounterFields(bundle),
+    dischargeSummary: extractDischargeSummary(bundle),
   }
 }

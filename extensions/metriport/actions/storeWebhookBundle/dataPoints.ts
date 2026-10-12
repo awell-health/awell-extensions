@@ -25,7 +25,7 @@ export const dataPoints = {
   },
   /**
    * `Encounter.period.start`. Omitted, like every Encounter field below, when
-   * absent, and for a discharge summary document.
+   * absent, and for a `patient.discharge-summary` event.
    */
   admissionDatetime: {
     key: 'admissionDatetime',
