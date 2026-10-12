@@ -103,6 +103,11 @@ describe('Metriport - Store Webhook Bundle', () => {
         bundleRef,
         transactionBundleRef,
         encounterId: 'c60544e1-2e37-45fb-8160-3d583902cfde',
+        admissionDatetime: '2024-07-22T19:50:00.000Z',
+        encounterClass: 'Ambulatory',
+        encounterLocation: 'Memorial Hospital',
+        encounterReason: 'Chest pain',
+        encounterDiagnoses: JSON.stringify(['Stable Angina']),
       },
     })
 
@@ -208,8 +213,13 @@ describe('Metriport - Store Webhook Bundle', () => {
 
     const dataPoints = onComplete.mock.calls[0][0].data_points
     expect(Object.keys(dataPoints).sort()).toEqual([
+      'admissionDatetime',
       'bundleRef',
+      'encounterClass',
+      'encounterDiagnoses',
       'encounterId',
+      'encounterLocation',
+      'encounterReason',
       'transactionBundleRef',
     ])
   })
