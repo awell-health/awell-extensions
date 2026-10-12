@@ -23,7 +23,10 @@ export const dataPoints = {
     key: 'encounterId',
     valueType: 'string',
   },
-  /** `Encounter.period.start`. Omitted, like every Encounter field below, when absent. */
+  /**
+   * `Encounter.period.start`. Omitted, like every Encounter field below, when
+   * absent, and for a discharge summary document.
+   */
   admissionDatetime: {
     key: 'admissionDatetime',
     valueType: 'date',

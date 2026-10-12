@@ -34,7 +34,7 @@ export const fetchWebhookBundle = async ({
   bundle: Bundle
   transactionBundle: Bundle | undefined
   encounterId: string | undefined
-  /** Empty when the bundle carries no Encounter. */
+  /** Empty when the bundle carries no Encounter, or is a discharge summary. */
   encounterFields: EncounterFields
   /** Undefined for any bundle that is not a discharge summary document. */
   dischargeSummary: DischargeSummaryFields | undefined
@@ -54,11 +54,15 @@ export const fetchWebhookBundle = async ({
     log,
   })
 
+  const dischargeSummary = extractDischargeSummary(bundle)
+
   return {
     bundle,
     transactionBundle,
     encounterId: findEncounterId(bundle),
-    encounterFields: extractEncounterFields(bundle),
-    dischargeSummary: extractDischargeSummary(bundle),
+    // A discharge summary hands on its own fields instead.
+    encounterFields:
+      dischargeSummary === undefined ? extractEncounterFields(bundle) : {},
+    dischargeSummary,
   }
 }

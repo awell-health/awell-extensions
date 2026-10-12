@@ -206,6 +206,26 @@ describe('Metriport - Store Webhook Bundle', () => {
     )
   })
 
+  test('Should not return the Encounter fields for a discharge summary document', async () => {
+    mockedFetchBundle.mockResolvedValue(progressNoteDischargeSummaryBundle as never)
+
+    await run({ eventType: 'patient.discharge-summary' })
+
+    expect(onError).not.toHaveBeenCalled()
+    const dataPoints = onComplete.mock.calls[0][0].data_points
+    for (const key of [
+      'admissionDatetime',
+      'dischargeDatetime',
+      'encounterClass',
+      'encounterType',
+      'encounterLocation',
+      'encounterReason',
+      'encounterDiagnoses',
+    ]) {
+      expect(dataPoints).not.toHaveProperty(key)
+    }
+  })
+
   test('Should not return discharge summary fields for an encounter bundle', async () => {
     mockedFetchBundle.mockResolvedValue(patientAdmitBundle as never)
 
