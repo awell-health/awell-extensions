@@ -31,13 +31,18 @@ export const storeWebhookBundle: Action<
 
       // No `log`: it would write every resource's identifiers (MRNs and the
       // like) to the logs, and a bundle can hold tens of thousands of resources.
-      const { bundle, transactionBundle, encounterId, dischargeSummary } =
-        await fetchWebhookBundle({
-          url,
-          awellPatientId: payload.patient.id,
-          eventType,
-          reason: provenanceReason,
-        })
+      const {
+        bundle,
+        transactionBundle,
+        encounterId,
+        encounterFields,
+        dischargeSummary,
+      } = await fetchWebhookBundle({
+        url,
+        awellPatientId: payload.patient.id,
+        eventType,
+        reason: provenanceReason,
+      })
 
       const objectName = (name: string): string =>
         `metriport/${payload.activity.id}/${name}.json`
@@ -59,6 +64,7 @@ export const storeWebhookBundle: Action<
           bundleRef,
           ...(transactionBundleRef !== undefined ? { transactionBundleRef } : {}),
           ...(encounterId !== undefined ? { encounterId } : {}),
+          ...encounterFields,
           // The discharge summary fields are small by construction; they are
           // the one part of a summary that is meant to travel as data points.
           ...dischargeSummary,

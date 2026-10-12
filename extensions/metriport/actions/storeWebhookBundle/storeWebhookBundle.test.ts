@@ -103,6 +103,11 @@ describe('Metriport - Store Webhook Bundle', () => {
         bundleRef,
         transactionBundleRef,
         encounterId: 'c60544e1-2e37-45fb-8160-3d583902cfde',
+        admissionDatetime: '2024-07-22T19:50:00.000Z',
+        encounterClass: 'Ambulatory',
+        encounterLocation: 'Memorial Hospital',
+        encounterReason: 'Chest pain',
+        encounterDiagnoses: JSON.stringify(['Stable Angina']),
       },
     })
 
@@ -201,6 +206,27 @@ describe('Metriport - Store Webhook Bundle', () => {
     )
   })
 
+  test('Should not return the Encounter fields for a discharge summary event', async () => {
+    // The event, not the bundle's contents, says it is a discharge summary.
+    mockedFetchBundle.mockResolvedValue(patientAdmitBundle as never)
+
+    await run({ eventType: 'patient.discharge-summary' })
+
+    expect(onError).not.toHaveBeenCalled()
+    const dataPoints = onComplete.mock.calls[0][0].data_points
+    for (const key of [
+      'admissionDatetime',
+      'dischargeDatetime',
+      'encounterClass',
+      'encounterType',
+      'encounterLocation',
+      'encounterReason',
+      'encounterDiagnoses',
+    ]) {
+      expect(dataPoints).not.toHaveProperty(key)
+    }
+  })
+
   test('Should not return discharge summary fields for an encounter bundle', async () => {
     mockedFetchBundle.mockResolvedValue(patientAdmitBundle as never)
 
@@ -208,8 +234,13 @@ describe('Metriport - Store Webhook Bundle', () => {
 
     const dataPoints = onComplete.mock.calls[0][0].data_points
     expect(Object.keys(dataPoints).sort()).toEqual([
+      'admissionDatetime',
       'bundleRef',
+      'encounterClass',
+      'encounterDiagnoses',
       'encounterId',
+      'encounterLocation',
+      'encounterReason',
       'transactionBundleRef',
     ])
   })
