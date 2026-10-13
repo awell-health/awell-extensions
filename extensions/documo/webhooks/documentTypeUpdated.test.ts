@@ -16,7 +16,7 @@ describe('Documo - Webhook - Document Type Updated', () => {
 
   describe('When payload has all fields populated', () => {
     it('should extract all data points correctly', async () => {
-      await extensionWebhook.onEvent!({
+      await extensionWebhook.onEvent({
         payload: {
           payload: fullPayload,
           settings: {},
@@ -44,7 +44,7 @@ describe('Documo - Webhook - Document Type Updated', () => {
 
   describe('When payload has a different type', () => {
     it('should extract data points correctly', async () => {
-      await extensionWebhook.onEvent!({
+      await extensionWebhook.onEvent({
         payload: {
           payload: alternateTypePayload,
           settings: {},
@@ -72,7 +72,7 @@ describe('Documo - Webhook - Document Type Updated', () => {
 
   describe('When payload has no user', () => {
     it('should extract data points and set userEmail to an empty string', async () => {
-      await extensionWebhook.onEvent!({
+      await extensionWebhook.onEvent({
         payload: {
           payload: withoutUserPayload,
           settings: {},
@@ -100,7 +100,7 @@ describe('Documo - Webhook - Document Type Updated', () => {
 
   describe('webhookData data point', () => {
     it('should always include the full payload as JSON', async () => {
-      await extensionWebhook.onEvent!({
+      await extensionWebhook.onEvent({
         payload: {
           payload: fullPayload,
           settings: {},

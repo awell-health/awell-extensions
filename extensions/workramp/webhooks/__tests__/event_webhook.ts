@@ -1,7 +1,4 @@
-import {
-  OnWebhookReceivedParams,
-  Settings,
-} from '@awell-health/extensions-core'
+import { TestHelpers } from '@awell-health/extensions-core'
 import { WORKRAMP_IDENTIFIER } from '../../config'
 import { EventPayload, EventType } from '../../types'
 import { eventWebhook } from '../EventWebhook'
@@ -21,21 +18,26 @@ describe('Event webhook', () => {
       },
     },
   }
-  const onSuccess = jest.fn()
-  const onError = jest.fn()
 
-  beforeAll(() => {
-    jest.clearAllMocks()
+  const { extensionWebhook, onSuccess, onError, helpers, clearMocks } =
+    TestHelpers.fromWebhook(eventWebhook)
+
+  beforeEach(() => {
+    clearMocks()
   })
+
   it('should validate the example webhook', async () => {
-    await eventWebhook.onWebhookReceived!(
-      {
+    await extensionWebhook.onEvent({
+      payload: {
         payload: exampleWebhook,
-        settings: {} as Settings,
-      } as OnWebhookReceivedParams<EventPayload, {}>,
+        settings: {},
+        rawBody: Buffer.from(''),
+        headers: {},
+      },
       onSuccess,
-      onError
-    )
+      onError,
+      helpers,
+    })
     expect(onSuccess).toHaveBeenCalledTimes(1)
     expect(onSuccess).toHaveBeenCalledWith({
       data_points: {

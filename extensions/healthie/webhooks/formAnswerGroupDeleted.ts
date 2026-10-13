@@ -23,7 +23,7 @@ export const formAnswerGroupDeleted: Webhook<
 > = {
   key: 'formAnswerGroupDeleted',
   dataPoints,
-  onWebhookReceived: async ({ payload, settings }, onSuccess, onError) => {
+  onEvent: async ({ payload: { payload, settings }, onSuccess, onError }) => {
     try {
       const { sdk } = await createSdk({ settings })
 

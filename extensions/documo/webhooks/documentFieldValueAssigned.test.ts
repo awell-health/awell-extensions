@@ -18,7 +18,7 @@ describe('Documo - Webhook - Document Field Value Assigned', () => {
 
   describe('When payload has all mapped fields', () => {
     it('should extract all patient fields correctly', async () => {
-      await extensionWebhook.onEvent!({
+      await extensionWebhook.onEvent({
         payload: {
           payload: fullPayload,
           settings: {},
@@ -47,7 +47,7 @@ describe('Documo - Webhook - Document Field Value Assigned', () => {
 
   describe('When payload has only phone number', () => {
     it('should extract phone number and set other fields to empty strings', async () => {
-      await extensionWebhook.onEvent!({
+      await extensionWebhook.onEvent({
         payload: {
           payload: phoneOnlyPayload,
           settings: {},
@@ -76,7 +76,7 @@ describe('Documo - Webhook - Document Field Value Assigned', () => {
 
   describe('When payload has no mapped fields', () => {
     it('should set all patient fields to empty strings', async () => {
-      await extensionWebhook.onEvent!({
+      await extensionWebhook.onEvent({
         payload: {
           payload: unmappedFieldsPayload,
           settings: {},
@@ -105,7 +105,7 @@ describe('Documo - Webhook - Document Field Value Assigned', () => {
 
   describe('When payload has empty assignments', () => {
     it('should set all patient fields to empty strings', async () => {
-      await extensionWebhook.onEvent!({
+      await extensionWebhook.onEvent({
         payload: {
           payload: emptyAssignmentsPayload,
           settings: {},
@@ -134,7 +134,7 @@ describe('Documo - Webhook - Document Field Value Assigned', () => {
 
   describe('When payload has user present', () => {
     it('should extract patient fields regardless of user presence', async () => {
-      await extensionWebhook.onEvent!({
+      await extensionWebhook.onEvent({
         payload: {
           payload: withUserPayload,
           settings: {},
@@ -163,7 +163,7 @@ describe('Documo - Webhook - Document Field Value Assigned', () => {
 
   describe('webhookData data point', () => {
     it('should always include the full payload as JSON', async () => {
-      await extensionWebhook.onEvent!({
+      await extensionWebhook.onEvent({
         payload: {
           payload: fullPayload,
           settings: {},
