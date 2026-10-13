@@ -101,6 +101,32 @@ describe('extractEncounterFields', () => {
     })
   })
 
+  test('Should read the location name from the Location in the bundle', () => {
+    const fields = extractEncounterFields(
+      bundleWith(
+        { location: [{ location: { reference: 'Location/loc-1' } }] },
+        {
+          fullUrl: 'urn:uuid:loc-1',
+          resource: { resourceType: 'Location', id: 'loc-1', name: 'Clinic A' },
+        },
+      ),
+    )
+
+    expect(fields.encounterLocation).toBe('Clinic A')
+  })
+
+  test('Should fall back to the reference display when the Location is not in the bundle', () => {
+    const fields = extractEncounterFields(
+      bundleWith({
+        location: [
+          { location: { reference: 'Location/gone', display: 'Clinic B' } },
+        ],
+      }),
+    )
+
+    expect(fields.encounterLocation).toBe('Clinic B')
+  })
+
   test('Should return nothing when the bundle has no Encounter', () => {
     expect(
       extractEncounterFields({ resourceType: 'Bundle', type: 'searchset' }),

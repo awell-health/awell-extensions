@@ -3,8 +3,9 @@ import {
   type CodeableConcept,
   type Condition,
   type Encounter,
+  type Location,
 } from '@medplum/fhirtypes'
-import { indexBundle, resolve } from '../dischargeSummary/resolve'
+import { indexBundle, resolve, type ResourceIndex } from '../dischargeSummary/resolve'
 
 /**
  * The Metriport id of the Encounter a webhook bundle describes.
@@ -55,6 +56,21 @@ const nonEmpty = (value: string | undefined): value is string =>
   value !== undefined && value.length > 0
 
 /**
+ * The first location's name, read from the Location the reference points at
+ * in the bundle. The reference's own `display` is only a fallback: Metriport
+ * does not reliably set it.
+ */
+const locationLabel = (
+  index: ResourceIndex,
+  encounter: Encounter,
+): string | undefined => {
+  const reference = encounter.location?.[0]?.location
+  return (
+    resolve<Location>(index, reference, 'Location')?.name ?? reference?.display
+  )
+}
+
+/**
  * The fields of the first Encounter in a webhook bundle — the same Encounter
  * `findEncounterId` reads. A diagnosis is labelled by its reference's
  * `display`, falling back to the Condition it points at when the bundle
@@ -89,7 +105,7 @@ export const extractEncounterFields = (bundle: Bundle): EncounterFields => {
         ? classDisplay
         : encounterType,
     encounterType,
-    encounterLocation: encounter.location?.[0]?.location.display,
+    encounterLocation: locationLabel(index, encounter),
     encounterReason: encounter.reasonCode?.find((reason) =>
       nonEmpty(reason.text),
     )?.text,
