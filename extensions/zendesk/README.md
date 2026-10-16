@@ -76,7 +76,7 @@ Updates an existing support ticket in Zendesk.
 
 **Optional fields:**
 - Comment: A comment to add to the ticket. Multi-line; line breaks and blank lines are preserved, and Markdown is rendered when posted by an agent (which API calls are).
-- Public comment: Whether the requester can see the comment. Defaults to No, which posts an internal note visible to agents only.
+- Public comment: Whether the requester can see the comment. Defaults to Yes; set to No to post an internal note visible to agents only.
 - Priority: The priority level (urgent, high, normal, or low)
 - Status: The new status (new, open, pending, hold, solved, or closed)
 - Add Tags: Tags to add to the ticket (comma-separated text or a list data point). Existing tags are kept.

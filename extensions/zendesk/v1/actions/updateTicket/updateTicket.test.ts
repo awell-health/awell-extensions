@@ -70,7 +70,7 @@ describe('Update ticket', () => {
     })
 
     expect(mockZendeskAPIClient.updateTicket).toHaveBeenCalledWith('123', {
-      comment: { body: 'This is an update comment', public: false },
+      comment: { body: 'This is an update comment', public: true },
     })
     expect(onComplete).toHaveBeenCalledWith({})
   })
@@ -121,7 +121,7 @@ describe('Update ticket', () => {
     })
 
     expect(mockZendeskAPIClient.updateTicket).toHaveBeenCalledWith('456', {
-      comment: { body: 'Updating ticket with all fields', public: false },
+      comment: { body: 'Updating ticket with all fields', public: true },
       priority: 'high',
       status: 'open',
       public: undefined,
@@ -282,7 +282,7 @@ describe('Update ticket', () => {
     })
 
     expect(mockZendeskAPIClient.updateTicket).toHaveBeenCalledWith('302589', {
-      comment: { body: 'Automated call summary', public: false },
+      comment: { body: 'Automated call summary', public: true },
       priority: 'high',
       status: 'open',
       public: undefined,

@@ -39,7 +39,7 @@ export const fields = {
     type: FieldType.BOOLEAN,
     required: false,
     description:
-      'Whether the comment is visible to the requester. Defaults to No, which posts the comment as an internal note that only agents can see.',
+      'Whether the comment is visible to the requester. Defaults to Yes. Set to No to post the comment as an internal note that only agents can see.',
   },
   priority: {
     label: 'Priority',

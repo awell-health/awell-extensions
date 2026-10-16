@@ -114,7 +114,7 @@ describe('Update ticket - request body', () => {
     mockZendeskAPIClient.updateTicket.mockResolvedValue(undefined)
   })
 
-  test('Adds and removes tags and posts an internal note by default', async () => {
+  test('Adds and removes tags and posts a public comment by default', async () => {
     await updateTicket.onEvent!({
       payload: {
         ...basePayload,
@@ -134,7 +134,7 @@ describe('Update ticket - request body', () => {
     expect(mockZendeskAPIClient.updateTicket).toHaveBeenCalledWith('42', {
       comment: {
         body: 'Summary\n \n- item one\n- item two',
-        public: false,
+        public: true,
       },
       additional_tags: ['kit_return', 'awell'],
       remove_tags: ['needs_call'],
@@ -142,11 +142,11 @@ describe('Update ticket - request body', () => {
     expect(onComplete).toHaveBeenCalledWith({})
   })
 
-  test('Posts a public comment when requested', async () => {
+  test('Posts an internal note when the comment is not public', async () => {
     await updateTicket.onEvent!({
       payload: {
         ...basePayload,
-        fields: { ...baseFields, comment: 'Hello', public: true },
+        fields: { ...baseFields, comment: 'Hello', public: false },
       },
       onComplete,
       onError,
@@ -155,7 +155,7 @@ describe('Update ticket - request body', () => {
     })
 
     expect(mockZendeskAPIClient.updateTicket).toHaveBeenCalledWith('42', {
-      comment: { body: 'Hello', public: true },
+      comment: { body: 'Hello', public: false },
     })
   })
 

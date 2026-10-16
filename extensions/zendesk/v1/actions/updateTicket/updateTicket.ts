@@ -48,7 +48,7 @@ export const updateTicket: Action<typeof fields, typeof settings> = {
           !isEmpty(comment.trim()) && {
             comment: {
               body: preserveBlankLines(comment),
-              public: isPublic ?? false,
+              public: isPublic ?? true,
             },
           }),
         ...(!isNil(priority) && { priority }),

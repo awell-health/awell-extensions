@@ -2,22 +2,22 @@
 
 All notable changes to this project will be documented in this file.
 
-## [1.2.1] - 2026-10-07
-
-### Fixed
-
-- "Update Ticket" rejected the ticket ID with `expected string` when the field was bound to a number data point. The field is numeric in Studio, so it now uses the same `NumericIdSchema` as "Get Ticket" and "Delete Ticket" and accepts both numbers and numeric strings.
-
 ## [1.3.0] - 2026-10-16
 
 ### Added
 
 - Update Ticket: `Add Tags` and `Remove Tags` fields, mapped to Zendesk's `additional_tags` and `remove_tags`. Existing tags are never replaced wholesale. Both accept comma-separated text or a list data point; a tag listed in both is rejected.
-- Update Ticket: `Public comment` field. Defaults to No, so comments are posted as internal notes visible to agents only.
+- Update Ticket: `Public comment` field. Defaults to Yes, matching the previous behaviour; set it to No to post the comment as an internal note visible to agents only.
 
 ### Changed
 
 - Update Ticket: the `Comment` field is now multi-line. Blank lines between paragraphs are preserved (Zendesk otherwise collapses them). Comments that are blank after trimming are no longer sent.
+
+## [1.2.1] - 2026-10-07
+
+### Fixed
+
+- "Update Ticket" rejected the ticket ID with `expected string` when the field was bound to a number data point. The field is numeric in Studio, so it now uses the same `NumericIdSchema` as "Get Ticket" and "Delete Ticket" and accepts both numbers and numeric strings.
 
 ## [1.2.0] - 2026-09-23
 
