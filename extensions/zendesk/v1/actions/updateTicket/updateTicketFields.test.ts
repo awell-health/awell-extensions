@@ -37,12 +37,13 @@ const baseFields = {
   public: undefined,
   priority: undefined,
   status: undefined,
-  tags: undefined,
+  add_tags: undefined,
+  remove_tags: undefined,
 }
 
 describe('Update ticket - tags', () => {
   const parseTags = (tags: unknown): string[] | undefined =>
-    FieldsValidationSchema.parse({ ...baseFields, tags }).tags
+    FieldsValidationSchema.parse({ ...baseFields, add_tags: tags }).add_tags
 
   test.each([
     [undefined, undefined],
@@ -71,6 +72,18 @@ describe('Update ticket - tags', () => {
 
   test('rejects malformed JSON arrays', () => {
     expect(() => parseTags('[not json')).toThrow()
+  })
+
+  test('rejects a tag that is both added and removed', () => {
+    const result = FieldsValidationSchema.safeParse({
+      ...baseFields,
+      add_tags: 'a, b',
+      remove_tags: 'b, c',
+    })
+    expect(result.success).toBe(false)
+    expect(result.error?.issues[0].message).toBe(
+      'The same tag cannot be both added and removed: b',
+    )
   })
 })
 
@@ -101,14 +114,15 @@ describe('Update ticket - request body', () => {
     mockZendeskAPIClient.updateTicket.mockResolvedValue(undefined)
   })
 
-  test('Replaces all tags and posts an internal note by default', async () => {
+  test('Adds and removes tags and posts an internal note by default', async () => {
     await updateTicket.onEvent!({
       payload: {
         ...basePayload,
         fields: {
           ...baseFields,
           comment: 'Summary\n\n- item one\n- item two',
-          tags: 'kit_return, awell',
+          add_tags: 'kit_return, awell',
+          remove_tags: '["needs_call"]',
         },
       },
       onComplete,
@@ -122,7 +136,8 @@ describe('Update ticket - request body', () => {
         body: 'Summary\n \n- item one\n- item two',
         public: false,
       },
-      tags: ['kit_return', 'awell'],
+      additional_tags: ['kit_return', 'awell'],
+      remove_tags: ['needs_call'],
     })
     expect(onComplete).toHaveBeenCalledWith({})
   })
@@ -144,11 +159,11 @@ describe('Update ticket - request body', () => {
     })
   })
 
-  test('Leaves tags untouched when the field is blank', async () => {
+  test('Sends no tag changes when both tag fields are blank', async () => {
     await updateTicket.onEvent!({
       payload: {
         ...basePayload,
-        fields: { ...baseFields, status: 'solved', tags: '' },
+        fields: { ...baseFields, status: 'solved', add_tags: '', remove_tags: '[]' },
       },
       onComplete,
       onError,

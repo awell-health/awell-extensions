@@ -67,13 +67,21 @@ export const fields = {
       })),
     },
   },
-  tags: {
-    label: 'Tags',
-    id: 'tags',
+  add_tags: {
+    label: 'Add Tags',
+    id: 'add_tags',
     type: FieldType.STRING_ARRAY,
     required: false,
     description:
-      'Replaces ALL tags on the ticket with this list. Enter comma-separated tags or select a list data point. Leave empty to keep the existing tags unchanged.',
+      'Tags to add to the ticket. Existing tags are kept. Enter comma-separated tags or select a list data point. Zendesk normalises tags: spaces become underscores and letters are lowercased.',
+  },
+  remove_tags: {
+    label: 'Remove Tags',
+    id: 'remove_tags',
+    type: FieldType.STRING_ARRAY,
+    required: false,
+    description:
+      'Tags to remove from the ticket. Tags not present are ignored. Enter comma-separated tags or select a list data point.',
   },
 } satisfies Record<string, Field>
 
@@ -91,7 +99,7 @@ export const preserveBlankLines = (body: string): string =>
  * Accepts the shapes a STRING_ARRAY field can arrive in: a JSON array string
  * (from a data point), a comma-separated string (typed in Studio), or an
  * actual array. Returns a de-duplicated list of trimmed, non-empty tags, or
- * `undefined` when there is nothing to set so the caller can omit `tags`.
+ * `undefined` when there is nothing to send so the caller can omit the key.
  */
 const TagsSchema = z
   .unknown()
@@ -139,11 +147,26 @@ const TagsSchema = z
     return tags.length === 0 ? undefined : tags
   })
 
-export const FieldsValidationSchema = z.object({
-  ticket_id: NumericIdSchema,
-  comment: z.string().optional(),
-  public: z.boolean().optional(),
-  priority: makeStringOptional(priorityEnum),
-  status: makeStringOptional(statusEnum),
-  tags: TagsSchema,
-} satisfies Record<keyof typeof fields, ZodType>)
+export const FieldsValidationSchema = z
+  .object({
+    ticket_id: NumericIdSchema,
+    comment: z.string().optional(),
+    public: z.boolean().optional(),
+    priority: makeStringOptional(priorityEnum),
+    status: makeStringOptional(statusEnum),
+    add_tags: TagsSchema,
+    remove_tags: TagsSchema,
+  } satisfies Record<keyof typeof fields, ZodType>)
+  .superRefine((value, ctx) => {
+    if (isNil(value.add_tags) || isNil(value.remove_tags)) return
+    const both = value.add_tags.filter((tag) =>
+      value.remove_tags?.includes(tag),
+    )
+    if (both.length > 0) {
+      ctx.addIssue({
+        code: 'custom',
+        path: ['remove_tags'],
+        message: `The same tag cannot be both added and removed: ${both.join(', ')}`,
+      })
+    }
+  })

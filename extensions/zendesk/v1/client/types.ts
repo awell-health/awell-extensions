@@ -29,8 +29,10 @@ export interface UpdateTicketInput {
   }
   priority?: 'urgent' | 'high' | 'normal' | 'low'
   status?: 'new' | 'open' | 'pending' | 'hold' | 'solved' | 'closed'
-  /** Replaces all tags on the ticket. Omit to leave tags unchanged. */
-  tags?: string[]
+  /** Tags appended to the ticket's existing tags. Cannot be combined with `tags`. */
+  additional_tags?: string[]
+  /** Tags removed from the ticket if present. Cannot be combined with `tags`. */
+  remove_tags?: string[]
 }
 
 /**

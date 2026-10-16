@@ -79,7 +79,10 @@ Updates an existing support ticket in Zendesk.
 - Public comment: Whether the requester can see the comment. Defaults to No, which posts an internal note visible to agents only.
 - Priority: The priority level (urgent, high, normal, or low)
 - Status: The new status (new, open, pending, hold, solved, or closed)
-- Tags: Replaces **all** tags on the ticket with the given list (comma-separated text or a list data point). Leave empty to keep the existing tags unchanged. Tags cannot be cleared to none with this action.
+- Add Tags: Tags to add to the ticket (comma-separated text or a list data point). Existing tags are kept.
+- Remove Tags: Tags to remove from the ticket. Tags that are not present are ignored.
+
+Tags are never replaced wholesale, so tags maintained by agents or other systems (e.g. for reporting) are preserved. Zendesk normalises tags on write: spaces become underscores and letters are lowercased, so `Kit Return` is stored as `kit_return`. The same tag cannot be listed in both fields. Note that adding or removing tags can fire Zendesk triggers that react to tag changes.
 
 ### Delete Ticket
 

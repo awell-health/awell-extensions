@@ -39,7 +39,8 @@ describe('Update ticket', () => {
       priority: undefined,
       status: undefined,
       public: undefined,
-      tags: undefined,
+      add_tags: undefined,
+      remove_tags: undefined,
     }
 
     const payload = {
@@ -89,7 +90,8 @@ describe('Update ticket', () => {
       priority: 'high',
       status: 'open',
       public: undefined,
-      tags: undefined,
+      add_tags: undefined,
+      remove_tags: undefined,
     }
 
     const payload = {
@@ -123,7 +125,8 @@ describe('Update ticket', () => {
       priority: 'high',
       status: 'open',
       public: undefined,
-      tags: undefined,
+      add_tags: undefined,
+      remove_tags: undefined,
     })
     expect(onComplete).toHaveBeenCalledWith({})
   })
@@ -143,7 +146,8 @@ describe('Update ticket', () => {
       priority: 'urgent',
       status: 'solved',
       public: undefined,
-      tags: undefined,
+      add_tags: undefined,
+      remove_tags: undefined,
     }
 
     const payload = {
@@ -176,7 +180,8 @@ describe('Update ticket', () => {
       priority: 'urgent',
       status: 'solved',
       public: undefined,
-      tags: undefined,
+      add_tags: undefined,
+      remove_tags: undefined,
     })
     expect(onComplete).toHaveBeenCalledWith({})
   })
@@ -196,7 +201,8 @@ describe('Update ticket', () => {
       priority: undefined,
       status: undefined,
       public: undefined,
-      tags: undefined,
+      add_tags: undefined,
+      remove_tags: undefined,
     }
 
     const payload = {
@@ -280,7 +286,8 @@ describe('Update ticket', () => {
       priority: 'high',
       status: 'open',
       public: undefined,
-      tags: undefined,
+      add_tags: undefined,
+      remove_tags: undefined,
     })
     expect(onError).not.toHaveBeenCalled()
     expect(onComplete).toHaveBeenCalledWith({})

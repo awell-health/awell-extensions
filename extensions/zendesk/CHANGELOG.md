@@ -12,7 +12,7 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
-- Update Ticket: `Tags` field. Replaces all tags on the ticket when set; leaves tags unchanged when left empty. Accepts comma-separated text or a list data point.
+- Update Ticket: `Add Tags` and `Remove Tags` fields, mapped to Zendesk's `additional_tags` and `remove_tags`. Existing tags are never replaced wholesale. Both accept comma-separated text or a list data point; a tag listed in both is rejected.
 - Update Ticket: `Public comment` field. Defaults to No, so comments are posted as internal notes visible to agents only.
 
 ### Changed

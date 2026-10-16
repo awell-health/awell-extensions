@@ -24,7 +24,15 @@ export const updateTicket: Action<typeof fields, typeof settings> = {
     try {
       const {
         settings,
-        fields: { ticket_id, comment, public: isPublic, priority, status, tags },
+        fields: {
+          ticket_id,
+          comment,
+          public: isPublic,
+          priority,
+          status,
+          add_tags,
+          remove_tags,
+        },
       } = validate({
         schema: z.object({
           settings: SettingsValidationSchema,
@@ -45,8 +53,9 @@ export const updateTicket: Action<typeof fields, typeof settings> = {
           }),
         ...(!isNil(priority) && { priority }),
         ...(!isNil(status) && { status }),
-        // Only sent when non-empty: Zendesk replaces all tags with this list.
-        ...(!isNil(tags) && { tags }),
+        // Append / remove only; existing tags are never replaced wholesale.
+        ...(!isNil(add_tags) && { additional_tags: add_tags }),
+        ...(!isNil(remove_tags) && { remove_tags }),
       }
 
       helpers.log({ updateData }, 'Updating Zendesk ticket')
