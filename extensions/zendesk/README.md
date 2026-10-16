@@ -75,9 +75,14 @@ Updates an existing support ticket in Zendesk.
 - Ticket ID: The unique identifier of the ticket to update
 
 **Optional fields:**
-- Comment: A comment to add to the ticket
+- Comment: A comment to add to the ticket. Multi-line; line breaks and blank lines are preserved, and Markdown is rendered when posted by an agent (which API calls are).
+- Public comment: Whether the requester can see the comment. Defaults to Yes; set to No to post an internal note visible to agents only.
 - Priority: The priority level (urgent, high, normal, or low)
 - Status: The new status (new, open, pending, hold, solved, or closed)
+- Add Tags: Tags to add to the ticket (comma-separated text or a list data point). Existing tags are kept.
+- Remove Tags: Tags to remove from the ticket. Tags that are not present are ignored.
+
+Tags are never replaced wholesale, so tags maintained by agents or other systems (e.g. for reporting) are preserved. Zendesk normalises tags on write: spaces become underscores and letters are lowercased, so `Kit Return` is stored as `kit_return`. The same tag cannot be listed in both fields. Note that adding or removing tags can fire Zendesk triggers that react to tag changes.
 
 ### Delete Ticket
 
