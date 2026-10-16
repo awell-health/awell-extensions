@@ -24,9 +24,13 @@ export interface CreateTicketResponse {
 export interface UpdateTicketInput {
   comment?: {
     body: string
+    /** false posts an internal note visible to agents only. */
+    public?: boolean
   }
   priority?: 'urgent' | 'high' | 'normal' | 'low'
   status?: 'new' | 'open' | 'pending' | 'hold' | 'solved' | 'closed'
+  /** Replaces all tags on the ticket. Omit to leave tags unchanged. */
+  tags?: string[]
 }
 
 /**

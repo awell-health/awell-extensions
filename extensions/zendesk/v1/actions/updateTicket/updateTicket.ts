@@ -4,12 +4,14 @@ import { type settings } from '../../../settings'
 import { Category, validate } from '@awell-health/extensions-core'
 import { SettingsValidationSchema } from '../../../settings'
 import { FieldsValidationSchema, fields } from './config'
+import { preserveBlankLines } from './config/fields'
+import { type UpdateTicketInput } from '../../client/types'
 import { makeAPIClient } from '../../client'
 import {
   isZendeskApiError,
   zendeskApiErrorToActivityEvent,
 } from '../../client/error'
-import { isNil } from 'lodash'
+import { isEmpty, isNil } from 'lodash'
 
 export const updateTicket: Action<typeof fields, typeof settings> = {
   key: 'updateTicket',
@@ -22,7 +24,7 @@ export const updateTicket: Action<typeof fields, typeof settings> = {
     try {
       const {
         settings,
-        fields: { ticket_id, comment, priority, status },
+        fields: { ticket_id, comment, public: isPublic, priority, status, tags },
       } = validate({
         schema: z.object({
           settings: SettingsValidationSchema,
@@ -33,10 +35,18 @@ export const updateTicket: Action<typeof fields, typeof settings> = {
 
       const client = makeAPIClient(settings)
 
-      const updateData: any = {
-        ...(!isNil(comment) && { comment: { body: comment } }),
+      const updateData: UpdateTicketInput = {
+        ...(!isNil(comment) &&
+          !isEmpty(comment.trim()) && {
+            comment: {
+              body: preserveBlankLines(comment),
+              public: isPublic ?? false,
+            },
+          }),
         ...(!isNil(priority) && { priority }),
         ...(!isNil(status) && { status }),
+        // Only sent when non-empty: Zendesk replaces all tags with this list.
+        ...(!isNil(tags) && { tags }),
       }
 
       helpers.log({ updateData }, 'Updating Zendesk ticket')

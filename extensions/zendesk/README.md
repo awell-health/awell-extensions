@@ -75,9 +75,11 @@ Updates an existing support ticket in Zendesk.
 - Ticket ID: The unique identifier of the ticket to update
 
 **Optional fields:**
-- Comment: A comment to add to the ticket
+- Comment: A comment to add to the ticket. Multi-line; line breaks and blank lines are preserved, and Markdown is rendered when posted by an agent (which API calls are).
+- Public comment: Whether the requester can see the comment. Defaults to No, which posts an internal note visible to agents only.
 - Priority: The priority level (urgent, high, normal, or low)
 - Status: The new status (new, open, pending, hold, solved, or closed)
+- Tags: Replaces **all** tags on the ticket with the given list (comma-separated text or a list data point). Leave empty to keep the existing tags unchanged. Tags cannot be cleared to none with this action.
 
 ### Delete Ticket
 
