@@ -22,6 +22,13 @@ export const InfobipClientMockImplementation = {
           {
             messageId: '123',
             to: mockedEmailData.to,
+            status: {
+              groupId: 1,
+              groupName: 'PENDING',
+              id: 26,
+              name: 'PENDING_ACCEPTED',
+              description: 'Message accepted, pending for delivery.',
+            },
           },
         ],
       },
