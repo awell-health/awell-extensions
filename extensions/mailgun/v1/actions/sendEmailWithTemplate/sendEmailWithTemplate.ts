@@ -3,28 +3,50 @@ import { fields } from './config'
 import { Category } from '@awell-health/extensions-core'
 import { validateSettings, type settings } from '../../../settings'
 import mailgunSdk from '../../../common/sdk/mailgunSdk'
-import { getApiUrl } from '../../../common/utils'
+import {
+  buildAttachment,
+  describeAttachment,
+  getApiUrl,
+} from '../../../common/utils'
 import { validateActionFields } from './config/fields'
 import { fromZodError } from 'zod-validation-error'
 import { ZodError } from 'zod'
+import { isNil } from 'lodash'
 import { addActivityEventLog } from '../../../../../src/lib/awell/addEventLog'
 
 export const sendEmailWithTemplate: Action<typeof fields, typeof settings> = {
   key: 'sendEmailWithTemplate',
   title: 'Send email with template',
-  description: 'Send an email based on a template.',
+  description:
+    'Send an email based on a template, optionally with a file attachment.',
   category: Category.COMMUNICATION,
   fields,
   previewable: true,
   onEvent: async ({ payload, onComplete, onError, helpers }) => {
-    helpers.log({ fields: payload.fields }, 'Processing sendEmailWithTemplate')
+    /**
+     * The attachment content can be a large base64 string; log its size
+     * rather than the content itself.
+     */
+    const { attachmentContent, ...loggableFields } = payload.fields
+    helpers.log(
+      {
+        fields: {
+          ...loggableFields,
+          attachmentContentLength: isNil(attachmentContent)
+            ? 0
+            : String(attachmentContent).length,
+        },
+      },
+      'Processing sendEmailWithTemplate',
+    )
 
     try {
-      const { to, subject, template, variables } = validateActionFields(
-        payload.fields,
-      )
+      const validatedFields = validateActionFields(payload.fields)
+      const { to, subject, template, variables } = validatedFields
       const { apiKey, domain, region, fromName, fromEmail, testMode } =
         validateSettings(payload.settings)
+
+      const attachment = buildAttachment(validatedFields)
 
       const mg = mailgunSdk.client({
         username: 'api',
@@ -39,6 +61,7 @@ export const sendEmailWithTemplate: Action<typeof fields, typeof settings> = {
         template,
         'h:X-Mailgun-Variables': JSON.stringify(variables),
         'o:testmode': testMode,
+        ...(attachment !== undefined && { attachment }),
       })
 
       await onComplete({
@@ -46,7 +69,7 @@ export const sendEmailWithTemplate: Action<typeof fields, typeof settings> = {
           addActivityEventLog({
             message: `Mailgun accepted the request, request ID: ${String(
               res?.id,
-            )}`,
+            )}${describeAttachment(attachment)}`,
           }),
         ],
       })

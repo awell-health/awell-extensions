@@ -2,6 +2,11 @@ import { isNil } from 'lodash'
 import { z, type ZodType } from 'zod'
 import { type Field, FieldType, type json } from '@awell-health/extensions-core'
 import { CommaSeparatedEmailsValidationSchema } from '../../../../../../src/lib/awell'
+import {
+  attachmentFields,
+  attachmentFieldsValidationSchema,
+  refineAttachmentFields,
+} from '../../../../common/utils'
 
 export const fields = {
   to: {
@@ -38,30 +43,34 @@ export const fields = {
     type: FieldType.JSON,
     required: false,
   },
+  ...attachmentFields,
 } satisfies Record<string, Field>
 
-export const FieldsValidationSchema = z.object({
-  to: CommaSeparatedEmailsValidationSchema.refine(
-    (emails) => emails.length > 0,
-    {
-      error: 'At least one email address is required',
-    },
-  ),
-  subject: z.string(),
-  template: z.string(),
-  variables: z
-    .optional(z.string())
-    .transform((str, ctx): z.infer<ReturnType<typeof json>> => {
-      if (isNil(str)) return {}
+export const FieldsValidationSchema = z
+  .object({
+    to: CommaSeparatedEmailsValidationSchema.refine(
+      (emails) => emails.length > 0,
+      {
+        error: 'At least one email address is required',
+      },
+    ),
+    subject: z.string(),
+    template: z.string(),
+    variables: z
+      .optional(z.string())
+      .transform((str, ctx): z.infer<ReturnType<typeof json>> => {
+        if (isNil(str)) return {}
 
-      try {
-        return JSON.parse(str)
-      } catch (e) {
-        ctx.addIssue({ code: 'custom', message: 'Invalid JSON' })
-        return z.NEVER
-      }
-    }),
-} satisfies Record<keyof typeof fields, ZodType>)
+        try {
+          return JSON.parse(str)
+        } catch (e) {
+          ctx.addIssue({ code: 'custom', message: 'Invalid JSON' })
+          return z.NEVER
+        }
+      }),
+    ...attachmentFieldsValidationSchema,
+  } satisfies Record<keyof typeof fields, ZodType>)
+  .superRefine(refineAttachmentFields)
 
 export const validateActionFields = (
   fields: unknown,

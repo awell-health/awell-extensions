@@ -3,8 +3,12 @@ import { fields } from './config'
 import { Category } from '@awell-health/extensions-core'
 import { validateSettings, type settings } from '../../../settings'
 import mailgunSdk from '../../../common/sdk/mailgunSdk'
-import { getApiUrl } from '../../../common/utils'
-import { buildAttachment, validateActionFields } from './config/fields'
+import {
+  buildAttachment,
+  describeAttachment,
+  getApiUrl,
+} from '../../../common/utils'
+import { validateActionFields } from './config/fields'
 import { fromZodError } from 'zod-validation-error'
 import { ZodError } from 'zod'
 import { isNil } from 'lodash'
@@ -59,17 +63,12 @@ export const sendEmail: Action<typeof fields, typeof settings> = {
         ...(attachment !== undefined && { attachment }),
       })
 
-      const attachmentSummary =
-        attachment === undefined
-          ? ''
-          : `, with attachment "${attachment.filename}" (${attachment.data.length} bytes, ${attachment.contentType})`
-
       await onComplete({
         events: [
           addActivityEventLog({
             message: `Mailgun accepted the request, message ID: ${String(
               res?.id,
-            )}${attachmentSummary}`,
+            )}${describeAttachment(attachment)}`,
           }),
         ],
       })
