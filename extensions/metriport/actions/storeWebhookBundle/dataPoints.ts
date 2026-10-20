@@ -52,7 +52,11 @@ export const dataPoints = {
     key: 'encounterType',
     valueType: 'string',
   },
-  /** `Encounter.location[0].location.display`. */
+  /**
+   * The name of the facility `Encounter.location[0]` belongs to: its Location
+   * in the bundle, followed up `partOf` to the top-most named one. The
+   * reference's `display` when the Location is not in the bundle.
+   */
   encounterLocation: {
     key: 'encounterLocation',
     valueType: 'string',
