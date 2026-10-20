@@ -235,7 +235,7 @@ It takes the same fields as **Get Webhook Bundle**: `url`, `eventType` and `prov
 | `dischargeDatetime` | date | The Encounter's `period.end`; absent while the patient is still admitted. |
 | `encounterClass` | string | The Encounter's `class.display`, e.g. "Ambulatory". When the class is missing or "unknown", the `encounterType` value instead. |
 | `encounterType` | string | The first `type[].text` containing "Inpatient", "Ambulatory" or "Emergency", ignoring case. |
-| `encounterLocation` | string | The Encounter's `location[0].location.display`. |
+| `encounterLocation` | string | The name of the facility the Encounter's first location belongs to: the referenced Location in the bundle, followed up `partOf` to the top-most Location with a name (a unit "22-7475 WOR ELARA CARING - WORCESTER - SHH" that is part of "Elara Caring - WORCESTER - SHH" gives the latter). Falls back to the reference's `display` when the Location is not in the bundle. |
 | `encounterReason` | string | The first `reasonCode` text. |
 | `encounterDiagnoses` | strings_array | The display text of every `diagnosis` condition, falling back to the Condition's code text when the reference has no display. |
 | `reasonForVisit` … `dischargeSummaryCoverage` | string / json | The discharge summary fields, only for a `patient.discharge-summary` bundle, exactly as **Get Webhook Bundle** returns them (see "Discharge summary fields" above). They are small, so they travel as plain data points even though the bundle itself is stored. |
