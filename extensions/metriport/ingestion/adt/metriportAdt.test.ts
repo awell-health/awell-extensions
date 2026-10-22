@@ -10,6 +10,14 @@ import { patientAdmitBundle } from '../../actions/webhookBundle/bundle/__testdat
 import { fetchBundle } from '../../shared/fetchBundle'
 import { METRIPORT_IDENTIFIER_SYSTEM } from '../../shared/identifierSystem'
 import { MetriportWebhookType } from '../../webhooks/types'
+import {
+  dischargeSummaryReceived,
+  events as declaredEvents,
+  fhirBundleReceived,
+  patientAdmitted,
+  patientDischarged,
+  patientTransferred,
+} from '../events'
 import { dischargeSummaryBundle } from './__testdata__/dischargeSummaryBundle'
 import {
   ENCOUNTER_DATA_SOURCE,
@@ -117,6 +125,11 @@ describe('Metriport - Ingestion - ADT notifications', () => {
     test('is a webhook-sourced endpoint keyed metriportAdt', () => {
       expect(metriportAdt.key).toBe('metriportAdt')
       expect(metriportAdt.source).toBe('webhook')
+    })
+
+    // What gives each published key its label in the events manifest.
+    test('declares the events the endpoint publishes', () => {
+      expect(Metriport.events).toEqual(declaredEvents)
     })
   })
 
@@ -472,29 +485,30 @@ describe('Metriport - Ingestion - ADT notifications', () => {
       })
     })
 
-    test.each<[AdtRecord['event'], string]>([
-      [MetriportWebhookType.PatientAdmit, 'patient.admitted'],
-      [MetriportWebhookType.PatientTransfer, 'patient.transferred'],
-      [MetriportWebhookType.PatientDischarge, 'patient.discharged'],
+    test.each<[AdtRecord['event'], { key: string }]>([
+      [MetriportWebhookType.PatientAdmit, patientAdmitted],
+      [MetriportWebhookType.PatientTransfer, patientTransferred],
+      [MetriportWebhookType.PatientDischarge, patientDischarged],
     ])(
       'publishes the clinical event and the fhir-export event for %s',
-      async (type, key) => {
+      async (type, published) => {
         await run(record(type))
 
-        expect(events.publish).toHaveBeenCalledWith({ key })
-        expect(events.publish).toHaveBeenCalledWith({
-          key: 'fhir.bundle-received',
-        })
+        expect(events.publish).toHaveBeenCalledWith(published)
+        expect(events.publish).toHaveBeenCalledWith(fhirBundleReceived)
         expect(events.publish).toHaveBeenCalledTimes(2)
       },
     )
 
-    test('the fhir-export event carries no bundle: publish takes the key alone', async () => {
+    test('the fhir-export event carries no bundle: only declared events are published', async () => {
       await run(record(MetriportWebhookType.PatientAdmit))
 
+      // A declared event is a key and a label, nothing else, so publishing one
+      // hands over no data; the bundle is looked up by ingestion id.
       const published = events.publish.mock.calls.map(([event]) => event)
       published.forEach((event) => {
-        expect(Object.keys(event)).toEqual(['key'])
+        expect(declaredEvents).toContain(event)
+        expect(Object.keys(event).sort()).toEqual(['key', 'label'])
       })
     })
 
@@ -520,12 +534,8 @@ describe('Metriport - Ingestion - ADT notifications', () => {
       expect(store.save.mock.calls.map(([name]) => name)).toEqual([
         ENCOUNTER_DATA_SOURCE,
       ])
-      expect(events.publish).toHaveBeenCalledWith({
-        key: 'discharge.summary-received',
-      })
-      expect(events.publish).toHaveBeenCalledWith({
-        key: 'fhir.bundle-received',
-      })
+      expect(events.publish).toHaveBeenCalledWith(dischargeSummaryReceived)
+      expect(events.publish).toHaveBeenCalledWith(fhirBundleReceived)
       expect(events.publish).toHaveBeenCalledTimes(2)
     })
   })
