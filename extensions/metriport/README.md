@@ -21,13 +21,22 @@ In order to set up this extension, **you will need to provide a Metriport API ke
 
 An ingestion endpoint for Metriport's [real-time patient notifications](https://docs.metriport.com/medical-api/handling-data/realtime-patient-notifications). Point the webhook URL in the Metriport dashboard at it. Request verification (Metriport's HMAC-SHA256 `x-metriport-signature`, with the verification ping answered by `pong`) is implemented but switched off for the pre-release; it will be enabled, and the **Webhook Key** setting required, before general availability.
 
-Handled notification types are `patient.admit`, `patient.transfer`, `patient.discharge` and `patient.discharge-summary`. For each, the FHIR bundle behind the pre-signed `payload.url` is downloaded and the patient is resolved on `payload.externalId` (the id you gave Metriport when creating the patient, i.e. your own MRN). The endpoint saves one encounter keyed on the visit number (the patient itself is created by that resolution; demographics are not written yet), so all four notifications about one visit update the same encounter (`in-progress` until the discharge, `finished` after it, with the last transfer destination as its location). Any other notification type is acknowledged and produces nothing.
+Handled notification types are `patient.admit`, `patient.transfer`, `patient.discharge` and `patient.discharge-summary`. For each, the FHIR bundle behind the pre-signed `payload.url` is downloaded and the patient is resolved on `payload.externalId` (the id you gave Metriport when creating the patient, i.e. your own MRN). Any other notification type is acknowledged and produces nothing.
 
-Events published, for care flows to trigger on: `patient.admitted`, `patient.transferred`, `patient.discharged` and `discharge.summary-received` (on a discharge summary). Every handled notification also publishes `fhir.bundle-received`, which FHIR data movement listens for; it carries no clinical data, the bundle is looked up by ingestion id.
+What is written follows Awell's data catalog field for field (the patient itself is created by that resolution; demographics are not written yet):
 
-# Custom Actions
+| Catalog object | Found again by | Written from |
+| --- | --- | --- |
+| Encounter (`awell_encounter_default`) | `awell_identifier`: the visit number (`https://metriport.com/encounter`) | The bundle's Encounter: `class`, `type`, `serviceType`, `reasonCode`, `hospitalization.dischargeDisposition`, the period (the notification's timestamps first), the patient as `subject`, the Conditions below as `diagnosis`, and its Locations and service provider as references (see below). `status` is `in-progress` until the discharge and `finished` after it. |
+| Condition (`awell_condition_default`) | `awell_identifier`: Metriport's Condition id (`https://metriport.com/condition`) | Each Condition `Encounter.diagnosis` points at: `code`, `clinicalStatus`, `verificationStatus`, `category`, `severity`, onset, abatement and recorded dates, the patient as `subject`. |
 
-**GENERAL NOTE: Make sure to create Organizations and Facilities in Metriport before using this extension. A Patient must be associated with a Facility by providing the facilityId when stated in the actions.**
+Locations and the service provider (an Organization) are the organization's directory, which this endpoint never writes. The Encounter points at them by Metriport's ids (`https://metriport.com/location`, `https://metriport.com/organization`), and Awell stores the id of the directory record that carries that identifier. A Location or Organization the directory does not hold yet is left out of the Encounter rather than failing the notification; it is picked up by the next notification about the visit once it exists.
+
+All four notifications about one visit update the same encounter, and each writes only what it carries, so a later notification never clears what an earlier one set. A field that holds many codings (`type`, `reason`, `category`) gets every coding of every concept; a field that holds one gets the first coding with both a `system` and a `code`. A coding without a system, and a concept that has only text, are left out: the catalog cannot hold them. A Condition without an id is skipped, since it could not be found again.
+
+The bundle is not part of the record: it is put in the object store (`metriport/adt/<messageId>/bundle.json`) and the record carries its reference as `bundleRef`.
+
+Events published, for care flows to trigger on: `patient.admitted`, `patient.transferred`, `patient.discharged` and `discharge.summary-received` (on a discharge summary). Every handled notification also publishes `fhir.bundle-received`, which FHIR data movement listens for; it carries no clinical data, the bundle is reached through the ingestion record's `bundleRef`.
 
 ## Create Patient
 
