@@ -14,8 +14,9 @@
   "scripts": {
     "clean": "rimraf dist/* && echo 'Cleaned dist/'",
     "compile": "tsc",
-    "build": "tsc -p tsconfig.build.json && echo 'Built new dist/' && yarn copy-markdown",
+    "build": "tsc -p tsconfig.build.json && echo 'Built new dist/' && yarn copy-markdown && yarn events-manifests",
     "copy-markdown": "node copy-markdown.js && echo 'Copied markdown files to dist/'",
+    "events-manifests": "ts-node --transpile-only ./scripts/events-manifests.ts",
     "start": "node dist/src/index.js",
     "lint": "eslint \"**/*.{ts,tsx}\"",
     "test": "jest --verbose --testPathIgnorePatterns '.*\\.local\\.test\\.ts$'",
@@ -39,6 +40,7 @@
       "require": "./dist/components/*/index.js",
       "import": "./dist/components/*/index.js"
     },
+    "./events-manifest/*": "./dist/events-manifests/*.json",
     "./package.json": "./package.json"
   },
   "files": [

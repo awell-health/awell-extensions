@@ -32,8 +32,20 @@ jobs:
       - name: Install dependencies
         run: yarn
 
+      # Also writes dist/events-manifests/<key>.json for every extension with
+      # ingestion endpoints (scripts/events-manifests.ts), so a PR that breaks
+      # a manifest fails here.
       - name: Compile Typescript
         run: yarn build
+
+      # What each extension's ingestion endpoints publish, as this PR builds
+      # it: download the artifact to review a change to an extension's events.
+      - name: Upload events manifests
+        uses: actions/upload-artifact@v4
+        with:
+          name: events-manifests
+          path: dist/events-manifests/
+          if-no-files-found: error
 
       # ts-jest no longer type-checks each test file (see tsconfig.json's
       # isolatedModules), so the whole program is checked once here instead.

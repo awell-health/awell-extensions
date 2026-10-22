@@ -9,6 +9,13 @@ import { fetchBundle } from '../../shared/fetchBundle'
 import { type settings } from '../../settings'
 import { MetriportWebhookType } from '../../webhooks/types'
 import { isAdtWebhookType } from '../../webhooks/validation.zod'
+import {
+  dischargeSummaryReceived,
+  fhirBundleReceived,
+  patientAdmitted,
+  patientDischarged,
+  patientTransferred,
+} from '../events'
 import { findEncounter, visitIdFrom } from './bundle'
 import { adtRecordSchema, notificationSchema } from './schemas'
 
@@ -135,26 +142,26 @@ export const metriportAdt = withSettings<typeof settings>().endpoint({
     // Every handled message carries a bundle, so every record says so. This is
     // what FHIR data movement listens for; it looks the bundle up from
     // retention by the ingestion id, so the event carries nothing else.
-    events.publish({ key: 'fhir.bundle-received' })
+    events.publish(fhirBundleReceived)
 
     // `record.event` is our union, not Metriport's: getRecords already dropped
     // what we do not handle, so this switch is genuinely closed.
     switch (record.event) {
       case MetriportWebhookType.PatientAdmit:
-        events.publish({ key: 'patient.admitted' })
+        events.publish(patientAdmitted)
         break
       case MetriportWebhookType.PatientTransfer:
-        events.publish({ key: 'patient.transferred' })
+        events.publish(patientTransferred)
         break
       case MetriportWebhookType.PatientDischarge:
-        events.publish({ key: 'patient.discharged' })
+        events.publish(patientDischarged)
         break
       case MetriportWebhookType.DischargeSummary:
         // Same envelope, supplemental bundle: more detail about a discharge
         // already recorded, converging on the same encounter. The document
         // itself is not modelled yet; it is reachable through the retained
         // bundle.
-        events.publish({ key: 'discharge.summary-received' })
+        events.publish(dischargeSummaryReceived)
         break
       default:
         unhandled(record.event)
