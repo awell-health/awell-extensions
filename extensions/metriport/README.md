@@ -36,7 +36,15 @@ All four notifications about one visit update the same encounter, and each write
 
 The bundle is not part of the record: it is put in the object store (`metriport/adt/<messageId>/bundle.json`) and the record carries its reference as `bundleRef`.
 
-Events published, for care flows to trigger on: `patient.admitted`, `patient.transferred`, `patient.discharged` and `discharge.summary-received` (on a discharge summary). Every handled notification also publishes `fhir.bundle-received`, which FHIR data movement listens for; it carries no clinical data, the bundle is reached through the ingestion record's `bundleRef`.
+Events published, for care flows to trigger on: `patient.admitted`, `patient.transferred`, `patient.discharged` and `discharge.summary-received` (on a discharge summary). Every handled notification also publishes `fhir.bundle-received`, which FHIR data movement listens for.
+
+Each event but `discharge.summary-received` carries a `ref`, a pointer to what it is about and never data:
+
+| Event | `ref` |
+| --- | --- |
+| `patient.admitted`, `patient.transferred`, `patient.discharged` | `Encounter/<id>`: the Encounter the notification wrote, by its Awell id |
+| `fhir.bundle-received` | The stored bundle's object-store key, the same value as the record's `bundleRef` |
+| `discharge.summary-received` | None yet: the discharge summary document is not modelled |
 
 ## Create Patient
 

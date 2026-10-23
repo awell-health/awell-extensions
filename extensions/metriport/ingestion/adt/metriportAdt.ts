@@ -246,7 +246,7 @@ export const metriportAdt = withSettings<typeof settings>().endpoint({
     // Only what this message knows is written: an admit carries no discharge
     // time and a discharge summary no service type, and neither should clear
     // what an earlier message about the same visit already set.
-    store.save(
+    const savedEncounter = store.save(
       ENCOUNTER_OBJECT,
       encounterData(record.encounter, {
         visitId: record.visitId,
@@ -259,21 +259,26 @@ export const metriportAdt = withSettings<typeof settings>().endpoint({
     )
 
     // Every handled message carries a bundle, so every record says so. This is
-    // what FHIR data movement listens for; the event names its ingestion record,
-    // and the retained record carries `bundleRef`, so the event needs no more.
-    events.publish({ key: 'fhir.bundle-received' })
+    // what FHIR data movement listens for; the event points at the stored
+    // bundle by the key the object store answered, a pointer and never the data.
+    events.publish({ key: 'fhir.bundle-received', ref: record.bundleRef })
+
+    // The clinical events are about the visit: they point at the Encounter by
+    // the id `save` answered. It may be a draft id, which the platform swaps for
+    // the committed one.
+    const encounterRef = `Encounter/${savedEncounter.id}`
 
     // `record.event` is our union, not Metriport's: getRecords already dropped
     // what we do not handle, so this switch is genuinely closed.
     switch (record.event) {
       case MetriportWebhookType.PatientAdmit:
-        events.publish({ key: 'patient.admitted' })
+        events.publish({ key: 'patient.admitted', ref: encounterRef })
         break
       case MetriportWebhookType.PatientTransfer:
-        events.publish({ key: 'patient.transferred' })
+        events.publish({ key: 'patient.transferred', ref: encounterRef })
         break
       case MetriportWebhookType.PatientDischarge:
-        events.publish({ key: 'patient.discharged' })
+        events.publish({ key: 'patient.discharged', ref: encounterRef })
         break
       case MetriportWebhookType.DischargeSummary:
         // Same envelope, supplemental bundle: more detail about a discharge

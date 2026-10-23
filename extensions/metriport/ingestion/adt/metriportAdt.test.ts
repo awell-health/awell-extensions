@@ -132,6 +132,14 @@ describe('Metriport - Ingestion - ADT notifications', () => {
       .filter(([name]) => name === object)
       .map(([, data]) => data)
 
+  /** The ids `store.save` handed back for each save of `object`, in order. */
+  const savedIdsOf = (object: string): string[] =>
+    store.save.mock.calls.flatMap(([name], index) =>
+      name === object
+        ? [(store.save.mock.results[index].value as { id: string }).id]
+        : [],
+    )
+
   describe('extension registration', () => {
     test('declares the ingestion endpoint and the identifier system it stamps', () => {
       expect(Metriport.ingestion).toContain(metriportAdt)
@@ -685,24 +693,39 @@ describe('Metriport - Ingestion - ADT notifications', () => {
       [MetriportWebhookType.PatientTransfer, 'patient.transferred'],
       [MetriportWebhookType.PatientDischarge, 'patient.discharged'],
     ])(
-      'publishes the clinical event and the fhir-export event for %s',
+      'publishes the clinical event for %s, pointing at the Encounter it saved, and the fhir-export event',
       async (type, key) => {
-        await run(record(type))
+        await run(record(type, { conditions: [admitCondition] }))
 
-        expect(events.publish).toHaveBeenCalledWith({ key })
+        // The id `save` handed back for the Encounter, not the patient's or a
+        // Condition's, and not Metriport's visit id.
+        const [encounterId] = savedIdsOf(ENCOUNTER_OBJECT)
         expect(events.publish).toHaveBeenCalledWith({
-          key: 'fhir.bundle-received',
+          key,
+          ref: `Encounter/${encounterId}`,
         })
+        expect(events.publish).toHaveBeenCalledWith(
+          expect.objectContaining({ key: 'fhir.bundle-received' }),
+        )
         expect(events.publish).toHaveBeenCalledTimes(2)
       },
     )
 
-    test('the fhir-export event carries no bundle: publish takes the key alone', async () => {
-      await run(record(MetriportWebhookType.PatientAdmit))
+    test('the fhir-export event points at the bundle the object store kept, and carries no bundle', async () => {
+      mockedFetchBundle.mockResolvedValue(patientAdmitBundle)
+      const [rec] = (await getRecords(
+        notification(MetriportWebhookType.PatientAdmit),
+      )) as AdtRecord[]
 
-      const published = events.publish.mock.calls.map(([event]) => event)
-      published.forEach((event) => {
-        expect(Object.keys(event)).toEqual(['key'])
+      await run(rec)
+
+      // Whatever `put` answered, so the test holds whatever shape the store's
+      // key takes.
+      const stored = await jest.mocked(helpers.objectStore.put).mock.results[0]
+        .value
+      expect(events.publish).toHaveBeenCalledWith({
+        key: 'fhir.bundle-received',
+        ref: stored,
       })
     })
 
@@ -736,6 +759,7 @@ describe('Metriport - Ingestion - ADT notifications', () => {
       })
       expect(events.publish).toHaveBeenCalledWith({
         key: 'fhir.bundle-received',
+        ref: 'memory://metriport/adt/msg/bundle.json',
       })
       expect(events.publish).toHaveBeenCalledTimes(2)
     })
