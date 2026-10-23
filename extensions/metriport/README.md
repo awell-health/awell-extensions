@@ -42,7 +42,7 @@ Each event but `discharge.summary-received` carries a `ref`, a pointer to what i
 
 | Event | `ref` |
 | --- | --- |
-| `patient.admitted`, `patient.transferred`, `patient.discharged` | `Encounter/<id>`: the Encounter the notification wrote, by its Awell id |
+| `patient.admitted`, `patient.transferred`, `patient.discharged` | `encounter/<id>` (the catalog key): the Encounter the notification wrote, by its Awell id |
 | `fhir.bundle-received` | The stored bundle's object-store key, the same value as the record's `bundleRef` |
 | `discharge.summary-received` | None yet: the discharge summary document is not modelled |
 

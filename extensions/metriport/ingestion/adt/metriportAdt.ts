@@ -264,9 +264,10 @@ export const metriportAdt = withSettings<typeof settings>().endpoint({
     events.publish({ key: 'fhir.bundle-received', ref: record.bundleRef })
 
     // The clinical events are about the visit: they point at the Encounter by
-    // the id `save` answered. It may be a draft id, which the platform swaps for
-    // the committed one.
-    const encounterRef = `Encounter/${savedEncounter.id}`
+    // the id `save` answered, under its catalog key (`encounter`, not the FHIR
+    // spelling). It may be a draft id, which the platform swaps for the
+    // committed one.
+    const encounterRef = `encounter/${savedEncounter.id}`
 
     // `record.event` is our union, not Metriport's: getRecords already dropped
     // what we do not handle, so this switch is genuinely closed.

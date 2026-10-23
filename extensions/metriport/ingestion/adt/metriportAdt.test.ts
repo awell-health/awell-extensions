@@ -702,7 +702,7 @@ describe('Metriport - Ingestion - ADT notifications', () => {
         const [encounterId] = savedIdsOf(ENCOUNTER_OBJECT)
         expect(events.publish).toHaveBeenCalledWith({
           key,
-          ref: `Encounter/${encounterId}`,
+          ref: `encounter/${encounterId}`,
         })
         expect(events.publish).toHaveBeenCalledWith(
           expect.objectContaining({ key: 'fhir.bundle-received' }),
