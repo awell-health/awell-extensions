@@ -754,9 +754,12 @@ describe('Metriport - Ingestion - ADT notifications', () => {
           awell_period_end: '2024-07-25T14:10:00.000Z',
         },
       ])
-      expect(events.publish).toHaveBeenCalledWith({
-        key: 'discharge.summary-received',
-      })
+      // Strictly: the event carries no `ref` at all, not even an undefined one,
+      // which `toHaveBeenCalledWith` would let through.
+      const summary = events.publish.mock.calls.find(
+        ([event]) => event.key === 'discharge.summary-received',
+      )
+      expect(summary?.[0]).toStrictEqual({ key: 'discharge.summary-received' })
       expect(events.publish).toHaveBeenCalledWith({
         key: 'fhir.bundle-received',
         ref: 'memory://metriport/adt/msg/bundle.json',
