@@ -1,5 +1,6 @@
 import { isEmpty, isNil } from 'lodash'
 import { z } from 'zod'
+import { VoicemailActionSchema } from '../api/schema/atoms'
 
 export const dropdownOptionsBoolean = [
   { value: 'true', label: 'Yes' },
@@ -9,6 +10,22 @@ export const dropdownOptionsBoolean = [
 export const dropdownOptionsBooleanSchema = z
   .enum(['true', 'false'])
   .transform((val) => val === 'true')
+
+export const dropdownOptionsVoicemailAction = [
+  { value: 'hangup', label: 'Hang up' },
+  { value: 'leave_message', label: 'Leave message' },
+  { value: 'ignore', label: 'Ignore' },
+]
+
+// Care flows saved while this was a JSON field can still hold '{}' (a cleared input) or a quoted value
+export const VoicemailActionFieldSchema = z
+  .preprocess((val) => {
+    if (typeof val !== 'string') return val
+    const trimmed = val.trim()
+    if (trimmed === '' || trimmed === '{}') return undefined
+    return trimmed.replace(/^"(.*)"$/, '$1')
+  }, VoicemailActionSchema.optional())
+  .optional()
 
 export const JsonObjectSchema = z
   .string()
