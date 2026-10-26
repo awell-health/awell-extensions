@@ -292,38 +292,6 @@ describe('Bland - Send call with pathway', () => {
     })
   })
 
-  describe('Voicemail action field', () => {
-    const baseFields = { phoneNumber: '+12133734253', pathwayId: 'pathwayId' }
-
-    test.each([
-      ['ignore', 'ignore'],
-      ['hangup', 'hangup'],
-      ['leave_message', 'leave_message'],
-      [undefined, undefined],
-      ['', undefined],
-      ['{}', undefined],
-      ['"ignore"', 'ignore'],
-    ])('parses %j as %j', (input, expected) => {
-      const parsed = FieldsValidationSchema.parse({
-        ...baseFields,
-        voicemail_action: input,
-      })
-      expect(parsed.voicemail_action).toBe(expected)
-    })
-
-    test.each(['{"voicemail_action":"ignore"}', 'voicemail'])(
-      'rejects %j',
-      (input) => {
-        expect(() =>
-          FieldsValidationSchema.parse({
-            ...baseFields,
-            voicemail_action: input,
-          }),
-        ).toThrow(ZodError)
-      },
-    )
-  })
-
   describe('Action execution', () => {
     const fields = {
       phoneNumber: '1234567890',

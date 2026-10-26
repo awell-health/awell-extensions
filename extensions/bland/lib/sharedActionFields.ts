@@ -25,7 +25,6 @@ export const VoicemailActionFieldSchema = z
     if (trimmed === '' || trimmed === '{}') return undefined
     return trimmed.replace(/^"(.*)"$/, '$1')
   }, VoicemailActionSchema.optional())
-  .optional()
 
 export const JsonObjectSchema = z
   .string()
