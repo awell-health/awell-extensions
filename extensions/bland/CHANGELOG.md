@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Changed **Voicemail action** on `sendCall` and `sendCallWithPathway` from a JSON input to a dropdown (Hang up, Leave message, Ignore). Values saved while it was a JSON input still work: `{}` or empty is treated as not set, and a quoted value like `"ignore"` is accepted.
+
 - Added the optional **Webhook signing secret** setting. When set, the `callCompleted` and `completedBlandText` webhooks verify Bland's `X-Webhook-Signature` header (an HMAC-SHA256 of the body, hex-encoded) and reject a request with no signature or a wrong one with a `401`. When empty, nothing changes: webhooks are not verified, as before.
 - Added `sendSms` action: send an SMS immediately via Bland `POST /v1/sms/send`. The agent message is optional; when omitted, the pathway configured on the agent number generates the message.
 - Added `createSmsConversation` action: seed an SMS conversation positioned at pathway state via Bland `POST /v1/sms/create` without sending a message.
