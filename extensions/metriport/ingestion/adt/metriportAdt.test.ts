@@ -388,7 +388,7 @@ describe('Metriport - Ingestion - ADT notifications', () => {
 
       expect(savesOf(ENCOUNTER_OBJECT)).toEqual([
         {
-          awell_identifier: {
+          identifier: {
             system: METRIPORT_ENCOUNTER_IDENTIFIER_SYSTEM,
             value: VISIT_ID,
           },
@@ -442,7 +442,7 @@ describe('Metriport - Ingestion - ADT notifications', () => {
 
       expect(savesOf(CONDITION_OBJECT)).toEqual([
         {
-          awell_identifier: {
+          identifier: {
             system: METRIPORT_CONDITION_IDENTIFIER_SYSTEM,
             value: '8724f6e9-c531-48ba-9d34-7e2a81c05fb3',
           },
@@ -639,14 +639,14 @@ describe('Metriport - Ingestion - ADT notifications', () => {
 
       const [admit, discharge] = savesOf(ENCOUNTER_OBJECT)
       expect(Object.keys(admit)).toEqual([
-        'awell_identifier',
+        'identifier',
         'awell_status',
         'awell_class',
         'awell_subject',
         'awell_period_start',
       ])
       expect(Object.keys(discharge)).toEqual([
-        'awell_identifier',
+        'identifier',
         'awell_status',
         'awell_class',
         'awell_subject',
@@ -667,7 +667,7 @@ describe('Metriport - Ingestion - ADT notifications', () => {
       const saves = savesOf(ENCOUNTER_OBJECT)
       expect(saves).toHaveLength(3)
       saves.forEach((save) => {
-        expect(save.awell_identifier).toEqual({
+        expect(save.identifier).toEqual({
           system: METRIPORT_ENCOUNTER_IDENTIFIER_SYSTEM,
           value: VISIT_ID,
         })
@@ -716,7 +716,7 @@ describe('Metriport - Ingestion - ADT notifications', () => {
 
       expect(savesOf(ENCOUNTER_OBJECT)).toEqual([
         {
-          awell_identifier: {
+          identifier: {
             system: METRIPORT_ENCOUNTER_IDENTIFIER_SYSTEM,
             value: VISIT_ID,
           },

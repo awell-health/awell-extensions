@@ -54,13 +54,13 @@ const known = (data: Record<string, unknown>): Record<string, unknown> =>
 const nonEmpty = <T>(items: T[]): T[] | undefined =>
   items.length > 0 ? items : undefined
 
-/** A Condition: the patient's record, upserted on `awell_identifier`. */
+/** A Condition: the patient's record, upserted on `identifier`. */
 const conditionData = (
   condition: Condition & { id: string },
   patientId: string,
 ): Record<string, unknown> =>
   known({
-    awell_identifier: {
+    identifier: {
       system: METRIPORT_CONDITION_IDENTIFIER_SYSTEM,
       value: condition.id,
     },
@@ -96,7 +96,7 @@ const encounterData = (
   },
 ): Record<string, unknown> =>
   known({
-    awell_identifier: {
+    identifier: {
       system: METRIPORT_ENCOUNTER_IDENTIFIER_SYSTEM,
       value: visit.visitId,
     },
