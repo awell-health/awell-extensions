@@ -104,7 +104,7 @@ const RAW_RUNTIME_STATE =
           ["nodemailer", "npm:9.1.1"],\
           ["oauth-1.0a", "npm:2.2.6"],\
           ["openai", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:6.44.0"],\
-          ["prettier", "npm:3.9.6"],\
+          ["prettier", "npm:3.9.10"],\
           ["qrcode", "npm:1.5.4"],\
           ["request-filtering-agent", "npm:2.0.1"],\
           ["rimraf", "npm:4.4.1"],\
@@ -457,7 +457,7 @@ const RAW_RUNTIME_STATE =
           ["nodemailer", "npm:9.1.1"],\
           ["oauth-1.0a", "npm:2.2.6"],\
           ["openai", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:6.44.0"],\
-          ["prettier", "npm:3.9.6"],\
+          ["prettier", "npm:3.9.10"],\
           ["qrcode", "npm:1.5.4"],\
           ["request-filtering-agent", "npm:2.0.1"],\
           ["rimraf", "npm:4.4.1"],\
@@ -13195,10 +13195,10 @@ const RAW_RUNTIME_STATE =
         ],\
         "linkType": "HARD"\
       }],\
-      ["npm:3.9.6", {\
-        "packageLocation": "./.yarn/unplugged/prettier-npm-3.9.6-ad164eec07/node_modules/prettier/",\
+      ["npm:3.9.10", {\
+        "packageLocation": "./.yarn/unplugged/prettier-npm-3.9.10-551fb7fe51/node_modules/prettier/",\
         "packageDependencies": [\
-          ["prettier", "npm:3.9.6"]\
+          ["prettier", "npm:3.9.10"]\
         ],\
         "linkType": "HARD"\
       }]\
