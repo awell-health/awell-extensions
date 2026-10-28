@@ -3,8 +3,13 @@ import {
   type CodeableConcept,
   type Condition,
   type Encounter,
+  type Location,
 } from '@medplum/fhirtypes'
-import { indexBundle, resolve } from '../dischargeSummary/resolve'
+import {
+  indexBundle,
+  resolve,
+  type ResourceIndex,
+} from '../dischargeSummary/resolve'
 
 /**
  * The Metriport id of the Encounter a webhook bundle describes.
@@ -55,6 +60,48 @@ const nonEmpty = (value: string | undefined): value is string =>
   value !== undefined && value.length > 0
 
 /**
+ * The name of the facility a Location belongs to: `partOf` is followed up to
+ * the top-most Location in the bundle, and the highest one with a name wins.
+ * Metriport puts the unit in the Encounter ("22-7475 WOR ELARA CARING -
+ * WORCESTER - SHH") and the facility in its parent ("Elara Caring - WORCESTER -
+ * SHH"). A parent missing from the bundle ends the walk, as does a `partOf`
+ * that loops back.
+ */
+const facilityName = (
+  index: ResourceIndex,
+  location: Location,
+): string | undefined => {
+  const seen = new Set<Location>()
+  let name: string | undefined
+  for (
+    let current: Location | undefined = location;
+    current !== undefined && !seen.has(current);
+    current = resolve<Location>(index, current.partOf, 'Location')
+  ) {
+    seen.add(current)
+    if (nonEmpty(current.name)) name = current.name
+  }
+  return name
+}
+
+/**
+ * The first location's facility name, read from the Location the reference
+ * points at in the bundle. The reference's own `display` is only a fallback:
+ * Metriport does not reliably set it.
+ */
+const locationLabel = (
+  index: ResourceIndex,
+  encounter: Encounter,
+): string | undefined => {
+  const reference = encounter.location?.[0]?.location
+  const location = resolve<Location>(index, reference, 'Location')
+  return (
+    (location !== undefined ? facilityName(index, location) : undefined) ??
+    reference?.display
+  )
+}
+
+/**
  * The fields of the first Encounter in a webhook bundle — the same Encounter
  * `findEncounterId` reads. A diagnosis is labelled by its reference's
  * `display`, falling back to the Condition it points at when the bundle
@@ -89,7 +136,7 @@ export const extractEncounterFields = (bundle: Bundle): EncounterFields => {
         ? classDisplay
         : encounterType,
     encounterType,
-    encounterLocation: encounter.location?.[0]?.location.display,
+    encounterLocation: locationLabel(index, encounter),
     encounterReason: encounter.reasonCode?.find((reason) =>
       nonEmpty(reason.text),
     )?.text,

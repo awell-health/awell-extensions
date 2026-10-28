@@ -38,6 +38,9 @@ describe('Update ticket', () => {
       comment: 'This is an update comment',
       priority: undefined,
       status: undefined,
+      public: undefined,
+      add_tags: undefined,
+      remove_tags: undefined,
     }
 
     const payload = {
@@ -67,7 +70,7 @@ describe('Update ticket', () => {
     })
 
     expect(mockZendeskAPIClient.updateTicket).toHaveBeenCalledWith('123', {
-      comment: { body: 'This is an update comment' },
+      comment: { body: 'This is an update comment', public: true },
     })
     expect(onComplete).toHaveBeenCalledWith({})
   })
@@ -86,6 +89,9 @@ describe('Update ticket', () => {
       comment: 'Updating ticket with all fields',
       priority: 'high',
       status: 'open',
+      public: undefined,
+      add_tags: undefined,
+      remove_tags: undefined,
     }
 
     const payload = {
@@ -115,9 +121,12 @@ describe('Update ticket', () => {
     })
 
     expect(mockZendeskAPIClient.updateTicket).toHaveBeenCalledWith('456', {
-      comment: { body: 'Updating ticket with all fields' },
+      comment: { body: 'Updating ticket with all fields', public: true },
       priority: 'high',
       status: 'open',
+      public: undefined,
+      add_tags: undefined,
+      remove_tags: undefined,
     })
     expect(onComplete).toHaveBeenCalledWith({})
   })
@@ -136,6 +145,9 @@ describe('Update ticket', () => {
       comment: undefined,
       priority: 'urgent',
       status: 'solved',
+      public: undefined,
+      add_tags: undefined,
+      remove_tags: undefined,
     }
 
     const payload = {
@@ -167,6 +179,9 @@ describe('Update ticket', () => {
     expect(mockZendeskAPIClient.updateTicket).toHaveBeenCalledWith('789', {
       priority: 'urgent',
       status: 'solved',
+      public: undefined,
+      add_tags: undefined,
+      remove_tags: undefined,
     })
     expect(onComplete).toHaveBeenCalledWith({})
   })
@@ -185,6 +200,9 @@ describe('Update ticket', () => {
       comment: 'This will fail',
       priority: undefined,
       status: undefined,
+      public: undefined,
+      add_tags: undefined,
+      remove_tags: undefined,
     }
 
     const payload = {
@@ -264,9 +282,12 @@ describe('Update ticket', () => {
     })
 
     expect(mockZendeskAPIClient.updateTicket).toHaveBeenCalledWith('302589', {
-      comment: { body: 'Automated call summary' },
+      comment: { body: 'Automated call summary', public: true },
       priority: 'high',
       status: 'open',
+      public: undefined,
+      add_tags: undefined,
+      remove_tags: undefined,
     })
     expect(onError).not.toHaveBeenCalled()
     expect(onComplete).toHaveBeenCalledWith({})

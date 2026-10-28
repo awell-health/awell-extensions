@@ -101,6 +101,110 @@ describe('extractEncounterFields', () => {
     })
   })
 
+  test('Should read the location name from the Location in the bundle', () => {
+    const fields = extractEncounterFields(
+      bundleWith(
+        { location: [{ location: { reference: 'Location/loc-1' } }] },
+        {
+          fullUrl: 'urn:uuid:loc-1',
+          resource: { resourceType: 'Location', id: 'loc-1', name: 'Clinic A' },
+        },
+      ),
+    )
+
+    expect(fields.encounterLocation).toBe('Clinic A')
+  })
+
+  describe('when the Location is part of another', () => {
+    const location = (
+      id: string,
+      name: string | undefined,
+      partOf?: string,
+    ): NonNullable<Bundle['entry']>[number] => ({
+      fullUrl: `urn:uuid:${id}`,
+      resource: {
+        resourceType: 'Location',
+        id,
+        ...(name !== undefined ? { name } : {}),
+        ...(partOf !== undefined
+          ? { partOf: { reference: `Location/${partOf}` } }
+          : {}),
+      },
+    })
+
+    const locationOf = (
+      ...locations: NonNullable<Bundle['entry']>
+    ): string | undefined =>
+      extractEncounterFields(
+        bundleWith(
+          { location: [{ location: { reference: 'Location/unit' } }] },
+          ...locations,
+        ),
+      ).encounterLocation
+
+    test('Should return the name of the Location it is part of', () => {
+      expect(
+        locationOf(
+          location(
+            'unit',
+            '22-7475 WOR ELARA CARING - WORCESTER - SHH',
+            'facility',
+          ),
+          location('facility', 'Elara Caring - WORCESTER - SHH'),
+        ),
+      ).toBe('Elara Caring - WORCESTER - SHH')
+    })
+
+    test('Should follow partOf up to the top-most Location', () => {
+      expect(
+        locationOf(
+          location('unit', 'Bed 4', 'ward'),
+          location('ward', 'Ward B', 'facility'),
+          location('facility', 'Memorial Hospital'),
+        ),
+      ).toBe('Memorial Hospital')
+    })
+
+    test('Should stop at the last Location in the bundle when a parent is missing', () => {
+      expect(
+        locationOf(
+          location('unit', 'Bed 4', 'ward'),
+          location('ward', 'Ward B', 'gone'),
+        ),
+      ).toBe('Ward B')
+    })
+
+    test('Should skip a parent that has no name', () => {
+      expect(
+        locationOf(
+          location('unit', 'Bed 4', 'facility'),
+          location('facility', undefined),
+        ),
+      ).toBe('Bed 4')
+    })
+
+    test('Should stop when partOf loops back on itself', () => {
+      expect(
+        locationOf(
+          location('unit', 'Bed 4', 'ward'),
+          location('ward', 'Ward B', 'unit'),
+        ),
+      ).toBe('Ward B')
+    })
+  })
+
+  test('Should fall back to the reference display when the Location is not in the bundle', () => {
+    const fields = extractEncounterFields(
+      bundleWith({
+        location: [
+          { location: { reference: 'Location/gone', display: 'Clinic B' } },
+        ],
+      }),
+    )
+
+    expect(fields.encounterLocation).toBe('Clinic B')
+  })
+
   test('Should return nothing when the bundle has no Encounter', () => {
     expect(
       extractEncounterFields({ resourceType: 'Bundle', type: 'searchset' }),
