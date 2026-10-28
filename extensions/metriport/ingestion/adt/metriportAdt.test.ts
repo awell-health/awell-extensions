@@ -1,5 +1,5 @@
 import crypto from 'crypto'
-import { type Encounter } from '@medplum/fhirtypes'
+import { type Condition, type Encounter } from '@medplum/fhirtypes'
 import {
   PayloadValidationError,
   TestHelpers,
@@ -12,10 +12,17 @@ import { METRIPORT_IDENTIFIER_SYSTEM } from '../../shared/identifierSystem'
 import { MetriportWebhookType } from '../../webhooks/types'
 import { dischargeSummaryBundle } from './__testdata__/dischargeSummaryBundle'
 import {
-  ENCOUNTER_DATA_SOURCE,
+  CONDITION_OBJECT,
+  ENCOUNTER_OBJECT,
+  ENCOUNTER_STATUS_SYSTEM,
+  LOCATION_OBJECT,
+  METRIPORT_CONDITION_IDENTIFIER_SYSTEM,
   METRIPORT_ENCOUNTER_IDENTIFIER_SYSTEM,
-  metriportAdt,
-} from './metriportAdt'
+  METRIPORT_LOCATION_IDENTIFIER_SYSTEM,
+  METRIPORT_ORGANIZATION_IDENTIFIER_SYSTEM,
+  ORGANIZATION_OBJECT,
+} from './catalog'
+import { metriportAdt } from './metriportAdt'
 import { type AdtRecord, adtRecordSchema, notificationSchema } from './schemas'
 import { verify } from './verify'
 
@@ -32,10 +39,20 @@ const settings = {
 const VISIT_ID = '987654321'
 const BUNDLE_URL = 'https://example.com/encounter-bundle'
 
-/** The Encounter in `patientAdmitBundle`, the source of every saved detail. */
-const admitEncounter = patientAdmitBundle.entry?.find(
-  (entry) => entry.resource?.resourceType === 'Encounter',
-)?.resource as Encounter
+const resourceOf = <T>(
+  bundle: typeof patientAdmitBundle,
+  resourceType: string,
+): T =>
+  bundle.entry?.find((entry) => entry.resource?.resourceType === resourceType)
+    ?.resource as T
+
+/** The resources in `patientAdmitBundle`, the source of every saved detail. */
+const admitEncounter = resourceOf<Encounter>(patientAdmitBundle, 'Encounter')
+const admitCondition = resourceOf<Condition>(patientAdmitBundle, 'Condition')
+const dischargeEncounter = resourceOf<Encounter>(
+  dischargeSummaryBundle,
+  'Encounter',
+)
 
 const notification = (
   type: string,
@@ -65,8 +82,17 @@ const record = (
   metriportPatientId: 'metriport-uuid',
   visitId: VISIT_ID,
   admittedAt: '2026-07-21T09:50:00.000Z',
-  bundle: patientAdmitBundle,
+  bundleRef: 'memory://metriport/adt/msg/bundle.json',
+  encounter: admitEncounter,
+  conditions: [],
   ...overrides,
+})
+
+const locationRef = (value: string): Record<string, unknown> => ({
+  $ref: {
+    object: LOCATION_OBJECT,
+    identifier: { system: METRIPORT_LOCATION_IDENTIFIER_SYSTEM, value },
+  },
 })
 
 const sign = (key: string, body: Buffer): string =>
@@ -101,9 +127,9 @@ describe('Metriport - Ingestion - ADT notifications', () => {
     })
   }
 
-  const encounterSaves = (): Array<Record<string, unknown>> =>
+  const savesOf = (object: string): Array<Record<string, unknown>> =>
     store.save.mock.calls
-      .filter(([name]) => name === ENCOUNTER_DATA_SOURCE)
+      .filter(([name]) => name === object)
       .map(([, data]) => data)
 
   describe('extension registration', () => {
@@ -168,18 +194,79 @@ describe('Metriport - Ingestion - ADT notifications', () => {
         metriportPatientId: 'metriport-uuid',
         visitId: VISIT_ID,
         admittedAt: '2026-07-21T09:50:00.000Z',
-        bundle: patientAdmitBundle,
       })
       expect(adtRecordSchema.safeParse(records[0]).success).toBe(true)
     })
 
-    test('produces no records, and fetches nothing, for an unhandled type', async () => {
+    test('stores the bundle in the object store, named after the message, and carries only its reference', async () => {
+      mockedFetchBundle.mockResolvedValue(patientAdmitBundle)
+
+      const [rec] = (await getRecords(
+        notification(MetriportWebhookType.PatientAdmit),
+      )) as AdtRecord[]
+
+      expect(helpers.objectStore.put).toHaveBeenCalledWith(
+        'metriport/adt/msg-patient.admit/bundle.json',
+        JSON.stringify(patientAdmitBundle),
+      )
+      expect(rec.bundleRef).toBe(
+        'memory://metriport/adt/msg-patient.admit/bundle.json',
+      )
+      expect(rec).not.toHaveProperty('bundle')
+      await expect(helpers.objectStore.get(rec.bundleRef)).resolves.toBe(
+        JSON.stringify(patientAdmitBundle),
+      )
+    })
+
+    test('names the object safely whatever the message id holds', async () => {
+      mockedFetchBundle.mockResolvedValue(patientAdmitBundle)
+
+      await getRecords({
+        ...notification(MetriportWebhookType.PatientAdmit),
+        meta: {
+          messageId: '..',
+          when: '2026-07-21T10:00:00.000Z',
+          type: MetriportWebhookType.PatientAdmit,
+        },
+      })
+
+      expect(helpers.objectStore.put).toHaveBeenCalledWith(
+        'metriport/adt/%2E%2E/bundle.json',
+        expect.any(String),
+      )
+    })
+
+    test('carries the Encounter and the Conditions it points at, found in the bundle', async () => {
+      mockedFetchBundle.mockResolvedValue(patientAdmitBundle)
+
+      const [rec] = (await getRecords(
+        notification(MetriportWebhookType.PatientAdmit),
+      )) as AdtRecord[]
+
+      expect(rec.encounter).toEqual(admitEncounter)
+      expect(rec.conditions).toEqual([admitCondition])
+      expect(rec).not.toHaveProperty('locations')
+    })
+
+    test('carries no Condition the bundle does not hold', async () => {
+      mockedFetchBundle.mockResolvedValue(dischargeSummaryBundle)
+
+      const [rec] = (await getRecords(
+        notification(MetriportWebhookType.DischargeSummary),
+      )) as AdtRecord[]
+
+      expect(rec.conditions).toEqual([])
+      expect(adtRecordSchema.safeParse(rec).success).toBe(true)
+    })
+
+    test('produces no records, and fetches and stores nothing, for an unhandled type', async () => {
       const records = await getRecords(
         notification('patient.laboratory', { url: BUNDLE_URL }),
       )
 
       expect(records).toEqual([])
       expect(mockedFetchBundle).not.toHaveBeenCalled()
+      expect(helpers.objectStore.put).not.toHaveBeenCalled()
     })
 
     test('produces no records for a ping', async () => {
@@ -215,23 +302,6 @@ describe('Metriport - Ingestion - ADT notifications', () => {
       )
     })
 
-    test('takes the location from the Encounter, not from the notification transfers', async () => {
-      mockedFetchBundle.mockResolvedValue(patientAdmitBundle)
-
-      const [rec] = (await getRecords(
-        notification(MetriportWebhookType.PatientTransfer, {
-          transfers: [
-            {
-              timestamp: '2026-07-21T12:00:00.000Z',
-              destinationLocation: 'Ward 4',
-            },
-          ],
-        }),
-      )) as AdtRecord[]
-
-      expect(rec.location).toEqual(admitEncounter.location)
-    })
-
     test('falls back to the Encounter period when the notification carries no timestamps', async () => {
       mockedFetchBundle.mockResolvedValue(dischargeSummaryBundle)
 
@@ -259,63 +329,7 @@ describe('Metriport - Ingestion - ADT notifications', () => {
       expect(rec.dischargedAt).toBe('2026-07-24T08:00:00.000Z')
     })
 
-    test('lifts the Encounter elements verbatim', async () => {
-      mockedFetchBundle.mockResolvedValue(patientAdmitBundle)
-
-      const [rec] = (await getRecords(
-        notification(MetriportWebhookType.PatientAdmit),
-      )) as AdtRecord[]
-
-      expect(rec).toMatchObject({
-        subject: {
-          reference: 'Patient/78a4d9e5-f2b3-42c8-9a84-52f3e21c2b9d',
-          type: 'Patient',
-          display: 'Sarah Johnson',
-        },
-        class: {
-          system: 'http://terminology.hl7.org/CodeSystem/v3-ActCode',
-          code: 'AMB',
-          display: 'Ambulatory',
-        },
-        serviceType: {
-          coding: [{ code: '394592004', display: 'Cardiology' }],
-          text: 'Cardiology',
-        },
-        reasonCode: [{ text: 'Chest pain' }],
-        location: [
-          {
-            location: {
-              reference: 'Location/3ca5e8d2-7c84-45ab-91e7-834f8becde12',
-              type: 'Location',
-              display: 'Memorial Hospital',
-            },
-          },
-        ],
-        diagnosis: admitEncounter.diagnosis,
-      })
-      expect(rec.diagnosis?.[0].condition?.display).toBe('Stable Angina')
-      expect(adtRecordSchema.safeParse(rec).success).toBe(true)
-    })
-
-    test('leaves out what the Encounter does not carry rather than writing blanks', async () => {
-      mockedFetchBundle.mockResolvedValue(dischargeSummaryBundle)
-
-      const [rec] = (await getRecords(
-        notification(MetriportWebhookType.DischargeSummary),
-      )) as AdtRecord[]
-
-      expect(rec.class?.code).toBe('IMP')
-      expect(rec.subject).toEqual({
-        reference: 'Patient/78a4d9e5-f2b3-42c8-9a84-52f3e21c2b9d',
-      })
-      expect(rec.serviceType).toBeUndefined()
-      expect(rec.reasonCode).toBeUndefined()
-      expect(rec.location).toBeUndefined()
-      expect(rec.diagnosis).toBeUndefined()
-      expect(adtRecordSchema.safeParse(rec).success).toBe(true)
-    })
-
-    test('rejects a handled notification whose bundle carries no Encounter', async () => {
+    test('rejects a handled notification whose bundle carries no Encounter, storing nothing', async () => {
       mockedFetchBundle.mockResolvedValue({
         resourceType: 'Bundle',
         type: 'collection',
@@ -325,6 +339,7 @@ describe('Metriport - Ingestion - ADT notifications', () => {
       await expect(
         getRecords(notification(MetriportWebhookType.PatientAdmit)),
       ).rejects.toThrow(PayloadValidationError)
+      expect(helpers.objectStore.put).not.toHaveBeenCalled()
     })
 
     test('rejects a handled notification with no payload rather than acknowledging it', async () => {
@@ -364,83 +379,279 @@ describe('Metriport - Ingestion - ADT notifications', () => {
   })
 
   describe('run', () => {
-    test('writes the Encounter elements as JSON under the workbench field names, deriving the display labels', async () => {
+    test('writes the Encounter in the catalog shape, referencing its patient, Locations and Conditions', async () => {
       await run(
         record(MetriportWebhookType.PatientAdmit, {
-          subject: admitEncounter.subject,
-          class: admitEncounter.class,
-          serviceType: admitEncounter.serviceType,
-          reasonCode: admitEncounter.reasonCode,
-          location: admitEncounter.location,
-          diagnosis: admitEncounter.diagnosis,
+          conditions: [admitCondition],
         }),
       )
 
-      expect(encounterSaves()[0]).toEqual({
-        identifier: {
-          system: METRIPORT_ENCOUNTER_IDENTIFIER_SYSTEM,
-          value: VISIT_ID,
+      expect(savesOf(ENCOUNTER_OBJECT)).toEqual([
+        {
+          awell_identifier: {
+            system: METRIPORT_ENCOUNTER_IDENTIFIER_SYSTEM,
+            value: VISIT_ID,
+          },
+          awell_status: {
+            system: ENCOUNTER_STATUS_SYSTEM,
+            code: 'in-progress',
+          },
+          awell_class: {
+            system: 'http://terminology.hl7.org/CodeSystem/v3-ActCode',
+            code: 'AMB',
+            display: 'Ambulatory',
+          },
+          awell_subject: 'patient-1',
+          awell_period_start: '2026-07-21T09:50:00.000Z',
+          awell_location: [locationRef('3ca5e8d2-7c84-45ab-91e7-834f8becde12')],
+          awell_diagnosis: [`${CONDITION_OBJECT}-1`],
         },
-        status: 'in-progress',
-        startedAt: '2026-07-21T09:50:00.000Z',
-        subject: admitEncounter.subject,
-        class: admitEncounter.class,
-        class_display: 'Ambulatory',
-        serviceType: admitEncounter.serviceType,
-        serviceType_display: 'Cardiology',
-        reason: admitEncounter.reasonCode,
-        location: admitEncounter.location,
-        diagnosis: admitEncounter.diagnosis,
+      ])
+    })
+
+    test('saves the patient, then the Conditions, then the Encounter that points at them; never a Location', async () => {
+      await run(
+        record(MetriportWebhookType.PatientAdmit, {
+          conditions: [admitCondition],
+        }),
+      )
+
+      expect(store.save.mock.calls.map(([name]) => name)).toEqual([
+        'patient',
+        CONDITION_OBJECT,
+        ENCOUNTER_OBJECT,
+      ])
+      // The identifier the record was resolved by: it answers the patient's id
+      // and changes nothing.
+      expect(savesOf('patient')).toEqual([
+        {
+          identifier: {
+            system: METRIPORT_IDENTIFIER_SYSTEM,
+            value: 'mrn-12345',
+          },
+        },
+      ])
+    })
+
+    test('writes a Condition as the patient record Metriport names it by', async () => {
+      await run(
+        record(MetriportWebhookType.PatientAdmit, {
+          conditions: [admitCondition],
+        }),
+      )
+
+      expect(savesOf(CONDITION_OBJECT)).toEqual([
+        {
+          awell_identifier: {
+            system: METRIPORT_CONDITION_IDENTIFIER_SYSTEM,
+            value: '8724f6e9-c531-48ba-9d34-7e2a81c05fb3',
+          },
+          awell_code: {
+            system: 'http://snomed.info/sct',
+            code: '194828000',
+            display: 'Stable angina',
+          },
+          awell_clinical_status: {
+            system: 'http://terminology.hl7.org/CodeSystem/condition-clinical',
+            code: 'active',
+            display: 'Active',
+          },
+          awell_verification_status: {
+            system:
+              'http://terminology.hl7.org/CodeSystem/condition-ver-status',
+            code: 'confirmed',
+            display: 'Confirmed',
+          },
+          awell_category: [
+            {
+              system:
+                'http://terminology.hl7.org/CodeSystem/condition-category',
+              code: 'encounter-diagnosis',
+              display: 'Encounter Diagnosis',
+            },
+          ],
+          awell_subject: 'patient-1',
+          awell_onset_at: '2024-03-15T14:20:00.000Z',
+          awell_recorded_at: '2024-03-15T16:45:00.000Z',
+        },
+      ])
+    })
+
+    test('skips a Condition without an id: with nothing to find it by, every message would mint a new one', async () => {
+      await run(
+        record(MetriportWebhookType.PatientAdmit, {
+          conditions: [{ ...admitCondition, id: undefined }],
+        }),
+      )
+
+      expect(store.save.mock.calls.map(([name]) => name)).toEqual([
+        'patient',
+        ENCOUNTER_OBJECT,
+      ])
+      expect(savesOf(ENCOUNTER_OBJECT)[0]).not.toHaveProperty('awell_diagnosis')
+    })
+
+    test('points at every Location and the service provider by Metriport id, and at none it cannot name', async () => {
+      await run(
+        record(MetriportWebhookType.PatientAdmit, {
+          encounter: {
+            ...admitEncounter,
+            location: [
+              { location: { reference: 'Location/L-1' } },
+              { location: { reference: 'urn:uuid:L-2' } },
+              { location: { display: 'Ward without a reference' } },
+            ],
+            serviceProvider: { reference: 'Organization/O-1' },
+          },
+        }),
+      )
+
+      const [save] = savesOf(ENCOUNTER_OBJECT)
+      expect(save.awell_location).toEqual([
+        locationRef('L-1'),
+        locationRef('L-2'),
+      ])
+      expect(save.awell_service_provider).toEqual({
+        $ref: {
+          object: ORGANIZATION_OBJECT,
+          identifier: {
+            system: METRIPORT_ORGANIZATION_IDENTIFIER_SYSTEM,
+            value: 'O-1',
+          },
+        },
       })
     })
 
-    test('falls back to the service type text for its display, and writes no display for a class without one', async () => {
+    test('writes no location or service provider for an Encounter that names none', async () => {
       await run(
         record(MetriportWebhookType.PatientAdmit, {
-          class: { code: 'IMP' },
-          serviceType: { coding: [{ code: '394592004' }], text: 'Cardiology' },
+          encounter: {
+            ...admitEncounter,
+            location: [],
+            serviceProvider: undefined,
+          },
         }),
       )
 
-      const [save] = encounterSaves()
-      expect(save.serviceType_display).toBe('Cardiology')
-      expect(save).not.toHaveProperty('class_display')
+      const [save] = savesOf(ENCOUNTER_OBJECT)
+      expect(save).not.toHaveProperty('awell_location')
+      expect(save).not.toHaveProperty('awell_service_provider')
+    })
+
+    test('writes every coding of every concept to a field that holds many', async () => {
+      await run(
+        record(MetriportWebhookType.PatientAdmit, {
+          encounter: {
+            ...admitEncounter,
+            type: [
+              { coding: [{ system: 'urn:t', code: 'A' }] },
+              {
+                coding: [
+                  { system: 'urn:t', code: 'B' },
+                  { system: 'urn:u', code: 'b' },
+                ],
+              },
+            ],
+            reasonCode: [
+              { coding: [{ system: 'urn:r', code: 'R1', display: 'One' }] },
+              { coding: [{ system: 'urn:r', code: 'R2' }] },
+            ],
+          },
+        }),
+      )
+
+      const [save] = savesOf(ENCOUNTER_OBJECT)
+      expect(save.awell_type).toEqual([
+        { system: 'urn:t', code: 'A' },
+        { system: 'urn:t', code: 'B' },
+        { system: 'urn:u', code: 'b' },
+      ])
+      expect(save.awell_reason).toEqual([
+        { system: 'urn:r', code: 'R1', display: 'One' },
+        { system: 'urn:r', code: 'R2' },
+      ])
+    })
+
+    test('writes one coding to a field that holds one: the first the catalog can hold', async () => {
+      await run(
+        record(MetriportWebhookType.PatientDischarge, {
+          encounter: {
+            ...admitEncounter,
+            serviceType: {
+              coding: [
+                { code: 'no-system' },
+                { system: 'urn:s', code: 'CARD', display: 'Cardiology' },
+                { system: 'urn:s2', code: 'card' },
+              ],
+            },
+            hospitalization: {
+              dischargeDisposition: {
+                coding: [
+                  {
+                    system:
+                      'http://terminology.hl7.org/CodeSystem/discharge-disposition',
+                    code: 'home',
+                    display: 'Home',
+                  },
+                ],
+              },
+            },
+          },
+        }),
+      )
+
+      const [save] = savesOf(ENCOUNTER_OBJECT)
+      expect(save.awell_service_type).toEqual({
+        system: 'urn:s',
+        code: 'CARD',
+        display: 'Cardiology',
+      })
+      expect(save.awell_discharge_disposition).toEqual({
+        system: 'http://terminology.hl7.org/CodeSystem/discharge-disposition',
+        code: 'home',
+        display: 'Home',
+      })
+    })
+
+    test('leaves out a coding without a system, and a concept with only text: the catalog cannot hold either', async () => {
+      // The admit bundle's service type is `394592004` with no system, and its
+      // reason is the text "Chest pain".
+      await run(record(MetriportWebhookType.PatientAdmit))
+
+      const [save] = savesOf(ENCOUNTER_OBJECT)
+      expect(save).not.toHaveProperty('awell_service_type')
+      expect(save).not.toHaveProperty('awell_reason')
     })
 
     test('writes only what the message knows, so a later message never clears an earlier one', async () => {
-      await run(record(MetriportWebhookType.PatientAdmit))
-      await run(
-        record(MetriportWebhookType.PatientTransfer, {
-          location: admitEncounter.location,
-        }),
-      )
+      const bare: Encounter = {
+        resourceType: 'Encounter',
+        status: 'in-progress',
+        class: admitEncounter.class,
+      }
+      await run(record(MetriportWebhookType.PatientAdmit, { encounter: bare }))
       await run(
         record(MetriportWebhookType.PatientDischarge, {
+          encounter: bare,
           dischargedAt: '2026-07-24T08:00:00.000Z',
         }),
       )
 
-      const [admit, transfer, discharge] = encounterSaves()
-      expect(Object.keys(admit)).toEqual(['identifier', 'status', 'startedAt'])
-      expect(Object.keys(transfer)).toEqual([
-        'identifier',
-        'status',
-        'startedAt',
-        'location',
+      const [admit, discharge] = savesOf(ENCOUNTER_OBJECT)
+      expect(Object.keys(admit)).toEqual([
+        'awell_identifier',
+        'awell_status',
+        'awell_class',
+        'awell_subject',
+        'awell_period_start',
       ])
       expect(Object.keys(discharge)).toEqual([
-        'identifier',
-        'status',
-        'startedAt',
-        'endedAt',
-      ])
-    })
-
-    test('saves only the encounter; the patient is created by identifier resolution, not written here', async () => {
-      await run(record(MetriportWebhookType.PatientAdmit))
-
-      expect(store.save.mock.calls.map(([name]) => name)).toEqual([
-        ENCOUNTER_DATA_SOURCE,
+        'awell_identifier',
+        'awell_status',
+        'awell_class',
+        'awell_subject',
+        'awell_period_start',
+        'awell_period_end',
       ])
     })
 
@@ -453,23 +664,20 @@ describe('Metriport - Ingestion - ADT notifications', () => {
         }),
       )
 
-      const saves = encounterSaves()
+      const saves = savesOf(ENCOUNTER_OBJECT)
       expect(saves).toHaveLength(3)
       saves.forEach((save) => {
-        expect(save.identifier).toEqual({
+        expect(save.awell_identifier).toEqual({
           system: METRIPORT_ENCOUNTER_IDENTIFIER_SYSTEM,
           value: VISIT_ID,
         })
       })
-      expect(saves[0]).toMatchObject({
-        status: 'in-progress',
-        startedAt: '2026-07-21T09:50:00.000Z',
-      })
-      expect(saves[1].status).toBe('in-progress')
-      expect(saves[2]).toMatchObject({
-        status: 'finished',
-        endedAt: '2026-07-24T08:00:00.000Z',
-      })
+      expect(saves.map((save) => save.awell_status)).toEqual([
+        { system: ENCOUNTER_STATUS_SYSTEM, code: 'in-progress' },
+        { system: ENCOUNTER_STATUS_SYSTEM, code: 'in-progress' },
+        { system: ENCOUNTER_STATUS_SYSTEM, code: 'finished' },
+      ])
+      expect(saves[2].awell_period_end).toBe('2026-07-24T08:00:00.000Z')
     })
 
     test.each<[AdtRecord['event'], string]>([
@@ -501,24 +709,27 @@ describe('Metriport - Ingestion - ADT notifications', () => {
     test('a discharge summary converges on the same, closed encounter and publishes discharge.summary-received', async () => {
       await run(
         record(MetriportWebhookType.DischargeSummary, {
-          bundle: dischargeSummaryBundle,
+          encounter: dischargeEncounter,
           dischargedAt: '2024-07-25T14:10:00.000Z',
         }),
       )
 
-      expect(encounterSaves()).toEqual([
+      expect(savesOf(ENCOUNTER_OBJECT)).toEqual([
         {
-          identifier: {
+          awell_identifier: {
             system: METRIPORT_ENCOUNTER_IDENTIFIER_SYSTEM,
             value: VISIT_ID,
           },
-          status: 'finished',
-          startedAt: '2026-07-21T09:50:00.000Z',
-          endedAt: '2024-07-25T14:10:00.000Z',
+          awell_status: { system: ENCOUNTER_STATUS_SYSTEM, code: 'finished' },
+          awell_class: {
+            system: 'http://terminology.hl7.org/CodeSystem/v3-ActCode',
+            code: 'IMP',
+            display: 'inpatient encounter',
+          },
+          awell_subject: 'patient-1',
+          awell_period_start: '2026-07-21T09:50:00.000Z',
+          awell_period_end: '2024-07-25T14:10:00.000Z',
         },
-      ])
-      expect(store.save.mock.calls.map(([name]) => name)).toEqual([
-        ENCOUNTER_DATA_SOURCE,
       ])
       expect(events.publish).toHaveBeenCalledWith({
         key: 'discharge.summary-received',

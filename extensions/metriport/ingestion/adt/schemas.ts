@@ -1,4 +1,4 @@
-import { type Bundle, type Encounter } from '@medplum/fhirtypes'
+import { type Condition, type Encounter } from '@medplum/fhirtypes'
 import { z } from 'zod'
 import { ADT_WEBHOOK_TYPES } from '../../webhooks/validation.zod'
 
@@ -41,25 +41,21 @@ export const notificationSchema = z.looseObject({
 
 export type Notification = z.infer<typeof notificationSchema>
 
-const bundleSchema = z.custom<Bundle>(
-  (value) =>
-    typeof value === 'object' &&
-    value !== null &&
-    (value as Bundle).resourceType === 'Bundle',
-  { error: 'Expected a FHIR Bundle' },
-)
-
 /**
- * A FHIR element carried verbatim. Only its being an object (or array of them)
- * is checked here; the type is the fhirtypes one so `run` and the tests see the
- * real shape. How it is written to the workbench is `run`'s concern.
+ * A FHIR resource carried verbatim. Only its type is checked here; the type is
+ * the fhirtypes one so `run` and the tests see the real shape. How it maps
+ * onto the catalog is `run`'s concern.
  */
-const fhir = <T>(): z.ZodOptional<z.ZodCustom<T, T>> =>
-  z
-    .custom<T>((value) => typeof value === 'object' && value !== null, {
-      error: 'Expected a FHIR element',
-    })
-    .optional()
+const fhirResource = <T extends { resourceType: string }>(
+  resourceType: T['resourceType'],
+): z.ZodCustom<T, T> =>
+  z.custom<T>(
+    (value) =>
+      typeof value === 'object' &&
+      value !== null &&
+      (value as T).resourceType === resourceType,
+    { error: `Expected a FHIR ${resourceType}` },
+  )
 
 /**
  * The record: our shape, and closed. `getRecords` has already dropped what we
@@ -70,6 +66,13 @@ const fhir = <T>(): z.ZodOptional<z.ZodCustom<T, T>> =>
  * customer's MRN and the subject key, so a notification without one has no
  * patient to attach to and is quarantined rather than minted under Metriport's
  * UUID.
+ *
+ * The bundle itself is NOT here: it can run to megabytes and the record is
+ * retained per ingestion, so `getRecords` puts it in the object store and the
+ * record carries the reference. What `run` writes travels with it: the
+ * Encounter, and the Conditions it points at. The Locations and the service
+ * provider are the organization's and are only pointed at, through the
+ * Encounter's own references.
  */
 export const adtRecordSchema = z.object({
   event: z.enum(ADT_WEBHOOK_TYPES),
@@ -80,14 +83,11 @@ export const adtRecordSchema = z.object({
   visitId: z.string().min(1),
   admittedAt: z.string().optional(),
   dischargedAt: z.string().optional(),
-  /** The Encounter's own elements, verbatim. */
-  subject: fhir<NonNullable<Encounter['subject']>>(),
-  class: fhir<NonNullable<Encounter['class']>>(),
-  serviceType: fhir<NonNullable<Encounter['serviceType']>>(),
-  reasonCode: fhir<NonNullable<Encounter['reasonCode']>>(),
-  location: fhir<NonNullable<Encounter['location']>>(),
-  diagnosis: fhir<NonNullable<Encounter['diagnosis']>>(),
-  bundle: bundleSchema,
+  /** The bundle, in the object store: what FHIR data movement reads. */
+  bundleRef: z.string().min(1),
+  encounter: fhirResource<Encounter>('Encounter'),
+  /** The Conditions `encounter.diagnosis` points at, as the bundle carries them. */
+  conditions: z.array(fhirResource<Condition>('Condition')),
 })
 
 export type AdtRecord = z.infer<typeof adtRecordSchema>
