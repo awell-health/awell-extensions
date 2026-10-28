@@ -1683,7 +1683,7 @@ const RAW_RUNTIME_STATE =
           ["prettier", "npm:2.8.8"],\
           ["qs", "npm:6.16.0"],\
           ["rimraf", "npm:2.7.1"],\
-          ["undici", "npm:7.29.1"],\
+          ["undici", "npm:7.30.1"],\
           ["yargs", "npm:15.4.1"]\
         ],\
         "linkType": "HARD"\
@@ -5705,7 +5705,7 @@ const RAW_RUNTIME_STATE =
           ["parse5", "npm:7.3.0"],\
           ["parse5-htmlparser2-tree-adapter", "npm:7.1.0"],\
           ["parse5-parser-stream", "npm:7.1.2"],\
-          ["undici", "npm:7.29.1"],\
+          ["undici", "npm:7.30.1"],\
           ["whatwg-mimetype", "npm:4.0.0"]\
         ],\
         "linkType": "HARD"\
@@ -12148,7 +12148,7 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["native-fetch", "virtual:c4b8d763faef8b17c456df3d9a46f45ac8ca73a78d6dc170e2a10f56f6e377c40135031c7b8d0f1b192c2bcfe2c883db72764b8d9dd8640ac78a0aba4ca231ed#npm:4.0.2"],\
           ["@types/undici", null],\
-          ["undici", "npm:7.29.1"]\
+          ["undici", "npm:7.30.1"]\
         ],\
         "packagePeers": [\
           "@types/undici",\
@@ -15469,10 +15469,10 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["undici", [\
-      ["npm:7.29.1", {\
-        "packageLocation": "./.yarn/cache/undici-npm-7.29.1-e8955914fd-8b9eaf8361.zip/node_modules/undici/",\
+      ["npm:7.30.1", {\
+        "packageLocation": "./.yarn/cache/undici-npm-7.30.1-eae24791c4-306a28e4c7.zip/node_modules/undici/",\
         "packageDependencies": [\
-          ["undici", "npm:7.29.1"]\
+          ["undici", "npm:7.30.1"]\
         ],\
         "linkType": "HARD"\
       }]\
