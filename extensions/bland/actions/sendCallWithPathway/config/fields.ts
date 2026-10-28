@@ -7,13 +7,14 @@ import {
   backgroundTrackOptions,
   BackgroundTrackEnum,
   ModelSchema,
-  VoicemailActionSchema,
 } from '../../../api/schema/atoms'
 import z, { type ZodType } from 'zod'
 import { getTimezoneOptions } from '../../../../awell/v1/actions/updatePatient/config/getTimezones'
 import {
   dropdownOptionsBoolean,
   dropdownOptionsBooleanSchema,
+  dropdownOptionsVoicemailAction,
+  VoicemailActionFieldSchema,
   JsonArraySchema,
   JsonObjectSchema,
 } from '../../../lib/sharedActionFields'
@@ -248,8 +249,11 @@ export const fields = {
     label: 'Voicemail action',
     description:
       'This is processed separately from the AI’s decision making, and overrides it. If voicemail_message is set, then the AI will leave the message regardless of the voicemail_action.',
-    type: FieldType.JSON,
+    type: FieldType.STRING,
     required: false,
+    options: {
+      dropdownOptions: dropdownOptionsVoicemailAction,
+    },
   },
   retry: {
     id: 'retry',
@@ -384,7 +388,7 @@ export const FieldsValidationSchema = z.object({
   timezone: z.string().optional(),
   tools: JsonArraySchema.optional(),
   voicemail_message: z.string().optional(),
-  voicemail_action: VoicemailActionSchema.optional(),
+  voicemail_action: VoicemailActionFieldSchema,
   retry: JsonObjectSchema.optional(),
   max_duration: z.number().optional(),
   webhook: z.string().optional(),
