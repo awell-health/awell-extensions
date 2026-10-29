@@ -51,5 +51,6 @@ export const dataIngestion = defineEndpoint({
     )
 
     events.publish({ key: 'careflow.start' })
+    events.publish({ key: 'ingestion.test' })
   },
 })
