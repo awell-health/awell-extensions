@@ -282,6 +282,86 @@ describe('checkWorkingHours', () => {
         },
       })
     })
+
+    it.each([
+      {
+        name: 'after working hours, the night clocks go forward',
+        // 18:00 EST, next start is 09:00 EDT
+        now: '2024-03-09T23:00:00.000Z',
+        minutesToNextWorkingHours: '840',
+        nextWorkingHoursDatetime: '2024-03-10T13:00:00.000Z',
+      },
+      {
+        name: 'after working hours, the night clocks go back',
+        // 18:00 EDT, next start is 09:00 EST
+        now: '2024-11-02T22:00:00.000Z',
+        minutesToNextWorkingHours: '960',
+        nextWorkingHoursDatetime: '2024-11-03T14:00:00.000Z',
+      },
+      {
+        name: 'before working hours, on the day clocks go forward',
+        // 01:00 EST, next start is 09:00 EDT
+        now: '2024-03-10T06:00:00.000Z',
+        minutesToNextWorkingHours: '420',
+        nextWorkingHoursDatetime: '2024-03-10T13:00:00.000Z',
+      },
+    ])(
+      'Should count the real minutes across a DST change ($name)',
+      async ({ now, minutesToNextWorkingHours, nextWorkingHoursDatetime }) => {
+        jest.setSystemTime(new Date(now))
+
+        await extensionAction.onEvent({
+          payload: generateTestPayload({
+            fields: {
+              workingHoursStart: '09:00',
+              workingHoursEnd: '17:00',
+              timezone: 'America/New_York',
+            },
+            settings: {},
+          }),
+          onComplete,
+          onError,
+          helpers,
+          attempt: 1,
+        })
+
+        expect(onComplete).toHaveBeenCalledWith({
+          data_points: {
+            isWithinWorkingHours: 'false',
+            minutesToNextWorkingHours,
+            nextWorkingHoursDatetime,
+          },
+        })
+      },
+    )
+
+    it('Should return the start of working hours without the current seconds', async () => {
+      // 18:30:42.517 UTC, after working hours
+      jest.setSystemTime(new Date('2024-01-15T18:30:42.517Z'))
+
+      await extensionAction.onEvent({
+        payload: generateTestPayload({
+          fields: {
+            workingHoursStart: '09:00',
+            workingHoursEnd: '17:00',
+            timezone: 'UTC',
+          },
+          settings: {},
+        }),
+        onComplete,
+        onError,
+        helpers,
+        attempt: 1,
+      })
+
+      expect(onComplete).toHaveBeenCalledWith({
+        data_points: {
+          isWithinWorkingHours: 'false',
+          minutesToNextWorkingHours: '870',
+          nextWorkingHoursDatetime: '2024-01-16T09:00:00.000Z',
+        },
+      })
+    })
   })
 
   describe('Different working hours', () => {
