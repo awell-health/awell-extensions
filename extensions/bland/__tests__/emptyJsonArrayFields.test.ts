@@ -71,11 +71,25 @@ describe.each(actions)(
       expect(body).not.toHaveProperty(field)
     })
 
-    test('still sends a non-empty tools array', async () => {
-      await run({ tools: '[{"name":"lookup"}]' })
-      expect(sendCallSpy).toHaveBeenCalledWith(
-        expect.objectContaining({ tools: [{ name: 'lookup' }] }),
-      )
+    test.each(jsonArrayFields)(
+      'still sends a non-empty %s array',
+      async (field) => {
+        const value = [{ word: 'Awell', pronunciation: 'ah-well' }]
+        await run({ [field]: JSON.stringify(value) })
+        expect(sendCallSpy).toHaveBeenCalledWith(
+          expect.objectContaining({ [field]: value }),
+        )
+      },
+    )
+
+    test.each(
+      jsonArrayFields.flatMap((field) =>
+        ['not json', '{"a":"b"}'].map((value) => [field, value]),
+      ),
+    )('errors without calling Bland for %s %j', async (field, value) => {
+      await run({ [field]: value })
+      expect(sendCallSpy).not.toHaveBeenCalled()
+      expect(onError).toHaveBeenCalled()
     })
   },
 )
