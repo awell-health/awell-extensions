@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- When Bland rejects a request, the error on the activity now includes the HTTP status and Bland's response body (for example `{"status":"error","message":"Invalid parameters","errors":[...]}`) instead of only `Request failed with status code 400`. This applies to every Bland action.
+
 - Changed **Voicemail action** on `sendCall` and `sendCallWithPathway` from a JSON input to a dropdown (Hang up, Leave message, Ignore). Values saved while it was a JSON input still work: `{}` or empty is treated as not set, and a quoted value like `"ignore"` is accepted.
 
 - Added the optional **Webhook signing secret** setting. When set, the `callCompleted` and `completedBlandText` webhooks verify Bland's `X-Webhook-Signature` header (an HMAC-SHA256 of the body, hex-encoded) and reject a request with no signature or a wrong one with a `401`. When empty, nothing changes: webhooks are not verified, as before.

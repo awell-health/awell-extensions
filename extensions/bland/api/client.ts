@@ -23,6 +23,16 @@ export class BlandApiClient {
         'Content-Type': 'application/json',
       },
     })
+    // Bland explains a rejection in the response body; axios's default message drops it.
+    this.client.interceptors.response.use(undefined, async (error) => {
+      if (axios.isAxiosError(error) && error.response !== undefined) {
+        const { status, data } = error.response
+        const body = typeof data === 'string' ? data : JSON.stringify(data)
+        // Capped so a gateway HTML error page can't flood the activity feed.
+        error.message = `Bland API ${error.config?.method?.toUpperCase() ?? ''} ${error.config?.url ?? ''} failed with status ${status}: ${String(body).slice(0, 500)}`
+      }
+      return await Promise.reject(error)
+    })
   }
 
   async sendCall(
