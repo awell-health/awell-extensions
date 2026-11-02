@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Fixed **Tools**, **Dynamic data** and **Pronunciation guide** on `sendCall` and `sendCallWithPathway` sending an empty array to Bland when the field was cleared (`""`, `[]` or `{}`). Bland rejects `tools: []` with a `400`. An empty value is now treated as not set and left out of the request.
+
 - When Bland rejects a request, the error on the activity now includes the HTTP status and Bland's response body (for example `{"status":"error","message":"Invalid parameters","errors":[...]}`) instead of only `Request failed with status code 400`. This applies to every Bland action.
 
 - Changed **Voicemail action** on `sendCall` and `sendCallWithPathway` from a JSON input to a dropdown (Hang up, Leave message, Ignore). Values saved while it was a JSON input still work: `{}` or empty is treated as not set, and a quoted value like `"ignore"` is accepted.

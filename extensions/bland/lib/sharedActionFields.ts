@@ -47,14 +47,15 @@ export const JsonObjectSchema = z
 export const JsonArraySchema = z
   .string()
   .optional()
-  .transform((str, ctx): Array<Record<string, string>> => {
-    if (isNil(str) || isEmpty(str)) return []
+  // A cleared field means "not set": Bland rejects an empty array such as `tools: []`
+  .transform((str, ctx): Array<Record<string, string>> | undefined => {
+    if (isNil(str) || isEmpty(str)) return undefined
 
     try {
       const parsedJson = JSON.parse(str)
 
       if (isEmpty(parsedJson)) {
-        return []
+        return undefined
       }
 
       if (!Array.isArray(parsedJson)) {
