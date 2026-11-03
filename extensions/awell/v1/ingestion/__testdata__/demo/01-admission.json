@@ -1,0 +1,32 @@
+{
+  "patient_id": "P-1001",
+  "first_name": "Jane",
+  "last_name": "Doe",
+  "birth_date": "1980-04-12",
+  "sex": "female",
+  "email": "jane.doe@example.com",
+  "address": {
+    "street": "1 Main Street",
+    "city": "Boston",
+    "state": "MA",
+    "zip": "02110",
+    "country": "US"
+  },
+  "encounter": {
+    "visit_id": "V-2001",
+    "class": "inpatient",
+    "admitted_at": "2026-11-01T08:30:00Z",
+    "facility_id": "FAC-NORTH",
+    "service_provider_id": "ORG-ACME"
+  },
+  "condition": {
+    "condition_id": "C-3001",
+    "icd10_code": "I21.4",
+    "description": "Non-ST elevation myocardial infarction",
+    "clinical_status": "active",
+    "verification_status": "confirmed",
+    "severity": "severe",
+    "onset_at": "2026-11-01T06:00:00Z",
+    "recorded_at": "2026-11-01T09:15:00Z"
+  }
+}

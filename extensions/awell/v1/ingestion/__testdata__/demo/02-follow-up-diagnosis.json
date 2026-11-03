@@ -1,0 +1,14 @@
+{
+  "patient_id": "P-1001",
+  "condition": {
+    "condition_id": "C-3002",
+    "visit_id": "V-2001",
+    "icd10_code": "E11.9",
+    "description": "Type 2 diabetes mellitus without complications",
+    "clinical_status": "active",
+    "verification_status": "confirmed",
+    "severity": "moderate",
+    "recorded_at": "2026-11-02T10:00:00Z",
+    "note": "Found on admission labs; HbA1c 8.1%"
+  }
+}
