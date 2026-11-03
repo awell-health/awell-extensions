@@ -43,7 +43,8 @@ describe('Awell - Ingestion - Data ingestion', () => {
     expect(Awell.ingestion).toContain(dataIngestion)
   })
 
-  test('resolves the patient by patient_id', () => {
+  test("resolves the patient by patient_id under the sender's system of record", () => {
+    expect(dataIngestion.identifier.system).toBe(IDENTIFIER_SYSTEM)
     expect(
       dataIngestion.identifier.resolveValue(
         dataIngestionSchema.parse(admission),
@@ -64,10 +65,9 @@ describe('Awell - Ingestion - Data ingestion', () => {
       ])
     })
 
-    test('writes demographics under the profile catalog keys, with the extra identifiers', () => {
+    test('writes demographics under the profile catalog keys', () => {
       expect(savesOf('patient')).toEqual([
         {
-          identifier: [{ system: IDENTIFIER_SYSTEM, value: 'MRN-445566' }],
           first_name: 'Jane',
           last_name: 'Doe',
           birth_date: '1980-04-12',
@@ -312,10 +312,6 @@ describe('Awell - Ingestion - Data ingestion', () => {
       ],
       ['a condition without a code', { condition: { condition_id: 'C' } }],
       ['an unknown sex', { sex: 'F' }],
-      [
-        'an identifier whose system is not a URL',
-        { identifiers: [{ system: 'mrn', value: '1' }] },
-      ],
     ])('refuses %s', (_, payload) => {
       expect(
         dataIngestionSchema.safeParse({ patient_id: 'P-1001', ...payload })

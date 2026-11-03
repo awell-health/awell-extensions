@@ -1,6 +1,5 @@
 {
   "patient_id": "P-1001",
-  "identifiers": [{ "system": "https://acme.com", "value": "MRN-445566" }],
   "first_name": "Jane",
   "last_name": "Doe",
   "birth_date": "1980-04-12",

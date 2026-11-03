@@ -69,12 +69,8 @@ const conditionSchema = z.looseObject({
  * it carries.
  */
 export const dataIngestionSchema = z.looseObject({
+  /** The patient's id in the sender's system of record, `https://acme.com`. */
   patient_id: id,
-  /** More of the patient's identifiers, such as a hospital MRN, each under its own system. */
-  identifiers: z
-    .array(z.object({ system: z.url(), value: id }))
-    .min(1)
-    .optional(),
   first_name: trimmedString.optional(),
   last_name: trimmedString.optional(),
   birth_date: z.iso.date().optional(),
@@ -174,13 +170,15 @@ export const dataIngestion = defineEndpoint({
   key: 'dataIngestion',
   title: 'Data ingestion (experimental)',
   description:
-    'Experimental endpoint. POST a patient payload, optionally with an `encounter` at a facility and a `condition` diagnosed in it. Writes the demographics, the Encounter (pointing at the Location the facility id names) and the Condition (pointing at the Encounter) to the data store, and publishes events for care flows. Identifies the patient by `patient_id`.',
+    'Experimental endpoint. POST a patient payload, optionally with an `encounter` at a facility and a `condition` diagnosed in it. Writes the demographics, the Encounter (pointing at the Location the facility id names) and the Condition (pointing at the Encounter) to the data store, and publishes events for care flows. Identifies the patient by `patient_id` under `https://acme.com`.',
   source: 'webhook',
   schema: dataIngestionSchema,
-  identifier: { resolveValue: (record) => record.patient_id },
+  identifier: {
+    system: IDENTIFIER_SYSTEM,
+    resolveValue: (record) => record.patient_id,
+  },
   run: async ({ record, store, events }) => {
     const demographics = known({
-      identifier: record.identifiers,
       first_name: record.first_name,
       last_name: record.last_name,
       birth_date: record.birth_date,

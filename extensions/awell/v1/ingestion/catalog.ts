@@ -10,7 +10,7 @@ export const ORGANIZATION_OBJECT = 'organization'
 
 /**
  * The sender's system of record. Every record it sends is identified under this one system by the sender's own id:
- * the patient's MRN, an encounter, a condition, and the Location or Organization an encounter points at. A Location or
+ * the patient, an encounter, a condition, and the Location or Organization an encounter points at. A Location or
  * Organization must carry an identifier under it in the workbench for an encounter's reference to resolve.
  */
 export const IDENTIFIER_SYSTEM = 'https://acme.com'

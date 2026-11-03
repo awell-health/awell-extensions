@@ -3,17 +3,17 @@
 Three payloads for the `dataIngestion` endpoint, sent in order. They tell one hospital stay for patient `P-1001`
 and show what the data workbench does with each.
 
-| #   | Payload                       | What it shows                                                                                                                                                                      |
-| --- | ----------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 1   | `01-admission.json`           | Patient demographics, an extra patient identifier, an Encounter at a Location and Organization referenced by identifier, and a Condition linked to that Encounter in the same POST |
-| 2   | `02-follow-up-diagnosis.json` | A second Condition linked to the Encounter from payload 1, found by its `visit_id`                                                                                                 |
-| 3   | `03-discharge.json`           | Upserts: the same Encounter (`V-2001`) is finished and the same Condition (`C-3001`) is resolved, with no duplicates                                                               |
+| #   | Payload                       | What it shows                                                                                                                                         |
+| --- | ----------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1   | `01-admission.json`           | Patient demographics, an Encounter at a Location and Organization referenced by identifier, and a Condition linked to that Encounter in the same POST |
+| 2   | `02-follow-up-diagnosis.json` | A second Condition linked to the Encounter from payload 1, found by its `visit_id`                                                                    |
+| 3   | `03-discharge.json`           | Upserts: the same Encounter (`V-2001`) is finished and the same Condition (`C-3001`) is resolved, with no duplicates                                  |
 
 ## Before sending
 
 In the demo tenant:
 
-- Register the identifier system `https://acme.com` on the tenant. Without it, payload 1 fails as a whole.
+- Register the identifier system `https://acme.com` on the tenant. Every payload identifies its patient by `patient_id` under it, and every other record by its own id under it.
 - Install Encounter, Condition, Location and Organization in the workbench.
 - Create a Location with identifier `https://acme.com` / `FAC-NORTH`, and an Organization with
   identifier `https://acme.com` / `ORG-ACME`. If either is missing, that reference is left empty
