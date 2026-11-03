@@ -1,0 +1,16 @@
+{
+  "patient_id": "P-1001",
+  "encounter": {
+    "visit_id": "V-2001",
+    "class": "inpatient",
+    "discharged_at": "2026-11-04T15:00:00Z",
+    "discharge_disposition": "home"
+  },
+  "condition": {
+    "condition_id": "C-3001",
+    "icd10_code": "I21.4",
+    "description": "Non-ST elevation myocardial infarction",
+    "clinical_status": "resolved",
+    "verification_status": "confirmed"
+  }
+}
