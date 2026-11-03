@@ -3,12 +3,11 @@ import { isUndefined, omitBy } from 'lodash'
 import { z } from 'zod'
 import {
   CLINICAL_STATUSES,
-  CONDITION_IDENTIFIER_SYSTEM,
+  IDENTIFIER_SYSTEM,
   CONDITION_OBJECT,
   DISCHARGE_DISPOSITIONS,
   ENCOUNTER_CLASSES,
   ENCOUNTER_DIAGNOSIS,
-  ENCOUNTER_IDENTIFIER_SYSTEM,
   ENCOUNTER_OBJECT,
   ENCOUNTER_STATUSES,
   SEVERITIES,
@@ -112,7 +111,7 @@ const encounterData = (
 ): Record<string, unknown> =>
   known({
     identifier: {
-      system: ENCOUNTER_IDENTIFIER_SYSTEM,
+      system: IDENTIFIER_SYSTEM,
       value: encounter.visit_id,
     },
     class: ENCOUNTER_CLASSES[encounter.class],
@@ -151,7 +150,7 @@ const conditionData = (
 ): Record<string, unknown> =>
   known({
     identifier: {
-      system: CONDITION_IDENTIFIER_SYSTEM,
+      system: IDENTIFIER_SYSTEM,
       value: condition.condition_id,
     },
     code: icd10(condition.icd10_code, condition.description),

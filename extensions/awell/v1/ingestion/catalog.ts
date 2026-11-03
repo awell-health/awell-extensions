@@ -9,14 +9,11 @@ export const LOCATION_OBJECT = 'location'
 export const ORGANIZATION_OBJECT = 'organization'
 
 /**
- * The namespaces of the sender's own ids for each record. A Location or Organization must carry an identifier under
- * its system in the workbench for an encounter to resolve its reference to it.
+ * The sender's system of record. Every record it sends is identified under this one system by the sender's own id:
+ * the patient's MRN, an encounter, a condition, and the Location or Organization an encounter points at. A Location or
+ * Organization must carry an identifier under it in the workbench for an encounter's reference to resolve.
  */
-export const ENCOUNTER_IDENTIFIER_SYSTEM = 'https://awellhealth.com/encounter'
-export const CONDITION_IDENTIFIER_SYSTEM = 'https://awellhealth.com/condition'
-export const LOCATION_IDENTIFIER_SYSTEM = 'https://awellhealth.com/location'
-export const ORGANIZATION_IDENTIFIER_SYSTEM =
-  'https://awellhealth.com/organization'
+export const IDENTIFIER_SYSTEM = 'https://acme.com'
 
 /** A coding as the catalog stores it. */
 export interface CatalogCoding {
@@ -131,11 +128,8 @@ const refTo =
   })
 
 /** A Location of the organization's directory. */
-export const locationRef = refTo(LOCATION_OBJECT, LOCATION_IDENTIFIER_SYSTEM)
+export const locationRef = refTo(LOCATION_OBJECT, IDENTIFIER_SYSTEM)
 /** An Organization of the organization's directory. */
-export const organizationRef = refTo(
-  ORGANIZATION_OBJECT,
-  ORGANIZATION_IDENTIFIER_SYSTEM,
-)
+export const organizationRef = refTo(ORGANIZATION_OBJECT, IDENTIFIER_SYSTEM)
 /** One of the patient's Encounters, ingested by an earlier payload. */
-export const encounterRef = refTo(ENCOUNTER_OBJECT, ENCOUNTER_IDENTIFIER_SYSTEM)
+export const encounterRef = refTo(ENCOUNTER_OBJECT, IDENTIFIER_SYSTEM)

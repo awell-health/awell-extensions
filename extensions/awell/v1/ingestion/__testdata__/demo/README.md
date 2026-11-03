@@ -15,8 +15,8 @@ In the demo tenant:
 
 - Register the identifier system `https://acme.com` on the tenant. Without it, payload 1 fails as a whole.
 - Install Encounter, Condition, Location and Organization in the workbench.
-- Create a Location with identifier `https://awellhealth.com/location` / `FAC-NORTH`, and an Organization with
-  identifier `https://awellhealth.com/organization` / `ORG-ACME`. If either is missing, that reference is left empty
+- Create a Location with identifier `https://acme.com` / `FAC-NORTH`, and an Organization with
+  identifier `https://acme.com` / `ORG-ACME`. If either is missing, that reference is left empty
   and logged, and the rest still saves.
 - Use a tenant on v2 care flows; only those store typed references.
 

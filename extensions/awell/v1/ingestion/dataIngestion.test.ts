@@ -4,13 +4,10 @@ import admission from './__testdata__/demo/01-admission.json'
 import followUpDiagnosis from './__testdata__/demo/02-follow-up-diagnosis.json'
 import discharge from './__testdata__/demo/03-discharge.json'
 import {
-  CONDITION_IDENTIFIER_SYSTEM,
+  IDENTIFIER_SYSTEM,
   CONDITION_OBJECT,
-  ENCOUNTER_IDENTIFIER_SYSTEM,
   ENCOUNTER_OBJECT,
-  LOCATION_IDENTIFIER_SYSTEM,
   LOCATION_OBJECT,
-  ORGANIZATION_IDENTIFIER_SYSTEM,
   ORGANIZATION_OBJECT,
 } from './catalog'
 import { dataIngestion, dataIngestionSchema } from './dataIngestion'
@@ -70,7 +67,7 @@ describe('Awell - Ingestion - Data ingestion', () => {
     test('writes demographics under the profile catalog keys, with the extra identifiers', () => {
       expect(savesOf('patient')).toEqual([
         {
-          identifier: [{ system: 'https://acme.com', value: 'MRN-445566' }],
+          identifier: [{ system: IDENTIFIER_SYSTEM, value: 'MRN-445566' }],
           first_name: 'Jane',
           last_name: 'Doe',
           birth_date: '1980-04-12',
@@ -90,7 +87,7 @@ describe('Awell - Ingestion - Data ingestion', () => {
     test('upserts the encounter on the visit id, pointing at the Location and Organization by identifier', () => {
       expect(savesOf(ENCOUNTER_OBJECT)).toEqual([
         {
-          identifier: { system: ENCOUNTER_IDENTIFIER_SYSTEM, value: 'V-2001' },
+          identifier: { system: IDENTIFIER_SYSTEM, value: 'V-2001' },
           class: {
             system: 'http://terminology.hl7.org/CodeSystem/v3-ActCode',
             code: 'IMP',
@@ -106,7 +103,7 @@ describe('Awell - Ingestion - Data ingestion', () => {
               $ref: {
                 object: LOCATION_OBJECT,
                 identifier: {
-                  system: LOCATION_IDENTIFIER_SYSTEM,
+                  system: IDENTIFIER_SYSTEM,
                   value: 'FAC-NORTH',
                 },
               },
@@ -116,7 +113,7 @@ describe('Awell - Ingestion - Data ingestion', () => {
             $ref: {
               object: ORGANIZATION_OBJECT,
               identifier: {
-                system: ORGANIZATION_IDENTIFIER_SYSTEM,
+                system: IDENTIFIER_SYSTEM,
                 value: 'ORG-ACME',
               },
             },
@@ -132,7 +129,7 @@ describe('Awell - Ingestion - Data ingestion', () => {
 
       expect(savesOf(CONDITION_OBJECT)).toEqual([
         {
-          identifier: { system: CONDITION_IDENTIFIER_SYSTEM, value: 'C-3001' },
+          identifier: { system: IDENTIFIER_SYSTEM, value: 'C-3001' },
           code: {
             system: 'http://hl7.org/fhir/sid/icd-10-cm',
             code: 'I21.4',
@@ -222,7 +219,7 @@ describe('Awell - Ingestion - Data ingestion', () => {
       encounter: {
         $ref: {
           object: ENCOUNTER_OBJECT,
-          identifier: { system: ENCOUNTER_IDENTIFIER_SYSTEM, value: 'V-2001' },
+          identifier: { system: IDENTIFIER_SYSTEM, value: 'V-2001' },
         },
       },
       category: [expect.objectContaining({ code: 'encounter-diagnosis' })],
@@ -263,12 +260,12 @@ describe('Awell - Ingestion - Data ingestion', () => {
 
       expect(savesOf(CONDITION_OBJECT)).toEqual([
         expect.objectContaining({
-          identifier: { system: CONDITION_IDENTIFIER_SYSTEM, value: 'C-3002' },
+          identifier: { system: IDENTIFIER_SYSTEM, value: 'C-3002' },
           encounter: {
             $ref: {
               object: ENCOUNTER_OBJECT,
               identifier: {
-                system: ENCOUNTER_IDENTIFIER_SYSTEM,
+                system: IDENTIFIER_SYSTEM,
                 value: 'V-2001',
               },
             },
@@ -282,13 +279,13 @@ describe('Awell - Ingestion - Data ingestion', () => {
 
       expect(savesOf(ENCOUNTER_OBJECT)).toEqual([
         expect.objectContaining({
-          identifier: { system: ENCOUNTER_IDENTIFIER_SYSTEM, value: 'V-2001' },
+          identifier: { system: IDENTIFIER_SYSTEM, value: 'V-2001' },
           status: expect.objectContaining({ code: 'finished' }),
         }),
       ])
       expect(savesOf(CONDITION_OBJECT)).toEqual([
         expect.objectContaining({
-          identifier: { system: CONDITION_IDENTIFIER_SYSTEM, value: 'C-3001' },
+          identifier: { system: IDENTIFIER_SYSTEM, value: 'C-3001' },
           clinical_status: expect.objectContaining({ code: 'resolved' }),
           encounter: `${ENCOUNTER_OBJECT}-1`,
         }),
