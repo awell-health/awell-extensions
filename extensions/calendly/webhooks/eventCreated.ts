@@ -92,7 +92,7 @@ export const eventCreated: Webhook<
 > = {
   key: 'eventCreated',
   dataPoints,
-  onWebhookReceived: async ({ payload }, onSuccess, onError) => {
+  onEvent: async ({ payload: { payload }, onSuccess, onError }) => {
     const {
       payload: {
         email,

@@ -25,7 +25,7 @@ describe('Freshesk - Webhook - Ticket created', () => {
     })
 
     test('Should call onSuccess, which starts the care flow', async () => {
-      await extensionWebhook.onEvent!({
+      await extensionWebhook.onEvent({
         payload: {
           payload: ticketCreatedPayload,
           settings: {
