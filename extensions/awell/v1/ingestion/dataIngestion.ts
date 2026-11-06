@@ -1,4 +1,5 @@
 import { defineEndpoint } from '@awell-health/extensions-core'
+import ISO6391 from 'iso-639-1'
 import { isUndefined, omitBy } from 'lodash'
 import { z } from 'zod'
 import {
@@ -76,6 +77,8 @@ export const dataIngestionSchema = z.looseObject({
   birth_date: z.iso.date().optional(),
   sex: z.enum(keysOf(SEX_CODES)).optional(),
   email: z.email().optional(),
+  /** An ISO 639-1 code or its English name, in any case (`es`, `Spanish`); see `languageCode`. */
+  preferred_language: z.string().optional(),
   address: z
     .looseObject({
       street: trimmedString.optional(),
@@ -95,6 +98,24 @@ type ConditionInput = z.infer<typeof conditionSchema>
 /** Drops what a payload does not carry, so a save never clears a field an earlier payload set. */
 const known = (data: Record<string, unknown>): Record<string, unknown> =>
   omitBy(data, isUndefined)
+
+/**
+ * The lower-case ISO 639-1 code (`es`) the runtime picks message translations by, from a code or a language name
+ * (English or native) in any case, as the Care UI's language list (`iso-639-1`) names them. Blank means not sent. A
+ * value that maps to no language (`Klingon`, `es-ES`) is dropped with a warning rather than failing the record, so one
+ * bad field never loses the patient; storing it would only make the runtime fall back to the default language
+ * silently. `console`, as the ingestion run context carries no logger.
+ */
+const languageCode = (value: string | undefined): string | undefined => {
+  const text = value?.trim().toLowerCase() ?? ''
+  if (text === '') return undefined
+  const code = ISO6391.validate(text) ? text : ISO6391.getCode(text)
+  if (code !== '') return code
+  console.warn(
+    `dataIngestion: preferred_language ${JSON.stringify(value)} is not an ISO 639-1 code or language name; not saved`,
+  )
+  return undefined
+}
 
 const statusOf = (encounter: EncounterInput): string =>
   encounter.status ??
@@ -170,7 +191,7 @@ export const dataIngestion = defineEndpoint({
   key: 'dataIngestion',
   title: 'Data ingestion (experimental)',
   description:
-    'Experimental endpoint. POST a patient payload, optionally with an `encounter` at a facility and a `condition` diagnosed in it. Writes the demographics, the Encounter (pointing at the Location the facility id names) and the Condition (pointing at the Encounter) to the data store, and publishes events for care flows. Identifies the patient by `patient_id` under `https://acme.com`.',
+    'Experimental endpoint. POST a patient payload, optionally with a `preferred_language` (an ISO 639-1 code or English name, such as `es` or `Spanish`, saved as the code), an `encounter` at a facility and a `condition` diagnosed in it. Writes the demographics, the Encounter (pointing at the Location the facility id names) and the Condition (pointing at the Encounter) to the data store, and publishes events for care flows. Identifies the patient by `patient_id` under `https://acme.com`.',
   source: 'webhook',
   schema: dataIngestionSchema,
   identifier: {
@@ -184,6 +205,7 @@ export const dataIngestion = defineEndpoint({
       birth_date: record.birth_date,
       sex: isUndefined(record.sex) ? undefined : SEX_CODES[record.sex],
       email: record.email,
+      preferred_language: languageCode(record.preferred_language),
       address: isUndefined(record.address) ? undefined : known(record.address),
     })
     if (Object.keys(demographics).length > 0)

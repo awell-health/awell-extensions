@@ -254,6 +254,51 @@ describe('Awell - Ingestion - Data ingestion', () => {
     expect(published()).toEqual(['careflow.start', 'ingestion.testing'])
   })
 
+  describe('preferred language', () => {
+    let warn: jest.SpyInstance
+
+    beforeEach(() => {
+      warn = jest.spyOn(console, 'warn').mockImplementation(() => {})
+    })
+
+    afterEach(() => {
+      warn.mockRestore()
+    })
+
+    test.each(['es', 'ES', ' es ', 'Spanish', 'spanish', 'SPANISH'])(
+      'saves %j as the ISO 639-1 code, as the runtime picks translations by it',
+      async (preferred_language) => {
+        await run({ patient_id: 'P-1001', preferred_language })
+
+        expect(savesOf('patient')).toEqual([{ preferred_language: 'es' }])
+      },
+    )
+
+    test.each(['', '   '])(
+      'treats %j as not sent',
+      async (preferred_language) => {
+        await run({ patient_id: 'P-1001', preferred_language })
+
+        expect(store.save).not.toHaveBeenCalled()
+        expect(warn).not.toHaveBeenCalled()
+      },
+    )
+
+    test.each(['Klingon', 'es-ES', 'spa'])(
+      'drops %j with a warning and still saves the rest of the patient',
+      async (preferred_language) => {
+        await run({
+          patient_id: 'P-1001',
+          first_name: 'Ana',
+          preferred_language,
+        })
+
+        expect(savesOf('patient')).toEqual([{ first_name: 'Ana' }])
+        expect(warn).toHaveBeenCalledTimes(1)
+      },
+    )
+  })
+
   describe('demo payloads', () => {
     test('the follow-up diagnosis links to the admitted visit by identifier', async () => {
       await run(followUpDiagnosis)

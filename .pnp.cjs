@@ -89,6 +89,7 @@ const RAW_RUNTIME_STATE =
           ["gray-matter", "npm:4.0.3"],\
           ["helmet", "npm:8.3.0"],\
           ["husky", "npm:9.1.7"],\
+          ["iso-639-1", "npm:2.1.15"],\
           ["jest", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:29.7.0"],\
           ["jest-fetch-mock", "npm:3.2.0"],\
           ["jsdom", "virtual:049eed45d3849f67ed7f880735d5ee048a7d62bc90d33a158215f4adacd02cf17031abc4b91d07962efa1a0b45ace628d17384bb6f00b810e420e007c786efda#npm:26.1.0"],\
@@ -442,6 +443,7 @@ const RAW_RUNTIME_STATE =
           ["gray-matter", "npm:4.0.3"],\
           ["helmet", "npm:8.3.0"],\
           ["husky", "npm:9.1.7"],\
+          ["iso-639-1", "npm:2.1.15"],\
           ["jest", "virtual:6d1931a4340173b37cf492f77cb803dda2f92958adb6847175388be3c73eb24be6f6bfd25e0fc0b7ad8dba815a972ad5e9d1f18e67fb58466bb7c99205a9d42e#npm:29.7.0"],\
           ["jest-fetch-mock", "npm:3.2.0"],\
           ["jsdom", "virtual:049eed45d3849f67ed7f880735d5ee048a7d62bc90d33a158215f4adacd02cf17031abc4b91d07962efa1a0b45ace628d17384bb6f00b810e420e007c786efda#npm:26.1.0"],\
@@ -10079,6 +10081,15 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./.yarn/cache/isexe-npm-3.1.1-9c0061eead-7fe1931ee4.zip/node_modules/isexe/",\
         "packageDependencies": [\
           ["isexe", "npm:3.1.1"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["iso-639-1", [\
+      ["npm:2.1.15", {\
+        "packageLocation": "./.yarn/cache/iso-639-1-npm-2.1.15-6a99898069-32f6cfdfa5.zip/node_modules/iso-639-1/",\
+        "packageDependencies": [\
+          ["iso-639-1", "npm:2.1.15"]\
         ],\
         "linkType": "HARD"\
       }]\
