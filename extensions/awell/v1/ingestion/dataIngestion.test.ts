@@ -254,6 +254,18 @@ describe('Awell - Ingestion - Data ingestion', () => {
     expect(published()).toEqual(['careflow.start', 'ingestion.testing'])
   })
 
+  test('saves the preferred language on the patient, so the runtime sends messages in it', async () => {
+    await run({ patient_id: 'P-1001', preferred_language: 'es' })
+
+    expect(savesOf('patient')).toEqual([{ preferred_language: 'es' }])
+  })
+
+  test('lower-cases the preferred language', async () => {
+    await run({ patient_id: 'P-1001', preferred_language: ' ES ' })
+
+    expect(savesOf('patient')).toEqual([{ preferred_language: 'es' }])
+  })
+
   describe('demo payloads', () => {
     test('the follow-up diagnosis links to the admitted visit by identifier', async () => {
       await run(followUpDiagnosis)
@@ -312,6 +324,9 @@ describe('Awell - Ingestion - Data ingestion', () => {
       ],
       ['a condition without a code', { condition: { condition_id: 'C' } }],
       ['an unknown sex', { sex: 'F' }],
+      ['a regional language tag', { preferred_language: 'es-ES' }],
+      ['a three-letter language code', { preferred_language: 'spa' }],
+      ['an empty language', { preferred_language: '' }],
     ])('refuses %s', (_, payload) => {
       expect(
         dataIngestionSchema.safeParse({ patient_id: 'P-1001', ...payload })

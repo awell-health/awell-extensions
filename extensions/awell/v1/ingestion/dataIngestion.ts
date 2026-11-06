@@ -76,6 +76,14 @@ export const dataIngestionSchema = z.looseObject({
   birth_date: z.iso.date().optional(),
   sex: z.enum(keysOf(SEX_CODES)).optional(),
   email: z.email().optional(),
+  /**
+   * ISO 639-1 (`es`), as Awell's runtime keys message translations. A regional tag (`es-ES`) is refused: the runtime
+   * would not match it and would silently send the default language.
+   */
+  preferred_language: trimmedString
+    .toLowerCase()
+    .regex(/^[a-z]{2}$/)
+    .optional(),
   address: z
     .looseObject({
       street: trimmedString.optional(),
@@ -170,7 +178,7 @@ export const dataIngestion = defineEndpoint({
   key: 'dataIngestion',
   title: 'Data ingestion (experimental)',
   description:
-    'Experimental endpoint. POST a patient payload, optionally with an `encounter` at a facility and a `condition` diagnosed in it. Writes the demographics, the Encounter (pointing at the Location the facility id names) and the Condition (pointing at the Encounter) to the data store, and publishes events for care flows. Identifies the patient by `patient_id` under `https://acme.com`.',
+    'Experimental endpoint. POST a patient payload, optionally with a `preferred_language` (ISO 639-1, such as `es`), an `encounter` at a facility and a `condition` diagnosed in it. Writes the demographics, the Encounter (pointing at the Location the facility id names) and the Condition (pointing at the Encounter) to the data store, and publishes events for care flows. Identifies the patient by `patient_id` under `https://acme.com`.',
   source: 'webhook',
   schema: dataIngestionSchema,
   identifier: {
@@ -184,6 +192,7 @@ export const dataIngestion = defineEndpoint({
       birth_date: record.birth_date,
       sex: isUndefined(record.sex) ? undefined : SEX_CODES[record.sex],
       email: record.email,
+      preferred_language: record.preferred_language,
       address: isUndefined(record.address) ? undefined : known(record.address),
     })
     if (Object.keys(demographics).length > 0)
