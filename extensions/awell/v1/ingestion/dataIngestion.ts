@@ -185,6 +185,7 @@ const conditionData = (
     onset_at: condition.onset_at,
     recorded_at: condition.recorded_at,
     note: condition.note,
+    custom_field_demo: 'Custom fields are fun',
   })
 
 export const dataIngestion = defineEndpoint({

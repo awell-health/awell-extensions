@@ -160,6 +160,7 @@ describe('Awell - Ingestion - Data ingestion', () => {
           encounter: encounter.id,
           onset_at: '2026-11-01T06:00:00Z',
           recorded_at: '2026-11-01T09:15:00Z',
+          custom_field_demo: 'Custom fields are fun',
         },
       ])
     })
