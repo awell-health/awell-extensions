@@ -285,6 +285,7 @@ __metadata:
     gray-matter: "npm:^4.0.3"
     helmet: "npm:^8.3.0"
     husky: "npm:^9.1.7"
+    iso-639-1: "npm:^2.1.15"
     jest: "npm:^29.7.0"
     jest-fetch-mock: "npm:^3.2.0"
     jsdom: "npm:^26.1.0"
@@ -7798,6 +7799,13 @@ __metadata:
   version: 3.1.1
   resolution: "isexe@npm:3.1.1"
   checksum: 10/7fe1931ee4e88eb5aa524cd3ceb8c882537bc3a81b02e438b240e47012eef49c86904d0f0e593ea7c3a9996d18d0f1f3be8d3eaa92333977b0c3a9d353d5563e
+  languageName: node
+  linkType: hard
+
+"iso-639-1@npm:^2.1.15":
+  version: 2.1.15
+  resolution: "iso-639-1@npm:2.1.15"
+  checksum: 10/32f6cfdfa5e85eef54cb2df77829e6678e9479e9b6a7fdb7e75ba0005957d4da35ff315b69c354e216ba46044e4437b1823362d27dff14bcefbb408b2a66e2f8
   languageName: node
   linkType: hard
 
