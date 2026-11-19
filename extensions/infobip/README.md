@@ -36,6 +36,8 @@ Sends a simple email to a recipient, optionally with a single file attachment.
 
 Leave the attachment fields empty to send without an attachment. Infobip limits emails to 10 MB in total, so attachments are capped at 9 MB (decoded).
 
+**Data points:** `bulkId`, `messageId`, `messageStatus` as returned by Infobip when it accepts the request. Acceptance is not delivery: use `messageId` in the Infobip portal (Analyze > Logs) to see whether the email was delivered, bounced or rejected.
+
 ### Send email with template
 
 Send an email, using a template, to a recipient. You need to create a [Broadcast email template](https://www.infobip.com/docs/email/templates) as that is the only type of template supported by Infobip's API. Templates can be created and managed via the Infobip web portal.
