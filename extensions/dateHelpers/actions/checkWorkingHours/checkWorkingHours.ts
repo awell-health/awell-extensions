@@ -1,6 +1,13 @@
 import { type Action } from '@awell-health/extensions-core'
 import { Category } from '@awell-health/extensions-core'
-import { getHours, getMinutes, addDays, setHours, setMinutes } from 'date-fns'
+import {
+  getHours,
+  getMinutes,
+  addDays,
+  set,
+  differenceInMinutes,
+  startOfMinute,
+} from 'date-fns'
 import { utcToZonedTime, zonedTimeToUtc } from 'date-fns-tz'
 import { type settings } from '../../settings'
 import { dataPoints, fields, FieldsValidationSchema } from './config'
@@ -74,30 +81,32 @@ export const checkWorkingHours: Action<
     // Calculate minutes to next working hours only if not currently within working hours
     if (!isWithinWorkingHours) {
       let nextWorkingHoursDate: Date
+      const startTime = {
+        hours: startHour,
+        minutes: startMinute,
+        seconds: 0,
+        milliseconds: 0,
+      }
 
       if (currentTotalMinutes < startTotalMinutes) {
         // Before working hours today
-        minutesToNextWorkingHours = startTotalMinutes - currentTotalMinutes
         // Set the datetime to today at working hours start time
-        nextWorkingHoursDate = setMinutes(
-          setHours(currentTimeInTimezone, startHour),
-          startMinute,
-        )
+        nextWorkingHoursDate = set(currentTimeInTimezone, startTime)
       } else {
         // After working hours today, so next working hours is tomorrow
-        const minutesUntilMidnight = 24 * 60 - currentTotalMinutes
-        minutesToNextWorkingHours = minutesUntilMidnight + startTotalMinutes
         // Set the datetime to tomorrow at working hours start time
         const tomorrow = addDays(currentTimeInTimezone, 1)
-        nextWorkingHoursDate = setMinutes(
-          setHours(tomorrow, startHour),
-          startMinute,
-        )
+        nextWorkingHoursDate = set(tomorrow, startTime)
       }
 
       // Convert the zoned time back to UTC for consistent output
       const nextWorkingHoursUtc = zonedTimeToUtc(nextWorkingHoursDate, timezone)
       nextWorkingHoursDatetime = nextWorkingHoursUtc.toISOString()
+      // Count from the real start time, so a DST change in between is included
+      minutesToNextWorkingHours = differenceInMinutes(
+        nextWorkingHoursUtc,
+        startOfMinute(now),
+      )
     }
 
     helpers.log(
