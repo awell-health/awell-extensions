@@ -18,7 +18,7 @@ export const pathwayStart: Webhook<
   description:
     'Start a pathway via webhook. No data points are expected nor required.',
   dataPoints,
-  onWebhookReceived: async ({ payload }, onSuccess) => {
+  onEvent: async ({ payload: { payload }, onSuccess }) => {
     if (!isNil(payload.patient_id)) {
       const { patient_id } = payload
       await onSuccess({

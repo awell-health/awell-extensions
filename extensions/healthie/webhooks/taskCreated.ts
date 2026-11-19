@@ -23,7 +23,7 @@ export const taskCreated: Webhook<
 > = {
   key: 'taskCreated',
   dataPoints,
-  onWebhookReceived: async ({ payload, settings }, onSuccess, onError) => {
+  onEvent: async ({ payload: { payload, settings }, onSuccess, onError }) => {
     try {
       const { sdk } = await createSdk({ settings })
 

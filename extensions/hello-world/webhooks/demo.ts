@@ -54,7 +54,7 @@ export interface Payload {
 export const demo: Webhook<keyof typeof dataPoints, Payload> = {
   key: 'demo',
   dataPoints,
-  onWebhookReceived: async ({ payload }, onSuccess, onError) => {
+  onEvent: async ({ payload: { payload }, onSuccess, onError }) => {
     const {
       eventType,
       hello,

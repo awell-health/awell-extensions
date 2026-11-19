@@ -31,7 +31,7 @@ export const pathwayCompleted: Webhook<
 > = {
   key: 'pathwayCompleted',
   dataPoints,
-  onWebhookReceived: async ({ payload }, onSuccess, onError) => {
+  onEvent: async ({ payload: { payload }, onSuccess, onError }) => {
     const { pathway, complete_date } = payload
     if (isNil(pathway.pathway_definition_id)) {
       await onError({

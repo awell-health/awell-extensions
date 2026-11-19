@@ -1,6 +1,6 @@
+import { TestHelpers } from '@awell-health/extensions-core'
 import { eventCreated } from '../webhooks/eventCreated'
 import { testInviteeCreated } from '../__mocks__/objects'
-import { type OnWebhookReceivedParams } from '@awell-health/extensions-core'
 import {
   type CalendlyInviteeCreatedWebhook,
   type CalendlyWebhookPayload,
@@ -9,36 +9,34 @@ import * as _ from 'lodash'
 import { ZodError } from 'zod'
 
 describe('Test event Created', () => {
-  const onComplete = jest.fn()
-  const onError = jest.fn()
-  const buildOnWebhookReceivedParams = <Payload>({
-    payload,
-  }: {
-    payload: Payload
-  }): OnWebhookReceivedParams<Payload> => {
-    return {
+  const { extensionWebhook, onSuccess, onError, helpers, clearMocks } =
+    TestHelpers.fromWebhook(eventCreated)
+
+  const buildOnEventParams = <Payload>({ payload }: { payload: Payload }) => ({
+    payload: {
       payload,
       rawBody: Buffer.from(JSON.stringify(payload)),
       headers: {},
       settings: {},
-    }
-  }
+    },
+    onSuccess,
+    onError,
+    helpers,
+  })
 
   beforeEach(() => {
-    jest.clearAllMocks()
+    clearMocks()
   })
 
   it('should return the correct data points', async () => {
     const event = testInviteeCreated
-    const evt = eventCreated.onWebhookReceived!(
-      buildOnWebhookReceivedParams<CalendlyInviteeCreatedWebhook>({
+    const evt = extensionWebhook.onEvent(
+      buildOnEventParams<CalendlyInviteeCreatedWebhook>({
         payload: event,
       }),
-      onComplete,
-      onError
     )
     await expect(evt).resolves.toBeUndefined()
-    expect(onComplete).toBeCalled()
+    expect(onSuccess).toBeCalled()
   })
 
   it.each([
@@ -75,19 +73,17 @@ describe('Test event Created', () => {
         inviteeLastName: '',
       },
     },
-  ])('onComplete should always be called $name', async (params) => {
+  ])('onSuccess should always be called $name', async (params) => {
     const { payload, output } = params
     const merged = _.merge({}, testInviteeCreated, { payload })
-    const evt = eventCreated.onWebhookReceived!(
-      buildOnWebhookReceivedParams<CalendlyWebhookPayload>({
+    const evt = extensionWebhook.onEvent(
+      buildOnEventParams<CalendlyWebhookPayload>({
         payload: merged,
       }),
-      onComplete,
-      onError
     )
     await expect(evt).resolves.toBeUndefined()
-    expect(onComplete).toHaveBeenCalledWith(
-      expect.objectContaining({ data_points: expect.objectContaining(output) })
+    expect(onSuccess).toHaveBeenCalledWith(
+      expect.objectContaining({ data_points: expect.objectContaining(output) }),
     )
   })
 
@@ -116,25 +112,23 @@ describe('Test event Created', () => {
       payload: { scheduled_event: { event_type: 'missing-scheduled-events' } },
       name: 'scheduled_event.event_type is empty',
       error: Error(
-        'Could not parse scheduled event type id from uri missing-scheduled-events'
+        'Could not parse scheduled event type id from uri missing-scheduled-events',
       ),
     },
     {
       payload: { scheduled_event: { uri: 'missing-event-types' } },
       name: 'scheduled_event.uri is empty',
       error: Error(
-        'Could not parse scheduled event id from uri missing-event-types'
+        'Could not parse scheduled event id from uri missing-event-types',
       ),
     },
   ])('Error should throw: $name', async (params) => {
     const { payload, error } = params
     const merged = _.merge({}, testInviteeCreated, { payload })
-    const evt = eventCreated.onWebhookReceived!(
-      buildOnWebhookReceivedParams<CalendlyWebhookPayload>({
+    const evt = extensionWebhook.onEvent(
+      buildOnEventParams<CalendlyWebhookPayload>({
         payload: merged,
       }),
-      onComplete,
-      onError
     )
     await expect(evt).rejects.toThrow(error)
   })

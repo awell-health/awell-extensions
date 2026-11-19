@@ -15,7 +15,7 @@ describe('Medplum - Webhook - Observation created', () => {
   describe('When payload is invalid', () => {
     describe('When subject reference is missing', () => {
       test('Should call onError', async () => {
-        await extensionWebhook.onEvent!({
+        await extensionWebhook.onEvent({
           payload: {
             payload: {
               ...ObservationCreatedPayloadExample,
@@ -43,7 +43,7 @@ describe('Medplum - Webhook - Observation created', () => {
 
     describe('When subject reference is not a patient', () => {
       test('Should call onError', async () => {
-        await extensionWebhook.onEvent!({
+        await extensionWebhook.onEvent({
           payload: {
             payload: {
               ...ObservationCreatedPayloadExample,
@@ -73,7 +73,7 @@ describe('Medplum - Webhook - Observation created', () => {
 
     describe('When subject reference is empty', () => {
       test('Should call onError', async () => {
-        await extensionWebhook.onEvent!({
+        await extensionWebhook.onEvent({
           payload: {
             payload: {
               ...ObservationCreatedPayloadExample,
@@ -102,7 +102,7 @@ describe('Medplum - Webhook - Observation created', () => {
 
   describe('When payload is valid', () => {
     test('Should call onSuccess', async () => {
-      await extensionWebhook.onEvent!({
+      await extensionWebhook.onEvent({
         payload: {
           payload: ObservationCreatedPayloadExample,
           settings: mockSettings,
