@@ -3137,7 +3137,7 @@ const RAW_RUNTIME_STATE =
           ["@medplum/core", "virtual:e1018e3c164b28dbcac791458fee205056e4119d33330e2d444ffedc10e147942fb36e46a5a0983400b528ee653041156f5d907bb1aaed9e2e38e7272be05dda#npm:2.2.10"],\
           ["axios", "npm:1.20.0"],\
           ["dayjs", "npm:1.11.13"],\
-          ["fast-xml-parser", "npm:5.12.0"],\
+          ["fast-xml-parser", "npm:5.12.1"],\
           ["http-status", "npm:1.7.4"],\
           ["lodash", "npm:4.18.1"],\
           ["semver", "npm:7.7.4"],\
@@ -8178,10 +8178,10 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["fast-xml-builder", [\
-      ["npm:1.3.1", {\
-        "packageLocation": "./.yarn/cache/fast-xml-builder-npm-1.3.1-871389fcc1-6e2774b07a.zip/node_modules/fast-xml-builder/",\
+      ["npm:1.3.2", {\
+        "packageLocation": "./.yarn/cache/fast-xml-builder-npm-1.3.2-fdc42c88c1-147cba62ef.zip/node_modules/fast-xml-builder/",\
         "packageDependencies": [\
-          ["fast-xml-builder", "npm:1.3.1"],\
+          ["fast-xml-builder", "npm:1.3.2"],\
           ["path-expression-matcher", "npm:1.6.2"],\
           ["xml-naming", "npm:0.3.0"]\
         ],\
@@ -8189,12 +8189,12 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["fast-xml-parser", [\
-      ["npm:5.12.0", {\
-        "packageLocation": "./.yarn/cache/fast-xml-parser-npm-5.12.0-325a5b7672-86b16fd9f4.zip/node_modules/fast-xml-parser/",\
+      ["npm:5.12.1", {\
+        "packageLocation": "./.yarn/cache/fast-xml-parser-npm-5.12.1-e4158e4c5b-eda4e8f187.zip/node_modules/fast-xml-parser/",\
         "packageDependencies": [\
-          ["fast-xml-parser", "npm:5.12.0"],\
+          ["fast-xml-parser", "npm:5.12.1"],\
           ["@nodable/entities", "npm:3.1.0"],\
-          ["fast-xml-builder", "npm:1.3.1"],\
+          ["fast-xml-builder", "npm:1.3.2"],\
           ["is-unsafe", "npm:2.0.3"],\
           ["path-expression-matcher", "npm:1.6.2"],\
           ["strnum", "npm:2.5.1"],\
