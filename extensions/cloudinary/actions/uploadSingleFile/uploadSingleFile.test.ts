@@ -22,6 +22,8 @@ describe('Cloudinary - Upload single file', () => {
           cloudName: 'cloud-name',
           uploadPreset: 'upload-preset',
           folder: 'variant-label',
+          apiKey: undefined,
+          apiSecret: undefined,
         },
       }),
       onComplete,
